@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:binding="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.dl.playfun.ui.program.programsubject.ProgramSubjectViewModel" />
+
+        <import type="me.tatarka.bindingcollectionadapter2.LayoutManagers" />
+
+        <import type="com.dl.playfun.widget.recyclerview.LineManagers" />
+
+        <variable
+            name="adapter"
+            type="com.dl.playfun.ui.program.programsubject.ProgramChooseRecyclerViewAdapter" />
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context="com.dl.playfun.ui.program.programsubject.ProgramSubjectFragment">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/rcv_program"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="60dp"
+            android:text="@string/playfun_dialog_program_subject_choose_title"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcv_program"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            binding:adapter="@{adapter}"
+            binding:itemBinding="@{viewModel.itemBinding}"
+            binding:items="@{viewModel.itemList}"
+            binding:layoutManager="@{LayoutManagers.grid(4)}" />
+
+        <ImageView
+            android:id="@+id/iv_dialog_close"
+            android:layout_width="39dp"
+            android:layout_height="39dp"
+            android:layout_below="@+id/rcv_program"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="28dp"
+            android:background="#969696"
+            android:src="@drawable/ic_dialog_close"
+            binding:onClickCommand="@{viewModel.closeClickCommand}" />
+    </RelativeLayout>
+</layout>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:binding="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.dl.play.chat.R" />
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="com.dl.play.chat.ui.radio.issuanceprogram.clip.ClipItemViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_marginBottom="1dp"
+        binding:onClickCommand="@{viewModel.clickPostion}"
+        android:layout_width="89dp"
+        android:layout_height="89dp">
+        <ImageView
+            android:elevation="11dp"
+            android:src="@drawable/clip_media_checked"
+            android:visibility="@{viewModel.checked?View.VISIBLE:View.GONE}"
+            android:layout_width="89dp"
+            android:layout_height="89dp"/>
+
+        <ImageView
+            android:id="@+id/dating_img"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            binding:imageThumbPath='@{viewModel.itemEntity.path}'
+            binding:imageErrorPlaceholderRes="@{R.drawable.clop_img_video_loadding}"
+            binding:imagePlaceholderRes="@{R.drawable.clop_img_video_loadding}" />
+        <RelativeLayout
+            android:visibility="@{viewModel.itemEntity.mediaType==1?View.GONE:View.VISIBLE}"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="22dp">
+            <ImageView
+                android:layout_marginStart="5dp"
+                android:src="@drawable/icon_video_play"
+                android:layout_width="18dp"
+                android:layout_height="18dp"/>
+            <TextView
+                android:text="@{viewModel.getVideoTime}"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="1dp"
+                android:layout_marginEnd="5dp"
+                android:textSize="12sp"
+                android:textColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+    </RelativeLayout>
+</layout>

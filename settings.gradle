@@ -1,0 +1,26 @@
+rootProject.name='PlayFun_Google'
+include ':app', ':mvvmhabit'
+include ':jsBridge'
+include ':customDrawable'
+include ':AliyunVideoCommon'
+include ':AliyunSVideoBase'
+include ':AlivcMedia'
+include ':AliyunCrop:crop'
+include ':QueenBeauty'
+
+/*IM聊天组件*/
+include ':tuicore'
+project(':tuicore').projectDir = new File(settingsDir, 'TUIKit/TUICore/tuicore')
+
+include ':tuichat'
+project(':tuichat').projectDir = new File(settingsDir, 'TUIKit/TUIChat/tuichat')
+
+include ':tuicontact'
+project(':tuicontact').projectDir = new File(settingsDir, 'TUIKit/TUIContact/tuicontact')
+
+include ':tuiconversation'
+project(':tuiconversation').projectDir = new File(settingsDir, 'TUIKit/TUIConversation/tuiconversation')
+
+include ':tuicalling'
+project(':tuicalling').projectDir = new File(settingsDir, 'TUIKit/TUICalling/tuicalling')
+/*IM聊天组件*/

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:binding="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.dl.play.chat.R" />
+
+        <import type="android.view.View" />
+
+        <import type="com.dl.play.chat.utils.TimeUtils" />
+
+        <variable
+            name="viewModel"
+            type="com.dl.play.chat.ui.message.applymessage.ApplyMessageItemViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:paddingStart="16dp"
+        android:paddingTop="16dp"
+        android:paddingEnd="16dp"
+        binding:onClickCommand="@{viewModel.itemClick}"
+        binding:onLongClickCommand="@{viewModel.itemLongClick}">
+
+        <com.dl.play.chat.widget.roundedimageview.RoundedImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/default_avatar"
+            app:riv_oval="true"
+            binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
+            binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
+            binding:imageThumbPath="@{viewModel.itemEntity.user.avatar}" />
+
+        <TextView
+            android:id="@+id/tv_content"
+            style="@style/MessageItem"
+            android:layout_toRightOf="@+id/iv_avatar"
+            android:ellipsize="end"
+            android:maxLines="2"
+            app:htmlText="@{viewModel.itemEntity.content}"
+            tools:text="Hi,歡迎來到PlayChat，在結交新朋友前，我們溫馨提醒您：\n1) 請遵守《平臺使用規範》和《廣播發布須知》，若發布違規內容（如：色情低俗裸露內容等），PlayChat有權對賬號作出限制權限，甚至凍結賬號處理。\n2) 在使用平臺過程中，若遇到任何問題需要幫助或者提供寶貴意見，請在個人中心-聯系人工客服，進行處理。\n我們的理念是Friendship empowers people!希望您在PlayChat上找到有價值的友情，玩得開心" />
+
+        <com.dl.play.chat.widget.roundedimageview.RoundedImageView
+            android:id="@+id/iv_photo"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_below="@+id/tv_content"
+            android:layout_alignLeft="@+id/tv_content"
+            android:layout_marginTop="10dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/default_placeholder_img"
+            app:riv_border_color="@{viewModel.photoIsView == 1 ? @color/gray_light:@color/red_E944C4}"
+            app:riv_border_width="2dp"
+            app:riv_corner_radius="8dip"
+            binding:burnStatus="@{viewModel.photoIsView}"
+            binding:burnThumbImgPath="@{viewModel.itemEntity.apply.img}"
+            binding:isBurn="@{true}"
+            binding:onClickCommand="@{viewModel.photoClick}" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/iv_photo"
+            android:layout_alignTop="@+id/iv_photo"
+            android:background="@{viewModel.photoIsView == 1 ? @drawable/photo_mark_gray_left:@drawable/photo_mark_red_left}"
+            android:padding="3dp"
+            android:src="@drawable/ic_hot" />
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/iv_photo"
+            android:layout_alignLeft="@id/tv_content"
+            android:layout_marginTop="10dp"
+            android:text='@{viewModel.itemEntity.createdAt != null ? TimeUtils.getFriendlyTimeSpan(viewModel.itemEntity.createdAt):""}'
+            android:textColor="@color/gray_light"
+            android:textSize="@dimen/text_size_mini" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_time"
+            android:layout_alignParentRight="true"
+            android:drawableRight="@drawable/ic_arrow_right"
+            android:text="@string/ta_homepage"
+            android:textColor="@color/gray_light"
+            android:textSize="@dimen/text_size_mini" />
+
+        <TextView
+            android:id="@+id/tv_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_time"
+            android:layout_alignLeft="@id/tv_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="@{viewModel.itemEntity.apply.status == 1 ? @string/request_allow:@string/request_denied}"
+            android:textColor="@{viewModel.itemEntity.apply.status == 1 ? @color/green:@color/red_7c}"
+            android:textSize="@dimen/text_size_middle"
+            android:visibility="@{viewModel.itemEntity.apply.status != 0 ? View.VISIBLE:View.GONE}"
+            tools:text="status" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_time"
+            android:layout_marginTop="10dp"
+            android:clipToPadding="false"
+            android:orientation="horizontal"
+            android:paddingStart="58dp"
+            android:paddingBottom="15dp"
+            android:visibility="@{viewModel.itemEntity.apply.status == 0 ? View.VISIBLE:View.GONE}">
+
+            <Button
+                style="@style/ButtonPrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:paddingStart="15dp"
+                android:paddingLeft="15dp"
+                android:paddingEnd="15dp"
+                android:paddingRight="15dp"
+                android:text="@string/allowes"
+                binding:onClickCommand="@{viewModel.allowClick}" />
+
+            <Button
+                style="@style/ButtonSecondary"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginLeft="10dp"
+                android:text="@string/reject"
+                binding:onClickCommand="@{viewModel.rejectClick}" />
+        </LinearLayout>
+
+    </RelativeLayout>
+</layout>

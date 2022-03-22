@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:binding="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="com.blankj.utilcode.util.StringUtils" />
+
+        <variable
+            name="viewModel"
+            type="com.dl.play.chat.ui.userdetail.detail.UserDetailViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/home_bottom_nav_height"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bottom_navigation_backgroup_user_detail"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="@{viewModel.detailEntity.sex == null ? View.GONE:View.VISIBLE}">
+
+        <com.dl.play.chat.widget.DrawableCenterTextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:drawableStart="@drawable/ic_user_detail_evaluate"
+            android:drawablePadding="4.19dp"
+            android:gravity="center_vertical"
+            android:text="@string/user_detail_evaluate"
+            android:textColor="@drawable/user_detail_bottom_text_color"
+            android:textSize="13sp"
+            binding:onClickCommand="@{viewModel.evaluateOnClickCommand}" />
+
+        <com.dl.play.chat.widget.DrawableCenterTextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:drawableStart="@drawable/ic_user_detail_send_message"
+            android:drawablePadding="4.19dp"
+            android:enabled="@{!(viewModel.detailEntity.albumType == 3 &amp;&amp; viewModel.detailEntity.albumApply != 1)}"
+            android:gravity="center_vertical"
+            android:text="@string/user_detail_chat"
+            android:textColor="@drawable/user_detail_bottom_text_color"
+            android:textSize="13sp"
+            binding:onClickCommand="@{viewModel.chatOnClickCommand}" />
+
+        <com.dl.play.chat.widget.DrawableCenterTextView
+            android:id="@+id/dt_social_account"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:drawableStart="@drawable/ic_user_detail_video"
+            android:drawablePadding="4.19dp"
+            android:enabled="@{!(viewModel.detailEntity.albumType == 3 &amp;&amp; viewModel.detailEntity.albumApply != 1)}"
+            android:gravity="center_vertical"
+            android:text="@string/message_deatail_call_video"
+            android:textColor="@drawable/user_detail_bottom_text_color"
+            android:textSize="13sp"
+            binding:onClickCommand="@{viewModel.socialAccountOnClickCommand}" />
+
+
+        <com.dl.play.chat.widget.DrawableCenterTextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:drawableStart="@drawable/ic_user_detail_voice"
+            android:drawablePadding="4.19dp"
+            android:enabled="@{!(viewModel.detailEntity.albumType == 3 &amp;&amp; viewModel.detailEntity.albumApply != 1) &amp;&amp; viewModel.detailEntity.isConnectionMic}"
+            android:gravity="center_vertical"
+            android:text="@string/user_detail_link_mic"
+            android:textColor="@drawable/user_detail_bottom_text_color"
+            android:textSize="13sp"
+            binding:onClickCommand="@{viewModel.connMicOnClickCommand}" />
+
+    </LinearLayout>
+</layout>

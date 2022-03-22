@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:binding="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.dl.playfun.R" />
+
+        <import type="android.view.View" />
+
+        <import type="com.dl.playfun.utils.SystemDictUtils" />
+
+        <variable
+            name="viewModel"
+            type="com.dl.playfun.ui.home.HomeMainViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/transparentyin"
+            android:clickable="true"
+            android:elevation="1dp"
+            android:gravity="center"
+            android:visibility="@{viewModel.showLocationAlert?View.VISIBLE:View.GONE}">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="396dp"
+                android:layout_marginLeft="17dp"
+                android:layout_marginRight="17dp"
+                android:background="@drawable/location_alert"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="149dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/playfun_dialog_location_title"
+                        android:textColor="@color/black"
+                        android:textSize="17sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="48dp"
+                        android:layout_marginTop="6dp"
+                        android:layout_marginEnd="48dp"
+                        android:gravity="center"
+                        android:text="@string/playfun_dialog_location_title1"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:text="@string/playfun_dialog_location_title_sel"
+                        android:textColor="@color/black"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="15dp"
+                        android:background="@drawable/location_alert_sel_icon"
+                        android:drawableRight="@drawable/lication_alert_sel_zk"
+                        android:ellipsize="end"
+                        android:gravity="center|start"
+                        android:hint="@string/playfun_dialog_location_title_sel_hint"
+                        android:maxLines="1"
+                        android:paddingStart="14dp"
+                        android:paddingRight="14dp"
+                        android:text="@{viewModel.SelConfigItemEntity.name}"
+                        android:textSize="16dp"
+                        app:onClickCommand="@{viewModel.clickLocationSelCommand}" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_confirm"
+                    style="@style/ButtonPrimary"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="42dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginRight="42dp"
+                    android:text="@string/playfun_confirm"
+                    android:textStyle="normal"
+                    android:textSize="14sp"
+                    app:onClickCommand="@{viewModel.clickbtnConfirm}" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:context="com.dl.playfun.ui.home.HomeMainFragment">
+
+            <View
+                android:id="@+id/status_bar_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@color/status_bar_color" />
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/AppTheme.AppBarOverlay"
+                app:elevation="0dp">
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/action_bar_height"
+                    android:background="?attr/colorPrimary"
+                    app:contentInsetStart="0dp"
+                    app:popupTheme="@style/AppTheme.PopupOverlay">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp">
+
+                        <ImageView
+                            android:id="@+id/iv_search"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_centerVertical="true"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/ic_search"
+                            binding:onClickCommand="@{viewModel.searchOnClickCommand}" />
+
+                        <Switch
+                            android:visibility="visible"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp"
+                            android:layout_toRightOf="@+id/iv_search"
+                            android:background="@android:color/transparent"
+                            android:button="@null"
+                            android:drawableStart="@drawable/gender_checkbok_background"
+                            android:scaleType="centerInside"
+                            android:thumb="@null"
+                            android:track="@null"
+                            binding:onClickCommand="@{viewModel.genderOnClickCommand}"
+                            binding:switchState="@{safeUnbox(viewModel.gender)}" />
+
+                        <TextView
+                            android:id="@+id/tv_location"
+                            style="@style/ActionBarTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:drawableRight="@drawable/ic_arrow_down"
+                            android:drawablePadding="5dp"
+                            android:padding="5dp"
+                            android:text="@{viewModel.regionTitle}"
+                            binding:onClickCommand="@{viewModel.regionOnClickCommand}"
+                            android:maxLines="1"
+                            android:ellipsize="end"
+                            tools:text=""
+                            />
+
+                        <Switch
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:button="@null"
+                            android:paddingLeft="9dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="1dp"
+                            android:paddingBottom="7dp"
+                            android:text="@string/playfun_fragment_home_on_line"
+                            android:textColor="@drawable/online_checkbok_text_color"
+                            android:textSize="12sp"
+                            android:maxLines="1"
+                            android:ellipsize="end"
+                            android:thumb="@null"
+                            android:track="@null"
+                            binding:onCheckedChangeCommand="@{viewModel.onlineOnCheckedChangeCommand}"
+                            binding:switchState="@{safeUnbox(viewModel.online)}" />
+                        <!--                    android:background="@drawable/online_checkbok_background"-->
+                    </RelativeLayout>
+                </androidx.appcompat.widget.Toolbar>
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/tab_bar_height"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp" />
+
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <TextView
+                android:id="@+id/tv_location_warn"
+                style="@style/TopWarn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/ic_arrow_right_golden"
+                android:text="@string/playfun_homt_main_lication_title"
+                android:visibility="@{viewModel.locationService?View.GONE:View.VISIBLE}" />
+
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:paddingBottom="@dimen/home_bottom_nav_height" />
+        </LinearLayout>
+
+
+        <com.dl.playfun.widget.image.HomeShareImageView
+            tools:visibility="gone"
+            android:layout_width="58dp"
+            android:layout_height="58dp"
+            android:layout_marginLeft="288dp"
+            android:layout_marginTop="430dp"
+            android:elevation="50dp"
+            android:clickable="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/nearby_accost_tip_img"
+            binding:onClickCommand="@{viewModel.toTaskClickCommand}" />
+    </RelativeLayout>
+
+</layout>

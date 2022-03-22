@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:binding="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.dl.play.chat.ui.login.viewmodel.LoginViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/login_bg"
+        android:minHeight="640dp"
+        android:orientation="vertical"
+        tools:context=".ui.login.login.LoginFragment">
+
+        <LinearLayout
+            android:id="@+id/iv_top_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="156dp"
+                android:layout_height="89dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/login_logo" />
+
+            <ImageView
+                android:layout_width="240dp"
+                android:layout_height="132dp"
+                android:layout_marginTop="48dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/login_text" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/login_btn_background"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingBottom="20dp">
+
+            <LinearLayout
+                android:id="@+id/login_button"
+                android:layout_width="match_parent"
+                android:layout_height="78dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/login_facebook_bg"
+                android:gravity="center_vertical"
+                android:orientation="vertical"></LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/signIn_button"
+                android:layout_width="match_parent"
+                android:layout_height="78dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/login_google_bg"
+                android:gravity="center_vertical"
+                android:orientation="vertical"></LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginLeft="27dp"
+                android:layout_marginRight="27dp"
+                android:background="@drawable/login_in_moblie"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                binding:onClickCommand="@{viewModel.registerOnClickCommand}"></LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@android:dimen/app_icon_size"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:checked="@={viewModel.agree}"
+                    android:drawableStart="@drawable/checkbox_button"
+                    android:padding="10dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/agree"
+                    android:textColor="@color/gray_dark"
+                    android:textSize="@dimen/text_size_middle2" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/terms_of_service"
+                    android:textColor="@color/text_7639FF"
+                    android:textSize="@dimen/text_size_middle2"
+                    binding:onClickCommand="@{viewModel.termsOfServiceOnClickCommand}" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/and"
+                    android:textColor="@color/gray_dark"
+                    android:textSize="@dimen/text_size_middle2" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:paddingEnd="0dp"
+                    android:paddingRight="0dp"
+                    android:text="@string/privacy_policy"
+                    android:textColor="@color/text_7639FF"
+                    android:textSize="@dimen/text_size_middle2"
+                    binding:onClickCommand="@{viewModel.usageSpecificationOnClickCommand}" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>

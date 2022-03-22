@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:binding="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.dl.playfun.ui.message.systemmessagegroup.SystemMessageGroupViewModel" />
+
+        <variable
+            name="viewModel"
+            type="com.dl.playfun.ui.message.systemmessagegroup.SystemMessageGroupViewModel" />
+
+        <import type="me.tatarka.bindingcollectionadapter2.LayoutManagers" />
+
+        <import type="com.dl.playfun.widget.recyclerview.LineManagers" />
+    </data>
+
+    <com.scwang.smart.refresh.layout.SmartRefreshLayout
+        android:id="@+id/refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/home_bottom_nav_height"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        binding:onRefreshCommand="@{viewModel.onRefreshCommand}"
+        tools:context="com.dl.playfun.ui.message.systemmessagegroup.SystemMessageGroupFragment">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            binding:adapter="@{viewModel.adapter}"
+            binding:itemBinding="@{viewModel.itemBinding}"
+            binding:items="@{viewModel.observableList}"
+            binding:layoutManager="@{LayoutManagers.linear()}"
+            binding:lineManager="@{LineManagers.horizontal(1,72,0)}" />
+    </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+
+</layout>

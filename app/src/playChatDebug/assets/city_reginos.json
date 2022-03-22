@@ -1,0 +1,1592 @@
+[
+  {
+    "city": "基隆市",
+    "regions": [
+      {
+        "postalCode": "200",
+        "region": "仁愛區"
+      },
+      {
+        "postalCode": "201",
+        "region": "信義區"
+      },
+      {
+        "postalCode": "202",
+        "region": "中正區"
+      },
+      {
+        "postalCode": "203",
+        "region": "中山區"
+      },
+      {
+        "postalCode": "204",
+        "region": "安樂區"
+      },
+      {
+        "postalCode": "205",
+        "region": "暖暖區"
+      },
+      {
+        "postalCode": "206",
+        "region": "七堵區"
+      }
+    ]
+  },
+  {
+    "city": "台北市",
+    "regions": [
+      {
+        "postalCode": "100",
+        "region": "中正區"
+      },
+      {
+        "postalCode": "103",
+        "region": "大同區"
+      },
+      {
+        "postalCode": "104",
+        "region": "中山區"
+      },
+      {
+        "postalCode": "105",
+        "region": "松山區"
+      },
+      {
+        "postalCode": "106",
+        "region": "大安區"
+      },
+      {
+        "postalCode": "108",
+        "region": "萬華區"
+      },
+      {
+        "postalCode": "110",
+        "region": "信義區"
+      },
+      {
+        "postalCode": "111",
+        "region": "士林區"
+      },
+      {
+        "postalCode": "112",
+        "region": "北投區"
+      },
+      {
+        "postalCode": "114",
+        "region": "內湖區"
+      },
+      {
+        "postalCode": "115",
+        "region": "南港區"
+      },
+      {
+        "postalCode": "116",
+        "region": "文山區"
+      }
+    ]
+  },
+  {
+    "city": "新北市",
+    "regions": [
+      {
+        "postalCode": "207",
+        "region": "萬里區"
+      },
+      {
+        "postalCode": "208",
+        "region": "金山區"
+      },
+      {
+        "postalCode": "220",
+        "region": "板橋區"
+      },
+      {
+        "postalCode": "221",
+        "region": "汐止區"
+      },
+      {
+        "postalCode": "222",
+        "region": "深坑區"
+      },
+      {
+        "postalCode": "223",
+        "region": "石碇區"
+      },
+      {
+        "postalCode": "224",
+        "region": "瑞芳區"
+      },
+      {
+        "postalCode": "226",
+        "region": "平溪區"
+      },
+      {
+        "postalCode": "227",
+        "region": "雙溪區"
+      },
+      {
+        "postalCode": "228",
+        "region": "貢寮區"
+      },
+      {
+        "postalCode": "231",
+        "region": "新店區"
+      },
+      {
+        "postalCode": "232",
+        "region": "坪林區"
+      },
+      {
+        "postalCode": "233",
+        "region": "烏來區"
+      },
+      {
+        "postalCode": "234",
+        "region": "永和區"
+      },
+      {
+        "postalCode": "235",
+        "region": "中和區"
+      },
+      {
+        "postalCode": "236",
+        "region": "土城區"
+      },
+      {
+        "postalCode": "237",
+        "region": "三峽區"
+      },
+      {
+        "postalCode": "238",
+        "region": "樹林區"
+      },
+      {
+        "postalCode": "239",
+        "region": "鶯歌區"
+      },
+      {
+        "postalCode": "241",
+        "region": "三重區"
+      },
+      {
+        "postalCode": "242",
+        "region": "新莊區"
+      },
+      {
+        "postalCode": "243",
+        "region": "泰山區"
+      },
+      {
+        "postalCode": "244",
+        "region": "林口區"
+      },
+      {
+        "postalCode": "247",
+        "region": "蘆洲區"
+      },
+      {
+        "postalCode": "248",
+        "region": "五股區"
+      },
+      {
+        "postalCode": "249",
+        "region": "八里區"
+      },
+      {
+        "postalCode": "251",
+        "region": "淡水區"
+      },
+      {
+        "postalCode": "252",
+        "region": "三芝區"
+      },
+      {
+        "postalCode": "253",
+        "region": "石門區"
+      }
+    ]
+  },
+  {
+    "city": "桃園市",
+    "regions": [
+      {
+        "postalCode": "320",
+        "region": "中壢區"
+      },
+      {
+        "postalCode": "324",
+        "region": "平鎮區"
+      },
+      {
+        "postalCode": "325",
+        "region": "龍潭區"
+      },
+      {
+        "postalCode": "326",
+        "region": "楊梅區"
+      },
+      {
+        "postalCode": "327",
+        "region": "新屋區"
+      },
+      {
+        "postalCode": "328",
+        "region": "觀音區"
+      },
+      {
+        "postalCode": "330",
+        "region": "桃園區"
+      },
+      {
+        "postalCode": "333",
+        "region": "龜山區"
+      },
+      {
+        "postalCode": "334",
+        "region": "八德區"
+      },
+      {
+        "postalCode": "335",
+        "region": "大溪區"
+      },
+      {
+        "postalCode": "336",
+        "region": "復興區"
+      },
+      {
+        "postalCode": "337",
+        "region": "大園區"
+      },
+      {
+        "postalCode": "338",
+        "region": "蘆竹區"
+      }
+    ]
+  },
+  {
+    "city": "新竹市",
+    "regions": [
+      {
+        "postalCode": "300",
+        "region": "東區"
+      },
+      {
+        "postalCode": "300",
+        "region": "北區"
+      },
+      {
+        "postalCode": "300",
+        "region": "香山區"
+      }
+    ]
+  },
+  {
+    "city": "新竹縣",
+    "regions": [
+      {
+        "postalCode": "302",
+        "region": "竹北市"
+      },
+      {
+        "postalCode": "303",
+        "region": "湖口鄉"
+      },
+      {
+        "postalCode": "304",
+        "region": "新豐鄉"
+      },
+      {
+        "postalCode": "305",
+        "region": "新埔鎮"
+      },
+      {
+        "postalCode": "306",
+        "region": "關西鎮"
+      },
+      {
+        "postalCode": "307",
+        "region": "芎林鄉"
+      },
+      {
+        "postalCode": "308",
+        "region": "寶山鄉"
+      },
+      {
+        "postalCode": "310",
+        "region": "竹東鎮"
+      },
+      {
+        "postalCode": "311",
+        "region": "五峰鄉"
+      },
+      {
+        "postalCode": "312",
+        "region": "橫山鄉"
+      },
+      {
+        "postalCode": "313",
+        "region": "尖石鄉"
+      },
+      {
+        "postalCode": "314",
+        "region": "北埔鄉"
+      },
+      {
+        "postalCode": "315",
+        "region": "峨眉鄉"
+      }
+    ]
+  },
+  {
+    "city": "苗栗縣",
+    "regions": [
+      {
+        "postalCode": "350",
+        "region": "竹南鎮"
+      },
+      {
+        "postalCode": "351",
+        "region": "頭份市"
+      },
+      {
+        "postalCode": "352",
+        "region": "三灣鄉"
+      },
+      {
+        "postalCode": "353",
+        "region": "南庄鄉"
+      },
+      {
+        "postalCode": "354",
+        "region": "獅潭鄉"
+      },
+      {
+        "postalCode": "356",
+        "region": "後龍鎮"
+      },
+      {
+        "postalCode": "357",
+        "region": "通霄鎮"
+      },
+      {
+        "postalCode": "358",
+        "region": "苑裡鎮"
+      },
+      {
+        "postalCode": "360",
+        "region": "苗栗市"
+      },
+      {
+        "postalCode": "361",
+        "region": "造橋鄉"
+      },
+      {
+        "postalCode": "362",
+        "region": "頭屋鄉"
+      },
+      {
+        "postalCode": "363",
+        "region": "公館鄉"
+      },
+      {
+        "postalCode": "364",
+        "region": "大湖鄉"
+      },
+      {
+        "postalCode": "365",
+        "region": "泰安鄉"
+      },
+      {
+        "postalCode": "366",
+        "region": "銅鑼鄉"
+      },
+      {
+        "postalCode": "367",
+        "region": "三義鄉"
+      },
+      {
+        "postalCode": "368",
+        "region": "西湖鄉"
+      },
+      {
+        "postalCode": "369",
+        "region": "卓蘭鎮"
+      }
+    ]
+  },
+  {
+    "city": "台中市",
+    "regions": [
+      {
+        "postalCode": "400",
+        "region": "中區"
+      },
+      {
+        "postalCode": "401",
+        "region": "東區"
+      },
+      {
+        "postalCode": "402",
+        "region": "南區"
+      },
+      {
+        "postalCode": "403",
+        "region": "西區"
+      },
+      {
+        "postalCode": "404",
+        "region": "北區"
+      },
+      {
+        "postalCode": "406",
+        "region": "北屯區"
+      },
+      {
+        "postalCode": "407",
+        "region": "西屯區"
+      },
+      {
+        "postalCode": "408",
+        "region": "南屯區"
+      },
+      {
+        "postalCode": "411",
+        "region": "太平區"
+      },
+      {
+        "postalCode": "412",
+        "region": "大里區"
+      },
+      {
+        "postalCode": "413",
+        "region": "霧峰區"
+      },
+      {
+        "postalCode": "414",
+        "region": "烏日區"
+      },
+      {
+        "postalCode": "420",
+        "region": "豐原區"
+      },
+      {
+        "postalCode": "421",
+        "region": "后里區"
+      },
+      {
+        "postalCode": "422",
+        "region": "石岡區"
+      },
+      {
+        "postalCode": "423",
+        "region": "東勢區"
+      },
+      {
+        "postalCode": "424",
+        "region": "和平區"
+      },
+      {
+        "postalCode": "426",
+        "region": "新社區"
+      },
+      {
+        "postalCode": "427",
+        "region": "潭子區"
+      },
+      {
+        "postalCode": "428",
+        "region": "大雅區"
+      },
+      {
+        "postalCode": "429",
+        "region": "神岡區"
+      },
+      {
+        "postalCode": "432",
+        "region": "大肚區"
+      },
+      {
+        "postalCode": "433",
+        "region": "沙鹿區"
+      },
+      {
+        "postalCode": "434",
+        "region": "龍井區"
+      },
+      {
+        "postalCode": "435",
+        "region": "梧棲區"
+      },
+      {
+        "postalCode": "436",
+        "region": "清水區"
+      },
+      {
+        "postalCode": "437",
+        "region": "大甲區"
+      },
+      {
+        "postalCode": "438",
+        "region": "外埔區"
+      },
+      {
+        "postalCode": "439",
+        "region": "大安區"
+      }
+    ]
+  },
+  {
+    "city": "彰化縣",
+    "regions": [
+      {
+        "postalCode": "500",
+        "region": "彰化市"
+      },
+      {
+        "postalCode": "502",
+        "region": "芬園鄉"
+      },
+      {
+        "postalCode": "503",
+        "region": "花壇鄉"
+      },
+      {
+        "postalCode": "504",
+        "region": "秀水鄉"
+      },
+      {
+        "postalCode": "505",
+        "region": "鹿港鎮"
+      },
+      {
+        "postalCode": "506",
+        "region": "福興鄉"
+      },
+      {
+        "postalCode": "507",
+        "region": "線西鄉"
+      },
+      {
+        "postalCode": "508",
+        "region": "和美鎮"
+      },
+      {
+        "postalCode": "509",
+        "region": "伸港鄉"
+      },
+      {
+        "postalCode": "510",
+        "region": "員林市"
+      },
+      {
+        "postalCode": "511",
+        "region": "社頭鄉"
+      },
+      {
+        "postalCode": "512",
+        "region": "永靖鄉"
+      },
+      {
+        "postalCode": "513",
+        "region": "埔心鄉"
+      },
+      {
+        "postalCode": "514",
+        "region": "溪湖鎮"
+      },
+      {
+        "postalCode": "515",
+        "region": "大村鄉"
+      },
+      {
+        "postalCode": "516",
+        "region": "埔鹽鄉"
+      },
+      {
+        "postalCode": "520",
+        "region": "田中鎮"
+      },
+      {
+        "postalCode": "521",
+        "region": "北斗鎮"
+      },
+      {
+        "postalCode": "522",
+        "region": "田尾鄉"
+      },
+      {
+        "postalCode": "523",
+        "region": "埤頭鄉"
+      },
+      {
+        "postalCode": "524",
+        "region": "溪州鄉"
+      },
+      {
+        "postalCode": "525",
+        "region": "竹塘鄉"
+      },
+      {
+        "postalCode": "526",
+        "region": "二林鎮"
+      },
+      {
+        "postalCode": "527",
+        "region": "大城鄉"
+      },
+      {
+        "postalCode": "528",
+        "region": "芳苑鄉"
+      },
+      {
+        "postalCode": "530",
+        "region": "二水鄉"
+      }
+    ]
+  },
+  {
+    "city": "南投縣",
+    "regions": [
+      {
+        "postalCode": "540",
+        "region": "南投市"
+      },
+      {
+        "postalCode": "541",
+        "region": "中寮鄉"
+      },
+      {
+        "postalCode": "542",
+        "region": "草屯鎮"
+      },
+      {
+        "postalCode": "544",
+        "region": "國姓鄉"
+      },
+      {
+        "postalCode": "545",
+        "region": "埔里鎮"
+      },
+      {
+        "postalCode": "546",
+        "region": "仁愛鄉"
+      },
+      {
+        "postalCode": "551",
+        "region": "名間鄉"
+      },
+      {
+        "postalCode": "552",
+        "region": "集集鎮"
+      },
+      {
+        "postalCode": "553",
+        "region": "水里鄉"
+      },
+      {
+        "postalCode": "555",
+        "region": "魚池鄉"
+      },
+      {
+        "postalCode": "556",
+        "region": "信義鄉"
+      },
+      {
+        "postalCode": "557",
+        "region": "竹山鎮"
+      },
+      {
+        "postalCode": "558",
+        "region": "鹿谷鄉"
+      }
+    ]
+  },
+  {
+    "city": "雲林縣",
+    "regions": [
+      {
+        "postalCode": "630",
+        "region": "斗南鎮"
+      },
+      {
+        "postalCode": "631",
+        "region": "大埤鄉"
+      },
+      {
+        "postalCode": "632",
+        "region": "虎尾鎮"
+      },
+      {
+        "postalCode": "633",
+        "region": "土庫鎮"
+      },
+      {
+        "postalCode": "634",
+        "region": "褒忠鄉"
+      },
+      {
+        "postalCode": "635",
+        "region": "東勢鄉"
+      },
+      {
+        "postalCode": "636",
+        "region": "台西鄉"
+      },
+      {
+        "postalCode": "637",
+        "region": "崙背鄉"
+      },
+      {
+        "postalCode": "638",
+        "region": "麥寮鄉"
+      },
+      {
+        "postalCode": "640",
+        "region": "斗六市"
+      },
+      {
+        "postalCode": "643",
+        "region": "林內鄉"
+      },
+      {
+        "postalCode": "646",
+        "region": "古坑鄉"
+      },
+      {
+        "postalCode": "647",
+        "region": "莿桐鄉"
+      },
+      {
+        "postalCode": "648",
+        "region": "西螺鎮"
+      },
+      {
+        "postalCode": "649",
+        "region": "二崙鄉"
+      },
+      {
+        "postalCode": "651",
+        "region": "北港鎮"
+      },
+      {
+        "postalCode": "652",
+        "region": "水林鄉"
+      },
+      {
+        "postalCode": "653",
+        "region": "口湖鄉"
+      },
+      {
+        "postalCode": "654",
+        "region": "四湖鄉"
+      },
+      {
+        "postalCode": "655",
+        "region": "元長鄉"
+      }
+    ]
+  },
+  {
+    "city": "嘉義市",
+    "regions": [
+      {
+        "postalCode": "600",
+        "region": "東區"
+      },
+      {
+        "postalCode": "600",
+        "region": "西區"
+      }
+    ]
+  },
+  {
+    "city": "嘉義縣",
+    "regions": [
+      {
+        "postalCode": "602",
+        "region": "番路鄉"
+      },
+      {
+        "postalCode": "603",
+        "region": "梅山鄉"
+      },
+      {
+        "postalCode": "604",
+        "region": "竹崎鄉"
+      },
+      {
+        "postalCode": "605",
+        "region": "阿里山鄉"
+      },
+      {
+        "postalCode": "606",
+        "region": "中埔鄉"
+      },
+      {
+        "postalCode": "607",
+        "region": "大埔鄉"
+      },
+      {
+        "postalCode": "608",
+        "region": "水上鄉"
+      },
+      {
+        "postalCode": "611",
+        "region": "鹿草鄉"
+      },
+      {
+        "postalCode": "612",
+        "region": "太保市"
+      },
+      {
+        "postalCode": "613",
+        "region": "朴子市"
+      },
+      {
+        "postalCode": "614",
+        "region": "東石鄉"
+      },
+      {
+        "postalCode": "615",
+        "region": "六腳鄉"
+      },
+      {
+        "postalCode": "616",
+        "region": "新港鄉"
+      },
+      {
+        "postalCode": "621",
+        "region": "民雄鄉"
+      },
+      {
+        "postalCode": "622",
+        "region": "大林鎮"
+      },
+      {
+        "postalCode": "623",
+        "region": "溪口鄉"
+      },
+      {
+        "postalCode": "624",
+        "region": "義竹鄉"
+      },
+      {
+        "postalCode": "625",
+        "region": "布袋鎮"
+      }
+    ]
+  },
+  {
+    "city": "台南市",
+    "regions": [
+      {
+        "postalCode": "700",
+        "region": "中西區"
+      },
+      {
+        "postalCode": "701",
+        "region": "東區"
+      },
+      {
+        "postalCode": "702",
+        "region": "南區"
+      },
+      {
+        "postalCode": "704",
+        "region": "北區"
+      },
+      {
+        "postalCode": "708",
+        "region": "安平區"
+      },
+      {
+        "postalCode": "709",
+        "region": "安南區"
+      },
+      {
+        "postalCode": "710",
+        "region": "永康區"
+      },
+      {
+        "postalCode": "711",
+        "region": "歸仁區"
+      },
+      {
+        "postalCode": "712",
+        "region": "新化區"
+      },
+      {
+        "postalCode": "713",
+        "region": "左鎮區"
+      },
+      {
+        "postalCode": "714",
+        "region": "玉井區"
+      },
+      {
+        "postalCode": "715",
+        "region": "楠西區"
+      },
+      {
+        "postalCode": "716",
+        "region": "南化區"
+      },
+      {
+        "postalCode": "717",
+        "region": "仁德區"
+      },
+      {
+        "postalCode": "718",
+        "region": "關廟區"
+      },
+      {
+        "postalCode": "719",
+        "region": "龍崎區"
+      },
+      {
+        "postalCode": "720",
+        "region": "官田區"
+      },
+      {
+        "postalCode": "721",
+        "region": "麻豆區"
+      },
+      {
+        "postalCode": "722",
+        "region": "佳里區"
+      },
+      {
+        "postalCode": "723",
+        "region": "西港區"
+      },
+      {
+        "postalCode": "724",
+        "region": "七股區"
+      },
+      {
+        "postalCode": "725",
+        "region": "將軍區"
+      },
+      {
+        "postalCode": "726",
+        "region": "學甲區"
+      },
+      {
+        "postalCode": "727",
+        "region": "北門區"
+      },
+      {
+        "postalCode": "730",
+        "region": "新營區"
+      },
+      {
+        "postalCode": "731",
+        "region": "後壁區"
+      },
+      {
+        "postalCode": "732",
+        "region": "白河區"
+      },
+      {
+        "postalCode": "733",
+        "region": "東山區"
+      },
+      {
+        "postalCode": "734",
+        "region": "六甲區"
+      },
+      {
+        "postalCode": "735",
+        "region": "下營區"
+      },
+      {
+        "postalCode": "736",
+        "region": "柳營區"
+      },
+      {
+        "postalCode": "737",
+        "region": "鹽水區"
+      },
+      {
+        "postalCode": "741",
+        "region": "善化區"
+      },
+      {
+        "postalCode": "742",
+        "region": "大內區"
+      },
+      {
+        "postalCode": "743",
+        "region": "山上區"
+      },
+      {
+        "postalCode": "744",
+        "region": "新市區"
+      },
+      {
+        "postalCode": "745",
+        "region": "安定區"
+      }
+    ]
+  },
+  {
+    "city": "高雄市",
+    "regions": [
+      {
+        "postalCode": "800",
+        "region": "新興區"
+      },
+      {
+        "postalCode": "801",
+        "region": "前金區"
+      },
+      {
+        "postalCode": "802",
+        "region": "苓雅區"
+      },
+      {
+        "postalCode": "803",
+        "region": "鹽埕區"
+      },
+      {
+        "postalCode": "804",
+        "region": "鼓山區"
+      },
+      {
+        "postalCode": "805",
+        "region": "旗津區"
+      },
+      {
+        "postalCode": "806",
+        "region": "前鎮區"
+      },
+      {
+        "postalCode": "807",
+        "region": "三民區"
+      },
+      {
+        "postalCode": "811",
+        "region": "楠梓區"
+      },
+      {
+        "postalCode": "812",
+        "region": "小港區"
+      },
+      {
+        "postalCode": "813",
+        "region": "左營區"
+      },
+      {
+        "postalCode": "814",
+        "region": "仁武區"
+      },
+      {
+        "postalCode": "815",
+        "region": "大社區"
+      },
+      {
+        "postalCode": "817",
+        "region": "東沙群島"
+      },
+      {
+        "postalCode": "819",
+        "region": "南沙群島"
+      },
+      {
+        "postalCode": "820",
+        "region": "岡山區"
+      },
+      {
+        "postalCode": "821",
+        "region": "路竹區"
+      },
+      {
+        "postalCode": "822",
+        "region": "阿蓮區"
+      },
+      {
+        "postalCode": "823",
+        "region": "田寮區"
+      },
+      {
+        "postalCode": "824",
+        "region": "燕巢區"
+      },
+      {
+        "postalCode": "825",
+        "region": "橋頭區"
+      },
+      {
+        "postalCode": "826",
+        "region": "梓官區"
+      },
+      {
+        "postalCode": "827",
+        "region": "彌陀區"
+      },
+      {
+        "postalCode": "828",
+        "region": "永安區"
+      },
+      {
+        "postalCode": "829",
+        "region": "湖內區"
+      },
+      {
+        "postalCode": "830",
+        "region": "鳳山區"
+      },
+      {
+        "postalCode": "831",
+        "region": "大寮區"
+      },
+      {
+        "postalCode": "832",
+        "region": "林園區"
+      },
+      {
+        "postalCode": "833",
+        "region": "鳥松區"
+      },
+      {
+        "postalCode": "840",
+        "region": "大樹區"
+      },
+      {
+        "postalCode": "842",
+        "region": "旗山區"
+      },
+      {
+        "postalCode": "843",
+        "region": "美濃區"
+      },
+      {
+        "postalCode": "844",
+        "region": "六龜區"
+      },
+      {
+        "postalCode": "845",
+        "region": "內門區"
+      },
+      {
+        "postalCode": "846",
+        "region": "杉林區"
+      },
+      {
+        "postalCode": "847",
+        "region": "甲仙區"
+      },
+      {
+        "postalCode": "848",
+        "region": "桃源區"
+      },
+      {
+        "postalCode": "849",
+        "region": "那瑪夏區"
+      },
+      {
+        "postalCode": "851",
+        "region": "茂林區"
+      },
+      {
+        "postalCode": "852",
+        "region": "茄萣區"
+      }
+    ]
+  },
+  {
+    "city": "屏東縣",
+    "regions": [
+      {
+        "postalCode": "900",
+        "region": "屏東市"
+      },
+      {
+        "postalCode": "901",
+        "region": "三地門鄉"
+      },
+      {
+        "postalCode": "902",
+        "region": "霧台鄉"
+      },
+      {
+        "postalCode": "903",
+        "region": "瑪家鄉"
+      },
+      {
+        "postalCode": "904",
+        "region": "九如鄉"
+      },
+      {
+        "postalCode": "905",
+        "region": "里港鄉"
+      },
+      {
+        "postalCode": "906",
+        "region": "高樹鄉"
+      },
+      {
+        "postalCode": "907",
+        "region": "鹽埔鄉"
+      },
+      {
+        "postalCode": "908",
+        "region": "長治鄉"
+      },
+      {
+        "postalCode": "909",
+        "region": "麟洛鄉"
+      },
+      {
+        "postalCode": "911",
+        "region": "竹田鄉"
+      },
+      {
+        "postalCode": "912",
+        "region": "內埔鄉"
+      },
+      {
+        "postalCode": "913",
+        "region": "萬丹鄉"
+      },
+      {
+        "postalCode": "920",
+        "region": "潮州鎮"
+      },
+      {
+        "postalCode": "921",
+        "region": "泰武鄉"
+      },
+      {
+        "postalCode": "922",
+        "region": "來義鄉"
+      },
+      {
+        "postalCode": "923",
+        "region": "萬巒鄉"
+      },
+      {
+        "postalCode": "924",
+        "region": "崁頂鄉"
+      },
+      {
+        "postalCode": "925",
+        "region": "新埤鄉"
+      },
+      {
+        "postalCode": "926",
+        "region": "南州鄉"
+      },
+      {
+        "postalCode": "927",
+        "region": "林邊鄉"
+      },
+      {
+        "postalCode": "928",
+        "region": "東港鎮"
+      },
+      {
+        "postalCode": "929",
+        "region": "琉球鄉"
+      },
+      {
+        "postalCode": "931",
+        "region": "佳冬鄉"
+      },
+      {
+        "postalCode": "932",
+        "region": "新園鄉"
+      },
+      {
+        "postalCode": "940",
+        "region": "枋寮鄉"
+      },
+      {
+        "postalCode": "941",
+        "region": "枋山鄉"
+      },
+      {
+        "postalCode": "942",
+        "region": "春日鄉"
+      },
+      {
+        "postalCode": "943",
+        "region": "獅子鄉"
+      },
+      {
+        "postalCode": "944",
+        "region": "車城鄉"
+      },
+      {
+        "postalCode": "945",
+        "region": "牡丹鄉"
+      },
+      {
+        "postalCode": "946",
+        "region": "恆春鎮"
+      },
+      {
+        "postalCode": "947",
+        "region": "滿州鄉"
+      }
+    ]
+  },
+  {
+    "city": "台東縣",
+    "regions": [
+      {
+        "postalCode": "950",
+        "region": "台東市"
+      },
+      {
+        "postalCode": "951",
+        "region": "綠島鄉"
+      },
+      {
+        "postalCode": "952",
+        "region": "蘭嶼鄉"
+      },
+      {
+        "postalCode": "953",
+        "region": "延平鄉"
+      },
+      {
+        "postalCode": "954",
+        "region": "卑南鄉"
+      },
+      {
+        "postalCode": "955",
+        "region": "鹿野鄉"
+      },
+      {
+        "postalCode": "956",
+        "region": "關山鎮"
+      },
+      {
+        "postalCode": "957",
+        "region": "海端鄉"
+      },
+      {
+        "postalCode": "958",
+        "region": "池上鄉"
+      },
+      {
+        "postalCode": "959",
+        "region": "東河鄉"
+      },
+      {
+        "postalCode": "961",
+        "region": "成功鎮"
+      },
+      {
+        "postalCode": "962",
+        "region": "長濱鄉"
+      },
+      {
+        "postalCode": "963",
+        "region": "太麻里鄉"
+      },
+      {
+        "postalCode": "964",
+        "region": "金峰鄉"
+      },
+      {
+        "postalCode": "965",
+        "region": "大武鄉"
+      },
+      {
+        "postalCode": "966",
+        "region": "達仁鄉"
+      }
+    ]
+  },
+  {
+    "city": "花蓮縣",
+    "regions": [
+      {
+        "postalCode": "970",
+        "region": "花蓮市"
+      },
+      {
+        "postalCode": "971",
+        "region": "新城鄉"
+      },
+      {
+        "postalCode": "972",
+        "region": "秀林鄉"
+      },
+      {
+        "postalCode": "973",
+        "region": "吉安鄉"
+      },
+      {
+        "postalCode": "974",
+        "region": "壽豐鄉"
+      },
+      {
+        "postalCode": "975",
+        "region": "鳳林鎮"
+      },
+      {
+        "postalCode": "976",
+        "region": "光復鄉"
+      },
+      {
+        "postalCode": "977",
+        "region": "豐濱鄉"
+      },
+      {
+        "postalCode": "978",
+        "region": "瑞穗鄉"
+      },
+      {
+        "postalCode": "979",
+        "region": "萬榮鄉"
+      },
+      {
+        "postalCode": "981",
+        "region": "玉里鎮"
+      },
+      {
+        "postalCode": "982",
+        "region": "卓溪鄉"
+      },
+      {
+        "postalCode": "983",
+        "region": "富里鄉"
+      }
+    ]
+  },
+  {
+    "city": "宜蘭縣",
+    "regions": [
+      {
+        "postalCode": "260",
+        "region": "宜蘭市"
+      },
+      {
+        "postalCode": "261",
+        "region": "頭城鎮"
+      },
+      {
+        "postalCode": "262",
+        "region": "礁溪鄉"
+      },
+      {
+        "postalCode": "263",
+        "region": "壯圍鄉"
+      },
+      {
+        "postalCode": "264",
+        "region": "員山鄉"
+      },
+      {
+        "postalCode": "265",
+        "region": "羅東鎮"
+      },
+      {
+        "postalCode": "266",
+        "region": "三星鄉"
+      },
+      {
+        "postalCode": "267",
+        "region": "大同鄉"
+      },
+      {
+        "postalCode": "268",
+        "region": "五結鄉"
+      },
+      {
+        "postalCode": "269",
+        "region": "冬山鄉"
+      },
+      {
+        "postalCode": "270",
+        "region": "蘇澳鎮"
+      },
+      {
+        "postalCode": "272",
+        "region": "南澳鄉"
+      }
+    ]
+  },
+  {
+    "city": "澎湖縣",
+    "regions": [
+      {
+        "postalCode": "880",
+        "region": "馬公市"
+      },
+      {
+        "postalCode": "881",
+        "region": "西嶼鄉"
+      },
+      {
+        "postalCode": "882",
+        "region": "望安鄉"
+      },
+      {
+        "postalCode": "883",
+        "region": "七美鄉"
+      },
+      {
+        "postalCode": "884",
+        "region": "白沙鄉"
+      },
+      {
+        "postalCode": "885",
+        "region": "湖西鄉"
+      }
+    ]
+  },
+  {
+    "city": "金門縣",
+    "regions": [
+      {
+        "postalCode": "890",
+        "region": "金沙鎮"
+      },
+      {
+        "postalCode": "891",
+        "region": "金湖鎮"
+      },
+      {
+        "postalCode": "892",
+        "region": "金寧鄉"
+      },
+      {
+        "postalCode": "893",
+        "region": "金城鎮"
+      },
+      {
+        "postalCode": "894",
+        "region": "烈嶼鄉"
+      },
+      {
+        "postalCode": "896",
+        "region": "烏坵鄉"
+      }
+    ]
+  },
+  {
+    "city": "連江縣",
+    "regions": [
+      {
+        "postalCode": "209",
+        "region": "南竿鄉"
+      },
+      {
+        "postalCode": "210",
+        "region": "北竿鄉"
+      },
+      {
+        "postalCode": "211",
+        "region": "莒光鄉"
+      },
+      {
+        "postalCode": "212",
+        "region": "東引鄉"
+      }
+    ]
+  }
+]

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/white_round_bg"
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/confirm_pay"
+            android:textColor="@color/gray_light"
+            android:textSize="@dimen/text_size_middle"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_pay_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="TWD 0.00"
+            android:textColor="@color/gray_middle"
+            android:textSize="26sp" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:src="@color/divider" />
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checkedButton="@+id/rb_mycard">
+
+            <RadioButton
+                android:id="@+id/rb_mycard"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@color/transparent"
+                android:button="@null"
+                android:drawableLeft="@drawable/ic_mycard_pay"
+                android:drawableRight="@drawable/radiobox_button"
+                android:drawablePadding="10dp"
+                android:text="MyCard"
+                android:textColor="@color/gray_middle"
+                android:textSize="18sp" />
+
+            <RadioButton
+                android:id="@+id/rb_googlepay"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@color/transparent"
+                android:button="@null"
+                android:drawableLeft="@drawable/ic_googlepay_big"
+                android:drawableRight="@drawable/radiobox_button"
+                android:drawablePadding="39dp"
+                android:text="Google Pay"
+                android:textColor="@color/gray_middle"
+                android:textSize="18sp" />
+
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/btn_confirm"
+            style="@style/ButtonPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/confirm_pay"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_42" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_dialog_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_margin="10dp"
+        android:padding="6dp"
+        android:src="@drawable/ic_close_x" />
+</RelativeLayout>

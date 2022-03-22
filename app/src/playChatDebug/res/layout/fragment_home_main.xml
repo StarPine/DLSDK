@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:binding="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.dl.play.chat.R" />
+
+        <import type="android.view.View" />
+
+        <import type="com.dl.play.chat.utils.SystemDictUtils" />
+
+        <variable
+            name="viewModel"
+            type="com.dl.play.chat.ui.home.HomeMainViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="162dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/message_popup"
+            android:clickable="true"
+            android:elevation="11dp"
+            android:visibility="@{viewModel.isShowMessageTag?View.VISIBLE:View.GONE}"
+            binding:onClickCommand="@{viewModel.toMessageTagUserOnClick}"
+            tools:visibility="gone">
+
+            <ImageView
+                android:layout_width="37dp"
+                android:layout_height="28dp"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/message_hint_close"
+                binding:onClickCommand="@{viewModel.hideMessageTagOnClick}" />
+
+            <com.dl.play.chat.widget.roundedimageview.RoundedImageView
+                android:id="@+id/iv_avatar"
+                android:layout_width="67dp"
+                android:layout_height="67dp"
+                android:layout_marginLeft="17dp"
+                android:layout_marginTop="24dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/default_avatar"
+                app:riv_oval="true"
+                binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
+                binding:imagePath="@{viewModel.messageTagEntity.avatar}"
+                binding:imagePlaceholderRes="@{R.drawable.default_avatar}" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="23dp"
+                android:layout_marginTop="30dp"
+                android:layout_toRightOf="@+id/iv_avatar"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="李安然"
+                    android:text="@{viewModel.messageTagEntity.nickname}"
+                    android:textColor="#ffffff"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:layout_width="43dp"
+                    android:layout_height="18dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="2dp"
+                    android:src="@drawable/ic_real_man"
+                    android:visibility="@{viewModel.messageTagEntity.certification==1?View.VISIBLE:View.GONE}" />
+
+                <ImageView
+                    android:layout_width="43dp"
+                    android:layout_height="18dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="2dp"
+                    android:src="@{viewModel.messageTagEntity.sex==1?@drawable/ic_vip:@drawable/ic_goddess}"
+                    android:visibility="@{viewModel.messageTagEntity.isVip==1?View.VISIBLE:View.GONE}"
+                    tools:src="@drawable/ic_goddess" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="23dp"
+                android:layout_marginTop="60dp"
+                android:layout_toRightOf="@+id/iv_avatar"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/MessageHintTag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{SystemDictUtils.getCityById(viewModel.messageTagEntity.cityId)}"
+                    tools:text="台北市" />
+
+                <TextView
+                    style="@style/MessageHintTag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="7dp"
+                    android:hint="26歲·獅子座"
+                    tools:text='@{viewModel.messageTagEntity.age+"·"+viewModel.messageTagEntity.constellation}' />
+
+                <TextView
+                    style="@style/MessageHintTag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="7dp"
+                    android:text="@{SystemDictUtils.getOccupationById(viewModel.messageTagEntity.occupationId)}"
+                    tools:hint="美容美髮" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/down_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="15dp"
+                android:layout_marginBottom="25dp"
+                android:hint="15s後自動拒絕！"
+                android:text="@{viewModel.countDownTimerUi}"
+                android:textColor="#ffffff"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="25dp"
+                android:layout_toRightOf="@+id/down_time"
+                android:text="@{viewModel.messageTagEntity.msg}"
+                android:textColor="#ffffffff"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:layout_width="45dp"
+                android:layout_height="38dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="18dp"
+                android:layout_marginBottom="18dp"
+                android:src="@drawable/ic_message_hint_title" />
+
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/transparentyin"
+            android:clickable="true"
+            android:elevation="1dp"
+            android:gravity="center"
+            tools:visibility="gone"
+            android:visibility="@{viewModel.showLocationAlert?View.VISIBLE:View.GONE}">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="396dp"
+                android:layout_marginLeft="17dp"
+                android:layout_marginRight="17dp"
+                android:background="@drawable/location_alert"
+
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="149dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dialog_location_title"
+                        android:textColor="@color/black"
+                        android:textSize="21dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="@string/dialog_location_title1"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/dialog_location_title_sel" />
+
+                    <TextView
+                        android:layout_width="140dp"
+                        android:layout_height="45dp"
+                        android:background="@drawable/location_alert_sel_icon"
+                        android:drawableRight="@drawable/lication_alert_sel_zk"
+                        android:gravity="center"
+                        android:hint="@string/dialog_location_title_sel_hint"
+                        android:paddingStart="-23dp"
+                        android:paddingRight="7dp"
+                        android:text="@{viewModel.SelConfigItemEntity.name}"
+                        android:textSize="16dp"
+                        app:onClickCommand="@{viewModel.clickLocationSelCommand}" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_confirm"
+                    style="@style/ButtonPrimary"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="42dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginRight="42dp"
+                    android:text="@string/confirm"
+                    app:onClickCommand="@{viewModel.clickbtnConfirm}" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:context=".ui.home.HomeMainFragment">
+
+            <View
+                android:id="@+id/status_bar_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@color/status_bar_color" />
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/AppTheme.AppBarOverlay"
+                app:elevation="0dp">
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/action_bar_height"
+                    android:background="?attr/colorPrimary"
+                    app:contentInsetStart="0dp"
+                    app:popupTheme="@style/AppTheme.PopupOverlay">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp">
+
+                        <ImageView
+                            android:id="@+id/iv_search"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_centerVertical="true"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/ic_search"
+                            binding:onClickCommand="@{viewModel.searchOnClickCommand}" />
+
+                        <Switch
+                            android:visibility="gone"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp"
+                            android:layout_toRightOf="@+id/iv_search"
+                            android:background="@android:color/transparent"
+                            android:button="@null"
+                            android:drawableStart="@drawable/gender_checkbok_background"
+                            android:scaleType="centerInside"
+                            android:thumb="@null"
+                            android:track="@null"
+                            binding:onClickCommand="@{viewModel.genderOnClickCommand}"
+                            binding:switchState="@{safeUnbox(viewModel.gender)}" />
+
+                        <TextView
+                            android:id="@+id/tv_location"
+                            style="@style/ActionBarTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:drawableRight="@drawable/ic_arrow_down"
+                            android:drawablePadding="5dp"
+                            android:padding="5dp"
+                            android:text="@{viewModel.regionTitle}"
+                            binding:onClickCommand="@{viewModel.regionOnClickCommand}" />
+
+                        <Switch
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:button="@null"
+                            android:paddingLeft="9dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="9dp"
+                            android:paddingBottom="7dp"
+                            android:text="@string/fragment_home_on_line"
+                            android:textColor="@drawable/online_checkbok_text_color"
+                            android:textSize="12sp"
+                            android:thumb="@null"
+                            android:track="@null"
+                            binding:onCheckedChangeCommand="@{viewModel.onlineOnCheckedChangeCommand}"
+                            binding:switchState="@{safeUnbox(viewModel.online)}" />
+                        <!--                    android:background="@drawable/online_checkbok_background"-->
+                    </RelativeLayout>
+                </androidx.appcompat.widget.Toolbar>
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/tab_bar_height"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp" />
+
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <TextView
+                android:id="@+id/tv_location_warn"
+                style="@style/TopWarn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/ic_arrow_right_golden"
+                android:text="未開啟定位服務，PlayChat無法計算你與其他用戶的距離"
+                android:visibility="@{viewModel.locationService?View.GONE:View.VISIBLE}" />
+
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:paddingBottom="@dimen/home_bottom_nav_height" />
+        </LinearLayout>
+
+
+        <com.dl.play.chat.widget.image.HomeShareImageView
+            android:layout_width="58dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="288dp"
+            android:layout_marginTop="430dp"
+            android:elevation="50dp"
+            android:clickable="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/nearby_accost_tip_img"
+            binding:onClickCommand="@{viewModel.toTaskClickCommand}" />
+
+    </RelativeLayout>
+
+</layout>

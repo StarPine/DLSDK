@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:padding="14dp">
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_coin"
+        android:drawablePadding="7.68dp"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:lines="1"
+        android:maxLength="16"
+        android:text=""
+        android:textColor="@color/gray_dark"
+        android:textSize="15.37sp" />
+
+    <TextView
+        android:id="@+id/first_hint"
+        android:background="@drawable/coin_first_recharge_backdrop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/tv_name"
+        android:layout_marginStart="5dp"
+        android:paddingStart="4dp"
+        android:paddingEnd="3dp"
+        android:paddingTop="1dp"
+        android:paddingBottom="1dp"
+        android:textSize="11sp"
+        android:visibility="gone"
+        android:textColor="@color/red"/>
+
+    <TextView
+        android:id="@+id/tv_price"
+        android:layout_width="wrap_content"
+        android:layout_height="28.64dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/pay_price_bg"
+        android:gravity="center"
+        android:minWidth="62.88dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:text="0"
+        android:textColor="@color/purple" />
+
+    <TextView
+        android:id="@+id/tv_old_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="14dp"
+        android:layout_toLeftOf="@+id/tv_price"
+        android:text="0"
+        android:textColor="@color/gray_light"
+        android:textSize="13.27sp"
+        android:visibility="gone" />
+
+</RelativeLayout>

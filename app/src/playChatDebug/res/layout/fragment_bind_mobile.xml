@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:binding="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.dl.play.chat.ui.mine.bindmobile.BindMobileViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".ui.mine.bindmobile.BindMobileFragment">
+
+        <View
+            android:id="@+id/status_bar_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/status_bar_color" />
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay"
+            app:elevation="0dp">
+
+            <com.dl.play.chat.widget.BasicToolbar
+                android:id="@+id/basic_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/action_bar_height"
+                app:toolbar_title="@string/fragment_bind_mobile_title" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/container_background"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <ImageView
+                android:id="@+id/iv_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="30dp"
+                android:src="@drawable/ic_bind_mobile" />
+
+            <TextView
+                android:id="@+id/tv_tip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iv_icon"
+                android:layout_marginLeft="14.8dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/fragment_bind_mobile_explain"
+                android:textColor="@color/gray_middle" />
+
+            <LinearLayout
+                android:id="@+id/ll_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_tip"
+                android:layout_marginTop="10dp"
+                android:clipToPadding="false"
+                android:orientation="vertical"
+                android:paddingBottom="30dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@drawable/edittext_background"
+                    android:orientation="horizontal"
+                    android:paddingLeft="14dp"
+                    android:paddingRight="14dp">
+
+                    <TextView
+                        style="@style/EditLabel"
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/phone_number_prefix_tw" />
+
+                    <EditText
+                        style="@style/EditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:hint="@string/mobile_hint"
+                        android:inputType="phone"
+                        android:maxLength="20"
+                        android:text="@={viewModel.mobile}" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@drawable/edittext_background"
+                    android:orientation="horizontal"
+                    android:paddingLeft="14dp"
+                    android:paddingRight="14dp">
+
+                    <TextView
+                        style="@style/EditLabel"
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/code" />
+
+                    <EditText
+                        style="@style/EditText"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:hint="@string/code_hint"
+                        android:inputType="number"
+                        android:maxLength="6"
+                        android:text="@={viewModel.code}" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:text="@={viewModel.downTimeStr}"
+                        android:textColor="#B35EDF"
+                        android:textSize="11sp"
+                        binding:onClickCommand="@{viewModel.sendSmsOnClickCommand}" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@drawable/edittext_background"
+                    android:orientation="horizontal"
+                    android:paddingLeft="14dp"
+                    android:paddingRight="14dp">
+
+                    <TextView
+                        style="@style/EditLabel"
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/setting_password" />
+
+                    <EditText
+                        style="@style/EditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:hint="@string/password_hint"
+                        android:inputType="textPassword"
+                        android:maxLength="32"
+                        android:text="@={viewModel.password}" />
+                </LinearLayout>
+
+                <Button
+                    style="@style/ButtonPrimary"
+                    android:layout_width="match_parent"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginRight="20dp"
+                    android:text="@string/confirm"
+                    binding:onClickCommand="@{viewModel.confirmOnClickCommand}" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+    </LinearLayout>
+</layout>

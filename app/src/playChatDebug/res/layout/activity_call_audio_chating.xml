@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:binding="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="com.dl.play.chat.R" />
+
+        <variable
+            name="viewModel"
+            type="com.dl.play.chat.kl.viewmodel.AudioCallChatingViewModel" />
+
+        <import type="me.tatarka.bindingcollectionadapter2.LayoutManagers" />
+
+        <import type="com.dl.play.chat.widget.recyclerview.LineManagers" />
+
+        <import type="androidx.recyclerview.widget.LinearLayoutManager" />
+    </data>
+
+    <RelativeLayout
+        android:id="@+id/main_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/call_audio_chating_bg">
+
+        <com.opensource.svgaplayer.SVGAImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:autoPlay="true"
+            app:source="shootingStar.svga" />
+
+        <TextView
+            android:id="@+id/time_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="22dp"
+            android:layout_marginTop="43dp"
+            android:text="@{viewModel.timeTextField}"
+            android:textColor="#ffececec"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:layout_width="19dp"
+            android:layout_height="19dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="42dp"
+            android:layout_marginRight="14dp"
+            android:onClick="@{viewModel.closeOnclick}"
+            android:src="@drawable/call_close" />
+
+        <RelativeLayout
+            android:id="@+id/tip_img_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="46dp"
+            android:layout_marginTop="135dp">
+
+            <LinearLayout
+                android:id="@+id/img_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.dl.play.chat.widget.image.CircleImageView
+                    android:id="@+id/cimg_avatar_left"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
+                    binding:imagePath="@{viewModel.leftUserInfoField.avatar}"
+                    binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
+                    tools:src="@drawable/default_avatar" />
+
+                <FrameLayout
+                    android:id="@+id/cimg_avatar_center"
+                    android:layout_width="86dp"
+                    android:layout_height="86dp"
+                    android:layout_toEndOf="@+id/cimg_avatar_left">
+
+                    <com.opensource.svgaplayer.SVGAImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:autoPlay="true"
+                        app:source="cardiac.svga" />
+                </FrameLayout>
+
+                <com.dl.play.chat.widget.image.CircleImageView
+                    android:id="@+id/cimg_avatar_right"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:layout_toEndOf="@+id/cimg_avatar_center"
+                    binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
+                    binding:imagePath="@{viewModel.rightUserInfoField.avatar}"
+                    binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
+                    tools:src="@drawable/default_avatar" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="21dp"
+                android:layout_height="21dp"
+                android:layout_below="@+id/img_layout"
+                android:layout_marginStart="34dp"
+                android:layout_marginTop="-12dp"
+                android:src="@drawable/call_audio_follow"
+                android:visibility="@{viewModel.collectedField==1?View.GONE:View.VISIBLE}"
+                binding:onClickCommand="@{viewModel.addlikeOnClickCommand}" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/img_layout"
+                android:layout_marginTop="13dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/left_user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:maxWidth="64dp"
+                    android:text="@{viewModel.leftUserInfoField.nickname}"
+                    android:textColor="@color/white"
+                    android:textSize="13sp" />
+
+                <ImageView
+                    android:layout_width="31dp"
+                    android:layout_height="13dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toEndOf="@+id/left_user_name"
+                    android:background="@{viewModel.getVipGodsImg(viewModel.leftUserInfoField)}"
+                    android:scaleType="centerCrop" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/img_layout"
+                android:layout_marginStart="197dp"
+                android:layout_marginTop="13dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/right_user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:maxWidth="64dp"
+                    android:text="@{viewModel.rightUserInfoField.nickname}"
+                    android:textColor="@color/white"
+                    android:textSize="13sp" />
+
+                <ImageView
+                    android:layout_width="31dp"
+                    android:layout_height="13dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toEndOf="@+id/right_user_name"
+                    android:background="@{viewModel.getVipGodsImg(viewModel.rightUserInfoField)}"
+                    android:scaleType="centerCrop" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rect_layout"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:layout_below="@+id/tip_img_layout"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="110dp"
+            android:layout_marginEnd="14dp"
+            android:layout_marginBottom="19dp"
+            android:background="@drawable/call_audio_rect_bg"
+            android:paddingLeft="8dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="7dp"
+            android:visibility="@{viewModel.sayHiEntityHidden?View.GONE:View.VISIBLE}">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:text="@string/call_audio_tips"
+                android:textColor="#FCFCFF"
+                android:textSize="11sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="5dp"
+                android:text="@{viewModel.sayHiEntityField.message}"
+                android:textColor="#FFF300"
+                android:textSize="13sp" />
+
+            <ImageView
+                android:id="@+id/iv_up_say_hi"
+                android:layout_width="21dp"
+                android:layout_height="21dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="46dp"
+                android:src="@drawable/call_audio_refresh"
+                binding:onClickCommand="@{viewModel.upSayHiEntityOnClickCommand}" />
+
+            <ImageView
+                android:layout_width="21dp"
+                android:layout_height="21dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="11dp"
+                android:src="@drawable/call_audio_close2"
+                binding:onClickCommand="@{viewModel.colseSayHiEntityOnClickCommand}" />
+        </RelativeLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcv_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/bottom_layout"
+            android:layout_below="@+id/rect_layout"
+            android:layout_marginBottom="54dp"
+            android:maxHeight="150dp"
+            android:paddingLeft="14dp"
+            binding:adapter="@{viewModel.adapter}"
+            binding:itemBinding="@{viewModel.itemBinding}"
+            binding:items="@{viewModel.observableList}"
+            binding:layoutManager="@{LayoutManagers.linear(LinearLayoutManager.VERTICAL,false)}" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/bottom_layout"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="14dp"
+            android:layout_marginBottom="14dp"
+            android:background="@drawable/border_purple_background_white"
+            android:gravity="center_vertical"
+            android:visibility="@{viewModel.girlEarningsField?View.VISIBLE:View.GONE}"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_coin_not"
+                android:layout_width="wrap_content"
+                android:layout_height="39dp"
+                android:gravity="center"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:scaleType="centerCrop"
+                android:text="@{viewModel.girlEarningsText}"
+                android:textSize="13sp"
+                tools:text="對方餘額不足，請提醒對方充值" />
+
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true"
+                android:layout_marginEnd="12dp"
+                android:src="@drawable/ic_close_x"
+                android:visibility="@{viewModel.isShowCountdown?View.VISIBLE:View.GONE}"
+                binding:onClickCommand="@{viewModel.closeMoney2}" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="39dp"
+            android:layout_above="@+id/bottom_layout"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="14dp"
+            android:background="@drawable/border_purple_background_white"
+            android:visibility="@{viewModel.maleTextLayoutSHow?View.VISIBLE:View.GONE}"
+            tools:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="12dp"
+                android:text="@{viewModel.maleTextMoneyField}"
+                android:textColor="#FFF1F2F9"
+                android:textSize="13sp" />
+
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="30dp"
+                android:layout_centerInParent="true"
+                android:layout_marginEnd="10dp"
+                android:layout_toStartOf="@+id/ic_close_money"
+                android:background="@drawable/btn_yellow_cicle"
+                android:gravity="center"
+                android:text="@string/dialong_coin_rechaege_top_up"
+                android:textColor="@color/purple1"
+                android:textSize="13sp"
+                binding:onClickCommand="@{viewModel.referMoney}" />
+
+            <ImageView
+                android:id="@+id/ic_close_money"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/ic_close_x"
+                binding:onClickCommand="@{viewModel.closeMoney}" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/bottom_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="43dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="47dp"
+                android:layout_height="47dp"
+                android:layout_marginTop="2dp"
+                android:src="@drawable/call_audiocall_backdrop"
+                binding:onClickCommand="@{viewModel.micMuteOnClickCommand}"
+                binding:stateActivated="@{viewModel.micMuteField}" />
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="47dp"
+                android:src="@drawable/call_audio_gift"
+                binding:onClickCommand="@{viewModel.giftBagOnClickCommand}" />
+
+            <ImageView
+                android:layout_width="47dp"
+                android:layout_height="47dp"
+                android:layout_marginLeft="47dp"
+                android:layout_marginTop="2dp"
+                android:src="@drawable/call_audio_speaker_backdrop"
+                binding:onClickCommand="@{viewModel.handsFreeOnClickCommand}"
+                binding:stateActivated="@{viewModel.handsFreeField}" />
+        </LinearLayout>
+
+        <com.opensource.svgaplayer.SVGAImageView
+            android:id="@+id/gift_effects"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:autoPlay="true" />
+    </RelativeLayout>
+</layout>

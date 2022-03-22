@@ -1,0 +1,137 @@
+package com.dl.playfun.ui.message.chatmessage;
+
+import android.app.Application;
+import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.databinding.ObservableField;
+
+import com.dl.playfun.app.AppContext;
+import com.dl.playfun.app.AppsFlyerEvent;
+import com.dl.playfun.data.AppRepository;
+import com.dl.playfun.data.source.http.observer.BaseObserver;
+import com.dl.playfun.data.source.http.response.BaseDataResponse;
+import com.dl.playfun.data.source.http.response.BaseResponse;
+import com.dl.playfun.entity.BrowseNumberEntity;
+import com.dl.playfun.entity.MessageChatNumberEntity;
+import com.dl.playfun.entity.UserDataEntity;
+import com.dl.playfun.ui.mine.trace.man.TraceManFragment;
+import com.dl.playfun.viewmodel.BaseViewModel;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import me.goldze.mvvmhabit.binding.command.BindingAction;
+import me.goldze.mvvmhabit.binding.command.BindingCommand;
+import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
+import me.goldze.mvvmhabit.utils.RxUtils;
+
+/**
+ * @author wulei
+ */
+public class ChatMessageViewModel extends BaseViewModel<AppRepository> {
+
+    UIChangeObservable uc = new UIChangeObservable();
+
+    public ObservableField<String> NewNumberText = new ObservableField<String>();
+    //跳转谁看过我
+    public BindingCommand traceOnClickCommand = new BindingCommand(new BindingAction() {
+        @Override
+        public void call() {
+            AppContext.instance().logEvent(AppsFlyerEvent.chat_seen_me);
+            Bundle bundle = new Bundle();
+            bundle.putInt("userId", model.readUserData().getId());
+            start(TraceManFragment.class.getCanonicalName(), bundle);
+            NewNumberText.set(null);
+        }
+    });
+
+    public ChatMessageViewModel(@NonNull Application application, AppRepository repository) {
+        super(application, repository);
+        getLocalUserData();
+    }
+    //请求谁看过我、粉丝间隔时间
+    private Long intervalTime = null;
+
+    //获取当前用户数据
+    public void getLocalUserData() {
+        uc.localUserDataEntity.postValue(model.readUserData());
+    }
+
+    public void checkChatNumber(int userId) {
+        model.isMessageChat(userId)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseDataResponse<MessageChatNumberEntity>>() {
+                    @Override
+                    public void onSuccess(BaseDataResponse<MessageChatNumberEntity> response) {
+                        dismissHUD();
+                        List<Integer> p = new ArrayList<>();
+                        p.add(userId);
+                        if (response.getData().getStatus() == 1) {
+                            p.add(-1);
+                            uc.askUseChatNumber.postValue(p);
+                        } else {
+                            p.add(response.getData().getNumber());
+                            uc.askUseChatNumber.postValue(p);
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        dismissHUD();
+                    }
+                });
+    }
+
+    public void useChatNumber(int userId) {
+        model.useMessageChat(userId)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseResponse>() {
+                    @Override
+                    public void onSuccess(BaseResponse response) {
+                        dismissHUD();
+                        uc.useChatNumberSuccess.postValue(userId);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        dismissHUD();
+                    }
+                });
+    }
+
+    public void newsBrowseNumber() {
+        long dayTime = System.currentTimeMillis();
+        if (intervalTime != null && (dayTime / 1000) - intervalTime.longValue() <= 2) {
+            return;
+        }
+        if (intervalTime == null) {
+            intervalTime = dayTime / 1000;
+        }
+        model.newsBrowseNumber()
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .subscribe(new BaseObserver<BaseDataResponse<BrowseNumberEntity>>() {
+                    @Override
+                    public void onSuccess(BaseDataResponse<BrowseNumberEntity> browseNumberEntity) {
+                        uc.loadBrowseNumber.setValue(browseNumberEntity.getData());
+                    }
+                });
+    }
+
+    public class UIChangeObservable {
+        public SingleLiveEvent<List<Integer>> askUseChatNumber = new SingleLiveEvent<>();
+        public SingleLiveEvent<Integer> useChatNumberSuccess = new SingleLiveEvent<>();
+        //查询本机用户资料
+        public SingleLiveEvent<UserDataEntity> localUserDataEntity = new SingleLiveEvent<>();
+        public SingleLiveEvent<BrowseNumberEntity> loadBrowseNumber = new SingleLiveEvent<>();
+    }
+
+}

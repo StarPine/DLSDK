@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:binding="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.dl.play.chat.ui.mine.task.record.list.ExchangeRecordListViewModel" />
+
+        <import type="android.view.View" />
+
+        <import type="me.tatarka.bindingcollectionadapter2.LayoutManagers" />
+
+        <import type="com.dl.play.chat.widget.recyclerview.LineManagers" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.scwang.smart.refresh.layout.SmartRefreshLayout
+            android:id="@+id/refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/bottomBar"
+            binding:onLoadMoreCommand="@{viewModel.onLoadMoreCommand}"
+            binding:onRefreshCommand="@{viewModel.onRefreshCommand}">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#FFF8F8F8">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    binding:adapter="@{viewModel.adapter}"
+                    binding:itemBinding="@{viewModel.itemBinding}"
+                    binding:items="@{viewModel.observableList}"
+                    binding:layoutManager="@{LayoutManagers.linear()}" />
+
+                <include
+                    layout="@layout/empty_view"
+                    app:stateModel="@{viewModel.stateModel}" />
+            </RelativeLayout>
+        </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+
+        <RelativeLayout
+            android:id="@+id/bottomBar"
+            android:layout_width="match_parent"
+            android:layout_height="81dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            android:visibility="@{viewModel.stateModel.empty?View.GONE:(viewModel.grend==0?View.VISIBLE:View.GONE)}">
+
+            <CheckBox
+                android:id="@+id/checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="14dp"
+                android:button="@null"
+                android:checked="@={viewModel.checkAll}"
+                android:drawableStart="@drawable/checkbox_list_record"
+                android:padding="10dp" />
+
+            <TextView
+                android:id="@+id/text_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="14dp"
+                android:layout_toEndOf="@id/checkbox"
+                android:text="@string/task_exchange_record_fragment_ceckAll"
+                android:textSize="@dimen/text_size_middle2" />
+
+            <Button
+                android:id="@+id/btn_confirm"
+                style="@style/ButtonPrimary"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_toEndOf="@+id/text_all"
+                android:text="@string/task_exchange_record_fragment_btn"
+                binding:onClickCommand="@{viewModel.clickBtnConfirm}" />
+        </RelativeLayout>
+    </RelativeLayout>
+</layout>

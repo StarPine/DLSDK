@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.dl.play.chat.ui.login.profile.ProfileViewModel" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/login_btn_background"
+        android:fadingEdge="vertical"
+        android:orientation="vertical"
+        android:scrollbars="vertical"
+        tools:context=".ui.login.register.RegisterFragment">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:orientation="vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <View
+                android:id="@+id/status_bar_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@color/status_bar_color" />
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/AppTheme.AppBarOverlay"
+                app:elevation="0dp">
+
+                <com.dl.play.chat.widget.BasicToolbar
+                    android:id="@+id/basic_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/action_bar_height" />
+
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="29dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="42dp"
+                android:layout_marginTop="60dp"
+                android:layout_marginRight="42dp"
+                android:background="@drawable/reg_user_process2"
+                android:maxWidth="330dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="42dp"
+                android:layout_marginTop="81dp"
+                android:text="@string/choose_name_your_are"
+                android:textColor="@color/gray_dark"
+                android:textSize="32dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="42dp"
+                android:layout_marginTop="21dp"
+                android:text="@string/choose_name_title"
+                android:textColor="#7C8698"
+                android:textSize="20dp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:layout_marginLeft="42dp"
+                android:layout_marginTop="53dp"
+                android:layout_marginRight="42dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/user_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:background="#F4F4F4"
+                    android:gravity="start"
+                    android:hint="@string/choose_name_hint"
+                    android:inputType="textMultiLine"
+                    android:maxLength="10"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="15dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="15dp"
+                    android:singleLine="false" />
+
+                <TextView
+                    android:id="@+id/tv_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginRight="10dp"
+                    android:text='0/10'
+                    android:textColor="@color/gray"
+                    android:textSize="@dimen/text_size_mini" />
+            </RelativeLayout>
+
+            <Button
+                style="@style/ButtonPrimary"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_below="@+id/iv_top_view"
+                android:layout_marginLeft="42dp"
+                android:layout_marginTop="59dp"
+                android:layout_marginRight="42dp"
+                android:text="@string/dialog_set_withdraw_account_confirm"
+                app:onClickCommand="@{viewModel.ConfirmName}" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</layout>

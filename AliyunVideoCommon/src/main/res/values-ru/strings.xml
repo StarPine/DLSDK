@@ -1,0 +1,33 @@
+<resources>
+    <string name="alivc_common_no_camera_permission">Использование камеры запрещено, пожалуйста, сначала откройте</string>
+    <string name="alivc_common_no_record_bluetooth_permission">Запись по Блютус запрещена, пожалуйста, сначала откройте</string>
+    <string name="alivc_common_no_record_audio_permission">Запись аудио запрещена, пожалуйста, сначала откройте</string>
+    <string name="alivc_common_no_read_phone_state_permission">Состояние телефона читать запрещено, пожалуйста, откройте сначала</string>
+    <string name="alivc_common_no_write_external_storage_permission">Запись на внешнее хранилище запрещена, пожалуйста, сначала откройте</string>
+    <string name="alivc_common_no_read_external_storage_permission">Внешнее хранилище не разрешено для чтения, пожалуйста, откройте сначала</string>
+
+    <string name="alivc_common_note">Примечание</string>
+    <string name="alivc_common_confirm">Подтвердите</string>
+
+    <string name="alivc_common_no_permission">Отсутствие разрешения</string>
+
+    <string name="aliyun_common_confirm">Хорошо</string>
+    <string name="aliyun_common_cancel">Отменить</string>
+    <string name="aliyun_common_update_app">Доступна новая версия. Перейти на новую версию?</string>
+    <string name="aliyun_common_updating">Обновление...</string>
+
+    <string name="alivc_common_operate_success">Успех</string>
+    <string name="alivc_common_operate_fail">Провал</string>
+    <string name="alivc_common_loading">Погрузка</string>
+    <string name="alivc_common_loading_end">Конец загрузки</string>
+    <string name="alivc_common_device_memory_not_enough">Недостаточно памяти. Пожалуйста, очистите кэш памяти</string>
+    <string name="alivc_common_creating_video_remind">Создание видео, пожалуйста, подождите</string>
+
+
+
+
+    <string name="alivc_common_download">Скачать</string>
+    <string name="alivc_common_cancel">Отменить</string>
+    <string name="alivc_common_no_free_memory">Недостаточно места на диске</string>
+
+</resources>
