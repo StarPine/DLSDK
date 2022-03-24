@@ -9,7 +9,7 @@
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.mine.task.record.TaskExchangeRecordViewModel" />
+            type="com.dl.playfun.ui.mine.task.record.TaskExchangeRecordViewModel" />
     </data>
 
     <LinearLayout
@@ -31,7 +31,7 @@
             app:elevation="0dp">
 
 
-            <com.dl.play.chat.widget.BasicToolbar
+            <com.dl.playfun.widget.BasicToolbar
                 android:id="@+id/basic_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
@@ -55,7 +55,7 @@
                         android:textSize="12sp"
                         binding:onClickCommand="@{viewModel.helpOnClickCommand}" />
                 </RelativeLayout>
-            </com.dl.play.chat.widget.BasicToolbar>
+            </com.dl.playfun.widget.BasicToolbar>
         </com.google.android.material.appbar.AppBarLayout>
 
         <com.google.android.material.tabs.TabLayout
@@ -70,7 +70,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.dl.play.chat.ui.mine.task.record.list.ShareImageView
+            <com.dl.playfun.ui.mine.task.record.list.ShareImageView
                 android:id="@+id/iv_help_admin"
                 android:layout_width="83dp"
                 android:layout_height="92dp"

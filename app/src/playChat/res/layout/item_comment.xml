@@ -7,9 +7,9 @@
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.mine.broadcast.mytrends.CommentItemViewModel" />
+            type="com.dl.playfun.ui.mine.broadcast.mytrends.CommentItemViewModel" />
 
-        <import type="com.dl.play.chat.R" />
+        <import type="com.dl.playfun.R" />
 
         <import type="android.view.View" />
     </data>

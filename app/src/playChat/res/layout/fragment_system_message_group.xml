@@ -6,7 +6,7 @@
 
     <data>
 
-        <import type="com.dl.play.chat.ui.message.systemmessagegroup.SystemMessageGroupViewModel" />
+        <import type="com.dl.playfun.ui.message.systemmessagegroup.SystemMessageGroupViewModel" />
 
         <variable
             name="viewModel"
@@ -14,7 +14,7 @@
 
         <import type="me.tatarka.bindingcollectionadapter2.LayoutManagers" />
 
-        <import type="com.dl.play.chat.widget.recyclerview.LineManagers" />
+        <import type="com.dl.playfun.widget.recyclerview.LineManagers" />
     </data>
 
     <FrameLayout

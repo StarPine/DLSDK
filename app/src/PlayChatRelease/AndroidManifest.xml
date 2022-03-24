@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.dl.play.chat">
+    package="com.dl.playfun">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -93,7 +93,7 @@
         <!-- 内容提供器 -用来安装APK -->
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.dl.play.chat.widget.dialog.version.UpdateFileProvider"
+            android:authorities="com.dl.playfun.widget.dialog.version.UpdateFileProvider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

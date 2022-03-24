@@ -5,7 +5,7 @@
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.mine.task.fukubukuro.FukubukuroViewModel" />
+            type="com.dl.playfun.ui.mine.task.fukubukuro.FukubukuroViewModel" />
     </data>
 
     <LinearLayout
@@ -28,16 +28,16 @@
                 android:progressDrawable="@drawable/progress_gradient_bg"
                 android:visibility="gone" />
 
-            <com.dl.play.chat.widget.action.StatusLayout
+            <com.dl.playfun.widget.action.StatusLayout
                 android:id="@+id/hl_browser_hint"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <com.dl.play.chat.ui.webview.BrowserView
+                <com.dl.playfun.ui.webview.BrowserView
                     android:id="@+id/web_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
-            </com.dl.play.chat.widget.action.StatusLayout>
+            </com.dl.playfun.widget.action.StatusLayout>
         </LinearLayout>
     </LinearLayout>
 </layout>

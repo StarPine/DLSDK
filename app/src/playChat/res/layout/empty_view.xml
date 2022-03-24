@@ -9,7 +9,7 @@
 
         <variable
             name="stateModel"
-            type="com.dl.play.chat.viewmodel.StateModel" />
+            type="com.dl.playfun.viewmodel.StateModel" />
     </data>
 
     <RelativeLayout

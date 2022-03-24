@@ -8,7 +8,7 @@
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.radio.publishdynamic.PublishDynamicViewModel" />
+            type="com.dl.playfun.ui.radio.publishdynamic.PublishDynamicViewModel" />
     </data>
 
     <LinearLayout
@@ -29,7 +29,7 @@
             android:theme="@style/AppTheme.AppBarOverlay"
             app:elevation="0dp">
 
-            <com.dl.play.chat.widget.BasicToolbar
+            <com.dl.playfun.widget.BasicToolbar
                 android:id="@+id/basic_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/action_bar_height"
@@ -89,7 +89,7 @@
                             android:textSize="@dimen/text_size_mini" />
                     </RelativeLayout>
 
-                    <com.dl.play.chat.widget.picchoose.PicChooseView
+                    <com.dl.playfun.widget.picchoose.PicChooseView
                         android:id="@+id/pic_choose_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

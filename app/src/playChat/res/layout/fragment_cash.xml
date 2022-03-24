@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.mine.wallet.cash.CashViewModel" />
+            type="com.dl.playfun.ui.mine.wallet.cash.CashViewModel" />
     </data>
 
     <RelativeLayout

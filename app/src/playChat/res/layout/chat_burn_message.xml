@@ -4,7 +4,7 @@
     android:layout_width="160dp"
     android:layout_height="160dp">
 
-    <com.dl.play.chat.widget.roundedimageview.RoundedImageView
+    <com.dl.playfun.widget.roundedimageview.RoundedImageView
         android:id="@+id/round_image_view"
         android:layout_width="160dp"
         android:layout_height="160dp"

@@ -6,7 +6,7 @@
 
     <data>
 
-        <import type="com.dl.play.chat.R" />
+        <import type="com.dl.playfun.R" />
 
         <import type="com.blankj.utilcode.util.StringUtils" />
 
@@ -14,7 +14,7 @@
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.mine.trace.man.TraceManItemViewModel" />
+            type="com.dl.playfun.ui.mine.trace.man.TraceManItemViewModel" />
     </data>
 
     <RelativeLayout
@@ -28,7 +28,7 @@
         android:paddingBottom="17.46dp"
         binding:onClickCommand="@{viewModel.AlertVipOnClickCommand}">
 
-        <com.dl.play.chat.widget.image.CircleImageView
+        <com.dl.playfun.widget.image.CircleImageView
             android:id="@+id/iv_avatar"
             android:layout_width="65dp"
             android:layout_height="65dp"

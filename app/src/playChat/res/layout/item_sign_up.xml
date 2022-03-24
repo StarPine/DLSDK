@@ -7,13 +7,13 @@
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.program.programdetail.ProgramDetailDynamicItemViewModel" />
+            type="com.dl.playfun.ui.program.programdetail.ProgramDetailDynamicItemViewModel" />
 
         <import type="android.view.View" />
 
-        <import type="com.dl.play.chat.R" />
+        <import type="com.dl.playfun.R" />
 
-        <import type="com.dl.play.chat.utils.TimeUtils" />
+        <import type="com.dl.playfun.utils.TimeUtils" />
     </data>
 
     <RelativeLayout
@@ -23,7 +23,7 @@
         android:clipToPadding="false"
         android:padding="13.97dp">
 
-        <com.dl.play.chat.widget.roundedimageview.RoundedImageView
+        <com.dl.playfun.widget.roundedimageview.RoundedImageView
             android:id="@+id/iv_avatar"
             android:layout_width="41.92dp"
             android:layout_height="41.92dp"

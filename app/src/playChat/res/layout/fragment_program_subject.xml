@@ -7,15 +7,15 @@
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.program.programsubject.ProgramSubjectViewModel" />
+            type="com.dl.playfun.ui.program.programsubject.ProgramSubjectViewModel" />
 
         <import type="me.tatarka.bindingcollectionadapter2.LayoutManagers" />
 
-        <import type="com.dl.play.chat.widget.recyclerview.LineManagers" />
+        <import type="com.dl.playfun.widget.recyclerview.LineManagers" />
 
         <variable
             name="adapter"
-            type="com.dl.play.chat.ui.program.programsubject.ProgramChooseRecyclerViewAdapter" />
+            type="com.dl.playfun.ui.program.programsubject.ProgramChooseRecyclerViewAdapter" />
 
     </data>
 

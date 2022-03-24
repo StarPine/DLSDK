@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/transparent">
 
-    <com.dl.play.chat.widget.image.ZoomImageView
+    <com.dl.playfun.widget.image.ZoomImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

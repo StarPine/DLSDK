@@ -8,11 +8,11 @@
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.program.searchprogramsite.SearchProgramSiteViewModel" />
+            type="com.dl.playfun.ui.program.searchprogramsite.SearchProgramSiteViewModel" />
 
         <import type="me.tatarka.bindingcollectionadapter2.LayoutManagers" />
 
-        <import type="com.dl.play.chat.widget.recyclerview.LineManagers" />
+        <import type="com.dl.playfun.widget.recyclerview.LineManagers" />
     </data>
 
     <LinearLayout

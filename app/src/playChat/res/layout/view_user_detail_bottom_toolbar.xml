@@ -10,7 +10,7 @@
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.userdetail.detail.UserDetailViewModel" />
+            type="com.dl.playfun.ui.userdetail.detail.UserDetailViewModel" />
     </data>
 
     <LinearLayout
@@ -22,7 +22,7 @@
         android:orientation="horizontal"
         android:visibility="@{viewModel.detailEntity.sex == null ? View.GONE:View.VISIBLE}">
 
-        <com.dl.play.chat.widget.DrawableCenterTextView
+        <com.dl.playfun.widget.DrawableCenterTextView
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
@@ -34,7 +34,7 @@
             android:textSize="13sp"
             binding:onClickCommand="@{viewModel.evaluateOnClickCommand}" />
 
-        <com.dl.play.chat.widget.DrawableCenterTextView
+        <com.dl.playfun.widget.DrawableCenterTextView
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
@@ -47,7 +47,7 @@
             android:textSize="13sp"
             binding:onClickCommand="@{viewModel.chatOnClickCommand}" />
 
-        <com.dl.play.chat.widget.DrawableCenterTextView
+        <com.dl.playfun.widget.DrawableCenterTextView
             android:id="@+id/dt_social_account"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -63,7 +63,7 @@
             binding:onClickCommand="@{viewModel.socialAccountOnClickCommand}" />
 
 
-        <com.dl.play.chat.widget.DrawableCenterTextView
+        <com.dl.playfun.widget.DrawableCenterTextView
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"

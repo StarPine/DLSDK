@@ -8,35 +8,35 @@
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.mine.broadcast.mytrends.TrendItemViewModel" />
+            type="com.dl.playfun.ui.mine.broadcast.mytrends.TrendItemViewModel" />
 
         <import type="me.tatarka.bindingcollectionadapter2.LayoutManagers" />
 
-        <import type="com.dl.play.chat.widget.recyclerview.LineManagers" />
+        <import type="com.dl.playfun.widget.recyclerview.LineManagers" />
 
         <variable
             name="adapter"
-            type="com.dl.play.chat.ui.mine.broadcast.mytrends.HeadRecyclerViewAdapter" />
+            type="com.dl.playfun.ui.mine.broadcast.mytrends.HeadRecyclerViewAdapter" />
 
         <variable
             name="ivadapter"
-            type="com.dl.play.chat.ui.mine.broadcast.mytrends.ImageRecyclerViewAdapter" />
+            type="com.dl.playfun.ui.mine.broadcast.mytrends.ImageRecyclerViewAdapter" />
 
         <variable
             name="commentadapter"
-            type="com.dl.play.chat.ui.mine.broadcast.mytrends.CommentRecyclerViewAdapter" />
+            type="com.dl.playfun.ui.mine.broadcast.mytrends.CommentRecyclerViewAdapter" />
 
         <import type="android.view.View" />
 
-        <import type="com.dl.play.chat.R" />
+        <import type="com.dl.playfun.R" />
 
-        <import type="com.dl.play.chat.utils.TimeUtils" />
+        <import type="com.dl.playfun.utils.TimeUtils" />
 
-        <import type="com.dl.play.chat.utils.ListUtils" />
+        <import type="com.dl.playfun.utils.ListUtils" />
 
         <import type="com.blankj.utilcode.util.StringUtils" />
 
-        <import type="com.dl.play.chat.utils.StringUtil" />
+        <import type="com.dl.playfun.utils.StringUtil" />
     </data>
 
     <LinearLayout
@@ -54,7 +54,7 @@
                 android:layout_marginEnd="80dp"
                 binding:onClickCommand="@{viewModel.avatarClick}">
 
-                <com.dl.play.chat.widget.image.CircleImageView
+                <com.dl.playfun.widget.image.CircleImageView
                     binding:onClickCommand="@{viewModel.avatarClick}"
                     android:id="@+id/user_img"
                     android:layout_width="34dp"
@@ -169,7 +169,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-                <com.dl.play.chat.widget.videoview.SampleCoverVideo
+                <com.dl.playfun.widget.videoview.SampleCoverVideo
                     android:visibility="@{StringUtils.isEmpty(viewModel.newsEntityObservableField.video)?View.GONE:View.VISIBLE}"
                     android:id="@+id/video_item_player"
                     android:layout_width="match_parent"
@@ -189,7 +189,7 @@
                     android:visibility="gone"
                     tools:visibility="gone" />
 
-                <com.dl.play.chat.widget.roundedimageview.RoundedImageView
+                <com.dl.playfun.widget.roundedimageview.RoundedImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
@@ -224,7 +224,7 @@
                     android:textSize="12sp"
                     tools:text="#想戀愛" />
 
-                <com.dl.play.chat.widget.FolderTextView
+                <com.dl.playfun.widget.FolderTextView
                     android:clickable="true"
                     android:id="@+id/content_text"
                     android:layout_width="match_parent"

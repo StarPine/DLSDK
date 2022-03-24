@@ -33,7 +33,7 @@
 
     </LinearLayout>
 
-    <com.dl.play.chat.widget.dialog.CustomCalendarView
+    <com.dl.playfun.widget.dialog.CustomCalendarView
         android:id="@+id/cameraView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

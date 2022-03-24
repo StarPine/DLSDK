@@ -6,15 +6,15 @@
 
     <data>
 
-        <import type="com.dl.play.chat.R" />
+        <import type="com.dl.playfun.R" />
 
         <import type="android.view.View" />
 
-        <import type="com.dl.play.chat.utils.TimeUtils" />
+        <import type="com.dl.playfun.utils.TimeUtils" />
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.message.applymessage.ApplyMessageItemViewModel" />
+            type="com.dl.playfun.ui.message.applymessage.ApplyMessageItemViewModel" />
     </data>
 
     <RelativeLayout
@@ -27,7 +27,7 @@
         binding:onClickCommand="@{viewModel.itemClick}"
         binding:onLongClickCommand="@{viewModel.itemLongClick}">
 
-        <com.dl.play.chat.widget.roundedimageview.RoundedImageView
+        <com.dl.playfun.widget.roundedimageview.RoundedImageView
             android:id="@+id/iv_avatar"
             android:layout_width="48dp"
             android:layout_height="48dp"
@@ -47,7 +47,7 @@
             app:htmlText="@{viewModel.itemEntity.content}"
             tools:text="Hi,歡迎來到PlayChat，在結交新朋友前，我們溫馨提醒您：\n1) 請遵守《平臺使用規範》和《廣播發布須知》，若發布違規內容（如：色情低俗裸露內容等），PlayChat有權對賬號作出限制權限，甚至凍結賬號處理。\n2) 在使用平臺過程中，若遇到任何問題需要幫助或者提供寶貴意見，請在個人中心-聯系人工客服，進行處理。\n我們的理念是Friendship empowers people!希望您在PlayChat上找到有價值的友情，玩得開心" />
 
-        <com.dl.play.chat.widget.roundedimageview.RoundedImageView
+        <com.dl.playfun.widget.roundedimageview.RoundedImageView
             android:id="@+id/iv_photo"
             android:layout_width="100dp"
             android:layout_height="100dp"

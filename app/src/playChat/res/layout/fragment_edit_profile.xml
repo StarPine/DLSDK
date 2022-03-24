@@ -8,14 +8,14 @@
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.mine.profile.EditProfileViewModel" />
+            type="com.dl.playfun.ui.mine.profile.EditProfileViewModel" />
 
-        <import type="com.dl.play.chat.R" />
+        <import type="com.dl.playfun.R" />
 
         <import type="android.view.View" />
 
-        <!--        <import type="com.dl.play.chat.utils.StringUtil" />-->
-        <import type="com.dl.play.chat.utils.SystemDictUtils" />
+        <!--        <import type="com.dl.playfun.utils.StringUtil" />-->
+        <import type="com.dl.playfun.utils.SystemDictUtils" />
 
     </data>
 
@@ -39,7 +39,7 @@
             android:theme="@style/AppTheme.AppBarOverlay"
             app:elevation="0dp">
 
-            <com.dl.play.chat.widget.BasicToolbar
+            <com.dl.playfun.widget.BasicToolbar
                 android:id="@+id/basic_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/action_bar_height"
@@ -62,7 +62,7 @@
                         android:text="@string/save"
                         binding:onClickCommand="@{viewModel.clickSave}" />
                 </RelativeLayout>
-            </com.dl.play.chat.widget.BasicToolbar>
+            </com.dl.playfun.widget.BasicToolbar>
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -115,7 +115,7 @@
                         android:text="*"
                         android:textColor="@color/purple" />
 
-                    <com.dl.play.chat.widget.roundedimageview.RoundedImageView
+                    <com.dl.playfun.widget.roundedimageview.RoundedImageView
                         android:id="@+id/iv_avatar"
                         android:layout_width="40dp"
                         android:layout_height="40dp"

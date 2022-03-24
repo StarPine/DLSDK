@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.message.photoreview.PhotoReviewViewModel" />
+            type="com.dl.playfun.ui.message.photoreview.PhotoReviewViewModel" />
     </data>
 
     <LinearLayout
@@ -28,7 +28,7 @@
             android:theme="@style/AppTheme.AppBarOverlay"
             app:elevation="0dp">
 
-            <com.dl.play.chat.widget.BasicToolbar
+            <com.dl.playfun.widget.BasicToolbar
                 android:id="@+id/basic_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/action_bar_height"
@@ -51,7 +51,7 @@
                         android:paddingBottom="5dp"
                         android:text="@string/send" />
                 </RelativeLayout>
-            </com.dl.play.chat.widget.BasicToolbar>
+            </com.dl.playfun.widget.BasicToolbar>
 
         </com.google.android.material.appbar.AppBarLayout>
 

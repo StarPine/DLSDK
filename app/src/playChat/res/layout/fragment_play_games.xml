@@ -5,7 +5,7 @@
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.webview.PlayGameViewModel1" />
+            type="com.dl.playfun.ui.webview.PlayGameViewModel1" />
     </data>
 
     <LinearLayout

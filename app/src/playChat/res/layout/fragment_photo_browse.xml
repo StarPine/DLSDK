@@ -10,11 +10,11 @@
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.userdetail.photobrowse.PhotoBrowseViewModel" />
+            type="com.dl.playfun.ui.userdetail.photobrowse.PhotoBrowseViewModel" />
 
         <import type="me.tatarka.bindingcollectionadapter2.LayoutManagers" />
 
-        <import type="com.dl.play.chat.widget.recyclerview.LineManagers" />
+        <import type="com.dl.playfun.widget.recyclerview.LineManagers" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

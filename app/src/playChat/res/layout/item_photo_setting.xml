@@ -6,18 +6,18 @@
 
         <import type="android.view.View" />
 
-        <import type="com.dl.play.chat.R" />
+        <import type="com.dl.playfun.R" />
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.mine.photosetting.PhotoSettingItemViewModel" />
+            type="com.dl.playfun.ui.mine.photosetting.PhotoSettingItemViewModel" />
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.dl.play.chat.widget.videoview.SampleCoverVideo
+        <com.dl.playfun.widget.videoview.SampleCoverVideo
             android:id="@+id/videoView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

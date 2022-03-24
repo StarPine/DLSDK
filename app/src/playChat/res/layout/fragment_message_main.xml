@@ -10,7 +10,7 @@
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.message.MessageMainViewModel" />
+            type="com.dl.playfun.ui.message.MessageMainViewModel" />
     </data>
 
     <LinearLayout

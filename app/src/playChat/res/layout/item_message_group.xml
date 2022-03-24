@@ -7,9 +7,9 @@
 
         <import type="android.view.View" />
 
-        <import type="com.dl.play.chat.utils.TimeUtils" />
+        <import type="com.dl.playfun.utils.TimeUtils" />
 
-        <import type="com.dl.play.chat.ui.message.systemmessagegroup.SystemMessageGroupItemViewModel" />
+        <import type="com.dl.playfun.ui.message.systemmessagegroup.SystemMessageGroupItemViewModel" />
 
         <variable
             name="viewModel"

@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.message.chooselocation.ChooseLocationItemViewModel" />
+            type="com.dl.playfun.ui.message.chooselocation.ChooseLocationItemViewModel" />
     </data>
 
     <RelativeLayout

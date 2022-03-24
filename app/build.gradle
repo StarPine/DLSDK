@@ -10,8 +10,8 @@ if(rootProject.ext.BuildSdkPlayfun){
     apply from: 'aab_res_guard.gradle'
 }
 android {
-    if(rootProject.ext.BuildSdkPlayfun){
-        packagingOptions {
+    packagingOptions {
+        if(rootProject.ext.BuildSdkPlayfun){
             exclude 'META-INF/DEPENDENCIES'
             exclude 'META-INF/NOTICE'
             exclude 'META-INF/NOTICE.txt'
@@ -21,12 +21,11 @@ android {
             exclude 'lib/x86_64/*.so'
             exclude 'lib/armeabi/*.so'
             exclude 'lib/arm64-v8a/*.so'
-        }
-    }else{
-        packagingOptions {
+        }else{
             exclude('META-INF/LICENSE')
             exclude('META-INF/beans.xml')
         }
+
     }
 
     signingConfigs {
@@ -126,7 +125,6 @@ android {
     flavorDimensions "distribute"
     //定义的配置 最终会在Build Variants里面呈现出来
     productFlavors {
-
         // PlayChat台湾版配置 BuildPlayChatRelease (false = Debug 或 true = 正式包)
         PlayChat {
             dimension "distribute"
@@ -238,19 +236,19 @@ android {
         if(!rootProject.ext.BuildSdkPlayfun){
             if(!BuildPlayChatRelease){
                 //java文件指定为 playChat模块下
-                java.srcDirs=['src/playChat/java']
+                main.java.srcDirs=['src/main/java','src/playChat/java']
                 //清单文件指定为 playChat模块下
-                manifest.srcFile 'src/playChat/AndroidManifest.xml'
+                main.manifest.srcFile 'src/playChat/AndroidManifest.xml'
             }else{
                 //替换java文件 合并替换debug、release下的相同代码文件
-                java.srcDirs=['src/playChat/java', 'src/PlayChatRelease/java']
-                manifest.srcFile 'src/PlayChatRelease/AndroidManifest.xml'
+                main.java.srcDirs=['src/playChat/java', 'src/PlayChatRelease/java']
+                main.manifest.srcFile 'src/PlayChatRelease/AndroidManifest.xml'
             }
             //其它资源文件
-            resources.srcDirs = ['src/playChat/res']
-            res.srcDirs = ['src/playChat/res']
-            assets.srcDirs = ['src/playChat/assets']
-            jniLibs.srcDirs = ['src/playChat/jniLibs']
+//            resources.srcDirs = ['src/playChat/res']
+            main.res.srcDirs = ['src/playChat/res']
+            main.assets.srcDirs = ['src/playChat/assets']
+            main.jniLibs.srcDirs = ['src/playChat/jniLibs']
         }
     }
     //条件判断-是打apk包

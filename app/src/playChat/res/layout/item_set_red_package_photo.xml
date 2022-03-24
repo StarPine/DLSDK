@@ -6,14 +6,14 @@
 
         <import type="android.view.View" />
 
-        <import type="com.dl.play.chat.R" />
+        <import type="com.dl.playfun.R" />
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.mine.setredpackagephoto.SetRedPackagePhotoItemViewModel" />
+            type="com.dl.playfun.ui.mine.setredpackagephoto.SetRedPackagePhotoItemViewModel" />
     </data>
 
-    <com.dl.play.chat.widget.SquareLayout
+    <com.dl.playfun.widget.SquareLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="1dp"
@@ -56,5 +56,5 @@
             android:padding="4dp"
             android:visibility="@{viewModel.itemEntity.verificationType == 1 ? View.VISIBLE:View.GONE}" />
 
-    </com.dl.play.chat.widget.SquareLayout>
+    </com.dl.playfun.widget.SquareLayout>
 </layout>

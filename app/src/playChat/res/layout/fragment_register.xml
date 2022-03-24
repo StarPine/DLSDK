@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.login.viewmodel.LoginViewModel" />
+            type="com.dl.playfun.ui.login.viewmodel.LoginViewModel" />
     </data>
 
     <ScrollView

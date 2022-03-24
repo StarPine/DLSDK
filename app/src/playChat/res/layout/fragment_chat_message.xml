@@ -5,7 +5,7 @@
 
     <data>
 
-        <import type="com.dl.play.chat.ui.message.chatmessage.ChatMessageViewModel" />
+        <import type="com.dl.playfun.ui.message.chatmessage.ChatMessageViewModel" />
 
         <variable
             name="viewModel"
@@ -14,7 +14,7 @@
         <import type="android.view.View" />
         <import type="me.tatarka.bindingcollectionadapter2.LayoutManagers" />
 
-        <import type="com.dl.play.chat.widget.recyclerview.LineManagers" />
+        <import type="com.dl.playfun.widget.recyclerview.LineManagers" />
     </data>
 
     <LinearLayout
@@ -41,7 +41,7 @@
                     android:layout_height="57dp"
                     android:elevation="11dp"
                     android:src="@drawable/message_chat_border_img"/>
-                <com.dl.play.chat.widget.image.CircleImageView
+                <com.dl.playfun.widget.image.CircleImageView
                     android:layout_width="51dp"
                     android:layout_height="51dp"
                     android:layout_centerInParent="true"

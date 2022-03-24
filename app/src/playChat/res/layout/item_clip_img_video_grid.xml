@@ -4,11 +4,11 @@
 
     <data>
 
-        <import type="com.dl.play.chat.R" />
+        <import type="com.dl.playfun.R" />
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.radio.issuanceprogram.clip.ClipItemViewModel" />
+            type="com.dl.playfun.ui.radio.issuanceprogram.clip.ClipItemViewModel" />
     </data>
 
     <RelativeLayout

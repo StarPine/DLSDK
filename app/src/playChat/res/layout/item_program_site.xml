@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.program.adapter.ProgramSiteItemViewModel" />
+            type="com.dl.playfun.ui.program.adapter.ProgramSiteItemViewModel" />
     </data>
 
     <LinearLayout

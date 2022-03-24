@@ -6,13 +6,13 @@
 
     <data>
 
-        <import type="com.dl.play.chat.R" />
+        <import type="com.dl.playfun.R" />
 
         <import type="android.view.View" />
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.message.coinredpackagedetail.CoinRedPackageDetailViewModel" />
+            type="com.dl.playfun.ui.message.coinredpackagedetail.CoinRedPackageDetailViewModel" />
     </data>
 
     <RelativeLayout
@@ -39,7 +39,7 @@
                     android:adjustViewBounds="true"
                     android:src="@drawable/redpackage_detail_top" />
 
-                <com.dl.play.chat.widget.roundedimageview.RoundedImageView
+                <com.dl.playfun.widget.roundedimageview.RoundedImageView
                     android:id="@+id/iv_avatar"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
@@ -159,7 +159,7 @@
             android:theme="@style/AppTheme.AppBarOverlay"
             app:elevation="0dp">
 
-            <com.dl.play.chat.widget.BasicToolbar
+            <com.dl.playfun.widget.BasicToolbar
                 android:id="@+id/basic_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/action_bar_height"

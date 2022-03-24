@@ -8,21 +8,21 @@
 
         <import type="android.view.View" />
 
-        <import type="com.dl.play.chat.utils.SystemDictUtils" />
+        <import type="com.dl.playfun.utils.SystemDictUtils" />
 
         <import type="com.blankj.utilcode.util.StringUtils" />
 
         <import type="com.blankj.utilcode.util.ObjectUtils" />
 
-        <import type="com.dl.play.chat.R" />
+        <import type="com.dl.playfun.R" />
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.userdetail.detail.UserDetailViewModel" />
+            type="com.dl.playfun.ui.userdetail.detail.UserDetailViewModel" />
 
         <import type="me.tatarka.bindingcollectionadapter2.LayoutManagers" />
 
-        <import type="com.dl.play.chat.widget.recyclerview.LineManagers" />
+        <import type="com.dl.playfun.widget.recyclerview.LineManagers" />
     </data>
 
     <RelativeLayout
@@ -63,7 +63,7 @@
                     android:layout_marginBottom="7dp"
                     android:clickable="true">
 
-                    <com.dl.play.chat.widget.image.CircleImageView
+                    <com.dl.playfun.widget.image.CircleImageView
                         android:id="@+id/min_user_img"
                         android:layout_width="29dp"
                         android:layout_height="29dp"
@@ -214,7 +214,7 @@
                                                 android:layout_height="69dp"
                                                 android:background="@drawable/circle_white" />
 
-                                            <com.dl.play.chat.widget.image.CircleImageView
+                                            <com.dl.playfun.widget.image.CircleImageView
                                                 android:layout_width="67dp"
                                                 android:layout_height="67dp"
                                                 android:layout_marginStart="1dp"
@@ -552,7 +552,7 @@
                                                     android:visibility="@{ObjectUtils.isEmpty(viewModel.detailEntity.news) ? View.GONE:View.VISIBLE}"
                                                     tools:visibility="gone">
 
-                                                    <com.dl.play.chat.widget.roundedimageview.RoundedImageView
+                                                    <com.dl.playfun.widget.roundedimageview.RoundedImageView
                                                         android:layout_width="66dp"
                                                         android:layout_height="66dp"
                                                         android:layout_centerVertical="true"
@@ -564,7 +564,7 @@
                                                         binding:imageErrorPlaceholderRes="@{R.drawable.default_placeholder_img}"
                                                         binding:imageThumbPath="@{viewModel.dynamicPic1}" />
 
-                                                    <com.dl.play.chat.widget.roundedimageview.RoundedImageView
+                                                    <com.dl.playfun.widget.roundedimageview.RoundedImageView
                                                         android:layout_width="66dp"
                                                         android:layout_height="66dp"
                                                         android:layout_centerVertical="true"
@@ -576,7 +576,7 @@
                                                         binding:imageErrorPlaceholderRes="@{R.drawable.default_placeholder_img}"
                                                         binding:imageThumbPath="@{viewModel.dynamicPic2}" />
 
-                                                    <com.dl.play.chat.widget.roundedimageview.RoundedImageView
+                                                    <com.dl.playfun.widget.roundedimageview.RoundedImageView
                                                         android:layout_width="66dp"
                                                         android:layout_height="66dp"
                                                         android:layout_centerVertical="true"
@@ -594,7 +594,7 @@
                                                         android:layout_centerVertical="true"
                                                         android:layout_gravity="start">
 
-                                                        <com.dl.play.chat.widget.roundedimageview.RoundedImageView
+                                                        <com.dl.playfun.widget.roundedimageview.RoundedImageView
                                                             android:layout_width="66dp"
                                                             android:layout_height="66dp"
                                                             android:scaleType="centerCrop"
@@ -754,7 +754,7 @@
                                                     android:textSize="12sp"
                                                     android:visibility="@{viewModel.isUserTagShow?View.GONE:View.VISIBLE}" />
 
-                                                <com.dl.play.chat.widget.custom.FlowLayout
+                                                <com.dl.playfun.widget.custom.FlowLayout
                                                     android:id="@+id/flow_layout"
                                                     android:layout_width="match_parent"
                                                     android:layout_height="wrap_content"

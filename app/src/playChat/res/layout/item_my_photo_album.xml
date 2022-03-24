@@ -8,21 +8,21 @@
 
         <import type="android.view.View" />
 
-        <import type="com.dl.play.chat.R" />
+        <import type="com.dl.playfun.R" />
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.mine.myphotoalbum.MyPhotoAlbumItemViewModel" />
+            type="com.dl.playfun.ui.mine.myphotoalbum.MyPhotoAlbumItemViewModel" />
     </data>
 
-    <com.dl.play.chat.widget.SquareLayout
+    <com.dl.playfun.widget.SquareLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="2dp"
         binding:onClickCommand="@{viewModel.itemClick}"
         binding:onLongClickCommand="@{viewModel.itemLongClick}">
 
-        <com.dl.play.chat.widget.roundedimageview.RoundedImageView
+        <com.dl.playfun.widget.roundedimageview.RoundedImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
@@ -110,5 +110,5 @@
             tools:visibility="gone" />
 
 
-    </com.dl.play.chat.widget.SquareLayout>
+    </com.dl.playfun.widget.SquareLayout>
 </layout>

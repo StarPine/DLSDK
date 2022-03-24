@@ -11,11 +11,11 @@
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.radio.programlist.ProgramListViewModel" />
+            type="com.dl.playfun.ui.radio.programlist.ProgramListViewModel" />
 
         <import type="me.tatarka.bindingcollectionadapter2.LayoutManagers" />
 
-        <import type="com.dl.play.chat.widget.recyclerview.LineManagers" />
+        <import type="com.dl.playfun.widget.recyclerview.LineManagers" />
     </data>
 
 
@@ -112,7 +112,7 @@
 
                         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-                        <com.dl.play.chat.widget.RadioFilterView
+                        <com.dl.playfun.widget.RadioFilterView
                             android:id="@+id/radio_filter_view"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

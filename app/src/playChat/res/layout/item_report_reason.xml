@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.userdetail.report.ReportItemViewModel" />
+            type="com.dl.playfun.ui.userdetail.report.ReportItemViewModel" />
 
         <import type="android.view.View" />
     </data>

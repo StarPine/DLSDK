@@ -8,13 +8,13 @@
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.mine.trace.man.TraeManViewModel" />
+            type="com.dl.playfun.ui.mine.trace.man.TraeManViewModel" />
 
         <import type="android.view.View" />
 
         <import type="me.tatarka.bindingcollectionadapter2.LayoutManagers" />
 
-        <import type="com.dl.play.chat.widget.recyclerview.LineManagers" />
+        <import type="com.dl.playfun.widget.recyclerview.LineManagers" />
 
     </data>
 
@@ -36,7 +36,7 @@
             android:theme="@style/AppTheme.AppBarOverlay"
             app:elevation="0dp">
 
-            <com.dl.play.chat.widget.BasicToolbar
+            <com.dl.playfun.widget.BasicToolbar
                 android:id="@+id/basic_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/action_bar_height"

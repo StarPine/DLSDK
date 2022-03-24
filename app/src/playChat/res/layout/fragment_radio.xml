@@ -6,19 +6,19 @@
 
     <data>
 
-        <import type="com.dl.play.chat.R" />
+        <import type="com.dl.playfun.R" />
 
         <import type="android.view.View" />
 
-        <import type="com.dl.play.chat.utils.SystemDictUtils" />
+        <import type="com.dl.playfun.utils.SystemDictUtils" />
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.radio.radiohome.RadioViewModel" />
+            type="com.dl.playfun.ui.radio.radiohome.RadioViewModel" />
 
         <import type="me.tatarka.bindingcollectionadapter2.LayoutManagers" />
 
-        <import type="com.dl.play.chat.widget.recyclerview.LineManagers" />
+        <import type="com.dl.playfun.widget.recyclerview.LineManagers" />
     </data>
 
     <LinearLayout
@@ -70,7 +70,7 @@
                     android:src="@drawable/message_hint_close"
                     binding:onClickCommand="@{viewModel.hideMessageTagOnClick}" />
 
-                <com.dl.play.chat.widget.roundedimageview.RoundedImageView
+                <com.dl.playfun.widget.roundedimageview.RoundedImageView
                     android:id="@+id/iv_avatar"
                     android:layout_width="67dp"
                     android:layout_height="67dp"
@@ -298,7 +298,7 @@
                             </RelativeLayout>
                         </LinearLayout>
 
-                        <com.dl.play.chat.widget.RadioFilterView
+                        <com.dl.playfun.widget.RadioFilterView
                             android:id="@+id/radio_filter_view"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />

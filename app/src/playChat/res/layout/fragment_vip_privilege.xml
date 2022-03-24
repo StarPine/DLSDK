@@ -7,13 +7,13 @@
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.mine.vipprivilege.VipPrivilegeViewModel" />
+            type="com.dl.playfun.ui.mine.vipprivilege.VipPrivilegeViewModel" />
 
         <import type="android.view.View" />
 
         <import type="me.tatarka.bindingcollectionadapter2.LayoutManagers" />
 
-        <import type="com.dl.play.chat.widget.recyclerview.LineManagers" />
+        <import type="com.dl.playfun.widget.recyclerview.LineManagers" />
 
         <import type="androidx.recyclerview.widget.LinearLayoutManager" />
     </data>
@@ -36,7 +36,7 @@
             android:theme="@style/AppTheme.AppBarOverlay"
             app:elevation="0dp">
 
-            <com.dl.play.chat.widget.BasicToolbar
+            <com.dl.playfun.widget.BasicToolbar
                 android:id="@+id/basic_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/action_bar_height"

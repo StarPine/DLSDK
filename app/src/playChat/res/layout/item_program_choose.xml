@@ -7,9 +7,9 @@
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.program.programsubject.ProgramChooseItemViewModel" />
+            type="com.dl.playfun.ui.program.programsubject.ProgramChooseItemViewModel" />
 
-        <import type="com.dl.play.chat.R" />
+        <import type="com.dl.playfun.R" />
     </data>
 
     <LinearLayout
@@ -18,12 +18,12 @@
         android:orientation="vertical"
         binding:onClickCommand="@{viewModel.itemClick}">
 
-        <com.dl.play.chat.widget.SquareLayout
+        <com.dl.playfun.widget.SquareLayout
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:padding="5dp">
 
-            <com.dl.play.chat.widget.roundedimageview.RoundedImageView
+            <com.dl.playfun.widget.roundedimageview.RoundedImageView
                 android:id="@+id/iv_avatar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -34,7 +34,7 @@
                 binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
                 binding:imageThumbPath="@{viewModel.configItemEntityObservableField.icon}" />
 
-        </com.dl.play.chat.widget.SquareLayout>
+        </com.dl.playfun.widget.SquareLayout>
 
         <TextView
             android:layout_width="wrap_content"

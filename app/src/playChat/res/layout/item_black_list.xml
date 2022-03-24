@@ -5,13 +5,13 @@
 
     <data>
 
-        <import type="com.dl.play.chat.R" />
+        <import type="com.dl.playfun.R" />
 
         <import type="android.view.View" />
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.mine.blacklist.BlackListItemViewModel" />
+            type="com.dl.playfun.ui.mine.blacklist.BlackListItemViewModel" />
     </data>
 
     <RelativeLayout
@@ -21,7 +21,7 @@
         android:padding="14dp"
         binding:onClickCommand="@{viewModel.itemClick}">
 
-        <com.dl.play.chat.widget.roundedimageview.RoundedImageView
+        <com.dl.playfun.widget.roundedimageview.RoundedImageView
             android:id="@+id/iv_avatar"
             android:layout_width="50dp"
             android:layout_height="50dp"

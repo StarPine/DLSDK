@@ -6,13 +6,13 @@
 
     <data>
 
-        <import type="com.dl.play.chat.utils.TimeUtils" />
+        <import type="com.dl.playfun.utils.TimeUtils" />
 
         <import type="android.view.View" />
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.message.evaluatemessage.EvaluateMessageItemViewModel" />
+            type="com.dl.playfun.ui.message.evaluatemessage.EvaluateMessageItemViewModel" />
     </data>
 
     <RelativeLayout

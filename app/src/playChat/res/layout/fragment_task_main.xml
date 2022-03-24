@@ -4,13 +4,13 @@
 
     <data>
 
-        <import type="com.dl.play.chat.R" />
+        <import type="com.dl.playfun.R" />
 
         <import type="android.view.View" />
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.mine.task.main.TaskMainViewModel" />
+            type="com.dl.playfun.ui.mine.task.main.TaskMainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

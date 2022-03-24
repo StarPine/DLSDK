@@ -4,11 +4,11 @@
 
     <data>
 
-        <import type="com.dl.play.chat.R" />
+        <import type="com.dl.playfun.R" />
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.radio.issuanceprogram.RadioDatingItemViewModel" />
+            type="com.dl.playfun.ui.radio.issuanceprogram.RadioDatingItemViewModel" />
     </data>
 
     <RelativeLayout

@@ -8,15 +8,15 @@
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.program.programdetail.ProgramDetailViewModel" />
+            type="com.dl.playfun.ui.program.programdetail.ProgramDetailViewModel" />
 
         <import type="me.tatarka.bindingcollectionadapter2.LayoutManagers" />
 
-        <import type="com.dl.play.chat.widget.recyclerview.LineManagers" />
+        <import type="com.dl.playfun.widget.recyclerview.LineManagers" />
 
         <variable
             name="adapter"
-            type="com.dl.play.chat.ui.program.programdetail.ProgramRecyclerViewAdapter" />
+            type="com.dl.playfun.ui.program.programdetail.ProgramRecyclerViewAdapter" />
 
         <import type="android.view.View" />
     </data>
@@ -39,7 +39,7 @@
             android:theme="@style/AppTheme.AppBarOverlay"
             app:elevation="0dp">
 
-            <com.dl.play.chat.widget.BasicToolbar
+            <com.dl.playfun.widget.BasicToolbar
                 android:id="@+id/basic_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/action_bar_height"

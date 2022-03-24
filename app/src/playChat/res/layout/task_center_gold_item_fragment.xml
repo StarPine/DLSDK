@@ -3,13 +3,13 @@
 
     <data>
 
-        <import type="com.dl.play.chat.R" />
+        <import type="com.dl.playfun.R" />
 
         <import type="android.view.View" />
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.mine.task.golddetail.GoldDetailItemViewModel" />
+            type="com.dl.playfun.ui.mine.task.golddetail.GoldDetailItemViewModel" />
     </data>
 
     <RelativeLayout

@@ -5,10 +5,10 @@
 
     <data>
         <import type="android.view.View" />
-        <import type="com.dl.play.chat.R" />
+        <import type="com.dl.playfun.R" />
         <variable
             name="viewModel"
-            type="com.dl.play.chat.kl.viewmodel.VideoCallChatingItemViewModel" />
+            type="com.dl.playfun.kl.viewmodel.VideoCallChatingItemViewModel" />
     </data>
     <LinearLayout
         android:background="@drawable/call_audio_chating_item_backdrop"

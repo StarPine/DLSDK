@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.mine.choosesex.ChooseSexViewModel" />
+            type="com.dl.playfun.ui.mine.choosesex.ChooseSexViewModel" />
     </data>
 
     <ScrollView

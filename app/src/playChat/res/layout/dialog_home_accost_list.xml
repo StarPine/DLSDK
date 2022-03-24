@@ -95,7 +95,7 @@
                         app:lottie_loop="false"
                         app:lottie_rawRes="@raw/accost_animation" />
 
-                    <com.dl.play.chat.widget.image.CircleImageView
+                    <com.dl.playfun.widget.image.CircleImageView
                         android:id="@+id/item_entity_img1"
                         android:layout_width="58dp"
                         android:layout_height="58dp"
@@ -177,7 +177,7 @@
                         app:lottie_loop="false"
                         app:lottie_rawRes="@raw/accost_animation" />
 
-                    <com.dl.play.chat.widget.image.CircleImageView
+                    <com.dl.playfun.widget.image.CircleImageView
                         android:id="@+id/item_entity_img2"
                         android:layout_width="58dp"
                         android:layout_height="58dp"
@@ -260,7 +260,7 @@
                         app:lottie_loop="false"
                         app:lottie_rawRes="@raw/accost_animation" />
 
-                    <com.dl.play.chat.widget.image.CircleImageView
+                    <com.dl.playfun.widget.image.CircleImageView
                         android:id="@+id/item_entity_img3"
                         android:layout_width="58dp"
                         android:layout_height="58dp"
@@ -343,7 +343,7 @@
                         app:lottie_loop="false"
                         app:lottie_rawRes="@raw/accost_animation" />
 
-                    <com.dl.play.chat.widget.image.CircleImageView
+                    <com.dl.playfun.widget.image.CircleImageView
                         android:id="@+id/item_entity_img4"
                         android:layout_width="58dp"
                         android:layout_height="58dp"
@@ -425,7 +425,7 @@
                         app:lottie_loop="false"
                         app:lottie_rawRes="@raw/accost_animation" />
 
-                    <com.dl.play.chat.widget.image.CircleImageView
+                    <com.dl.playfun.widget.image.CircleImageView
                         android:id="@+id/item_entity_img5"
                         android:layout_width="58dp"
                         android:layout_height="58dp"
@@ -508,7 +508,7 @@
                         app:lottie_loop="false"
                         app:lottie_rawRes="@raw/accost_animation" />
 
-                    <com.dl.play.chat.widget.image.CircleImageView
+                    <com.dl.playfun.widget.image.CircleImageView
                         android:id="@+id/item_entity_img6"
                         android:layout_width="58dp"
                         android:layout_height="58dp"

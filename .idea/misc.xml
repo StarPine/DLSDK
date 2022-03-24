@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android-Project/PlayFun_Google/app/src/playChat/res/layout/dialog_home_accost_list.xml" value="0.1" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/gradle-build/app/intermediates/exploded-aar/PlayFun_Google/customDrawable/unspecified/playFunDebugDebug/res/drawable/radius_purple.xml" value="0.1155" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/gradle-build/app/intermediates/exploded-aar/PlayFun_Google/tuicontact/unspecified/playFunDebugDebug/res/drawable/switch_thumb.xml" value="0.16" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/gradle-build/app/intermediates/exploded-aar/PlayFun_Google/tuicore/unspecified/playFunDebugDebug/res/drawable/switch_thumb.xml" value="0.1155" />

@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.dl.play.chat.ui.message.searchaddress.SearchAddressItemViewModel" />
+            type="com.dl.playfun.ui.message.searchaddress.SearchAddressItemViewModel" />
     </data>
 
     <LinearLayout
