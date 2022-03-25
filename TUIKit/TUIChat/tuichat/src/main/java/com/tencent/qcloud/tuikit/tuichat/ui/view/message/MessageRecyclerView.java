@@ -50,7 +50,7 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
     //追踪消息的msgId
     public static String addLikeMsgId = null;
     public static boolean certification = false;
-    public static boolean flagTipMoney = false;//收益提示开关
+    public static boolean flagTipMoney = false;//收入提示开关
     private final MessageProperties properties = MessageProperties.getInstance();
     protected OnItemLongClickListener mOnItemLongClickListener;
     protected MessageRecyclerView.OnLoadMoreHandler mHandler;
@@ -461,6 +461,11 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
                 if (mOnItemLongClickListener != null) {
                     mOnItemLongClickListener.clickToUserMain();
                 }
+            }
+
+            @Override
+            public void onClickCustomText() {
+
             }
         });
     }

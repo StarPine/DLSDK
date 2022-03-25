@@ -2,7 +2,6 @@ package com.tencent.qcloud.tuikit.tuichat.ui.view.input;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,6 +11,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -44,6 +44,7 @@ import com.tencent.qcloud.tuikit.tuichat.component.camera.CameraActivity;
 import com.tencent.qcloud.tuikit.tuichat.component.camera.view.JCameraView;
 import com.tencent.qcloud.tuikit.tuichat.component.face.Emoji;
 import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
+import com.tencent.qcloud.tuikit.tuichat.interfaces.CustomizeMessageListener;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.IChatLayout;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.IInputLayout;
@@ -92,7 +93,6 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
     /**
      * 更多按钮
      */
-    protected ImageView mMoreInputButton;
     protected Object mMoreInputEvent;
     protected boolean mMoreInputDisable;
 
@@ -123,7 +123,6 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
     protected List<InputMoreActionUnit> mInputMoreActionList = new ArrayList<>();
     protected List<InputMoreActionUnit> mInputMoreCustomActionList = new ArrayList<>();
     ChatPresenter presenter;
-    private AlertDialog mPermissionDialog;
     private boolean mSendPhotoDisable;
     private boolean mCaptureDisable;
     private boolean mVideoRecordDisable;
@@ -136,6 +135,7 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
     private IChatLayout mChatLayout;
     private boolean mSendEnable;
     private boolean mAudioCancel;
+    private boolean isListenerCustomizeMessage = false;//是否已监听
     private int mCurrentState;
     private int mLastMsgLineCount;
     private float mStartRecordY;
@@ -145,19 +145,17 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
     /**
      * 临时新增
      */
-    private boolean isVip = false;
-    private ImageView locationBtn;
-    private View view_red_phone;
+    private TextView tv_profit_tip;
 
-    public void setVipType(boolean vip) {
-        this.isVip = vip;
-        if (isVip) {
-            locationBtn.setVisibility(VISIBLE);
-            giftBtn.setVisibility(GONE);
-            callPhoneVideoBtn.setVisibility(GONE);
-            mMoreInputButton.setVisibility(GONE);
-            view_red_phone.setVisibility(GONE);
+
+    public void setProfitTip(String tip,boolean isShow){
+        if (isShow){
+            tv_profit_tip.setVisibility(VISIBLE);
+            tv_profit_tip.setText(tip);
+        }else {
+            tv_profit_tip.setVisibility(GONE);
         }
+
     }
 
     private SendOnClickCallback sendOnClickCallbacks;
@@ -183,6 +181,16 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
 
     public void setPresenter(ChatPresenter presenter) {
         this.presenter = presenter;
+        if (!isListenerCustomizeMessage){
+            isListenerCustomizeMessage = true;
+            presenter.setCustomizeMessageListener(new CustomizeMessageListener() {
+                @Override
+                public void blacklist(int status) {
+
+                    sendOnClickCallbacks.sendBlackStatus(status);
+                }
+            });
+        }
     }
 
     private void initViews() {
@@ -194,7 +202,6 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
         mSendAudioButton = findViewById(R.id.chat_voice_input);
         mAudioInputSwitchButton = findViewById(R.id.voice_input_switch);
         mEmojiInputButton = findViewById(R.id.face_btn);
-        mMoreInputButton = findViewById(R.id.more_btn);
         mSendTextButton = findViewById(R.id.send_btn);
         mTextInput = findViewById(R.id.chat_message_input);
         //彭石林新增
@@ -202,8 +209,7 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
         phoneVideoBtn = findViewById(R.id.phone_video_btn);
         giftBtn = findViewById(R.id.gift_btn);
         callPhoneVideoBtn = findViewById(R.id.call_phone_video_btn);
-        locationBtn = findViewById(R.id.location_btn);
-        view_red_phone = findViewById(R.id.view_red_phone);
+        tv_profit_tip = findViewById(R.id.tv_profit_tip);
         // 子类实现所有的事件处理
         init();
     }
@@ -234,18 +240,9 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
                 }
             }
         });
-        locationBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (sendOnClickCallbacks != null) {
-                    sendOnClickCallbacks.onClickSendLocation();
-                }
-            }
-        });
 
         mAudioInputSwitchButton.setOnClickListener(this);
         mEmojiInputButton.setOnClickListener(this);
-        mMoreInputButton.setOnClickListener(this);
         mSendTextButton.setOnClickListener(this);
         mTextInput.addTextChangedListener(this);
         mTextInput.setOnTouchListener(new OnTouchListener() {
@@ -609,7 +606,6 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
         TUIChatLog.i(TAG, "onClick id:" + view.getId()
                 + "|voice_input_switch:" + R.id.voice_input_switch
                 + "|face_btn:" + R.id.face_btn
-                + "|more_btn:" + R.id.more_btn
                 + "|send_btn:" + R.id.send_btn
                 + "|mCurrentState:" + mCurrentState
                 + "|mSendEnable:" + mSendEnable
@@ -651,32 +647,6 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
                 mCurrentState = STATE_FACE_INPUT;
                 mEmojiInputButton.setImageResource(R.drawable.action_textinput_selector);
                 showFaceViewGroup();
-            }
-        } else if (view.getId() == R.id.more_btn) {//若点击右边的“+”号按钮
-            hideSoftInput();
-            if (mMoreInputEvent instanceof View.OnClickListener) {
-                ((View.OnClickListener) mMoreInputEvent).onClick(view);
-            } else if (mMoreInputEvent instanceof BaseInputFragment) {
-                showCustomInputMoreFragment();
-            } else {
-                if (mCurrentState == STATE_ACTION_INPUT) {
-                    mCurrentState = STATE_NONE_INPUT;
-                    //以下是zanhanding添加的代码，用于fix有时需要两次点击加号按钮才能呼出富文本选择布局的问题
-                    //判断富文本选择布局是否已经被呼出，并反转相应的状态
-                    if (mInputMoreView.getVisibility() == View.VISIBLE) {
-                        mInputMoreView.setVisibility(View.GONE);
-                    } else {
-                        mInputMoreView.setVisibility(View.VISIBLE);
-                    }
-                    //以上是zanhanding添加的代码，用于fix有时需要两次点击加号按钮才能呼出富文本选择布局的问题
-                } else {
-                    showInputMoreLayout();//显示“更多”消息发送布局
-                    mCurrentState = STATE_ACTION_INPUT;
-                    mAudioInputSwitchButton.setImageResource(R.drawable.action_audio_selector);
-                    mEmojiInputButton.setImageResource(R.drawable.action_face_selector);
-                    mSendAudioButton.setVisibility(GONE);
-                    mTextInput.setVisibility(VISIBLE);
-                }
             }
         } else if (view.getId() == R.id.send_btn) {
             if (mSendEnable) {
@@ -1259,6 +1229,7 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
         void onClickCallPlayUser();
 
         void onClickSendLocation();
+        void sendBlackStatus(int status);
     }
 
 }

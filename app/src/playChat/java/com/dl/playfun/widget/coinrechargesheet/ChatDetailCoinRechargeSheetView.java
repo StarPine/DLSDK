@@ -592,7 +592,7 @@ public class ChatDetailCoinRechargeSheetView extends BasePopupWindow implements 
         if (StringUtil.isEmpty(packageName)) {
             packageName = AppContext.instance().getApplicationInfo().packageName;
         }
-        String sku = purchase.getSku();
+        String sku = purchase.getSkus().toString();
         String pToken = purchase.getPurchaseToken();
         ConsumeParams.Builder consumeParams = ConsumeParams.newBuilder();
         consumeParams.setPurchaseToken(purchase.getPurchaseToken());

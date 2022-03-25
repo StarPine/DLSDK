@@ -3,6 +3,7 @@ package com.tencent.qcloud.tuikit.tuichat.util;
 import static com.tencent.qcloud.tuicore.TUIConstants.TUIConversation.CONVERSATION_C2C_PREFIX;
 import static com.tencent.qcloud.tuicore.TUIConstants.TUIConversation.CONVERSATION_GROUP_PREFIX;
 
+import com.google.gson.Gson;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMImageElem;
 import com.tencent.imsdk.v2.V2TIMMessage;
@@ -11,6 +12,8 @@ import com.tencent.qcloud.tuicore.util.ImageUtil;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
 
 import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 public class TUIChatUtils {
 
@@ -46,6 +49,33 @@ public class TUIChatUtils {
     }
 
     /**
+     * 匹配包含0开头的十位数字
+     * @param str
+     * @return
+     */
+    public static boolean isLineNumber(String str) {
+        if (str == null || str.length() < 10) return false;
+        String all = str.replaceAll("\\s+", "").toLowerCase();
+        String s = all.replaceAll("isLine", "");
+        String replace = s.replaceAll("0[0-9]{9}", "isLine");
+        return replace.contains("isLine");
+    }
+
+    /**
+     * 判断是否包含相关字段，默认小写匹配
+     */
+    public static boolean isContains(String message, List<String> str) {
+        if (str == null || str.size() == 0 || message == null || message.length() == 0)
+            return false;
+        String all = message.replaceAll("\\s+", "").toLowerCase();
+        for (String words : str) {
+            boolean contains = all.contains(words.toLowerCase());
+            if (contains) return true;
+        }
+        return false;
+    }
+
+    /**
      * 获取 MessageInfo 中原图的路径
      * @param msg
      * @return
@@ -78,6 +108,18 @@ public class TUIChatUtils {
             }
         }
         return localImgPath;
+    }
+
+    public static boolean isJSON2(String str) {
+        boolean result = false;
+        try {
+            new Gson().fromJson(str, Map.class);
+            result = true;
+        } catch (Exception e) {
+            result = false;
+        }
+        return result;
+
     }
 
 }

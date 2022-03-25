@@ -125,6 +125,11 @@ public class TUIForwardChatActivity extends BaseLightActivity {
             public void clickToUserMain() {
 
             }
+
+            @Override
+            public void onClickCustomText() {
+
+            }
         });
 
         init();

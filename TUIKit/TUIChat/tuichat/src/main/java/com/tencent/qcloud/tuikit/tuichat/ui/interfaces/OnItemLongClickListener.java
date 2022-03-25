@@ -31,4 +31,6 @@ public interface OnItemLongClickListener {
     void onClickDialogRechargeShow();
 
     void clickToUserMain();
+
+    void onClickCustomText();
 }

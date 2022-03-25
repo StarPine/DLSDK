@@ -161,6 +161,11 @@ public class TUIBaseChatFragment extends BaseFragment {
             public void clickToUserMain() {
 
             }
+
+            @Override
+            public void onClickCustomText() {
+
+            }
         });
 
         chatView.getInputLayout().setStartActivityListener(new InputView.OnStartActivityListener() {

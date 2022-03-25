@@ -318,7 +318,7 @@ public class MainContainerActivity extends MySupportActivity {
                                             Map<String, Object> maps = new HashMap<>();
                                             maps.put("orderId", purchase.getOrderId());
                                             maps.put("token", purchase.getPurchaseToken());
-                                            maps.put("sku", purchase.getSku());
+                                            maps.put("sku", purchase.getSkus().toString());
                                             maps.put("package", pack);
                                             purchaseList.add(maps);
                                         }

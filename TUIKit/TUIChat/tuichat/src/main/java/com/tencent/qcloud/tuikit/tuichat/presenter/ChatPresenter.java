@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.tencent.coustom.CustomIMTextEntity;
@@ -24,6 +23,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.OfflineMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.OfflineMessageContainerBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.OfflinePushInfo;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
+import com.tencent.qcloud.tuikit.tuichat.interfaces.CustomizeMessageListener;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.IBaseMessageSender;
 import com.tencent.qcloud.tuikit.tuichat.model.ChatProvider;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.IMessageAdapter;
@@ -62,6 +62,7 @@ public abstract class ChatPresenter {
     private boolean isChatFragmentShow = false;
     // 用来定位消息搜索时消息的位置
     private MessageInfo locateMessage;
+    private CustomizeMessageListener customizeMessageListener;
 
     public ChatPresenter() {
         TUIChatLog.i(TAG, "ChatPresenter Init");
@@ -88,6 +89,10 @@ public abstract class ChatPresenter {
         loadedMessageInfoList.clear();
         messageListAdapter.onViewNeedRefresh(MessageRecyclerView.DATA_CHANGE_TYPE_REFRESH, 0);
         loadMessage(TUIChatConstants.GET_MESSAGE_FORWARD, null);
+    }
+
+    public void setCustomizeMessageListener(CustomizeMessageListener customizeMessageListener){
+        this.customizeMessageListener = customizeMessageListener;
     }
 
     public abstract ChatInfo getChatInfo();
@@ -179,12 +184,12 @@ public abstract class ChatPresenter {
                         }
                     }
                 } else if (map_data.get("type").equals("message_photo")) {
-                    Log.e("开始给聊天消息排序", messageInfo.getExtra().toString());
                     loadedMessageInfoList.add(0, messageInfo);
                     ismessage_photo = true;
                 } else {
                     loadedMessageInfoList.add(messageInfo);
                 }
+
             }
         } else {
             loadedMessageInfoList.add(messageInfo);
@@ -563,6 +568,30 @@ public abstract class ChatPresenter {
 
     protected boolean checkExist(MessageInfo msg) {
         if (msg != null) {
+            String extra = (String) msg.getExtra();
+            if (extra != null && extra.contains("message_blacklist")){
+                Map<String, Object> map_data = new Gson().fromJson(extra, Map.class);
+                if (map_data != null){
+                    String data = String.valueOf(map_data.get("data"));
+                    if (data != null){
+                        Map<String, Object> dataMap = new Gson().fromJson(data, Map.class);
+                        Object blacklist_status = dataMap.get("blacklist_status");
+                        if (customizeMessageListener != null){
+                            if (blacklist_status instanceof Integer){
+                                customizeMessageListener.blacklist((Integer) blacklist_status);
+                            }else if (blacklist_status instanceof Double){
+                                customizeMessageListener.blacklist(((Double) blacklist_status).intValue());
+                            }
+                        }
+                    }
+                }
+                msg.remove();//删除当前消息
+                return true;
+            }else if(extra != null && (extra.contains("message_pushPay") || extra.contains("message_pushGreet"))){
+                //未付费推送和今日缘分推送拦截，不展示在聊天界面
+                msg.remove();//删除当前消息
+                return true;
+            }
             String msgId = msg.getId();
             for (int i = loadedMessageInfoList.size() - 1; i >= 0; i--) {
                 if (loadedMessageInfoList.get(i).getId().equals(msgId)

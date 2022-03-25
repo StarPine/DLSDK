@@ -53,9 +53,6 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        if(!rootProject.ext.BuildSdkPlayfun){
-            applicationId "com.ld.play.chat"
-        }
         // 版本号 - 注意，这里的版本号无效，请到productFlavors中设置
         versionCode 1
         // 版本名 - 注意，这里的版本名无效，请到productFlavors中设置
@@ -128,9 +125,9 @@ android {
         // PlayChat台湾版配置 BuildPlayChatRelease (false = Debug 或 true = 正式包)
         PlayChat {
             dimension "distribute"
-            applicationId "com.ld.play.chat"
-            manifestPlaceholders = [package_name: applicationId]
-            if(!BuildPlayChatRelease){
+            if(!rootProject.ext.BuildSdkPlayfun && !rootProject.ext.BuildPlayChatRelease){
+                applicationId "com.ld.play.chat"
+                manifestPlaceholders = [package_name: applicationId]
                 //测试包配置
                 signingConfig signingConfigs.playFunDebug
                 // 腾讯IM App KEY
@@ -161,7 +158,10 @@ android {
                 versionCode 5
                 // 版本名
                 versionName "1.0.1-beta"
-            }else{
+            }
+            if(!rootProject.ext.BuildSdkPlayfun && rootProject.ext.BuildPlayChatRelease){
+                applicationId "com.ld.play.chat"
+                manifestPlaceholders = [package_name: applicationId]
                 //正式包配置
                 signingConfig signingConfigs.playChatRelease
                 // 腾讯IM App KEY 1400504347
@@ -201,7 +201,6 @@ android {
             dimension "distribute"
             // 腾讯IM App KEY
             buildConfigField "int", "IM_APP_KEY", "1400625290"//"1400510510"
-            //buildConfigField "int", "IM_APP_KEY", "1400369342"
             // 腾讯IM FCM离线推送ID
             //buildConfigField "int", "GOOGLE_FCM_PUSH_BUZID", "13127"17321
             buildConfigField "int", "GOOGLE_FCM_PUSH_BUZID", "18414"
@@ -214,7 +213,7 @@ android {
             // Ali OSS BucketName
             buildConfigField "String", "BUCKET_NAME", "\"joymask\""
             //app名字
-            resValue "string","app_name","PlayChat-beta"
+            resValue "string","app_name","PlayFun-beta"
             //Facebook APPID
             resValue "string","facebook_app_id","5173832349346696"
             //Flyerid
@@ -234,9 +233,9 @@ android {
     sourceSets {
         //条件判断-是打apk包
         if(!rootProject.ext.BuildSdkPlayfun){
-            if(!BuildPlayChatRelease){
+            if(!rootProject.ext.BuildPlayChatRelease){
                 //java文件指定为 playChat模块下
-                main.java.srcDirs=['src/main/java','src/playChat/java']
+                main.java.srcDirs=['src/playChat/java']
                 //清单文件指定为 playChat模块下
                 main.manifest.srcFile 'src/playChat/AndroidManifest.xml'
             }else{
@@ -350,6 +349,13 @@ dependencies {
         implementation project (':AliyunCrop:crop')
         implementation project (':AliyunSVideoBase')
         implementation project(':AliyunVideoCommon')
+        implementation 'com.appsflyer:af-android-sdk:6.3.0'
+        // facebook 依赖库
+        implementation 'com.facebook.android:facebook-core:11.1.1'
+        implementation 'com.facebook.android:facebook-login:11.1.1' //facebook登录包
+        debugImplementation 'com.facebook.stetho:stetho:1.5.1'
+        debugImplementation 'com.facebook.stetho:stetho-okhttp3:1.5.1'
+        debugImplementation 'com.facebook.stetho:stetho-urlconnection:1.5.1'
     }
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.media2:media2-widget:1.1.2'

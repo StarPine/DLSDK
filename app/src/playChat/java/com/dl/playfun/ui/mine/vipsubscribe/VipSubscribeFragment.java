@@ -246,12 +246,12 @@ public class VipSubscribeFragment extends BaseToolbarFragment<FragmentVipSubscri
                 if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                     Log.i(TAG, "Acknowledge purchase success");
                     String packageName = purchase.getPackageName();
-                    String sku = purchase.getSku();
+                    String sku = purchase.getSkus().toString();
                     String pToken = purchase.getPurchaseToken();
                     viewModel.paySuccessNotify(packageName, sku, pToken, billingResult.getResponseCode());
                 } else {
                     String packageName = purchase.getPackageName();
-                    String sku = purchase.getSku();
+                    String sku = purchase.getSkus().toString();
                     String pToken = purchase.getPurchaseToken();
                     viewModel.paySuccessNotify(packageName, sku, pToken, billingResult.getResponseCode());
                     AppContext.instance().logEvent(AppsFlyerEvent.vip_google_play_error+billingResult.getResponseCode());

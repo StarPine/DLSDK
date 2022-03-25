@@ -156,10 +156,10 @@ public class TRTCCallingImpl extends TRTCCalling {
             initUserInfo();
             SignallingData signallingData = convert2CallingData(data);
             //信令版本判断 --彭石林新增
-//            if (!isCallingData(signallingData)) {
-//                TRTCLogger.d(TAG, "this is not the calling sense ");
-//                return;
-//            }
+            if (!isCallingData(signallingData)) {
+                TRTCLogger.d(TAG, "this is not the calling sense ");
+                return;
+            }
             if (!TextUtils.isEmpty(inviteID)) {
                 mInviteIdMap.put(signallingData.getRoomId(), inviteID);
             }

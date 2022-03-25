@@ -192,5 +192,7 @@
 	<string name="custom_message_txt2_test2">Ваш доход +%sот НТД. Удвоьте доход после верификации реального человека. Перейти к проверке>></string>
 	<string name="opponent_in_game">В игре</string>
 	<string name="call_ended">Звонок завершён</string>
-
+	<string name="custom_message_book_next_call">給他發送私訊預訂下一次通話時間耶~</string>
+	<string name="custom_message_busy_missed">忙線未接聽</string>
+	<string name="custom_message_other_busy">對方忙線中</string>
 </resources>

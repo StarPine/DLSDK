@@ -33,6 +33,8 @@ public class VideoViewActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         //去除状态栏
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //禁止屏幕截屏
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         setContentView(R.layout.activity_video_view);
         mVideoView = findViewById(R.id.video_play_view);
 
@@ -116,5 +118,11 @@ public class VideoViewActivity extends Activity {
         if (mVideoView != null) {
             mVideoView.stop();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
     }
 }

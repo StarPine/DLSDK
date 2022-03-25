@@ -431,7 +431,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         customChatInputFragment.setCustomChatInputFragmentListener(this);
         inputLayout.replaceMoreInput(customChatInputFragment);
         //设置客服聊天隐藏
-        inputLayout.setVipType(getTaUserIdIM() == 0);
+        //inputLayout.setVipType(getTaUserIdIM() == 0);
         inputLayout.setSendOnClickCallbacks(this);//添加发送按钮拦截事件
         MessageRecyclerView.is_read_Map = null;
         MessageRecyclerView messageLayout = binding.chatLayout.getMessageLayout();
@@ -645,6 +645,11 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                 }
                 Bundle bundle = UserDetailFragment.getStartBundle(userId);
                 viewModel.start(UserDetailFragment.class.getCanonicalName(), bundle);
+            }
+
+            @Override
+            public void onClickCustomText() {
+
             }
         });
 
@@ -1043,6 +1048,11 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     @Override
     public void onClickSendLocation() {//发送位置
         startForResult(new ChooseLocationFragment(), 1001);
+    }
+
+    @Override
+    public void sendBlackStatus(int status) {
+
     }
 
     private void DialogCallPlayUser() {

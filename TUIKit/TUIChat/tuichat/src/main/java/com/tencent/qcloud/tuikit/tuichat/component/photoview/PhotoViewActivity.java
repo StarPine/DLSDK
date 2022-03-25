@@ -48,6 +48,8 @@ public class PhotoViewActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         //去除状态栏
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //禁止屏幕截屏
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         setContentView(R.layout.activity_photo_view);
         String previewPath = getIntent().getStringExtra(TUIChatConstants.IMAGE_PREVIEW_PATH);
         Uri uri = FileUtil.getUriFromPath(previewPath);
@@ -133,6 +135,7 @@ public class PhotoViewActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
         if (downloadReceiver != null) {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(downloadReceiver);
             downloadReceiver = null;
