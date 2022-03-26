@@ -47,13 +47,14 @@ ext {
             "tuicontact"       : "default",
             "tuichat"          : "default",
             "tuicalling"       : "default",
+            "tuicore"          : "default",
             "mvvmhabit"        : "default",
             "jsBridge"         : "default",
             "customDrawable"   : "default",
             "AliyunCrop:crop"  : "default",
             "AliyunSVideoBase" : "default",
             "AliyunVideoCommon": "default",
-            "networkLocal"     : "default",
+            "AlivcMedia"       : "default",
     ]
 
     dependenciesID = [

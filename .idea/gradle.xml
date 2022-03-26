@@ -25,7 +25,6 @@
             <option value="$PROJECT_DIR$/customDrawable" />
             <option value="$PROJECT_DIR$/jsBridge" />
             <option value="$PROJECT_DIR$/mvvmhabit" />
-            <option value="$PROJECT_DIR$/networkLocal" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

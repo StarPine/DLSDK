@@ -24,4 +24,3 @@ project(':tuiconversation').projectDir = new File(settingsDir, 'TUIKit/TUIConver
 include ':tuicalling'
 project(':tuicalling').projectDir = new File(settingsDir, 'TUIKit/TUICalling/tuicalling')
 /*IM聊天组件*/
-include ':networkLocal'
