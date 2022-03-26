@@ -4,7 +4,7 @@ ext {
     externalAndroidAppCompatV7 = 'com.android.support:appcompat-v7:28.0.0'
     externalAlivcConan = 'com.alivc.conan:AlivcConan:1.0.5'
     externalAlivcCore = 'com.aliyun.video.android:core:1.2.2'
-    externalAlivcFFmpeg =  'com.aliyun.video.android:AlivcFFmpeg:4.3.0'
+    externalAlivcFFmpeg = 'com.aliyun.video.android:AlivcFFmpeg:4.3.0'
     externalSvideopro = 'com.aliyun.video.android:svideopro:3.24.0'
 
     externalAndroidSupportV4 = "com.android.support:support-v13:28.0.0"
@@ -42,6 +42,86 @@ ext {
             'animated-vector-drawable': "com.android.support:animated-vector-drawable:${versions["support-version"]}",
             'junit'                   : "junit:junit:${versions["junit-version"]}",
     ]
+    projectID = [
+            "tuiconversation"  : "default",
+            "tuicontact"       : "default",
+            "tuichat"          : "default",
+            "tuicalling"       : "default",
+            "mvvmhabit"        : "default",
+            "jsBridge"         : "default",
+            "customDrawable"   : "default",
+            "AliyunCrop:crop"  : "default",
+            "AliyunSVideoBase" : "default",
+            "AliyunVideoCommon": "default",
+    ]
+
+    dependenciesID = [
+            "design"                       : support["design"],
+            "appcompat"                    : 'androidx.appcompat:appcompat:1.2.0',
+            "constraintlayout"             : 'androidx.constraintlayout:constraintlayout:2.0.4',
+            "navigation-fragment"          : 'android.arch.navigation:navigation-fragment:1.0.0',
+            "navigation-ui"                : 'android.arch.navigation:navigation-ui:1.0.0',
+            "legacy"                       : 'androidx.legacy:legacy-support-v4:1.0.0',
+            "lifecycle"                    : 'androidx.lifecycle:lifecycle-extensions:2.2.0',
+            "cardview"                     : 'androidx.cardview:cardview:1.0.0',
+            "media2"                       : 'androidx.media2:media2-widget:1.1.2',
+            "appsflyer"                    : 'com.appsflyer:af-android-sdk:6.3.0',
+
+            // facebook
+            "facebook-core"                : 'com.facebook.android:facebook-core:11.1.1',
+            "facebook-login"               : 'com.facebook.android:facebook-login:11.1.1',
+
+            //firebase
+            "firebase-core"                : 'com.google.firebase:firebase-core:18.0.0',
+            "firebase-analytics2"          : 'com.google.firebase:firebase-analytics',
+            "firebase-analytics"           : 'com.google.firebase:firebase-analytics:18.0.0',
+            "firebase-messaging"           : 'com.google.firebase:firebase-messaging:21.0.0',
+            "firebase-iid"                 : 'com.google.firebase:firebase-iid:21.0.0',
+//            "firebase-bom"                 : 'com.google.firebase:firebase-bom:28.0.1',
+            "firebase-auth"                : 'com.google.firebase:firebase-auth',
+            "firebase-crashlytics"         : 'com.google.firebase:firebase-crashlytics',
+
+            //google.gms
+            "play-services-location"       : 'com.google.android.gms:play-services-location:17.1.0',
+            "play-services-maps"           : 'com.google.android.gms:play-services-maps:17.0.0',
+            "play-services-auth"           : 'com.google.android.gms:play-services-auth:19.0.0',
+
+            "billingclient"                : 'com.android.billingclient:billing:4.0.0',
+            "guava"                        : 'com.google.guava:guava:29.0-android',
+            "immersionbar"                 : 'com.gyf.immersionbar:immersionbar:3.0.0',
+            "utilcode"                     : 'com.blankj:utilcode:1.28.4',
+            "kprogresshud"                 : 'com.kaopiz:kprogresshud:1.2.0',
+            "PickerView"                   : 'com.contrarywind:Android-PickerView:4.1.9',
+            "BaseRecyclerViewAdapterHelper": 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.50',
+            "xpopup"                       : 'com.lxj:xpopup:1.9.0',
+            "annotation"                   : 'org.glassfish:javax.annotation:10.0-b28',
+            "refresh-layout-kernel"        : 'com.scwang.smart:refresh-layout-kernel:2.0.3',
+            "refresh-header-material"      : 'com.scwang.smart:refresh-header-material:2.0.3',
+            //   PopupWindow 的封装
+            "EasyPopup"                    : 'com.github.zyyoona7:EasyPopup:1.1.2',
+            "mmkv"                         : 'com.tencent:mmkv-static:1.1.2',
+            // To get SwipeBack feature, rely on both fragmentation & fragmentation-swipeback
+            "fragmentationx"               : 'me.yokeyword:fragmentationx:1.0.2',
+            "PhotoView"                    : 'com.github.chrisbanes:PhotoView:2.3.0',
+            "oss-android-sdk"              : 'com.aliyun.dpa:oss-android-sdk:2.9.4',
+            "blurry"                       : 'jp.wasabeef:blurry:3.0.0',
+            "Luban"                        : 'top.zibin:Luban:1.1.8',
+            "devbrackets"                  : 'com.devbrackets.android:exomedia:4.3.0',
+            "banner"                       : 'com.youth.banner:banner:1.4.10', //最新版本
+            "installreferrer"              : 'com.android.installreferrer:installreferrer:2.2',
+            //今日头条适配
+            "AndroidAutoSize"              : 'com.github.JessYanCoding:AndroidAutoSize:v1.2.1',
+            //高斯模糊图片类
+            "glide-transformations"        : 'jp.wasabeef:glide-transformations:4.3.0',
+            // 动画解析库：https://github.com/airbnb/lottie-android
+            // 动画资源：https://lottiefiles.com、https://icons8.com/animated-icons
+            "lottie"                       : 'com.airbnb.android:lottie:3.6.1',
+            //视频列表播放插件 完整版引入
+            "GSYVideoPlayer"               : 'com.github.CarGuo.GSYVideoPlayer:GSYVideoPlayer:v8.1.7-release-jitpack',
+            //SVGA动画播放库
+            "SVGAPlayer"                   : 'com.github.svga:SVGAPlayer-Android:2.6.1',
+            "viewpager2"                   : "androidx.viewpager2:viewpager2:1.0.0",
+    ]
     //依赖第三方配置
     dependencies = [
             //rxjava
@@ -76,6 +156,7 @@ ext {
             //MVVMHabit
             "MVVMHabit"                            : "com.github.goldze:MVVMHabit:3.1.4",
     ]
+
 }
 
 

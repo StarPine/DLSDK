@@ -301,130 +301,18 @@ if(rootProject.ext.BuildSdkPlayfun){
 
 
 dependencies {
-    if(rootProject.ext.BuildSdkPlayfun){
-        implementation fileTree(dir: "libs", include: ["*.jar"])
-    }else{
-        implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
-    }
+    embed fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
 
     //日志打印
     implementation('com.github.ihsanbal:LoggingInterceptor:3.0.0') {
         exclude group: 'org.json', module: 'json'
     }
-    implementation rootProject.ext.support["design"]
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation 'android.arch.navigation:navigation-fragment:1.0.0'
-    implementation 'android.arch.navigation:navigation-ui:1.0.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    if(rootProject.ext.BuildSdkPlayfun){
-        embed project(path: ':tuicore', configuration: 'default')
-        embed project(path: ':tuiconversation', configuration: 'default')
-        embed project(path: ':tuicontact', configuration: 'default')
-        embed project(path: ':tuichat', configuration: 'default')
-        embed project(path: ':tuicalling', configuration: 'default')
-        embed project(path: ':mvvmhabit', configuration: 'default')
-        embed project(path: ':jsBridge', configuration: 'default')
-        embed project(path: ':customDrawable', configuration: 'default')
-        embed project(path: ':AlivcMedia', configuration: 'default')
-        embed project(path: ':AliyunCrop:crop', configuration: 'default')
-        embed project(path: ':AliyunSVideoBase', configuration: 'default')
-        embed project(path: ':AliyunVideoCommon', configuration: 'default')
-        embed (name:'picture_library-v2.6.0', ext:'aar')
-        embed (name:'ucrop-v2.6.0', ext:'aar')
-        embed (name:'refresh-footer-classics-2.0.3', ext:'aar')
-        embed (name:'refresh-drawable-paint-2.0.3', ext:'aar')
-
-
-    }
+    implementation platform('com.google.firebase:firebase-bom:28.0.1')
     if(!rootProject.ext.BuildSdkPlayfun){
-        implementation project(':tuiconversation')
-        implementation project(':tuicontact')
-        implementation project(':tuichat')
-        implementation project(':tuicalling')
-        implementation project(':mvvmhabit')
-        implementation project(':jsBridge')
-        implementation project(':customDrawable')
-        implementation project (':AliyunCrop:crop')
-        implementation project (':AliyunSVideoBase')
-        implementation project(':AliyunVideoCommon')
-        implementation 'com.appsflyer:af-android-sdk:6.3.0'
-        // facebook 依赖库
-        implementation 'com.facebook.android:facebook-core:11.1.1'
-        implementation 'com.facebook.android:facebook-login:11.1.1' //facebook登录包
         debugImplementation 'com.facebook.stetho:stetho:1.5.1'
         debugImplementation 'com.facebook.stetho:stetho-okhttp3:1.5.1'
         debugImplementation 'com.facebook.stetho:stetho-urlconnection:1.5.1'
     }
-    implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.media2:media2-widget:1.1.2'
-
-    testImplementation 'junit:junit:4.13.1'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-
-
-    implementation 'com.google.firebase:firebase-core:18.0.0'
-    implementation "com.google.android.gms:play-services-location:17.1.0"
-    implementation 'com.google.android.gms:play-services-maps:17.0.0'
-    implementation 'com.google.firebase:firebase-analytics:18.0.0'
-    implementation 'com.google.firebase:firebase-messaging:21.0.0'
-    implementation 'com.google.firebase:firebase-iid:21.0.0'
-    implementation 'com.android.billingclient:billing:4.0.0'
-    implementation 'com.google.guava:guava:29.0-android'
-
-    implementation platform('com.google.firebase:firebase-bom:28.0.1')
-    implementation 'com.google.firebase:firebase-auth'
-    implementation 'com.google.firebase:firebase-crashlytics'
-    //Google谷歌登录
-    implementation 'com.google.android.gms:play-services-auth:19.0.0'
-    implementation 'com.google.firebase:firebase-analytics'
-
-    implementation 'com.gyf.immersionbar:immersionbar:3.0.0'
-    implementation 'com.blankj:utilcode:1.28.4'
-    implementation 'com.kaopiz:kprogresshud:1.2.0'
-
-    // 直接引用源码，取消AAR的引用
-    implementation 'com.contrarywind:Android-PickerView:4.1.9'
-    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.50'
-    implementation 'com.lxj:xpopup:1.9.0'
-    implementation 'org.glassfish:javax.annotation:10.0-b28'
-
-    implementation 'com.scwang.smart:refresh-layout-kernel:2.0.3'
-    implementation 'com.scwang.smart:refresh-header-material:2.0.3'
-//   PopupWindow 的封装
-    implementation 'com.github.zyyoona7:EasyPopup:1.1.2'
-
-    implementation 'com.tencent:mmkv-static:1.1.2'
-
-    // To get SwipeBack feature, rely on both fragmentation & fragmentation-swipeback
-    implementation 'me.yokeyword:fragmentationx:1.0.2'
-
-    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
-
-    implementation 'com.aliyun.dpa:oss-android-sdk:2.9.4'
-
-    implementation 'jp.wasabeef:blurry:3.0.0'
-
-    implementation 'top.zibin:Luban:1.1.8'
-    implementation 'com.devbrackets.android:exomedia:4.3.0'
-    implementation 'com.youth.banner:banner:1.4.10'  //最新版本
-
-    implementation 'com.android.installreferrer:installreferrer:2.2'
-
-    //今日头条适配
-    implementation 'com.github.JessYanCoding:AndroidAutoSize:v1.2.1'
-    //高斯模糊图片类
-    implementation 'jp.wasabeef:glide-transformations:4.3.0'
-    // 动画解析库：https://github.com/airbnb/lottie-android
-    // 动画资源：https://lottiefiles.com、https://icons8.com/animated-icons
-    implementation 'com.airbnb.android:lottie:3.6.1'
-
-    //视频列表播放插件 完整版引入
-    implementation 'com.github.CarGuo.GSYVideoPlayer:GSYVideoPlayer:v8.1.7-release-jitpack'
-    //SVGA动画播放库
-    implementation 'com.github.svga:SVGAPlayer-Android:2.6.1'
-
-    implementation "androidx.viewpager2:viewpager2:1.0.0"
+    dependenciesID.each {k,v -> implementation v}
+    projectID.each {k,v -> embed project (':'+k)}
 }
