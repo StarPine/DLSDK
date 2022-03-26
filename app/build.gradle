@@ -301,7 +301,13 @@ if(rootProject.ext.BuildSdkPlayfun){
 
 
 dependencies {
-    embed fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+    if(rootProject.ext.BuildSdkPlayfun){
+        implementation fileTree(dir: "libs", include: ["*.jar"])
+        projectID.each {k,v -> implementation project (':'+k)}
+    }else{
+        embed fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+        projectID.each {k,v -> embed project (':'+k)}
+    }
 
     //日志打印
     implementation('com.github.ihsanbal:LoggingInterceptor:3.0.0') {
@@ -314,5 +320,4 @@ dependencies {
         debugImplementation 'com.facebook.stetho:stetho-urlconnection:1.5.1'
     }
     dependenciesID.each {k,v -> implementation v}
-    projectID.each {k,v -> embed project (':'+k)}
 }
