@@ -4,7 +4,7 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
-        <option name="testRunner" value="GRADLE" />
+        <option name="testRunner" value="PLATFORM" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
@@ -25,6 +25,7 @@
             <option value="$PROJECT_DIR$/customDrawable" />
             <option value="$PROJECT_DIR$/jsBridge" />
             <option value="$PROJECT_DIR$/mvvmhabit" />
+            <option value="$PROJECT_DIR$/networkLocal" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
