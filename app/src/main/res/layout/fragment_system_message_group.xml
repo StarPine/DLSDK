@@ -17,23 +17,29 @@
         <import type="com.dl.playfun.widget.recyclerview.LineManagers" />
     </data>
 
-    <com.scwang.smart.refresh.layout.SmartRefreshLayout
-        android:id="@+id/refresh_layout"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/home_bottom_nav_height"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        binding:onRefreshCommand="@{viewModel.onRefreshCommand}"
-        tools:context="com.dl.playfun.ui.message.systemmessagegroup.SystemMessageGroupFragment">
+        android:paddingBottom="60dp">
 
-        <androidx.recyclerview.widget.RecyclerView
+        <com.scwang.smart.refresh.layout.SmartRefreshLayout
+            android:id="@+id/refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            binding:adapter="@{viewModel.adapter}"
-            binding:itemBinding="@{viewModel.itemBinding}"
-            binding:items="@{viewModel.observableList}"
-            binding:layoutManager="@{LayoutManagers.linear()}"
-            binding:lineManager="@{LineManagers.horizontal(1,72,0)}" />
-    </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            binding:onRefreshCommand="@{viewModel.onRefreshCommand}"
+            tools:context=".ui.message.systemmessagegroup.SystemMessageGroupFragment">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="20dp"
+                binding:adapter="@{viewModel.adapter}"
+                binding:itemBinding="@{viewModel.itemBinding}"
+                binding:items="@{viewModel.observableList}"
+                binding:layoutManager="@{LayoutManagers.linear()}"
+                binding:lineManager="@{LineManagers.horizontal(1,72,0)}" />
+        </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+    </FrameLayout>
 
 </layout>

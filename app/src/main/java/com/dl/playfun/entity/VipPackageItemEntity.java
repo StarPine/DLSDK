@@ -59,6 +59,9 @@ public class VipPackageItemEntity extends BaseObservable {
     @SerializedName("give_coin")
     private Integer giveCoin;
 
+    //首充状态（H5传递）
+    private Integer purchased;
+
     public Integer getGiveCoin() {
         return giveCoin;
     }
@@ -203,5 +206,38 @@ public class VipPackageItemEntity extends BaseObservable {
     public void setSelected(Boolean selected) {
         isSelected = selected;
         notifyPropertyChanged(BR.selected);
+    }
+
+    public Integer getPurchased() {
+        return purchased;
+    }
+
+    public void setPurchased(Integer purchased) {
+        this.purchased = purchased;
+    }
+
+    @Override
+    public String toString() {
+        return "VipPackageItemEntity{" +
+                "id=" + id +
+                ", goodsName='" + goodsName + '\'' +
+                ", monthlyPrice='" + monthlyPrice + '\'' +
+                ", payPrice='" + payPrice + '\'' +
+                ", isRecommend=" + isRecommend +
+                ", googleGoodsId='" + googleGoodsId + '\'' +
+                ", goldPrice='" + goldPrice + '\'' +
+                ", goldTagPrice='" + goldTagPrice + '\'' +
+                ", isSelected=" + isSelected +
+                ", actualValue=" + actualValue +
+                ", price='" + price + '\'' +
+                ", dayPrice='" + dayPrice + '\'' +
+                ", goodsLabel='" + goodsLabel + '\'' +
+                ", picImg='" + picImg + '\'' +
+                ", selectImg='" + selectImg + '\'' +
+                ", isFirst=" + isFirst +
+                ", firstText='" + firstText + '\'' +
+                ", giveCoin=" + giveCoin +
+                ", purchased=" + purchased +
+                '}';
     }
 }

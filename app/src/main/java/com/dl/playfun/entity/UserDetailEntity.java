@@ -56,6 +56,8 @@ public class UserDetailEntity extends BaseObservable {
     private Double distance;
     @SerializedName("is_online")
     private Integer isOnline;
+    @SerializedName("calling_status")
+    private int callingStatus;
     /**
      * 男性则代表是否是vip，女性则代表是否为女神
      */
@@ -78,6 +80,8 @@ public class UserDetailEntity extends BaseObservable {
     private Integer isWeixinShow;
     @SerializedName("is_unlock_account")
     private Integer isUnlockAccount;
+    @SerializedName("unlock_account_money")
+    private Integer unlockAccountMoney;
     private String weixin;
     private String insgram;
     @SerializedName("topical_id")
@@ -87,6 +91,12 @@ public class UserDetailEntity extends BaseObservable {
     private Integer albumType;
     @SerializedName("album_img_total")
     private Integer albumImgTotal;
+    /**
+     * 0相安无事，1拉黑对方 ，2被对方拉黑，3 双拉黑
+     */
+    @SerializedName("blacklist_status")
+    private Integer blacklistStatus;
+
 
     /**
      * -1未审核  0等待 1通过  2拒绝
@@ -137,6 +147,32 @@ public class UserDetailEntity extends BaseObservable {
     //动态数量
     @SerializedName("news_number")
     private Integer newsNumber;
+
+    @Bindable
+    public Integer getBlacklistStatus() {
+        return blacklistStatus;
+    }
+
+    public void setBlacklistStatus(Integer blacklistStatus) {
+        this.blacklistStatus = blacklistStatus;
+        notifyPropertyChanged(BR.blacklistStatus);
+    }
+
+    public Integer getUnlockAccountMoney() {
+        return unlockAccountMoney;
+    }
+
+    public void setUnlockAccountMoney(Integer unlockAccountMoney) {
+        this.unlockAccountMoney = unlockAccountMoney;
+    }
+
+    public int getCallingStatus() {
+        return callingStatus;
+    }
+
+    public void setCallingStatus(int callingStatus) {
+        this.callingStatus = callingStatus;
+    }
 
     public void setSoundStatus(Integer soundStatus) {
         this.soundStatus = soundStatus;

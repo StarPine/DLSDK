@@ -1,25 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center"
     android:orientation="vertical">
 
     <RelativeLayout
-        android:layout_width="294dp"
-        android:layout_height="363dp">
-
+        android:layout_width="wrap_content"
+        android:gravity="center"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/iv_accost_match"
+            android:layout_width="290dp"
+            android:layout_height="420dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/accost_backdrop_img"
+            android:visibility="gone"
+            tools:visibility="visible"
+            />
         <RelativeLayout
-            android:id="@+id/refresh_layout"
-            android:layout_width="80dp"
-            android:layout_height="19dp"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="14dp"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/accost_refresh_backdrop"
-            android:elevation="11dp">
+            android:layout_width="290dp"
+            android:layout_height="350dp"
+            android:layout_marginTop="70dp"
+            >
+            <ImageView
+                android:id="@+id/iv_accost_incomplete"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/accost_backdrop_img2"
+                android:visibility="visible"
+                tools:visibility="gone"
+                />
+            <RelativeLayout
+                android:id="@+id/refresh_layout"
+                android:layout_width="61dp"
+                android:layout_height="19dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="14dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/accost_refresh_backdrop"
+                android:elevation="11dp">
 
             <ImageView
                 android:id="@+id/refresh_img"
@@ -43,11 +67,11 @@
                 android:textSize="11sp" />
         </RelativeLayout>
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/accost_backdrop_img" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/accost_backdrop_img" />
 
         <LinearLayout
             android:id="@+id/item_entity_layout1"
@@ -566,7 +590,7 @@
             android:layout_marginTop="-4dp"
             android:textColor="@color/purple1"
             tools:text="00:05:33" />
-
+        </RelativeLayout>
     </RelativeLayout>
 
     <ImageView

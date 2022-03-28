@@ -93,6 +93,15 @@ public class VipSubscribeFragment extends BaseToolbarFragment<FragmentVipSubscri
     }
 
     @Override
+    public void onDestroy() {
+        if (viewModel.billingClient != null) {
+            viewModel.billingClient.endConnection();
+            viewModel.billingClient = null;
+        }
+        super.onDestroy();
+    }
+
+    @Override
     public void initData() {
         super.initData();
         viewModel.billingClient = BillingClient.newBuilder(mActivity).setListener(this).enablePendingPurchases().build();

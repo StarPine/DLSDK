@@ -7,6 +7,8 @@ import androidx.databinding.ObservableField;
 
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
+import com.dl.playfun.app.AppContext;
+import com.dl.playfun.app.EaringlSwitchUtil;
 import com.dl.playfun.entity.TraceEntity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.utils.LogUtils;
@@ -40,7 +42,20 @@ public class TraceItemViewModel extends MultiItemViewModel<TraceListViewModel> {
                     viewModel.uc.clickDelLike.setValue(position);
                 } else {
                     //拿到position
-                    viewModel.addLike(position);
+                    if (ConfigManager.getInstance().isMale()){
+
+                        viewModel.addLike(position);
+                    }else {
+                        //是女生提示
+                        int guideFlag = AppContext.instance().appRepository.readSwitches(EaringlSwitchUtil.KEY_TIPS);
+                        //后台开关 1提示  0隐藏
+                        if (guideFlag == 1) {
+                            viewModel.uc.clickAddLike.setValue(position);
+                        } else {
+                            viewModel.addLike(position);
+                        }
+
+                    }
                 }
             }
         }

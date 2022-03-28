@@ -109,9 +109,6 @@ public class ChatUtils {
     }
 
     public static void chatUser(String userId, String name, BaseViewModel baseViewModel, String MessageText) {
-        //关闭定时器
-        AppContext.downTimer.cancel();
-        AppContext.downTimer = null;
         String serviceUserId = userId;
 
         if(provider==null){

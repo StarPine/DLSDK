@@ -35,6 +35,7 @@ import com.dl.playfun.data.source.local.LocalDataSourceImpl;
 import com.dl.playfun.databinding.FragmentChatDetailBinding;
 import com.dl.playfun.entity.AlbumPhotoEntity;
 import com.dl.playfun.entity.EvaluateItemEntity;
+import com.dl.playfun.entity.GameCoinBuy;
 import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.entity.LocalMessageIMEntity;
@@ -69,7 +70,7 @@ import com.dl.playfun.utils.PictureSelectorUtil;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.utils.Utils;
 import com.dl.playfun.widget.bottomsheet.BottomSheet;
-import com.dl.playfun.widget.coinrechargesheet.ChatDetailCoinRechargeSheetView;
+import com.dl.playfun.widget.coinrechargesheet.GameCoinTopupSheetView;
 import com.dl.playfun.widget.dialog.MMAlertDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.dl.playfun.widget.dialog.MessageDetailDialog;
@@ -365,9 +366,9 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                 if (tagEntity.getThisIsGg().intValue() == 1) {//当前用户是GG
                     viewModel.isTagShow.set(true);
                     if (tagEntity.getToIsInvite().intValue() == 1) {//是否填写邀请码 0否 1是
-                        binding.tagTitle.setText(R.string.user_message_tag2);
+                        binding.tagTitle.setText(R.string.playfun_user_message_tag2);
                     } else {
-                        binding.tagTitle.setText(R.string.user_message_tag1);
+                        binding.tagTitle.setText(R.string.playfun_user_message_tag1);
                     }
                 }
                 if (tagEntity.getToIsGg().intValue() == 1) {//对方用户是GG
@@ -380,9 +381,9 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         viewModel.uc.otherBusy.observe(this, o -> {
             TraceDialog.getInstance(ChatDetailFragment.this.getContext())
                     .chooseType(TraceDialog.TypeEnum.CENTER)
-                    .setTitle(StringUtils.getString(R.string.other_busy_title))
-                    .setContent(StringUtils.getString(R.string.other_busy_text))
-                    .setConfirmText(StringUtils.getString(R.string.mine_trace_delike_confirm))
+                    .setTitle(StringUtils.getString(R.string.playfun_other_busy_title))
+                    .setContent(StringUtils.getString(R.string.playfun_other_busy_text))
+                    .setConfirmText(StringUtils.getString(R.string.playfun_mine_trace_delike_confirm))
                     .setConfirmOnlick(new TraceDialog.ConfirmOnclick() {
                         @Override
                         public void confirm(Dialog dialog) {
@@ -398,9 +399,9 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                 if (mChatInfo == null || userId < 1) {
                     return;
                 }
-                String[] items = new String[]{getString(R.string.pull_black_shield_both_sides), getString(R.string.report_user_title)};
+                String[] items = new String[]{getString(R.string.playfun_pull_black_shield_both_sides), getString(R.string.playfun_report_user_title)};
                 if (viewModel.inBlacklist.get()) {
-                    items[0] = getString(R.string.remove_black_shield_both_sides);
+                    items[0] = getString(R.string.playfun_remove_black_shield_both_sides);
                 }
 
                 new BottomSheet.Builder(mActivity).setDatas(items).setOnItemSelectedListener(new BottomSheet.ItemSelectedListener() {
@@ -412,8 +413,8 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                                 viewModel.delBlackList(userId);
                             } else {
                                 MVDialog.getInstance(mActivity)
-                                        .setContent(getString(R.string.dialog_add_blacklist_content))
-                                        .setConfirmText(getString(R.string.dialog_add_black_list_btn))
+                                        .setContent(getString(R.string.playfun_dialog_add_blacklist_content))
+                                        .setConfirmText(getString(R.string.playfun_dialog_add_black_list_btn))
                                         .setConfirmOnlick(dialog -> {
                                             viewModel.addBlackList(userId);
                                         })
@@ -1042,10 +1043,10 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     public void onClickGift() {//点击调用礼物
         if (viewModel.tagEntitys.get() != null) {
             if (viewModel.tagEntitys.get().getBlacklistStatus() == 1 || viewModel.tagEntitys.get().getBlacklistStatus() == 3) {
-                Toast.makeText(mActivity, R.string.chat_detail_pull_black_other2, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, R.string.playfun_chat_detail_pull_black_other2, Toast.LENGTH_SHORT).show();
                 return;
             } else if (viewModel.tagEntitys.get().getBlacklistStatus() == 2) {
-                Toast.makeText(mActivity, R.string.chat_detail_blocked2, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, R.string.playfun_chat_detail_blocked2, Toast.LENGTH_SHORT).show();
                 return;
             }
             AppContext.instance().logEvent(AppsFlyerEvent.im_gifts);
@@ -1088,10 +1089,10 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     public void onClickCallPlayUser() {//点击调用拨打通话
         if (viewModel.tagEntitys.get() != null){
             if (viewModel.tagEntitys.get().getBlacklistStatus() == 1 || viewModel.tagEntitys.get().getBlacklistStatus() == 3 ){
-                Toast.makeText(mActivity, R.string.chat_detail_pull_black_other, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, R.string.playfun_chat_detail_pull_black_other, Toast.LENGTH_SHORT).show();
                 return;
             }else if(viewModel.tagEntitys.get().getBlacklistStatus() == 2){
-                Toast.makeText(mActivity, R.string.chat_detail_blocked, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, R.string.playfun_chat_detail_blocked, Toast.LENGTH_SHORT).show();
                 return;
             }
             DialogCallPlayUser();
@@ -1237,21 +1238,24 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     }
 
     private void googleCoinValueBox(boolean isGiftSend) {
-        ChatDetailCoinRechargeSheetView coinRechargeSheetView = new ChatDetailCoinRechargeSheetView(mActivity, getTaUserIdIM(), 1, isGiftSend, false);
-        coinRechargeSheetView.setCoinRechargeSheetViewListener(new ChatDetailCoinRechargeSheetView.CoinRechargeSheetViewListener() {
+
+        GameCoinTopupSheetView gameCoinTopupSheetView = new GameCoinTopupSheetView(mActivity);
+        gameCoinTopupSheetView.show();
+        gameCoinTopupSheetView.setCoinRechargeSheetViewListener(new GameCoinTopupSheetView.CoinRechargeSheetViewListener() {
             @Override
-            public void onPaySuccess(ChatDetailCoinRechargeSheetView sheetView, GoodsEntity sel_goodsEntity) {
+            public void onPaySuccess(GameCoinTopupSheetView sheetView, GameCoinBuy sel_goodsEntity) {
+                sheetView.endGooglePlayConnect();
                 sheetView.dismiss();
                 viewModel.maleBalance += sel_goodsEntity.getActualValue().intValue();
             }
 
             @Override
-            public void onPayFailed(ChatDetailCoinRechargeSheetView sheetView, String msg) {
+            public void onPayFailed(GameCoinTopupSheetView sheetView, String msg) {
                 sheetView.dismiss();
-                // do nothing
+                me.goldze.mvvmhabit.utils.ToastUtils.showShort(msg);
+                AppContext.instance().logEvent(AppsFlyerEvent.Failed_to_top_up);
             }
         });
-        coinRechargeSheetView.show();
 
     }
 

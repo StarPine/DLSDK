@@ -35,7 +35,7 @@
         <com.dl.playfun.widget.DrawableCenterTextView
             android:layout_width="75dp"
             android:layout_height="match_parent"
-            android:drawableStart="@drawable/ic_toolbar_chat"
+            android:drawableStart="@drawable/ic_user_detail_send_message"
             android:drawablePadding="4.19dp"
             android:enabled="@{!(viewModel.detailEntity.albumType == 3 &amp;&amp; viewModel.detailEntity.albumApply != 1)}"
             android:gravity="center_vertical"
@@ -43,34 +43,21 @@
             android:textSize="13sp"
             binding:onClickCommand="@{viewModel.chatOnClickCommand}" />
 
-        <RelativeLayout
-            android:layout_width="115dp"
+        <com.dl.playfun.widget.DrawableCenterTextView
+            android:id="@+id/dt_social_account"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="match_parent"
-            android:visibility="gone">
+            android:layout_centerHorizontal="true"
+            android:drawableStart="@drawable/ic_user_detail_video"
+            android:drawablePadding="4.19dp"
+            android:enabled="@{!(viewModel.detailEntity.albumType == 3 &amp;&amp; viewModel.detailEntity.albumApply != 1)}"
+            android:gravity="center_vertical"
+            android:text="@string/message_deatail_call_video"
+            android:textColor="@drawable/user_detail_bottom_text_color"
+            android:textSize="13sp"
+            binding:onClickCommand="@{viewModel.socialAccountOnClickCommand}" />
 
-            <com.dl.playfun.widget.DrawableCenterTextView
-                android:id="@+id/dt_social_account"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_centerHorizontal="true"
-                android:drawableStart="@drawable/ic_toolbar_social"
-                android:drawablePadding="4.19dp"
-                android:enabled="@{!(viewModel.detailEntity.albumType == 3 &amp;&amp; viewModel.detailEntity.albumApply != 1)}"
-                android:gravity="center_vertical"
-                android:textColor="@drawable/user_detail_bottom_text_color"
-                android:textSize="13sp"
-                binding:onClickCommand="@{viewModel.socialAccountOnClickCommand}" />
-
-            <ImageView
-                android:id="@+id/iv_social_account_tag"
-                android:layout_width="14dp"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@id/dt_social_account"
-                android:layout_marginStart="11dp"
-                android:layout_marginTop="12dp"
-                android:adjustViewBounds="true"
-                android:src="@drawable/ic_social_account_tag" />
-        </RelativeLayout>
 
         <com.dl.playfun.widget.DrawableCenterTextView
             android:layout_width="90dp"

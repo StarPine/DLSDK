@@ -27,6 +27,7 @@ import com.tencent.liteav.trtccalling.model.util.TUICallingConstants;
 
 import me.goldze.mvvmhabit.base.BaseActivity;
 import me.goldze.mvvmhabit.bus.RxBus;
+import me.jessyan.autosize.AutoSizeCompat;
 import me.jessyan.autosize.internal.CustomAdapt;
 import me.tatarka.bindingcollectionadapter2.BR;
 
@@ -54,6 +55,7 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
 
     @Override
     public int initContentView(Bundle savedInstanceState) {
+        AutoSizeCompat.autoConvertDensityOfGlobal(this.getResources());
         return R.layout.activity_call_waiting2;
     }
 

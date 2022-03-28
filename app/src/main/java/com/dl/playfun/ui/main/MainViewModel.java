@@ -1,28 +1,49 @@
 package com.dl.playfun.ui.main;
 
 import android.app.Application;
+import android.os.Handler;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
 
 import com.blankj.utilcode.util.ObjectUtils;
+import com.blankj.utilcode.util.StringUtils;
+import com.dl.playfun.app.AppContext;
+import com.dl.playfun.app.Injection;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
+import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.BannerItemEntity;
+import com.dl.playfun.entity.BubbleEntity;
+import com.dl.playfun.entity.CoinWalletEntity;
 import com.dl.playfun.entity.LikeRecommendEntity;
+import com.dl.playfun.event.BubbleTopShowEvent;
 import com.dl.playfun.event.MainTabEvent;
 import com.dl.playfun.event.MessageCountChangeEvent;
+import com.dl.playfun.event.MessageGiftNewEvent;
 import com.dl.playfun.event.RewardRedDotEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocationManager;
+import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.viewmodel.BaseViewModel;
+import com.google.gson.Gson;
+import com.tencent.coustom.GiftEntity;
+import com.tencent.coustom.IMGsonUtils;
+import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
+import com.tencent.imsdk.v2.V2TIMCallback;
+import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
+import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageInfoUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import io.reactivex.disposables.Disposable;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
@@ -30,6 +51,7 @@ import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.RxUtils;
+import me.goldze.mvvmhabit.utils.ToastUtils;
 
 /**
  * @author wulei
@@ -57,6 +79,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
     @Override
     public void onEnterAnimationEnd() {
         super.onEnterAnimationEnd();
+        initIMListener();
         lockPassword.set(model.readPassword());
         if (!StringUtil.isEmpty(lockPassword.get())) {
             uc.lockDialog.call();
@@ -96,14 +119,15 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
             isHaveRewards.set(event.isHaveReward());
         });
 
-        mainTabEventReceive = RxBus.getDefault().toObservable(MainTabEvent.class).subscribe(event -> {
-            uc.mainTab.postValue(event);
+        BubbleTopShowEventSubscription = RxBus.getDefault().toObservable(BubbleTopShowEvent.class).subscribe(event -> {
+            uc.bubbleTopShow.postValue(false);
         });
 
         //将订阅者加入管理站
         RxSubscriptions.add(taskMainTabEventReceive);
         RxSubscriptions.add(mainTabEventReceive);
         RxSubscriptions.add(rewardRedDotEventReceive);
+        RxSubscriptions.add(BubbleTopShowEventSubscription);
     }
 
     @Override
@@ -113,6 +137,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         RxSubscriptions.remove(taskMainTabEventReceive);
         RxSubscriptions.remove(mainTabEventReceive);
         RxSubscriptions.remove(rewardRedDotEventReceive);
+        RxSubscriptions.remove(BubbleTopShowEventSubscription);
     }
 
     public void logout() {
@@ -168,7 +193,172 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                 });
     }
 
+    //今日缘分打开上报
+    public void pushGreet(Integer type) {
+        model.pushGreet(type)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseResponse>() {
+                    @Override
+                    public void onSuccess(BaseResponse baseResponse) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        dismissHUD();
+                    }
+                });
+    }
+
+    //批量搭讪
+    public void putAccostList(List<Integer> userIds) {
+        model.putAccostList(userIds)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseResponse>() {
+                    @Override
+                    public void onSuccess(BaseResponse baseResponse) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        dismissHUD();
+                    }
+                });
+    }
+
+    //回复收入气泡提示
+    public void getBubbleSetting() {
+        model.getBubbleEntity()
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .subscribe(new BaseObserver<BaseDataResponse<BubbleEntity>>() {
+                    @Override
+                    public void onSuccess(BaseDataResponse<BubbleEntity> bubbleEntityBaseDataResponse) {
+                        BubbleEntity bubble = bubbleEntityBaseDataResponse.getData();
+                        if (bubble != null) {
+                            if (bubble.getStatus() == 1) {
+                                uc.bubbleTopShow.postValue(true);
+                            }
+                        }
+                    }
+                });
+    }
+
+    public void loadBalance() {
+        model.coinWallet()
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .subscribe(new BaseObserver<BaseDataResponse<CoinWalletEntity>>() {
+                    @Override
+                    public void onSuccess(BaseDataResponse<CoinWalletEntity> response) {
+//                        mBalance = response.getData().getTotalCoin();
+//                        tvBalance.setText(String.valueOf(response.getData().getTotalCoin()));
+//                        autoPay();
+                    }
+
+                    @Override
+                    public void onError(RequestException e) {
+                        ToastUtils.showShort(e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        super.onComplete();
+                    }
+                });
+    }
+    //添加IM消息监听器
+    public void initIMListener () {
+        V2TIMManager.getMessageManager().addAdvancedMsgListener(new V2TIMAdvancedMsgListener() {
+            @Override
+            public void onRecvNewMessage(V2TIMMessage msg) {
+                MessageInfo info = ChatMessageInfoUtil.createMessageInfo(msg);
+                if (info != null) {
+                    String text = String.valueOf(info.getExtra());
+                    if (StringUtil.isJSON2(text) && text.contains("type")) {//做自定义通知判断
+                        Map<String, Object> map_data = new Gson().fromJson(text, Map.class);
+                        if (map_data != null && map_data.get("type") != null) {
+                            String type = Objects.requireNonNull(map_data.get("type")).toString();
+                            String data = (String) map_data.get("data");
+                            if (StringUtil.isJSON2(data)) {
+                                switch (type) {
+                                    case "message_pushGreet"://今日搭訕
+                                        if (AppContext.isHomePage){
+                                            uc.clickAccountDialog.setValue("1");
+                                        }
+                                        if (ConfigManager.getInstance().getRemoveImMessageFlag()){
+                                            //清除云端缓存
+                                            remove(msg);
+                                        }
+
+                                        break;
+                                    case "message_pushPay"://未支付儲值鑽石
+                                        if (AppContext.isShowNotPaid){
+                                            Map<String, Object> dataMapPushPay = new Gson().fromJson(data, Map.class);
+                                            String dataType = Objects.requireNonNull(dataMapPushPay.get("type")).toString();
+                                            if (dataType.equals("1") || dataType.equals("1.0")) {
+                                                uc.notPaidDialog.setValue("1");
+                                            } else {
+                                                uc.notPaidDialog.setValue("2");
+                                            }
+                                        }
+
+                                        if (ConfigManager.getInstance().getRemoveImMessageFlag()){
+                                            //清除云端缓存
+                                            remove(msg);
+                                        }
+                                        break;
+                                    case "message_gift"://接收礼物
+                                        if (map_data.get("is_accost") == null) {//不是搭讪礼物
+                                            GiftEntity giftEntity = IMGsonUtils.fromJson(data, GiftEntity.class);
+                                            //是特效礼物才发送订阅通知事件
+                                            if (!StringUtils.isEmpty(giftEntity.getSvgaPath())) {
+                                                RxBus.getDefault().post(new MessageGiftNewEvent(giftEntity));
+                                            }
+                                        }
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+    /**
+     * 删除本地和云端的数据
+     * @param msg
+     */
+    private void remove(V2TIMMessage msg) {
+        List<V2TIMMessage> v2TIMMessages = new ArrayList<>();
+        v2TIMMessages.add(msg);
+
+        V2TIMManager.getMessageManager().deleteMessages(v2TIMMessages, new V2TIMCallback() {
+            @Override
+            public void onError(int code, String desc) {
+                LogUtils.i("onError: "+code);
+            }
+
+            @Override
+            public void onSuccess() {
+                LogUtils.i("IM -onSuccess: ");
+            }
+        });
+    }
+
+
     public class UIChangeObservable {
+        //气泡提示
+        public SingleLiveEvent<Boolean> bubbleTopShow = new SingleLiveEvent<>();
         //        public SingleLiveEvent<Void> showAgreementDialog = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> showFaceRecognitionDialog = new SingleLiveEvent<>();
         public SingleLiveEvent<String> startFace = new SingleLiveEvent<>();
@@ -179,6 +369,12 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<LikeRecommendEntity> showRecommendUserDialog = new SingleLiveEvent<>();
         public ObservableField<Boolean> gender = new ObservableField<>(false);
         public SingleLiveEvent<MainTabEvent> mainTab = new SingleLiveEvent<>();
+        //每个新版本只会弹出一次
+        public SingleLiveEvent<Void> versionAlertSl = new SingleLiveEvent<>();
+        //打开批量搭讪
+        public SingleLiveEvent<String> clickAccountDialog = new SingleLiveEvent<>();
+        //未付费弹窗
+        public SingleLiveEvent<String> notPaidDialog = new SingleLiveEvent<>();
     }
 
 }

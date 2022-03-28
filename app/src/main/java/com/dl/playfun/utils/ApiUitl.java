@@ -3,6 +3,7 @@ package com.dl.playfun.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
@@ -10,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Base64;
 import android.util.Log;
 
@@ -30,6 +32,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -53,6 +56,7 @@ import okhttp3.RequestBody;
  * @Version 1.0
  **/
 public class ApiUitl {
+    private static List<Field> sMetricsFields;
     public static boolean isShow = false;
     public static boolean issendMessageTag = false;
     public static AddressEntity $address = null;
@@ -78,17 +82,6 @@ public class ApiUitl {
     }
 
     /**
-    * @Desc TODO(封装请求体转化为RequestBody)
-    * @author 彭石林
-    * @parame [body]
-    * @return okhttp3.RequestBody
-    * @Date 2022/1/14
-    */
-    public static RequestBody getBody(String body){
-        return RequestBody.create(MediaType.parse("application/json; charset=utf-8"),body);
-    }
-
-    /**
      * 判断字符串中是否包含中文
      *
      * @param str 待校验字符串
@@ -102,6 +95,17 @@ public class ApiUitl {
         Pattern p = Pattern.compile("[\u4e00-\u9fa5]");
         Matcher m = p.matcher(str);
         return m.find();
+    }
+
+    /**
+     * @return okhttp3.RequestBody
+     * @Desc TODO(封装请求体转化为RequestBody)
+     * @author 彭石林
+     * @parame [body]
+     * @Date 2022/1/14
+     */
+    public static RequestBody getBody(String body) {
+        return RequestBody.create(MediaType.parse("application/json; charset=utf-8"), body);
     }
 
     /**
@@ -347,6 +351,60 @@ public class ApiUitl {
 
     public interface CallBackUploadFileNameCallback {
         void success(String fileName);
+    }
+
+    public static Resources autoXDpi(float designWidth, Resources resources) {
+        return autoSizeWidth(resources, 360);
+//        AutoSizeCompat.autoConvertDensityBaseOnWidth(resources, designWidth);
+////        DisplayMetrics displayMetrics = resources.getDisplayMetrics();
+////        displayMetrics.xdpi = ScreenUtils.getScreenWidth() * 25.4f / designWidth;
+//        return resources;
+    }
+
+    public static Resources autoSizeWidth(Resources resources, float designWidth) {
+        float newXdpi = (resources.getDisplayMetrics().widthPixels * 72f) / designWidth;
+        resources.getDisplayMetrics().xdpi = newXdpi;
+        if (sMetricsFields == null) {
+            sMetricsFields = new ArrayList<>();
+            Class resCls = resources.getClass();
+            Field[] declaredFields = resCls.getDeclaredFields();
+            while (declaredFields != null && declaredFields.length > 0) {
+                for (Field field : declaredFields) {
+                    if (field.getType().isAssignableFrom(DisplayMetrics.class)) {
+                        field.setAccessible(true);
+                        DisplayMetrics tmpDm = getMetricsFromField(resources, field);
+                        if (tmpDm != null) {
+                            sMetricsFields.add(field);
+                            tmpDm.xdpi = newXdpi;
+                        }
+                    }
+                }
+                resCls = resCls.getSuperclass();
+                if (resCls != null) {
+                    declaredFields = resCls.getDeclaredFields();
+                } else {
+                    break;
+                }
+            }
+        } else {
+            for (Field metricsField : sMetricsFields) {
+                try {
+                    DisplayMetrics dm = (DisplayMetrics) metricsField.get(resources);
+                    if (dm != null) dm.xdpi = newXdpi;
+                } catch (Exception e) {
+                    Log.e("AdaptScreenUtils", "applyMetricsFields: " + e);
+                }
+            }
+        }
+        return resources;
+    }
+
+    private static DisplayMetrics getMetricsFromField(final Resources resources, final Field field) {
+        try {
+            return (DisplayMetrics) field.get(resources);
+        } catch (Exception ignore) {
+            return null;
+        }
     }
 
 }

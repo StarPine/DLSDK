@@ -39,6 +39,7 @@ import java.util.List;
 public class MMAlertDialog {
     public static Integer selectedPosition = -1;
 
+
     public static AlertDialog WithdrawAccountDialog(Context context, boolean touchOutside, String account, String name, WithdrawAccountDialogListener withdrawAccountDialogListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         AlertDialog dialog = builder.create();

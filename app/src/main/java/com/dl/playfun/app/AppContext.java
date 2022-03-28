@@ -5,7 +5,6 @@ import android.app.Application;
 import android.content.Context;
 import android.net.http.HttpResponseCache;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.util.Log;
 
@@ -72,8 +71,10 @@ public class AppContext extends Application {
     public static final String TAG = "AppContext";
     public static final String LOG_TAG = "AppsFlyerOneLinkSimApp";
     public static final String DL_ATTRS = "dl_attrs";
+    public static String currPage = "not_in";
+    public static boolean isHomePage = false;
+    public static boolean isShowNotPaid = false;
     public static Handler sUiThreadHandler;
-    public static CountDownTimer downTimer = null;
     private static AppContext instance;
     private static Thread sUiThread;
 

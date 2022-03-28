@@ -36,6 +36,7 @@ public class TraceDialog {
     private String confirmText = "";
     private String confirmTwoText = "";
     private String cannelText = "";
+    private int titleSize = 0;
 
 
     private ConfirmOnclick confirmOnclick;
@@ -143,7 +144,7 @@ public class TraceDialog {
      * @param titleString
      * @return
      */
-    public TraceDialog setTitele(String titleString) {
+    public TraceDialog setTitle(String titleString) {
         this.titleString = titleString;
         return INSTANCE;
     }
@@ -152,6 +153,13 @@ public class TraceDialog {
         this.contentString = content;
         return INSTANCE;
     }
+
+    public TraceDialog setTitleSize(int size) {
+        this.titleSize = size;
+        return INSTANCE;
+    }
+
+
 
     /**
      * 设置确定按钮文案
@@ -224,6 +232,9 @@ public class TraceDialog {
             title.setVisibility(View.VISIBLE);
             title.setText(titleString);
         }
+        if (titleSize != 0){
+            title.setTextSize(titleSize);
+        }
 
         if (StringUtils.isEmpty(confirmText)) {
             confirmBtn.setVisibility(View.GONE);
@@ -242,6 +253,9 @@ public class TraceDialog {
         cannelwBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (cannelOnclick != null) {
+                    cannelOnclick.cannel(bottomDialog);
+                }
                 bottomDialog.dismiss();
             }
         });
@@ -263,12 +277,21 @@ public class TraceDialog {
         Dialog bottomDialog = new Dialog(context, R.style.BottomDialog);
         View contentView = LayoutInflater.from(context).inflate(R.layout.dialog_trace_vip, null);
         bottomDialog.setContentView(contentView);
+        TextView title = contentView.findViewById(R.id.tv_title);
+        TextView tv_content = contentView.findViewById(R.id.tv_content);
         ViewGroup.LayoutParams layoutParams = contentView.getLayoutParams();
         contentView.setLayoutParams(layoutParams);
         bottomDialog.getWindow().setGravity(Gravity.CENTER);
         bottomDialog.getWindow().setWindowAnimations(R.style.BottomDialog_Animation);
 
         Button confirmBtn = contentView.findViewById(R.id.confirm);
+        if (!StringUtils.isEmpty(titleString)) {
+            title.setText(titleString);
+        }
+        if (!StringUtils.isEmpty(contentString)) {
+            tv_content.setText(contentString);
+        }
+
         if (StringUtils.isEmpty(confirmText)) {
             confirmBtn.setVisibility(View.GONE);
         } else {
@@ -332,6 +355,62 @@ public class TraceDialog {
         });
 
         confirmtowBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (confirmTwoOnclick != null) {
+                    confirmTwoOnclick.confirmTwo(bottomDialog);
+                }
+                bottomDialog.dismiss();
+            }
+        });
+
+        return bottomDialog;
+    }
+
+    public Dialog verticalButtonDialog() {
+        Dialog bottomDialog = new Dialog(context, R.style.BottomDialog);
+        View contentView = LayoutInflater.from(context).inflate(R.layout.dialog_vertical_two_button, null);
+        bottomDialog.setContentView(contentView);
+        bottomDialog.getWindow().setGravity(Gravity.CENTER);
+        bottomDialog.getWindow().setWindowAnimations(R.style.BottomDialog_Animation);
+        TextView title = contentView.findViewById(R.id.tv_title);
+        TextView tv_content = contentView.findViewById(R.id.tv_content);
+
+        if (!StringUtils.isEmpty(titleString)) {
+            title.setText(titleString);
+        } else {
+            title.setVisibility(View.INVISIBLE);
+        }
+
+        if (!StringUtils.isEmpty(contentString)) {
+            tv_content.setText(contentString);
+        } else {
+            tv_content.setVisibility(View.GONE);
+        }
+
+        Button button_top = contentView.findViewById(R.id.button_top);
+        Button button_below = contentView.findViewById(R.id.button_below);
+
+        if (!StringUtils.isEmpty(confirmText)) {
+            button_top.setText(confirmText);
+        }
+        if (!StringUtils.isEmpty(confirmTwoText)) {
+            button_below.setText(confirmTwoText);
+        } else {
+            button_below.setVisibility(View.GONE);
+        }
+
+        button_top.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (confirmOnclick != null) {
+                    confirmOnclick.confirm(bottomDialog);
+                }
+                bottomDialog.dismiss();
+            }
+        });
+
+        button_below.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (confirmTwoOnclick != null) {

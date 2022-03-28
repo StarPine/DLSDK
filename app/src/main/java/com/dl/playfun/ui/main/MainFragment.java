@@ -21,13 +21,20 @@ import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.config.TbarCenterImgConfig;
+import com.dl.playfun.entity.GameCoinBuy;
 import com.dl.playfun.event.MainTabEvent;
 import com.dl.playfun.event.TaskListEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.tim.TUIUtils;
 import com.dl.playfun.ui.base.BaseFragment;
+import com.dl.playfun.ui.dialog.HomeAccostDialog;
+import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
+import com.dl.playfun.ui.mine.wallet.coin.CoinFragment;
 import com.dl.playfun.utils.ImmersionBarUtils;
+import com.dl.playfun.widget.coinrechargesheet.GameCoinTopupSheetView;
 import com.dl.playfun.widget.dialog.MVDialog;
+import com.dl.playfun.widget.dialog.TraceDialog;
+import com.dl.playfun.widget.dialog.WebViewDialog;
 import com.dl.playfun.widget.pageview.FragmentAdapter;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
@@ -43,7 +50,10 @@ import com.tencent.liteav.trtccalling.model.impl.TUICallingManager;
 import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.view.ConversationCommonHolder;
 
+import java.util.List;
+
 import me.goldze.mvvmhabit.bus.RxBus;
+import me.goldze.mvvmhabit.utils.ToastUtils;
 import me.yokeyword.fragmentation.SupportFragment;
 
 /**
@@ -94,6 +104,137 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
     public void initViewObservable() {
         super.initViewObservable();
         AppContext.instance().logEvent(AppsFlyerEvent.main_open);
+        //未付费弹窗
+        viewModel.uc.notPaidDialog.observe(this,s -> {
+            String url;
+            if (s.equals("2")) {
+                url = AppConfig.WEB_BASE_URL+"recharge_vip/recharge_vip.html";
+            } else {
+                url = AppConfig.WEB_BASE_URL+"recharge_zuan/recharge_zuan.html";
+            }
+            if(AppConfig.isDebug){
+                if (s.equals("2")) {
+                    url = "http://t-m.joy-mask.com/recharge_vip/recharge_vip.html";
+                } else {
+                    url = "http://t-m.joy-mask.com/recharge_zuan/recharge_zuan.html";
+                }
+            }
+            new WebViewDialog(getContext(), mActivity, url, new WebViewDialog.ConfirmOnclick() {
+                @Override
+                public void webToVipRechargeVC(Dialog dialog) {
+                    if(dialog!=null){
+                        dialog.dismiss();
+                    }
+                    viewModel.start(VipSubscribeFragment.class.getCanonicalName());
+                }
+
+                @Override
+                public void vipRechargeDiamondSuccess(Dialog dialog, Integer coinValue) {
+                    if(dialog!=null){
+                        dialog.dismiss();
+                    }
+                }
+
+                @Override
+                public void moreRechargeDiamond(Dialog dialog) {
+                    dialog.dismiss();
+                    mActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showRecharge();
+                        }
+                    });
+                }
+
+                @Override
+                public void cancel() {
+                }
+            }).noticeDialog().show();
+            if (s.equals("2")){//vip
+                viewModel.pushGreet(3);
+            }else {
+                viewModel.pushGreet(2);
+            }
+
+        });
+        //搭讪弹窗-今日缘分
+        viewModel.uc.clickAccountDialog.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String isShow) {
+                HomeAccostDialog homeAccostDialog = new HomeAccostDialog(getContext());
+                homeAccostDialog.setIncomplete(isShow);
+                homeAccostDialog.setDialogAccostClicksListener(new HomeAccostDialog.DialogAccostClicksListener() {
+                    @Override
+                    public void onSubmitClick(HomeAccostDialog dialog, List<Integer> listData) {
+                        dialog.dismiss();
+                        viewModel.putAccostList(listData);
+                    }
+
+                    @Override
+                    public void onCancelClick(HomeAccostDialog dialog) {
+                        AppContext.instance().logEvent(AppsFlyerEvent.accost_close);
+                        dialog.dismiss();
+                    }
+                });
+                homeAccostDialog.show();
+                if (isShow.equals("1")){
+                    viewModel.pushGreet(1);
+                }
+            }
+        });
+        //公告展示
+        viewModel.uc.versionAlertSl.observe(this, new Observer<Void>() {
+            @Override
+            public void onChanged(Void unused) {
+//                WebViewDialog.getInstance(getContext())
+//                        .setWebUrl(AppConfig.WEB_BASE_URL + "notice/notice.html")
+//                        .setConfirmOnlick(new WebViewDialog.ConfirmOnclick() {
+//                            @Override
+//                            public void webToVipRechargeVC(Dialog dialog) {
+//                                dialog.dismiss();
+//                                viewModel.start(VipSubscribeFragment.class.getCanonicalName());
+//                            }
+//
+//                            @Override
+//                            public void cancel() {
+//                                viewModel.uc.newUserRegis.postValue(false);
+//                            }
+//                        }).noticeDialog().show();
+            }
+        });
+        //气泡提示
+        viewModel.uc.bubbleTopShow.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean tipShow) {
+                if (!ConfigManager.getInstance().getTipMoneyShowFlag()) {
+                    binding.bubbleTip.setVisibility(View.GONE);
+                    return;
+                }
+                if (tipShow && !ConfigManager.getInstance().isMale()) {
+                    binding.bubbleTip.setVisibility(View.VISIBLE);
+                } else {
+                    binding.bubbleTip.setVisibility(View.GONE);
+                }
+            }
+        });
+        viewModel.uc.mainTab.observe(this, new Observer<MainTabEvent>() {
+            @Override
+            public void onChanged(MainTabEvent mainTabEvent) {
+                if (mainTabEvent != null) {
+                    switch (mainTabEvent.getTabName()) {
+                        case "home":
+                            setSelectedItemId(binding.navigationHome);//tbar切换到首頁
+                            break;
+                        case "plaza":
+                            setSelectedItemId(binding.navigationRadio);//tbar切换到廣場
+                            break;
+                        case "message":
+                            setSelectedItemId(binding.navigationMessage);//tbar切换到訊息
+                            break;
+                    }
+                }
+            }
+        });
         viewModel.uc.showFaceRecognitionDialog.observe(this, new Observer<Void>() {
             @Override
             public void onChanged(Void aVoid) {
@@ -170,6 +311,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
             @Override
             public void onChanged(Integer count) {
                 try {
+                    viewModel.getBubbleSetting();
                     if (count == 0) {
                         tvBadgeNum.setVisibility(View.GONE);
                     } else {
@@ -196,6 +338,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         }
         initView();
         ConversationCommonHolder.sexMale = ConfigManager.getInstance().isMale();
+        viewModel.getBubbleSetting();
     }
 
     /**
@@ -332,6 +475,12 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                 setSelectedItemId(binding.navigationMine);
             }
         });
+        binding.bubbleTip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setSelectedItemId(binding.navigationMessage);
+            }
+        });
         mainViewPager = binding.viewPager;
         FragmentAdapter fragmentAdapter = new FragmentAdapter(this);
         fragmentAdapter.setFragmentList(mFragments);
@@ -390,6 +539,25 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
             }
             binding.navigationMineText.setTextColor(getResources().getColor(R.color.navigation_checked));
         }
+    }
+
+
+    private void showRecharge() {
+        GameCoinTopupSheetView gameCoinTopupSheetView = new GameCoinTopupSheetView(mActivity);
+        gameCoinTopupSheetView.show();
+        gameCoinTopupSheetView.setCoinRechargeSheetViewListener(new GameCoinTopupSheetView.CoinRechargeSheetViewListener() {
+            @Override
+            public void onPaySuccess(GameCoinTopupSheetView sheetView, GameCoinBuy sel_goodsEntity) {
+                sheetView.endGooglePlayConnect();
+                sheetView.dismiss();
+            }
+
+            @Override
+            public void onPayFailed(GameCoinTopupSheetView sheetView, String msg) {
+                sheetView.dismiss();
+                ToastUtils.showShort(msg);
+            }
+        });
     }
 
     //初始化按钮状态

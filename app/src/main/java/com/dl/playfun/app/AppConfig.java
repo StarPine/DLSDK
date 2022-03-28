@@ -7,6 +7,7 @@ import com.dl.playfun.entity.BannerItemEntity;
  * @author wulei
  */
 public class AppConfig {
+    public static final boolean isDebug = BuildConfig.DEBUG;
     /**
      * 版本编号
      */
@@ -71,6 +72,8 @@ public class AppConfig {
 //
 //    public static final String BUCKET_NAME = "jmasktest";
     public static BannerItemEntity radioAlertFlagEntity = null;
+    //新IM 发送图片oss文件夹定义
+    public static String OSS_CUSTOM_FILE_NAME_CHAT = "chat";
     /**
      * @Desc TODO(跳转页面地址)
      * @author 彭石林

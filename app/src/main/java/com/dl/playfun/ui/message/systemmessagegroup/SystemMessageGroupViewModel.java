@@ -60,9 +60,7 @@ public class SystemMessageGroupViewModel extends BaseRefreshViewModel<AppReposit
         super.onCreate();
     }
 
-    @Override
-    public void onEnterAnimationEnd() {
-        super.onEnterAnimationEnd();
+    public void initData() {
         startRefresh();
     }
 

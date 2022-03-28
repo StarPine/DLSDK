@@ -78,7 +78,7 @@ public class HomeAccostDialog extends BaseDialog {
     private ImageView item_tag_img1, item_tag_img2, item_tag_img3, item_tag_img4, item_tag_img5, item_tag_img6;
     private LottieAnimationView item_lottie1, item_lottie2, item_lottie3, item_lottie4, item_lottie5, item_lottie6;
     private ImageView iv_dialog_close;//关闭按钮
-    private ImageView btn_submit;//提交按钮
+    private ImageView btn_submit,incomplete,iv_accost_match;//提交按钮
     private TextView exp_time;//提示
     private DialogAccostClicksListener dialogAccostClicksListener;
 
@@ -95,6 +95,16 @@ public class HomeAccostDialog extends BaseDialog {
         this.dialogAccostClicksListener = listener;
     }
 
+    public void setIncomplete(String isShow){
+        if (isShow.equals("1")){
+            incomplete.setVisibility(View.GONE);
+            iv_accost_match.setVisibility(View.VISIBLE);
+        }else {
+            iv_accost_match.setVisibility(View.GONE);
+            incomplete.setVisibility(View.VISIBLE);
+        }
+    }
+
     private void initView() {
         //读取本地冷却时间
         changeDownTime = readKeyValue(AppContext.instance().appRepository.readUserData().getId() + "_homeAccost");
@@ -103,6 +113,8 @@ public class HomeAccostDialog extends BaseDialog {
         rootView = inflater.inflate(R.layout.dialog_home_accost_list, null);
         exp_time = rootView.findViewById(R.id.exp_time);
         changeText = rootView.findViewById(R.id.change_text);
+        incomplete = rootView.findViewById(R.id.iv_accost_incomplete);
+        iv_accost_match = rootView.findViewById(R.id.iv_accost_match);
         item_entity_img1 = rootView.findViewById(R.id.item_entity_img1);
         item_entity_img2 = rootView.findViewById(R.id.item_entity_img2);
         item_entity_img3 = rootView.findViewById(R.id.item_entity_img3);

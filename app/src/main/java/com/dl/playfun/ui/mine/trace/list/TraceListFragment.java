@@ -87,7 +87,7 @@ public class TraceListFragment extends BaseToolbarFragment<FragmentTraceListBind
             @Override
             public void onChanged(Integer unused) {
                 TraceDialog.getInstance(TraceListFragment.this.getContext())
-                        .setTitele(getString(R.string.playfun_mine_trace_delike))
+                        .setTitle(getString(R.string.playfun_mine_trace_delike))
                         .setCannelText(getString(R.string.playfun_mine_trace_delike_cannel))
                         .setConfirmText(getString(R.string.playfun_mine_trace_delike_confirm))
                         .chooseType(TraceDialog.TypeEnum.CENTER)
@@ -103,7 +103,15 @@ public class TraceListFragment extends BaseToolbarFragment<FragmentTraceListBind
         viewModel.uc.clickAddLike.observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-
+                TraceDialog.getInstance(TraceListFragment.this.getContext())
+                        .setTitle(getString(R.string.playfun_addlike_title_tip))
+                        .setTitleSize(16)
+                        .setCannelText(getString(R.string.playfun_mine_trace_like_confirm))//左边按钮
+                        .setConfirmText(getString(R.string.cancel))//右边按钮
+                        .chooseType(TraceDialog.TypeEnum.CENTER)
+                        .setCannelOnclick(dialog -> {
+                            viewModel.addLike(integer);
+                        }).show();
             }
         });
 

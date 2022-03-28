@@ -1,5 +1,6 @@
 package com.dl.playfun.ui.mine.broadcast.mytrends;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 
@@ -435,5 +436,16 @@ public class TrendItemViewModel extends MultiItemViewModel<BaseViewModel> {
         return position;
     }
 
+    public Drawable onLineColor(BroadcastEntity broadcastEntity){
+        if (broadcastEntity == null)return null;
+        if (broadcastEntity.getCallingStatus() == 0){
+            if (broadcastEntity.getIsOnline() == 1) {
+                return AppContext.instance().getResources().getDrawable(R.drawable.mine_radius3);
+            }
+        }else {
+            return AppContext.instance().getResources().getDrawable(R.drawable.mine_radius2);
+        }
+        return AppContext.instance().getResources().getDrawable(R.drawable.mine_radius2);
+    }
 
 }

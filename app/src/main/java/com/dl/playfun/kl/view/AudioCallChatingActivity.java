@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -26,6 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.aliyun.svideo.common.utils.FastClickUtil;
 import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
@@ -36,14 +38,18 @@ import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.entity.CoinExchangePriceInfo;
 import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.entity.GoodsEntity;
+import com.dl.playfun.event.CallChatingHangupEvent;
+import com.dl.playfun.kl.Utils;
 import com.dl.playfun.kl.viewmodel.AudioCallChatingViewModel;
 import com.dl.playfun.manager.ConfigManager;
+import com.dl.playfun.ui.dialog.GiftBagDialog;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
 import com.dl.playfun.widget.dialog.MessageDetailDialog;
+import com.dl.playfun.widget.dialog.TraceDialog;
 import com.dl.playfun.widget.image.CircleImageView;
 import com.dl.playfun.R;
 import com.dl.playfun.databinding.ActivityCallAudioChatingBinding;
@@ -64,6 +70,8 @@ import java.net.URL;
 import java.util.Map;
 
 import me.goldze.mvvmhabit.base.BaseActivity;
+import me.goldze.mvvmhabit.bus.RxBus;
+import me.jessyan.autosize.AutoSizeCompat;
 import me.jessyan.autosize.internal.CustomAdapt;
 import me.tatarka.bindingcollectionadapter2.BR;
 
@@ -108,6 +116,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
 
     @Override
     public int initContentView(Bundle savedInstanceState) {
+        AutoSizeCompat.autoConvertDensityOfGlobal(this.getResources());
         return R.layout.activity_call_audio_chating;
     }
 
@@ -126,6 +135,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
     @Override
     public void initParam() {
         super.initParam();
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
         SVGASoundManager.INSTANCE.init();
         SVGAParser.Companion.shareParser().init(this);
         mContext = this;
@@ -158,6 +168,19 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
             public void onChanged(Void unused) {
                 binding.rcvLayout.scrollToPosition(viewModel.adapter.getItemCount() - 1);
             }
+        });
+
+        //关注按钮点击
+        viewModel.uc.clickLike.observe(this,unused -> {
+            TraceDialog.getInstance(AudioCallChatingActivity.this)
+                    .setTitle(getString(R.string.playfun_addlike_title_tip))
+                    .setTitleSize(16)
+                    .setCannelText(getString(R.string.playfun_mine_trace_like_confirm))//左边按钮
+                    .setConfirmText(getString(R.string.cancel))//右边按钮
+                    .chooseType(TraceDialog.TypeEnum.CENTER)
+                    .setCannelOnclick(dialog -> {
+                        viewModel.addLike(false);
+                    }).show();
         });
 
         //破冰文案刷新動畫
@@ -644,7 +667,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                     //没10秒更新一次破冰文案
                     viewModel.getSayHiList();
                 }
-                if (viewModel.userCall) {//拨打人
+                if (viewModel.isMale) {//男
                     if (mTimeCount == 120 && !viewModel.sendGiftBagSuccess) {//两分钟
                         String maleTextSendGift = StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt16);
                         SpannableString itemMessageBuilder = new SpannableString(maleTextSendGift);
@@ -675,10 +698,16 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                                 String textHint = (viewModel.maleBalanceMoney / 60) + minute + (viewModel.maleBalanceMoney % 60);
                                 String txt = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt14), textHint);
                                 viewModel.maleTextMoneyField.set(txt);
-//                                if (!ConfigManager.getInstance().isMale()){
-//                                    viewModel.maleTextLayoutSHow.set(true);
-//                                }
+                                viewModel.maleTextLayoutSHow.set(true);
                                 viewModel.flagMoney = true;
+
+                                //通知女生男生这边余额不足
+                                if (viewModel.audioUserDataEntity.get().getId().intValue() == viewModel.audioCallingInfoEntity.get().getFromUserProfile().getId().intValue()) {
+                                    viewModel.getTips(toUserId,2,"1");
+                                } else {
+                                    viewModel.getTips(fromUserId,2,"1");
+                                }
+
                             }
                         }
                     }
@@ -717,17 +746,19 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                         }
                     }
                     if (viewModel.profitTipsIntervalSeconds != null && mTimeCount % viewModel.profitTipsIntervalSeconds == 0) {
-                        if (ConfigManager.getInstance().getTipMoneyShowFlag() && !ConfigManager.getInstance().isMale()) {
-                            viewModel.coinTotal = (viewModel.timePrice.multiply(BigDecimal.valueOf(10)));
-                            //收益提示框
-                            viewModel.girlEarningsField.set(false);
-                            mTimeTen++;
-                            String girlEarningsTex = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt), (viewModel.timePrice.multiply(BigDecimal.valueOf(mTimeTen * 10))));
-                            SpannableString stringBuilder = new SpannableString(girlEarningsTex);
-                            ForegroundColorSpan blueSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint1));
-                            stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, girlEarningsTex.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            stringBuilder.setSpan(blueSpan, girlEarningsTex.indexOf(": ")+1, girlEarningsTex.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            viewModel.girlEarningsText.set(stringBuilder);
+                        if (ConfigManager.getInstance().getTipMoneyShowFlag()) {
+                            if (!viewModel.isShowCountdown.get()){//对方余额不足没有展示
+                                viewModel.coinTotal = (viewModel.timePrice.multiply(BigDecimal.valueOf(10)));
+                                viewModel.girlEarningsField.set(true);
+                                mTimeTen++;
+                                String girlEarningsTex = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt), (viewModel.timePrice.multiply(BigDecimal.valueOf(mTimeTen * 10))));
+                                SpannableString stringBuilder = new SpannableString(girlEarningsTex);
+                                ForegroundColorSpan blueSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint1));
+                                stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                stringBuilder.setSpan(blueSpan, 6, girlEarningsTex.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                viewModel.girlEarningsText.set(stringBuilder);
+                            }
+
                         }
                     }
                 }
@@ -741,6 +772,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
     @Override
     public void onDestroy() {
         super.onDestroy();
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
         if (mHandler != null) {
             mHandler.removeCallbacks(timerRunnable);
             mHandler = null;
@@ -809,6 +841,10 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
 
     @Override
     public void finishView() {
+        //2秒最多发一次
+        if (!FastClickUtil.isFastCallFun("AudioCallChatingActivity")) {
+            RxBus.getDefault().post(new CallChatingHangupEvent());
+        }
         Utils.runOnUiThread(this::finish);
     }
 

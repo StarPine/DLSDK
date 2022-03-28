@@ -1,11 +1,14 @@
 package com.dl.playfun.ui.base;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.MotionEvent;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.dl.playfun.utils.ApiUitl;
 
 import me.yokeyword.fragmentation.ExtraTransaction;
 import me.yokeyword.fragmentation.ISupportActivity;
@@ -52,6 +55,16 @@ public class MySupportActivity extends AppCompatActivity implements ISupportActi
     protected void onDestroy() {
         mDelegate.onDestroy();
         super.onDestroy();
+    }
+
+    /**
+     * 从写适配规则适配360dp
+     *
+     * @return
+     */
+    @Override
+    public Resources getResources() {
+        return ApiUitl.autoXDpi(360f, super.getResources());
     }
 
     /**

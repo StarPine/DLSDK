@@ -860,8 +860,20 @@ public class MVDialog {
         return INSTANCE;
     }
 
-
-
+    public MVDialog setTitleSize(float textSize){
+        this.textSize = textSize;
+        return INSTANCE;
+    }
+    /**
+     * 设置
+     *
+     * @param titleString
+     * @return
+     */
+    public MVDialog setTitle(String titleString) {
+        this.titleString = titleString;
+        return INSTANCE;
+    }
     /**
      * 获取
      *
@@ -914,9 +926,11 @@ public class MVDialog {
             }
         });
         if (StringUtil.isEmpty(confirmText)) {
+            contentBtn.setVisibility(View.VISIBLE);
             contentBtn.setText(context.getResources().getString(R.string.playfun_confirm));
         } else {
             contentBtn.setText(confirmText);
+            contentBtn.setVisibility(View.VISIBLE);
         }
         if (StringUtil.isEmpty(confirmTwoText)) {
             contentTowBtn.setText(context.getResources().getString(R.string.playfun_confirm));

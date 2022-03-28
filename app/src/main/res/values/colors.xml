@@ -83,5 +83,5 @@
     <color name="call_message_deatail_hint2">#FF3DFFF0</color>
 
     <color name="accost_down_time_change">#FF333333</color>
-
+    <color name="purple_text">#BE63FF</color>
 </resources>

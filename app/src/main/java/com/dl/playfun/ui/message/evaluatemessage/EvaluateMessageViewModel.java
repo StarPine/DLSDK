@@ -74,7 +74,7 @@ public class EvaluateMessageViewModel extends BaseRefreshViewModel<AppRepository
         MultiItemViewModel<EvaluateMessageViewModel> itemViewModel = observableList.get(position);
         if ((Integer) itemViewModel.getItemType() == 1) {
             EvaluateThemMessageItemViewModel evaluateThemMessageItemViewModel = (EvaluateThemMessageItemViewModel) itemViewModel;
-            getUserEvaluate(evaluateThemMessageItemViewModel.itemEntity.get().getUser().getId());
+            getUserEvaluate(evaluateThemMessageItemViewModel.itemEntity.get().getUser().getId(), evaluateThemMessageItemViewModel.itemEntity.get().getUser().getSex());
         } else if ((Integer) itemViewModel.getItemType() == 2) {
 
         }
@@ -146,7 +146,7 @@ public class EvaluateMessageViewModel extends BaseRefreshViewModel<AppRepository
                 });
     }
 
-    public void getUserEvaluate(int userId) {
+    public void getUserEvaluate(int userId, int sex) {
         model.evaluate(userId)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
@@ -156,7 +156,7 @@ public class EvaluateMessageViewModel extends BaseRefreshViewModel<AppRepository
                     @Override
                     public void onSuccess(BaseDataResponse<List<EvaluateEntity>> response) {
                         Map<String, Object> params = new HashMap<>();
-                        params.put("sex", 1);
+                        params.put("sex", sex);
                         params.put("userId", userId);
                         params.put("evaluates", response.getData());
                         uc.clickEvaluate.postValue(params);

@@ -41,6 +41,7 @@ import java.util.List;
 
 import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.utils.ToastUtils;
+import me.jessyan.autosize.AutoSizeCompat;
 import me.jessyan.autosize.internal.CustomAdapt;
 
 /**
@@ -52,6 +53,7 @@ public class HomeMainFragment extends BaseFragment<FragmentHomeMainBinding, Home
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        AutoSizeCompat.autoConvertDensityOfGlobal(this.getResources());
         return R.layout.fragment_home_main;
     }
 
@@ -188,10 +190,11 @@ public class HomeMainFragment extends BaseFragment<FragmentHomeMainBinding, Home
             }
         });
         //搭讪弹窗
-        viewModel.uc.clickAccountDialog.observe(this, new Observer<Void>() {
+        viewModel.uc.clickAccountDialog.observe(this, new Observer<String>() {
             @Override
-            public void onChanged(Void unused) {
+            public void onChanged(String isShow) {
                 HomeAccostDialog homeAccostDialog = new HomeAccostDialog(getContext());
+                homeAccostDialog.setIncomplete(isShow);
                 homeAccostDialog.setDialogAccostClicksListener(new HomeAccostDialog.DialogAccostClicksListener() {
                     @Override
                     public void onSubmitClick(HomeAccostDialog dialog, List<Integer> listData) {
@@ -308,6 +311,20 @@ public class HomeMainFragment extends BaseFragment<FragmentHomeMainBinding, Home
         ImmersionBarUtils.setupStatusBar(this, true, true);
         if (!viewModel.locationService.get()) {
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        AppContext.isHomePage = true;
+        AppContext.isShowNotPaid = true;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        AppContext.isShowNotPaid = false;
+        AppContext.isHomePage = false;
     }
 
     @Override

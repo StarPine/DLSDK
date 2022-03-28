@@ -23,6 +23,7 @@ import com.dl.playfun.entity.BubbleEntity;
 import com.dl.playfun.entity.CallingInfoEntity;
 import com.dl.playfun.entity.CallingInviteInfo;
 import com.dl.playfun.entity.CashWalletEntity;
+import com.dl.playfun.entity.ChatDetailCoinEntity;
 import com.dl.playfun.entity.ChatRedPackageEntity;
 import com.dl.playfun.entity.CoinExchangeBoxInfo;
 import com.dl.playfun.entity.CoinWalletEntity;
@@ -75,6 +76,7 @@ import com.dl.playfun.entity.TokenEntity;
 import com.dl.playfun.entity.TopicalListEntity;
 import com.dl.playfun.entity.TraceEntity;
 import com.dl.playfun.entity.UnReadMessageNumEntity;
+import com.dl.playfun.entity.UnlockSocialAccountConfigEntity;
 import com.dl.playfun.entity.UserCoinItemEntity;
 import com.dl.playfun.entity.UserConnMicStatusEntity;
 import com.dl.playfun.entity.UserDataEntity;
@@ -121,6 +123,11 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
+    public Observable<BaseDataResponse<ChatDetailCoinEntity>> getTotalCoins(Integer dismissRoom) {
+        return apiService.getTotalCoins(dismissRoom);
+    }
+
+    @Override
     public Observable<BaseResponse> GamePaySuccessNotify(String packageName, String orderNumber, List<String> productId, String token, int type, Integer event, String serverId, String roleId) {
         return apiService.GamePaySuccessNotify(packageName, orderNumber, productId,token,type,event,serverId,roleId);
     }
@@ -156,6 +163,11 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
+    public Observable<BaseDataResponse> getTips(Integer toUserId, Integer type, String isShow) {
+        return apiService.getTips(toUserId, type, isShow);
+    }
+
+    @Override
     public Observable<BaseResponse> addIMCollect(Integer userId, Integer type) {
         return apiService.addIMCollect(userId, type);
     }
@@ -188,6 +200,18 @@ public class HttpDataSourceImpl implements HttpDataSource {
     @Override
     public Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(Integer callingType, Integer fromUserId, Integer toUserId, Integer currentUserId) {
         return apiService.callingInviteInfo(callingType, fromUserId, toUserId, currentUserId);
+    }
+
+    @Override
+    public Observable<BaseDataResponse<UnlockSocialAccountConfigEntity>> getUnlockSocialAccountConfig() {
+        return apiService.getUnlockSocialAccountConfig();
+    }
+
+    @Override
+    public Observable<BaseResponse> updateSocialLevel(Integer socialLevel) {
+        HashMap<String, Integer> map = new HashMap<>();
+        map.put("socialLevel", socialLevel);
+        return apiService.updateSocialLevel(ApiUitl.getBody(GsonUtils.toJson(map)));
     }
 
     @Override
@@ -246,6 +270,11 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
+    public Observable<BaseDataResponse> getSensitiveWords() {
+        return apiService.getSensitiveWords();
+    }
+
+    @Override
     public Observable<BaseDataResponse<PhotoAlbumEntity>> getPhotoAlbum(Integer user_id) {
         return apiService.getPhotoAlbum(user_id);
     }
@@ -283,6 +312,11 @@ public class HttpDataSourceImpl implements HttpDataSource {
     @Override
     public Observable<BaseResponse> ExchangeIntegraBuy(Integer id) {
         return apiService.ExchangeIntegraBuy(id);
+    }
+
+    @Override
+    public Observable<BaseResponse> pushGreet(Integer type) {
+        return apiService.pushGreet(type);
     }
 
     @Override
@@ -923,6 +957,11 @@ public class HttpDataSourceImpl implements HttpDataSource {
     @Override
     public Observable<BaseDataResponse<CoinWalletEntity>> coinWallet() {
         return apiService.coinWallet();
+    }
+
+    @Override
+    public Observable<BaseResponse> setWithdrawAccount(String realName, String account) {
+        return apiService.setWithdrawAccount(realName, account);
     }
 
     @Override

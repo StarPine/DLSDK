@@ -79,28 +79,7 @@ public class WalletViewModel extends BaseViewModel<AppRepository> {
     });
 
     public void getUserAccount(){
-//        model.getUserAccount()
-//                .doOnSubscribe(this)
-//                .compose(RxUtils.schedulersTransformer())
-//                .compose(RxUtils.exceptionTransformer())
-//                .doOnSubscribe(disposable -> showHUD())
-//                .subscribe(new BaseObserver<BaseDataResponse<CoinWalletEntity>>(){
-//
-//                    @Override
-//                    public void onSuccess(BaseDataResponse<CoinWalletEntity> coinWalletEntityBaseDataResponse) {
-//                        CoinWalletEntity coinWalletEntity = coinWalletEntityBaseDataResponse.getData();
-//                        if(coinWalletEntity!=null){
-//                            totalCoin.set(String.valueOf(coinWalletEntity.getTotalCoin()));
-//                            totalProfit.set(String.format("%.2f", coinWalletEntity.getTotalProfit()));
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//                        dismissHUD();
-//                    }
-//                });
-        model.getUserAccountPageInfo()
+        model.getUserAccount()
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())

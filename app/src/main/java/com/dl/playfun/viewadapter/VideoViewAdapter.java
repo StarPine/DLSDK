@@ -184,7 +184,6 @@ public class VideoViewAdapter {
         gsyVideoPlayer.setVideoAllCallBack(new GSYSampleCallBack() {
             @Override
             public void onClickStartIcon(String url, Object... objects) {
-                Log.e("===========","=====================");
                 super.onClickStartIcon(url, objects);
             }
 

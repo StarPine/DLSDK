@@ -15,12 +15,16 @@
             type="com.dl.playfun.ui.message.chatdetail.ChatDetailViewModel" />
     </data>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/container_background"
-        android:orientation="vertical"
-        tools:context="com.dl.playfun.ui.message.chatdetail.ChatDetailFragment">
+        tools:context=".ui.message.chatdetail.ChatDetailFragment">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/container_background"
+            android:orientation="vertical">
 
         <View
             android:id="@+id/status_bar_view"
@@ -48,14 +52,23 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp">
 
-                    <ImageView
-                        android:layout_width="14dp"
-                        android:layout_height="9dp"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginBottom="4dp"
-                        android:layout_toLeftOf="@+id/tag_title"
-                        android:src="@drawable/tag_invite"
-                        android:visibility="@{viewModel.isTagShow?View.VISIBLE:View.GONE}" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:paddingLeft="30dp"
+                            android:src="@{viewModel.onLineDrawables(viewModel.tagEntitys)}"
+                            android:visibility="@{viewModel.tagEntitys.isOnline == 1? View.VISIBLE:View.GONE}" />
+
+                        <ImageView
+                            android:layout_width="14dp"
+                            android:layout_height="9dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginBottom="4dp"
+                            android:layout_toLeftOf="@+id/tag_title"
+                            android:src="@drawable/tag_invite"
+                            android:visibility="@{viewModel.isTagShow?View.VISIBLE:View.GONE}" />
 
                     <TextView
                         android:id="@+id/tag_title"
@@ -107,5 +120,14 @@
             </androidx.core.widget.NestedScrollView>
         </LinearLayout>
 
-    </LinearLayout>
+        </LinearLayout>
+
+        <com.opensource.svgaplayer.SVGAImageView
+            android:id="@+id/gift_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:autoPlay="true" />
+    </RelativeLayout>
+
 </layout>

@@ -41,6 +41,7 @@ public class SystemMessageGroupFragment extends BaseRefreshFragment<FragmentSyst
         super.initData();
         binding.refreshLayout.setEnableAutoLoadMore(false);
         binding.refreshLayout.setEnableLoadMore(false);
+        viewModel.initData();
     }
 
 }

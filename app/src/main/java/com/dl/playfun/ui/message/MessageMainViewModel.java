@@ -124,4 +124,13 @@ public class MessageMainViewModel extends BaseViewModel<AppRepository> {
     private void notifyMessageCountChange() {
         RxBus.getDefault().post(new MessageCountChangeEvent(systemMessageCount.get() + chatMessageCount.get()));
     }
+
+    public String addString(Integer integer) {
+
+        String s = String.valueOf(integer);
+        if (integer > 99) {
+            s = "99+";
+        }
+        return s;
+    }
 }

@@ -195,6 +195,6 @@
     <string name="custom_message_other_busy">對方忙線中</string>
     <string name="opponent_in_game">В игре</string>
     <string name="call_ended">Звонок завершён</string>
-
+    <string name="custom_send_violation_message_tip">系统提示：為防止詐騙，建議您先發起視訊通話，確認對方身份</string>
 
 </resources>

@@ -452,7 +452,7 @@ public class CoinExchargeItegralDialog extends BaseDialog implements View.OnClic
                         //Log.i(TAG, "querySkuDetailsAsync=getResponseCode==" + billingResult.getResponseCode() + ",skuDetailsList.size=" + skuDetailsList.size());
                         // Process the result.
                         if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                            if (skuDetailsList.size() > 0) {
+                            if (skuDetailsList != null && skuDetailsList.size() > 0) {
                                 for (SkuDetails skuDetails : skuDetailsList) {
                                     String sku = skuDetails.getSku();
                                     String price = skuDetails.getPrice();

@@ -40,6 +40,27 @@ public class BroadcastEntity {
     private TopicalBean topical;
     private NewsBean news;
 
+    @SerializedName("calling_status")
+    private int callingStatus;
+    @SerializedName("is_online")
+    private int isOnline;
+
+    public int getCallingStatus() {
+        return callingStatus;
+    }
+
+    public void setCallingStatus(int callingStatus) {
+        this.callingStatus = callingStatus;
+    }
+
+    public int getIsOnline() {
+        return isOnline;
+    }
+
+    public void setIsOnline(int isOnline) {
+        this.isOnline = isOnline;
+    }
+
     public String getGameChannel() {
         return gameChannel;
     }

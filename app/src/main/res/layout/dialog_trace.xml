@@ -23,7 +23,10 @@
             android:layout_marginTop="24dp"
             android:text="@string/playfun_mine_trace_delike"
             android:textAlignment="center"
-            android:textColor="@color/black"
+            android:gravity="center_horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textColor="@color/text_default"
             android:textSize="20sp" />
 
         <LinearLayout

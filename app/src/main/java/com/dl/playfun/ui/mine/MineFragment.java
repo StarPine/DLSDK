@@ -4,6 +4,7 @@ import static com.dl.playfun.ui.dialog.MyEvaluateDialog.TYPE_MYSELF;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -56,7 +57,9 @@ import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.utils.ToastUtils;
+import me.jessyan.autosize.AutoSizeCompat;
 import me.jessyan.autosize.internal.CustomAdapt;
 
 /**
@@ -81,6 +84,7 @@ public class MineFragment extends BaseRefreshFragment<FragmentMineBinding, MineV
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        AutoSizeCompat.autoConvertDensityOfGlobal(this.getResources());
         return R.layout.fragment_mine;
     }
 
@@ -495,5 +499,14 @@ public class MineFragment extends BaseRefreshFragment<FragmentMineBinding, MineV
     @Override
     public float getSizeInDp() {
         return 360;
+    }
+
+    @SuppressLint("MissingSuperCall")
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (AudioPlayer.getInstance().isPlaying()) {
+            AudioPlayer.getInstance().stopPlay();
+        }
     }
 }

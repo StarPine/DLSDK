@@ -64,6 +64,7 @@ import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.utils.RxUtils;
 import me.goldze.mvvmhabit.utils.ToastUtils;
+import me.jessyan.autosize.AutoSizeConfig;
 import me.yokeyword.fragmentation.ISupportFragment;
 import me.yokeyword.fragmentation.anim.DefaultHorizontalAnimator;
 import me.yokeyword.fragmentation.anim.FragmentAnimator;
@@ -89,6 +90,7 @@ public class MainContainerActivity extends MySupportActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_container);
+        AutoSizeConfig.getInstance().setCustomFragment(true);
         ImmersionBarUtils.setupStatusBar(this, true, false);
 //        getSupportFragmentManager().getFragments().clear();
 

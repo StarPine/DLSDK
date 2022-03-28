@@ -28,6 +28,7 @@ import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
+import com.dl.playfun.app.EaringlSwitchUtil;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
@@ -115,7 +116,8 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     public Integer balanceNotEnoughTipsMinutes;
     public int maleBalanceMoney = 0;
     public boolean flagMoney = false;
-    //通话收益提示间隔秒数
+    public ObservableField<Boolean> isShowCountdown = new ObservableField(false);
+    //通话收入提示间隔秒数
     public Integer profitTipsIntervalSeconds;
     //价格配置表
     public List<CallingInfoEntity.CallingUnitPriceInfo> unitPriceList;
@@ -132,6 +134,8 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     public ObservableBoolean girlEarningsField = new ObservableBoolean(false);
     //收益文字
     public ObservableField<SpannableString> girlEarningsText = new ObservableField<>();
+    public ObservableField<UserDataEntity> audioUserDataEntity = new ObservableField<>();
+    public ObservableField<CallingInfoEntity> audioCallingInfoEntity = new ObservableField<>();
     //是否已经追踪
     public ObservableInt collectedField = new ObservableInt(1);
     //是否静音
@@ -185,6 +189,17 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
             maleTextLayoutSHow.set(false);
         }
     });
+
+    //关闭女生界面男生余额不足提示
+    public BindingCommand closeMoney2 = new BindingCommand(new BindingAction() {
+        @Override
+        public void call() {
+            isShowCountdown.set(false);
+            girlEarningsField.set(false);
+        }
+    });
+
+
     //订阅者
     private Disposable mSubscription;
     private long mSelfLowQualityTime;
@@ -199,7 +214,19 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
         @Override
         public void call() {
             AppContext.instance().logEvent(AppsFlyerEvent.voicecall_follow);
-            addLike(false);
+            if (ConfigManager.getInstance().isMale()) {
+                addLike(false);
+
+            } else {
+                //是女生提示
+                int guideFlag = model.readSwitches(EaringlSwitchUtil.KEY_TIPS);
+                //后台开关 1提示  0隐藏
+                if (guideFlag == 1) {
+                    uc.clickLike.call();
+                } else {
+                    addLike(false);
+                }
+            }
         }
     });
 
@@ -632,7 +659,9 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                     public void onSuccess(BaseDataResponse<CallingInfoEntity> response) {
                         CallingInfoEntity callingInviteInfo = response.getData();
                         UserDataEntity userDataEntity = model.readUserData();
-                        //uc.callAudioStart.call();
+                        audioUserDataEntity.set(userDataEntity);
+                        audioCallingInfoEntity.set(callingInviteInfo);
+                        uc.callAudioStart.call();
                         sayHiEntityList = callingInviteInfo.getSayHiList().getData();
                         if (sayHiEntityList.size() > 1) {
                             sayHiEntityHidden.set(false);
@@ -680,6 +709,22 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                 });
     }
 
+    public void getTips(Integer toUserId,int type,String isShowCountdown){
+        model.getTips(toUserId, type,isShowCountdown)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .subscribe(new BaseObserver<BaseDataResponse>() {
+                    @Override
+                    public void onSuccess(BaseDataResponse baseDataResponse) {
+                    }
+
+                    @Override
+                    public void onError(RequestException e) {
+
+                    }
+                });
+    }
     //获取破冰文案
     public void getSayHiList() {
         //录音文案数组坐标
@@ -727,6 +772,8 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     public class UIChangeObservable {
         //接听成功
         public SingleLiveEvent<Void> callAudioStart = new SingleLiveEvent<>();
+        //关注点击
+        public SingleLiveEvent<Void> clickLike = new SingleLiveEvent<>();
         //调用发送礼物弹窗
         public SingleLiveEvent<Void> callGiftBagAlert = new SingleLiveEvent<>();
         //发送礼物失败。充值钻石

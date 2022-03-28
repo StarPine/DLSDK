@@ -20,6 +20,7 @@ import com.dl.playfun.entity.BubbleEntity;
 import com.dl.playfun.entity.CallingInfoEntity;
 import com.dl.playfun.entity.CallingInviteInfo;
 import com.dl.playfun.entity.CashWalletEntity;
+import com.dl.playfun.entity.ChatDetailCoinEntity;
 import com.dl.playfun.entity.ChatRedPackageEntity;
 import com.dl.playfun.entity.CoinExchangeBoxInfo;
 import com.dl.playfun.entity.CoinWalletEntity;
@@ -72,6 +73,7 @@ import com.dl.playfun.entity.TokenEntity;
 import com.dl.playfun.entity.TopicalListEntity;
 import com.dl.playfun.entity.TraceEntity;
 import com.dl.playfun.entity.UnReadMessageNumEntity;
+import com.dl.playfun.entity.UnlockSocialAccountConfigEntity;
 import com.dl.playfun.entity.UserCoinItemEntity;
 import com.dl.playfun.entity.UserConnMicStatusEntity;
 import com.dl.playfun.entity.UserDataEntity;
@@ -92,6 +94,16 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface HttpDataSource {
+
+
+    /**
+     * @return io.reactivex.Observable<com.dl.play.chat.data.source.http.response.BaseDataResponse < com.dl.play.chat.entity.ChatDetailCoinEntity>>
+     * @Desc TODO(拨打完成后调用查询总钻石 。 拨打发调用)
+     * @author 彭石林
+     * @parame [dismissRoom]
+     * @Date 2022/3/21
+     */
+    Observable<BaseDataResponse<ChatDetailCoinEntity>> getTotalCoins(Integer dismissRoom);
 
     /**
      * @Desc TODO(游戏支付成功验签)
@@ -173,6 +185,14 @@ public interface HttpDataSource {
     Observable<BaseDataResponse<PriceConfigEntity.Current>> getMaleRefundMsg(Integer toUserId, Integer type);
 
     /**
+     * 余额不足提示
+     * @param toUserId
+     * @param type
+     * @return
+     */
+    Observable<BaseDataResponse> getTips(Integer toUserId, Integer type,String isShow);
+
+    /**
      * IM通话中追踪
      *
      * @param userId
@@ -242,6 +262,17 @@ public interface HttpDataSource {
      * @Date 2021/12/13
      */
     Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(Integer callingType, Integer fromUserId, Integer toUserId, Integer currentUserId);
+
+    /**
+     * 获取解锁社交账号配置
+     */
+    Observable<BaseDataResponse<UnlockSocialAccountConfigEntity>> getUnlockSocialAccountConfig();
+
+    /**
+     * 更新解锁社交账号档次
+     */
+    Observable<BaseResponse> updateSocialLevel(Integer socialLevel);
+
 
 
     /**
@@ -356,6 +387,12 @@ public interface HttpDataSource {
     Observable<BaseDataResponse<List<MessageRuleEntity>>> getMessageRule();
 
     /**
+     * 屏蔽關鍵字
+     * @return
+     */
+    Observable<BaseDataResponse> getSensitiveWords();
+
+    /**
      * @Desc TODO(IM聊天相册)
      * @author 彭石林
      * @parame [user_id]
@@ -438,6 +475,12 @@ public interface HttpDataSource {
      * @Date 2021/9/23
      */
     Observable<BaseResponse> ExchangeIntegraBuy( Integer id);
+
+    /**
+     * 一键搭讪推送状态提交
+     * @return
+     */
+    Observable<BaseResponse> pushGreet(Integer type);
 
     /**
      * @Desc TODO(钻石兑换积分列表)
@@ -1607,6 +1650,18 @@ public interface HttpDataSource {
      * @return
      */
     Observable<BaseDataResponse<CoinWalletEntity>> coinWallet();
+
+    /**
+     * 设置提现账号
+     *
+     * @param realName 收款人真实姓名
+     * @param account  收款账户
+     * @return
+     */
+    Observable<BaseResponse> setWithdrawAccount(
+            String realName,
+            String account
+    );
 
     /**
      * 获取IM Sig

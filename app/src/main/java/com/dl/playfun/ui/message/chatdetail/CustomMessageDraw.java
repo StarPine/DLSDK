@@ -2,16 +2,22 @@ package com.dl.playfun.ui.message.chatdetail;
 
 import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
 
 import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.ImageViewTarget;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.transformations.MvBlurTransformation;
 import com.dl.playfun.utils.ChatUtils;
@@ -32,6 +38,8 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
  * @author litchi
  */
 public class CustomMessageDraw implements IOnCustomMessageDrawListener {
+
+    private static final int DEFAULT_MAX_SIZE = 540;
 
     private final CustomMessageListener customMessageListener;
 
@@ -70,6 +78,36 @@ public class CustomMessageDraw implements IOnCustomMessageDrawListener {
                 customMessageData.setMsgId(timMessage.getMsgID());
                 Log.d("CustomMessageDrwa", timMessage.getMsgID());
                 customMessageData.setSenderUserID(senderUserID);
+                if (customMessageData.type == CustomMessageData.TYPE_CUSTOM_IMAGE) {//自定义图片发送
+                    View view = LayoutInflater.from(AppContext.instance()).inflate(R.layout.chat_custom_image_message, null, false);
+                    parent.addMessageContentView(view);
+                    ImageView content_image_iv = view.findViewById(R.id.content_image_iv);
+                    Glide.with(AppContext.instance())
+                            .asBitmap()
+                            .load(StringUtil.getFullImageUrl(customMessageData.getImgPath()))
+                            .error(R.drawable.chat_custom_image_error)
+                            .placeholder(R.drawable.chat_custom_image_load)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(new ImageViewTarget<Bitmap>(content_image_iv) {
+                                @Override
+                                protected void setResource(@Nullable Bitmap resource) {
+                                    if (resource != null) {
+                                        content_image_iv.setLayoutParams(getImageParams(content_image_iv.getLayoutParams(), resource.getWidth(), resource.getHeight()));
+                                        content_image_iv.setImageBitmap(resource);
+                                    }
+                                }
+                            });
+                    view.setTag(customMessageData);
+                    view.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            CustomMessageData customMessageData1 = (CustomMessageData) v.getTag();
+                            if (customMessageListener != null) {
+                                customMessageListener.onImageClick(customMessageData1);
+                            }
+                        }
+                    });
+                }
                 if (customMessageData.type == CustomMessageData.TYPE_LOCATION) {
                     View view = LayoutInflater.from(AppContext.instance()).inflate(R.layout.chat_location_message, null, false);
                     parent.addMessageContentView(view);
@@ -186,6 +224,22 @@ public class CustomMessageDraw implements IOnCustomMessageDrawListener {
         void onCoinRedPackageMessageClick(CustomMessageData customMessageData);
 
         void onBurnMessageClick(CustomMessageData customMessageData);
+
+        void onImageClick(CustomMessageData customMessageData);
+    }
+
+    private ViewGroup.LayoutParams getImageParams(ViewGroup.LayoutParams params, final int width, final int height) {
+        if (width == 0 || height == 0) {
+            return params;
+        }
+        if (width > height) {
+            params.width = DEFAULT_MAX_SIZE;
+            params.height = DEFAULT_MAX_SIZE * height / width;
+        } else {
+            params.width = DEFAULT_MAX_SIZE * width / height;
+            params.height = DEFAULT_MAX_SIZE;
+        }
+        return params;
     }
 
 }

@@ -25,6 +25,7 @@ import com.dl.playfun.entity.BubbleEntity;
 import com.dl.playfun.entity.CallingInfoEntity;
 import com.dl.playfun.entity.CallingInviteInfo;
 import com.dl.playfun.entity.CashWalletEntity;
+import com.dl.playfun.entity.ChatDetailCoinEntity;
 import com.dl.playfun.entity.ChatRedPackageEntity;
 import com.dl.playfun.entity.CoinExchangeBoxInfo;
 import com.dl.playfun.entity.CoinWalletEntity;
@@ -82,6 +83,7 @@ import com.dl.playfun.entity.TokenEntity;
 import com.dl.playfun.entity.TopicalListEntity;
 import com.dl.playfun.entity.TraceEntity;
 import com.dl.playfun.entity.UnReadMessageNumEntity;
+import com.dl.playfun.entity.UnlockSocialAccountConfigEntity;
 import com.dl.playfun.entity.UserCoinItemEntity;
 import com.dl.playfun.entity.UserConnMicStatusEntity;
 import com.dl.playfun.entity.UserDataEntity;
@@ -135,6 +137,11 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
+    public Observable<BaseDataResponse<ChatDetailCoinEntity>> getTotalCoins(Integer dismissRoom) {
+        return mHttpDataSource.getTotalCoins(dismissRoom);
+    }
+
+    @Override
     public Observable<BaseResponse> GamePaySuccessNotify(String packageName, String orderNumber, List<String> productId, String token, int type, Integer event, String serverId, String roleId) {
         return mHttpDataSource.GamePaySuccessNotify(packageName, orderNumber, productId, token, type, event, serverId, roleId);
     }
@@ -170,6 +177,11 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
+    public Observable<BaseDataResponse> getTips(Integer toUserId, Integer type, String isShow) {
+        return mHttpDataSource.getTips(toUserId, type, isShow);
+    }
+
+    @Override
     public Observable<BaseResponse> addIMCollect(Integer userId, Integer type) {
         return mHttpDataSource.addIMCollect(userId, type);
     }
@@ -202,6 +214,16 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     @Override
     public Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(Integer callingType, Integer fromUserId, Integer toUserId, Integer currentUserId) {
         return mHttpDataSource.callingInviteInfo(callingType, fromUserId, toUserId, currentUserId);
+    }
+
+    @Override
+    public Observable<BaseDataResponse<UnlockSocialAccountConfigEntity>> getUnlockSocialAccountConfig() {
+        return mHttpDataSource.getUnlockSocialAccountConfig();
+    }
+
+    @Override
+    public Observable<BaseResponse> updateSocialLevel(Integer socialLevel) {
+        return mHttpDataSource.updateSocialLevel(socialLevel);
     }
 
     @Override
@@ -260,6 +282,11 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
+    public Observable<BaseDataResponse> getSensitiveWords() {
+        return mHttpDataSource.getSensitiveWords();
+    }
+
+    @Override
     public Observable<BaseDataResponse<PhotoAlbumEntity>> getPhotoAlbum(Integer user_id) {
         return mHttpDataSource.getPhotoAlbum(user_id);
     }
@@ -297,6 +324,11 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     @Override
     public Observable<BaseResponse> ExchangeIntegraBuy(Integer id) {
         return mHttpDataSource.ExchangeIntegraBuy(id);
+    }
+
+    @Override
+    public Observable<BaseResponse> pushGreet(Integer type) {
+        return mHttpDataSource.pushGreet(type);
     }
 
     @Override
@@ -1250,6 +1282,11 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     @Override
     public Observable<BaseDataResponse<CoinWalletEntity>> coinWallet() {
         return mHttpDataSource.coinWallet();
+    }
+
+    @Override
+    public Observable<BaseResponse> setWithdrawAccount(String realName, String account) {
+        return mHttpDataSource.setWithdrawAccount(realName, account);
     }
 
     @Override

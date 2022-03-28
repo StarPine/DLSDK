@@ -10,8 +10,6 @@ import com.google.gson.annotations.SerializedName;
 public class PriceConfigEntity {
     @SerializedName("is_follow")
     private Integer isFollow;
-    @SerializedName("is_pay")
-    private Integer isPay;
     private Current current;
     private Current other;
 
@@ -39,33 +37,34 @@ public class PriceConfigEntity {
         this.other = other;
     }
 
-    public Integer getIsPay() {
-        return isPay;
-    }
-
-    public void setIsPay(Integer isPay) {
-        this.isPay = isPay;
-    }
-
     //男
-    public class Current{
-            private Integer balance;
-            private Integer sex;
-            @SerializedName("prop_total")
-            private Integer propTotal;
-            @SerializedName("charge_msg_number")
-            private Integer chargeMsgNumber;
-            @SerializedName("refund_msg_number")
-            private Integer refundMsgNumber;
-            private Integer certification;
+    public class Current {
+        private Integer balance;
+        private Integer sex;
+        @SerializedName("prop_total")
+        private Integer propTotal;
+        @SerializedName("charge_msg_number")
+        private Integer chargeMsgNumber;
+        @SerializedName("refund_msg_number")
+        private Integer refundMsgNumber;
+        private Integer certification;
 
         private String videoProfitTips;
-            private String audioProfitTips;
-            @SerializedName("text_price")
-            private Integer textPrice;
-            //是否是首次收益
-            @SerializedName("first_im_msg")
-            private Integer firstImMsg;
+        private String videoTips;
+        private String audioProfitTips;
+        @SerializedName("text_price")
+        private Integer textPrice;
+        //是否是首次收入
+        @SerializedName("first_im_msg")
+        private Integer firstImMsg;
+
+        public String getVideoTips() {
+            return videoTips;
+        }
+
+        public void setVideoTips(String videoTips) {
+            this.videoTips = videoTips;
+        }
 
         public Integer getBalance() {
             return balance;
@@ -167,7 +166,6 @@ public class PriceConfigEntity {
     public String toString() {
         return "PriceConfigEntity{" +
                 "isFollow=" + isFollow +
-                ", isPay=" + isPay +
                 ", current=" + current +
                 ", other=" + other +
                 '}';

@@ -13,9 +13,11 @@ import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.ConfigItemEntity;
 import com.dl.playfun.entity.OccupationConfigItemEntity;
+import com.dl.playfun.entity.UnlockSocialAccountConfigEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.AvatarChangeEvent;
 import com.dl.playfun.event.ProfileChangeEvent;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.FileUploadUtils;
 import com.dl.playfun.utils.LogUtils;
@@ -43,6 +45,7 @@ import me.goldze.mvvmhabit.utils.ToastUtils;
  */
 public class EditProfileViewModel extends BaseViewModel<AppRepository> {
     public ObservableField<UserDataEntity> userDataEntity = new ObservableField<>();
+    public ObservableField<UnlockSocialAccountConfigEntity> sociaAccountEntity = new ObservableField<>();
     public ObservableField<Boolean> lineChoose = new ObservableField<>(true);
     public ObservableField<Boolean> insgramChoose = new ObservableField<>(false);
     public ObservableField<String> gender = new ObservableField<>("");
@@ -52,6 +55,8 @@ public class EditProfileViewModel extends BaseViewModel<AppRepository> {
     public List<ConfigItemEntity> height = new ArrayList<>();
     //    体重
     public List<ConfigItemEntity> weight = new ArrayList<>();
+    //    社群账号价格
+    public List<UnlockSocialAccountConfigEntity.PriceInfosBean> price = new ArrayList<>();
     //    职业
     public List<OccupationConfigItemEntity> occupation = new ArrayList<>();
     //    城市
@@ -61,6 +66,13 @@ public class EditProfileViewModel extends BaseViewModel<AppRepository> {
     public BindingCommand uploadAvatarOnClickCommand = new BindingCommand(() -> {
         uc.clickAvatar.call();
     });
+
+    //设置社群价格
+    public BindingCommand setUnlockPrice = new BindingCommand(() -> {
+        loadSocialAccountConfig();
+
+    });
+
     //    选择城市
     public BindingCommand chooseCity = new BindingCommand(new BindingAction() {
         @Override
@@ -121,6 +133,45 @@ public class EditProfileViewModel extends BaseViewModel<AppRepository> {
         super.onEnterAnimationEnd();
         loadProfile();
     }
+
+    private void loadSocialAccountConfig() {
+        model.getUnlockSocialAccountConfig()
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseDataResponse<UnlockSocialAccountConfigEntity>>() {
+                    @Override
+                    public void onSuccess(BaseDataResponse<UnlockSocialAccountConfigEntity> baseResponse) {
+                        dismissHUD();
+                        UnlockSocialAccountConfigEntity data = baseResponse.getData();
+                        sociaAccountEntity.set(data);
+                        price.addAll(data.getPriceInfos());
+                        uc.clickUnlock.call();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        dismissHUD();
+                    }
+                });
+    }
+
+    public void updateSocialLevel(int level) {
+        model.updateSocialLevel(level)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(EditProfileViewModel.this)
+                .subscribe(new BaseObserver<BaseResponse>() {
+                    @Override
+                    public void onSuccess(BaseResponse baseResponse) {
+                    }
+
+                });
+    }
+
+
 
     //获取个人资料
     private void loadProfile() {
@@ -315,11 +366,18 @@ public class EditProfileViewModel extends BaseViewModel<AppRepository> {
                 });
     }
 
+    public boolean getTipMoneyShowFlag() {
+        return ConfigManager.getInstance().getTipMoneyShowFlag();
+    }
+
     public class UIChangeObservable {
         public SingleLiveEvent<Void> clickAvatar = new SingleLiveEvent<>();
         public SingleLiveEvent clickCity = new SingleLiveEvent<>();
         public SingleLiveEvent clickBirthday = new SingleLiveEvent<>();
         public SingleLiveEvent clickOccupation = new SingleLiveEvent<>();
+        public SingleLiveEvent clickProgram = new SingleLiveEvent<>();
+        public SingleLiveEvent clickHope = new SingleLiveEvent<>();
+        public SingleLiveEvent clickUnlock = new SingleLiveEvent<>();
         public SingleLiveEvent clickHeight = new SingleLiveEvent<>();
         public SingleLiveEvent clickWeight = new SingleLiveEvent<>();
         public SingleLiveEvent clickUploadingHead = new SingleLiveEvent<>();

@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
@@ -28,6 +29,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.aliyun.svideo.common.utils.FastClickUtil;
 import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
@@ -40,6 +42,7 @@ import com.dl.playfun.entity.CallingInviteInfo;
 import com.dl.playfun.entity.CoinExchangePriceInfo;
 import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.entity.GoodsEntity;
+import com.dl.playfun.event.CallChatingHangupEvent;
 import com.dl.playfun.kl.viewmodel.VideoCallViewModel;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.utils.ChatUtils;
@@ -48,6 +51,7 @@ import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
 import com.dl.playfun.widget.dialog.MessageDetailDialog;
+import com.dl.playfun.widget.dialog.TraceDialog;
 import com.dl.playfun.widget.image.CircleImageView;
 import com.google.gson.Gson;
 import com.dl.playfun.R;
@@ -71,6 +75,8 @@ import java.net.URL;
 import java.util.Map;
 
 import me.goldze.mvvmhabit.base.BaseActivity;
+import me.goldze.mvvmhabit.bus.RxBus;
+import me.jessyan.autosize.AutoSizeCompat;
 import me.jessyan.autosize.internal.CustomAdapt;
 import me.tatarka.bindingcollectionadapter2.BR;
 
@@ -121,6 +127,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
 
     @Override
     public int initContentView(Bundle savedInstanceState) {
+        AutoSizeCompat.autoConvertDensityOfGlobal(this.getResources());
         return R.layout.activity_call_video;
     }
 
@@ -139,6 +146,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
     @Override
     public void initParam() {
         super.initParam();
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
         mContext = this;
         SVGASoundManager.INSTANCE.init();
         SVGAParser.Companion.shareParser().init(this);
@@ -169,6 +177,10 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                 @Override
                 public void finish() {
                     super.finish();
+                    //2秒最多发一次
+                    if (!FastClickUtil.isFastCallFun("CallingVideoActivity")) {
+                        RxBus.getDefault().post(new CallChatingHangupEvent());
+                    }
                     Log.i("JM_trtc", "finish: ");
                     CallingVideoActivity.this.finish();
                 }
@@ -178,6 +190,10 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                 @Override
                 public void finish() {
                     super.finish();
+                    //2秒最多发一次
+                    if (!FastClickUtil.isFastCallFun("CallingVideoActivity")) {
+                        RxBus.getDefault().post(new CallChatingHangupEvent());
+                    }
                     Log.i("JM_trtc", "finish: ");
                     CallingVideoActivity.this.finish();
                 }
@@ -239,6 +255,19 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                 }
 
             }
+        });
+
+        //关注按钮点击
+        viewModel.uc.clickLike.observe(this,unused -> {
+            TraceDialog.getInstance(CallingVideoActivity.this)
+                    .setTitle(getString(R.string.playfun_addlike_title_tip))
+                    .setTitleSize(16)
+                    .setCannelText(getString(R.string.playfun_mine_trace_like_confirm))//左边按钮
+                    .setConfirmText(getString(R.string.cancel))//右边按钮
+                    .chooseType(TraceDialog.TypeEnum.CENTER)
+                    .setCannelOnclick(dialog -> {
+                        viewModel.addLike(false);
+                    }).show();
         });
         //公屏消息滚动到底部
         viewModel.uc.scrollToEnd.observe(this, new Observer<Void>() {
@@ -358,7 +387,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                     @Override
                     public void sendGiftClick(Dialog dialog, int number, GiftBagEntity.giftEntity giftEntity) {
                         AppContext.instance().logEvent(AppsFlyerEvent.videocall_send_gift);
-                        if (viewModel.userCall) {
+                        if (viewModel.isMale) {
                             //男生情况下。钻石减去送礼物的价格少于0==余额不足。不允许发送
                             if (viewModel.coinBalance - (giftEntity.getMoney().intValue() * number) < 0) {
                                 dialog.dismiss();
@@ -777,7 +806,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                     //没10秒更新一次破冰文案
                     viewModel.getSayHiList();
                 }
-                if (viewModel.userCall) {//拨打发起方
+                if (viewModel.isMale) {//男
                     if (mTimeCount == 120 && !viewModel.sendGiftBagSuccess) {//两分钟
                         String maleTextSendGift = StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt16);
                         SpannableString itemMessageBuilder = new SpannableString(maleTextSendGift);
@@ -806,8 +835,13 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                                 String textHint = (viewModel.maleBalanceMoney / 60) + minute + (viewModel.maleBalanceMoney % 60);
                                 String txt = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt14), textHint);
                                 viewModel.maleTextMoneyField.set(txt);
-                                //viewModel.maleTextLayoutSHow.set(true);
+                                viewModel.maleTextLayoutSHow.set(true);
                                 viewModel.flagMoney = true;
+
+                                //通知女生男生这边余额不足
+                                String otherUserId = (role == TUICalling.Role.CALL ? userIds[0] : callUserId);
+                                int toUserid = ChatUtils.imUserIdToSystemUserId(otherUserId);
+                                viewModel.getTips(toUserid,2,"1");
                             }
                         }
                     }
@@ -847,17 +881,18 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                         }
                     }
                     if (viewModel.profitTipsIntervalSeconds != null && mTimeCount % viewModel.profitTipsIntervalSeconds == 0) {
-                        if (ConfigManager.getInstance().getTipMoneyShowFlag() && !ConfigManager.getInstance().isMale()) {
-                            viewModel.coinTotal = (viewModel.timePrice.multiply(BigDecimal.valueOf(10)));
-                            //收益提示框
-                            viewModel.girlEarningsField.set(false);
-                            mTimeTen++;
-                            String girlEarningsTex = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt), (viewModel.timePrice.multiply(BigDecimal.valueOf(mTimeTen * 10))));
-                            SpannableString stringBuilder = new SpannableString(girlEarningsTex);
-                            ForegroundColorSpan blueSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint1));
-                            stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, girlEarningsTex.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            stringBuilder.setSpan(blueSpan, girlEarningsTex.indexOf(": ")+1, girlEarningsTex.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            viewModel.girlEarningsText.set(stringBuilder);
+                        if (ConfigManager.getInstance().getTipMoneyShowFlag()) {
+                            if (!viewModel.isShowCountdown.get()) {//对方余额不足没有展示
+                                viewModel.coinTotal = (viewModel.timePrice.multiply(BigDecimal.valueOf(10)));
+                                viewModel.girlEarningsField.set(true);
+                                mTimeTen++;
+                                String girlEarningsTex = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt), (viewModel.timePrice.multiply(BigDecimal.valueOf(mTimeTen * 10))));
+                                SpannableString stringBuilder = new SpannableString(girlEarningsTex);
+                                ForegroundColorSpan blueSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint1));
+                                stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                stringBuilder.setSpan(blueSpan, 6, girlEarningsTex.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                viewModel.girlEarningsText.set(stringBuilder);
+                            }
                         }
                     }
                 }
@@ -870,6 +905,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
     @Override
     public void onDestroy() {
         super.onDestroy();
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
         if (mHandler != null) {
             mHandler.removeCallbacks(timerRunnable);
             mHandler = null;

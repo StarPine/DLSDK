@@ -75,27 +75,6 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
         }
     };
 
-    @Override
-    public void onEnterAnimationEnd(Bundle savedInstanceState) {
-        super.onEnterAnimationEnd(savedInstanceState);
-        //腾讯IM登录
-        TokenEntity tokenEntity = Injection.provideDemoRepository().readLoginInfo();
-        if (tokenEntity != null) {
-            TUIUtils.login(tokenEntity.getUserID(), tokenEntity.getUserSig(), new V2TIMCallback() {
-                @Override
-                public void onSuccess() {
-                    initIM();
-                    ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
-                    registerUnreadListener();
-                }
-
-                @Override
-                public void onError(int code, String desc) {
-                    KLog.e("tencent im login error  errCode = " + code + ", errInfo = " + desc);
-                }
-            });
-        }
-    }
 
     @Override
     public void onDestroy() {
@@ -116,6 +95,28 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
 
             }
         });
+    }
+
+    @Override
+    public void initData() {
+        super.initData();
+        //腾讯IM登录
+        TokenEntity tokenEntity = Injection.provideDemoRepository().readLoginInfo();
+        if (tokenEntity != null) {
+            TUIUtils.login(tokenEntity.getUserID(), tokenEntity.getUserSig(), new V2TIMCallback() {
+                @Override
+                public void onSuccess() {
+                    initIM();
+                    ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
+                    registerUnreadListener();
+                }
+
+                @Override
+                public void onError(int code, String desc) {
+                    KLog.e("tencent im login error  errCode = " + code + ", errInfo = " + desc);
+                }
+            });
+        }
     }
 
     @Override
@@ -212,7 +213,12 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
                             Integer number = browseNumberEntity.getBrowseNumber();
                             String text = String.format(StringUtils.getString(R.string.playfun_char_message_text1),number) ;
                             binding.conversationLastMsg.setText(text);
-                            viewModel.NewNumberText.set(String.valueOf(number));
+                            if (number > 99) {
+                                viewModel.NewNumberText.set("99+");
+                            } else {
+                                viewModel.NewNumberText.set(String.valueOf(number));
+                            }
+
                         }
                         binding.itemLeft.setVisibility(View.VISIBLE);
                     }

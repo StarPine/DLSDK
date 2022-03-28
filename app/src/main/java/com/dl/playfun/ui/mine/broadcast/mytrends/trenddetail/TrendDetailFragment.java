@@ -97,6 +97,20 @@ public class TrendDetailFragment extends BaseToolbarFragment<FragmentTrendDetail
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        AppContext.isHomePage = true;
+        AppContext.isShowNotPaid = true;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        AppContext.isShowNotPaid = false;
+        AppContext.isHomePage = false;
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         try {

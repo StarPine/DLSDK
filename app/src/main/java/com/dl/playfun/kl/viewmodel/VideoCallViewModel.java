@@ -24,6 +24,7 @@ import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
+import com.dl.playfun.app.EaringlSwitchUtil;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
@@ -77,6 +78,8 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
     public boolean sendGiftBagSuccess = false;
     public boolean isCallingInviteInfoNull = false;
 
+    public ObservableField<Boolean> isShowCountdown = new ObservableField(false);
+
     //录音文案数组坐标
     public int sayHiePosition = 0;
     public int sayHiePage = 1;
@@ -102,6 +105,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
 
     public ObservableField<Boolean> mainVIewShow = new ObservableField<>(false);
 
+    protected TRTCCalling mTRTCCalling;
     protected JMTUICallVideoView mCallVideoView;
 
 
@@ -149,6 +153,17 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
             maleTextLayoutSHow.set(false);
         }
     });
+
+    //关闭女生界面男生余额不足提示
+    public BindingCommand closeMoney2 = new BindingCommand(new BindingAction() {
+        @Override
+        public void call() {
+            isShowCountdown.set(false);
+            girlEarningsField.set(false);
+        }
+    });
+
+
 
     //已经取下标数
     public Integer formSelIndex = 0;
@@ -266,7 +281,18 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
         @Override
         public void call() {
             AppContext.instance().logEvent(AppsFlyerEvent.videocall_follow);
-            addLike(false);
+            if (ConfigManager.getInstance().isMale()){
+                addLike(false);
+            }else {
+                //是女生提示
+                int guideFlag = model.readSwitches(EaringlSwitchUtil.KEY_TIPS);
+                //后台开关 1提示  0隐藏
+                if (guideFlag == 1) {
+                    uc.clickLike.call();
+                } else {
+                    addLike(false);
+                }
+            }
         }
     });
     //切换破冰文案提示
@@ -328,6 +354,23 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
                     @Override
                     public void onComplete() {
                         dismissHUD();
+                    }
+                });
+    }
+
+    public void getTips(Integer toUserId, int type, String isShowCountdown){
+        model.getTips(toUserId, type,isShowCountdown)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .subscribe(new BaseObserver<BaseDataResponse>() {
+                    @Override
+                    public void onSuccess(BaseDataResponse baseDataResponse) {
+                    }
+
+                    @Override
+                    public void onError(RequestException e) {
+
                     }
                 });
     }
@@ -527,7 +570,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
                         String textTip = null;
                         //礼物数量*礼物钻石
                         int amountMoney = giftEntity.getMoney().intValue() * amount;
-                        if (userCall) {//拨打方
+                        if (isMale) {
                             if (TimeCount < 60) {//不满1分钟
                                 if (unitPriceList.size() > 1) {//聊天卡
                                     //总钻石 - 每分钟花费钻石得到 多余钻石
@@ -741,6 +784,21 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
                                         stringBuilder.setSpan(blueSpan, 0, msgText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                         putRcvItemMessage(stringBuilder, null, false);
                                     }
+                                }else if (map_data != null && map_data.get("type") != null && map_data.get("type").equals("message_countdown")) {//对方余额不足
+                                    if (!isMale && ConfigManager.getInstance().getTipMoneyShowFlag()) {
+                                        String data = (String) map_data.get("data");
+                                        Map<String, Object> dataMapCountdown = new Gson().fromJson(data, Map.class);
+                                        String isShow = (String) dataMapCountdown.get("is_show");
+                                        if (isShow != null && isShow.equals("1")) {
+                                            isShowCountdown.set(true);
+                                            girlEarningsField.set(true);
+                                            String girlEarningsTex = StringUtils.getString(R.string.playfun_insufficient_balance_of_counterparty);
+                                            SpannableString stringBuilder = new SpannableString(girlEarningsTex);
+                                            stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, girlEarningsTex.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                            girlEarningsText.set(stringBuilder);
+
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -803,6 +861,8 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
     public class UIChangeObservable {
         //接听成功
         public SingleLiveEvent<Void> callAudioStart = new SingleLiveEvent<>();
+        //关注点击
+        public SingleLiveEvent<Void> clickLike = new SingleLiveEvent<>();
         //调用发送礼物弹窗
         public SingleLiveEvent<Void> callGiftBagAlert = new SingleLiveEvent<>();
         //发送礼物失败。充值钻石

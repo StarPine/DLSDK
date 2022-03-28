@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <declare-styleable name="dlpickerview">
+        <attr name="dlwheelview_gravity">
+            <enum name="center" value="17"/>
+            <enum name="left" value="3"/>
+            <enum name="right" value="5"/>
+        </attr>
+        <attr name="dlwheelview_textSize" format="dimension"/>
+        <attr name="dlwheelview_textColorOut" format="color"/>
+        <attr name="dlwheelview_textColorCenter" format="color"/>
+        <attr name="dlwheelview_dividerColor" format="color"/>
+        <attr name="dlwheelview_dividerWidth" format="dimension"/>
+        <attr name="dlwheelview_lineSpacingMultiplier" format="float"/>
+    </declare-styleable>
     <declare-styleable name="RoundedImageView">
         <attr name="riv_corner_radius" format="dimension" />
         <attr name="riv_corner_radius_top_left" format="dimension" />

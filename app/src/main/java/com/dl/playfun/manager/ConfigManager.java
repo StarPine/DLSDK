@@ -87,6 +87,13 @@ public class ConfigManager {
         return AppContext.instance().appRepository.readSwitches(EaringlSwitchUtil.KEY_TIPS).intValue() == 1;
     }
 
+    //收入开关
+    public boolean getRemoveImMessageFlag() {
+        return AppContext.instance().appRepository.readSwitches(EaringlSwitchUtil.REMOVE_IM_MESSAGE).intValue() == 1;
+    }
+
+
+
     /**
      * 返回用户上级ID
      *
@@ -104,6 +111,16 @@ public class ConfigManager {
     public boolean isMale() {
         return AppContext.instance().appRepository.readUserData().getSex() == 1;
     }
+
+    /**
+     * 获取个人头像
+     *
+     * @return
+     */
+    public String getAvatar() {
+        return AppContext.instance().appRepository.readUserData().getAvatar();
+    }
+
 
     /**
      * 是否新用户

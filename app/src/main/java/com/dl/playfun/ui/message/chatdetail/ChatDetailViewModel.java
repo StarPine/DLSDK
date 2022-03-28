@@ -214,33 +214,6 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
         return model.readUserData();
     }
 
-    public void checkChatNumber(int userId) {
-        model.isMessageChat(userId)
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .doOnSubscribe(this)
-                .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseDataResponse<MessageChatNumberEntity>>() {
-                    @Override
-                    public void onSuccess(BaseDataResponse<MessageChatNumberEntity> response) {
-                        dismissHUD();
-                        List<Integer> p = new ArrayList<>();
-                        p.add(userId);
-                        if (response.getData().getStatus() == 1) {
-                            p.add(-1);
-                            uc.askUseChatNumber.postValue(p);
-                        } else {
-                            p.add(response.getData().getNumber());
-                            uc.askUseChatNumber.postValue(p);
-                        }
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        dismissHUD();
-                    }
-                });
-    }
 
     public void addBlackList(int userId) {
         model.addBlack(userId)
@@ -305,7 +278,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                         if (response.getData().getConnection()) {
                             uc.clickConnMic.call();
                         } else {
-                            ToastUtils.showShort(R.string.opposite_mic_disabled);
+                            ToastUtils.showShort(R.string.playfun_opposite_mic_disabled);
                         }
                     }
 
@@ -457,7 +430,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                     @Override
                     public void onSuccess(BaseResponse response) {
                         dismissHUD();
-                        ToastUtils.showShort(R.string.submittd);
+                        ToastUtils.showShort(R.string.playfun_submittd);
                         uc.removeEvaluateMessage.call();
                     }
 
@@ -495,7 +468,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                         dialog.dismiss();
                         dismissHUD();
                         if (e.getCode() != null && e.getCode().intValue() == 21001) {
-                            ToastCenterUtils.showToast(R.string.dialog_exchange_integral_total_text1);
+                            ToastCenterUtils.showToast(R.string.playfun_dialog_exchange_integral_total_text1);
                             AppContext.instance().logEvent(AppsFlyerEvent.im_gifts_Insufficient_topup);
                             uc.sendUserGiftError.call();
                         }
@@ -687,7 +660,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                     @Override
                     public void onError(Throwable e) {
                         dismissHUD();
-                        ToastUtils.showShort(R.string.upload_failed);
+                        ToastUtils.showShort(R.string.playfun_upload_failed);
                     }
 
                     @Override
@@ -722,18 +695,18 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                                     maleBalance = totalCoins;
                                 }
                             } else {
-                                ToastUtils.showShort(R.string.network_text);
+                                ToastUtils.showShort(R.string.playfun_network_text);
                                 pop();
                             }
                         } else {
-                            ToastUtils.showShort(R.string.network_text);
+                            ToastUtils.showShort(R.string.playfun_network_text);
                             pop();
                         }
                     }
 
                     @Override
                     public void onError(RequestException e) {
-                        ToastUtils.showShort(R.string.network_text);
+                        ToastUtils.showShort(R.string.playfun_network_text);
                         pop();
                     }
 

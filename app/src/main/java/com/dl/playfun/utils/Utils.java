@@ -27,6 +27,7 @@ public class Utils {
     public static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     public static SimpleDateFormat formatday = new SimpleDateFormat("yyyy-MM-dd");
     public static SimpleDateFormat formatTime = new SimpleDateFormat("HH:mm:ss");
+    public static SimpleDateFormat formatYYMMSS = new SimpleDateFormat("yyyyMMdd");
 
     public static boolean isManilaApp() {
         return isManilaApp(AppContext.instance());

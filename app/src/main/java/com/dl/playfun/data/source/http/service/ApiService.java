@@ -20,6 +20,7 @@ import com.dl.playfun.entity.BubbleEntity;
 import com.dl.playfun.entity.CallingInfoEntity;
 import com.dl.playfun.entity.CallingInviteInfo;
 import com.dl.playfun.entity.CashWalletEntity;
+import com.dl.playfun.entity.ChatDetailCoinEntity;
 import com.dl.playfun.entity.ChatRedPackageEntity;
 import com.dl.playfun.entity.CoinExchangeBoxInfo;
 import com.dl.playfun.entity.CoinWalletEntity;
@@ -72,6 +73,7 @@ import com.dl.playfun.entity.TokenEntity;
 import com.dl.playfun.entity.TopicalListEntity;
 import com.dl.playfun.entity.TraceEntity;
 import com.dl.playfun.entity.UnReadMessageNumEntity;
+import com.dl.playfun.entity.UnlockSocialAccountConfigEntity;
 import com.dl.playfun.entity.UserCoinItemEntity;
 import com.dl.playfun.entity.UserConnMicStatusEntity;
 import com.dl.playfun.entity.UserDataEntity;
@@ -107,6 +109,15 @@ import retrofit2.http.Query;
  */
 
 public interface ApiService {
+    /**
+     * @return io.reactivex.Observable<com.dl.play.chat.data.source.http.response.BaseDataResponse < com.dl.play.chat.entity.ChatDetailCoinEntity>>
+     * @Desc TODO(拨打完成后调用查询总钻石 。 拨打发调用)
+     * @author 彭石林
+     * @parame [dismissRoom]
+     * @Date 2022/3/21
+     */
+    @GET("calling/userAccount/getTotalCoins")
+    Observable<BaseDataResponse<ChatDetailCoinEntity>> getTotalCoins(@Query("dismissRoom") Integer dismissRoom);
     /**
     * @Desc TODO(游戏支付成功验签)
     * @author 彭石林
@@ -213,6 +224,17 @@ public interface ApiService {
     @GET("api/v4/refundMsg")
     Observable<BaseDataResponse<PriceConfigEntity.Current>> getMaleRefundMsg(@Query("to_user_id") Integer toUserId, @Query("type") Integer type);
 
+
+    /**
+     * 余额不足提示
+     * @param toUserId
+     * @param type
+     * @return
+     */
+    @FormUrlEncoded
+    @POST("api/v4/tips")
+    Observable<BaseDataResponse> getTips(@Field("to_user_id") Integer toUserId, @Field("type") Integer type, @Field("is_show") String isShow);
+
     /**
      * IM通话中追踪
      *
@@ -289,6 +311,19 @@ public interface ApiService {
      */
     @GET("/calling/getCallingInvitedInfo")
     Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(@Query("callingType") Integer callingType, @Query("fromUserId") Integer fromUserId, @Query("toUserId") Integer toUserId, @Query("currentUserId") Integer currentUserId);
+
+    /**
+     * 获取解锁社交账号配置
+     */
+    @GET("/calling/userData/getUnlockSocialAccountConfig")
+    Observable<BaseDataResponse<UnlockSocialAccountConfigEntity>> getUnlockSocialAccountConfig();
+
+    /**
+     * 更新解锁社交账号档次
+     */
+    @POST("calling/userData/updateSocialLevel")
+    @Headers("Content-Type: application/json")
+    Observable<BaseResponse> updateSocialLevel(@Body RequestBody requestBody);
 
     /**
      * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
@@ -415,6 +450,14 @@ public interface ApiService {
      */
     @GET("api/v2/user/rule")
     Observable<BaseDataResponse<List<MessageRuleEntity>>> getMessageRule();
+
+    /**
+     * 屏蔽關鍵字
+     * @return
+     */
+    @GET("/calling/config/getSensitiveWords")
+    Observable<BaseDataResponse> getSensitiveWords();
+
     /**
     * @Desc TODO(IM聊天相册)
     * @author 彭石林
@@ -548,6 +591,14 @@ public interface ApiService {
     @POST("api/v2/bonus/buy")
     @FormUrlEncoded
     Observable<BaseResponse> ExchangeIntegraBuy(@Field("id") Integer id);
+
+    /**
+     * 推送状态提交 type  1今日 2钻石 3VIP
+     * @return
+     */
+    @POST("api/v4/pushGreet")
+    @FormUrlEncoded
+    Observable<BaseResponse> pushGreet(@Field("type") Integer type);
 
     /**
     * @Desc TODO(钻石兑换积分列表)
@@ -1837,6 +1888,20 @@ public interface ApiService {
      */
     @GET("api/userCoin/account")
     Observable<BaseDataResponse<CoinWalletEntity>> coinWallet();
+
+    /**
+     * 设置提现账号
+     *
+     * @param realName 收款人真实姓名
+     * @param account  收款账户
+     * @return
+     */
+    @FormUrlEncoded
+    @POST("api/user/account")
+    Observable<BaseResponse> setWithdrawAccount(
+            @Field("realname") String realName,
+            @Field("account_number") String account
+    );
 
     /**
      * 获取IM Sig

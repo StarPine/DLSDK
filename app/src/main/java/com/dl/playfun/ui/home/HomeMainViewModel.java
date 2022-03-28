@@ -16,6 +16,7 @@ import com.dl.playfun.entity.ConfigItemEntity;
 import com.dl.playfun.entity.SystemConfigTaskEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.LoadEvent;
+import com.dl.playfun.event.MessageTagEvent;
 import com.dl.playfun.event.OnlineChangeEvent;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.dl.playfun.R;
@@ -38,6 +39,7 @@ import me.goldze.mvvmhabit.utils.RxUtils;
 public class HomeMainViewModel extends BaseViewModel<AppRepository> {
 
     public ObservableField<Boolean> showLocationAlert = new ObservableField<>(false);
+    public ObservableField<Boolean> isCurrentPage = new ObservableField<>(false);
     //推荐用户弹窗
     public ObservableField<Integer> cityId = new ObservableField<>();
     public ObservableField<String> regionTitle = new ObservableField<>(StringUtils.getString(R.string.playfun_tab_female_1));
@@ -58,11 +60,8 @@ public class HomeMainViewModel extends BaseViewModel<AppRepository> {
     }
     );
     public BindingCommand toTaskClickCommand = new BindingCommand(() -> {
-        uc.clickAccountDialog.call();
+        uc.clickAccountDialog.setValue("0");
         AppContext.instance().logEvent(AppsFlyerEvent.homepage_batch_accost);
-        //AppContext.instance().logEvent(AppsFlyerEvent.nearby_ad_id);
-        //RxBus.getDefault().post(new TaskMainTabEvent(false,true));
-        //start(TaskCenterFragment.class.getCanonicalName());
     });
     /**
      * 在线优先改变
@@ -102,7 +101,7 @@ public class HomeMainViewModel extends BaseViewModel<AppRepository> {
     });
     public BindingCommand regionOnClickCommand = new BindingCommand(() -> uc.clickRegion.call());
     //消费者
-    private Disposable loadReceive;
+    private Disposable MessageTagReceive, CountDownTimerReceive, loadReceive;
 
     public HomeMainViewModel(@NonNull Application application, AppRepository repository) {
         super(application, repository);
@@ -152,6 +151,8 @@ public class HomeMainViewModel extends BaseViewModel<AppRepository> {
     @Override
     public void removeRxBus() {
         super.removeRxBus();
+        RxSubscriptions.remove(MessageTagReceive);
+        RxSubscriptions.remove(CountDownTimerReceive);
         RxSubscriptions.remove(loadReceive);
     }
 
@@ -189,10 +190,11 @@ public class HomeMainViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<Integer> genderCheckedChange = new SingleLiveEvent<>();
         public SingleLiveEvent clickLocationSel = new SingleLiveEvent();
         public SingleLiveEvent clickLocationConfirm = new SingleLiveEvent();
+        public SingleLiveEvent clickToMessageDetail = new SingleLiveEvent();
         //加载任务中心系统配置
         public SingleLiveEvent<SystemConfigTaskEntity> loadSysConfigTask = new SingleLiveEvent<>();
         //打开批量搭讪接口
-        public SingleLiveEvent<Void> clickAccountDialog = new SingleLiveEvent<>();
+        public SingleLiveEvent<String> clickAccountDialog = new SingleLiveEvent<>();
         public SingleLiveEvent<Boolean> isLoad = new SingleLiveEvent<>();
     }
 
