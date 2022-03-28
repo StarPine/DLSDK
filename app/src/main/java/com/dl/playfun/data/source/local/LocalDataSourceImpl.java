@@ -42,6 +42,8 @@ public class LocalDataSourceImpl implements LocalDataSource {
     private static final String KEY_PROGRAM_TIME_CONFIG = "key_program_time_config";
     private static final String KEY_HEIGHT_CONFIG = "key_height_config";
     private static final String KEY_WEIGHT_CONFIG = "key_weight_config";
+    private static final String KEY_IS_CHAT_PUSH = "key_is_chat_push";
+    private static final String KEY_SENSITIVE_WORDS = "key_sensitive_words";
     private static final String KEY_GAME_CONFIG = "key_game_config";
     private static final String KEY_REPORT_REASON_CONFIG = "key_report_reason_config";
     private static final String KEY_FAMALE_EVALUATE_CONFIG = "key_female_evaluate_config";
@@ -366,6 +368,17 @@ public class LocalDataSourceImpl implements LocalDataSource {
     }
 
     @Override
+    public Boolean readChatPushStatus() {
+        int isChatPush = kv.decodeInt(KEY_IS_CHAT_PUSH);
+        return isChatPush == 1;
+    }
+
+    @Override
+    public void saveChatPushStatus(int value) {
+        kv.encode(KEY_IS_CHAT_PUSH, value);
+    }
+
+    @Override
     public void saveProgramTimeConfig(List<ConfigItemEntity> configs) {
         String json = GsonUtils.toJson(configs);
         boolean b = kv.encode(KEY_PROGRAM_TIME_CONFIG, json);
@@ -423,6 +436,26 @@ public class LocalDataSourceImpl implements LocalDataSource {
         List<ConfigItemEntity> list = GsonUtils.fromJson(json, new TypeToken<List<ConfigItemEntity>>() {
         }.getType());
         return list;
+    }
+
+    @Override
+    public List<String> readSensitiveWords() {
+        String json = kv.decodeString(KEY_SENSITIVE_WORDS);
+        if (json == null) {
+            return new ArrayList<>();
+        } else if (json.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<String> list = GsonUtils.fromJson(json, new TypeToken<List<String>>() {
+        }.getType());
+        return list;
+    }
+
+    @Override
+    public void saveSensitiveWords(List<String> configs) {
+        String json = GsonUtils.toJson(configs);
+        boolean b = kv.encode(KEY_SENSITIVE_WORDS, json);
+        System.out.println(b);
     }
 
     @Override

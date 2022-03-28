@@ -536,6 +536,16 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
+    public Boolean readChatPushStatus() {
+        return mLocalDataSource.readChatPushStatus();
+    }
+
+    @Override
+    public void saveChatPushStatus(int value) {
+        mLocalDataSource.saveChatPushStatus(value);
+    }
+
+    @Override
     public void saveVersion(String code) {
         mLocalDataSource.saveVersion(code);
     }
@@ -714,6 +724,16 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     @Override
     public List<ConfigItemEntity> readWeightConfig() {
         return mLocalDataSource.readWeightConfig();
+    }
+
+    @Override
+    public void saveSensitiveWords(List<String> configs) {
+        mLocalDataSource.saveSensitiveWords(configs);
+    }
+
+    @Override
+    public List<String> readSensitiveWords() {
+        return mLocalDataSource.readSensitiveWords();
     }
 
     @Override

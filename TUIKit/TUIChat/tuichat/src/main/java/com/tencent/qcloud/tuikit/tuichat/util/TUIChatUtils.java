@@ -53,8 +53,13 @@ public class TUIChatUtils {
      * @param str
      * @return
      */
-    public static boolean isLineNumber(String str) {
-        if (str == null || str.length() < 10) return false;
+    /**
+     * 匹配包含0开头的十位数字
+     * @param str
+     * @return
+     */
+    public static boolean isLineNumber(String str){
+        if (str == null || str.length() < 10)return false;
         String all = str.replaceAll("\\s+", "").toLowerCase();
         String s = all.replaceAll("isLine", "");
         String replace = s.replaceAll("0[0-9]{9}", "isLine");
@@ -64,13 +69,12 @@ public class TUIChatUtils {
     /**
      * 判断是否包含相关字段，默认小写匹配
      */
-    public static boolean isContains(String message, List<String> str) {
-        if (str == null || str.size() == 0 || message == null || message.length() == 0)
-            return false;
+    public static boolean isContains(String message, List<String> str){
+        if (str == null || str.size() == 0 || message == null || message.length() == 0)return false;
         String all = message.replaceAll("\\s+", "").toLowerCase();
         for (String words : str) {
             boolean contains = all.contains(words.toLowerCase());
-            if (contains) return true;
+            if (contains)return true;
         }
         return false;
     }

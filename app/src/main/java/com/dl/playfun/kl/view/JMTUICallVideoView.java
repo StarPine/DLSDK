@@ -124,7 +124,7 @@ public class JMTUICallVideoView extends BaseTUICallView {
                     TraceDialog.getInstance(mContext)
                             .setCannelOnclick(new TraceDialog.CannelOnclick() {
                                 @Override
-                                public void confirm(Dialog dialog) {
+                                public void cannel(Dialog dialog) {
                                     mTRTCCalling.reject();
                                     ToastUtils.showShort(R.string.trtccalling_tips_start_camera_audio);
                                     finish();

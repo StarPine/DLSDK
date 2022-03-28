@@ -59,6 +59,11 @@ public interface LocalDataSource {
      */
     String readChannelAF();
 
+    //私讯推送状态
+    Boolean readChatPushStatus();
+
+    void saveChatPushStatus(int value);
+
     /**
      * 保存邀请码到本地
      */
@@ -269,6 +274,20 @@ public interface LocalDataSource {
      * @return
      */
     List<ConfigItemEntity> readWeightConfig();
+
+    /**
+     * 保存屏蔽關鍵字
+     *
+     * @param configs
+     */
+    void saveSensitiveWords(List<String> configs);
+
+    /**
+     * 获取屏蔽關鍵字
+     *
+     * @return
+     */
+    List<String> readSensitiveWords();
 
     /**
      * 保存举报原因配置

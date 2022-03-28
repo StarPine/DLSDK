@@ -335,7 +335,7 @@ public class TraceDialog {
             @Override
             public void onClick(View v) {
                 if (confirmTwoOnclick != null) {
-                    confirmTwoOnclick.confirm(bottomDialog);
+                    confirmTwoOnclick.confirmTwo(bottomDialog);
                 }
                 bottomDialog.dismiss();
             }
@@ -393,7 +393,7 @@ public class TraceDialog {
             @Override
             public void onClick(View v) {
                 if (cannelOnclick != null) {
-                    cannelOnclick.confirm(bottomDialog);
+                    cannelOnclick.cannel(bottomDialog);
                 }
             }
         });
@@ -438,7 +438,7 @@ public class TraceDialog {
             @Override
             public void onClick(View v) {
                 if (cannelOnclick != null) {
-                    cannelOnclick.confirm(bottomDialog);
+                    cannelOnclick.cannel(bottomDialog);
                 }
                 bottomDialog.dismiss();
             }
@@ -466,7 +466,7 @@ public class TraceDialog {
             @Override
             public void onClick(View v) {
                 if (cannelOnclick != null) {
-                    cannelOnclick.confirm(bottomDialog);
+                    cannelOnclick.cannel(bottomDialog);
                 }
                 bottomDialog.dismiss();
             }
@@ -557,7 +557,7 @@ public class TraceDialog {
             @Override
             public void onClick(View v) {
                 if (cannelOnclick != null) {
-                    cannelOnclick.confirm(bottomDialog);
+                    cannelOnclick.cannel(bottomDialog);
                 } else {
                     bottomDialog.dismiss();
                 }
@@ -644,7 +644,7 @@ public class TraceDialog {
             @Override
             public void onClick(View v) {
                 if (cannelOnclick != null) {
-                    cannelOnclick.confirm(dialog);
+                    cannelOnclick.cannel(dialog);
                 } else {
                     dialog.dismiss();
                 }
@@ -695,7 +695,7 @@ public class TraceDialog {
             @Override
             public void onClick(View v) {
                 if (cannelOnclick != null) {
-                    cannelOnclick.confirm(bottomDialog);
+                    cannelOnclick.cannel(bottomDialog);
                 } else {
                     bottomDialog.dismiss();
                 }
@@ -725,10 +725,10 @@ public class TraceDialog {
     }
 
     public interface ConfirmTwoOnclick {
-        void confirm(Dialog dialog);
+        void confirmTwo(Dialog dialog);
     }
 
     public interface CannelOnclick {
-        void confirm(Dialog dialog);
+        void cannel(Dialog dialog);
     }
 }

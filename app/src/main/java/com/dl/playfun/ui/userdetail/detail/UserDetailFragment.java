@@ -943,6 +943,15 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
         });
     }
 
+    @SuppressLint("MissingSuperCall")
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (AudioPlayer.getInstance().isPlaying()) {
+            AudioPlayer.getInstance().stopPlay();
+        }
+    }
+
     protected void copyStr(String text) {
         ClipboardManager clipboard = (ClipboardManager) mActivity.getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("play_fun", text);

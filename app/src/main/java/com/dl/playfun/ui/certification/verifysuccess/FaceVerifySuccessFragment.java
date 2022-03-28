@@ -73,7 +73,7 @@ public class FaceVerifySuccessFragment extends BaseToolbarFragment<FragmentFaceV
                             })
                             .setCannelOnclick(new TraceDialog.CannelOnclick() {
                                 @Override
-                                public void confirm(Dialog dialog) {
+                                public void cannel(Dialog dialog) {
                                     dialog.dismiss();
                                 }
                             })

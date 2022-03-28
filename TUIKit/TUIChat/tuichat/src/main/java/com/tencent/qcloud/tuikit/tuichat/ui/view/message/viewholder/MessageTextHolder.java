@@ -52,7 +52,7 @@ import java.util.regex.Pattern;
 public class MessageTextHolder extends MessageContentHolder {
 
     private TextView msgBodyText;
-    private TextView chat_tips_tv;
+    private TextView chat_tips_tv,chat_system_tip_tv;
     private FrameLayout msg_content_fl_custom;
 
     public MessageTextHolder(View itemView) {
@@ -90,12 +90,14 @@ public class MessageTextHolder extends MessageContentHolder {
         msgBodyText = rootView.findViewById(R.id.msg_body_tv);
         chat_tips_tv = rootView.findViewById(R.id.chat_tips_tv);
         msg_content_fl_custom = rootView.findViewById(R.id.msg_content_fl_custom);
+        chat_system_tip_tv = rootView.findViewById(R.id.chat_system_tip_tv);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void layoutVariableViews(MessageInfo msg, int position) {
         msgBodyText.setVisibility(View.VISIBLE);
+        chat_system_tip_tv.setVisibility(View.GONE);
         if (msg.getExtra() != null) {
             String text = String.valueOf(msg.getExtra());
             if (TUIChatUtils.isJSON2(text) && text.indexOf("type") != -1) {//做自定义通知判断
@@ -492,11 +494,15 @@ public class MessageTextHolder extends MessageContentHolder {
                     rootView.findViewById(R.id.full_toast).setVisibility(View.GONE);
                     rootView.findViewById(R.id.message_sending_pb).setVisibility(View.GONE);
                     rootView.findViewById(R.id.message_status_iv).setVisibility(View.VISIBLE);
+                    msgContentFrame.setVisibility(View.VISIBLE);
+                    msgBodyText.setVisibility(View.VISIBLE);
                     msgBodyText.setText(map_data.get("text").toString());
-                    String s = "系统提示：為防止詐騙，建議您先發起視訊通話，確認對方身份";
-                    TextView viewById = (TextView) rootView.findViewById(R.id.chat_system_tip_tv);
-                    viewById.setVisibility(View.VISIBLE);
-                    viewById.setText(s);
+                    String s = rootView.getContext().getString(R.string.custom_send_violation_message_tip);
+                    chat_system_tip_tv.setVisibility(View.VISIBLE);
+                    chat_system_tip_tv.setText(s);
+                    chat_system_tip_tv.setTextSize(11);
+                    msgBodyText.setTextColor(rootView.getResources().getColor(R.color.white));
+                    msgBodyText.setTextSize(14);
 
                 } else if (map_data != null && map_data.get("type") != null && map_data.get("type").equals("message_callingbusy")) {//忙線推送
                     View custom_gift_layout_max = rootView.findViewById(R.id.custom_gift_layout_max);

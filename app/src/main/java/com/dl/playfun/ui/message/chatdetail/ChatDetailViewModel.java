@@ -3,11 +3,15 @@ package com.dl.playfun.ui.message.chatdetail;
 import android.app.Application;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
 
+import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.ObjectUtils;
+import com.dl.playfun.R;
+import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.Injection;
@@ -17,9 +21,12 @@ import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.CallingInviteInfo;
+import com.dl.playfun.entity.ChatDetailCoinEntity;
 import com.dl.playfun.entity.EvaluateEntity;
 import com.dl.playfun.entity.EvaluateItemEntity;
 import com.dl.playfun.entity.EvaluateObjEntity;
+import com.dl.playfun.entity.GiftBagEntity;
+import com.dl.playfun.entity.MessageChatNumberEntity;
 import com.dl.playfun.entity.MessageRuleEntity;
 import com.dl.playfun.entity.PhotoAlbumEntity;
 import com.dl.playfun.entity.PriceConfigEntity;
@@ -29,21 +36,35 @@ import com.dl.playfun.entity.TaskRewardReceiveEntity;
 import com.dl.playfun.entity.UserConnMicStatusEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.AddBlackListEvent;
+import com.dl.playfun.event.CallChatingHangupEvent;
+import com.dl.playfun.event.MessageGiftNewEvent;
 import com.dl.playfun.event.RewardRedDotEvent;
-import com.dl.playfun.kl.Utils;
 import com.dl.playfun.manager.ConfigManager;
+import com.dl.playfun.utils.FileUploadUtils;
 import com.dl.playfun.utils.ToastCenterUtils;
+import com.dl.playfun.utils.Utils;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.google.gson.Gson;
-import com.dl.playfun.R;
+import com.luck.picture.lib.entity.LocalMedia;
+import com.tencent.coustom.GiftEntity;
+import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
+import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageInfoUtil;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 import me.goldze.mvvmhabit.binding.command.BindingAction;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
 import me.goldze.mvvmhabit.bus.RxBus;
+import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.RxUtils;
 import me.goldze.mvvmhabit.utils.ToastUtils;
@@ -56,6 +77,8 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
     public ObservableField<Boolean> isTagShow = new ObservableField<>(false);
     public ObservableField<Boolean> inBlacklist = new ObservableField<>(false);
     public ObservableField<Boolean> dialogShow = new ObservableField<>(false);
+    public ObservableField<TagEntity> tagEntitys = new ObservableField<>();
+    public ObservableField<List<String>> sensitiveWords = new ObservableField<>();
     //IM聊天价格配置
     public PriceConfigEntity priceConfigEntityField = null;
     //男生钻石总额
@@ -67,11 +90,22 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
     public boolean isCertification = false;
     //是否相互追踪
     public boolean isFollower = false;
-    //是否当前用户付费
-    public boolean isPlay = false;
+    //对方未结算消息条数
+    public Integer chargeMsgNumber = 0;
+    //对方未结算消息条数
+    public Integer refundMsgNumber = 0;
+    //是否首次存在收入
+    public Integer firstImMsg = 0;
 
     public Integer ChatInfoId = null;
     public UIChangeObservable uc = new UIChangeObservable();
+    //创建动画待播放数组
+    public volatile ArrayList<GiftEntity> animGiftList = new ArrayList<>();
+    //是否在播放动画
+    public volatile boolean animGiftPlaying = false;
+    //RxBus订阅事件
+    private Disposable messageGiftNewEventSubscriber;
+    private Disposable CallChatingHangupSubscriber;
     public BindingCommand moreOnClickCommand = new BindingCommand(new BindingAction() {
         @Override
         public void call() {
@@ -83,6 +117,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
     public ChatDetailViewModel(@NonNull Application application, AppRepository repository) {
         super(application, repository);
         uc.userDataEntity.postValue(model.readUserData());
+        sensitiveWords.set(model.readSensitiveWords());
     }
 
     @Override
@@ -129,6 +164,8 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                         TagEntity tagEntity = tagEntityBaseDataResponse.getData();
                         if (tagEntity != null) {
                             uc.loadTag.postValue(tagEntity);
+                            tagEntitys.set(tagEntity);
+                            model.saveChatPushStatus(tagEntitys.get().getIsChatPush());
                         }
                     }
 
@@ -166,6 +203,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                 });
     }
 
+
     //获取当前用户数据
     public void getLocalUserData() {
         uc.userDataEntity.postValue(model.readUserData());
@@ -174,6 +212,34 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
     //获取当前用户数据
     public UserDataEntity getLocalUserDataEntity() {
         return model.readUserData();
+    }
+
+    public void checkChatNumber(int userId) {
+        model.isMessageChat(userId)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(this)
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseDataResponse<MessageChatNumberEntity>>() {
+                    @Override
+                    public void onSuccess(BaseDataResponse<MessageChatNumberEntity> response) {
+                        dismissHUD();
+                        List<Integer> p = new ArrayList<>();
+                        p.add(userId);
+                        if (response.getData().getStatus() == 1) {
+                            p.add(-1);
+                            uc.askUseChatNumber.postValue(p);
+                        } else {
+                            p.add(response.getData().getNumber());
+                            uc.askUseChatNumber.postValue(p);
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        dismissHUD();
+                    }
+                });
     }
 
     public void addBlackList(int userId) {
@@ -187,6 +253,11 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                     public void onSuccess(BaseResponse response) {
                         dismissHUD();
                         inBlacklist.set(true);
+                        if (tagEntitys.get().getBlacklistStatus() == 0){
+                            tagEntitys.get().setBlacklistStatus(1);
+                        }else if(tagEntitys.get().getBlacklistStatus() == 2){
+                            tagEntitys.get().setBlacklistStatus(3);
+                        }
                         RxBus.getDefault().post(new AddBlackListEvent());
                     }
 
@@ -208,6 +279,11 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                     public void onSuccess(BaseResponse response) {
                         dismissHUD();
                         inBlacklist.set(false);
+                        if (tagEntitys.get().getBlacklistStatus() == 1){
+                            tagEntitys.get().setBlacklistStatus(0);
+                        }else if(tagEntitys.get().getBlacklistStatus() == 3){
+                            tagEntitys.get().setBlacklistStatus(2);
+                        }
                     }
 
                     @Override
@@ -229,7 +305,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                         if (response.getData().getConnection()) {
                             uc.clickConnMic.call();
                         } else {
-                            ToastUtils.showShort(R.string.playfun_opposite_mic_disabled);
+                            ToastUtils.showShort(R.string.opposite_mic_disabled);
                         }
                     }
 
@@ -297,6 +373,26 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                     }
                 });
     }
+
+    /**
+     * 获取在线状态标识图
+     * @param detailEntity
+     * @return
+     */
+    public Drawable onLineDrawables(TagEntity detailEntity) {
+        if (detailEntity == null)return null;
+        if (detailEntity.getCallingStatus() == 0) {
+            if (detailEntity.getIsOnline() == 1) {
+                return AppContext.instance().getResources().getDrawable(R.drawable.user_detail_online2);
+            }
+        } else if (detailEntity.getCallingStatus() == 1) {
+            return AppContext.instance().getResources().getDrawable(R.drawable.user_detail_calling2);
+        } else if (detailEntity.getCallingStatus() == 2) {
+            return AppContext.instance().getResources().getDrawable(R.drawable.user_detail_video2);
+        }
+        return AppContext.instance().getResources().getDrawable(R.drawable.user_detail_online2);
+    }
+
     //根据用户ID获取评价
     public void getUserEvaluate(Integer userId,boolean sendIM) {
         model.evaluate(userId)
@@ -361,38 +457,45 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                     @Override
                     public void onSuccess(BaseResponse response) {
                         dismissHUD();
-                        ToastUtils.showShort(R.string.playfun_submittd);
+                        ToastUtils.showShort(R.string.submittd);
                         uc.removeEvaluateMessage.call();
                     }
 
                     @Override
                     public void onComplete() {
                         dismissHUD();
-                        if(dialog!=null) {
+                        if (dialog != null) {
                             dialog.dismiss();
                         }
                     }
                 });
     }
 
-    public void sendUserGift(Dialog dialog,Integer gift_id, Integer to_user_id, Integer amount){
-        model.sendUserGift(gift_id,to_user_id,amount,1)
+    public void sendUserGift(Dialog dialog, GiftBagEntity.giftEntity giftEntity, Integer to_user_id, Integer amount) {
+        model.sendUserGift(giftEntity.getId(), to_user_id, amount, 1)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
                 .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseResponse>(){
+                .subscribe(new BaseObserver<BaseResponse>() {
                     @Override
                     public void onSuccess(BaseResponse baseResponse) {
                         dismissHUD();
-                        dialog.dismiss();
+                        maleBalance -= giftEntity.getMoney();
+//                        GiftEntity _giftEntity = new GiftEntity();
+//                        _giftEntity.setSvgaPath(giftEntity.getLink());
+//                        animGiftList.add(_giftEntity);
+//                        if(!animGiftPlaying){
+//                            uc.signGiftAnimEvent.call();
+//                        }
+                        //dialog.dismiss();
                     }
                     @Override
                     public void onError(RequestException e) {
                         dialog.dismiss();
                         dismissHUD();
                         if (e.getCode() != null && e.getCode().intValue() == 21001) {
-                            ToastCenterUtils.showToast(R.string.playfun_dialog_exchange_integral_total_text1);
+                            ToastCenterUtils.showToast(R.string.dialog_exchange_integral_total_text1);
                             AppContext.instance().logEvent(AppsFlyerEvent.im_gifts_Insufficient_topup);
                             uc.sendUserGiftError.call();
                         }
@@ -411,9 +514,23 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                 .subscribe(new BaseObserver<BaseDataResponse<CallingInviteInfo>>() {
                     @Override
                     public void onSuccess(BaseDataResponse<CallingInviteInfo> callingInviteInfoBaseDataResponse) {
+                        if (callingInviteInfoBaseDataResponse.getCode() == 2) {
+                            uc.otherBusy.call();
+                            return;
+                        }
                         CallingInviteInfo callingInviteInfo = callingInviteInfoBaseDataResponse.getData();
                         if (callingInviteInfo != null) {
-                            Utils.tryStartCallSomeone(callingType, toImUserId, callingInviteInfo.getRoomId(), new Gson().toJson(callingInviteInfo));
+                            com.dl.playfun.kl.Utils.tryStartCallSomeone(callingType, toImUserId, callingInviteInfo.getRoomId(), new Gson().toJson(callingInviteInfo));
+                        }
+                    }
+
+                    @Override
+                    public void onError(RequestException e) {
+                        super.onError(e);
+                        if (e != null) {
+                            if (e.getCode() == 1) {
+                                uc.sendDialogViewEvent.call();
+                            }
                         }
                     }
 
@@ -436,16 +553,26 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                         PriceConfigEntity priceConfigEntity = response.getData();
                         if(priceConfigEntity != null){
                             priceConfigEntityField = priceConfigEntity;
+                            uc.imProfit.call();
                             isFollower = priceConfigEntity.getIsFollow().intValue() == 1;
-                            isPlay = priceConfigEntity.getIsPay().intValue() ==1;
-                            maleBalance = priceConfigEntityField.getCurrent().getBalance();
-                            maleCardNumber = priceConfigEntityField.getCurrent().getPropTotal();
-                            maleMessagePrice = priceConfigEntityField.getCurrent().getTextPrice();
+                            UserDataEntity userDataEntity = getLocalUserDataEntity();
+                            if(userDataEntity.getSex()==1) {
+                                maleBalance = priceConfigEntityField.getCurrent().getBalance();
+                                maleCardNumber = priceConfigEntityField.getCurrent().getPropTotal();
+                                maleMessagePrice = priceConfigEntityField.getCurrent().getTextPrice();
+                                chargeMsgNumber = priceConfigEntityField.getCurrent().getChargeMsgNumber();
+                            }else{
+                                isCertification = priceConfigEntityField.getCurrent().getCertification().intValue() == 1;
+                                chargeMsgNumber = priceConfigEntityField.getCurrent().getChargeMsgNumber();
+                                refundMsgNumber = priceConfigEntityField.getCurrent().getRefundMsgNumber();
+                                firstImMsg = priceConfigEntityField.getCurrent().getFirstImMsg();
+                            }
                         }
                     }
+
                     @Override
                     public void onComplete() {
-
+                        dismissHUD();
                     }
                 });
     }
@@ -527,11 +654,130 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                     }
                 });
     }
+    //上传文件到阿里云
+    public void uploadFileOSS(final LocalMedia localMedia){
+        final String filePath = localMedia.getCompressPath();
+        Observable.just(filePath)
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(this)
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribeOn(Schedulers.io())
+                .map(new Function<String, String>() {
+                    @Override
+                    public String apply(String s) throws Exception {
+                        String fileName = AppConfig.OSS_CUSTOM_FILE_NAME_CHAT +"/"+ Utils.formatYYMMSS.format(new Date());
+                        return FileUploadUtils.ossUploadFileCustom(FileUploadUtils.FILE_TYPE_IMAGE,filePath,fileName, null);
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableObserver<String>() {
+                    @Override
+                    public void onNext(String fileKey) {
+                        dismissHUD();
+                        if(fileKey!=null){
+                            CustomMessageData customMessageData = CustomMessageData.genCustomMessage(fileKey, CustomMessageData.TYPE_CUSTOM_IMAGE);
+                            customMessageData.setImgWidth(localMedia.getWidth());
+                            customMessageData.setImgHeight(localMedia.getHeight());
+                            MessageInfo info = ChatMessageInfoUtil.buildCustomMessage(GsonUtils.toJson(customMessageData), null, null);
+                            uc.signUploadSendMessage.postValue(info);
+                        }
 
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        dismissHUD();
+                        ToastUtils.showShort(R.string.upload_failed);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+                });
+    }
+
+    /**
+     * @return void
+     * @Desc TODO(查询剩余钻石)
+     * @author 彭石林
+     * @parame []
+     * @Date 2022/3/21
+     */
+    public void getTotalCoins() {
+        model.getTotalCoins(1)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseDataResponse<ChatDetailCoinEntity>>() {
+                    @Override
+                    public void onSuccess(BaseDataResponse<ChatDetailCoinEntity> responseBody) {
+                        if (responseBody.getData() != null) {
+                            ChatDetailCoinEntity chatDetailCoinEntity = responseBody.getData();
+                            Integer totalCoins = chatDetailCoinEntity.getTotalCoins();
+                            if (totalCoins != null) {
+                                if (totalCoins <= 0) {
+                                    maleBalance = 0;
+                                } else {
+                                    maleBalance = totalCoins;
+                                }
+                            } else {
+                                ToastUtils.showShort(R.string.network_text);
+                                pop();
+                            }
+                        } else {
+                            ToastUtils.showShort(R.string.network_text);
+                            pop();
+                        }
+                    }
+
+                    @Override
+                    public void onError(RequestException e) {
+                        ToastUtils.showShort(R.string.network_text);
+                        pop();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        dismissHUD();
+                    }
+                });
+    }
+
+    @Override
+    public void registerRxBus() {
+        super.registerRxBus();
+
+        messageGiftNewEventSubscriber = RxBus.getDefault().toObservable(MessageGiftNewEvent.class).subscribe(event -> {
+            GiftEntity giftEntity = event.getGiftEntity();
+            animGiftList.add(giftEntity);
+            if (!animGiftPlaying) {
+                uc.signGiftAnimEvent.call();
+            }
+        });
+        CallChatingHangupSubscriber = RxBus.getDefault().toObservable(CallChatingHangupEvent.class).subscribe(event -> {
+            UserDataEntity localUser = getLocalUserDataEntity();
+            if (localUser != null && localUser.getSex() != null && localUser.getSex().intValue() == 1) {
+                getTotalCoins();
+            }
+        });
+
+        //将订阅者加入管理站
+        RxSubscriptions.add(messageGiftNewEventSubscriber);
+    }
+
+    @Override
+    public void removeRxBus() {
+        super.removeRxBus();
+        RxSubscriptions.remove(messageGiftNewEventSubscriber);
+    }
 
     public class UIChangeObservable {
         public SingleLiveEvent<Void> clickConnMic = new SingleLiveEvent<>();
+        public SingleLiveEvent<Void> imProfit = new SingleLiveEvent<>();
         public SingleLiveEvent clickMore = new SingleLiveEvent<>();
+        //对方忙线
+        public SingleLiveEvent otherBusy = new SingleLiveEvent<>();
         //新增
         public SingleLiveEvent<List<Integer>> askUseChatNumber = new SingleLiveEvent<>();
         public SingleLiveEvent<Integer> useChatNumberSuccess = new SingleLiveEvent<>();
@@ -557,10 +803,18 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<List<MessageRuleEntity>> resultMessageRule = new SingleLiveEvent<>();
         //发送礼物失败。充值钻石
         public SingleLiveEvent<Void> sendUserGiftError = new SingleLiveEvent<>();
-        //首次收益弹窗展示
+        //首次收入弹窗展示
         public SingleLiveEvent<TaskRewardReceiveEntity> firstImMsgDialog = new SingleLiveEvent<>();
         //追踪成功
         public SingleLiveEvent<String> addLikeSuccess = new SingleLiveEvent<>();
+        //播放礼物效果
+        public SingleLiveEvent<Void> signGiftAnimEvent = new SingleLiveEvent<>();
+        //上传文件成功。发送消息
+        public SingleLiveEvent<MessageInfo> signUploadSendMessage = new SingleLiveEvent<>();
+        //钻石不足。唤起充值
+        public SingleLiveEvent<Void> sendDialogViewEvent = new SingleLiveEvent<>();
+
     }
+
 
 }
