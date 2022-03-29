@@ -158,6 +158,7 @@ android {
             // 腾讯IM App KEY
             buildConfigField "int", "IM_APP_KEY", "1400625290"//"1400510510"
             // 腾讯IM FCM离线推送ID
+            //buildConfigField "int", "GOOGLE_FCM_PUSH_BUZID", "13127"17321
             buildConfigField "int", "GOOGLE_FCM_PUSH_BUZID", "18414"
             // 服务端接口HOST
             buildConfigField "String", "API_BASE_URL", "\"https://t-api.joy-mask.com/\""
