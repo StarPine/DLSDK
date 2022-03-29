@@ -205,11 +205,11 @@ android {
             //buildConfigField "int", "GOOGLE_FCM_PUSH_BUZID", "13127"17321
             buildConfigField "int", "GOOGLE_FCM_PUSH_BUZID", "18414"
             // 服务端接口HOST
-            buildConfigField "String", "API_BASE_URL", "\"https://t-api.play-chat.net/\""
+            buildConfigField "String", "API_BASE_URL", "\"https://t-api.joy-mask.com/\""
             // 图片HOST
             buildConfigField "String", "IMAGE_BASE_URL", "\"https://img.joy-mask.com/\""
             //H5网页地址
-            buildConfigField "String", "WEB_BASE_URL", "\"https://t-m.joy-mask.com/\""
+            buildConfigField "String", "WEB_BASE_URL", "\"http://t-m.joy-mask.com/\""
             // Ali OSS BucketName
             buildConfigField "String", "BUCKET_NAME", "\"joymask\""
             //app名字
