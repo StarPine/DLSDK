@@ -79,7 +79,7 @@ public class WalletViewModel extends BaseViewModel<AppRepository> {
     });
 
     public void getUserAccount(){
-        model.getUserAccount()
+        model.getUserAccountPageInfo()
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())

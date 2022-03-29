@@ -169,7 +169,6 @@
     <string name="playfun_fragment_edit_profile_program">活動內容</string>
     <string name="playfun_fragment_edit_profile_hope">期望對象</string>
     <string name="playfun_fragment_edit_profile_line_account">社群賬號</string>
-    <string name="playfun_fragment_edit_profile_line_account_explai">請填寫真實賬號，填寫虛假賬號/無效賬號可能會被凍結</string>
     <string name="playfun_weight">體重</string>
     <string name="playfun_fragment_edit_profile_self_explain">文字自介</string>
     <string name="playfun_fragment_edit_profile_self_explain_hint">讓大家更了解你</string>
@@ -544,7 +543,6 @@
     <string name="playfun_photo_in_review">審核中</string>
     <string name="playfun_click_check_social_account">已填寫，點擊查看</string>
     <string name="playfun_please_choose_hope">請選擇期望對象</string>
-    <string name="playfun_opposite_mic_disabled">對方禁止語音通話</string>
     <string name="playfun_chat_service_name">客服專員</string>
     <string name="playfun_warn_no_certification">請先進行真人認證</string>
     <string name="playfun_dialog_add_blacklist_content">你將無法再看到對方和對方的動態，確定嗎？</string>
@@ -589,7 +587,7 @@
     <string name="playfun_recharge_coin_success">儲值成功</string>
     <string name="playfun_recharge_coin_success2">兌換?</string>
     <string name="playfun_age_and_constellation">%s</string>
-    <string name="playfun_age_and_constellation_only_age">%s歲·%s</string>
+    <string name="playfun_age_and_constellation_only_age">%s</string>
     <string name="playfun_upgrade_membership">升級會員</string>
     <string name="playfun_today_browse_useup">今天的查看次數已經用完</string>
     <string name="playfun_today_browse_female_count">你今天還能查看%s位女士</string>
@@ -963,6 +961,7 @@
     <string name="playfun_srl_footer_pulling">上拉加載更多</string>
     <string name="playfun_srl_footer_refreshing">等待刷新成功…</string>
     <string name="playfun_srl_footer_release">發佈</string>
+
     <string name="playfun_only_vip_can_unlock">升級vip解鎖她的社群賬號</string>
     <string name="playfun_become_vip">成為VIP</string>
     <string name="user_detail_him_disable_mic">对方禁止語音通話</string>
@@ -977,9 +976,17 @@
     <string name="playfun_chat_detail_pull_black_other2">已将對方封鎖，無法贈送禮物</string>
     <string name="playfun_chat_detail_blocked">已被對方封鎖，無法撥打。</string>
     <string name="playfun_chat_detail_blocked2">已被對方封鎖，無法贈送禮物</string>
+    <string name="playfun_network_text">網絡異常！</string>
+    <string name="playfun_fragment_edit_profile_line_account_explai">1、請填寫真實賬號，填寫虛假賬號/無效賬號可能會被凍結</string>
+    <string name="playfun_fragment_edit_profile_line_account_explai2">2、對方需付費解鎖查看妳的社群賬號，</string>
+    <string name="playfun_fragment_edit_profile_line_account_explai3"><u>設定解鎖價格</u></string>
+    <string name="playfun_opposite_mic_disabled">對方禁止語音通話</string>
     <string name="playfun_unlock_price">解鎖社群賬號收入</string>
     <string name="playfun_handling_fee">平台將換算後向用戶收取鑽石，收取%s手續費</string>
+
     <string name="playfun_message_deatail_check_video">選擇視頻</string>
     <string name="playfun_message_deatail_check_img">選擇照片</string>
     <string name="playfun_coin_custom_text">鑽石稍後到賬！</string>
+    <string name="playfun_coustom_time_picker_text">活動時間衹能選擇一周內</string>
+    <string name="playfun_fragment_issuance_program_explain">若發佈裸露低俗等違規照片，平台將做封號處置。</string>
 </resources>

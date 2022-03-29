@@ -331,7 +331,7 @@
                 android:layout_toStartOf="@+id/ic_close_money"
                 android:background="@drawable/btn_yellow_cicle"
                 android:gravity="center"
-                android:text="@string/dialong_coin_rechaege_top_up"
+                android:text="@string/playfun_dialong_coin_rechaege_top_up"
                 android:textColor="@color/purple1"
                 android:padding="5dp"
                 android:textSize="8sp"

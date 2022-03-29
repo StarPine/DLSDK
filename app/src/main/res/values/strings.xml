@@ -587,7 +587,7 @@
     <string name="playfun_recharge_coin_success">儲值成功</string>
     <string name="playfun_recharge_coin_success2">兌換?</string>
     <string name="playfun_age_and_constellation">%s</string>
-    <string name="playfun_age_and_constellation_only_age">%s歲·%s</string>
+    <string name="playfun_age_and_constellation_only_age">%s</string>
     <string name="playfun_upgrade_membership">升級會員</string>
     <string name="playfun_today_browse_useup">今天的查看次數已經用完</string>
     <string name="playfun_today_browse_female_count">你今天還能查看%s位女士</string>
@@ -987,4 +987,6 @@
     <string name="playfun_message_deatail_check_video">選擇視頻</string>
     <string name="playfun_message_deatail_check_img">選擇照片</string>
     <string name="playfun_coin_custom_text">鑽石稍後到賬！</string>
+    <string name="playfun_coustom_time_picker_text">活動時間衹能選擇一周內</string>
+    <string name="playfun_fragment_issuance_program_explain">若發佈裸露低俗等違規照片，平台將做封號處置。</string>
 </resources>

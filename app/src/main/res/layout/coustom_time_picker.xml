@@ -68,7 +68,7 @@
             android:layout_marginStart="3dp"
             android:layout_toEndOf="@+id/icon_time"
             android:includeFontPadding="false"
-            android:text="@string/coustom_time_picker_text" />
+            android:text="@string/playfun_coustom_time_picker_text" />
     </RelativeLayout>
 
     <LinearLayout

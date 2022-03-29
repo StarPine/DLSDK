@@ -75,8 +75,8 @@ public class RetrofitClient {
         }
         headers.put("client", "Android");
         headers.put("version", AppConfig.VERSION_NAME);
-        //source 来源ID 1642158125=喵遊 2=杜拉克
-        headers.put("source","12345678");
+        //source 来源ID 1642158125=喵遊 1648520220=杜拉克
+        headers.put("source","1648520220");
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .cookieJar(new CookieJarImpl(new PersistentCookieStore(mContext)))
 //                .cache(cache)

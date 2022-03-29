@@ -323,7 +323,6 @@ public class AppContext extends Application {
                         public void onError(int code, String desc) {
                             KLog.e(TAG, "doForeground err = " + code + ", desc = " + desc);
                         }
-
                         @Override
                         public void onSuccess() {
                             KLog.i(TAG, "doForeground success");
