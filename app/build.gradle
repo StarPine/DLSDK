@@ -306,12 +306,7 @@ dependencies {
     embed (name:'ucrop-v2.6.0', ext:'aar')
     embed (name:'refresh-footer-classics-2.0.3', ext:'aar')
     embed (name:'refresh-drawable-paint-2.0.3', ext:'aar')
-    if(rootProject.ext.BuildSdkPlayfun){
-        projectID.each {k,v -> embed project (':'+k)}
-//        projectID.each {k,v -> embed project(path: ':'+ k , configuration: 'default')}
-    }else{
-        projectID.each {k,v -> implementation project (':'+k)}
-    }
+    projectID.each {k,v -> embed project (":${k}")}
 
     //日志打印
     implementation('com.github.ihsanbal:LoggingInterceptor:3.0.0') {
