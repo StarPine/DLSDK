@@ -131,6 +131,14 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan|adjustResize|stateHidden" /><!--" adjustResize|stateHidden"-->、
+        <activity
+            android:name="com.dl.playfun.kl.view.VideoPresetActivity"
+            android:launchMode="singleTop"
+            android:requestLegacyExternalStorage="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan|adjustResize|stateHidden" /><!--" adjustResize|stateHidden"-->
+        、
 
         <activity
             android:name="com.dl.playfun.ui.MainContainerActivity"

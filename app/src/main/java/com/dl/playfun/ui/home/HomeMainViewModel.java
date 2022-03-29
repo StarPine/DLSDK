@@ -60,8 +60,9 @@ public class HomeMainViewModel extends BaseViewModel<AppRepository> {
     }
     );
     public BindingCommand toTaskClickCommand = new BindingCommand(() -> {
-        uc.clickAccountDialog.setValue("0");
-        AppContext.instance().logEvent(AppsFlyerEvent.homepage_batch_accost);
+//        uc.clickAccountDialog.setValue("0");
+//        AppContext.instance().logEvent(AppsFlyerEvent.homepage_batch_accost);
+        uc.starActivity.call();
     });
     /**
      * 在线优先改变
@@ -196,6 +197,7 @@ public class HomeMainViewModel extends BaseViewModel<AppRepository> {
         //打开批量搭讪接口
         public SingleLiveEvent<String> clickAccountDialog = new SingleLiveEvent<>();
         public SingleLiveEvent<Boolean> isLoad = new SingleLiveEvent<>();
+        public SingleLiveEvent<Void> starActivity = new SingleLiveEvent<>();
     }
 
 }

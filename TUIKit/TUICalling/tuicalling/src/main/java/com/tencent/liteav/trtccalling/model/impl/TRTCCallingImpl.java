@@ -2,6 +2,7 @@ package com.tencent.liteav.trtccalling.model.impl;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -368,6 +369,7 @@ public class TRTCCallingImpl extends TRTCCalling {
             }
         }
     };
+    private TXBeautyManager txBeautyManager;
 
     public TRTCCallingImpl(Context context) {
         mContext = context;
@@ -1029,16 +1031,31 @@ public class TRTCCallingImpl extends TRTCCalling {
         stopRing();
     }
 
+    public void presetWhitenessLevel(int level){
+        txBeautyManager.setWhitenessLevel(level);
+    }
+    public void presetBeautyLevel(int level){
+        txBeautyManager.setBeautyLevel(level);
+    }
+    public void presetRuddyLevel(int level){
+        txBeautyManager.setRuddyLevel(level);
+    }
+
+
     /**
      * trtc 进房
      */
     private void enterTRTCRoom() {
         if (mCurCallType == TRTCCalling.TYPE_VIDEO_CALL) {
             // 开启基础美颜
-            TXBeautyManager txBeautyManager = mTRTCCloud.getBeautyManager();
+            txBeautyManager = mTRTCCloud.getBeautyManager();
             // 自然美颜
             txBeautyManager.setBeautyStyle(1);
-            txBeautyManager.setBeautyLevel(6);
+            txBeautyManager.setBeautyLevel(0);
+            txBeautyManager.setWhitenessLevel(0);
+            txBeautyManager.setRuddyLevel(0);
+            txBeautyManager.setFilterStrength(1);
+            txBeautyManager.setFilter(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.beauty_filter_bailan));
             // 进房前需要设置一下关键参数
             TRTCCloudDef.TRTCVideoEncParam encParam = new TRTCCloudDef.TRTCVideoEncParam();
             encParam.videoResolution = TRTCCloudDef.TRTC_VIDEO_RESOLUTION_960_540;

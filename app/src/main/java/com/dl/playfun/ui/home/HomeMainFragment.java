@@ -24,6 +24,7 @@ import com.dl.playfun.app.Injection;
 import com.dl.playfun.entity.ConfigItemEntity;
 import com.dl.playfun.event.CityChangeEvent;
 import com.dl.playfun.event.LocationChangeEvent;
+import com.dl.playfun.kl.view.VideoPresetActivity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocationManager;
 import com.dl.playfun.ui.base.BaseFragment;
@@ -179,6 +180,13 @@ public class HomeMainFragment extends BaseFragment<FragmentHomeMainBinding, Home
     @Override
     public void initViewObservable() {
         super.initViewObservable();
+        viewModel.uc.starActivity.observe(this, new Observer<Void>() {
+            @Override
+            public void onChanged(Void aBoolean) {
+                Intent intent = new Intent(mActivity, VideoPresetActivity.class);
+                mActivity.startActivity(intent);
+            }
+        });
         viewModel.uc.isLoad.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
@@ -189,6 +197,7 @@ public class HomeMainFragment extends BaseFragment<FragmentHomeMainBinding, Home
                 }
             }
         });
+
         //搭讪弹窗
         viewModel.uc.clickAccountDialog.observe(this, new Observer<String>() {
             @Override
