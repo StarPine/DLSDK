@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr format="reference|color" name="picture.ac_preview.bottom.bg"/>
+    <attr format="reference|color" name="picture.ac_preview.complete.textColor"/>
+    <attr format="reference|color" name="picture.ac_preview.title.bg"/>
+    <attr format="reference|color" name="picture.ac_preview.title.textColor"/>
+    <attr format="reference" name="picture.arrow_down.icon"/>
+    <attr format="reference" name="picture.arrow_up.icon"/>
+    <attr format="reference|color" name="picture.bottom.bg"/>
+    <attr format="reference" name="picture.checked.style"/>
+    <attr format="reference|color" name="picture.complete.textColor"/>
+    <attr format="color" name="picture.container.backgroundColor"/>
+    <attr format="reference|color" name="picture.crop.status.color"/>
+    <attr format="reference|color" name="picture.crop.title.color"/>
+    <attr format="reference|color" name="picture.crop.toolbar.bg"/>
+    <attr format="color" name="picture.folder.textColor"/>
+    <attr format="dimension" name="picture.folder.textSize"/>
+    <attr format="reference" name="picture.folder_checked_dot"/>
+    <attr format="reference" name="picture.leftBack.icon"/>
+    <attr format="reference" name="picture.num.style"/>
+    <attr format="reference" name="picture.original.check.style"/>
+    <attr format="reference|color" name="picture.original.text.color"/>
+    <attr format="reference" name="picture.preview.leftBack.icon"/>
+    <attr format="reference|color" name="picture.preview.textColor"/>
+    <attr format="reference|color" name="picture.right.textColor"/>
+    <attr format="reference|color" name="picture.status.color"/>
+    <attr format="boolean" name="picture.statusFontColor"/>
+    <attr format="boolean" name="picture.style.checkNumMode"/>
+    <attr format="boolean" name="picture.style.numComplete"/>
+    <attr format="reference|color" name="picture.title.textColor"/>
+    <attr format="dimension" name="picture.titleBar.height"/>
+    <attr format="dimension" name="picture.titleRightArrow.LeftPadding"/>
+</resources>
