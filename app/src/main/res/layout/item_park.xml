@@ -196,6 +196,7 @@
                     android:text="@{StringUtils.isEmpty(viewModel.itemEntity.city) ? @string/playfun_unknown_region : viewModel.itemEntity.city}"
                     android:textColor="#FF827692"
                     android:textSize="12sp"
+                    android:visibility="gone"
                     tools:text="城市" />
 
                 <TextView
@@ -207,7 +208,7 @@
                     android:text="|"
                     android:textColor="#CDCED1"
                     android:textSize="@dimen/text_size_small"
-                    android:visibility="@{viewModel.isEmpty(viewModel.ageAndConstellation)? View.GONE :View.VISIBLE}"
+                    android:visibility="gone"
                     tools:ignore="HardcodedText" />
 
                 <TextView
@@ -228,7 +229,7 @@
                 android:text="@{SystemDictUtils.getOccupationById(safeUnbox(viewModel.itemEntity.occupationId))}"
                 android:textColor="#FF827692"
                 android:textSize="12sp"
-                tools:text="台北市" />
+                tools:text="职业" />
         </LinearLayout>
 
         <LinearLayout
