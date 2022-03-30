@@ -60,9 +60,9 @@ public class HomeMainViewModel extends BaseViewModel<AppRepository> {
     }
     );
     public BindingCommand toTaskClickCommand = new BindingCommand(() -> {
-//        uc.clickAccountDialog.setValue("0");
-//        AppContext.instance().logEvent(AppsFlyerEvent.homepage_batch_accost);
-        uc.starActivity.call();
+        uc.clickAccountDialog.setValue("0");
+        AppContext.instance().logEvent(AppsFlyerEvent.homepage_batch_accost);
+//        uc.starActivity.call();
     });
     /**
      * 在线优先改变

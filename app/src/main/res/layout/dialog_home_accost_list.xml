@@ -67,11 +67,6 @@
                 android:textSize="11sp" />
         </RelativeLayout>
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:src="@drawable/accost_backdrop_img" />
 
         <LinearLayout
             android:id="@+id/item_entity_layout1"
