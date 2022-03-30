@@ -989,4 +989,10 @@
     <string name="playfun_coin_custom_text">鑽石稍後到賬！</string>
     <string name="playfun_coustom_time_picker_text">活動時間衹能選擇一周內</string>
     <string name="playfun_fragment_issuance_program_explain">若發佈裸露低俗等違規照片，平台將做封號處置。</string>
+    <string name="auth_external_login_facebook">FaceBook</string>
+    <string name="auth_external_login_google">Google</string>
+    <string name="auth_external_login_line">Line</string>
+    <string name="auth_external_login_vk">VK</string>
+    <string name="auth_external_login_yk">遊客登入 ></string>
+    <string name="auth_external_login_more">其他登入方式 ></string>
 </resources>

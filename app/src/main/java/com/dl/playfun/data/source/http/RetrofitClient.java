@@ -75,7 +75,7 @@ public class RetrofitClient {
             headers = new HashMap<>();
         }
         headers.put("client", "Android");
-        headers.put("version", AppConfig.VERSION_NAME);
+        headers.put("version", AppConfig.VERSION_NAME_PUSH);
         //source 来源ID 1642158125=喵遊 1648520220=杜拉克
         headers.put("source","1648520220");
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
