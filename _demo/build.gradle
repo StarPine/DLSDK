@@ -81,7 +81,7 @@ android {
         // PlayChat台湾版配置 BuildPlayChatRelease (false = Debug 或 true = 正式包)
         PlayChat {
             dimension "distribute"
-            if(!rootProject.ext.BuildSdkPlayfun && !rootProject.ext.BuildPlayChatRelease){
+            if(!rootProject.ext.BuildPlayChatRelease){
                 applicationId "com.ld.play.chat"
                 manifestPlaceholders = [package_name: applicationId]
                 //测试包配置
@@ -115,7 +115,7 @@ android {
                 // 版本名
                 versionName "1.0.1-beta"
             }
-            if(!rootProject.ext.BuildSdkPlayfun && rootProject.ext.BuildPlayChatRelease){
+            if(rootProject.ext.BuildPlayChatRelease){
                 applicationId "com.ld.play.chat"
                 manifestPlaceholders = [package_name: applicationId]
                 //正式包配置
