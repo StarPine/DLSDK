@@ -3,6 +3,7 @@ package com.dl.playfun.data.source.http;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.dl.playfun.BuildConfig;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.data.source.http.interceptor.TokenInterceptor;
 import com.ihsanbal.logging.Level;
@@ -85,7 +86,7 @@ public class RetrofitClient {
                 .addInterceptor(new TokenInterceptor())
                 .addInterceptor(new LoggingInterceptor
                         .Builder()//构建者模式
-                        .loggable(false) //是否开启日志打印
+                        .loggable(BuildConfig.DEBUG) //是否开启日志打印
                         .setLevel(Level.BASIC) //打印的等级
                         .log(Platform.INFO) // 打印类型
                         .request("Request") // request的Tag
