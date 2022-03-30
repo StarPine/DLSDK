@@ -1,5 +1,7 @@
 package com.dl.playfun.api;
 
+import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 
@@ -59,6 +61,37 @@ public class PlayFunUserApiUtil {
         mapData.put("serverId", AESUtil.encrypt_AES(AppConfig.GAME_SOURCES_AES_KEY, serverId, AppConfig.GAME_SOURCES_AES_KEY));
         mapData.put("roleId",AESUtil.encrypt_AES(AppConfig.GAME_SOURCES_AES_KEY, roleId, AppConfig.GAME_SOURCES_AES_KEY));
         Injection.provideDemoRepository().putKeyValue(AppConfig.GAME_SOURCES_HEADER_KEY,GsonUtils.toJson(mapData));
+    }
+
+    /**
+    * @Desc TODO(保存游戏Activity路径。供playfun返回调用)
+    * @author 彭石林
+    * @parame [activityName]
+    * @return void
+    * @Date 2022/3/29
+    */
+    public void saveSourcesGameActivityName(@NonNull @NotNull String activityName){
+        Injection.provideDemoRepository().putKeyValue(AppConfig.GAME_SOURCES_ACTIVITY_NAME,activityName);
+    }
+
+    /**
+    * @Desc TODO(PlayFun返回游戏页面)
+    * @author 彭石林
+    * @parame [mContext]
+    * @return void
+    * @Date 2022/3/29
+    */
+    public void toPlayGameView(Context mContext){
+        String gameActivityName = Injection.provideDemoRepository().readKeyValue(AppConfig.GAME_SOURCES_ACTIVITY_NAME);
+        AppContext.instance().setGameState(1);
+        ConfigManagerUtil.getInstance().putPlayGameFlag(true);
+        if(gameActivityName!=null){
+            Intent intent = new Intent();
+            intent.setComponent(new ComponentName(mContext.getApplicationContext(), "com.joyluckgame.petcoin.UnityPlayerActivity"));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mContext.startActivity(intent);
+        }
+        ((Activity)mContext).finish();
     }
 
     /**

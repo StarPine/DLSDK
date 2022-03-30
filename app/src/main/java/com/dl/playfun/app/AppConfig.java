@@ -106,4 +106,6 @@ public class AppConfig {
     public static final String GAME_SOURCES_HEADER_KEY = "game_sources_header_key";
 
     public static final String GAME_SOURCES_AES_KEY = "game_sources_key";
+    //游戏activity绝对路径 （实际包名+类名）
+    public static final String GAME_SOURCES_ACTIVITY_NAME = "game_sources_activity_name";
 }
