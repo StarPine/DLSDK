@@ -45,6 +45,7 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
     private boolean isShowSearch = false;
 
     private boolean mIsLoading = false;
+    private ConversationListLayout mRecycleView;
 
     private View searchView;
     public ConversationListAdapter() {
@@ -417,11 +418,19 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
     public void onLoadingStateChanged(boolean isLoading) {
         this.mIsLoading = isLoading;
         notifyItemChanged(getItemCount() - 1);
+        //滚动到顶部
+        mRecycleView.scrollToTop();
     }
 
     @Override
     public void onViewNeedRefresh() {
         notifyDataSetChanged();
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        mRecycleView = (ConversationListLayout) recyclerView;
     }
 
     //header

@@ -152,6 +152,16 @@ public class ConversationListLayout extends RecyclerView implements IConversatio
         }
     }
 
+    public void scrollToTop() {
+        if (getAdapter() != null) {
+            RecyclerView.LayoutManager layoutManager = getLayoutManager();
+            int itemCount = getAdapter().getItemCount();
+            if (layoutManager instanceof LinearLayoutManager && itemCount > 0) {
+                ((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(0, 0);
+            }
+        }
+    }
+
     boolean isLoadCompleted(){
         if (presenter != null) {
             return presenter.isLoadFinished();
