@@ -196,7 +196,7 @@ public class ChatUtils {
 
     public static int imUserIdToSystemUserId(String userId) {
         try {
-            String strId = userId.replaceFirst("ru_", "");
+            String strId = userId.replaceFirst("user_", "");
             return Integer.parseInt(strId);
         } catch (Exception e) {
             return 0;
