@@ -380,12 +380,12 @@ public class HomeAccostDialog extends BaseDialog {
                                 item_entity_name4.setText(itemEntity4.getNickname());
                                 item_entity_name5.setText(itemEntity5.getNickname());
                                 item_entity_name6.setText(itemEntity6.getNickname());
-                                item_entity_text1.setText(String.format(StringUtils.getString(R.string.playfun_mine_age), itemEntity1.getAge()) + " " + SystemDictUtils.getCityById(itemEntity1.getCityId()));
-                                item_entity_text2.setText(String.format(StringUtils.getString(R.string.playfun_mine_age), itemEntity2.getAge()) + " " + SystemDictUtils.getCityById(itemEntity2.getCityId()));
-                                item_entity_text3.setText(String.format(StringUtils.getString(R.string.playfun_mine_age), itemEntity3.getAge()) + " " + SystemDictUtils.getCityById(itemEntity3.getCityId()));
-                                item_entity_text4.setText(String.format(StringUtils.getString(R.string.playfun_mine_age), itemEntity4.getAge()) + " " + SystemDictUtils.getCityById(itemEntity4.getCityId()));
-                                item_entity_text5.setText(String.format(StringUtils.getString(R.string.playfun_mine_age), itemEntity5.getAge()) + " " + SystemDictUtils.getCityById(itemEntity5.getCityId()));
-                                item_entity_text6.setText(String.format(StringUtils.getString(R.string.playfun_mine_age), itemEntity6.getAge()) + " " + SystemDictUtils.getCityById(itemEntity6.getCityId()));
+                                item_entity_text1.setText(String.format(StringUtils.getString(R.string.playfun_mine_age), itemEntity1.getAge()));
+                                item_entity_text2.setText(String.format(StringUtils.getString(R.string.playfun_mine_age), itemEntity2.getAge()));
+                                item_entity_text3.setText(String.format(StringUtils.getString(R.string.playfun_mine_age), itemEntity3.getAge()));
+                                item_entity_text4.setText(String.format(StringUtils.getString(R.string.playfun_mine_age), itemEntity4.getAge()));
+                                item_entity_text5.setText(String.format(StringUtils.getString(R.string.playfun_mine_age), itemEntity5.getAge()));
+                                item_entity_text6.setText(String.format(StringUtils.getString(R.string.playfun_mine_age), itemEntity6.getAge()));
                                 if (itemEntity1.getCertification() == 1) {
                                     item_tag_img1.setVisibility(View.VISIBLE);
                                     item_tag_img1.setImageResource(R.drawable.ic_real_man);

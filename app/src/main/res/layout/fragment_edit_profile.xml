@@ -181,6 +181,7 @@
                     android:background="@drawable/edittext_background"
                     android:orientation="horizontal"
                     android:paddingLeft="14dp"
+                    android:visibility="gone"
                     android:paddingRight="14dp">
 
                     <TextView
