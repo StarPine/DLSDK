@@ -1,60 +1,30 @@
 <resources>
-    <string name="alivc_use_gpu">使用GPU</string>
-    <string name="alivc_kbps_hint">建议600-2000，默认0</string>
-    <string name="alivc_resolution_1_1">540*540</string>
-    <string name="alivc_resolution_3_4">540*720</string>
-    <string name="alivc_resolution_9_16">540*960</string>
-    <string name="alivc_video_duration">%1$02d:%2$02d:%3$02d</string>
-    <string name="alivc_next_camera_roll_import">下一步</string>
-    <string name="alivc_total_duration_label_import">总时长</string>
-    <string name="alivc_video_param_error">Failed to crop the video</string>
-    <string name="alivc_crop_setting_frame_rate_1">帧率</string>
-    <!--裁剪设置界面 -->
-    <string name="alivc_crop_setting_tittle">裁剪参数</string>
-    <string name="alivc_crop_setting_bps">码率(kbps)</string>
-    <string name="alivc_crop_setting_bps_hint">默认值为0, 根据视频质量参数计算</string>
-    <string name="alivc_crop_setting_frame_rate">帧率</string>
-    <string name="alivc_crop_setting_frame_rate_hint">建议20-30，默认30</string>
-    <string name="alivc_crop_setting_gop">关键帧间隔</string>
-    <string name="alivc_crop_setting_gop_hint">建议1-300，默认250</string>
-    <string name="alivc_crop_setting_resolution">分辨率</string>
-    <string name="alivc_crop_setting_resolution_360p">360p</string>
-    <string name="alivc_crop_setting_resolution_480p">480p</string>
-    <string name="alivc_crop_setting_resolution_540p">540p</string>
-    <string name="alivc_crop_setting_resolution_720p">720p</string>
-    <string name="alivc_crop_setting_crop_mode">裁剪模式</string>
-    <string name="alivc_crop_setting_mode_fill">填充</string>
-    <string name="alivc_crop_setting_mode_crop">裁剪</string>
-    <string name="alivc_crop_setting_start_import">开始导入</string>
-    <string name="alivc_crop_setting_codec">视频编码方式</string>
-    <string name="alivc_crop_setting_encoder_hardware">硬编</string>
-    <string name="alivc_crop_setting_encoder_openh264">OpenH264软编</string>
-    <string name="alivc_crop_setting_encoder_ffmpeg">FFmpeg软编</string>
-    <string name="alivc_crop_setting_ratio">视频比例</string>
-    <string name="alivc_crop_setting_ratio_1_1">1:1</string>
-    <string name="alivc_crop_setting_ratio_9_16">9:16</string>
-    <string name="alivc_crop_setting_ratio_3_4">3:4</string>
-    <string name="alivc_crop_setting_ratio_original">原比例</string>
-    <string name="alivc_crop_setting_quality">视频质量</string>
-    <string name="alivc_crop_setting_quality_super">优质</string>
-    <string name="alivc_crop_setting_quality_high">良好</string>
-    <string name="alivc_crop_setting_quality_meidan">一般</string>
-    <string name="alivc_crop_setting_quality_low">较差</string>
-    <!--end-->
+    <string name="alivc_common_no_camera_permission">沒有權限使用攝像頭，請開啟攝像頭權限</string>
+    <string name="alivc_common_no_record_bluetooth_permission">沒有權限使用藍牙，請開啟藍牙權限</string>
+    <string name="alivc_common_no_record_audio_permission">沒有權限使用錄音，請開啟錄音權限</string>
+    <string name="alivc_common_no_read_phone_state_permission">沒有讀取用戶數據的權限，請開啟該權限</string>
+    <string name="alivc_common_no_write_external_storage_permission">沒有文件寫權限，請開啟該權限</string>
+    <string name="alivc_common_no_read_external_storage_permission">沒有文件讀權限，請開啟該權限</string>
+    <string name="alivc_common_note">提示</string>
+    <string name="alivc_common_confirm">確認</string>
+    <string name="alivc_common_no_permission">沒有權限</string>
 
-    <!--裁剪媒体选择页面-->
-    <string name="alivc_crop_media_tittle">相機膠卷</string>
-    <string name="alivc_crop_media_sdcard_not_ready">SDCARD 没有准备好</string>
-    <string name="alivc_crop_media_gif_not_support">暂时不支持gif文件裁剪</string>
-    <!--end-->
+    <string name="aliyun_common_confirm">確定</string>
+    <string name="aliyun_common_cancel">取消</string>
+    <string name="aliyun_common_update_app">發現新版本，請升級</string>
+    <string name="aliyun_common_updating">升級中</string>
 
-    <!--视频裁剪页面-->
-    <string name="alivc_crop_video_tip_not_supported_audio">音频格式不支持</string>
-    <string name="alivc_crop_video_tip_not_supported_video">视频格式不支持</string>
-    <string name="alivc_crop_video_tip_crop_failed">裁剪失败</string>
-    <string name="alivc_crop_video_tip_error">视频错误</string>
-    <string name="alivc_crop_video_tip_error2">視頻剪輯時長不能超過20秒</string>
-    <string name="alivc_crop_video_tip_error3">1. 拉動紅色框邊緣選擇視頻剪輯長度\n2. 剪輯視頻長度為3秒-20秒</string>
+    <string name="alivc_common_operate_success">操作成功</string>
+    <string name="alivc_common_operate_fail">操作失敗</string>
+    <string name="alivc_common_loading">正在加載</string>
+    <string name="alivc_common_loading_end">加載完畢</string>
 
-    <!--end-->
+    <string name="alivc_common_device_memory_not_enough">設備內存不足，請及時清理</string>
+    <string name="alivc_common_creating_video_remind">正在進行視頻合成，確定要放棄嗎？</string>
+
+    <string name="alivc_common_download">下載</string>
+    <string name="alivc_common_cancel">取消</string>
+    <string name="alivc_common_no_free_memory">剩余磁盤空間不足</string>
+
+
 </resources>

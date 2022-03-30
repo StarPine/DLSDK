@@ -108,6 +108,9 @@ public class PlayFunUserApiUtil {
         AppContext.instance().setGameState(-1);
         Intent intent = new Intent(mContext, MainContainerActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        //出栈动画
+        //((Activity)mContext).overridePendingTransition(R.anim.slide_in_left, R.anim.slide_in_left);
+
         mContext.startActivity(intent);
     }
 
