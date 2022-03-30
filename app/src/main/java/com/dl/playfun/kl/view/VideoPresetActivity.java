@@ -7,6 +7,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -40,6 +41,9 @@ public class VideoPresetActivity extends AppCompatActivity {
     private SeekBar seekbar_one;
     private SeekBar seekbar_two;
     private SeekBar seekbar_three;
+    private TextView text_one,text_two,text_three;
+    private int whitenessProgress;
+    private int beautyProgress;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,10 +71,14 @@ public class VideoPresetActivity extends AppCompatActivity {
         seekbar_one = findViewById(R.id.seekbar_one);
         seekbar_two = findViewById(R.id.seekbar_two);
         seekbar_three = findViewById(R.id.seekbar_three);
+        text_one = findViewById(R.id.text_one);
+        text_two = findViewById(R.id.text_two);
+        text_three = findViewById(R.id.text_three);
         seekbar_one.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 mTRTCCalling.presetWhitenessLevel(progress);
+                text_one.setText(progress+"");
             }
 
             @Override
@@ -80,13 +88,14 @@ public class VideoPresetActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+//                seekbar_one.setProgress(whitenessProgress);
             }
         });
         seekbar_two.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                mTRTCCalling.presetBeautyLevel(progress);
+                mTRTCCalling.presetRuddyLevel(progress);
+                text_two.setText(progress+"");
             }
 
             @Override
@@ -96,13 +105,14 @@ public class VideoPresetActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+//                seekbar_two.setProgress(beautyProgress);
             }
         });
         seekbar_three.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                mTRTCCalling.presetRuddyLevel(progress);
+                mTRTCCalling.presetBeautyLevel(progress);
+                text_three.setText(progress+"");
             }
 
             @Override

@@ -156,8 +156,23 @@ public abstract class TRTCCalling {
      * 当您作为被邀请方收到 {@link TRTCCallingDelegate#onInvited } 的回调时，可以调用该函数接听来电
      */
     public abstract void accept();
+
+    /**
+     * 美白
+     * @param level
+     */
     public abstract void presetWhitenessLevel(int level);
+
+    /**
+     * 美颜
+     * @param level
+     */
     public abstract void presetBeautyLevel(int level);
+
+    /**
+     * 红润
+     * @param level
+     */
     public abstract void presetRuddyLevel(int level);
 
     /**

@@ -10,37 +10,106 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="vertical"
+        android:background="@drawable/beauty_manager_bg"
+        android:paddingBottom="30dp">
 
-        >
-
-        <SeekBar
-            android:id="@+id/seekbar_one"
-            android:paddingBottom="10dp"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="美白" />
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxHeight="2dp"
-            android:max="9"
-            android:progress="0"/>
-        <SeekBar
-            android:id="@+id/seekbar_two"
-            android:paddingBottom="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxHeight="2dp"
-            android:max="100"
-            android:progress="0"/>
-        <SeekBar
-            android:id="@+id/seekbar_three"
-            android:paddingBottom="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxHeight="2dp"
-            android:max="100"
-            android:progress="0"/>
+            android:orientation="horizontal"
+            android:padding="10dp">
 
+            <SeekBar
+                android:id="@+id/seekbar_one"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="9"
+                android:maxHeight="2dp"
+                android:progress="0"
+                android:progressDrawable="@drawable/seek_bar_bg_layer"
+                android:thumb="@drawable/seek_bar_thumb" />
+
+            <TextView
+                android:id="@+id/text_one"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="9" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="紅潤" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <SeekBar
+                android:id="@+id/seekbar_two"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="9"
+                android:maxHeight="2dp"
+                android:progress="2"
+                android:progressDrawable="@drawable/seek_bar_bg_layer"
+                android:thumb="@drawable/seek_bar_thumb" />
+
+            <TextView
+                android:id="@+id/text_two"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="9" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="美顏" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <SeekBar
+                android:id="@+id/seekbar_three"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="9"
+                android:maxHeight="2dp"
+                android:progress="2"
+                android:progressDrawable="@drawable/seek_bar_bg_layer"
+                android:thumb="@drawable/seek_bar_thumb" />
+
+            <TextView
+                android:id="@+id/text_three"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="9" />
+        </LinearLayout>
 
     </LinearLayout>
-
 
 
 </RelativeLayout>

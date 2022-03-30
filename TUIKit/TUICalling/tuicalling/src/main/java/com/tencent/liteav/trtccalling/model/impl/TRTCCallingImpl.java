@@ -1054,7 +1054,7 @@ public class TRTCCallingImpl extends TRTCCalling {
             txBeautyManager.setBeautyLevel(0);
             txBeautyManager.setWhitenessLevel(0);
             txBeautyManager.setRuddyLevel(0);
-            txBeautyManager.setFilterStrength(1);
+            txBeautyManager.setFilterStrength(0);
             txBeautyManager.setFilter(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.beauty_filter_bailan));
             // 进房前需要设置一下关键参数
             TRTCCloudDef.TRTCVideoEncParam encParam = new TRTCCloudDef.TRTCVideoEncParam();
