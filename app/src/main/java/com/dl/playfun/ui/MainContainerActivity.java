@@ -23,6 +23,7 @@ import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.blankj.utilcode.util.KeyboardUtils;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.dl.playfun.R;
+import com.dl.playfun.api.PlayFunUserApiUtil;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
@@ -390,14 +391,7 @@ public class MainContainerActivity extends MySupportActivity {
     * @Date 2022/1/11
     */
     public void toPlayGameView() {
-        AppContext.instance().setGameState(1);
-        ConfigManagerUtil.getInstance().putPlayGameFlag(true);
-        Intent intent = new Intent();
-        intent.setComponent(new ComponentName(getApplicationContext(), "com.joyluckgame.petcoin.UnityPlayerActivity"));
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-
-        this.finish();
+        PlayFunUserApiUtil.getInstance().toPlayGameView(this);
     }
 
     private Runnable heartbeatRunnable = new Runnable() {
