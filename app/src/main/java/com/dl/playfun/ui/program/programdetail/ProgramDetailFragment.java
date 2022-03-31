@@ -361,7 +361,7 @@ public class ProgramDetailFragment extends BaseToolbarFragment<FragmentProgramDe
     private void payCheckChat(Integer coinPrice) {
         String btn1 = "";
         String title = "";
-        UserDataEntity userDataEntity = AppContext.instance().appRepository.readUserData();
+        UserDataEntity userDataEntity = ConfigManager.getInstance().getAppRepository().readUserData();
         int sex = userDataEntity.getSex();
         if (sex == AppConfig.MALE) {
             title = getString(R.string.playfun_to_chat_her);

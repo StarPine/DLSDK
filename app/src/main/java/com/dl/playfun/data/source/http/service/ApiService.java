@@ -582,17 +582,6 @@ public interface ApiService {
     Observable<BaseDataResponse<List<GoodsEntity>>> pointsGoodList(@Query("type") String type);
 
     /**
-    * @Desc TODO(钻石兑换积分购买接口。积分ID)
-    * @author 彭石林
-    * @parame [id]
-    * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
-    * @Date 2021/9/23
-    */
-    @POST("api/v2/bonus/buy")
-    @FormUrlEncoded
-    Observable<BaseResponse> ExchangeIntegraBuy(@Field("id") Integer id);
-
-    /**
      * 推送状态提交 type  1今日 2钻石 3VIP
      * @return
      */
@@ -600,15 +589,6 @@ public interface ApiService {
     @FormUrlEncoded
     Observable<BaseResponse> pushGreet(@Field("type") Integer type);
 
-    /**
-    * @Desc TODO(钻石兑换积分列表)
-    * @author 彭石林
-    * @parame []
-    * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseListDataResponse<com.dl.playfun.entity.ExchangeIntegraEntity>>
-    * @Date 2021/9/23
-    */
-    @GET("api/v2/bonus/list")
-    Observable<BaseDataResponse<ExchangeIntegraOuterEntity>> getExchangeIntegraListData();
     /**
      * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse < java.util.Map < java.lang.String, java.lang.String>>>
      * @Desc TODO(查询用户是否在黑名单里面)
@@ -638,188 +618,6 @@ public interface ApiService {
      */
     @GET("api/v2/user/isOnline")
     Observable<BaseDataResponse<Map<String, String>>> isOnlineUser(@Query("user_id") String userId);
-
-    /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseListDataResponse>
-     * @Desc TODO(任务中心广告位)
-     * @author 彭石林
-     * @parame []
-     * @Date 2021/9/4
-     */
-    @GET("api/v2/task/ad")
-    Observable<BaseListDataResponse<TaskAdEntity>> taskAdList();
-
-    /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
-     * @Desc TODO(兑换提货)
-     * @author 彭石林
-     * @parame [permanent_city_ids, address_id]
-     * @Date 2021/8/14
-     */
-    @FormUrlEncoded
-    @POST("api/v2/exchange/supply")
-    Observable<BaseResponse> subSupply(@Field("exchange_ids[]") List<Integer> exchange_ids, @Field("address_id") Integer address_id);
-
-    /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
-     * @Desc TODO(删除收获地址)
-     * @author 彭石林
-     * @parame [id]
-     * @Date 2021/8/16
-     */
-    @DELETE("/api/v2/address/{id}")
-    Observable<BaseResponse> removeAddress(@Path("id") Integer id);
-
-    /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse < com.dl.playfun.entity.AddressEntity>>
-     * @Desc TODO(查询用户默认收获地址)
-     * @author 彭石林
-     * @parame [id]
-     * @Date 2021/8/13
-     */
-    @GET("api/v2/address/view")
-    Observable<BaseDataResponse<AddressEntity>> getAddress(@Query("id") Integer id);
-
-    /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseListDataResponse < com.dl.playfun.entity.AddressEntity>>
-     * @Desc TODO(查询用户所有收获地址)
-     * @author 彭石林
-     * @parame []
-     * @Date 2021/8/13
-     */
-    @GET("api/v2/address")
-    Observable<BaseListDataResponse<AddressEntity>> getAddressList(@Query("page") Integer page);
-
-    /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
-     * @Desc TODO(添加收货地址)
-     * @author 彭石林
-     * @parame [contacts, city, are, address, phone, is_default]
-     * @Date 2021/8/13
-     */
-    @POST("api/v2/address")
-    Observable<BaseResponse> createAddress(
-            @Query("contacts") String contacts,
-            @Query("city") String city,
-            @Query("are") String are,
-            @Query("address") String address,
-            @Query("phone") String phone,
-            @Query("is_default") Integer is_default);
-
-    /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
-     * @Desc TODO(修改收货地址)
-     * @author 彭石林
-     * @parame [contacts, city, are, address, phone, is_default]
-     * @Date 2021/8/13
-     */
-    @PUT("api/v2/address")
-    Observable<BaseResponse> updateAddress(
-            @Query("id") Integer id,
-            @Query("contacts") String contacts,
-            @Query("city") String city,
-            @Query("are") String are,
-            @Query("address") String address,
-            @Query("phone") String phone,
-            @Query("is_default") Integer is_default);
-
-    /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseListDataResponse < com.dl.playfun.entity.ExchangeEntity>>
-     * @Desc TODO(兑换记录)
-     * @author 彭石林
-     * @parame [page]
-     * @Date 2021/8/10
-     */
-    @GET("api/v2/exchange")
-    Observable<BaseListDataResponse<ExchangeEntity>> qryExchange(@Query("page") Integer page, @Query("status") Integer status);
-
-    /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
-     * @Desc TODO(积分商品兑换)
-     * @author 彭石林
-     * @parame [goodsId]
-     * @Date 2021/8/10
-     */
-    @POST("api/v2/exchange")
-    Observable<BaseResponse> exchange(@Query("goods_id") String goodsId);
-
-    /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse < sBonusGoodsEntity>>
-     * @Desc TODO(积分商品列表)
-     * @author 彭石林
-     * @parame [page]
-     * @Date 2021/8/10
-     */
-    @GET("api/v2/bonusGoods")
-    Observable<BaseListDataResponse<BonusGoodsEntity>> getBonusGoods(@Query("page") Integer page);
-
-    /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
-     * @Desc TODO(获取积分明细列表)
-     * @author 彭石林
-     * @parame []
-     * @Date 2021/8/9
-     */
-    @GET("api/v2/bonus")
-    Observable<BaseListDataResponse<GoldDetailEntity>> getGoldList(@Query("page") Integer page);
-
-    /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
-     * @Desc TODO(领取积分)
-     * @author 彭石林
-     * @parame []
-     * @Date 2021/8/9
-     */
-    @POST("api/v2/bonus")
-    Observable<BaseResponse> ToaskSubBonus(@Query("type") String key);
-
-    /**
-     * @Desc TODO(领取任务)
-     * @param key
-     * @author liaosf
-     */
-    @POST("api/v4/task/receive")
-    Observable<BaseDataResponse<TaskRewardReceiveEntity>> TaskRewardReceive(@Query("slug") String key);
-
-    /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse < com.dl.playfun.entity.TaskConfigListEntity>>
-     * @Desc TODO(获取新手任务 、 每日任务)
-     * @author 彭石林
-     * @parame []
-     * @Date 2021/8/10
-     */
-    @GET("api/v4/task/list")
-    Observable<BaseDataResponse<List<TaskConfigItemEntity>>> getTaskListConfig();
-
-    /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse < TaskConfigEntity>>
-     * @Desc TODO(获取任务中心配置)
-     * @author 彭石林
-     * @parame []
-     * @Date 2021/8/7
-     */
-    @GET("api/v4/task")
-    Observable<BaseDataResponse<TaskConfigEntity>> getTaskConfig();
-
-    /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse < com.dl.playfun.entity.EjectSignInEntity>>
-     * @Desc TODO(每日签到 。 签到成功)
-     * @author 彭石林
-     * @parame []
-     * @Date 2021/8/6
-     */
-    @POST("api/v4/signIn")
-    Observable<BaseDataResponse<EjectSignInEntity>> reportEjectSignIn();
-
-    /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse < com.dl.playfun.entity.EjectEntity>>
-     * @Desc TODO(查询用户每日签到)
-     * @author 彭石林
-     * @parame []
-     * @Date 2021/8/6
-     */
-    @GET("api/v2/signIn/eject")
-    Observable<BaseDataResponse<EjectEntity>> getEjectconfig();
 
     /**
      * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse < BrowseNumberEntity>>
@@ -2413,15 +2211,6 @@ public interface ApiService {
      */
     @GET("calling/userAccount/getCoinExchangeBoxInfo")
     Observable<BaseDataResponse<CoinExchangeBoxInfo>> getCoinExchangeBoxInfo();
-
-//    /**
-//     * 游戏币兑换jm币对话框信息
-//     *
-//     * @return
-//     */
-//    @FormUrlEncoded
-//    @POST("calling/userAccount/exchangeCoins")
-//    Observable<BaseResponse> exchangeCoins(@Field("id") int id);
 
     /**
      * 游戏币兑换jm币对话框信息

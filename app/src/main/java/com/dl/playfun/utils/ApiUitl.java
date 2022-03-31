@@ -241,22 +241,6 @@ public class ApiUitl {
         return beginTime.getTime() <= nowTime.getTime() && nowTime.getTime() <= endTime.getTime();
     }
 
-    //修改收获地址
-    public static void updateAddress(AddressEntity entity) {
-        AppContext.instance().appRepository.updateAddress(entity.getId(), entity.getContacts(), entity.getCity(), entity.getAre(), entity.getAddress(), entity.getPhone(), entity.getIsDefault())
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .subscribe(new BaseObserver<BaseResponse>() {
-                    @Override
-                    public void onSuccess(BaseResponse baseResponse) {
-                    }
-
-                    @Override
-                    public void onComplete() {
-                    }
-                });
-    }
-
     /**
      * @return java.lang.String
      * @Desc TODO(获取Assets目录下的文件)

@@ -142,9 +142,9 @@ public class MainActivity extends Activity implements View.OnClickListener, Radi
                     public void onSuccess(BaseDataResponse<UserDataEntity> response) {
                         UserDataEntity userDataEntity = response.getData();
                         AppContext.instance().mFirebaseAnalytics.setUserId(String.valueOf(userDataEntity.getId()));
-                        AppContext.instance().appRepository.saveUserData(userDataEntity);
+                        ConfigManager.getInstance().getAppRepository().saveUserData(userDataEntity);
                         if (userDataEntity.getCertification() == 1) {
-                            AppContext.instance().appRepository.saveNeedVerifyFace(true);
+                            ConfigManager.getInstance().getAppRepository().saveNeedVerifyFace(true);
                         }
                         loginSuccess = true;
                         to_play_fun.setVisibility(View.VISIBLE);

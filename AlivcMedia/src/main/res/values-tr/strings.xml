@@ -29,8 +29,8 @@
     <string name="alivc_media_film_tail">Kapanış jeneriği</string>
     <string name="alivc_media_film_denoise">Gürültü azaltma</string>
     <string name="alivc_media_film_transcode">Kod çevrimi</string>
-    <string name="alivc_media_film_transcode_tip">Video 1080P'den büyük olduğunda, 1080P'nin altına kod dönüştürülür</string>
-    <string name="alivc_media_mix_recorder_film_transcode_tip">Video 540P'den büyük olduğunda, 540P'nin altında kod dönüştürülür</string>
+    <string name="alivc_media_film_transcode_tip">Video 1080P den büyük olduğunda, 1080P nin altına kod dönüştürülür</string>
+    <string name="alivc_media_mix_recorder_film_transcode_tip">Video 540P den büyük olduğunda, 540P nin altında kod dönüştürülür</string>
     <string name="alivc_media__hardware_encoder">Sabit kod</string>
     <string name="alivc_media__openh264_encoder">OpenH264 yazılım kodu</string>
     <string name="alivc_media__ffmpeg_encoder">FFmpeg yazılım kodu e</string>

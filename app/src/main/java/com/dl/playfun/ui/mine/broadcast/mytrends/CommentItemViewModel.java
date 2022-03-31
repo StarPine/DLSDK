@@ -8,6 +8,7 @@ import androidx.databinding.ObservableField;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.entity.CommentEntity;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.ExceptionReportUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
@@ -64,7 +65,7 @@ public class CommentItemViewModel extends MultiItemViewModel<BaseViewModel> {
                     } catch (Exception e) {
                         ExceptionReportUtils.report(e);
                     }
-                } else if (isSelf && commentBeanObservableField.get().getUser().getId() != AppContext.instance().appRepository.readUserData().getId()) {
+                } else if (isSelf && commentBeanObservableField.get().getUser().getId() != ConfigManager.getInstance().getAppRepository().readUserData().getId()) {
                     Map<String, String> data = new HashMap<>();
                     data.put("id", String.valueOf(id));
                     data.put("toUseriD", commentBeanObservableField.get().getUser() == null ? null : String.valueOf(commentBeanObservableField.get().getUser().getId()));

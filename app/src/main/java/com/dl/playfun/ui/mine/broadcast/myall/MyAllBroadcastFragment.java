@@ -31,6 +31,7 @@ import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.helper.DialogHelper;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseRefreshFragment;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
 import com.dl.playfun.utils.PictureSelectorUtil;
@@ -294,7 +295,7 @@ public class MyAllBroadcastFragment extends BaseRefreshFragment<FragmentMyAllBro
                 String toUserId = ((Map<String, String>) o).get("toUseriD");
                 String type = ((Map<String, String>) o).get("type");
                 String toUserName = ((Map<String, String>) o).get("toUserName");
-                if (AppContext.instance().appRepository.readUserData().getIsVip() == 1 || (AppContext.instance().appRepository.readUserData().getSex() == AppConfig.FEMALE && AppContext.instance().appRepository.readUserData().getCertification() == 1)) {
+                if (ConfigManager.getInstance().getAppRepository().readUserData().getIsVip() == 1 || (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == AppConfig.FEMALE && ConfigManager.getInstance().getAppRepository().readUserData().getCertification() == 1)) {
                     MVDialog.getInstance(MyAllBroadcastFragment.this.getContext())
                             .seCommentConfirm(new MVDialog.ConfirmComment() {
                                 @Override
@@ -341,7 +342,7 @@ public class MyAllBroadcastFragment extends BaseRefreshFragment<FragmentMyAllBro
             @Override
             public void onChanged(Object o) {
                 viewModel.initUserDate();
-                if (AppContext.instance().appRepository.readUserData().getCertification() == 1) {
+                if (ConfigManager.getInstance().getAppRepository().readUserData().getCertification() == 1) {
                     MVDialog.getInstance(MyAllBroadcastFragment.this.getContext())
                             .setTitele(getString(R.string.playfun_report_send_photo_titile))
                             .chooseType(MVDialog.TypeEnum.CENTER)
@@ -362,10 +363,10 @@ public class MyAllBroadcastFragment extends BaseRefreshFragment<FragmentMyAllBro
                             .setConfirmOnlick(new MVDialog.ConfirmOnclick() {
                                 @Override
                                 public void confirm(MVDialog dialog) {
-                                    if (AppContext.instance().appRepository.readUserData().getSex() == AppConfig.MALE) {
+                                    if (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == AppConfig.MALE) {
                                         viewModel.start(CertificationMaleFragment.class.getCanonicalName());
                                         return;
-                                    } else if (AppContext.instance().appRepository.readUserData().getSex() == AppConfig.FEMALE) {
+                                    } else if (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == AppConfig.FEMALE) {
                                         viewModel.start(CertificationFemaleFragment.class.getCanonicalName());
                                         return;
                                     }

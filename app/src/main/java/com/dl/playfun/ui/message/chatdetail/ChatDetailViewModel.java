@@ -549,27 +549,6 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                     }
                 });
     }
-    //领取积分
-    public void ToaskSubBonus() {
-        model.TaskRewardReceive("firstIm")    //1.3.0新接口
-                .doOnSubscribe(this)
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseDataResponse<TaskRewardReceiveEntity>>() {
-                    @Override
-                    public void onSuccess(BaseDataResponse<TaskRewardReceiveEntity> response) {
-                        uc.firstImMsgDialog.postValue(response.getData());
-                        //隐藏小红点
-                        RxBus.getDefault().post(new RewardRedDotEvent(false));
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        dismissHUD();
-                    }
-                });
-    }
 
     public void verifyGoddessTips(Integer userId) {
         Boolean sendSuccess = model.readVerifyGoddessTipsUser(model.readUserData().getId() + "_" + userId);

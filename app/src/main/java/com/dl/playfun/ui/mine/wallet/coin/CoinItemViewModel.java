@@ -7,6 +7,7 @@ import androidx.databinding.ObservableField;
 
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.entity.UserCoinItemEntity;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.utils.ExceptionReportUtils;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 
@@ -26,7 +27,7 @@ public class CoinItemViewModel extends MultiItemViewModel<CoinViewModel> {
             if (itemEntity.get().getUser() == null || itemEntity.get().getUser().getId() == 0) {
                 return;
             }
-            if (itemEntity.get().getUser().getId() == AppContext.instance().appRepository.readUserData().getId()) {
+            if (itemEntity.get().getUser().getId() == ConfigManager.getInstance().getAppRepository().readUserData().getId()) {
                 return;
             }
             Bundle bundle = UserDetailFragment.getStartBundle(itemEntity.get().getUser().getId());

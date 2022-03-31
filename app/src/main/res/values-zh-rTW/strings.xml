@@ -3,8 +3,6 @@
     <string name="playfun_title_home">首頁</string>
     <string name="playfun_title_notifications">訊息</string>
     <string name="playfun_title_mine">我的</string>
-
-
     <string name="playfun_toast_certification">認證女神更受歡迎！ 去認證</string>
 
     <string name="playfun_face_detect_auth_begin_ok">開始</string>
@@ -642,15 +640,15 @@
     <string name="playfun_no_vip_unlock">非VIP立即解鎖(%s鑽石)</string>
     <string name="playfun_pay_album">付費相簿</string>
     <string name="playfun_user_detail">個人信息</string>
-    <string name="playfun_member_subscribe_button_default">скидку для получения</string>
+    <string name="playfun_member_subscribe_button_default">折扣獲取</string>
 
     <string name="playfun_title_nearby">動態</string>
     <string name="playfun_visible_to_oneself">%s(僅自己可見)</string>
     <string name="playfun_fold">收起</string>
     <string name="playfun_unfold">更多</string>
 
-    <string name="playfun_error_facebook">Не удалось уполномочить через Фэйсбук</string>
-    <string name="playfun_error_google">Не удалось уполномочить через Гугл</string>
+    <string name="playfun_error_facebook">臉書授權失敗</string>
+    <string name="playfun_error_google">無法通過Google授權</string>
 
     <string name="playfun_face_success">認證通過</string>
     <string name="playfun_error_face_message">認證失敗</string>
@@ -976,7 +974,7 @@
     <string name="playfun_chat_detail_pull_black_other2">已将對方封鎖，無法贈送禮物</string>
     <string name="playfun_chat_detail_blocked">已被對方封鎖，無法撥打。</string>
     <string name="playfun_chat_detail_blocked2">已被對方封鎖，無法贈送禮物</string>
-    <string name="playfun_network_text">網絡異常！</string>
+    <string name="playfun_network_text">網路異常！</string>
     <string name="playfun_fragment_edit_profile_line_account_explai">1、請填寫真實賬號，填寫虛假賬號/無效賬號可能會被凍結</string>
     <string name="playfun_fragment_edit_profile_line_account_explai2">2、對方需付費解鎖查看妳的社群賬號，</string>
     <string name="playfun_fragment_edit_profile_line_account_explai3"><u>設定解鎖價格</u></string>
@@ -989,8 +987,8 @@
     <string name="playfun_coin_custom_text">鑽石稍後到賬！</string>
     <string name="playfun_coustom_time_picker_text">活動時間衹能選擇一周內</string>
     <string name="playfun_fragment_issuance_program_explain">若發佈裸露低俗等違規照片，平台將做封號處置。</string>
-    <string name="auth_external_login_facebook">FaceBook</string>
-    <string name="auth_external_login_google">Google</string>
+    <string name="auth_external_login_facebook">Facebook</string>
+    <string name="auth_external_login_google">谷歌</string>
     <string name="auth_external_login_line">Line</string>
     <string name="auth_external_login_vk">VK</string>
     <string name="auth_external_login_yk">遊客登入 ></string>

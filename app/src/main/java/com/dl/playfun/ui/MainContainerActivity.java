@@ -1,8 +1,6 @@
 package com.dl.playfun.ui;
 
-import android.content.ComponentName;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
@@ -33,6 +31,7 @@ import com.dl.playfun.event.GameHeartBeatEvent;
 import com.dl.playfun.event.GameLoginExpiredEvent;
 import com.dl.playfun.event.LoginExpiredEvent;
 import com.dl.playfun.event.UserDisableEvent;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.tim.TUIUtils;
 import com.dl.playfun.ui.base.MySupportActivity;
 import com.dl.playfun.ui.main.MainFragment;
@@ -43,9 +42,6 @@ import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.utils.TimeUtils;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.tencent.imsdk.v2.V2TIMCallback;
-import com.tencent.liteav.trtccalling.model.TUICalling;
-import com.tencent.liteav.trtccalling.model.impl.TUICallingManager;
-import com.tencent.liteav.trtccalling.model.util.TUICallingConstants;
 import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
 
 import org.jetbrains.annotations.NotNull;
@@ -93,9 +89,8 @@ public class MainContainerActivity extends MySupportActivity {
         setContentView(R.layout.activity_main_container);
         AutoSizeConfig.getInstance().setCustomFragment(true);
         ImmersionBarUtils.setupStatusBar(this, true, false);
-//        getSupportFragmentManager().getFragments().clear();
 
-        UserDataEntity userDataEntity = AppContext.instance().appRepository.readUserData();
+        UserDataEntity userDataEntity = ConfigManager.getInstance().getAppRepository().readUserData();
         if (userDataEntity != null && userDataEntity.getSex()!=null && userDataEntity.getSex().intValue()<0) {
             Observable.just("")
                     .delay(1500, TimeUnit.MILLISECONDS)
@@ -232,7 +227,7 @@ public class MainContainerActivity extends MySupportActivity {
                     if (AppConfig.userClickOut) {
                         return;
                     }
-                    AppContext.instance().appRepository.logout();
+                    ConfigManager.getInstance().getAppRepository().logout();
                     if (loginExpiredDialog == null) {
                         loginExpiredDialog = MVDialog.getInstance(this)
                                 .setContent(getString(R.string.playfun_again_login))
@@ -356,14 +351,14 @@ public class MainContainerActivity extends MySupportActivity {
                                     e.printStackTrace();
                                 }
                             }
-                            UserDataEntity userDataEntity = AppContext.instance().appRepository.readUserData();
+                            UserDataEntity userDataEntity = ConfigManager.getInstance().getAppRepository().readUserData();
                             if (userDataEntity == null || userDataEntity.getId() == null) {
                                 return;
                             }
                             if (!ObjectUtils.isEmpty(purchaseList) && purchaseList.size() > 0) {
                                 Map<String, Object> map = new HashMap<>();
                                 map.put("data", purchaseList);
-                                AppContext.instance().appRepository.repoetLocalGoogleOrder(map)
+                                ConfigManager.getInstance().getAppRepository().repoetLocalGoogleOrder(map)
                                         .compose(RxUtils.schedulersTransformer())
                                         .compose(RxUtils.exceptionTransformer())
                                         .subscribe(new BaseObserver<BaseResponse>() {

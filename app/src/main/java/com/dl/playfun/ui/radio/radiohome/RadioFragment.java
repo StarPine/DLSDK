@@ -316,7 +316,7 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
                 String toUserId = ((Map<String, String>) o).get("toUseriD");
                 String type = ((Map<String, String>) o).get("type");
                 String toUserName = ((Map<String, String>) o).get("toUserName");
-                if (AppContext.instance().appRepository.readUserData().getIsVip() == 1 || (AppContext.instance().appRepository.readUserData().getSex() == AppConfig.FEMALE && AppContext.instance().appRepository.readUserData().getCertification() == 1)) {
+                if (ConfigManager.getInstance().getAppRepository().readUserData().getIsVip() == 1 || (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == AppConfig.FEMALE && ConfigManager.getInstance().getAppRepository().readUserData().getCertification() == 1)) {
                     MVDialog.getInstance(RadioFragment.this.getContext())
                             .seCommentConfirm(new MVDialog.ConfirmComment() {
                                 @Override
@@ -337,7 +337,7 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
                             .show();
                 } else {
                     DialogHelper.showNotVipCommentDialog(RadioFragment.this);
-//                    if (AppContext.instance().appRepository.readUserData().getSex() == MALE) {
+//                    if (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == MALE) {
 //                        DialogHelper.showNotVipCommentDialog(RadioFragment.this);
 //                    } else {
 //                    MVDialog.getInstance(RadioFragment.this.getContext())
@@ -347,10 +347,10 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
 //                            .setConfirmOnlick(new MVDialog.ConfirmOnclick() {
 //                                @Override
 //                                public void confirm(MVDialog dialog) {
-//                                    if (AppContext.instance().appRepository.readUserData().getSex() == MALE) {
+//                                    if (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == MALE) {
 //                                        viewModel.start(CertificationMaleFragment.class.getCanonicalName());
 //                                        return;
-//                                    } else if (AppContext.instance().appRepository.readUserData().getSex() == FEMALE) {
+//                                    } else if (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == FEMALE) {
 //                                        viewModel.start(CertificationFemaleFragment.class.getCanonicalName());
 //                                        return;
 //                                    }
@@ -388,7 +388,7 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
             @Override
             public void onChanged(Object o) {
                 viewModel.initUserDate();
-                if (AppContext.instance().appRepository.readUserData().getCertification() == 1) {
+                if (ConfigManager.getInstance().getAppRepository().readUserData().getCertification() == 1) {
                     MVDialog.getInstance(RadioFragment.this.getContext())
                             .setTitele(getString(R.string.playfun_report_send_photo_titile))
                             .chooseType(MVDialog.TypeEnum.CENTER)
@@ -409,10 +409,10 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
                             .setConfirmOnlick(new MVDialog.ConfirmOnclick() {
                                 @Override
                                 public void confirm(MVDialog dialog) {
-                                    if (AppContext.instance().appRepository.readUserData().getSex() == AppConfig.MALE) {
+                                    if (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == AppConfig.MALE) {
                                         viewModel.start(CertificationMaleFragment.class.getCanonicalName());
                                         return;
-                                    } else if (AppContext.instance().appRepository.readUserData().getSex() == AppConfig.FEMALE) {
+                                    } else if (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == AppConfig.FEMALE) {
                                         viewModel.start(CertificationFemaleFragment.class.getCanonicalName());
                                         return;
                                     }

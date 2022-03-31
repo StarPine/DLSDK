@@ -570,7 +570,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                     return;
                 }
                 int userId = ChatUtils.imUserIdToSystemUserId(messageInfo.getFromUser());
-                if (userId == AppContext.instance().appRepository.readUserData().getId()) {
+                if (userId == ConfigManager.getInstance().getAppRepository().readUserData().getId()) {
                     return;
                 }
                 Bundle bundle = UserDetailFragment.getStartBundle(userId);
@@ -593,7 +593,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                                 return;
                             }
                             int userId = getTaUserIdIM(); //获取当前聊天对象的ID
-                            if (userId == AppContext.instance().appRepository.readUserData().getId()) {
+                            if (userId == ConfigManager.getInstance().getAppRepository().readUserData().getId()) {
                                 return;
                             }
                             Bundle bundle = UserDetailFragment.getStartBundle(userId);
@@ -631,7 +631,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             @Override
             public void toUserHome() {
                 int userId = getTaUserIdIM(); //获取当前聊天对象的ID
-                if (userId == AppContext.instance().appRepository.readUserData().getId()) {
+                if (userId == ConfigManager.getInstance().getAppRepository().readUserData().getId()) {
                     return;
                 }
                 AppContext.instance().logEvent(AppsFlyerEvent.Pchat_photo);
@@ -704,7 +704,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             @Override
             public void clickToUserMain() {
                 int userId = getTaUserIdIM(); //获取当前聊天对象的ID
-                if (userId == AppContext.instance().appRepository.readUserData().getId()) {
+                if (userId == ConfigManager.getInstance().getAppRepository().readUserData().getId()) {
                     return;
                 }
                 Bundle bundle = UserDetailFragment.getStartBundle(userId);
@@ -733,7 +733,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
 
             @Override
             public void onCoinRedPackageMessageClick(CustomMessageData customMessageData) {
-                Bundle bundle = CoinRedPackageDetailFragment.getStartBundle(customMessageData.getId(), customMessageData.getMsgId(), customMessageData.getSenderUserID() == AppContext.instance().appRepository.readUserData().getId());
+                Bundle bundle = CoinRedPackageDetailFragment.getStartBundle(customMessageData.getId(), customMessageData.getMsgId(), customMessageData.getSenderUserID() == ConfigManager.getInstance().getAppRepository().readUserData().getId());
                 CoinRedPackageDetailFragment coinRedPackageDetailFragment = new CoinRedPackageDetailFragment();
                 coinRedPackageDetailFragment.setArguments(bundle);
                 start(coinRedPackageDetailFragment);
@@ -745,7 +745,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                 albumPhotoEntity.setId(0);
                 albumPhotoEntity.setMsgId(customMessageData.getMsgId());
                 albumPhotoEntity.setSrc(customMessageData.getImgPath());
-                if (AppContext.instance().appRepository.readCahtCustomMessageStatus(customMessageData.getMsgId()) == 1) {
+                if (ConfigManager.getInstance().getAppRepository().readCahtCustomMessageStatus(customMessageData.getMsgId()) == 1) {
                     albumPhotoEntity.setBurnStatus(1);
                 } else {
                     albumPhotoEntity.setBurnStatus(0);
@@ -1331,18 +1331,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                 if (viewModel.chargeMsgNumber != null && viewModel.chargeMsgNumber.intValue() > 0) {//有收入消息
                     //收入气泡隐藏
                     RxBus.getDefault().post(new BubbleTopShowEvent(true));
-                    if (viewModel.firstImMsg != null && viewModel.firstImMsg.intValue() == 0) {//首次收入
-                        AppContext.runOnUIThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    viewModel.ToaskSubBonus();
-                                } catch (Exception e) {
-
-                                }
-                            }
-                        }, 2000);
-                    }
                 }
                 viewModel.chargeMsgNumber = 0;
                 viewModel.refundMsgNumber = 0;

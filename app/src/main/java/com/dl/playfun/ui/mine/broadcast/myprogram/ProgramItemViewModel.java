@@ -147,7 +147,6 @@ public class ProgramItemViewModel extends MultiItemViewModel<BaseViewModel> {
     //评论点击事件
     public BindingCommand commentClick = new BindingCommand(() -> {
         try {
-            int sex = AppContext.instance().appRepository.readUserData().getSex();
             if (topicalListEntityObservableField.get().getBroadcast().getIsComment() == 1) {
                 ToastUtils.showShort(R.string.playfun_comment_close);
                 return;
@@ -243,7 +242,7 @@ public class ProgramItemViewModel extends MultiItemViewModel<BaseViewModel> {
                         ToastUtils.showShort(R.string.playfun_program_over);
                         return;
                     }
-                    int sex = AppContext.instance().appRepository.readUserData().getSex();
+                    int sex = ConfigManager.getInstance().getAppRepository().readUserData().getSex();
                     if (topicalListEntityObservableField.get().getUser().getSex() == sex) {
                         if (sex == AppConfig.MALE) {
                             ToastUtils.showShort(R.string.playfun_warn_male_not_sign_up_program);
@@ -514,7 +513,7 @@ public class ProgramItemViewModel extends MultiItemViewModel<BaseViewModel> {
 
         if (topicalListEntityObservableField.get().getGiveCount() < 13) {
             HeadItemViewModel item = new HeadItemViewModel(viewModel, avatar, userId,
-                    AppContext.instance().appRepository.readUserData().getSex(),
+                    ConfigManager.getInstance().getAppRepository().readUserData().getSex(),
                     0,
                     HeadItemViewModel.Type_New, topicalListEntityObservableField.get().getId()
             );

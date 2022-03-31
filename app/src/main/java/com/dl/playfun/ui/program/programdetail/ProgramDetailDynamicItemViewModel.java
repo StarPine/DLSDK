@@ -32,18 +32,7 @@ public class ProgramDetailDynamicItemViewModel extends MultiItemViewModel<Progra
     //联系私聊的点击事件
     public BindingCommand chatOnClickCommand = new BindingCommand(() -> {
         try {
-            UserDataEntity userDataEntity = AppContext.instance().appRepository.readUserData();
             viewModel.isChat(signsBeanEntityObservableField.get().getUserId(), 1, signsBeanEntityObservableField.get().getUserId().toString(), signsBeanEntityObservableField.get().getNickname());
-//            if (userDataEntity.getIsVip() == 1) {
-//                ChatUtils.chatUser(signsBeanEntityObservableField.get().getUserId(), signsBeanEntityObservableField.get().getNickname(), viewModel);
-//            } else {
-//                if(userDataEntity.getSex()==0 || userDataEntity.getCertification()==1){
-//                    viewModel.uc.clickPayChat.postValue(ConfigManager.getInstance().getImMoney());
-//                }else{
-//                    ToastUtils.showShort(signsBeanEntityObservableField.get().getSex() == 1 ? R.string.is_vip_call_him : R.string.is_vip_call_her);
-//                }
-//
-//            }
         } catch (Exception e) {
             ExceptionReportUtils.report(e);
         }

@@ -29,6 +29,7 @@ import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.AccostEntity;
 import com.dl.playfun.entity.AccostItemEntity;
 import com.dl.playfun.event.LoadEvent;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseDialog;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.utils.SystemDictUtils;
@@ -107,7 +108,7 @@ public class HomeAccostDialog extends BaseDialog {
 
     private void initView() {
         //读取本地冷却时间
-        changeDownTime = readKeyValue(AppContext.instance().appRepository.readUserData().getId() + "_homeAccost");
+        changeDownTime = readKeyValue(ConfigManager.getInstance().getAppRepository().readUserData().getId() + "_homeAccost");
 
         LayoutInflater inflater = LayoutInflater.from(mContext);
         rootView = inflater.inflate(R.layout.dialog_home_accost_list, null);
@@ -300,7 +301,7 @@ public class HomeAccostDialog extends BaseDialog {
             page++;
             cutPage = page;
         }
-        AppContext.instance().appRepository.getAccostList(cutPage)
+        ConfigManager.getInstance().getAppRepository().getAccostList(cutPage)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
@@ -316,7 +317,7 @@ public class HomeAccostDialog extends BaseDialog {
                             changeTime = accostEntity.getChangeTime() * 1000;
                             if (isChange) {
                                 changeDownTime = Utils.format.format(new Date());
-                                putKeyValue(AppContext.instance().appRepository.readUserData().getId() + "_homeAccost", changeDownTime);
+                                putKeyValue(ConfigManager.getInstance().getAppRepository().readUserData().getId() + "_homeAccost", changeDownTime);
                             }
                             //显示灰色字体开启定时器。
                             if (changeDownTime != null) {
@@ -571,7 +572,7 @@ public class HomeAccostDialog extends BaseDialog {
 
     //批量搭讪
     public void putAccostList(List<Integer> userIds) {
-        AppContext.instance().appRepository.putAccostList(userIds)
+        ConfigManager.getInstance().getAppRepository().putAccostList(userIds)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
@@ -593,11 +594,11 @@ public class HomeAccostDialog extends BaseDialog {
 
     //存储键值对
     public void putKeyValue(String key, String value) {
-        AppContext.instance().appRepository.putKeyValue(key, value);
+        ConfigManager.getInstance().getAppRepository().putKeyValue(key, value);
     }
 
     public String readKeyValue(String key) {
-        return AppContext.instance().appRepository.readKeyValue(key);
+        return ConfigManager.getInstance().getAppRepository().readKeyValue(key);
     }
 
 

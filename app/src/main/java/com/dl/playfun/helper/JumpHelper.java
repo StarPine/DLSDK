@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
 import com.dl.playfun.ui.certification.certificationmale.CertificationMaleFragment;
 import com.dl.playfun.ui.mine.invitewebdetail.InviteWebDetailFragment;
@@ -38,14 +39,14 @@ public class JumpHelper {
                 }
             }
             if ("invitation".equals(host)) {
-                viewModel.start(InviteWebDetailFragment.class.getCanonicalName(), InviteWebDetailFragment.getStartBundle(AppConfig.API_BASE_URL + AppContext.instance().appRepository.readUserData().getInviteUrl()));
+                viewModel.start(InviteWebDetailFragment.class.getCanonicalName(), InviteWebDetailFragment.getStartBundle(AppConfig.API_BASE_URL + ConfigManager.getInstance().getAppRepository().readUserData().getInviteUrl()));
             } else if ("vip".equals(host)) {
                 viewModel.start(VipSubscribeFragment.class.getCanonicalName());
             } else if ("certification".equals(host)) {
-                if (AppContext.instance().appRepository.readUserData().getSex() != null) {
-                    if (AppContext.instance().appRepository.readUserData().getSex() == AppConfig.MALE) {
+                if (ConfigManager.getInstance().getAppRepository().readUserData().getSex() != null) {
+                    if (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == AppConfig.MALE) {
                         viewModel.start(CertificationMaleFragment.class.getCanonicalName());
-                    } else if (AppContext.instance().appRepository.readUserData().getSex() == AppConfig.FEMALE) {
+                    } else if (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == AppConfig.FEMALE) {
                         viewModel.start(CertificationFemaleFragment.class.getCanonicalName());
                     }
                 }

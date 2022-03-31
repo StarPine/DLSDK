@@ -20,6 +20,7 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.entity.ConfigItemEntity;
 import com.dl.playfun.entity.ThemeItemEntity;
 import com.dl.playfun.helper.DialogHelper;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseRefreshFragment;
 import com.dl.playfun.utils.PictureSelectorUtil;
 import com.dl.playfun.widget.dialog.MVDialog;
@@ -283,7 +284,7 @@ public class MyprogramFragment extends BaseRefreshFragment<FragmentMyProgramBind
             @Override
             public void onChanged(Void aVoid) {
                 List<ThemeItemEntity> themes = new ArrayList<>();
-                for (ConfigItemEntity configItemEntity : AppContext.instance().appRepository.readThemeConfig()) {
+                for (ConfigItemEntity configItemEntity : ConfigManager.getInstance().getAppRepository().readThemeConfig()) {
                     ThemeItemEntity themeItemEntity = new ThemeItemEntity();
                     themeItemEntity.setIcon(configItemEntity.getIcon());
                     themeItemEntity.setId(configItemEntity.getId());

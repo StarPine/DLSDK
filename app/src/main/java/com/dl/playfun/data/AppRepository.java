@@ -321,19 +321,10 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
         return mHttpDataSource.pointsGoodList();
     }
 
-    @Override
-    public Observable<BaseResponse> ExchangeIntegraBuy(Integer id) {
-        return mHttpDataSource.ExchangeIntegraBuy(id);
-    }
 
     @Override
     public Observable<BaseResponse> pushGreet(Integer type) {
         return mHttpDataSource.pushGreet(type);
-    }
-
-    @Override
-    public Observable<BaseDataResponse<ExchangeIntegraOuterEntity>> getExchangeIntegraListData() {
-        return mHttpDataSource.getExchangeIntegraListData();
     }
 
     @Override
@@ -349,92 +340,6 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     @Override
     public Observable<BaseDataResponse<Map<String, String>>> isOnlineUser(String userId) {
         return mHttpDataSource.isOnlineUser(userId);
-    }
-
-    @Override
-    public Observable<BaseListDataResponse<TaskAdEntity>> taskAdList() {
-        return mHttpDataSource.taskAdList();
-    }
-
-    @Override
-    public Observable<BaseResponse> subSupply(List<Integer> exchange_ids, Integer address_id) {
-        return mHttpDataSource.subSupply(exchange_ids, address_id);
-    }
-
-    @Override
-    public Observable<BaseResponse> removeAddress(Integer id) {
-        return mHttpDataSource.removeAddress(id);
-    }
-
-    @Override
-    public Observable<BaseDataResponse<AddressEntity>> getAddress(Integer id) {
-        return mHttpDataSource.getAddress(id);
-    }
-
-    @Override
-    public Observable<BaseListDataResponse<AddressEntity>> getAddressList(Integer page) {
-        return mHttpDataSource.getAddressList(page);
-    }
-
-    @Override
-    public Observable<BaseResponse> createAddress(String contacts, String city, String are, String address, String phone, Integer is_default) {
-        return mHttpDataSource.createAddress(contacts, city, are, address, phone, is_default);
-    }
-
-    @Override
-    public Observable<BaseResponse> updateAddress(Integer id, String contacts, String city, String are, String address, String phone, Integer is_default) {
-        return mHttpDataSource.updateAddress(id, contacts, city, are, address, phone, is_default);
-    }
-
-    @Override
-    public Observable<BaseListDataResponse<ExchangeEntity>> qryExchange(Integer page, Integer status) {
-        return mHttpDataSource.qryExchange(page, status);
-    }
-
-    @Override
-    public Observable<BaseResponse> exchange(String goodsId) {
-        return mHttpDataSource.exchange(goodsId);
-    }
-
-    @Override
-    public Observable<BaseListDataResponse<BonusGoodsEntity>> getBonusGoods(Integer page) {
-        return mHttpDataSource.getBonusGoods(page);
-    }
-
-    @Override
-    public Observable<BaseListDataResponse<GoldDetailEntity>> getGoldList(Integer page) {
-        return mHttpDataSource.getGoldList(page);
-    }
-
-    @Override
-    public Observable<BaseResponse> ToaskSubBonus(String key) {
-        return mHttpDataSource.ToaskSubBonus(key);
-    }
-
-    @Override
-    public Observable<BaseDataResponse<TaskRewardReceiveEntity>> TaskRewardReceive(String key) {
-        return mHttpDataSource.TaskRewardReceive(key);
-    }
-
-
-    @Override
-    public Observable<BaseDataResponse<List<TaskConfigItemEntity>>> getTaskListConfig() {
-        return mHttpDataSource.getTaskListConfig();
-    }
-
-    @Override
-    public Observable<BaseDataResponse<TaskConfigEntity>> getTaskConfig() {
-        return mHttpDataSource.getTaskConfig();
-    }
-
-    @Override
-    public Observable<BaseDataResponse<EjectSignInEntity>> reportEjectSignIn() {
-        return mHttpDataSource.reportEjectSignIn();
-    }
-
-    @Override
-    public Observable<BaseDataResponse<EjectEntity>> getEjectconfig() {
-        return mHttpDataSource.getEjectconfig();
     }
 
     @Override

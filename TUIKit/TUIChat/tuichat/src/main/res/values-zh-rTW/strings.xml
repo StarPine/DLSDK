@@ -26,11 +26,13 @@
     <string name="and_text">和</string>
     <string name="forward_chats_c2c">的聊天記錄</string>
     <string name="forward_compatible_text">不支援合併轉發消息，請升級到新版本。</string>
+
     <string name="forward_failed_tip">發送失敗消息不支援轉發！</string>
     <string name="forward_oneByOne_limit_number_tip">轉發消息過多，暫不支援逐條轉發</string>
 
     <string name="and_and">已和</string>
     <string name="be_friend">成為好友</string>
+
     <string name="join_group_tip">您已被邀請進群: </string>
     <string name="joined_tip">您已加入群: </string>
     <string name="reject_join_tip">您被拒絕加入群: </string>
@@ -53,8 +55,7 @@
 
     <string name="send">發送</string>
 
-    <!--修改为传送了一则讯息。 原  自訂消息-->
-    <string name="custom_msg">傳送了一則訊息！</string>
+    <string name="custom_msg">[自訂消息]</string>
     <string name="custom_emoji">[自訂表情]</string>
     <string name="picture_extra">[圖片]</string>
     <string name="video_extra">[視頻]</string>
@@ -123,11 +124,6 @@
     <string name="sending">傳送中...</string>
     <string name="download_file_error">下載視頻失敗: </string>
     <string name="voice_play_tip">語音檔還未下載完成</string>
-
-    <string name="device_info">手機型號:</string>
-    <string name="system_version">\n系統版本:</string>
-    <string name="sdk_version">\nSDK版本:</string>
-
     <string name="permission_content">使用該功能，需要開啟權限，鑒於您禁用相關權限，請手動設置開啟權限</string>
     <string name="setting">設定</string>
     <string name="sure">確定</string>
@@ -177,24 +173,24 @@
     <string name="test_custom_action">自訂消息</string>
     <string name="welcome_tip">歡迎加入雲通訊IM大家庭！</string>
     <string name="custom_send_error_message">發送失敗</string>
-    <string name="custom_send_error_message_txt1">鑽石餘額不足，獲取鑽石繼續聊天，她還在等你回復喔</string>
-    <string name="custom_send_error_message_txt2">獲取鑽石>></string>
-    <string name="custom_message_txt1">收入+%s新台幣，真人認證後收入翻倍 去認證>></string>
+    <string name="custom_send_error_message_txt1">已經沒有免費聊天次數啦~\n互相關注後可免費暢聊，獲取鑽石繼續撩</string>
+    <string name="custom_send_error_message_txt2">馬上獲取>></string>
+    <string name="custom_message_txt1">收益+%s新台幣，真人認證後收益翻倍 去認證>></string>
     <string name="custom_message_txt1_key">去認證>></string>
-    <string name="custom_message_txt2">妳的收入+%s新台幣</string>
-    <string name="custom_message_txt2_test2">妳的收入+%s新台幣，真人認證後收入翻倍 去認證>></string>
+    <string name="custom_message_txt2">妳的收益+%s新台幣</string>
+    <string name="custom_message_txt2_test2">妳的收益+%s新台幣，真人認證後收益翻倍 去認證>></string>
     <string name="custom_message_txt3">對方餘額不足，請提示他儲值</string>
     <string name="custom_message_txt4">追蹤了</string>
     <string name="custom_message_txt5">妳</string>
     <string name="custom_message_txt6">你</string>
-    <string name="custom_message_txt7">你的收入+%s鑽石</string>
+    <string name="custom_message_txt7">你的收益+%s鑽石</string>
     <string name="custom_message_txt_male">對方未及時回復，費用退回</string>
-    <string name="custom_message_txt_girl">對方聊天信息已過期 (收入失效)</string>
-    <string name="custom_message_book_next_call">給他發送私訊預訂下一次通話時間耶~</string>
+    <string name="custom_message_txt_girl">對方聊天信息已過期 (收益失效)</string>
+    <string name="custom_send_violation_message_tip">系统提示：為防止詐騙，建議您先發起視訊通話，確認對方身份</string>
+    <string name="custom_message_book_next_call">給他發送私訊預訂下一次通話時間</string>
     <string name="custom_message_busy_missed">忙線未接聽</string>
     <string name="custom_message_other_busy">對方忙線中</string>
-    <string name="opponent_in_game">В игре</string>
-    <string name="call_ended">Звонок завершён</string>
-    <string name="custom_send_violation_message_tip">系统提示：為防止詐騙，建議您先發起視訊通話，確認對方身份</string>
+    <string name="opponent_in_game">在遊戲中</string>
+    <string name="call_ended">通話結束</string>
 
 </resources>

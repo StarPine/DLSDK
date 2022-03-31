@@ -87,7 +87,7 @@ public class PlayFunUserApiUtil {
         ConfigManagerUtil.getInstance().putPlayGameFlag(true);
         if(gameActivityName!=null){
             Intent intent = new Intent();
-            intent.setComponent(new ComponentName(mContext.getApplicationContext(), "com.joyluckgame.petcoin.UnityPlayerActivity"));
+            intent.setComponent(new ComponentName(mContext.getApplicationContext(), gameActivityName));
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             mContext.startActivity(intent);
         }

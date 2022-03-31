@@ -181,7 +181,6 @@ public class TrendItemViewModel extends MultiItemViewModel<BaseViewModel> {
                 ToastUtils.showShort(R.string.playfun_comment_close);
                 return;
             }
-            int sex = AppContext.instance().appRepository.readUserData().getSex();
             if (viewModel instanceof MyTrendsViewModel) {
                 if (((MyTrendsViewModel) viewModel).userId == newsEntityObservableField.get().getUser().getId()) {
                     ToastUtils.showShort(R.string.playfun_self_ont_comment_broadcast);
@@ -373,7 +372,7 @@ public class TrendItemViewModel extends MultiItemViewModel<BaseViewModel> {
         newsEntityObservableField.get().setIsGive(1);
         newsEntityObservableField.get().getBroadcast().setGiveCount(newsEntityObservableField.get().getBroadcast().getGiveCount() + 1);
         HeadItemViewModel item = new HeadItemViewModel(viewModel, avatar, userId,
-                AppContext.instance().appRepository.readUserData().getSex(),
+                ConfigManager.getInstance().getAppRepository().readUserData().getSex(),
                 newsEntityObservableField.get().getGiveCount() - 14,
                 Type_New, newsEntityObservableField.get().getId()
         );

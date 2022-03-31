@@ -18,6 +18,7 @@ import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.FragmentWalletBinding;
 import com.dl.playfun.entity.CoinExchangePriceInfo;
 import com.dl.playfun.entity.GameCoinBuy;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
 import com.dl.playfun.ui.certification.certificationmale.CertificationMaleFragment;
@@ -64,10 +65,10 @@ public class WalletFragment extends BaseToolbarFragment<FragmentWalletBinding, W
                     .setConfirmOnlick(new MVDialog.ConfirmOnclick() {
                         @Override
                         public void confirm(MVDialog dialog) {
-                            if (AppContext.instance().appRepository.readUserData().getSex() == AppConfig.MALE) {
+                            if (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == AppConfig.MALE) {
                                 viewModel.start(CertificationMaleFragment.class.getCanonicalName());
                                 return;
-                            } else if (AppContext.instance().appRepository.readUserData().getSex() == AppConfig.FEMALE) {
+                            } else if (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == AppConfig.FEMALE) {
                                 viewModel.start(CertificationFemaleFragment.class.getCanonicalName());
                                 return;
                             }

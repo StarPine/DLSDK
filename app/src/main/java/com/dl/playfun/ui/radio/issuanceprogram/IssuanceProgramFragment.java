@@ -340,7 +340,7 @@ public class IssuanceProgramFragment extends BaseToolbarFragment<FragmentIssuanc
             titles = StringUtils.getString(R.string.playfun_send_show);
         }
 
-        new CoinPaySheet.Builder(mActivity).setPayParams(payType, AppContext.instance().appRepository.readUserData().getId(), titles, false, new CoinPaySheet.CoinPayDialogListener() {
+        new CoinPaySheet.Builder(mActivity).setPayParams(payType, ConfigManager.getInstance().getAppRepository().readUserData().getId(), titles, false, new CoinPaySheet.CoinPayDialogListener() {
             @Override
             public void onPaySuccess(CoinPaySheet sheet, String orderNo, Integer payPrice) {
                 sheet.dismiss();
