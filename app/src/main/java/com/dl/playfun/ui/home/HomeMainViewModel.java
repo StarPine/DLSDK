@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
 
 import com.blankj.utilcode.util.StringUtils;
+import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
@@ -13,15 +14,11 @@ import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.ConfigItemEntity;
-import com.dl.playfun.entity.SystemConfigTaskEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.LoadEvent;
-import com.dl.playfun.event.MessageTagEvent;
 import com.dl.playfun.event.OnlineChangeEvent;
-import com.dl.playfun.viewmodel.BaseViewModel;
-import com.dl.playfun.R;
-import com.dl.playfun.ui.dialog.CityChooseDialog;
 import com.dl.playfun.ui.home.search.SearchFragment;
+import com.dl.playfun.viewmodel.BaseViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +45,6 @@ public class HomeMainViewModel extends BaseViewModel<AppRepository> {
     public ObservableField<Boolean> locationService = new ObservableField<>(true);
     public ObservableField<Double> lat = new ObservableField<>();//纬度
     public ObservableField<Double> lng = new ObservableField<>();//经度
-    public ObservableField<ConfigItemEntity> SelConfigItemEntity = new ObservableField<>();
     public List<ConfigItemEntity> list_chooseCityItem = new ArrayList<>();
     public UIChangeObservable uc = new UIChangeObservable();
 
@@ -74,12 +70,6 @@ public class HomeMainViewModel extends BaseViewModel<AppRepository> {
         }
         RxBus.getDefault().post(new OnlineChangeEvent(isChecked));
     });
-    //城市按钮的点击事件
-    public BindingCommand cityOnClickCommand = new BindingCommand(() -> {
-//            CityChoiceDialog dialog = new CityChoiceDialog();
-        AppContext.instance().logEvent(AppsFlyerEvent.Nearby_Nearby_2);
-        start(CityChooseDialog.class.getCanonicalName());
-    });
     /**
      * 点击性别
      */
@@ -88,19 +78,6 @@ public class HomeMainViewModel extends BaseViewModel<AppRepository> {
         AppContext.instance().logEvent(AppsFlyerEvent.Nearby_Change_gender);
         gender.set(!gender.get());
     });
-    /**
-     * 点击选择城市弹窗内容值
-     */
-    public BindingCommand clickLocationSelCommand = new BindingCommand(() -> {
-        uc.clickLocationSel.call();
-    });
-    /**
-     * 确定城市选择
-     */
-    public BindingCommand clickbtnConfirm = new BindingCommand(() -> {
-        uc.clickLocationConfirm.call();
-    });
-    public BindingCommand regionOnClickCommand = new BindingCommand(() -> uc.clickRegion.call());
     //消费者
     private Disposable MessageTagReceive, CountDownTimerReceive, loadReceive;
 
@@ -109,7 +86,6 @@ public class HomeMainViewModel extends BaseViewModel<AppRepository> {
         //gender.set(repository.readUserData().getSex() != 1);
         userSex = repository.readUserData().getSex();
         list_chooseCityItem.addAll(model.readCityConfig());
-        SelConfigItemEntity.set(model.readCityConfig().get(0));
     }
 
     public void isBindCity(Integer city_id) {
@@ -187,13 +163,7 @@ public class HomeMainViewModel extends BaseViewModel<AppRepository> {
     }
 
     public class UIChangeObservable {
-        public SingleLiveEvent clickRegion = new SingleLiveEvent<>();
         public SingleLiveEvent<Integer> genderCheckedChange = new SingleLiveEvent<>();
-        public SingleLiveEvent clickLocationSel = new SingleLiveEvent();
-        public SingleLiveEvent clickLocationConfirm = new SingleLiveEvent();
-        public SingleLiveEvent clickToMessageDetail = new SingleLiveEvent();
-        //加载任务中心系统配置
-        public SingleLiveEvent<SystemConfigTaskEntity> loadSysConfigTask = new SingleLiveEvent<>();
         //打开批量搭讪接口
         public SingleLiveEvent<String> clickAccountDialog = new SingleLiveEvent<>();
         public SingleLiveEvent<Boolean> isLoad = new SingleLiveEvent<>();

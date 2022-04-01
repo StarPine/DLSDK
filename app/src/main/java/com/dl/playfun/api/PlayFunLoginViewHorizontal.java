@@ -69,13 +69,15 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import me.goldze.mvvmhabit.utils.RxUtils;
 import me.goldze.mvvmhabit.utils.ToastUtils;
+import me.jessyan.autosize.internal.CancelAdapt;
+import me.jessyan.autosize.internal.CustomAdapt;
 
 /**
  * Author: 彭石林
  * Time: 2022/3/30 12:43
  * Description: This is PlayFunLoginViewHorizontal
  */
-public class PlayFunLoginViewHorizontal  extends DialogFragment implements View.OnClickListener,Consumer<Disposable> {
+public class PlayFunLoginViewHorizontal  extends DialogFragment implements View.OnClickListener,Consumer<Disposable>, CancelAdapt {
     private CompositeDisposable mCompositeDisposable;
     //加载进度条
     private KProgressHUD hud;

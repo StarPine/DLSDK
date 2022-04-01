@@ -62,6 +62,13 @@ public class UserInfoEntity extends BaseObservable {
     @SerializedName("sound_status")
     private Integer soundStatus;
 
+    //当前用户im id
+    @SerializedName("imId")
+    private String ImUserId;
+    //对方用户 IM iD
+    @SerializedName("toImId")
+    private String ImToUserId;
+
     public Integer getSoundStatus() {
         return soundStatus;
     }
@@ -260,6 +267,22 @@ public class UserInfoEntity extends BaseObservable {
         this.cityId = cityId;
     }
 
+    public String getImUserId() {
+        return ImUserId;
+    }
+
+    public void setImUserId(String imUserId) {
+        ImUserId = imUserId;
+    }
+
+    public String getImToUserId() {
+        return ImToUserId;
+    }
+
+    public void setImToUserId(String imToUserId) {
+        ImToUserId = imToUserId;
+    }
+
     @Override
     public String toString() {
         return "UserInfoEntity{" +
@@ -287,6 +310,8 @@ public class UserInfoEntity extends BaseObservable {
                 ", soundTime=" + soundTime +
                 ", isSound=" + isSound +
                 ", soundStatus=" + soundStatus +
+                ", ImUserId='" + ImUserId + '\'' +
+                ", ImToUserId='" + ImToUserId + '\'' +
                 '}';
     }
 }

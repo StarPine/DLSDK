@@ -101,13 +101,6 @@ public class EditProfileFragment extends BaseToolbarFragment<FragmentEditProfile
                 clearNicknameFocus();
             }
         });
-        viewModel.uc.clickCity.observe(this, new Observer() {
-            @Override
-            public void onChanged(@Nullable Object o) {
-                shouChooseCity();
-                clearNicknameFocus();
-            }
-        });
         viewModel.uc.clickBirthday.observe(this, new Observer() {
             @Override
             public void onChanged(@Nullable Object o) {
@@ -175,19 +168,6 @@ public class EditProfileFragment extends BaseToolbarFragment<FragmentEditProfile
         });
     }
 
-    //选择城市dialog
-    public void shouChooseCity() {
-        if (viewModel.userDataEntity.get() == null) {
-            return;
-        }
-        MVDialog.ChooseCity chooseCity = new MVDialog.ChooseCity() {
-            @Override
-            public void clickListItem(Dialog dialog, List<Integer> ids) {
-                viewModel.userDataEntity.get().setPermanentCityIds(ids);
-            }
-        };
-        MVDialog.getCityDialog(this.getContext(), viewModel.city, viewModel.userDataEntity.get().getPermanentCityIds(), chooseCity);
-    }
 
     //选择职业dialog
     public void shouChooseOccupation() {

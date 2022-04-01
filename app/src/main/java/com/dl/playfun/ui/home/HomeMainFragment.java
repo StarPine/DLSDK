@@ -2,7 +2,6 @@ package com.dl.playfun.ui.home;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,32 +15,28 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.blankj.utilcode.util.IntentUtils;
 import com.blankj.utilcode.util.ObjectUtils;
+import com.dl.playfun.BR;
+import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.Injection;
+import com.dl.playfun.databinding.FragmentHomeMainBinding;
 import com.dl.playfun.entity.ConfigItemEntity;
-import com.dl.playfun.event.CityChangeEvent;
 import com.dl.playfun.event.LocationChangeEvent;
 import com.dl.playfun.kl.view.VideoPresetActivity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocationManager;
 import com.dl.playfun.ui.base.BaseFragment;
-import com.dl.playfun.utils.ImmersionBarUtils;
-import com.dl.playfun.widget.dialog.MVDialog;
-import com.google.android.material.tabs.TabLayout;
-import com.dl.playfun.BR;
-import com.dl.playfun.R;
-import com.dl.playfun.databinding.FragmentHomeMainBinding;
-import com.dl.playfun.ui.dialog.CityChooseDialog;
 import com.dl.playfun.ui.dialog.HomeAccostDialog;
+import com.dl.playfun.utils.ImmersionBarUtils;
+import com.google.android.material.tabs.TabLayout;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.List;
 
 import me.goldze.mvvmhabit.bus.RxBus;
-import me.goldze.mvvmhabit.utils.ToastUtils;
 import me.jessyan.autosize.AutoSizeCompat;
 import me.jessyan.autosize.internal.CustomAdapt;
 
@@ -238,60 +233,6 @@ public class HomeMainFragment extends BaseFragment<FragmentHomeMainBinding, Home
             binding.viewPager.setAdapter(adapter);
             startLocation();
             createTabs(integer);
-        });
-
-        viewModel.uc.clickRegion.observe(this, o -> {
-            CityChooseDialog dialog = new CityChooseDialog(citys);
-            dialog.show(getChildFragmentManager(), CityChooseDialog.class.getCanonicalName());
-            dialog.setCityChooseDialogListener(new CityChooseDialog.CityChooseDialogListener() {
-                @Override
-                public void onClickConfirm(CityChooseDialog dialog) {
-                    dialog.dismiss();
-                }
-
-                @Override
-                public void onItemClick(CityChooseDialog dialog, ConfigItemEntity itemEntity) {
-                    dialog.dismiss();
-                    for (ConfigItemEntity city : citys) {
-                        city.setIsChoose(false);
-                    }
-                    itemEntity.setIsChoose(true);
-                    viewModel.cityId.set(itemEntity.getId());
-                    viewModel.regionTitle.set(itemEntity.getName());
-                    if (itemEntity.getId() == null || itemEntity.getId() == 0) {
-                        startLocation();
-                    } else {
-                        RxBus.getDefault().post(new CityChangeEvent(itemEntity));
-                    }
-                }
-            });
-        });
-        viewModel.uc.clickLocationSel.observe(this, o -> {
-            MVDialog.getCityDialogs(mActivity, viewModel.list_chooseCityItem, viewModel.SelConfigItemEntity.get().getId(), new MVDialog.raDioChooseCity() {
-                @Override
-                public void clickListItem(Dialog dialog, ConfigItemEntity ids) {
-                    dialog.dismiss();
-                    viewModel.SelConfigItemEntity.set(ids);
-                }
-            });
-        });
-
-        viewModel.uc.clickLocationConfirm.observe(this, o -> {
-            ConfigItemEntity configItemEntity = viewModel.SelConfigItemEntity.get();
-            if (configItemEntity == null) {
-                ToastUtils.showShort(R.string.playfun_please_select_location);
-            } else {
-                viewModel.showLocationAlert.set(false);
-                configItemEntity.setIsChoose(true);
-                viewModel.cityId.set(configItemEntity.getId());
-                viewModel.regionTitle.set(configItemEntity.getName());
-                if (configItemEntity.getId() == null || configItemEntity.getId() == 0) {
-                    startLocation();
-                } else {
-                    viewModel.isBindCity(configItemEntity.getId());
-                    RxBus.getDefault().post(new CityChangeEvent(configItemEntity));
-                }
-            }
         });
     }
 
