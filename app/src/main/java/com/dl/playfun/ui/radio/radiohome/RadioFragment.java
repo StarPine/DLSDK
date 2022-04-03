@@ -63,7 +63,6 @@ import me.jessyan.autosize.internal.CustomAdapt;
  * @author wulei
  */
 public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, RadioViewModel> implements RadioFilterView.RadioFilterListener, CustomAdapt {
-    private TextView tvCreate;
     private Context mContext;
     private EasyPopup mCirclePop;
     private List<RadioFilterView.RadioFilterItemEntity> sexs;
@@ -71,7 +70,6 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        tvCreate = view.findViewById(R.id.tv_create);
     }
 
     @Override
@@ -130,7 +128,7 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
         sexs.add(new RadioFilterView.RadioFilterItemEntity<>(getString(R.string.playfun_just_look_lady), 0));
         sexs.add(new RadioFilterView.RadioFilterItemEntity<>(getString(R.string.playfun_just_look_man), 1));
 
-        viewModel.loadGameCity();
+        //viewModel.loadGameCity();
 
 
         binding.radioFilterView.setRadioFilterListener(this);
@@ -161,6 +159,8 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
         super.initViewObservable();
         AppContext.instance().logEvent(AppsFlyerEvent.Broadcast);
         mContext = this.getContext();
+        //初始化加载选项列表
+        binding.radioFilterView.setFilterData(sexs, null);
         viewModel.radioUC.getRadioTwoFilterItemEntity.observe(this, new Observer<List<RadioTwoFilterItemEntity>>() {
             @Override
             public void onChanged(List<RadioTwoFilterItemEntity> radioTwoFilterItemEntities) {

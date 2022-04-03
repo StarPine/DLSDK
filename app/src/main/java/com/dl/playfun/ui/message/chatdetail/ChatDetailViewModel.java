@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
@@ -474,6 +475,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
 
     //拨打语音、视频
     public void getCallingInvitedInfo(int callingType, String IMUserId, String toIMUserId) {
+        Log.e("拨打语音、视频",IMUserId+"======"+toIMUserId);
         model.callingInviteInfo(callingType, IMUserId, toIMUserId)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())

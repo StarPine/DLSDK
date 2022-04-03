@@ -53,7 +53,7 @@ public class Utility {
             Object sVmRuntime = getRuntime.invoke(null);
 
             setHiddenApiExemptions.invoke(sVmRuntime, new Object[]{new String[]{"L"}});
-        } catch (Throwable e) {
+        } catch (Exception e) {
             Log.e("Utility", "Reflect bootstrap failed:", e);
         }
     }

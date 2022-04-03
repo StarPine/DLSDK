@@ -1131,16 +1131,6 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
-    public Observable<BaseDataResponse<FaceVerifyTokenEntity>> faceVerifyToken() {
-        return mHttpDataSource.faceVerifyToken();
-    }
-
-    @Override
-    public Observable<BaseDataResponse<CompareFaceEntity>> compareFaces(String img) {
-        return mHttpDataSource.compareFaces(img);
-    }
-
-    @Override
     public Observable<BaseDataResponse<FaceVerifyResultEntity>> faceVerifyResult(String bizId) {
         return mHttpDataSource.faceVerifyResult(bizId);
     }

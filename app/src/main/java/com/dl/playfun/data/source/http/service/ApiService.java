@@ -223,7 +223,7 @@ public interface ApiService {
      * @parame [toUserId, type]
      * @Date 2021/12/29
      */
-    @GET("api/v4/refundMsg")
+    @GET("api/refundMsg")
     Observable<BaseDataResponse<PriceConfigEntity.Current>> getMaleRefundMsg(@Query("to_user_id") Integer toUserId, @Query("type") Integer type);
 
 
@@ -234,7 +234,7 @@ public interface ApiService {
      * @return
      */
     @FormUrlEncoded
-    @POST("api/v4/tips")
+    @POST("api/tips")
     Observable<BaseDataResponse> getTips(@Field("to_user_id") Integer toUserId, @Field("type") Integer type, @Field("is_show") String isShow);
 
     /**
@@ -266,7 +266,7 @@ public interface ApiService {
      * @parame [toUserId]
      * @Date 2021/12/24
      */
-    @GET("api/v4/goddessTips")
+    @GET("api/goddessTips")
     Observable<BaseDataResponse<Map<String, Integer>>> verifyGoddessTips(@Query("to_user_id") Integer toUserId);
 
     /**
@@ -276,7 +276,7 @@ public interface ApiService {
      * @parame [to_user_id]
      * @Date 2021/12/20
      */
-    @GET("api/v4/priceConfig")
+    @GET("api/priceConfig")
     Observable<BaseDataResponse<PriceConfigEntity>> getPriceConfig(@Query("to_user_id") Integer to_user_id);
 
     /**
@@ -338,7 +338,7 @@ public interface ApiService {
      * @Date 2021/12/9
      */
     @FormUrlEncoded
-    @POST("api/v4/gift/send")
+    @POST("api/gift/send")
     Observable<BaseResponse> sendUserGift(@Field("gift_id") Integer gift_id, @Field("to_user_id") Integer to_user_id, @Field("amount") Integer amount,@Field("type")Integer type);
     
     /**
@@ -348,7 +348,7 @@ public interface ApiService {
     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse<com.dl.playfun.entity.GiftBagEntity>>
     * @Date 2021/12/7
     */
-    @GET("api/v4/gift")
+    @GET("api/gift")
     Observable<BaseDataResponse<GiftBagEntity>> getBagGiftInfo();
 
     /**
@@ -368,7 +368,7 @@ public interface ApiService {
     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse<com.dl.playfun.entity.CoinWalletEntity>>
     * @Date 2021/12/6
     */
-    @GET("api/v4/account")
+    @GET("api/account")
     Observable<BaseDataResponse<CoinWalletEntity>> getUserAccount();
 
     /**
@@ -387,7 +387,7 @@ public interface ApiService {
      * @parame []
      * @Date 2021/12/2
      */
-    @GET("api/v4/bubble")
+    @GET("api/bubble")
     Observable<BaseDataResponse<BubbleEntity>> getBubbleEntity();
 
     /**
@@ -397,7 +397,7 @@ public interface ApiService {
      * @parame []
      * @Date 2021/11/30
      */
-    @GET("api/v4/accost")
+    @GET("api/accost")
     Observable<BaseDataResponse<AccostEntity>> getAccostList(@Query("page") Integer page);
 
     /**
@@ -407,7 +407,7 @@ public interface ApiService {
      * @parame [userIds]
      * @Date 2021/11/30
      */
-    @POST("api/v4/accost")
+    @POST("api/accost")
     @FormUrlEncoded
     Observable<BaseResponse> putAccostList(@Field("user_ids[]") List<Integer> userIds);
 
@@ -418,7 +418,7 @@ public interface ApiService {
      * @parame [userId]
      * @Date 2021/11/30
      */
-    @POST("api/v4/accost/first")
+    @POST("api/accost/first")
     @FormUrlEncoded
     Observable<BaseResponse> putAccostFirst(@Field("user_id") Integer userId);
 
@@ -590,7 +590,7 @@ public interface ApiService {
      * 推送状态提交 type  1今日 2钻石 3VIP
      * @return
      */
-    @POST("api/v4/pushGreet")
+    @POST("api/pushGreet")
     @FormUrlEncoded
     Observable<BaseResponse> pushGreet(@Field("type") Integer type);
 
@@ -641,7 +641,7 @@ public interface ApiService {
      * @parame [page]
      * @Date 2021/8/4
      */
-    @GET("api/v2/collect/toBrowse")
+    @GET("api/collect/toBrowse")
     Observable<BaseListDataResponse<TraceEntity>> toBrowse(@Query("page") Integer page);
 
     /**
@@ -651,7 +651,7 @@ public interface ApiService {
      * @parame [page]
      * @Date 2021/8/3
      */
-    @GET("api/v2/collect/fans")
+    @GET("api/collect/fans")
     Observable<BaseListDataResponse<TraceEntity>> collectFans(@Query("page") Integer page);
 
     /**
@@ -661,7 +661,7 @@ public interface ApiService {
      * @parame [page]
      * @Date 2021/8/3
      */
-    @GET("api/v2/collect")
+    @GET("api/collect")
     Observable<BaseListDataResponse<TraceEntity>> collect(@Query("page") Integer page);
 
     /**
@@ -900,7 +900,7 @@ public interface ApiService {
      * @param latitude   纬度
      * @return
      */
-    @GET("api/v4/home")
+    @GET("api/home")
     Observable<BaseListDataResponse<ParkItemEntity>> homeListGet(
             @Query("city_id") Integer cityId,
             @Query("type") Integer type,
@@ -1542,24 +1542,6 @@ public interface ApiService {
             @Path("id") Integer id
     );
 
-    /**
-     * 发起真人认证
-     *
-     * @return
-     */
-    @POST("api/aliyun/verifyToken")
-    Observable<BaseDataResponse<FaceVerifyTokenEntity>> faceVerifyToken();
-
-    /**
-     * 人脸对比
-     *
-     * @return
-     */
-    @FormUrlEncoded
-    @POST("api/aliyun/compareFaces")
-    Observable<BaseDataResponse<CompareFaceEntity>> compareFaces(
-            @Field("img") String img
-    );
 
     /**
      * 查看真人认证结果

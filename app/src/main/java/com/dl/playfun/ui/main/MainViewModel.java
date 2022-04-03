@@ -27,6 +27,7 @@ import com.dl.playfun.event.MessageGiftNewEvent;
 import com.dl.playfun.event.RewardRedDotEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocationManager;
+import com.dl.playfun.utils.FastCallFunUtil;
 import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.viewmodel.BaseViewModel;
@@ -235,6 +236,10 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
 
     //回复收入气泡提示
     public void getBubbleSetting() {
+        //防抖拦截 最多两秒触发一次
+        if(FastCallFunUtil.getInstance().isFastCallFun("getBubbleEntity",1500)){
+            return;
+        }
         model.getBubbleEntity()
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())

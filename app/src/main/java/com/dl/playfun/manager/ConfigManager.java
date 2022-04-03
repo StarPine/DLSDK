@@ -77,7 +77,7 @@ public class ConfigManager {
     */
     public AppRepository getAppRepository(){
         if (appRepository == null) {
-            synchronized (ConfigManager.class) {
+            synchronized (Object.class) {
                 if (appRepository == null) {
                     appRepository = Injection.provideDemoRepository();
                 }

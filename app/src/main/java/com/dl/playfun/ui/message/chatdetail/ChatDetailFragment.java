@@ -1484,6 +1484,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     }
     //获取当前用户的IM id
     public String getUserIdIM(){
+        Log.e("聊天页面","获取当前用户缓存腾讯id"+String.valueOf(ConfigManager.getInstance().getUserImID()));
         return ConfigManager.getInstance().getUserImID();
     }
 

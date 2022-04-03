@@ -28,6 +28,7 @@ public class ParkItemEntity extends BaseObservable {
      * is_collect : 0
      * album_type : 1
      */
+
     private int id;
     private String nickname;
     private Integer sex;

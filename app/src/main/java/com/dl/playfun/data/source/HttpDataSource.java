@@ -1361,20 +1361,6 @@ public interface HttpDataSource {
     );
 
     /**
-     * 发起真人认证
-     *
-     * @return
-     */
-    Observable<BaseDataResponse<FaceVerifyTokenEntity>> faceVerifyToken();
-
-    /**
-     * 人脸对比
-     *
-     * @return
-     */
-    Observable<BaseDataResponse<CompareFaceEntity>> compareFaces(String img);
-
-    /**
      * 查看真人认证结果
      *
      * @param bizId

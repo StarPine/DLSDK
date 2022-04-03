@@ -800,16 +800,6 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
-    public Observable<BaseDataResponse<FaceVerifyTokenEntity>> faceVerifyToken() {
-        return apiService.faceVerifyToken();
-    }
-
-    @Override
-    public Observable<BaseDataResponse<CompareFaceEntity>> compareFaces(String img) {
-        return apiService.compareFaces(img);
-    }
-
-    @Override
     public Observable<BaseDataResponse<FaceVerifyResultEntity>> faceVerifyResult(String bizId) {
         return apiService.faceVerifyResult(bizId);
     }
