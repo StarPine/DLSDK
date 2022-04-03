@@ -37,7 +37,6 @@ import com.dl.playfun.entity.AlbumPhotoEntity;
 import com.dl.playfun.entity.EvaluateItemEntity;
 import com.dl.playfun.entity.GameCoinBuy;
 import com.dl.playfun.entity.GiftBagEntity;
-import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.entity.LocalMessageIMEntity;
 import com.dl.playfun.entity.MessageRuleEntity;
 import com.dl.playfun.entity.PhotoAlbumEntity;
@@ -50,7 +49,6 @@ import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
 import com.dl.playfun.ui.certification.certificationmale.CertificationMaleFragment;
 import com.dl.playfun.ui.dialog.GiftBagDialog;
-import com.dl.playfun.ui.message.chooselocation.ChooseLocationFragment;
 import com.dl.playfun.ui.message.coinredpackagedetail.CoinRedPackageDetailFragment;
 import com.dl.playfun.ui.message.photoreview.PhotoReviewFragment;
 import com.dl.playfun.ui.message.sendcoinredpackage.SendCoinRedPackageFragment;
@@ -91,6 +89,7 @@ import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
+import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
@@ -122,7 +121,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     public static final String CHAT_INFO = "chatInfo";
 
     public static final String TAG = "ChatDetailFragment";
-    Integer message_page = 0;
     private ChatInfo mChatInfo;
     private InputView inputLayout;
     private String toSendMessageText = null;
@@ -136,19 +134,8 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     private SVGAImageView giftView;
 
     private GiftBagDialog giftBagDialog;
-
-    public static Bundle getStartBundle(ChatInfo chatInfo) {
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(CHAT_INFO, chatInfo);
-        return bundle;
-    }
-
-    public static Bundle getStartBundle(ChatInfo chatInfo, String message) {
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(CHAT_INFO, chatInfo);
-        bundle.putString("message", message);
-        return bundle;
-    }
+    //对方用户id
+    private Integer toUserDataId = null;
 
     @Nullable
     @Override
@@ -164,6 +151,8 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         super.initParam();
         mChatInfo = (ChatInfo) getArguments().getSerializable(CHAT_INFO);
         toSendMessageText = getArguments().getString("message");
+        //获取对方IM id
+        toUserDataId = getArguments().getInt("toUserId");
         //SVGA播放初始化
         SVGASoundManager.INSTANCE.init();
         SVGAParser.Companion.shareParser().init(this.getContext());
@@ -190,7 +179,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     public void initData() {
         super.initData();
         giftView = binding.giftView;
-        viewModel.getLocalUserData();
         binding.chatLayout.getTitleBar().setVisibility(View.GONE);
     }
 
@@ -569,12 +557,16 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                 if (null == messageInfo) {
                     return;
                 }
-                int userId = ChatUtils.imUserIdToSystemUserId(messageInfo.getFromUser());
-                if (userId == ConfigManager.getInstance().getAppRepository().readUserData().getId()) {
+                String id = messageInfo.getId();
+                //客服不允许进入主页
+                if (id.trim().contains(AppConfig.CHAT_SERVICE_USER_ID)) {
                     return;
                 }
-                Bundle bundle = UserDetailFragment.getStartBundle(userId);
-                viewModel.start(UserDetailFragment.class.getCanonicalName(), bundle);
+                //不能点击自己的用户头像进入主页
+                if(id.trim().equals(getUserIdIM())){
+                    return;
+                }
+                viewModel.transUserIM(messageInfo.getFromUser());
             }
 
             @Override
@@ -733,7 +725,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
 
             @Override
             public void onCoinRedPackageMessageClick(CustomMessageData customMessageData) {
-                Bundle bundle = CoinRedPackageDetailFragment.getStartBundle(customMessageData.getId(), customMessageData.getMsgId(), customMessageData.getSenderUserID() == ConfigManager.getInstance().getAppRepository().readUserData().getId());
+                Bundle bundle = CoinRedPackageDetailFragment.getStartBundle(customMessageData.getId(), customMessageData.getMsgId(), customMessageData.getSenderUserID().equals(ConfigManager.getInstance().getAppRepository().readUserData().getId()));
                 CoinRedPackageDetailFragment coinRedPackageDetailFragment = new CoinRedPackageDetailFragment();
                 coinRedPackageDetailFragment.setArguments(bundle);
                 start(coinRedPackageDetailFragment);
@@ -862,16 +854,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     }
 
     @Override
-    public void onLocationActionClick() {
-        //男生发送判断
-        if (!sendVerifyMale()) {
-            paySelectionboxChoose(false);
-            return;
-        }
-        startForResult(new ChooseLocationFragment(), 1001);
-    }
-
-    @Override
     public void onBurnActionClick() {
         PictureSelectorUtil.selectImage(mActivity, true, 1, new OnResultCallbackListener<LocalMedia>() {
             @Override
@@ -906,8 +888,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         if (mChatInfo.getId() != null && mChatInfo.getId().equals(AppConfig.CHAT_SERVICE_USER_ID)) {
             return;
         }
-        int userId = Integer.parseInt(mChatInfo.getId().replace("user_", ""));
-        Bundle bundle = SendCoinRedPackageFragment.getStartBundle(userId);
+        Bundle bundle = SendCoinRedPackageFragment.getStartBundle(getTaUserIdIM());
         SendCoinRedPackageFragment sendCoinRedPackageFragment = new SendCoinRedPackageFragment();
         sendCoinRedPackageFragment.setArguments(bundle);
         startForResult(sendCoinRedPackageFragment, 2002);
@@ -917,8 +898,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     public void onMicActionClick() {
         if (mChatInfo != null) {
             try {
-                String userId = mChatInfo.getId().replaceFirst("user_", "");
-                viewModel.checkConnMic(Integer.parseInt(userId));
+                viewModel.checkConnMic(getTaUserIdIM());
             } catch (Exception e) {
                 e.printStackTrace();
                 ToastUtils.showShort("error");
@@ -931,15 +911,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         if (resultCode != ISupportFragment.RESULT_OK) {
             return;
         }
-        if (requestCode == 1001) {
-            String name = data.getString(ChooseLocationFragment.ARG_ADDRESS_NAME);
-            String address = data.getString(ChooseLocationFragment.ARG_ADDRESS);
-            double lat = data.getDouble(ChooseLocationFragment.ARG_ADDRESS_LAT);
-            double lng = data.getDouble(ChooseLocationFragment.ARG_ADDRESS_LNG);
-            CustomMessageData customMessageData = CustomMessageData.genLocationMessage(name, address, lat, lng);
-            MessageInfo info = ChatMessageInfoUtil.buildCustomMessage(GsonUtils.toJson(customMessageData), null, null);
-            binding.chatLayout.sendMessage(info, false);
-        } else if (requestCode == 2002) {
+        if (requestCode == 2002) {
             int id = data.getInt(SendCoinRedPackageFragment.ARG_RED_PACKAGE_ID);
             String desc = data.getString(SendCoinRedPackageFragment.ARG_DESC);
             int number = data.getInt(SendCoinRedPackageFragment.ARG_NUMBER, 0);
@@ -1100,11 +1072,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
 
     }
 
-    @Override
-    public void onClickSendLocation() {//发送位置
-        startForResult(new ChooseLocationFragment(), 1001);
-    }
-
     //调起拨打音视频通话
     private void DialogCallPlayUser() {
 
@@ -1130,7 +1097,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                                 .subscribe(granted -> {
                                     if (granted) {
                                         AppContext.instance().logEvent(AppsFlyerEvent.im_voice_call);
-                                        viewModel.getCallingInvitedInfo(1, getTaUserIdIM(), mChatInfo.getId());
+                                        viewModel.getCallingInvitedInfo(1, getUserIdIM(), mChatInfo.getId());
                                     } else {
                                         TraceDialog.getInstance(mActivity)
                                                 .setCannelOnclick(new TraceDialog.CannelOnclick() {
@@ -1147,7 +1114,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                                                                 .subscribe(granted -> {
                                                                     if (granted) {
                                                                         AppContext.instance().logEvent(AppsFlyerEvent.im_voice_call);
-                                                                        viewModel.getCallingInvitedInfo(1, getTaUserIdIM(), mChatInfo.getId());
+                                                                        viewModel.getCallingInvitedInfo(1, getUserIdIM(), mChatInfo.getId());
                                                                     }
                                                                 });
                                                     }
@@ -1163,7 +1130,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                                 .subscribe(granted -> {
                                     if (granted) {
                                         AppContext.instance().logEvent(AppsFlyerEvent.im_video_call);
-                                        viewModel.getCallingInvitedInfo(2, getTaUserIdIM(), mChatInfo.getId());
+                                        viewModel.getCallingInvitedInfo(2, getUserIdIM(), mChatInfo.getId());
                                     } else {
                                         TraceDialog.getInstance(mActivity)
                                                 .setCannelOnclick(new TraceDialog.CannelOnclick() {
@@ -1180,7 +1147,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                                                                 .subscribe(granted -> {
                                                                     if (granted) {
                                                                         AppContext.instance().logEvent(AppsFlyerEvent.im_video_call);
-                                                                        viewModel.getCallingInvitedInfo(2, getTaUserIdIM(), mChatInfo.getId());
+                                                                        viewModel.getCallingInvitedInfo(2, getUserIdIM(), mChatInfo.getId());
                                                                     }
                                                                 });
                                                     }
@@ -1513,7 +1480,11 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
 
     //获取聊天对象的UserId
     public Integer getTaUserIdIM() {
-        return ChatUtils.imUserIdToSystemUserId(mChatInfo.getId());
+        return toUserDataId == null ? 0 : toUserDataId;
+    }
+    //获取当前用户的IM id
+    public String getUserIdIM(){
+        return ConfigManager.getInstance().getUserImID();
     }
 
     public synchronized void removeLocalMessage(LocalMessageIMEntity localMessageIMEntity, String eventId, boolean updateView) {
@@ -1530,10 +1501,9 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                 if (messages == null || messages.isEmpty()) {
                     return;
                 }
-                //String toUserId = V2TIMManager.getInstance().getLoginUser();
                 //binding.chatLayout.getChatManager().removeMessage(localMessageIMEntity.getMsgId(),toUserId);
                 if (updateView) {
-                    String toUserId = V2TIMManager.getInstance().getLoginUser();
+                    String toUserId = getUserIdIM();
                     binding.chatLayout.getChatPresenter().removeMessage(localMessageIMEntity.getMsgId(), toUserId);
                 }
                 V2TIMManager.getMessageManager().deleteMessageFromLocalStorage(messages.get(0), new V2TIMCallback() {

@@ -261,6 +261,9 @@ public class TrendItemViewModel extends MultiItemViewModel<BaseViewModel> {
         newsEntity.setVideo(broadcastEntity.getNews().getVideo());
         newsEntity.setNewsType(broadcastEntity.getNews().getNewsType());
         newsEntity.setCommentNumber(broadcastEntity.getNews().getCommentNumber());
+        //自己IMid  对方IM id
+        newsEntity.setImUserId(broadcastEntity.getImUserId());
+        newsEntity.setImToUserId(broadcastEntity.getImToUserId());
         BaseUserBeanEntity userBean = new BaseUserBeanEntity();
         userBean.setAvatar(broadcastEntity.getAvatar());
         userBean.setId(broadcastEntity.getUserId());

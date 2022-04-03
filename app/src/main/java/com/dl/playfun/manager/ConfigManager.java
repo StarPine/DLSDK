@@ -89,8 +89,8 @@ public class ConfigManager {
     //位置是否是空的
     public boolean isLocation() {
         try {
-            if (appRepository.readUserData() != null) {
-                return appRepository.readUserData().getPermanentCityIds().isEmpty();
+            if (getAppRepository().readUserData() != null) {
+                return getAppRepository().readUserData().getPermanentCityIds().isEmpty();
             }
         } catch (Exception e) {
             return true;
@@ -100,17 +100,17 @@ public class ConfigManager {
 
     //获取任务中心配置
     public SystemConfigTaskEntity getTaskConfig() {
-        return appRepository.readSystemConfigTask();
+        return getAppRepository().readSystemConfigTask();
     }
 
     //收益开关
     public boolean getTipMoneyShowFlag() {
-        return appRepository.readSwitches(EaringlSwitchUtil.KEY_TIPS).intValue() == 1;
+        return getAppRepository().readSwitches(EaringlSwitchUtil.KEY_TIPS).intValue() == 1;
     }
 
     //收入开关
     public boolean getRemoveImMessageFlag() {
-        return appRepository.readSwitches(EaringlSwitchUtil.REMOVE_IM_MESSAGE).intValue() == 1;
+        return getAppRepository().readSwitches(EaringlSwitchUtil.REMOVE_IM_MESSAGE).intValue() == 1;
     }
 
 
@@ -121,7 +121,18 @@ public class ConfigManager {
      * @return
      */
     public Integer getUserParentId() {
-        return appRepository.readUserData().getpId();
+        return getAppRepository().readUserData().getpId();
+    }
+
+    /**
+    * @Desc TODO(获取当前用户IM id)
+    * @author 彭石林
+    * @parame []
+    * @return java.lang.String
+    * @Date 2022/4/2
+    */
+    public String getUserImID(){
+        return  getAppRepository().readUserData().getImUserId();
     }
 
     /**
@@ -130,7 +141,7 @@ public class ConfigManager {
      * @return
      */
     public boolean isMale() {
-        return appRepository.readUserData().getSex() == 1;
+        return getAppRepository().readUserData().getSex() == 1;
     }
 
     /**
@@ -139,7 +150,7 @@ public class ConfigManager {
      * @return
      */
     public String getAvatar() {
-        return appRepository.readUserData().getAvatar();
+        return getAppRepository().readUserData().getAvatar();
     }
 
 
@@ -147,7 +158,7 @@ public class ConfigManager {
      * 是否新用户
      */
     public boolean isNewUser(){
-        return appRepository.readIsNewUser();
+        return getAppRepository().readIsNewUser();
     }
 
     /**
@@ -156,7 +167,7 @@ public class ConfigManager {
      * @return
      */
     public boolean isVip() {
-        return appRepository.readUserData().getIsVip() == 1;
+        return getAppRepository().readUserData().getIsVip() == 1;
     }
 
     /**
@@ -165,7 +176,7 @@ public class ConfigManager {
      * @return
      */
     public boolean isCertification() {
-        return appRepository.readUserData().getCertification() == 1;
+        return getAppRepository().readUserData().getCertification() == 1;
     }
 
     //    man_user 男性普通用户 man_real 男性真人 man_vip 男性会员 woman_user 女性普通用户 woman_real 女性真人 woman_vip 女神
@@ -234,7 +245,7 @@ public class ConfigManager {
         if (ObjectUtils.isEmpty(gameChannel)){
             return "";
         }
-        List<GameConfigEntity> gameConfigEntities = appRepository.readGameConfig();
+        List<GameConfigEntity> gameConfigEntities = getAppRepository().readGameConfig();
 
         if (ObjectUtils.isEmpty(gameConfigEntities)){
             return "";

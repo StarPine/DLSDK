@@ -37,13 +37,6 @@
 
     <uses-sdk tools:overrideLibrary="com.taobao.android.libqueen"/>
 
-    <supports-screens
-        android:largeScreens="true"
-        android:largestWidthLimitDp="600"
-        android:normalScreens="true"
-        android:smallScreens="true"
-        android:xlargeScreens="false" />
-
     <application>
         <meta-data
             android:name="design_width_in_dp"

@@ -62,7 +62,6 @@ public class CustomMessageDraw implements IOnCustomMessageDrawListener {
                 return;
             }
             V2TIMMessage timMessage = info.getTimMessage();
-            int senderUserID = ChatUtils.imUserIdToSystemUserId(timMessage.getSender());
             CallModel callModel = CallModel.convert2VideoCallData(timMessage);
             if (callModel == null) {
                 V2TIMCustomElem elem = timMessage.getCustomElem();
@@ -78,7 +77,7 @@ public class CustomMessageDraw implements IOnCustomMessageDrawListener {
                 }
                 customMessageData.setMsgId(timMessage.getMsgID());
                 Log.d("CustomMessageDrwa", timMessage.getMsgID());
-                customMessageData.setSenderUserID(senderUserID);
+                customMessageData.setSenderUserID(timMessage.getSender());
                 if (customMessageData.type == CustomMessageData.TYPE_CUSTOM_IMAGE) {//自定义图片发送
                     View view = LayoutInflater.from(AppContext.instance()).inflate(R.layout.chat_custom_image_message, null, false);
                     parent.addMessageContentView(view);
@@ -138,14 +137,14 @@ public class CustomMessageDraw implements IOnCustomMessageDrawListener {
                     textView.setText(customMessageData.getText());
                     int status = ConfigManager.getInstance().getAppRepository().readCahtCustomMessageStatus(customMessageData.getMsgId());
                     if (status == 0) {
-                        if (senderUserID == ConfigManager.getInstance().getAppRepository().readUserData().getId()) {
+                        if (timMessage.getSender().equals(ConfigManager.getInstance().getAppRepository().readUserData().getImUserId())) {
                             tvState.setText(R.string.playfun_chat_get_red_package_wait_rec);
                         } else {
                             tvState.setText(R.string.playfun_chat_get_red_package);
                         }
                     } else if (status == 2) {
                         //已领取
-                        if (senderUserID == ConfigManager.getInstance().getAppRepository().readUserData().getId()) {
+                        if (timMessage.getSender().equals(ConfigManager.getInstance().getAppRepository().readUserData().getImUserId())) {
                             tvState.setText(R.string.playfun_redpackage_be_received);
                         } else {
                             tvState.setText(R.string.playfun_redpackage_already_received);

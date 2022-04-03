@@ -45,6 +45,7 @@ import com.dl.playfun.entity.GoldDetailEntity;
 import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.entity.GoogleNearPoiBean;
 import com.dl.playfun.entity.GooglePoiBean;
+import com.dl.playfun.entity.IMTransUserEntity;
 import com.dl.playfun.entity.ImSigEntity;
 import com.dl.playfun.entity.IsChatEntity;
 import com.dl.playfun.entity.MessageGroupEntity;
@@ -90,12 +91,21 @@ import java.util.Map;
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
 import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface HttpDataSource {
 
-
+    /**
+     * @Desc TODO(IM用户Id转成数值id)
+     * @author 彭石林
+     * @parame [IMUserId]
+     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse<com.dl.playfun.entity.IMTransUserEntity>>
+     * @Date 2022/4/2
+     */
+    Observable<BaseDataResponse<IMTransUserEntity>> transUserIM(String IMUserId);
     /**
      * @return io.reactivex.Observable<com.dl.play.chat.data.source.http.response.BaseDataResponse < com.dl.play.chat.entity.ChatDetailCoinEntity>>
      * @Desc TODO(拨打完成后调用查询总钻石 。 拨打发调用)
@@ -249,9 +259,8 @@ public interface HttpDataSource {
     Observable<BaseDataResponse<CallingInfoEntity>> getCallingInfo(
             Integer roomId, //房间号
             Integer callingType, //通话类型：1=语音，2=视频
-            Integer fromUserId, //拔打人用户ID
-            Integer toUserId,//接收人用户ID
-            Integer currentUserId//当前用户ID
+            String fromUserId, //拔打人用户ID
+            String toUserId//接收人用户ID
     );
 
     /**
@@ -261,7 +270,7 @@ public interface HttpDataSource {
      * @parame [appId, callingType, fromUserId, toUserId, currentUserId]
      * @Date 2021/12/13
      */
-    Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(Integer callingType, Integer fromUserId, Integer toUserId, Integer currentUserId);
+    Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(Integer callingType, String fromUserId, String toUserId);
 
     /**
      * 获取解锁社交账号配置

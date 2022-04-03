@@ -85,8 +85,8 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     //是否发送过礼物
     public boolean sendGiftBagSuccess = false;
     public Integer roomId;
-    public Integer fromUserId;
-    public Integer toUserId;
+    public String fromUserId;
+    public String toUserId;
 
     //录音文案数组坐标
     public int sayHiePosition = 0;
@@ -567,8 +567,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                 if (msg != null && leftUserInfoField.get() != null) {
                     MessageInfo info = ChatMessageInfoUtil.createMessageInfo(msg);
                     if (info != null) {
-                        Integer msgFromUserId = ChatUtils.imUserIdToSystemUserId(info.getFromUser());
-                        if (msgFromUserId.intValue() == leftUserInfoField.get().getId().intValue()) {
+                        if (info.getFromUser().equals(leftUserInfoField.get().getImId())) {
                             String text = String.valueOf(info.getExtra());
 
                             if (isJSON2(text) && text.indexOf("type") != -1) {//做自定义通知判断
@@ -648,8 +647,8 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
         putRcvItemMessage(itemMessageBuilder, null, false);
     }
 
-    public void getCallingInfo(Integer roomId, Integer fromUserId, Integer toUserId) {
-        model.getCallingInfo(roomId, 1, fromUserId, toUserId, model.readUserData().getId())
+    public void getCallingInfo(Integer roomId, String fromUserId, String toUserId) {
+        model.getCallingInfo(roomId, 1, fromUserId, toUserId)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())

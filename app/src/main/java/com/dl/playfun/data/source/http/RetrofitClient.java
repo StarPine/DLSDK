@@ -3,6 +3,7 @@ package com.dl.playfun.data.source.http;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.blankj.utilcode.util.LanguageUtils;
 import com.dl.playfun.BuildConfig;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.data.source.http.interceptor.TokenInterceptor;
@@ -78,6 +79,7 @@ public class RetrofitClient {
         headers.put("version", AppConfig.VERSION_NAME_PUSH);
         //source 来源ID 1642158125=喵遊 1648520220=杜拉克
         headers.put("source","1648520220");
+        headers.put("Accept-Language", LanguageUtils.getCurrentLocale().getLanguage());
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .cookieJar(new CookieJarImpl(new PersistentCookieStore(mContext)))
 //                .cache(cache)

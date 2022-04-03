@@ -55,16 +55,16 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/accost_refresh_img" />
 
-            <TextView
-                android:id="@+id/change_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_marginStart="4dp"
-                android:layout_toEndOf="@+id/refresh_img"
-                android:text="@string/playfun_text_accost_hint"
-                android:textColor="@color/accost_down_time_change"
-                android:textSize="11sp" />
+                <TextView
+                    android:id="@+id/change_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginStart="4dp"
+                    android:layout_toEndOf="@+id/refresh_img"
+                    android:text="@string/playfun_text_accost_hint"
+                    android:textColor="@color/accost_down_time_change"
+                    android:textSize="11sp" />
         </RelativeLayout>
 
 

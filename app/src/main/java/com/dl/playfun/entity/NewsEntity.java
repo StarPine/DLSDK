@@ -48,6 +48,28 @@ public class NewsEntity extends BaseObservable {
     @SerializedName("game_channel")
     private String gamechannel;
 
+    //当前用户im id
+    @SerializedName("imId")
+    private String ImUserId;
+    //对方用户 IM iD
+    @SerializedName("toImId")
+    private String ImToUserId;
+
+    public String getImUserId() {
+        return ImUserId;
+    }
+
+    public void setImUserId(String imUserId) {
+        ImUserId = imUserId;
+    }
+
+    public String getImToUserId() {
+        return ImToUserId;
+    }
+
+    public void setImToUserId(String imToUserId) {
+        ImToUserId = imToUserId;
+    }
     public String getGamechannel() {
         return gamechannel;
     }

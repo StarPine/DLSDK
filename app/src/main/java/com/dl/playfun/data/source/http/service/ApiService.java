@@ -4,14 +4,12 @@ import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseListDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.AccostEntity;
-import com.dl.playfun.entity.AddressEntity;
 import com.dl.playfun.entity.AlbumPhotoEntity;
 import com.dl.playfun.entity.AllConfigEntity;
 import com.dl.playfun.entity.ApplyMessageEntity;
 import com.dl.playfun.entity.AuthLoginUserEntity;
 import com.dl.playfun.entity.BaseUserBeanEntity;
 import com.dl.playfun.entity.BlackEntity;
-import com.dl.playfun.entity.BonusGoodsEntity;
 import com.dl.playfun.entity.BoradCastMessageEntity;
 import com.dl.playfun.entity.BroadcastEntity;
 import com.dl.playfun.entity.BroadcastListEntity;
@@ -28,12 +26,8 @@ import com.dl.playfun.entity.CommentMessageEntity;
 import com.dl.playfun.entity.CompareFaceEntity;
 import com.dl.playfun.entity.ConfigItemEntity;
 import com.dl.playfun.entity.CreateOrderEntity;
-import com.dl.playfun.entity.EjectEntity;
-import com.dl.playfun.entity.EjectSignInEntity;
 import com.dl.playfun.entity.EvaluateEntity;
 import com.dl.playfun.entity.EvaluateMessageEntity;
-import com.dl.playfun.entity.ExchangeEntity;
-import com.dl.playfun.entity.ExchangeIntegraOuterEntity;
 import com.dl.playfun.entity.FaceVerifyResultEntity;
 import com.dl.playfun.entity.FaceVerifyTokenEntity;
 import com.dl.playfun.entity.GameCoinBuy;
@@ -41,10 +35,10 @@ import com.dl.playfun.entity.GameCoinWalletEntity;
 import com.dl.playfun.entity.GamePhotoAlbumEntity;
 import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.entity.GiveMessageEntity;
-import com.dl.playfun.entity.GoldDetailEntity;
 import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.entity.GoogleNearPoiBean;
 import com.dl.playfun.entity.GooglePoiBean;
+import com.dl.playfun.entity.IMTransUserEntity;
 import com.dl.playfun.entity.ImSigEntity;
 import com.dl.playfun.entity.IsChatEntity;
 import com.dl.playfun.entity.MessageGroupEntity;
@@ -66,9 +60,6 @@ import com.dl.playfun.entity.SwitchesEntity;
 import com.dl.playfun.entity.SystemMessageEntity;
 import com.dl.playfun.entity.TagEntity;
 import com.dl.playfun.entity.TaskAdEntity;
-import com.dl.playfun.entity.TaskConfigEntity;
-import com.dl.playfun.entity.TaskConfigItemEntity;
-import com.dl.playfun.entity.TaskRewardReceiveEntity;
 import com.dl.playfun.entity.TokenEntity;
 import com.dl.playfun.entity.TopicalListEntity;
 import com.dl.playfun.entity.TraceEntity;
@@ -98,7 +89,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
-import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -109,6 +99,18 @@ import retrofit2.http.Query;
  */
 
 public interface ApiService {
+
+    /**
+    * @Desc TODO(IM用户Id转成数值id)
+    * @author 彭石林
+    * @parame [IMUserId]
+    * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse<com.dl.playfun.entity.IMTransUserEntity>>
+    * @Date 2022/4/2
+    */
+    @FormUrlEncoded
+    @POST("api/im/transUser")
+    Observable<BaseDataResponse<IMTransUserEntity>> transUserIM( @Field("imId") String IMUserId);
+
     /**
      * @return io.reactivex.Observable<com.dl.play.chat.data.source.http.response.BaseDataResponse < com.dl.play.chat.entity.ChatDetailCoinEntity>>
      * @Desc TODO(拨打完成后调用查询总钻石 。 拨打发调用)
@@ -293,13 +295,12 @@ public interface ApiService {
      * @parame [roomId, callingType, fromUserId, toUserId, currentUserId]
      * @Date 2021/12/13
      */
-    @GET("/calling/getCallingInfo")
+    @GET("/calling/getCallingInfo/v2")
     Observable<BaseDataResponse<CallingInfoEntity>> getCallingInfo(
             @Query("roomId") Integer roomId, //房间号
             @Query("callingType") Integer callingType, //通话类型：1=语音，2=视频
-            @Query("fromUserId") Integer fromUserId, //拔打人用户ID
-            @Query("toUserId") Integer toUserId,//接收人用户ID
-            @Query("currentUserId") Integer currentUserId//当前用户ID
+            @Query("fromImId") String fromUserId, //拔打人用户ID
+            @Query("toImId") String toUserId//接收人用户ID
     );
 
     /**
@@ -309,8 +310,12 @@ public interface ApiService {
      * @parame [appId, callingType, fromUserId, toUserId, currentUserId]
      * @Date 2021/12/13
      */
-    @GET("/calling/getCallingInvitedInfo")
-    Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(@Query("callingType") Integer callingType, @Query("fromUserId") Integer fromUserId, @Query("toUserId") Integer toUserId, @Query("currentUserId") Integer currentUserId);
+    @GET("/calling/getCallingInvitedInfo/v2")
+    Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(
+            @Query("callingType") Integer callingType,
+            @Query("fromImId") String fromUserId,
+            @Query("toImId") String toUserId
+    );
 
     /**
      * 获取解锁社交账号配置

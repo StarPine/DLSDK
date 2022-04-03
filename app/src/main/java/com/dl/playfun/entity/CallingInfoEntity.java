@@ -163,6 +163,16 @@ public class CallingInfoEntity {
         private String occupation;
         private Integer occupationId;
         private String gameChannel;
+        //当前用户IM id
+        private String imId;
+
+        public String getImId() {
+            return imId;
+        }
+
+        public void setImId(String imId) {
+            this.imId = imId;
+        }
 
         public Integer getId() {
             return id;

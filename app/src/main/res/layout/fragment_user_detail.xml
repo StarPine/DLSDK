@@ -778,16 +778,14 @@
                                                     android:paddingEnd="14dp"
                                                     android:visibility="@{viewModel.detailEntity.height > 0 ? View.VISIBLE:View.GONE}">
 
-                                                    <TextView
-                                                        style="@style/LabelContent"
-                                                        android:layout_width="110dp"
-                                                        android:layout_height="wrap_content"
-                                                        android:drawablePadding="5dp"
-                                                        android:text="@string/playfun_user_detail_height"
-                                                        app:drawableStartCompat="@drawable/ic_user_detail_height" />
+                                                    <ImageView
+                                                        android:layout_width="18dp"
+                                                        android:layout_height="18dp"
+                                                        android:src="@drawable/ic_user_detail_height" />
 
                                                     <TextView
                                                         style="@style/LabelContent"
+                                                        android:layout_marginStart="48dp"
                                                         android:layout_width="wrap_content"
                                                         android:layout_height="wrap_content"
                                                         android:text="@{SystemDictUtils.getHeightById(viewModel.detailEntity.height)}"
@@ -802,17 +800,13 @@
                                                     android:orientation="horizontal"
                                                     android:paddingEnd="14dp"
                                                     android:visibility="@{viewModel.detailEntity.weight > 0 ? View.VISIBLE:View.GONE}">
-
+                                                    <ImageView
+                                                        android:layout_width="18dp"
+                                                        android:layout_height="18dp"
+                                                        android:src="@drawable/ic_user_detail_weight" />
                                                     <TextView
                                                         style="@style/LabelContent"
-                                                        android:layout_width="110dp"
-                                                        android:layout_height="wrap_content"
-                                                        android:drawablePadding="5dp"
-                                                        android:text="@string/playfun_user_detail_weight"
-                                                        app:drawableStartCompat="@drawable/ic_user_detail_weight" />
-
-                                                    <TextView
-                                                        style="@style/LabelContent"
+                                                        android:layout_marginStart="48dp"
                                                         android:layout_width="wrap_content"
                                                         android:layout_height="wrap_content"
                                                         android:text="@{SystemDictUtils.getWidthById(viewModel.detailEntity.weight)}"
@@ -844,40 +838,42 @@
                                                         tools:text="桃園市/台中市" />
                                                 </LinearLayout>
 
-                                                <LinearLayout
+                                                <RelativeLayout
                                                     android:layout_width="match_parent"
                                                     android:layout_height="wrap_content"
-                                                    android:gravity="center_vertical"
-                                                    android:minHeight="30dp"
-                                                    android:orientation="horizontal"
                                                     android:paddingEnd="14dp"
+                                                    android:minHeight="30dp"
                                                     android:visibility="@{viewModel.detailEntity.sex == 0 ? View.VISIBLE:View.GONE}">
-
-                                                    <TextView
-                                                        style="@style/LabelContent"
-                                                        android:layout_width="160dp"
-                                                        android:layout_height="wrap_content"
-                                                        android:drawablePadding="5dp"
-                                                        android:text="@string/playfun_user_detail_social_account"
-                                                        app:drawableStartCompat="@drawable/ic_user_detail_social_account" />
+                                                    <ImageView
+                                                        android:id="@+id/account_line_img"
+                                                        android:layout_centerInParent="true"
+                                                        android:layout_alignParentStart="true"
+                                                        android:layout_width="18dp"
+                                                        android:layout_height="18dp"
+                                                        android:src="@drawable/ic_user_detail_social_account" />
 
                                                     <TextView
                                                         android:id="@+id/account_line"
                                                         style="@style/LabelContent"
-                                                        android:layout_width="0dp"
+                                                        android:layout_toEndOf="@+id/account_line_img"
+                                                        android:layout_centerInParent="true"
+                                                        android:layout_marginStart="48dp"
+                                                        android:layout_width="wrap_content"
                                                         android:layout_height="wrap_content"
-                                                        android:layout_weight="1"
                                                         android:text='@string/playfun_click_check_social_account'
                                                         binding:onClickCommand="@{viewModel.checkChatAccountOnClickCommand}" />
 
                                                     <TextView
                                                         android:layout_width="wrap_content"
                                                         android:layout_height="wrap_content"
+                                                        android:layout_centerInParent="true"
+                                                        android:layout_alignParentEnd="true"
+                                                        android:layout_marginEnd="13dp"
                                                         android:text="@string/playfun_user_detail_chat_she"
                                                         android:textColor="@color/purple"
                                                         android:textSize="@dimen/text_size_middle"
                                                         binding:onClickCommand="@{viewModel.directChatOnClickCommand}" />
-                                                </LinearLayout>
+                                                </RelativeLayout>
 
                                                 <LinearLayout
                                                     android:layout_width="match_parent"
@@ -886,22 +882,16 @@
                                                     android:orientation="horizontal"
                                                     android:paddingEnd="14dp"
                                                     android:visibility="@{StringUtils.isEmpty(viewModel.detailEntity.desc) ? View.GONE:View.VISIBLE}">
-
-                                                    <TextView
-                                                        style="@style/LabelContent"
-                                                        android:layout_width="110dp"
-                                                        android:layout_height="wrap_content"
-                                                        android:layout_gravity="top"
-                                                        android:drawablePadding="5dp"
-                                                        android:gravity="center_vertical"
-                                                        android:minHeight="30dp"
-                                                        android:text="@string/playfun_user_detail_self_intro"
-                                                        app:drawableStartCompat="@drawable/ic_user_detail_self_intro" />
+                                                    <ImageView
+                                                        android:layout_width="18dp"
+                                                        android:layout_height="18dp"
+                                                        android:src="@drawable/ic_user_detail_self_intro" />
 
                                                     <TextView
                                                         style="@style/LabelContent"
                                                         android:layout_width="wrap_content"
                                                         android:layout_height="wrap_content"
+                                                        android:layout_marginStart="48dp"
                                                         android:paddingTop="10dp"
                                                         android:paddingBottom="10dp"
                                                         android:text="@{viewModel.detailEntity.desc}" />

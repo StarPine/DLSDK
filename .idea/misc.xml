@@ -22,22 +22,44 @@
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_broadcast.xml" value="0.17604166666666668" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_broadcast_message.xml" value="0.17604166666666668" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_chat_detail.xml" value="0.17604166666666668" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_choose_location.xml" value="0.2046875" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_choose_program_site.xml" value="0.2046875" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_custom_chat_input.xml" value="0.2046875" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_edit_profile.xml" value="0.33" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_home_main.xml" value="0.11752786220871327" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_issuance_program.xml" value="0.22916666666666666" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_main.xml" value="0.24166666666666667" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_message_main.xml" value="0.24114583333333334" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_mine.xml" value="0.12228260869565218" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_my_program.xml" value="0.16927083333333334" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_profit_message.xml" value="0.2046875" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_program_detail.xml" value="0.16927083333333334" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_program_subject.xml" value="0.33" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_push_setting.xml" value="0.1788693234476367" />
-        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_radio.xml" value="0.67" />
-        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_search_program_site.xml" value="0.28802083333333334" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_radio.xml" value="0.33" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_search_address.xml" value="0.2046875" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_search_program_site.xml" value="0.409375" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_sign_message.xml" value="0.2046875" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_user_detail.xml" value="0.25" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/item_broadcast_message.xml" value="0.5" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/item_choose_location.xml" value="0.2046875" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/item_game_coin_topup.xml" value="0.3078125" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/item_park.xml" value="0.1890625" />
-        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/item_sign_up.xml" value="0.22" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/item_program.xml" value="0.25" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/item_program_choose.xml" value="0.16927083333333334" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/item_program_site.xml" value="0.2046875" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/item_program_subject.xml" value="0.2046875" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/item_search_address.xml" value="0.2046875" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/item_sign_message.xml" value="0.33" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/item_sign_up.xml" value="0.25" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/pickerview_options_dl.xml" value="0.17604166666666668" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/trace_item_park_list.xml" value="0.24114583333333334" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/view_game_coin_topup_sheet.xml" value="0.24166666666666667" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/view_user_detail_bottom_toolbar.xml" value="0.22916666666666666" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/customDrawable/src/main/res/drawable/icon_radio_item_apply_ed.xml" value="0.178" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/customDrawable/src/main/res/drawable/icon_radio_item_apply_no.xml" value="0.178" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/customDrawable/src/main/res/drawable/icon_radio_item_time.xml" value="0.158" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/customDrawable/src/main/res/drawable/suspend_yellow_layout_back.xml" value="0.178" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/gradle-build/app/intermediates/exploded-aar/PlayFun_Google/customDrawable/unspecified/playFunDebugDebug/res/drawable/radius_purple.xml" value="0.1155" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/gradle-build/app/intermediates/exploded-aar/PlayFun_Google/tuicontact/unspecified/playFunDebugDebug/res/drawable/switch_thumb.xml" value="0.16" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/gradle-build/app/intermediates/exploded-aar/PlayFun_Google/tuicore/unspecified/playFunDebugDebug/res/drawable/switch_thumb.xml" value="0.1155" />

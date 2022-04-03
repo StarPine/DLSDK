@@ -41,7 +41,7 @@ public class BaseParkItemViewModel extends MultiItemViewModel<BaseParkViewModel>
         try {
             //拿到position
             if (itemEntity.get().getIsAccost() == 1) {
-                ChatUtils.chatUser(itemEntity.get().getId(), itemEntity.get().getNickname(), viewModel);
+                ChatUtils.chatUser(itemEntity.get().getImUserId(), itemEntity.get().getId(), itemEntity.get().getNickname(), viewModel);
                 AppContext.instance().logEvent(AppsFlyerEvent.homepage_chat);
             } else {
                 int position = viewModel.observableList.indexOf(BaseParkItemViewModel.this);

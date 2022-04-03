@@ -90,6 +90,17 @@ public class UserDataEntity extends BaseObservable {
     @SerializedName("sound_time")
     private Integer soundTime;
 
+    //当前用户im id
+    @SerializedName("imId")
+    private String ImUserId;
+    public String getImUserId() {
+        return ImUserId;
+    }
+
+    public void setImUserId(String imUserId) {
+        ImUserId = imUserId;
+    }
+
     public void setId(int id) {
         this.id = id;
     }

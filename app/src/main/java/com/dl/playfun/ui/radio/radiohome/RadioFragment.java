@@ -24,18 +24,20 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.StringUtils;
+import com.dl.playfun.BR;
+import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
+import com.dl.playfun.databinding.FragmentRadioBinding;
 import com.dl.playfun.entity.RadioTwoFilterItemEntity;
 import com.dl.playfun.helper.DialogHelper;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseRefreshFragment;
-import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
-import com.dl.playfun.ui.mine.broadcast.myprogram.ProgramItemViewModel;
 import com.dl.playfun.ui.mine.broadcast.mytrends.TrendItemViewModel;
-import com.dl.playfun.utils.LogUtils;
+import com.dl.playfun.ui.radio.issuanceprogram.IssuanceProgramFragment;
+import com.dl.playfun.ui.userdetail.report.ReportUserFragment;
 import com.dl.playfun.utils.PictureSelectorUtil;
 import com.dl.playfun.widget.RadioFilterView;
 import com.dl.playfun.widget.dialog.MMAlertDialog;
@@ -44,12 +46,6 @@ import com.dl.playfun.widget.dialog.TraceDialog;
 import com.google.gson.reflect.TypeToken;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.listener.OnResultCallbackListener;
-import com.dl.playfun.BR;
-import com.dl.playfun.R;
-import com.dl.playfun.databinding.FragmentRadioBinding;
-import com.dl.playfun.ui.certification.certificationmale.CertificationMaleFragment;
-import com.dl.playfun.ui.radio.issuanceprogram.IssuanceProgramFragment;
-import com.dl.playfun.ui.userdetail.report.ReportUserFragment;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.zyyoona7.popup.EasyPopup;
 import com.zyyoona7.popup.XGravity;
@@ -190,7 +186,6 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
                         .getImageDialog(mContext,drawable).show();
             }
         });
-
         /**
          * 节目发布
          */
@@ -200,7 +195,6 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
                 viewModel.start(IssuanceProgramFragment.class.getCanonicalName());
             }
         });
-
 
         viewModel.radioUC.clickMore.observe(this, o -> {
             Integer position = Integer.valueOf(((Map<String, String>) o).get("position"));
@@ -227,17 +221,6 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
                 if (viewModel.userId == ((TrendItemViewModel) viewModel.radioItems.get(position)).newsEntityObservableField.get().getUser().getId()) {
                     stop.setText(((TrendItemViewModel) viewModel.radioItems.get(position)).newsEntityObservableField.get().getBroadcast().getIsComment() == 0 ? getString(R.string.playfun_fragment_issuance_program_no_comment) : getString(R.string.playfun_open_comment));
                     stop.setVisibility(View.GONE);
-                    isSelf = true;
-                } else {
-                    mCirclePop.findViewById(R.id.tv_detele).setVisibility(View.GONE);
-                    stop.setText(getString(R.string.playfun_report_user_title));
-                    isSelf = false;
-                }
-            } else {
-                if (viewModel.userId == ((ProgramItemViewModel) viewModel.radioItems.get(position)).topicalListEntityObservableField.get().getUserId()) {
-                    stop.setText(((ProgramItemViewModel) viewModel.radioItems.get(position)).topicalListEntityObservableField.get().getBroadcast().getIsComment() == 0 ? getString(R.string.playfun_fragment_issuance_program_no_comment) : getString(R.string.playfun_open_comment));
-                    TextView tvDetele = mCirclePop.findViewById(R.id.tv_detele);
-                    tvDetele.setText(getString(R.string.playfun_delete_program));
                     isSelf = true;
                 } else {
                     mCirclePop.findViewById(R.id.tv_detele).setVisibility(View.GONE);
@@ -273,8 +256,6 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
                                 public void confirm(MVDialog dialog) {
                                     if (type.equals(RadioViewModel.RadioRecycleType_New)) {
                                         viewModel.deleteNews(position);
-                                    } else {
-                                        viewModel.deleteTopical(position);
                                     }
 
                                     dialog.dismiss();
@@ -296,12 +277,6 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
                 if (type.equals(RadioViewModel.RadioRecycleType_New)) {
                     if (((TrendItemViewModel) viewModel.radioItems.get(position)).newsEntityObservableField.get().getIsGive() == 0) {
                         viewModel.newsGive(position);
-                    } else {
-                        ToastUtils.showShort(R.string.playfun_already);
-                    }
-                } else {
-                    if (((ProgramItemViewModel) viewModel.radioItems.get(position)).topicalListEntityObservableField.get().getIsGive() == 0) {
-                        viewModel.topicalGive(position);
                     } else {
                         ToastUtils.showShort(R.string.playfun_already);
                     }
@@ -328,8 +303,6 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
                                     dialog.dismiss();
                                     if (type.equals(RadioViewModel.RadioRecycleType_New)) {
                                         viewModel.newsComment(Integer.valueOf(id), comment, toUserId != null ? Integer.valueOf(toUserId) : null, toUserName);
-                                    } else {
-                                        viewModel.topicalComment(Integer.valueOf(id), comment, toUserId != null ? Integer.valueOf(toUserId) : null, toUserName);
                                     }
                                 }
                             })
@@ -363,66 +336,6 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
 //                    }
                 }
 
-            }
-        });
-
-        viewModel.radioUC.clickSignUp.observe(this, new Observer() {
-            @Override
-            public void onChanged(Object o) {
-                MVDialog.getInstance(RadioFragment.this.getContext())
-                        .setContent(getString(R.string.playfun_end_porgram))
-                        .chooseType(MVDialog.TypeEnum.CENTER)
-                        .setConfirmOnlick(new MVDialog.ConfirmOnclick() {
-                            @Override
-                            public void confirm(MVDialog dialog) {
-                                viewModel.TopicalFinish((Integer) o);
-                                dialog.dismiss();
-                            }
-                        })
-                        .chooseType(MVDialog.TypeEnum.CENTER)
-                        .show();
-            }
-        });
-
-        viewModel.radioUC.clickCheck.observe(this, new Observer() {
-            @Override
-            public void onChanged(Object o) {
-                viewModel.initUserDate();
-                if (ConfigManager.getInstance().getAppRepository().readUserData().getCertification() == 1) {
-                    MVDialog.getInstance(RadioFragment.this.getContext())
-                            .setTitele(getString(R.string.playfun_report_send_photo_titile))
-                            .chooseType(MVDialog.TypeEnum.CENTER)
-                            .setConfirmOnlick(new MVDialog.ConfirmOnclick() {
-                                @Override
-                                public void confirm(MVDialog dialog) {
-                                    chooseAvatar((Integer) o);
-                                    dialog.dismiss();
-                                }
-                            })
-                            .chooseType(MVDialog.TypeEnum.CENTER)
-                            .show();
-                } else {
-                    MVDialog.getInstance(RadioFragment.this.getContext())
-                            .setTitele(getString(R.string.playfun_authentication_free_sign_up))
-                            .setConfirmText(getString(R.string.playfun_mine_once_certification))
-                            .chooseType(MVDialog.TypeEnum.CENTER)
-                            .setConfirmOnlick(new MVDialog.ConfirmOnclick() {
-                                @Override
-                                public void confirm(MVDialog dialog) {
-                                    if (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == AppConfig.MALE) {
-                                        viewModel.start(CertificationMaleFragment.class.getCanonicalName());
-                                        return;
-                                    } else if (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == AppConfig.FEMALE) {
-                                        viewModel.start(CertificationFemaleFragment.class.getCanonicalName());
-                                        return;
-                                    }
-                                    com.blankj.utilcode.util.ToastUtils.showShort(R.string.playfun_sex_unknown);
-                                    dialog.dismiss();
-                                }
-                            })
-                            .chooseType(MVDialog.TypeEnum.CENTER)
-                            .show();
-                }
             }
         });
         viewModel.radioUC.clickImage.observe(this, new Observer() {
@@ -471,19 +384,6 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
                 }
             });
         }
-    }
-
-    private void chooseAvatar(int position) {
-        PictureSelectorUtil.selectImage(mActivity, true, 1, new OnResultCallbackListener<LocalMedia>() {
-            @Override
-            public void onResult(List<LocalMedia> result) {
-                viewModel.imagUpload(result.get(0).getCompressPath(), position);
-            }
-
-            @Override
-            public void onCancel() {
-            }
-        });
     }
 
     @Override

@@ -1228,7 +1228,6 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
 
         void onClickCallPlayUser();
 
-        void onClickSendLocation();
         void sendBlackStatus(int status);
     }
 

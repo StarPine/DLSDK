@@ -69,8 +69,6 @@ import me.jessyan.autosize.AutoSizeConfig;
 public class AppContext extends Application {
 
     public static final String TAG = "AppContext";
-    public static final String LOG_TAG = "AppsFlyerOneLinkSimApp";
-    public static final String DL_ATTRS = "dl_attrs";
     public static String currPage = "not_in";
     public static boolean isHomePage = false;
     public static boolean isShowNotPaid = false;
@@ -79,7 +77,6 @@ public class AppContext extends Application {
     private static Thread sUiThread;
 
     static {
-        AutoSizeConfig.getInstance().setCustomFragment(true);
         //设置全局默认配置（优先级最低，会被其他设置覆盖）
         SmartRefreshLayout.setDefaultRefreshInitializer(new DefaultRefreshInitializer() {
             @Override
@@ -128,7 +125,6 @@ public class AppContext extends Application {
 
     public AppRepository appRepository;
     public FirebaseAnalytics mFirebaseAnalytics;
-    Map<String, Object> conversionData = null;
 
     public static AppContext instance() {
         return instance;
@@ -174,7 +170,6 @@ public class AppContext extends Application {
         BaseApplication.setApplication(this);
 
         FirebaseApp firebase = FirebaseApp.initializeApp(this);
-        Log.e("初始化firebase状态","=============="+(firebase==null));
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
@@ -255,16 +250,6 @@ public class AppContext extends Application {
     public void logEvent(String eventName, String money,Purchase purchase) {
         validateGooglePlayLog(purchase,money);
         logEvent(eventName);
-//        Map<String, Object> eventValues = new HashMap<>();
-//        eventValues.put(AFInAppEventParameterName.CONTENT_TYPE, eventName);
-//        eventValues.put(AFInAppEventParameterName.REVENUE, money);
-//        eventValues.put(AFInAppEventParameterName.CONTENT_ID, money);
-//        eventValues.put(AFInAppEventParameterName.CURRENCY, "USD");
-//        AppsFlyerLib.getInstance().logEvent(this, eventName, eventValues);
-//        Bundle bundleEvent = new Bundle();
-//        bundleEvent.putDouble(FirebaseAnalytics.Param.VALUE, 3.99);
-//        bundleEvent.putString(FirebaseAnalytics.Param.CURRENCY, "USD");  // e.g. $3.99 USD
-//        mFirebaseAnalytics.logEvent(eventName, bundleEvent);
     }
 
     //上报普通事件

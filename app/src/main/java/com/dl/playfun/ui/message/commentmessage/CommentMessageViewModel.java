@@ -17,7 +17,6 @@ import com.dl.playfun.ui.mine.broadcast.mytrends.trenddetail.TrendDetailFragment
 import com.dl.playfun.viewmodel.BaseRefreshViewModel;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
-import com.dl.playfun.ui.program.programdetail.ProgramDetailFragment;
 
 import java.util.List;
 
@@ -53,11 +52,7 @@ public class CommentMessageViewModel extends BaseRefreshViewModel<AppRepository>
 
     public void itemClick(int position) {
         CommentMessageEntity itemEntity = observableList.get(position).itemEntity.get();
-        if (itemEntity.getRelationType() == 1) {
-            //节目
-            Bundle bundle = ProgramDetailFragment.getStartBundle(itemEntity.getRelationId());
-            start(ProgramDetailFragment.class.getCanonicalName(), bundle);
-        } else if (itemEntity.getRelationType() == 2) {
+        if (itemEntity.getRelationType() == 2) {
             //动态
             Bundle bundle = TrendDetailFragment.getStartBundle(itemEntity.getNewsId());
             start(TrendDetailFragment.class.getCanonicalName(), bundle);

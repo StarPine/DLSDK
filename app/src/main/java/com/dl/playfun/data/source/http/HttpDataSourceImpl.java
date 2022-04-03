@@ -48,6 +48,7 @@ import com.dl.playfun.entity.GoldDetailEntity;
 import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.entity.GoogleNearPoiBean;
 import com.dl.playfun.entity.GooglePoiBean;
+import com.dl.playfun.entity.IMTransUserEntity;
 import com.dl.playfun.entity.ImSigEntity;
 import com.dl.playfun.entity.IsChatEntity;
 import com.dl.playfun.entity.MessageGroupEntity;
@@ -123,6 +124,11 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
+    public Observable<BaseDataResponse<IMTransUserEntity>> transUserIM(String IMUserId) {
+        return apiService.transUserIM(IMUserId);
+    }
+
+    @Override
     public Observable<BaseDataResponse<ChatDetailCoinEntity>> getTotalCoins(Integer dismissRoom) {
         return apiService.getTotalCoins(dismissRoom);
     }
@@ -193,13 +199,13 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
-    public Observable<BaseDataResponse<CallingInfoEntity>> getCallingInfo(Integer roomId, Integer callingType, Integer fromUserId, Integer toUserId, Integer currentUserId) {
-        return apiService.getCallingInfo(roomId, callingType, fromUserId, toUserId, currentUserId);
+    public Observable<BaseDataResponse<CallingInfoEntity>> getCallingInfo(Integer roomId, Integer callingType, String fromUserId, String toUserId) {
+        return apiService.getCallingInfo(roomId, callingType, fromUserId, toUserId);
     }
 
     @Override
-    public Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(Integer callingType, Integer fromUserId, Integer toUserId, Integer currentUserId) {
-        return apiService.callingInviteInfo(callingType, fromUserId, toUserId, currentUserId);
+    public Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(Integer callingType, String fromUserId, String toUserId) {
+        return apiService.callingInviteInfo(callingType, fromUserId, toUserId);
     }
 
     @Override

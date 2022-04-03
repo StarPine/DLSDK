@@ -4,6 +4,7 @@ import android.app.Application;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
@@ -26,6 +27,7 @@ import com.dl.playfun.entity.EvaluateEntity;
 import com.dl.playfun.entity.EvaluateItemEntity;
 import com.dl.playfun.entity.EvaluateObjEntity;
 import com.dl.playfun.entity.GiftBagEntity;
+import com.dl.playfun.entity.IMTransUserEntity;
 import com.dl.playfun.entity.MessageChatNumberEntity;
 import com.dl.playfun.entity.MessageRuleEntity;
 import com.dl.playfun.entity.PhotoAlbumEntity;
@@ -40,6 +42,7 @@ import com.dl.playfun.event.CallChatingHangupEvent;
 import com.dl.playfun.event.MessageGiftNewEvent;
 import com.dl.playfun.event.RewardRedDotEvent;
 import com.dl.playfun.manager.ConfigManager;
+import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.utils.FileUploadUtils;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.utils.Utils;
@@ -116,7 +119,6 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
 
     public ChatDetailViewModel(@NonNull Application application, AppRepository repository) {
         super(application, repository);
-        uc.userDataEntity.postValue(model.readUserData());
         sensitiveWords.set(model.readSensitiveWords());
     }
 
@@ -201,12 +203,6 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                         dismissHUD();
                     }
                 });
-    }
-
-
-    //获取当前用户数据
-    public void getLocalUserData() {
-        uc.userDataEntity.postValue(model.readUserData());
     }
 
     //获取当前用户数据
@@ -477,9 +473,8 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
     }
 
     //拨打语音、视频
-    public void getCallingInvitedInfo(int callingType, Integer toUserId, String toImUserId) {
-        int userId = getLocalUserDataEntity().getId();
-        model.callingInviteInfo(callingType, userId, toUserId, userId)
+    public void getCallingInvitedInfo(int callingType, String IMUserId, String toIMUserId) {
+        model.callingInviteInfo(callingType, IMUserId, toIMUserId)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
@@ -493,7 +488,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                         }
                         CallingInviteInfo callingInviteInfo = callingInviteInfoBaseDataResponse.getData();
                         if (callingInviteInfo != null) {
-                            com.dl.playfun.kl.Utils.tryStartCallSomeone(callingType, toImUserId, callingInviteInfo.getRoomId(), new Gson().toJson(callingInviteInfo));
+                            com.dl.playfun.kl.Utils.tryStartCallSomeone(callingType, toIMUserId, callingInviteInfo.getRoomId(), new Gson().toJson(callingInviteInfo));
                         }
                     }
 
@@ -695,6 +690,35 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                     }
                 });
     }
+    /**
+     * @Desc TODO(转换IM用户id)
+     * @author 彭石林
+     * @parame [ImUserId]
+     * @return void
+     * @Date 2022/4/2
+     */
+    public void transUserIM(String ImUserId){
+        model.transUserIM(ImUserId)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(dispose -> showHUD())
+                .subscribe(new BaseObserver<BaseDataResponse<IMTransUserEntity>>() {
+
+                    @Override
+                    public void onSuccess(BaseDataResponse<IMTransUserEntity> response) {
+                        IMTransUserEntity  imTransUserEntity = response.getData();
+                        if(imTransUserEntity!=null && imTransUserEntity.getUserId()!=null){
+                            Bundle bundle = UserDetailFragment.getStartBundle(imTransUserEntity.getUserId());
+                            start(UserDetailFragment.class.getCanonicalName(), bundle);
+                        }
+                    }
+                    @Override
+                    public void onComplete() {
+                        dismissHUD();
+                    }
+                });
+    }
 
     @Override
     public void registerRxBus() {
@@ -733,7 +757,6 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
         //新增
         public SingleLiveEvent<List<Integer>> askUseChatNumber = new SingleLiveEvent<>();
         public SingleLiveEvent<Integer> useChatNumberSuccess = new SingleLiveEvent<>();
-        public SingleLiveEvent<UserDataEntity> userDataEntity = new SingleLiveEvent<>();
         //查询对方资料 判断是否为机器人、最后在线时间-判断用户是否在线
         public SingleLiveEvent<Map<String, String>> ChatUserDetailEntity = new SingleLiveEvent<>();
 

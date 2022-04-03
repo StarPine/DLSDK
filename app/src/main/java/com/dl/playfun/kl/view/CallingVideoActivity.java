@@ -225,7 +225,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         } else {//被动接听
             toId = V2TIMManager.getInstance().getLoginUser();
             viewModel.init(myUserId, otherUserId, role, mCallView);
-            viewModel.getCallingInvitedInfo(2, ChatUtils.imUserIdToSystemUserId(callUserId));
+            viewModel.getCallingInvitedInfo(2, callUserId);
         }
     }
 
@@ -839,9 +839,15 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                                 viewModel.flagMoney = true;
 
                                 //通知女生男生这边余额不足
-                                String otherUserId = (role == TUICalling.Role.CALL ? userIds[0] : callUserId);
-                                int toUserid = ChatUtils.imUserIdToSystemUserId(otherUserId);
-                                viewModel.getTips(toUserid,2,"1");
+                               // String otherUserId = (role == TUICalling.Role.CALL ? userIds[0] : callUserId);
+
+                                //通知女生男生这边余额不足
+                                if (viewModel.userCall) {//当前用户是拨打人 --> 传入对方id 否则传入自己
+                                    viewModel.getTips(viewModel.callingVideoInviteInfoField.get().getId(),2,"1");
+                                } else {
+                                    viewModel.getTips(ConfigManager.getInstance().getAppRepository().readUserData().getId(),2,"1");
+                                }
+
                             }
                         }
                     }

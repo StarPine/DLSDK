@@ -346,9 +346,9 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
     }
 
     //拨打语音、视频---接听人
-    public void getCallingInvitedInfo(int callingType, Integer fromUserId) {
-        int userId = model.readUserData().getId();
-        model.callingInviteInfo(callingType, fromUserId, userId, userId)
+    public void getCallingInvitedInfo(int callingType, String fromUserId) {
+        String userId = model.readUserData().getImUserId();
+        model.callingInviteInfo(callingType, fromUserId, userId)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
@@ -388,8 +388,8 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
     @Override
     public void startChattingView(boolean userCall) {
         Bundle bundle = new Bundle();
-        bundle.putInt("fromUserId", ChatUtils.imUserIdToSystemUserId(fromUserId));
-        bundle.putInt("toUserId", ChatUtils.imUserIdToSystemUserId(this.toUserId));
+        bundle.putString("fromUserId", fromUserId);
+        bundle.putString("toUserId", this.toUserId);
         if (mRole == TUICalling.Role.CALL) {
             bundle.putInt("mRole", 1);
             bundle.putBoolean("userCall",true);
