@@ -10,6 +10,7 @@ import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableList;
 
 import com.dl.playfun.app.AppContext;
+import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.entity.BaseUserBeanEntity;
 import com.dl.playfun.entity.BroadcastBeanEntity;
 import com.dl.playfun.entity.BroadcastEntity;
@@ -18,6 +19,7 @@ import com.dl.playfun.entity.GiveUserBeanEntity;
 import com.dl.playfun.entity.NewsEntity;
 import com.dl.playfun.event.ZoomInPictureEvent;
 import com.dl.playfun.manager.ConfigManager;
+import com.dl.playfun.manager.PermissionManager;
 import com.dl.playfun.ui.mine.broadcast.myall.MyAllBroadcastViewModel;
 import com.dl.playfun.utils.ExceptionReportUtils;
 import com.dl.playfun.utils.ListUtils;
@@ -148,6 +150,10 @@ public class TrendItemViewModel extends MultiItemViewModel<BaseViewModel> {
     //点赞点击事件
     public BindingCommand likeClick = new BindingCommand(() -> {
         try {
+            if (!PermissionManager.getInstance().VerifyJumpUserDetailView(newsEntityObservableField.get().getUser().getSex())) {
+                ToastUtils.showShort(R.string.playfun_userdetail_same_sex);
+                return;
+            }
             if (viewModel instanceof MyTrendsViewModel) {
                 int position = ((MyTrendsViewModel) viewModel).observableList.indexOf(TrendItemViewModel.this);
                 ((MyTrendsViewModel) viewModel).uc.clickLike.setValue(position);
@@ -177,6 +183,10 @@ public class TrendItemViewModel extends MultiItemViewModel<BaseViewModel> {
     //评论点击事件
     public BindingCommand commentClick = new BindingCommand(() -> {
         try {
+            if (!PermissionManager.getInstance().VerifyJumpUserDetailView(newsEntityObservableField.get().getUser().getSex())) {
+                ToastUtils.showShort(R.string.playfun_userdetail_same_sex);
+                return;
+            }
             if (newsEntityObservableField.get().getBroadcast().getIsComment() == 1) {
                 ToastUtils.showShort(R.string.playfun_comment_close);
                 return;

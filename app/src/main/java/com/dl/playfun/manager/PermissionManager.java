@@ -2,6 +2,7 @@ package com.dl.playfun.manager;
 
 import com.dl.playfun.app.Injection;
 import com.dl.playfun.data.AppRepository;
+import com.dl.playfun.entity.UserDataEntity;
 
 /**
  * 权限管理
@@ -40,6 +41,25 @@ public class PermissionManager {
         } else {
             return false;
         }
+    }
+    /**
+    * @Desc TODO(判断同性之前是否查看用户主页)
+    * @author 彭石林
+    * @parame []
+    * @return boolean
+    * @Date 2022/4/4
+    */
+    public boolean VerifyJumpUserDetailView(Integer checkUserSex){
+        if (checkUserSex == null) {
+            return false;
+        }
+        UserDataEntity userDataEntity = ConfigManager.getInstance().getAppRepository().readUserData();
+        if (userDataEntity == null || userDataEntity.getSex() == null) {
+            return false;
+        }
+        int localUserSex =  userDataEntity.getSex();
+        //两个性别相同不允许查看。否则可以
+        return localUserSex == checkUserSex.intValue() ? false:true;
     }
 
     /**

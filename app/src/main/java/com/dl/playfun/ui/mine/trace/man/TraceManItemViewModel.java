@@ -1,6 +1,7 @@
 package com.dl.playfun.ui.mine.trace.man;
 
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -11,6 +12,9 @@ import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.entity.TraceEntity;
 import com.dl.playfun.manager.ConfigManager;
+import com.dl.playfun.manager.PermissionManager;
+import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
+import com.dl.playfun.utils.ExceptionReportUtils;
 import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.Utils;
 
@@ -20,6 +24,7 @@ import java.util.Date;
 
 import me.goldze.mvvmhabit.base.MultiItemViewModel;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
+import me.goldze.mvvmhabit.utils.ToastUtils;
 
 /**
  * Author: 彭石林
@@ -39,7 +44,16 @@ public class TraceManItemViewModel extends MultiItemViewModel<TraeManViewModel> 
             return;
         }
         if (isPlay == 1) {
-            viewModel.toUserDetails(itemEntity.get().getId());
+            try {
+                if (PermissionManager.getInstance().VerifyJumpUserDetailView(itemEntity.get().getSex())) {
+                    viewModel.toUserDetails(itemEntity.get().getId());
+                } else {
+                    ToastUtils.showShort(R.string.playfun_userdetail_same_sex);
+                }
+            } catch (Exception e) {
+                ExceptionReportUtils.report(e);
+            }
+            //viewModel.toUserDetails(itemEntity.get().getId());
             return;
         }
         traeManViewModel.uc.clickVip.call();

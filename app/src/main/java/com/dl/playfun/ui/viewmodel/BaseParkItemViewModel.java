@@ -12,6 +12,7 @@ import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.entity.ParkItemEntity;
 import com.dl.playfun.manager.ConfigManager;
+import com.dl.playfun.manager.PermissionManager;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.utils.ChatUtils;
 import com.dl.playfun.utils.ExceptionReportUtils;
@@ -20,6 +21,7 @@ import com.dl.playfun.R;
 
 import me.goldze.mvvmhabit.base.MultiItemViewModel;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
+import me.goldze.mvvmhabit.utils.ToastUtils;
 
 /**
  * @author wulei
@@ -29,10 +31,21 @@ public class BaseParkItemViewModel extends MultiItemViewModel<BaseParkViewModel>
     public ObservableField<ParkItemEntity> itemEntity = new ObservableField<>();
     //条目的点击事件
     public BindingCommand itemClick = new BindingCommand(() -> {
+//        try {
+//            AppContext.instance().logEvent(AppsFlyerEvent.Nearby_Follow);
+//            Bundle bundle = UserDetailFragment.getStartBundle(itemEntity.get().getId());
+//            viewModel.start(UserDetailFragment.class.getCanonicalName(), bundle);
+//        } catch (Exception e) {
+//            ExceptionReportUtils.report(e);
+//        }
         try {
-            AppContext.instance().logEvent(AppsFlyerEvent.Nearby_Follow);
-            Bundle bundle = UserDetailFragment.getStartBundle(itemEntity.get().getId());
-            viewModel.start(UserDetailFragment.class.getCanonicalName(), bundle);
+            if (PermissionManager.getInstance().VerifyJumpUserDetailView(itemEntity.get().getSex())) {
+                AppContext.instance().logEvent(AppsFlyerEvent.Nearby_Follow);
+                Bundle bundle = UserDetailFragment.getStartBundle(itemEntity.get().getId());
+                viewModel.start(UserDetailFragment.class.getCanonicalName(), bundle);
+            } else {
+                ToastUtils.showShort(R.string.playfun_userdetail_same_sex);
+            }
         } catch (Exception e) {
             ExceptionReportUtils.report(e);
         }
