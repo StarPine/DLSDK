@@ -241,6 +241,10 @@ public class TrendItemViewModel extends MultiItemViewModel<BaseViewModel> {
     });
     public BindingCommand avatarClick = new BindingCommand(() -> {
         try {
+            if (!PermissionManager.getInstance().VerifyJumpUserDetailView(newsEntityObservableField.get().getUser().getSex())) {
+                ToastUtils.showShort(R.string.playfun_userdetail_same_sex);
+                return;
+            }
             Bundle bundle = UserDetailFragment.getStartBundle(newsEntityObservableField.get().getUser().getId());
             viewModel.start(UserDetailFragment.class.getCanonicalName(), bundle);
             GSYVideoManager.releaseAllVideos();
