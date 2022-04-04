@@ -22,9 +22,24 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * @author wulei
- */
+* @Desc TODO(用户数据信息+token信息合并)
+* @author 彭石林
+* @parame 
+* @return 
+* @Date 2022/4/4
+*/
 public class UserDataEntity extends BaseObservable {
+    private String token;
+    private String userID;
+    private String userSig;
+    @SerializedName("is_contract")
+    private int isContract;
+
+    @SerializedName("is_new_user")
+    private Integer isNewUser;
+    @SerializedName("is_bind_game")
+    private Integer isBindGame;
+
 
     /**
      * id : 5
@@ -358,13 +373,53 @@ public class UserDataEntity extends BaseObservable {
         this.inviteUrl = inviteUrl;
     }
 
-    public boolean isCompleteInfo() {
-        boolean isComplete = false;
-//        if (isInviteCode && sex != null && !StringUtils.isEmpty(birthday) && !StringUtils.isEmpty(nickname) && permanentCityIds != null && !permanentCityIds.isEmpty() && hopeObjectIds != null && !hopeObjectIds.isEmpty()) {
-        if (sex != null && !StringUtils.isEmpty(birthday) && !StringUtils.isEmpty(nickname) && permanentCityIds != null && !permanentCityIds.isEmpty() && hopeObjectIds != null && !hopeObjectIds.isEmpty()) {
-            isComplete = true;
-        }
-        return isComplete;
+
+    public Integer getIsNewUser() {
+        return isNewUser;
+    }
+
+    public void setIsNewUser(Integer isNewUser) {
+        this.isNewUser = isNewUser;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+
+    public String getUserSig() {
+        return userSig;
+    }
+
+    public void setUserSig(String userSig) {
+        this.userSig = userSig;
+    }
+
+    public int getIsContract() {
+        return isContract;
+    }
+
+    public void setIsContract(int isContract) {
+        this.isContract = isContract;
+    }
+
+    public Integer getIsBindGame() {
+        return isBindGame;
+    }
+
+    public void setIsBindGame(Integer isBindGame) {
+        this.isBindGame = isBindGame;
     }
 
     public boolean isPerfect() {

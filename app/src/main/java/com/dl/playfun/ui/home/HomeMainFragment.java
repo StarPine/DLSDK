@@ -94,7 +94,7 @@ public class HomeMainFragment extends BaseFragment<FragmentHomeMainBinding, Home
             public void onTabSelected(TabLayout.Tab tab) {
                 try {
                     tab.getCustomView().findViewById(R.id.tab_text).setSelected(true);
-                } catch (Throwable e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -104,7 +104,7 @@ public class HomeMainFragment extends BaseFragment<FragmentHomeMainBinding, Home
                 try {
                     //tab未被选择的时候回调
                     tab.getCustomView().findViewById(R.id.tab_text).setSelected(false);
-                } catch (Throwable e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

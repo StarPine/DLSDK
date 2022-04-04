@@ -1,5 +1,5 @@
 <resources>
-
+    <string name="playfun_local_language">zh-TW</string>
     <string name="playfun_title_home">首頁</string>
     <string name="playfun_title_notifications">訊息</string>
     <string name="playfun_title_mine">我的</string>
@@ -993,4 +993,10 @@
     <string name="auth_external_login_vk">VK</string>
     <string name="auth_external_login_yk">遊客登入 ></string>
     <string name="auth_external_login_more">其他登入方式 ></string>
+    <string name="playfun_fragment_perfect_name_hint">請輸入暱稱</string>
+    <string name="playfun_fragment_perfect_brithday">生日</string>
+    <string name="playfun_fragment_perfect_avatar">請上傳頭像</string>
+    <string name="playfun_fragment_perfect_sex_hint">請選擇性別</string>
+    <string name="playfun_fragment_perfect_sex_hint2">確認後性別不可更改，請謹慎選擇</string>
+
 </resources>

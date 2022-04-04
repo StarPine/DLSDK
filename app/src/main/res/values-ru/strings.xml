@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-
+    <string name="playfun_local_language">ru-RU</string>
     <string name="playfun_title_home">Домой</string>
     <string name="playfun_title_notifications">Cообщение</string>
     <string name="playfun_title_mine">Мне</string>
-
-
     <string name="playfun_toast_certification">Аутентифицированная богиня больше бользуется популярностью! Идите аунтентифицироваться</string>
-
     <string name="playfun_face_detect_auth_begin_ok">Начните проверку</string>
     <string name="playfun_face_detect_dialog_btn_sure">Подвердить</string>
     <string name="playfun_tab_female_1">Рядом</string>
@@ -83,7 +80,7 @@
     <string name="playfun_chat_action_redpackage">Красный конвертик</string>
     <string name="playfun_chat_action_coin_redpackage">Бриллиантовый красный пакет</string>
     <string name="playfun_chat_action_mic">Голосовой Чат</string>
-    <string name="playfun_chat_detail_warn">Здоровое общение, общение через платформу для незаконной деятельности будет блокироваться</string>
+    <string name="playfun_chat_detail_warn">Скриншоты/видео/транскрипции личных сообщений запрещены.</string>
     <string name="playfun_setting_privacy_setting">Настройка конфиденциальности</string>
     <string name="playfun_setting_allow_link_mic">Разрешить людям с привилегиями личных сообщений делать мне голосовые звонки</string>
     <string name="playfun_chat_red">Оставьте слова</string>
@@ -997,5 +994,10 @@
     <string name="auth_external_login_vk">ВК</string>
     <string name="auth_external_login_yk">Гостевой вход ></string>
     <string name="auth_external_login_more">Другие способы входа ></string>
+    <string name="playfun_fragment_perfect_name_hint">請輸入暱稱</string>
+    <string name="playfun_fragment_perfect_brithday">生日</string>
+    <string name="playfun_fragment_perfect_avatar">請上傳頭像</string>
+    <string name="playfun_fragment_perfect_sex_hint">請選擇性別</string>
+    <string name="playfun_fragment_perfect_sex_hint2">確認後性別不可更改，請謹慎選擇</string>
 </resources>
 

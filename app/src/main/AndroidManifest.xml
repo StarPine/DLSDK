@@ -105,17 +105,15 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan|adjustResize|stateHidden"><!--" adjustResize|stateHidden"-->
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+        </activity>
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="pet.coin.master.ru"
-                    android:path="/call/audio"
-                    android:scheme="play_fun" />
-            </intent-filter>
+        <activity
+            android:name="com.dl.playfun.kl.view.CallingVideoActivity"
+            android:launchMode="singleTop"
+            android:requestLegacyExternalStorage="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan|adjustResize|stateHidden"><!--" adjustResize|stateHidden"-->
         </activity>
 
         <activity
@@ -143,25 +141,6 @@
             android:windowSoftInputMode="adjustPan|adjustResize|stateHidden"><!--" adjustResize|stateHidden"-->
         </activity>
 
-
-        <activity
-            android:name="com.dl.playfun.kl.view.CallingVideoActivity"
-            android:launchMode="singleTop"
-            android:requestLegacyExternalStorage="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan|adjustResize|stateHidden"><!--" adjustResize|stateHidden"-->
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="pet.coin.master.ru"
-                    android:path="/call/video"
-                    android:scheme="play_fun" />
-            </intent-filter>
-        </activity>
         <activity android:name="com.dl.playfun.ui.WebUrlViewActivity"
             android:requestLegacyExternalStorage="true"
             android:screenOrientation="portrait"

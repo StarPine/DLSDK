@@ -404,8 +404,8 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
-    public Observable<BaseResponse> regUser(String nickname, String avatar, String birthday, Integer sex, String channel) {
-        return mHttpDataSource.regUser(nickname, avatar, birthday, sex, channel);
+    public Observable<BaseDataResponse<UserDataEntity>> regUser(String nickname, String avatar, String birthday, Integer sex) {
+        return mHttpDataSource.regUser(nickname, avatar, birthday, sex);
     }
 
     @Override
@@ -424,7 +424,7 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
-    public Observable<BaseDataResponse<TokenEntity>> v2Login(String phone, String code, String device_code) {
+    public Observable<BaseDataResponse<UserDataEntity>> v2Login(String phone, String code, String device_code) {
         return mHttpDataSource.v2Login(phone, code, device_code);
     }
 
@@ -839,7 +839,7 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
-    public Observable<BaseDataResponse<AuthLoginUserEntity>> authLoginPost(String id, String type) {
+    public Observable<BaseDataResponse<UserDataEntity>> authLoginPost(String id, String type) {
         return mHttpDataSource.authLoginPost(id, type);
     }
 
@@ -1188,11 +1188,6 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     @Override
     public Observable<BaseResponse> setWithdrawAccount(String realName, String account) {
         return mHttpDataSource.setWithdrawAccount(realName, account);
-    }
-
-    @Override
-    public Observable<BaseDataResponse<ImSigEntity>> getImSig() {
-        return mHttpDataSource.getImSig();
     }
 
     @Override

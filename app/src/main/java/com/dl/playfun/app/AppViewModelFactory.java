@@ -56,7 +56,7 @@ import com.dl.playfun.ui.mine.myphotoalbum.MyPhotoAlbumViewModel;
 import com.dl.playfun.ui.mine.photosetting.PhotoSettingViewModel;
 import com.dl.playfun.ui.mine.privacysetting.PrivacySettingViewModel;
 import com.dl.playfun.ui.mine.profile.EditProfileViewModel;
-import com.dl.playfun.ui.mine.profile.choosesex.ChooseSexViewModel;
+import com.dl.playfun.ui.mine.profile.PerfectProfileViewModel;
 import com.dl.playfun.ui.mine.resetpassword.ResetPasswordViewModel;
 import com.dl.playfun.ui.mine.setredpackagephoto.SetRedPackagePhotoViewModel;
 import com.dl.playfun.ui.mine.setredpackagevideo.SetRedPackageVideoViewModel;
@@ -264,8 +264,8 @@ public class AppViewModelFactory extends ViewModelProvider.NewInstanceFactory {
             return (T) new AudioCallChatingViewModel(mApplication, mRepository);
         } else if (modelClass.isAssignableFrom(VideoCallViewModel.class)) {
             return (T) new VideoCallViewModel(mApplication, mRepository);
-        } else if (modelClass.isAssignableFrom(ChooseSexViewModel.class)){
-            return (T) new ChooseSexViewModel(mApplication, mRepository);
+        } else if (modelClass.isAssignableFrom(PerfectProfileViewModel.class)){
+            return (T) new PerfectProfileViewModel(mApplication, mRepository);
         }
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
     }

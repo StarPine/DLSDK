@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="playfun_local_language">tr-TR</string>
     <string name="playfun_title_home">Ana Sayfa</string>
     <string name="playfun_title_notifications">Mesaj</string>
     <string name="playfun_title_mine">Benim</string>
@@ -26,18 +27,18 @@
     <string name="playfun_user_detail_ta_dynamic">Ruh Hali</string>
     <string name="playfun_user_detail_face_verification_pass">Yüz tanıma yoluyla gerçek kişi doğrulaması</string>
     <string name="playfun_user_detail_is_goddess">Kraliçenin onayı alındı</string>
-    <string name="playfun_user_detail_album_tital">%s bir etkinlik başlatıyor</string>
+    <string name="playfun_user_detail_album_tital">Albüm</string>
     <string name="playfun_user_detail_album_lock">%s bir albüm kilidi ayarladı</string>
     <string name="playfun_user_detail_chat_she">Ona direkt mesaj gönder</string>
     <string name="playfun_user_detail_profile_lock">%1$s kısıtlama ayarladı ve %2$s onayladıktan sonra ancak verileri görüntüleyebilirsiniz</string>
     <string name="playfun_user_detail_profile_lock_sended">Başvuru gönderildi ve karşı taraf onayladıktan sonra bir hatırlatma mesajı alacaksınız.</string>
-    <string name="playfun_user_detail_paying_user">Ödeme yaparak JoyMask\'a katıldı.</string>
+    <string name="playfun_user_detail_paying_user">Ödeme yaparak PlayFun\'a katıldı.</string>
     <string name="playfun_user_detail_height">Boy</string>
     <string name="playfun_user_detail_weight">Kilo</string>
     <string name="playfun_user_detail_resident_city">Yaşadığınız şehir</string>
     <string name="playfun_user_detail_hope_obj">Beklentiniz</string>
     <string name="playfun_user_detail_self_intro">Hakkımda</string>
-    <string name="playfun_user_detail_warn">JoyMask üzerinden lütfen yasa dışı işlem yapmayın, bu konuda yapılan bir bildirim doğrulanırsa hesabınız bloke edilir.</string>
+    <string name="playfun_user_detail_warn">PlayFun üzerinden lütfen yasa dışı işlem yapmayın, bu konuda yapılan bir bildirim doğrulanırsa hesabınız bloke edilir.</string>
     <string name="playfun_user_detail_btn_apply_check">Başvuru görüntüleme</string>
     <string name="playfun_user_detail_social_account">Sosyal hesaplar</string>
     <string name="playfun_user_detail_link_empty">Sosyal hesap bilgisi girilmemiş, lütfen ona direkt mesaj göndererek isteyin.</string>
@@ -75,7 +76,7 @@
     <string name="playfun_chat_action_redpackage">Kırmızı Zarf</string>
     <string name="playfun_chat_action_coin_redpackage">Elmas Kırmızı Zarf</string>
     <string name="playfun_chat_action_mic">Sesli Arama</string>
-    <string name="playfun_chat_detail_warn">Sağlıklı iletişim kurun, platformu kullanarak yasadışı faaliyetlerle iletişim kurmak hesabınızın dondurulmasına neden olabilir.</string>
+    <string name="playfun_chat_detail_warn">Özel mesajların ekran görüntüleri/videoları/çevirileri yasaktır.</string>
     <string name="playfun_setting_privacy_setting">Gizlilik ayarları</string>
     <string name="playfun_setting_allow_link_mic">Özel mesajlaşma yetkisine sahip kişilerin benimle sesli arama yapmasına izin ver</string>
     <string name="playfun_chat_red">Küçük bir hediye, lütfen kabul et</string>
@@ -184,7 +185,7 @@
     <string name="playfun_fragment_face_verify_success_explain_man">Artık ücretsiz erkek etkinliklerine kaydolabilirsiniz.</string>
     <string name="playfun_fragment_give_list_title">Beğen</string>
     <string name="playfun_fragment_goddess_certification_explain_one">Görünümünüze çok güveniyorsanız, Kraliçe doğrulaması yapabilir ve özel bir logo alabilirsiniz.</string>
-    <string name="playfun_fragment_goddess_certification_explain_two">Lütfen yüzünüzün bir fotoğrafını veya videosunu yükleyin, JoyMask bilgilerinizi inceleyecektir ve 12 saat içinde inceleme sonucunu alacaksınız.</string>
+    <string name="playfun_fragment_goddess_certification_explain_two">Lütfen yüzünüzün bir fotoğrafını veya videosunu yükleyin, PlayFun bilgilerinizi inceleyecektir ve 12 saat içinde inceleme sonucunu alacaksınız.</string>
     <string name="playfun_fragment_home_on_line">Mevcut çevrimiçi öncelik</string>
     <string name="playfun_fragment_issuance_program_title">Anlar</string>
     <string name="playfun_address">Etkinlik yeri</string>
@@ -215,7 +216,7 @@
     <string name="playfun_open">Ürün açıldığında</string>
     <string name="playfun_push_setting_sound">Ses</string>
     <string name="playfun_push_setting_shock">Titreşim</string>
-    <string name="playfun_register_alert_hint">JoyMask\'ı kullandığınız için teşekkür ederiz. \nMüşteri hizmetleri ekibimiz profilinizi inceleyecektir!</string>
+    <string name="playfun_register_alert_hint">PlayFun\'ı kullandığınız için teşekkür ederiz. \nMüşteri hizmetleri ekibimiz profilinizi inceleyecektir!</string>
     <string name="playfun_code">Doğrulama kodu</string>
     <string name="playfun_setting_password">Şifre belirle</string>
     <string name="playfun_please_setting_password">Lütfen bir giriş şifresi belirleyin</string>
@@ -447,7 +448,7 @@
     <string name="playfun_goddess_certification">Kraliçe Onayı</string>
     <string name="playfun_goddess_certification_auditing">Kraliçe Onayı (inceleniyor)</string>
     <string name="playfun_dialog_face_recognition_title">Lütfen yüz tanıması yapın</string>
-    <string name="playfun_dialog_face_recognition_desc">Tekrar giriş yaptınız. Hesap güvenliğinizi korumak için lütfen yüz tanıması yapın. Yüz verilerinizle karşılaştırıp onaylandıktan sonra ancak JoyMask\'ı normal olarak kullanabilirsiniz.</string>
+    <string name="playfun_dialog_face_recognition_desc">Tekrar giriş yaptınız. Hesap güvenliğinizi korumak için lütfen yüz tanıması yapın. Yüz verilerinizle karşılaştırıp onaylandıktan sonra ancak PlayFun\'ı normal olarak kullanabilirsiniz.</string>
     <string name="playfun_dialog_face_recognition_btn_first">Yüz tanıma</string>
     <string name="playfun_dialog_face_recognition_btn_second">Çıkış Yap</string>
     <string name="playfun_dialog_face_recognition_contact_service">Sorunla karşılaşırsanız, müşteri hizmetleri ile iletişime geçin</string>
@@ -501,7 +502,7 @@
     <string name="playfun_phone_number_prefix_tw">886</string>
     <string name="playfun_user_detail_user_disable">Bu kullanıcının hesabı donduruldu</string>
     <string name="playfun_dialog_user_disable_title">Hesabınız donduruldu</string>
-    <string name="playfun_dialog_user_disable_content">İtiraz etmek için, ID\'nizi ve itiraz nedeninizi müşteri hizmetleri e-posta adresine gönderebilirsiniz:\ngloblejoymask@gmail.com</string>
+    <string name="playfun_dialog_user_disable_content">İtiraz etmek için, ID\'nizi ve itiraz nedeninizi müşteri hizmetleri e-posta adresine gönderebilirsiniz:\nPlayFun@gmail.com</string>
     <string name="playfun_dialog_user_disable_btn_text">Tamam</string>
     <string name="playfun_user_detail_him_disable_mic">Karşı taraf sesli aramayı yasakladı</string>
     <string name="playfun_dialog_set_withdraw_account_title">PayPal\'ınız</string>
@@ -574,8 +575,8 @@
     <string name="playfun_upgrade_vip">VIP\'ye yükselerek ayrıcalıkların tadını çıkarın</string>
     <string name="playfun_end_time">Sona ermesine: %s</string>
     <string name="playfun_x_count">%s</string>
-    <string name="playfun_dialog_agree_content">Merhaba, Joymask\'a hoş geldiniz, yeni arkadaşlar edinmeden önce, size birkaç şey hatırlatmak istiyoruz: \n
-    1) Lütfen "Platform Kullanım Şartları"na ve "Yayın Açma Kuralları"na uyun, eğer yasadışı içerik yayınlarsanız (örneğin: pornografi, müstehcen ve çıplak içerikler gibi), JoyMask, hesapta kısıtlama yapma hakkına sahiptir ve hatta hesabınızı dondurabilir. \n
+    <string name="playfun_dialog_agree_content">Merhaba, PlayFun\'a hoş geldiniz, yeni arkadaşlar edinmeden önce, size birkaç şey hatırlatmak istiyoruz: \n
+    1) Lütfen "Platform Kullanım Şartları"na ve "Yayın Açma Kuralları"na uyun, eğer yasadışı içerik yayınlarsanız (örneğin: pornografi, müstehcen ve çıplak içerikler gibi), PlayFun, hesapta kısıtlama yapma hakkına sahiptir ve hatta hesabınızı dondurabilir. \n
     2) Platformu kullanırken, herhangi bir sorunla karşılaşırsanız, yardıma ihtiyacınız olursa veya değerli görüşlerinizi iletmek isterseniz, lütfen Kişisel Merkez -  Müşteri Hizmetleri adımlarını izleyerek bizimle iletişime geçiniz.</string>
     <string name="playfun_recharge_coin_success">Takas başarılı</string>
     <string name="playfun_recharge_coin_success2">Takas et?</string>
@@ -673,7 +674,7 @@
     <string name="playfun_error_google_22">Tekrar bağlanmaya çalışırken bağlantı zaman aşımına uğradı.</string>
     <string name="playfun_error_google_12500">En yeni Google Play Service sürümüne yükselterek kullanabilirsiniz</string>
     <string name="playfun_please_select_location">Lütfen şehir seçin</string>
-    <string name="playfun_user_message_tag1">Davet kodu ile Joymask\'a katılın</string>
+    <string name="playfun_user_message_tag1">Davet kodu ile PlayFun\'a katılın</string>
     <string name="playfun_user_message_tag2">En gerçekçi arkadaş edinme ortamını sağlamak için,\nbilgilerinizi inceleyeceğiz ve gizli tutacağız</string>
     <string name="playfun_alert_invite_write_title">En gerçekçi arkadaş edinme ortamını sağlamak için,\nbilgilerinizi inceleyeceğiz ve gizli tutacağız</string>
     <string name="playfun_dialog_coin_pay_user_detail_title">Hak satın al</string>
@@ -781,7 +782,7 @@
     <string name="playfun_mine_audio_text2">Sesinizi silmek, yanıt alma şansını azaltacaktır</string>
     <string name="playfun_mine_audio_text4">İnceleniyor</string>
     <string name="playfun_mine_audio_text5">İnceleme başarısız</string>
-    <string name="playfun_mine_audio_text6">Mikrofonda ses yok. Lütfen uygulamanın izinleri yönetimi kısmından Joymask\'ın kayıt iznini etkinleştirin.</string>
+    <string name="playfun_mine_audio_text6">Mikrofonda ses yok. Lütfen uygulamanın izinleri yönetimi kısmından PlayFun\'ın kayıt iznini etkinleştirin.</string>
     <string name="playfun_mine_audio_text7">Bir ses kaydedin\nDaha fazla insanın gerçek sizi keşfetmesini sağlayın!C779</string>
     <string name="playfun_mine_audio_text8">Kaydetmek için uzun basın, her kayıt 20 saniyeyi geçemez</string>
     <string name="playfun_mine_audio_text9">Tekrar kaydet</string>
@@ -933,4 +934,9 @@
     <string name="auth_external_login_vk">ВК</string>
     <string name="auth_external_login_yk">Misafir girişi ></string>
     <string name="auth_external_login_more">Diğer oturum açma yöntemleri ></string>
+    <string name="playfun_fragment_perfect_name_hint">請輸入暱稱</string>
+    <string name="playfun_fragment_perfect_brithday">生日</string>
+    <string name="playfun_fragment_perfect_avatar">請上傳頭像</string>
+    <string name="playfun_fragment_perfect_sex_hint">請選擇性別</string>
+    <string name="playfun_fragment_perfect_sex_hint2">確認後性別不可更改，請謹慎選擇</string>
 </resources>

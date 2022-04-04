@@ -615,7 +615,7 @@ public interface HttpDataSource {
      * @param sex
      * @return
      */
-    Observable<BaseResponse> regUser(String nickname, String avatar, String birthday, Integer sex, String channel);
+    Observable<BaseDataResponse<UserDataEntity>> regUser(String nickname, String avatar, String birthday, Integer sex);
 
     /**
      * 上报用户当前坐标
@@ -657,7 +657,7 @@ public interface HttpDataSource {
      * @email 15616314565@163.com
      * Param [phone, code]
      **/
-    Observable<BaseDataResponse<TokenEntity>> v2Login(String phone, String code, String device_code);
+    Observable<BaseDataResponse<UserDataEntity>> v2Login(String phone, String code, String device_code);
 
     /**
      * 真人人脸图片
@@ -734,7 +734,7 @@ public interface HttpDataSource {
      * @param type     登录类型 facebook/line
      * @return
      */
-    Observable<BaseDataResponse<AuthLoginUserEntity>> authLoginPost(
+    Observable<BaseDataResponse<UserDataEntity>> authLoginPost(
             String id,
             String type
     );
@@ -1475,13 +1475,6 @@ public interface HttpDataSource {
             String realName,
             String account
     );
-
-    /**
-     * 获取IM Sig
-     *
-     * @return
-     */
-    Observable<BaseDataResponse<ImSigEntity>> getImSig();
 
     /**
      * 设置我的相册权限

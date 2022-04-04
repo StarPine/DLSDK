@@ -182,7 +182,7 @@ public interface ApiService {
      */
     @FormUrlEncoded
     @POST("api/auth/login")
-    Observable<BaseDataResponse<AuthLoginUserEntity>> authLoginPost(
+    Observable<BaseDataResponse<UserDataEntity>> authLoginPost(
             @Field("id") String id,
             @Field("type") String type
     );
@@ -748,7 +748,7 @@ public interface ApiService {
      * @return
      */
     @POST("api/v2/user")
-    Observable<BaseResponse> regUser(@Query("nickname") String nickname, @Query("avatar") String avatar, @Query("birthday") String birthday, @Query("sex") Integer sex, @Query("channel") String channel);
+    Observable<BaseDataResponse<UserDataEntity>> regUser(@Query("nickname") String nickname, @Query("avatar") String avatar, @Query("birthday") String birthday, @Query("sex") Integer sex);
 
     /**
      * 上报用户当前坐标
@@ -804,7 +804,7 @@ public interface ApiService {
      * Param [phone, code]
      **/
     @POST("api/v2/login")
-    Observable<BaseDataResponse<TokenEntity>> v2Login(@Query("phone") String phone, @Query("code") String code, @Query("device_code") String device_code);
+    Observable<BaseDataResponse<UserDataEntity>> v2Login(@Query("phone") String phone, @Query("code") String code, @Query("device_code") String device_code);
 
     /**
      * @return io.reactivex.Observable<com.dl.playfun.entity.VersionEntity>
@@ -1687,14 +1687,6 @@ public interface ApiService {
             @Field("realname") String realName,
             @Field("account_number") String account
     );
-
-    /**
-     * 获取IM Sig
-     *
-     * @return
-     */
-    @GET("api/im/sig")
-    Observable<BaseDataResponse<ImSigEntity>> getImSig();
 
     /**
      * 设置我的相册权限

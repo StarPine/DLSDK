@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <string name="playfun_local_language">en-US</string>
     <string name="playfun_title_home">Home</string>
     <string name="playfun_title_notifications">Message</string>
     <string name="playfun_title_mine">Me</string>
@@ -25,9 +25,9 @@
     <string name="playfun_user_sex_her">Her</string>
     <string name="playfun_user_sex_his">His</string>
     <string name="playfun_user_detail_ta_dynamic">Moments</string>
-    <string name="playfun_user_detail_face_verification_pass">%s is verified by face recognition.</string>
+    <string name="playfun_user_detail_face_verification_pass">Verification of authenticity through facial recognition.</string>
     <string name="playfun_user_detail_is_goddess">Got Queen Verification</string>
-    <string name="playfun_user_detail_album_tital">%s starting an event.</string>
+    <string name="playfun_user_detail_album_tital">Album</string>
     <string name="playfun_user_detail_album_lock">%s set the album locked.</string>
     <string name="playfun_user_detail_chat_she">Direct message her</string>
     <string name="playfun_user_detail_profile_lock">%1$s set  a limit. To view the profile, you need to ask %2$s for the permission.</string>
@@ -76,7 +76,7 @@
     <string name="playfun_chat_action_redpackage">Red packet</string>
     <string name="playfun_chat_action_coin_redpackage">Red packet with diamonds</string>
     <string name="playfun_chat_action_mic">Voice Call</string>
-    <string name="playfun_chat_detail_warn">JoyMask advocates for a healthy social environment. Any abuse will be frozen.</string>
+    <string name="playfun_chat_detail_warn">Screenshot/video/side recording of private message content is prohibited.</string>
     <string name="playfun_setting_privacy_setting">Privacy Settings</string>
     <string name="playfun_setting_allow_link_mic">Allow voice call</string>
     <string name="playfun_chat_red">Leave a word</string>
@@ -185,7 +185,7 @@
     <string name="playfun_fragment_face_verify_success_explain_man">Now you can sign up formen\'s events for free.</string>
     <string name="playfun_fragment_give_list_title">Like</string>
     <string name="playfun_fragment_goddess_certification_explain_one">Confident about your look? Upload a photo or a video to be the Queen and get a special badge.</string>
-    <string name="playfun_fragment_goddess_certification_explain_two">Upload a photo or video of your face, and JoyMask will review it. You will get the result within 12 hours.</string>
+    <string name="playfun_fragment_goddess_certification_explain_two">Upload a photo or video of your face, and PlayFun will review it. You will get the result within 12 hours.</string>
     <string name="playfun_fragment_home_on_line">Online</string>
     <string name="playfun_fragment_issuance_program_title">Event</string>
     <string name="playfun_address">Location</string>
@@ -216,7 +216,7 @@
     <string name="playfun_open">In-app</string>
     <string name="playfun_push_setting_sound">Sound</string>
     <string name="playfun_push_setting_shock">Vibration</string>
-    <string name="playfun_register_alert_hint">Thank you for using JoyMask.\n Our customer service team will review your profile!</string>
+    <string name="playfun_register_alert_hint">Thank you for using PlayFun.\n Our customer service team will review your profile!</string>
     <string name="playfun_code">Verification Code</string>
     <string name="playfun_setting_password">Password</string>
     <string name="playfun_please_setting_password">Enter Password</string>
@@ -473,7 +473,7 @@
     <string name="playfun_face_recognintion_fail_explain">The photo you uploaded does not match the facial recognition. Please upload a clear one.</string>
     <string name="playfun_updating_face_reord_success">Facial recognition updated.</string>
     <string name="playfun_he_not_uploaded_photo">%s has not uploaded photos yet.</string>
-    <string name="playfun_he_not_uploaded_photo_girl">%s No photos have been uploaded yet.\n Just ask me for them.</string>
+    <string name="playfun_he_not_uploaded_photo_girl">Just ask me for them.</string>
     <string name="playfun_ta_homepage">Profile</string>
     <string name="playfun_request_denied">Request rejected</string>
     <string name="playfun_allowes">Agree (valid for 15 days)</string>
@@ -504,7 +504,7 @@
     <string name="playfun_phone_number_prefix_tw">7</string>
     <string name="playfun_user_detail_user_disable">This user is blocked.</string>
     <string name="playfun_dialog_user_disable_title">Your account is blocked.</string>
-    <string name="playfun_dialog_user_disable_content">If you need to appeal, you can send your account ID and appeal reasons to: \ngloblejoymask@gmail.com</string>
+    <string name="playfun_dialog_user_disable_content">If you need to appeal, you can send your account ID and appeal reasons to: \ngloblePlayChat@gmail.com</string>
     <string name="playfun_dialog_user_disable_btn_text">OK</string>
     <string name="playfun_user_detail_him_disable_mic">Voice call disabled</string>
     <string name="playfun_dialog_set_withdraw_account_title">Your PayPal</string>
@@ -576,8 +576,8 @@
     <string name="playfun_upgrade_vip">Upgrade to VIP</string>
     <string name="playfun_end_time">Expires on %s</string>
     <string name="playfun_x_count">%s</string>
-    <string name="playfun_dialog_agree_content">Hi, welcome to JoyMask. Before making new friends. We warmly inform you:\n\n
-        1. Please comply with JoyMask Use Specification and Broadcast Instructions. JoyMask reserves the right to restrict or even freeze your account if you post any illegal content (such as porn contents).\n\n
+    <string name="playfun_dialog_agree_content">Hi, welcome to PlayFun. Before making new friends. We warmly inform you:\n\n
+        1. Please comply with PlayFun Use Specification and Broadcast Instructions. PlayFun reserves the right to restrict or even freeze your account if you post any illegal content (such as porn contents).\n\n
         2. Need help? Contact us.</string>
     <string name="playfun_recharge_coin_success">Topped up successfully</string>
     <string name="playfun_recharge_coin_success2">exchange?</string>
@@ -675,9 +675,9 @@
     <string name="playfun_error_google_22">The connection timed out while trying to reconnect.</string>
     <string name="playfun_error_google_12500">Update to the latest Google Play services to use.</string>
     <string name="playfun_please_select_location">Choose a city</string>
-    <string name="playfun_user_message_tag1">Join JoyMask via invitation code</string>
-    <string name="playfun_user_message_tag2">Thank you for using JoyMask.\n To ensure the most authentic dating environment, we will review your profile and keep it secret.</string>
-    <string name="playfun_alert_invite_write_title">Thank you for using JoyMask.\n To ensure the most authentic dating environment, we will review your profile and keep it secret.</string>
+    <string name="playfun_user_message_tag1">Join PlayFun via invitation code</string>
+    <string name="playfun_user_message_tag2">Thank you for using PlayFun.\n To ensure the most authentic dating environment, we will review your profile and keep it secret.</string>
+    <string name="playfun_alert_invite_write_title">Thank you for using PlayFun.\n To ensure the most authentic dating environment, we will review your profile and keep it secret.</string>
     <string name="playfun_dialog_coin_pay_user_detail_title">Unlock chat times</string>
     <string name="playfun_reg_user_sex_error">Choose your gender</string>
     <string name="playfun_reg_user_dating_ok">Enter the app</string>
@@ -692,9 +692,9 @@
     <string name="playfun_mine_trace_delike_confirm">Confirm</string>
     <string name="playfun_mine_trace_man_title">People who are interested in me</string>
     <string name="playfun_mine_trace_man_title2">Following %s girls.</string>
-    <string name="playfun_mine_trace_man_title3">See all people who are interested in me %s</string>
+    <string name="playfun_mine_trace_man_title3">View all people %s</string>
     <string name="playfun_mine_trace_man_title4">Unlock 24 hours real-time view of all the people who are interested in me</string>
-    <string name="playfun_mine_trace_man_title_dialog">See all people who are interested in me</string>
+    <string name="playfun_mine_trace_man_title_dialog">View all people interested in me</string>
     <string name="playfun_mine_trace_man_unlocks">Once unlocked, you can view all people who are interested in you within 24 hours</string>
     <string name="playfun_mine_trace_man_play_title">Unlock Who visited me</string>
     <string name="playfun_mine_trace_man_play_confirm">Unlock now (%s diamonds)</string>
@@ -933,4 +933,9 @@
     <string name="auth_external_login_vk">VK</string>
     <string name="auth_external_login_yk">Guest login ></string>
     <string name="auth_external_login_more">Other login methods </string>
+    <string name="playfun_fragment_perfect_name_hint">請輸入暱稱</string>
+    <string name="playfun_fragment_perfect_brithday">生日</string>
+    <string name="playfun_fragment_perfect_avatar">請上傳頭像</string>
+    <string name="playfun_fragment_perfect_sex_hint">請選擇性別</string>
+    <string name="playfun_fragment_perfect_sex_hint2">確認後性別不可更改，請謹慎選擇</string>
 </resources>

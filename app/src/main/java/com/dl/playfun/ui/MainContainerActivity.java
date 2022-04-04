@@ -35,7 +35,7 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.tim.TUIUtils;
 import com.dl.playfun.ui.base.MySupportActivity;
 import com.dl.playfun.ui.main.MainFragment;
-import com.dl.playfun.ui.mine.profile.choosesex.ChooseSexFragment;
+import com.dl.playfun.ui.mine.profile.PerfectProfileFragment;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.StringUtil;
@@ -99,10 +99,20 @@ public class MainContainerActivity extends MySupportActivity {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(s -> {
                         //startWithPop(ChooseSexFragment.class.getCanonicalName());
-                        loadRootFragment(R.id.fl_container, new ChooseSexFragment());
+                        //栈内查找 如果存在及复用
+                        if(findFragment(PerfectProfileFragment.class)!=null){
+                            loadRootFragment(R.id.fl_container, findFragment(PerfectProfileFragment.class));
+                        }else{
+                            loadRootFragment(R.id.fl_container, new PerfectProfileFragment());
+                        }
                     });
         } else {
-            loadRootFragment(R.id.fl_container, new MainFragment());
+            //栈内查找 如果存在及复用
+            if(findFragment(MainFragment.class)!=null){
+                loadRootFragment(R.id.fl_container, findFragment(MainFragment.class));
+            }else{
+                loadRootFragment(R.id.fl_container, new MainFragment());
+            }
         }
             //loadRootFragment(R.id.fl_container, new SplashFragment());
 
@@ -304,7 +314,11 @@ public class MainContainerActivity extends MySupportActivity {
     @Override
     public void onResume() {
         super.onResume();
-        AppContext.instance().mFirebaseAnalytics.setCurrentScreen(this, "Screen Name", this.getClass().getSimpleName());
+        try{
+            AppContext.instance().mFirebaseAnalytics.setCurrentScreen(this, "Screen Name", this.getClass().getSimpleName());
+        }catch(Exception e){
+
+        }
         //MobclickAgent.onResume(this);
     }
 

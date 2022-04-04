@@ -1,5 +1,6 @@
 package com.tencent.liteav.trtccalling.model.impl;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -35,6 +36,10 @@ import java.util.Map;
  * TUICalling模块对外接口
  */
 public final class TUICallingManager implements TUICalling, TRTCCallingDelegate {
+    //语音通话页面
+    public final String AUDIO_ACTIVITY_VIEW_NAME = "com.dl.playfun.kl.view.DialingAudioActivity";
+    //视频通话页面
+    public final String VIDEO_ACTIVITY_VIEW_NAME = "com.dl.playfun.kl.view.CallingVideoActivity";
 
     private static final String TAG = "TUICallingManager";
 
@@ -87,13 +92,13 @@ public final class TUICallingManager implements TUICalling, TRTCCallingDelegate 
             @Override
             public void run() {
 //                    Intent intent = Type.AUDIO == type ? new Intent(mContext, TRTCAudioCallActivity.class) : new Intent(mContext, TRTCVideoCallActivity.class);
-                Intent intent;
+                Intent intent = new Intent(Intent.ACTION_VIEW);;
                 if (Type.AUDIO == type) {
-                    intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse("play_fun://pet.coin.master.ru/call/audio"));
+                    intent.setComponent(new ComponentName(mContext.getApplicationContext(), AUDIO_ACTIVITY_VIEW_NAME));
+                   // intent.setData(Uri.parse("play_fun://pet.coin.master.ru/call/audio"));
                 } else {
-                    intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse("play_fun://pet.coin.master.ru/call/video"));
+                    intent.setComponent(new ComponentName(mContext.getApplicationContext(), VIDEO_ACTIVITY_VIEW_NAME));
+                   // intent.setData(Uri.parse("play_fun://pet.coin.master.ru/call/video"));
                 }
                 intent.putExtra(TUICallingConstants.PARAM_NAME_ROLE, Role.CALL);
 //                if (Role.CALLED == role) {
@@ -159,13 +164,13 @@ public final class TUICallingManager implements TUICalling, TRTCCallingDelegate 
                 @Override
                 public void run() {
 //                    Intent intent = Type.AUDIO == type ? new Intent(mContext, TRTCAudioCallActivity.class) : new Intent(mContext, TRTCVideoCallActivity.class);
-                    Intent intent;
+                    Intent intent = new Intent(Intent.ACTION_VIEW);;
                     if (Type.AUDIO == type) {
-                        intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setData(Uri.parse("play_fun://pet.coin.master.ru/call/audio"));
+                        intent.setComponent(new ComponentName(mContext.getApplicationContext(), AUDIO_ACTIVITY_VIEW_NAME));
+                        // intent.setData(Uri.parse("play_fun://pet.coin.master.ru/call/audio"));
                     } else {
-                        intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setData(Uri.parse("play_fun://pet.coin.master.ru/call/video"));
+                        intent.setComponent(new ComponentName(mContext.getApplicationContext(), VIDEO_ACTIVITY_VIEW_NAME));
+                        // intent.setData(Uri.parse("play_fun://pet.coin.master.ru/call/video"));
                     }
                     intent.putExtra(TUICallingConstants.PARAM_NAME_ROLE, role);
                     if (Role.CALLED == role) {
