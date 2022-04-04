@@ -23,6 +23,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.blankj.utilcode.util.StringUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.dl.playfun.entity.ConfigItemEntity;
@@ -899,13 +900,13 @@ public class MVDialog {
             contentBtn.setTextSize(TypedValue.COMPLEX_UNIT_SP,confirmTextSize);
         }
 
-        if (titleString.equals("")) {
+        if (StringUtils.isEmpty(titleString)) {
             title.setVisibility(View.GONE);
         } else {
             title.setVisibility(View.VISIBLE);
             title.setText(titleString);
         }
-        if (contentString.equals("")) {
+        if (StringUtils.isEmpty(contentString)) {
             content.setVisibility(View.GONE);
         } else {
             content.setVisibility(View.VISIBLE);
@@ -979,7 +980,7 @@ public class MVDialog {
         TextView title = contentView.findViewById(R.id.tv_title);
         EditText edtMoney = contentView.findViewById(R.id.edt_money);
         Button contentBtn = contentView.findViewById(R.id.btn_confirm);
-        if (titleString.equals("")) {
+        if (StringUtils.isEmpty(titleString)) {
             title.setVisibility(View.GONE);
         } else {
             title.setVisibility(View.VISIBLE);
@@ -1032,7 +1033,7 @@ public class MVDialog {
 
         TextView title = contentView.findViewById(R.id.tv_title);
         TextView content = contentView.findViewById(R.id.tv_content);
-        if (titleString.equals("")) {
+        if (StringUtils.isEmpty(titleString)) {
             title.setVisibility(View.GONE);
         } else {
             title.setVisibility(View.VISIBLE);
@@ -1049,7 +1050,7 @@ public class MVDialog {
             }
         });
         Button contentBtn = contentView.findViewById(R.id.btn_confirm);
-        if (confirmText.equals("")) {
+        if (StringUtils.isEmpty(confirmText)) {
             contentBtn.setText(context.getResources().getString(R.string.playfun_confirm));
         } else {
             contentBtn.setText(confirmText);

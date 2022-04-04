@@ -209,13 +209,13 @@ public class MMAlertDialog {
         dialog.getWindow().setWindowAnimations(R.style.BottomDialog_Animation);
         TextView title = contentView.findViewById(R.id.tv_title);
         TextView content = contentView.findViewById(R.id.tv_content);
-        if (titleString.equals("")) {
+        if (StringUtils.isEmpty(titleString)) {
             title.setVisibility(View.GONE);
         } else {
             title.setVisibility(View.VISIBLE);
             title.setText(titleString);
         }
-        if (contentString.equals("")) {
+        if (StringUtils.isEmpty(contentString)) {
             content.setVisibility(View.GONE);
         } else {
             content.setVisibility(View.VISIBLE);

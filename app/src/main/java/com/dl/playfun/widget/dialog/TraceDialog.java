@@ -226,7 +226,7 @@ public class TraceDialog {
         TextView title = contentView.findViewById(R.id.tv_title);
         Button confirmBtn = contentView.findViewById(R.id.confirm);
         Button cannelwBtn = contentView.findViewById(R.id.cannel);
-        if (titleString.equals("")) {
+        if (StringUtils.isEmpty(titleString)) {
             title.setVisibility(View.GONE);
         } else {
             title.setVisibility(View.VISIBLE);
