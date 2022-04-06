@@ -21,6 +21,7 @@
             <option value="$PROJECT_DIR$/TUIKit/TUIContact/tuicontact" />
             <option value="$PROJECT_DIR$/TUIKit/TUIConversation/tuiconversation" />
             <option value="$PROJECT_DIR$/TUIKit/TUICore/tuicore" />
+            <option value="$PROJECT_DIR$/_demo" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/customDrawable" />
             <option value="$PROJECT_DIR$/jsBridge" />

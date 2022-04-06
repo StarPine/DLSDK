@@ -10,6 +10,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
+import com.dl.playfun.api.AuthLoginResultListener;
+import com.dl.playfun.api.PlayFunAuthUserEntity;
+import com.dl.playfun.api.PlayFunLoginViewHorizontal;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.entity.GamePayEntity;
 import com.dl.playfun.entity.GamePhotoAlbumEntity;
@@ -17,6 +20,7 @@ import com.dl.playfun.event.GameHeartBeatEvent;
 import com.dl.playfun.event.GameLoginExpiredEvent;
 import com.dl.playfun.event.LoginExpiredEvent;
 import com.dl.playfun.event.UserDisableEvent;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.MainContainerActivity;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.facebook.AccessToken;
@@ -57,7 +61,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Radi
     private EditText edit_text;
     private RadioGroup radioGroupId;
     private LinearLayout linearLayout;
-    private DialogLoginApi dialog;
+    private PlayFunLoginViewHorizontal dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,16 +84,24 @@ public class MainActivity extends Activity implements View.OnClickListener, Radi
                 Injection.provideDemoRepository().v2Login(edit_text.getText().toString(), "000666", ApiUitl.getAndroidId())
                         .compose(RxUtils.schedulersTransformer())
                         .compose(RxUtils.exceptionTransformer())
-                        .subscribe(new BaseObserver<BaseDataResponse<TokenEntity>>() {
+                        .subscribe(new BaseObserver<BaseDataResponse<UserDataEntity>>() {
                             @Override
-                            public void onSuccess(BaseDataResponse<TokenEntity> response) {
-                                if (response.getData() != null && response.getData().getIsNewUser() != null && response.getData().getIsNewUser().intValue() == 1) {
+                            public void onSuccess(BaseDataResponse<UserDataEntity> response) {
+                                UserDataEntity  authLoginUserEntity = response.getData();
+                                if (authLoginUserEntity != null && authLoginUserEntity.getIsNewUser() != null && authLoginUserEntity.getIsNewUser().intValue() == 1) {
                                     AppContext.instance().logEvent(AppsFlyerEvent.register_start);
                                     Injection.provideDemoRepository().saveIsNewUser(true);
                                 }
-                                Injection.provideDemoRepository().saveLoginInfo(response.getData());
+                                TokenEntity tokenEntity = new TokenEntity(authLoginUserEntity.getToken(),authLoginUserEntity.getUserID(),authLoginUserEntity.getUserSig(), authLoginUserEntity.getIsContract());
+                                ConfigManager.getInstance().getAppRepository().saveLoginInfo(tokenEntity);
                                 AppContext.instance().logEvent(AppsFlyerEvent.LOG_IN_WITH_PHONE_NUMBER);
-                                loadProfile();
+                                AppContext.instance().mFirebaseAnalytics.setUserId(String.valueOf(authLoginUserEntity.getId()));
+                                AppContext.instance().appRepository.saveUserData(authLoginUserEntity);
+                                if (authLoginUserEntity.getCertification() == 1) {
+                                    AppContext.instance().appRepository.saveNeedVerifyFace(true);
+                                }
+                                loginSuccess = true;
+                                to_play_fun.setVisibility(View.VISIBLE);
                             }
 
                             @Override
@@ -210,20 +222,23 @@ public class MainActivity extends Activity implements View.OnClickListener, Radi
             case R.id.haiwai:
                 linearLayout.setVisibility(View.GONE);
                 if (dialog == null)
-                    dialog = new DialogLoginApi();
+                    dialog = new PlayFunLoginViewHorizontal();
                 dialog.show(getFragmentManager(), "DialogLoginApi");
-                dialog.setLoginResultListener(new DialogLoginApi.LoginResultListener() {
+                dialog.setLoginResultListener(new AuthLoginResultListener() {
                     @Override
-                    public void authLoginSuccess(AuthLoginUserEntity authLoginUserEntity, AccessToken accessToken, GoogleSignInAccount googleSignInAccount) {
+                    public void authLoginSuccess(PlayFunAuthUserEntity playFunAuthUserEntity) {
                         dialog.dismiss();
-                        Log.e("是否绑定过游戏", authLoginUserEntity.getIsBindGame() + "=======");
-                        //loadProfile();
+                        //PlayFunUserApiUtil.getInstance().startPlayFunActivity(mContext);
                         to_play_fun.setVisibility(View.VISIBLE);
+                        Log.e("是否绑定过游戏",playFunAuthUserEntity.getIsBindGame()+"=======");
+                        //登录渠道  1 facebook登录 2 google  3 Line  4 VK  5 游客
+                        Log.e("登录成功返回信息","登录渠道："+playFunAuthUserEntity.getTypeLogin());
+                        Log.e("登录成功返回信息","详细内容："+playFunAuthUserEntity.toString());
                     }
 
                     @Override
                     public void authLoginError(int code, int type, String message) {
-                        Log.e("登录失败原因", code + "===" + type + "=====" + message);
+                        Log.e("登录成功返回信息",code+"=="+type+"失败："+message);
                     }
                 });
                 break;
