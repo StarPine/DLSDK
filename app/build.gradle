@@ -277,7 +277,6 @@ repositories {
 //条件判断-不是打apk包
 if(rootProject.ext.BuildSdkPlayfun){
     afterEvaluate {
-        // for app test, copy the final aar to application libs
         android.libraryVariants.all { variant ->
             File outputFile = variant.outputs.first().outputFile
             if(outputFile.isFile()){
@@ -308,7 +307,6 @@ dependencies {
     embed (name:'refresh-footer-classics-2.0.3', ext:'aar')
     embed (name:'refresh-drawable-paint-2.0.3', ext:'aar')
     projectID.each {k,v -> embed project (":${k}")}
-
     //日志打印
     implementation('com.github.ihsanbal:LoggingInterceptor:3.0.0') {
         exclude group: 'org.json', module: 'json'
