@@ -10,6 +10,7 @@ import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableList;
 
 import com.dl.playfun.app.AppContext;
+import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.entity.BaseUserBeanEntity;
 import com.dl.playfun.entity.BroadcastBeanEntity;
 import com.dl.playfun.entity.BroadcastEntity;
@@ -18,6 +19,7 @@ import com.dl.playfun.entity.GiveUserBeanEntity;
 import com.dl.playfun.entity.NewsEntity;
 import com.dl.playfun.event.ZoomInPictureEvent;
 import com.dl.playfun.manager.ConfigManager;
+import com.dl.playfun.manager.PermissionManager;
 import com.dl.playfun.ui.mine.broadcast.myall.MyAllBroadcastViewModel;
 import com.dl.playfun.utils.ExceptionReportUtils;
 import com.dl.playfun.utils.ListUtils;
@@ -148,6 +150,10 @@ public class TrendItemViewModel extends MultiItemViewModel<BaseViewModel> {
     //点赞点击事件
     public BindingCommand likeClick = new BindingCommand(() -> {
         try {
+            if (!PermissionManager.getInstance().VerifyJumpUserDetailView(newsEntityObservableField.get().getUser().getSex())) {
+                ToastUtils.showShort(R.string.playfun_userdetail_same_sex);
+                return;
+            }
             if (viewModel instanceof MyTrendsViewModel) {
                 int position = ((MyTrendsViewModel) viewModel).observableList.indexOf(TrendItemViewModel.this);
                 ((MyTrendsViewModel) viewModel).uc.clickLike.setValue(position);
@@ -177,11 +183,14 @@ public class TrendItemViewModel extends MultiItemViewModel<BaseViewModel> {
     //评论点击事件
     public BindingCommand commentClick = new BindingCommand(() -> {
         try {
+            if (!PermissionManager.getInstance().VerifyJumpUserDetailView(newsEntityObservableField.get().getUser().getSex())) {
+                ToastUtils.showShort(R.string.playfun_userdetail_same_sex);
+                return;
+            }
             if (newsEntityObservableField.get().getBroadcast().getIsComment() == 1) {
                 ToastUtils.showShort(R.string.playfun_comment_close);
                 return;
             }
-            int sex = AppContext.instance().appRepository.readUserData().getSex();
             if (viewModel instanceof MyTrendsViewModel) {
                 if (((MyTrendsViewModel) viewModel).userId == newsEntityObservableField.get().getUser().getId()) {
                     ToastUtils.showShort(R.string.playfun_self_ont_comment_broadcast);
@@ -232,6 +241,10 @@ public class TrendItemViewModel extends MultiItemViewModel<BaseViewModel> {
     });
     public BindingCommand avatarClick = new BindingCommand(() -> {
         try {
+            if (!PermissionManager.getInstance().VerifyJumpUserDetailView(newsEntityObservableField.get().getUser().getSex())) {
+                ToastUtils.showShort(R.string.playfun_userdetail_same_sex);
+                return;
+            }
             Bundle bundle = UserDetailFragment.getStartBundle(newsEntityObservableField.get().getUser().getId());
             viewModel.start(UserDetailFragment.class.getCanonicalName(), bundle);
             GSYVideoManager.releaseAllVideos();
@@ -262,6 +275,9 @@ public class TrendItemViewModel extends MultiItemViewModel<BaseViewModel> {
         newsEntity.setVideo(broadcastEntity.getNews().getVideo());
         newsEntity.setNewsType(broadcastEntity.getNews().getNewsType());
         newsEntity.setCommentNumber(broadcastEntity.getNews().getCommentNumber());
+        //自己IMid  对方IM id
+        newsEntity.setImUserId(broadcastEntity.getImUserId());
+        newsEntity.setImToUserId(broadcastEntity.getImToUserId());
         BaseUserBeanEntity userBean = new BaseUserBeanEntity();
         userBean.setAvatar(broadcastEntity.getAvatar());
         userBean.setId(broadcastEntity.getUserId());
@@ -373,7 +389,7 @@ public class TrendItemViewModel extends MultiItemViewModel<BaseViewModel> {
         newsEntityObservableField.get().setIsGive(1);
         newsEntityObservableField.get().getBroadcast().setGiveCount(newsEntityObservableField.get().getBroadcast().getGiveCount() + 1);
         HeadItemViewModel item = new HeadItemViewModel(viewModel, avatar, userId,
-                AppContext.instance().appRepository.readUserData().getSex(),
+                ConfigManager.getInstance().getAppRepository().readUserData().getSex(),
                 newsEntityObservableField.get().getGiveCount() - 14,
                 Type_New, newsEntityObservableField.get().getId()
         );

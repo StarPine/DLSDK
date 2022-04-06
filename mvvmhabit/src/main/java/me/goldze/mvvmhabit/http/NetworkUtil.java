@@ -1,5 +1,6 @@
 package me.goldze.mvvmhabit.http;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -32,7 +33,7 @@ public class NetworkUtil {
                 Context.CONNECTIVITY_SERVICE);
         if (null == manager)
             return false;
-        NetworkInfo info = manager.getActiveNetworkInfo();
+        @SuppressLint("MissingPermission") NetworkInfo info = manager.getActiveNetworkInfo();
         return null != info && info.isAvailable();
     }
 
@@ -159,6 +160,7 @@ public class NetworkUtil {
     /**
      * is wifi on
      */
+    @SuppressLint("MissingPermission")
     public static boolean isWifiEnabled(Context context) {
         ConnectivityManager mgrConn = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);

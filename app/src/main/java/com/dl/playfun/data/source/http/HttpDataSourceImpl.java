@@ -48,6 +48,7 @@ import com.dl.playfun.entity.GoldDetailEntity;
 import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.entity.GoogleNearPoiBean;
 import com.dl.playfun.entity.GooglePoiBean;
+import com.dl.playfun.entity.IMTransUserEntity;
 import com.dl.playfun.entity.ImSigEntity;
 import com.dl.playfun.entity.IsChatEntity;
 import com.dl.playfun.entity.MessageGroupEntity;
@@ -123,6 +124,11 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
+    public Observable<BaseDataResponse<IMTransUserEntity>> transUserIM(String IMUserId) {
+        return apiService.transUserIM(IMUserId);
+    }
+
+    @Override
     public Observable<BaseDataResponse<ChatDetailCoinEntity>> getTotalCoins(Integer dismissRoom) {
         return apiService.getTotalCoins(dismissRoom);
     }
@@ -193,13 +199,13 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
-    public Observable<BaseDataResponse<CallingInfoEntity>> getCallingInfo(Integer roomId, Integer callingType, Integer fromUserId, Integer toUserId, Integer currentUserId) {
-        return apiService.getCallingInfo(roomId, callingType, fromUserId, toUserId, currentUserId);
+    public Observable<BaseDataResponse<CallingInfoEntity>> getCallingInfo(Integer roomId, Integer callingType, String fromUserId, String toUserId) {
+        return apiService.getCallingInfo(roomId, callingType, fromUserId, toUserId);
     }
 
     @Override
-    public Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(Integer callingType, Integer fromUserId, Integer toUserId, Integer currentUserId) {
-        return apiService.callingInviteInfo(callingType, fromUserId, toUserId, currentUserId);
+    public Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(Integer callingType, String fromUserId, String toUserId) {
+        return apiService.callingInviteInfo(callingType, fromUserId, toUserId);
     }
 
     @Override
@@ -310,18 +316,8 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
-    public Observable<BaseResponse> ExchangeIntegraBuy(Integer id) {
-        return apiService.ExchangeIntegraBuy(id);
-    }
-
-    @Override
     public Observable<BaseResponse> pushGreet(Integer type) {
         return apiService.pushGreet(type);
-    }
-
-    @Override
-    public Observable<BaseDataResponse<ExchangeIntegraOuterEntity>> getExchangeIntegraListData() {
-        return apiService.getExchangeIntegraListData();
     }
 
     @Override
@@ -339,91 +335,6 @@ public class HttpDataSourceImpl implements HttpDataSource {
         return apiService.isOnlineUser(userId);
     }
 
-    @Override
-    public Observable<BaseListDataResponse<TaskAdEntity>> taskAdList() {
-        return apiService.taskAdList();
-    }
-
-    @Override
-    public Observable<BaseResponse> subSupply(List<Integer> exchange_ids, Integer address_id) {
-        return apiService.subSupply(exchange_ids, address_id);
-    }
-
-    @Override
-    public Observable<BaseResponse> removeAddress(Integer id) {
-        return apiService.removeAddress(id);
-    }
-
-    @Override
-    public Observable<BaseDataResponse<AddressEntity>> getAddress(Integer id) {
-        return apiService.getAddress(id);
-    }
-
-    @Override
-    public Observable<BaseListDataResponse<AddressEntity>> getAddressList(Integer page) {
-        return apiService.getAddressList(page);
-    }
-
-    @Override
-    public Observable<BaseResponse> createAddress(String contacts, String city, String are, String address, String phone, Integer is_default) {
-        return apiService.createAddress(contacts, city, are, address, phone, is_default);
-    }
-
-    @Override
-    public Observable<BaseResponse> updateAddress(Integer id, String contacts, String city, String are, String address, String phone, Integer is_default) {
-        return apiService.updateAddress(id, contacts, city, are, address, phone, is_default);
-    }
-
-    @Override
-    public Observable<BaseListDataResponse<ExchangeEntity>> qryExchange(Integer page, Integer status) {
-        return apiService.qryExchange(page, status);
-    }
-
-    @Override
-    public Observable<BaseResponse> exchange(String goodsId) {
-        return apiService.exchange(goodsId);
-    }
-
-    @Override
-    public Observable<BaseListDataResponse<BonusGoodsEntity>> getBonusGoods(Integer page) {
-        return apiService.getBonusGoods(page);
-    }
-
-    @Override
-    public Observable<BaseListDataResponse<GoldDetailEntity>> getGoldList(Integer page) {
-        return apiService.getGoldList(page);
-    }
-
-    @Override
-    public Observable<BaseResponse> ToaskSubBonus(String key) {
-        return apiService.ToaskSubBonus(key);
-    }
-
-    @Override
-    public Observable<BaseDataResponse<TaskRewardReceiveEntity>> TaskRewardReceive(String key) {
-        return apiService.TaskRewardReceive(key);
-    }
-
-
-    @Override
-    public Observable<BaseDataResponse<List<TaskConfigItemEntity>>> getTaskListConfig() {
-        return apiService.getTaskListConfig();
-    }
-
-    @Override
-    public Observable<BaseDataResponse<TaskConfigEntity>> getTaskConfig() {
-        return apiService.getTaskConfig();
-    }
-
-    @Override
-    public Observable<BaseDataResponse<EjectSignInEntity>> reportEjectSignIn() {
-        return apiService.reportEjectSignIn();
-    }
-
-    @Override
-    public Observable<BaseDataResponse<EjectEntity>> getEjectconfig() {
-        return apiService.getEjectconfig();
-    }
 
     @Override
     public Observable<BaseDataResponse<BrowseNumberEntity>> newsBrowseNumber() {
@@ -481,8 +392,8 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
-    public Observable<BaseResponse> regUser(String nickname, String avatar, String birthday, Integer sex, String channel) {
-        return apiService.regUser(nickname, avatar, birthday, sex, channel);
+    public Observable<BaseDataResponse<UserDataEntity>> regUser(String nickname, String avatar, String birthday, Integer sex) {
+        return apiService.regUser(nickname, avatar, birthday, sex);
     }
 
     @Override
@@ -501,7 +412,7 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
-    public Observable<BaseDataResponse<TokenEntity>> v2Login(String phone, String code, String device_code) {
+    public Observable<BaseDataResponse<UserDataEntity>> v2Login(String phone, String code, String device_code) {
         return apiService.v2Login(phone, code, device_code);
     }
 
@@ -566,7 +477,7 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
-    public Observable<BaseDataResponse<AuthLoginUserEntity>> authLoginPost(String id, String type) {
+    public Observable<BaseDataResponse<UserDataEntity>> authLoginPost(String id, String type) {
         return apiService.authLoginPost(id, type);
     }
 
@@ -889,16 +800,6 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
-    public Observable<BaseDataResponse<FaceVerifyTokenEntity>> faceVerifyToken() {
-        return apiService.faceVerifyToken();
-    }
-
-    @Override
-    public Observable<BaseDataResponse<CompareFaceEntity>> compareFaces(String img) {
-        return apiService.compareFaces(img);
-    }
-
-    @Override
     public Observable<BaseDataResponse<FaceVerifyResultEntity>> faceVerifyResult(String bizId) {
         return apiService.faceVerifyResult(bizId);
     }
@@ -962,11 +863,6 @@ public class HttpDataSourceImpl implements HttpDataSource {
     @Override
     public Observable<BaseResponse> setWithdrawAccount(String realName, String account) {
         return apiService.setWithdrawAccount(realName, account);
-    }
-
-    @Override
-    public Observable<BaseDataResponse<ImSigEntity>> getImSig() {
-        return apiService.getImSig();
     }
 
     @Override

@@ -35,42 +35,22 @@ public class ChatUtils {
 
     private static ContactProvider provider;
 
-    public static void deleteFriend(int userId) {
-        if(provider==null){
-            provider = new ContactProvider();
-        }
-        List<String> idList = new ArrayList<>();
-        idList.add(getImUserId(userId));
-        provider.deleteFriend(idList, new IUIKitCallback<Void>() {
-            @Override
-            public void onSuccess(Void data) {
-
-            }
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-
-            }
-        });
-    }
-
-    public static void chatUser(String userId, String name, BaseViewModel baseViewModel) {
-        String serviceUserId = userId;
+    public static void chatUserView(String serviceUserId, Integer userId, String name, BaseViewModel baseViewModel) {
         if(provider==null){
             provider = new ContactProvider();
         }
 
-        provider.addFriend(userId, null, new IUIKitCallback<Pair<Integer, String>>() {
+        provider.addFriend(serviceUserId, null, new IUIKitCallback<Pair<Integer, String>>() {
             @Override
             public void onSuccess(Pair<Integer, String> data) {
                 switch (data.first) {
 
                     case FriendApplicationBean.ERR_SUCC:
-                        toChatUser(serviceUserId, name, baseViewModel);
+                        toChatUser(serviceUserId, userId, name, baseViewModel);
                         break;
                     case FriendApplicationBean.ERR_SVR_FRIENDSHIP_INVALID_PARAMETERS:
                         if (TextUtils.equals(data.second, "Err_SNS_FriendAdd_Friend_Exist")) {
-                            toChatUser(serviceUserId, name, baseViewModel);
+                            toChatUser(serviceUserId, userId, name, baseViewModel);
                             break;
                         }
                     case FriendApplicationBean.ERR_SVR_FRIENDSHIP_COUNT_LIMIT:
@@ -108,23 +88,22 @@ public class ChatUtils {
         });
     }
 
-    public static void chatUser(String userId, String name, BaseViewModel baseViewModel, String MessageText) {
-        String serviceUserId = userId;
+    public static void chatUserView(String serviceUserId, Integer userId,String name, BaseViewModel baseViewModel, String MessageText) {
 
         if(provider==null){
             provider = new ContactProvider();
         }
-        provider.addFriend(userId, null, new IUIKitCallback<Pair<Integer, String>>() {
+        provider.addFriend(serviceUserId, null, new IUIKitCallback<Pair<Integer, String>>() {
             @Override
             public void onSuccess(Pair<Integer, String> data) {
                 switch (data.first) {
 
                     case FriendApplicationBean.ERR_SUCC:
-                        toChatUser(serviceUserId, name, baseViewModel, MessageText);
+                        toChatUser(serviceUserId, userId, name, baseViewModel, MessageText);
                         break;
                     case FriendApplicationBean.ERR_SVR_FRIENDSHIP_INVALID_PARAMETERS:
                         if (TextUtils.equals(data.second, "Err_SNS_FriendAdd_Friend_Exist")) {
-                            toChatUser(serviceUserId, name, baseViewModel, MessageText);
+                            toChatUser(serviceUserId, userId, name, baseViewModel, MessageText);
                             break;
                         }
                     case FriendApplicationBean.ERR_SVR_FRIENDSHIP_COUNT_LIMIT:
@@ -162,70 +141,44 @@ public class ChatUtils {
         });
     }
 
-    private static void toChatUser(String serviceUserId, String name, BaseViewModel baseViewModel) {
+    private static void toChatUser(String serviceUserId, Integer userId,String name, BaseViewModel baseViewModel) {
         ChatInfo chatInfo = new ChatInfo();
         chatInfo.setType(V2TIMConversation.V2TIM_C2C);
         chatInfo.setId(serviceUserId);
         chatInfo.setChatName(name);
         Bundle bundle = new Bundle();
         bundle.putSerializable(CHAT_INFO, chatInfo);
+        bundle.putInt("toUserId", userId);
         baseViewModel.start(ChatDetailFragment.class.getCanonicalName(), bundle);
     }
 
-    private static void toChatUser(String serviceUserId, String name, BaseViewModel baseViewModel, String messageText) {
+    private static void toChatUser(String serviceUserId,Integer userId, String name, BaseViewModel baseViewModel, String messageText) {
         ChatInfo chatInfo = new ChatInfo();
         chatInfo.setType(V2TIMConversation.V2TIM_C2C);
         chatInfo.setId(serviceUserId);
         chatInfo.setChatName(name);
         Bundle bundle = new Bundle();
         bundle.putSerializable(CHAT_INFO, chatInfo);
+        bundle.putInt("toUserId", userId);
         bundle.putString("message", messageText);
         //Bundle bundle = ChatDetailFragment.getStartBundle(chatInfo,messageText);
         baseViewModel.start(ChatDetailFragment.class.getCanonicalName(), bundle);
     }
 
-    public static void chatUser(int userId, String name, BaseViewModel baseViewModel) {
-        String serviceUserId = String.format(StringUtils.getString(R.string.playfun_imsdk_user_id), userId);
-        chatUser(serviceUserId, name, baseViewModel);
+    /**
+    * @Desc TODO(进入1v1单聊页面)
+    * @author 彭石林
+    * @parame [ImUserId, name, baseViewModel]
+    * @return void
+    * @Date 2022/4/2
+    */
+    public static void chatUser(String ImUserId,Integer userId, String name, BaseViewModel baseViewModel) {
+        chatUserView(ImUserId,userId, name, baseViewModel);
     }
 
     public static void audioCall(String userId, String name) {
         String[] userList ={userId};
         TUICallingManager.sharedInstance().call(userList,TUICalling.Type.AUDIO);
     }
-
-    public static int imUserIdToSystemUserId(String userId) {
-        try {
-            String strId = userId.replaceFirst("user_", "");
-            return Integer.parseInt(strId);
-        } catch (Exception e) {
-            return 0;
-        }
-    }
-
-    public static String getImUserId(int userId) {
-        return String.format(StringUtils.getString(R.string.playfun_imsdk_user_id), userId);
-    }
-
-    public static void addToBlackList(int userId) {
-        addToBlackList(userId, null);
-    }
-
-    public static void deleteFromBlackList(int userId) {
-        deleteFromBlackList(userId, null);
-    }
-
-    public static void addToBlackList(int userId, V2TIMValueCallback<List<V2TIMFriendOperationResult>> callback) {
-        List<String> idList = new ArrayList<>();
-        idList.add(getImUserId(userId));
-        V2TIMManager.getFriendshipManager().addToBlackList(idList, callback);
-    }
-
-    public static void deleteFromBlackList(int userId, V2TIMValueCallback<List<V2TIMFriendOperationResult>> callback) {
-        List<String> idList = new ArrayList<>();
-        idList.add(getImUserId(userId));
-        V2TIMManager.getFriendshipManager().deleteFromBlackList(idList, callback);
-    }
-
 
 }

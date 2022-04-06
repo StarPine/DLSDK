@@ -34,6 +34,7 @@ import com.dl.playfun.databinding.FragmentVipSubscribeBinding;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.entity.VipPackageItemEntity;
 import com.dl.playfun.event.VipRechargeSuccessEvent;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.StringUtil;
@@ -168,9 +169,9 @@ public class VipSubscribeFragment extends BaseToolbarFragment<FragmentVipSubscri
             public void onPaySuccess(CoinPaySheet sheet, String orderNo, Integer payPrice) {
                 sheet.dismiss();
                 ToastUtils.showShort(R.string.playfun_recharge_success);
-                UserDataEntity userDataEntity = AppContext.instance().appRepository.readUserData();
+                UserDataEntity userDataEntity = ConfigManager.getInstance().getAppRepository().readUserData();
                 userDataEntity.setIsVip(1);
-                AppContext.instance().appRepository.saveUserData(userDataEntity);
+                ConfigManager.getInstance().getAppRepository().saveUserData(userDataEntity);
                 RxBus.getDefault().post(new VipRechargeSuccessEvent());
                 pop();
             }

@@ -48,11 +48,6 @@ public class FaceVerifySuccessFragment extends BaseToolbarFragment<FragmentFaceV
         if (basicToolbar != null) {
             basicToolbar.hiddenBack(true);
         }
-        //真人认证提示
-        if (ConfigManager.getInstance().isCertification() && !ConfigManager.getInstance().isMale()) {
-
-            viewModel.ToaskSubBonus();
-        }
     }
 
     @Override

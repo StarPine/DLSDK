@@ -209,13 +209,13 @@ public class MMAlertDialog {
         dialog.getWindow().setWindowAnimations(R.style.BottomDialog_Animation);
         TextView title = contentView.findViewById(R.id.tv_title);
         TextView content = contentView.findViewById(R.id.tv_content);
-        if (titleString.equals("")) {
+        if (StringUtils.isEmpty(titleString)) {
             title.setVisibility(View.GONE);
         } else {
             title.setVisibility(View.VISIBLE);
             title.setText(titleString);
         }
-        if (contentString.equals("")) {
+        if (StringUtils.isEmpty(contentString)) {
             content.setVisibility(View.GONE);
         } else {
             content.setVisibility(View.VISIBLE);
@@ -348,87 +348,6 @@ public class MMAlertDialog {
                 dilodAlertMessageInterface.confirm(dialog, DialogInterface.BUTTON_POSITIVE, 0, value.getText().toString());
             }
         });
-        return dialog;
-    }
-
-    public static Dialog DialogAddress(Context context, boolean touchOutside, AddressEntity addressEntity, AlertAddressesInterface alertAddressesInterface) {
-        Dialog dialog = new Dialog(context);
-        dialog.setCanceledOnTouchOutside(touchOutside);
-        dialog.setCancelable(false);
-        View contentView = LayoutInflater.from(context).inflate(R.layout.alert_address, null);
-
-        TextView toEditAddress = contentView.findViewById(R.id.toEditAddress);
-        TextView empty = contentView.findViewById(R.id.empty);
-
-        LinearLayout title1 = contentView.findViewById(R.id.title1);
-        LinearLayout title2 = contentView.findViewById(R.id.title2);
-        LinearLayout title3 = contentView.findViewById(R.id.title3);
-
-        TextView userName = contentView.findViewById(R.id.user_name);
-        TextView userPhone = contentView.findViewById(R.id.user_phone);
-        TextView userAddress = contentView.findViewById(R.id.user_address);
-        boolean isEmpty = false;
-        if (addressEntity == null) {
-            isEmpty = true;
-            empty.setVisibility(View.VISIBLE);
-            toEditAddress.setText(R.string.playfun_address_title2);
-            title1.setVisibility(View.GONE);
-            title2.setVisibility(View.GONE);
-            title3.setVisibility(View.GONE);
-        } else {
-            empty.setVisibility(View.GONE);
-            toEditAddress.setText(R.string.playfun_address_title3);
-            title1.setVisibility(View.VISIBLE);
-            title2.setVisibility(View.VISIBLE);
-            title3.setVisibility(View.VISIBLE);
-            userName.setText(addressEntity.getContacts());
-            userPhone.setText(addressEntity.getPhone());
-            String data = addressEntity.getCity() + "  " + addressEntity.getAre() + addressEntity.getAddress();
-            userAddress.setText(data);
-        }
-        boolean finalIsEmpty = isEmpty;
-        toEditAddress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //跳转收获详情编辑页面
-                alertAddressesInterface.toAddress(dialog, finalIsEmpty);
-            }
-        });
-
-        Button btnConfirm = contentView.findViewById(R.id.btn_confirm);
-        btnConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (finalIsEmpty) {
-                    ToastUtils.showShort(R.string.playfun_address_error);
-                } else {
-                    alertAddressesInterface.confirmSub(dialog);
-                }
-            }
-        });
-
-        ImageView close = contentView.findViewById(R.id.close);
-        close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        dialog.getWindow().setGravity(Gravity.BOTTOM);
-        dialog.getWindow().setWindowAnimations(R.style.BottomDialog_Animation);
-        //设置背景透明,去四个角
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        dialog.setContentView(contentView);
-        //设置宽度充满屏幕
-        Window window = dialog.getWindow();
-        window.setGravity(Gravity.BOTTOM); //可设置dialog的位置
-        window.getDecorView().setPadding(0, 0, 0, 0); //消除边距
-        WindowManager.LayoutParams lp = window.getAttributes();
-        lp.width = WindowManager.LayoutParams.MATCH_PARENT;   //设置宽度充满屏幕
-        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        window.setAttributes(lp);
-        //设置宽度充满屏幕
         return dialog;
     }
 

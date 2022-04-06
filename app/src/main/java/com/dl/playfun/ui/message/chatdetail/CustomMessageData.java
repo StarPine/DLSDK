@@ -16,7 +16,7 @@ public class CustomMessageData implements Serializable {
 
     int type = 0;
 
-    private int senderUserID;
+    private String senderUserID;
 
     private String msgId;
     private Integer id;
@@ -70,11 +70,11 @@ public class CustomMessageData implements Serializable {
         return customMessageData;
     }
 
-    public int getSenderUserID() {
+    public String getSenderUserID() {
         return senderUserID;
     }
 
-    public void setSenderUserID(int senderUserID) {
+    public void setSenderUserID(String senderUserID) {
         this.senderUserID = senderUserID;
     }
 

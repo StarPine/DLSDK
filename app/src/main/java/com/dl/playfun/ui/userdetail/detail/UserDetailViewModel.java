@@ -169,7 +169,7 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
 
         if (detailEntity.get().isConnectionMic()) {
             //视频拨打
-            getCallingInvitedInfo(2, userId.get(), String.format("user_%s", userId.get()));
+            getCallingInvitedInfo(2, detailEntity.get().getImToUserId(), detailEntity.get().getImUserId());
         } else {
             ToastUtils.showShort(R.string.user_detail_him_disable_mic2);
         }
@@ -184,7 +184,7 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
 
         if (detailEntity.get().isConnectionMic()) {
             //语音拨打
-            getCallingInvitedInfo(1, userId.get(), String.format("user_%s", userId.get()));
+            getCallingInvitedInfo(1, detailEntity.get().getImToUserId(), detailEntity.get().getImUserId());
         } else {
             ToastUtils.showShort(R.string.user_detail_him_disable_mic);
         }
@@ -203,9 +203,10 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
     public BindingCommand directChatOnClickCommand = new BindingCommand(() -> {
         isChat(userId.get(), 1);
     });
+    //进入私聊页面
     public BindingCommand chatOnClickCommand = new BindingCommand(() -> {
         AppContext.instance().logEvent(AppsFlyerEvent.Send_message);
-        ChatUtils.chatUser(userId.get(), detailEntity.get().getNickname(), this);
+        ChatUtils.chatUser(detailEntity.get().getImToUserId(),userId.get(), detailEntity.get().getNickname(), this);
         //isChat(userId.get(), 1);
     });
     //申请查看相册
@@ -711,20 +712,6 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
                                 //非会员查看相册
                                 uc.clickPayAlbum.postValue(userId);
                             }
-                        } else if (type == 3) {
-                            //连麦
-                            isLinkMic = true;
-                            if (response.getData().getIsChant() == 1) {
-                                //d
-                                getCallingInvitedInfo(1, userId, String.format(StringUtils.getString(R.string.playfun_imsdk_user_id), userId));
-                                //ChatUtils.audioCall(String.format(StringUtils.getString(R.string.playfun_imsdk_user_id), userId), detailEntity.get().getNickname());
-                            } else {
-                                if (response.getData().getChatNumber() > 0) {
-                                    uc.clickVipChat.postValue(response.getData().getChatNumber());
-                                } else {
-                                    uc.clickPayChat.postValue(ConfigManager.getInstance().getImMoney());
-                                }
-                            }
                         }
                     }
 
@@ -866,9 +853,9 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
             return;
         }
         if (isLinkMic) {
-            getCallingInvitedInfo(1, userId.get(), String.format(StringUtils.getString(R.string.playfun_imsdk_user_id), userId.get()));
+            getCallingInvitedInfo(1, detailEntity.get().getImToUserId(), detailEntity.get().getImUserId());
         } else {
-            ChatUtils.chatUser(userId.get(), detailEntity.get().getNickname(), this);
+            ChatUtils.chatUser(detailEntity.get().getImToUserId(), userId.get(), detailEntity.get().getNickname(), this);
         }
     }
 
@@ -925,9 +912,8 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
     }
 
     //拨打语音、视频
-    public void getCallingInvitedInfo(int callingType, Integer toUserId, String toImUserId) {
-        int MyUserId = model.readUserData().getId();
-        model.callingInviteInfo(callingType, MyUserId, toUserId, MyUserId)
+    public void getCallingInvitedInfo(int callingType, String IMUserId, String toIMUserId) {
+        model.callingInviteInfo(callingType, IMUserId, toIMUserId)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
@@ -941,7 +927,7 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
                         }
                         CallingInviteInfo callingInviteInfo = callingInviteInfoBaseDataResponse.getData();
                         if (callingInviteInfo != null) {
-                            Utils.tryStartCallSomeone(callingType, toImUserId, callingInviteInfo.getRoomId(), new Gson().toJson(callingInviteInfo));
+                            Utils.tryStartCallSomeone(callingType, toIMUserId, callingInviteInfo.getRoomId(), new Gson().toJson(callingInviteInfo));
                         }
                     }
 

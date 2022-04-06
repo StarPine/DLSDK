@@ -389,7 +389,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
     @Override
     public void onEnterAnimationEnd(Bundle savedInstanceState) {
         super.onEnterAnimationEnd(savedInstanceState);
-        String homePageName = AppContext.instance().appRepository.readDefaultHomePageConfig();
+        String homePageName = ConfigManager.getInstance().getAppRepository().readDefaultHomePageConfig();
         switch (homePageName) {
             case "home":
                 setSelectedItemId(binding.navigationHome);

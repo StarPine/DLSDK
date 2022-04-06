@@ -415,7 +415,7 @@ public class DialogLoginApi extends DialogFragment implements Consumer<Disposabl
 
     //第三方登录
     public void authLoginPost(String authId,String type){
-        AppContext.instance().appRepository.authLoginPost(authId,type)
+        ConfigManager.getInstance().getAppRepository().authLoginPost(authId,type)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
@@ -431,7 +431,7 @@ public class DialogLoginApi extends DialogFragment implements Consumer<Disposabl
                             authLoginUserEntity.setTypeLogin(2);
                         }
                         TokenEntity tokenEntity = new TokenEntity(authLoginUserEntity.getToken(),authLoginUserEntity.getUserID(),authLoginUserEntity.getUserSig(), authLoginUserEntity.getIsContract());
-                        AppContext.instance().appRepository.saveLoginInfo(tokenEntity);
+                        ConfigManager.getInstance().getAppRepository().saveLoginInfo(tokenEntity);
                         if(authLoginUserEntity!=null){
                             loadProfile(authLoginUserEntity);
                         }
@@ -459,9 +459,9 @@ public class DialogLoginApi extends DialogFragment implements Consumer<Disposabl
                     public void onSuccess(BaseDataResponse<UserDataEntity> response) {
                         UserDataEntity userDataEntity = response.getData();
                         AppContext.instance().mFirebaseAnalytics.setUserId(String.valueOf(userDataEntity.getId()));
-                        AppContext.instance().appRepository.saveUserData(userDataEntity);
+                        ConfigManager.getInstance().getAppRepository().saveUserData(userDataEntity);
                         if (userDataEntity.getCertification() == 1) {
-                            AppContext.instance().appRepository.saveNeedVerifyFace(true);
+                            ConfigManager.getInstance().getAppRepository().saveNeedVerifyFace(true);
                         }
                         if(loginResultListener!=null){
                             loginResultListener.authLoginSuccess(authLoginUserEntity,$facebookAccessToken,$googleSignInAccount);

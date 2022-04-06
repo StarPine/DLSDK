@@ -1,61 +1,51 @@
 <resources>
-
-
-    <string name="alivc_base_version">SDK VERSION INFO</string>
-
-    <!-- 美颜相关  start -->
-    <string name="alivc_base_beauty">Skin Filter</string>
-    <string name="alivc_base_beauty_face">Face Filter</string>
-    <string name="alivc_base_beauty_shape">Shape Filter</string>
-    <string name="alivc_base_fine_tune">Makeup</string>
-    <string name="alivc_base_stickers">Stickers</string>
-    <string name="alivc_base_filter">Filter</string>
-    <string name="alivc_record_anim_filter">Anim Filter</string>
-
-    <string name="alivc_base_beauty_whitening">Skin Whitening</string>
-    <string name="alivc_base_beauty_buffing">Skin Polishing</string>
-    <string name="alivc_base_beauty_blush">Skin Shining</string>
-    <string name="alivc_base_beauty_sharpen">Skin Sharpen</string>
-    <string name="alivc_base_beauty_bigeye">BigEye</string>
-    <string name="alivc_base_beauty_thinface">SlimFace</string>
-    <string name="alivc_base_beauty_level_advanced">Advanced</string>
-    <string name="alivc_base_beauty_level_normal">Normal</string>
-    <!--美颜脸型-->
-    <string name="alivc_base_beauty_natural_face">Natural Face</string>
-    <string name="alivc_base_beauty_square_face">Square Face</string>
-    <string name="alivc_base_beauty_round_face">Round Face</string>
-    <string name="alivc_base_beauty_long_face">Long Face</string>
-    <string name="alivc_base_beauty_pear_face">Pear Face</string>
-    <string name="alivc_base_beauty_cutface">cut Face</string>
-    <string name="alivc_base_beauty_longface">Long Face</string>
-    <string name="alivc_base_beauty_lowerjaw">Lower Jaw</string>
-    <string name="alivc_base_beauty_thinnose">Thin Nose</string>
-    <string name="alivc_base_beauty_mouthwidth">Mouth Width</string>
-    <string name="alivc_base_beauty_thinmandible">Thin Mandible</string>
-    <string name="alivc_base_beauty_cutcheek">Cut Cheek</string>
-
-    <string name="alivc_base_beauty_default_face">Default Face</string>
-    <string name="alivc_base_beauty_grace_face">Grace Face</string>
-    <string name="alivc_base_beauty_fine_face">Fine Face</string>
-    <string name="alivc_base_beauty_celebrity_face">Celebrity Face</string>
-    <string name="alivc_base_beauty_lovely_face">Lovely Face</string>
-    <string name="alivc_base_beauty_baby_face">Baby Face</string>
-    <string name="alivc_base_beauty_custom_face">Custom Face</string>
-    <!-- 美颜相关  end   -->
-
-    <string name="alivc_base_tips_fine_tuning">Tuning</string>
-    <string name="alivc_base_beauty_copyright">Advanced features are supported by FaceUnity</string>、
-    <string name="alivc_base_beauty_race_copyright">Advanced features are supported by Race</string>
-    <string name="alivc_base_beauty_queen_copyright">Advanced features are supported by queen</string>
+    <string name="alivc_base_version">SDK version information</string>
+    <string name="alivc_base_beauty">Beauty</string>
+    <string name="alivc_base_beauty_face">Beautify skin</string>
+    <string name="alivc_base_beauty_shape">Shape filter</string>
+    <string name="alivc_base_fine_tune">Fine-tuning</string>
+    <string name="alivc_base_stickers">Face stickers</string>
+    <string name="alivc_base_filter">filter</string>
+    <string name="alivc_record_anim_filter">Motion filters</string>
+    <string name="alivc_base_beauty_buffing">Microdermabrasion</string>
+    <string name="alivc_base_beauty_whitening">Whitening</string>
+    <string name="alivc_base_beauty_blush">rosy</string>
+    <string name="alivc_base_beauty_sharpen">Sharpen</string>
+    <string name="alivc_base_beauty_bigeye">Big eyes</string>
+    <string name="alivc_base_beauty_thinface">Slim face</string>
+    <string name="alivc_base_beauty_cutface">Narrow face</string>
+    <string name="alivc_base_beauty_longface">Face length</string>
+    <string name="alivc_base_beauty_lowerjaw">chin</string>
+    <string name="alivc_base_beauty_thinnose">Lean nose</string>
+    <string name="alivc_base_beauty_mouthwidth">Lip width</string>
+    <string name="alivc_base_beauty_thinmandible">mandible</string>
+    <string name="alivc_base_beauty_cutcheek">cheekbone</string>
+    <string name="alivc_base_beauty_level_advanced">Senior</string>
+    <string name="alivc_base_beauty_level_normal">ordinary</string>
+    <string name="alivc_base_beauty_natural_face">Natural face</string>
+    <string name="alivc_base_beauty_square_face">Square face</string>
+    <string name="alivc_base_beauty_round_face">Round face</string>
+    <string name="alivc_base_beauty_long_face">Long face</string>
+    <string name="alivc_base_beauty_pear_face">Pear-shaped face</string>
+    <string name="alivc_base_beauty_default_face">default</string>
+    <string name="alivc_base_beauty_grace_face">elegance</string>
+    <string name="alivc_base_beauty_fine_face">exquisite</string>
+    <string name="alivc_base_beauty_celebrity_face">Influencers</string>
+    <string name="alivc_base_beauty_lovely_face">Lovely</string>
+    <string name="alivc_base_beauty_baby_face">infant</string>
+    <string name="alivc_base_beauty_custom_face">Custom</string>
+    <string name="alivc_base_tips_fine_tuning">Click to fine-tuning</string>
+    <string name="alivc_base_beauty_copyright">Premium beauty is provided by faceunity</string>
+    <string name="alivc_base_beauty_race_copyright">Premium beauty is provided by race</string>
+    <string name="alivc_base_beauty_queen_copyright">Premium beauty is provided by queen</string>
     <string name="alivc_setting_rendering_faceunity">FaceUnity</string>
     <string name="alivc_setting_rendering_queen">Queen</string>
-    <string name="alivc_setting_rendering_default">默认</string>
-
-    <string name="alivc_base_beauty_copyright_link">View details</string>
+    <string name="alivc_setting_rendering_default">default</string>
+    <string name="alivc_base_beauty_copyright_link">How to get?</string>
     <string name="alivc_base_svideo_next">Next</string>
     <string name="alivc_base_svideo_save">Save</string>
-    <string name="alivc_develop_url">Develop Url</string>
-    <string name="alivc_pre_release_url">PreRelease Url</string>
-    <string name="alivc_release_url">Release Url</string>
+    <string name="alivc_develop_url">Test environment</string>
+    <string name="alivc_pre_release_url">Pre-release environment</string>
+    <string name="alivc_release_url">Formal environment</string>
 
 </resources>

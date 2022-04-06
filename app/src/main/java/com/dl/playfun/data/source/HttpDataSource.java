@@ -45,6 +45,7 @@ import com.dl.playfun.entity.GoldDetailEntity;
 import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.entity.GoogleNearPoiBean;
 import com.dl.playfun.entity.GooglePoiBean;
+import com.dl.playfun.entity.IMTransUserEntity;
 import com.dl.playfun.entity.ImSigEntity;
 import com.dl.playfun.entity.IsChatEntity;
 import com.dl.playfun.entity.MessageGroupEntity;
@@ -90,12 +91,21 @@ import java.util.Map;
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
 import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface HttpDataSource {
 
-
+    /**
+     * @Desc TODO(IM用户Id转成数值id)
+     * @author 彭石林
+     * @parame [IMUserId]
+     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse<com.dl.playfun.entity.IMTransUserEntity>>
+     * @Date 2022/4/2
+     */
+    Observable<BaseDataResponse<IMTransUserEntity>> transUserIM(String IMUserId);
     /**
      * @return io.reactivex.Observable<com.dl.play.chat.data.source.http.response.BaseDataResponse < com.dl.play.chat.entity.ChatDetailCoinEntity>>
      * @Desc TODO(拨打完成后调用查询总钻石 。 拨打发调用)
@@ -249,9 +259,8 @@ public interface HttpDataSource {
     Observable<BaseDataResponse<CallingInfoEntity>> getCallingInfo(
             Integer roomId, //房间号
             Integer callingType, //通话类型：1=语音，2=视频
-            Integer fromUserId, //拔打人用户ID
-            Integer toUserId,//接收人用户ID
-            Integer currentUserId//当前用户ID
+            String fromUserId, //拔打人用户ID
+            String toUserId//接收人用户ID
     );
 
     /**
@@ -261,7 +270,7 @@ public interface HttpDataSource {
      * @parame [appId, callingType, fromUserId, toUserId, currentUserId]
      * @Date 2021/12/13
      */
-    Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(Integer callingType, Integer fromUserId, Integer toUserId, Integer currentUserId);
+    Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(Integer callingType, String fromUserId, String toUserId);
 
     /**
      * 获取解锁社交账号配置
@@ -468,28 +477,10 @@ public interface HttpDataSource {
     Observable<BaseDataResponse<List<GoodsEntity>>> pointsGoodList();
 
     /**
-     * @Desc TODO(钻石兑换积分购买接口。积分ID)
-     * @author 彭石林
-     * @parame [id]
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
-     * @Date 2021/9/23
-     */
-    Observable<BaseResponse> ExchangeIntegraBuy( Integer id);
-
-    /**
      * 一键搭讪推送状态提交
      * @return
      */
     Observable<BaseResponse> pushGreet(Integer type);
-
-    /**
-     * @Desc TODO(钻石兑换积分列表)
-     * @author 彭石林
-     * @parame []
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseListDataResponse<com.dl.playfun.entity.ExchangeIntegraEntity>>
-     * @Date 2021/9/23
-     */
-    Observable<BaseDataResponse<ExchangeIntegraOuterEntity>> getExchangeIntegraListData();
 
     /**
      * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse < java.util.Map < java.lang.String, java.lang.String>>>
@@ -517,170 +508,6 @@ public interface HttpDataSource {
      * @Date 2021/9/9
      */
     Observable<BaseDataResponse<Map<String, String>>> isOnlineUser(String userId);
-
-    /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseListDataResponse>
-     * @Desc TODO(任务中心广告位)
-     * @author 彭石林
-     * @parame []
-     * @Date 2021/9/4
-     */
-    Observable<BaseListDataResponse<TaskAdEntity>> taskAdList();
-
-    /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
-     * @Desc TODO(兑换提货)
-     * @author 彭石林
-     * @parame [permanent_city_ids, address_id]
-     * @Date 2021/8/14
-     */
-    Observable<BaseResponse> subSupply(List<Integer> exchange_ids, Integer address_id);
-
-    /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
-     * @Desc TODO(删除收获地址)
-     * @author 彭石林
-     * @parame [id]
-     * @Date 2021/8/16
-     */
-    Observable<BaseResponse> removeAddress(Integer id);
-
-    /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse < com.dl.playfun.entity.AddressEntity>>
-     * @Desc TODO(查询用户默认收获地址)
-     * @author 彭石林
-     * @parame [id]
-     * @Date 2021/8/13
-     */
-    Observable<BaseDataResponse<AddressEntity>> getAddress(Integer id);
-
-    /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseListDataResponse < com.dl.playfun.entity.AddressEntity>>
-     * @Desc TODO(查询用户所有收获地址)
-     * @author 彭石林
-     * @parame []
-     * @Date 2021/8/13
-     */
-    Observable<BaseListDataResponse<AddressEntity>> getAddressList(Integer page);
-
-    /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
-     * @Desc TODO(添加收货地址)
-     * @author 彭石林
-     * @parame [contacts, city, are, address, phone, is_default]
-     * @Date 2021/8/13
-     */
-    Observable<BaseResponse> createAddress(
-            String contacts,
-            String city,
-            String are,
-            String address,
-            String phone,
-            Integer is_default);
-
-    /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
-     * @Desc TODO(修改收货地址)
-     * @author 彭石林
-     * @parame [contacts, city, are, address, phone, is_default]
-     * @Date 2021/8/13
-     */
-    Observable<BaseResponse> updateAddress(
-            Integer id,
-            String contacts,
-            String city,
-            String are,
-            String address,
-            String phone,
-            Integer is_default);
-
-    /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseListDataResponse < com.dl.playfun.entity.ExchangeEntity>>
-     * @Desc TODO(兑换记录)
-     * @author 彭石林
-     * @parame [page]
-     * @Date 2021/8/10
-     */
-    Observable<BaseListDataResponse<ExchangeEntity>> qryExchange(Integer page, Integer status);
-
-    /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
-     * @Desc TODO(积分商品兑换)
-     * @author 彭石林
-     * @parame [goodsId]
-     * @Date 2021/8/10
-     */
-    Observable<BaseResponse> exchange(String goodsId);
-
-    /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse < sBonusGoodsEntity>>
-     * @Desc TODO(积分商品列表)
-     * @author 彭石林
-     * @parame [page]
-     * @Date 2021/8/10
-     */
-    Observable<BaseListDataResponse<BonusGoodsEntity>> getBonusGoods(Integer page);
-
-    /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
-     * @Desc TODO(获取积分明细列表)
-     * @author 彭石林
-     * @parame []
-     * @Date 2021/8/9
-     */
-    Observable<BaseListDataResponse<GoldDetailEntity>> getGoldList(Integer page);
-
-    /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
-     * @Desc TODO(领取积分)
-     * @author 彭石林
-     * @parame []
-     * @Date 2021/8/9
-     */
-    Observable<BaseResponse> ToaskSubBonus(String key);
-
-    /**
-     * @Desc TODO(领取任务)
-     * @param key
-     * @author liaosf
-     */
-    Observable<BaseDataResponse<TaskRewardReceiveEntity>> TaskRewardReceive(String key);
-
-    /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse < com.dl.playfun.entity.TaskConfigListEntity>>
-     * @Desc TODO(获取新手任务 、 每日任务)
-     * @author 彭石林
-     * @parame []
-     * @Date 2021/8/10
-     */
-    Observable<BaseDataResponse<List<TaskConfigItemEntity>>> getTaskListConfig();
-
-    /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse < TaskConfigEntity>>
-     * @Desc TODO(获取任务中心配置)
-     * @author 彭石林
-     * @parame []
-     * @Date 2021/8/7
-     */
-    Observable<BaseDataResponse<TaskConfigEntity>> getTaskConfig();
-
-    /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse < com.dl.playfun.entity.EjectSignInEntity>>
-     * @Desc TODO(每日签到 。 签到成功)
-     * @author 彭石林
-     * @parame []
-     * @Date 2021/8/6
-     */
-    Observable<BaseDataResponse<EjectSignInEntity>> reportEjectSignIn();
-
-    /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse < com.dl.playfun.entity.EjectEntity>>
-     * @Desc TODO(查询用户每日签到)
-     * @author 彭石林
-     * @parame []
-     * @Date 2021/8/6
-     */
-    Observable<BaseDataResponse<EjectEntity>> getEjectconfig();
 
     /**
      * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse < BrowseNumberEntity>>
@@ -788,7 +615,7 @@ public interface HttpDataSource {
      * @param sex
      * @return
      */
-    Observable<BaseResponse> regUser(String nickname, String avatar, String birthday, Integer sex, String channel);
+    Observable<BaseDataResponse<UserDataEntity>> regUser(String nickname, String avatar, String birthday, Integer sex);
 
     /**
      * 上报用户当前坐标
@@ -830,7 +657,7 @@ public interface HttpDataSource {
      * @email 15616314565@163.com
      * Param [phone, code]
      **/
-    Observable<BaseDataResponse<TokenEntity>> v2Login(String phone, String code, String device_code);
+    Observable<BaseDataResponse<UserDataEntity>> v2Login(String phone, String code, String device_code);
 
     /**
      * 真人人脸图片
@@ -907,7 +734,7 @@ public interface HttpDataSource {
      * @param type     登录类型 facebook/line
      * @return
      */
-    Observable<BaseDataResponse<AuthLoginUserEntity>> authLoginPost(
+    Observable<BaseDataResponse<UserDataEntity>> authLoginPost(
             String id,
             String type
     );
@@ -1534,20 +1361,6 @@ public interface HttpDataSource {
     );
 
     /**
-     * 发起真人认证
-     *
-     * @return
-     */
-    Observable<BaseDataResponse<FaceVerifyTokenEntity>> faceVerifyToken();
-
-    /**
-     * 人脸对比
-     *
-     * @return
-     */
-    Observable<BaseDataResponse<CompareFaceEntity>> compareFaces(String img);
-
-    /**
      * 查看真人认证结果
      *
      * @param bizId
@@ -1662,13 +1475,6 @@ public interface HttpDataSource {
             String realName,
             String account
     );
-
-    /**
-     * 获取IM Sig
-     *
-     * @return
-     */
-    Observable<BaseDataResponse<ImSigEntity>> getImSig();
 
     /**
      * 设置我的相册权限

@@ -20,7 +20,6 @@ public class CustomChatInputFragment extends BaseInputFragment {
     public static boolean isAdmin = false;
     private TextView tvPicture;
     private TextView tvVideo;
-    private TextView tvLocation;
     private TextView tvBurn;
     private TextView tvRedPackage;
     private TextView tvCoinRedPackage;
@@ -35,9 +34,7 @@ public class CustomChatInputFragment extends BaseInputFragment {
                 customChatInputFragmentListener.onPictureActionClick();
             } else if (id == R.id.tv_action_video) {
                 customChatInputFragmentListener.onVideoActionClick();
-            } else if (id == R.id.tv_action_location) {
-                customChatInputFragmentListener.onLocationActionClick();
-            } else if (id == R.id.tv_action_burn) {
+            }  else if (id == R.id.tv_action_burn) {
                 customChatInputFragmentListener.onBurnActionClick();
             } else if (id == R.id.tv_action_redpackage) {
                 customChatInputFragmentListener.onRedPackageActionClick();
@@ -63,7 +60,6 @@ public class CustomChatInputFragment extends BaseInputFragment {
         View baseView = inflater.inflate(R.layout.fragment_custom_chat_input, container, false);
         tvPicture = baseView.findViewById(R.id.tv_action_picture);
         tvVideo = baseView.findViewById(R.id.tv_action_video);
-        tvLocation = baseView.findViewById(R.id.tv_action_location);
         tvBurn = baseView.findViewById(R.id.tv_action_burn);
         tvRedPackage = baseView.findViewById(R.id.tv_action_redpackage);
         tvCoinRedPackage = baseView.findViewById(R.id.tv_action_coin_redpackage);
@@ -78,7 +74,6 @@ public class CustomChatInputFragment extends BaseInputFragment {
 
         tvPicture.setOnClickListener(onClickListener);
         tvVideo.setOnClickListener(onClickListener);
-        tvLocation.setOnClickListener(onClickListener);
         tvBurn.setOnClickListener(onClickListener);
         tvRedPackage.setOnClickListener(onClickListener);
         tvCoinRedPackage.setOnClickListener(onClickListener);
@@ -91,8 +86,6 @@ public class CustomChatInputFragment extends BaseInputFragment {
         void onPictureActionClick();
 
         void onVideoActionClick();
-
-        void onLocationActionClick();
 
         void onBurnActionClick();
 

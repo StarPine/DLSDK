@@ -59,8 +59,6 @@ public class EditProfileViewModel extends BaseViewModel<AppRepository> {
     public List<UnlockSocialAccountConfigEntity.PriceInfosBean> price = new ArrayList<>();
     //    职业
     public List<OccupationConfigItemEntity> occupation = new ArrayList<>();
-    //    城市
-    public List<ConfigItemEntity> city = new ArrayList<>();
 
     UIChangeObservable uc = new UIChangeObservable();
     public BindingCommand uploadAvatarOnClickCommand = new BindingCommand(() -> {
@@ -71,16 +69,6 @@ public class EditProfileViewModel extends BaseViewModel<AppRepository> {
     public BindingCommand setUnlockPrice = new BindingCommand(() -> {
         loadSocialAccountConfig();
 
-    });
-
-    //    选择城市
-    public BindingCommand chooseCity = new BindingCommand(new BindingAction() {
-        @Override
-        public void call() {
-//            ToastUtils.showShort("选择城市");
-            uc.clickCity.call();
-
-        }
     });
     //    选择生日
     public BindingCommand chooseBirthday = new BindingCommand(new BindingAction() {
@@ -124,7 +112,6 @@ public class EditProfileViewModel extends BaseViewModel<AppRepository> {
         height.addAll(model.readHeightConfig());
         weight.addAll(model.readWeightConfig());
         occupation.addAll(model.readOccupationConfig());
-        city.addAll(model.readCityConfig());
 
     }
 
@@ -273,10 +260,6 @@ public class EditProfileViewModel extends BaseViewModel<AppRepository> {
             ToastUtils.showShort(R.string.playfun_name_nust);
             return;
         }
-        if (userEntity.getPermanentCityIds() == null) {
-            ToastUtils.showShort(R.string.playfun_city_nust);
-            return;
-        }
         if (userEntity.getBirthdayCal() == null) {
             ToastUtils.showShort(R.string.playfun_brithday_must);
             return;
@@ -372,7 +355,6 @@ public class EditProfileViewModel extends BaseViewModel<AppRepository> {
 
     public class UIChangeObservable {
         public SingleLiveEvent<Void> clickAvatar = new SingleLiveEvent<>();
-        public SingleLiveEvent clickCity = new SingleLiveEvent<>();
         public SingleLiveEvent clickBirthday = new SingleLiveEvent<>();
         public SingleLiveEvent clickOccupation = new SingleLiveEvent<>();
         public SingleLiveEvent clickProgram = new SingleLiveEvent<>();

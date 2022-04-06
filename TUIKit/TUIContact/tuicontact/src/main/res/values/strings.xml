@@ -1,79 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-	<string name="new_friend">Новые Контакты</string>
-	<string name="group">Мои Групповые Чаты</string>
-	<string name="blacklist">Заблокированный список</string>
-	<string name="contact_count">%d контакт(контакты)</string>
-	<string name="contact_title">Контакты</string>
-
-	<string name="no_friend_apply">Нет запроса в друзья</string>
-	<string name="at_all">Все</string>
-
-	<string name="success">Успешный</string>
-	<string name="have_be_friend">Вы уже друзья.</string>
-	<string name="friend_limit">Количество ваших друзей превышает лимит.</string>
-	<string name="other_friend_limit">Количество друзей другого пользователя превышает лимит.</string>
-	<string name="in_blacklist">Вы заблокировали этого пользователя.</string>
-	<string name="forbid_add_friend">Этот пользователь отключил запрос на добавление в друзья.</string>
-	<string name="set_in_blacklist">Вы были заблокированы.</string>
-	<string name="wait_agree_friend">Отправленный запрос</string>
-	<string name="send_request">Отправленный запрос</string>
-
-
-
-	<string name="request_agree">Принимать</string>
-	<string name="request_accepted">Принято</string>
-	<string name="request_waiting">Ожидаемый</string>
-	<string name="profile_detail">Подробности</string>
-	<string name="profile_remark_edit">Редактировать псевдоним</string>
-
-
-	<string name="profile_id">Счет</string>
-	<string name="profile_add_wording">Проверочное сообщение</string>
-	<string name="profile_remark">Замечание</string>
-	<string name="profile_black">Блок</string>
-	<string name="profile_chat">отправить сообщение</string>
-	<string name="profile_del">Удалить друга</string>
-
-	<string name="select_chat">Выберите пользователя чата</string>
-
-	<string name="tips_empty_group_member">Выберите участников группы</string>
-	<string name="tips_empty_group_type">Выберите способ присоединения к группе</string>
-
-	<string name="accept">Соглашаться</string>
-	<string name="refuse">Снижение</string>
-	<string name="accepted">Согласованный</string>
-	<string name="refused">Отклоненный</string>
-
-	<string name="cancel">Отменить</string>
-	<string name="sure">ОК</string>
-
-	<string name="chat_to_top">Липкий сверху</string>
-
-
-	<string name="add_friend">Добавить в контакты</string>
-	<string name="add_group">Добавить Групповой Чат</string>
-	<string name="start_conversation">Новый Чат</string>
-	<string name="create_group_chat">Создать Групповой Чат</string>
-	<string name="create_chat_room">Создать Комнату Чата</string>
-	<string name="create_private_group">Создать Дискуссионную группу</string>
-	<string name="create_community">Создать сообщество</string>
-	<string name="hint_add_user_id">Введите идентификатор</string>
-	<string name="hint_add_wording">Введите проверочное сообщение</string>
-	<string name="contact_add">Добавь</string>
-	<string name="user_id">Идентификатор</string>
-	<string name="add_wording">Проверочное сообщение</string>
-	<string name="create_group">Создать группу</string>
-
-
-	<string name="modify_group_name">Изменить название группы</string>
-	<string name="add_group_member">Добавить участника</string>
-	<string name="group_join_type">Способ объединения в группу</string>
-	<string name="forbid_join">Запрещено вступать</string>
-	<string name="manager_judge">Одобрение администратора</string>
-	<string name="auto_judge">Автоматическое утверждение</string>
-	<string name="input_tip">Кличка не введен, пожалуйста, заполните его еще раз</string>
-	<string name="profile_msgrev_opt">Сообщение Не беспокоить</string>
-
+	<string name="new_friend">New Contacts</string>
+	<string name="group">My Group Chats</string>
+	<string name="blacklist">Blocked List</string>
+	<string name="contact_count">%d contact(s)</string>
+	<string name="contact_title">Contacts</string>
+	<string name="no_friend_apply">No friend request</string>
+	<string name="at_all">All</string>
+	<string name="success">Successful</string>
+	<string name="have_be_friend">You\'re already friends.</string>
+	<string name="friend_limit">The number of your friends exceeds the limit.</string>
+	<string name="other_friend_limit">The number of the other user\'s friends exceeds the limit.</string>
+	<string name="in_blacklist">You have blocked this user.</string>
+	<string name="forbid_add_friend">This user has disabled friend request.</string>
+	<string name="set_in_blacklist">You have been blocked.</string>
+	<string name="wait_agree_friend">Request sent</string>
+	<string name="send_request">Request sent</string>
+	<string name="request_agree">Accept</string>
+	<string name="request_accepted">Accepted</string>
+	<string name="request_waiting">Pending</string>
+	<string name="profile_detail">Details</string>
+	<string name="profile_remark_edit">Edit Alias</string>
+	<string name="profile_id">Account</string>
+	<string name="profile_add_wording">Verification Message</string>
+	<string name="profile_remark">Remark</string>
+	<string name="profile_black">Block</string>
+	<string name="profile_chat">Send Message</string>
+	<string name="profile_del">Delete Friend</string>
+	<string name="select_chat">Select chat user</string>
+	<string name="tips_empty_group_member">Select group members</string>
+	<string name="tips_empty_group_type">Select group joining method</string>
+	<string name="accept">Agree</string>
+	<string name="refuse">Decline</string>
+	<string name="accepted">Agreed</string>
+	<string name="refused">Declined</string>
+	<string name="cancel">Cancel</string>
+	<string name="sure">OK</string>
+	<string name="chat_to_top">Sticky on Top</string>
+	<string name="add_friend">Add to Contacts</string>
+	<string name="add_group">Add Group Chat</string>
+	<string name="start_conversation">New Chat</string>
+	<string name="create_group_chat">Create Group Chat</string>
+	<string name="create_chat_room">Create Chat Room</string>
+	<string name="create_private_group">Create Discussion Group</string>
+	<string name="create_community">Create Community</string>
+	<string name="hint_add_user_id">Enter ID</string>
+	<string name="hint_add_wording">Enter verification message</string>
+	<string name="contact_add">Add</string>
+	<string name="user_id">ID</string>
+	<string name="add_wording">Verification Message</string>
+	<string name="create_group">Create Group</string>
+	<string name="modify_group_name">Edit Group Name</string>
+	<string name="add_group_member">Add Member</string>
+	<string name="group_join_type">Group Joining Method</string>
+	<string name="forbid_join">Prohibited from Joining</string>
+	<string name="manager_judge">Admin Approval</string>
+	<string name="auto_judge">Auto Approval</string>
+	<string name="input_tip">No nickname entered, please fill in again</string>
+	<string name="profile_msgrev_opt">Message Do Not Disturb</string>
 </resources>

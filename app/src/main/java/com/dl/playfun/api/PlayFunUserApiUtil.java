@@ -87,7 +87,7 @@ public class PlayFunUserApiUtil {
         ConfigManagerUtil.getInstance().putPlayGameFlag(true);
         if(gameActivityName!=null){
             Intent intent = new Intent();
-            intent.setComponent(new ComponentName(mContext.getApplicationContext(), "com.joyluckgame.petcoin.UnityPlayerActivity"));
+            intent.setComponent(new ComponentName(mContext.getApplicationContext(), gameActivityName));
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             mContext.startActivity(intent);
         }
@@ -108,6 +108,9 @@ public class PlayFunUserApiUtil {
         AppContext.instance().setGameState(-1);
         Intent intent = new Intent(mContext, MainContainerActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        //出栈动画
+        //((Activity)mContext).overridePendingTransition(R.anim.slide_in_left, R.anim.slide_in_left);
+
         mContext.startActivity(intent);
     }
 

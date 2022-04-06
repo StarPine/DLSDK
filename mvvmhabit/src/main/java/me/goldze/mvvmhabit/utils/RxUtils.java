@@ -76,13 +76,6 @@ public class RxUtils {
         return new ObservableTransformer() {
             @Override
             public ObservableSource apply(Observable observable) {
-                observable.map(new Function() {
-                    @Override
-                    public Object apply(@androidx.annotation.NonNull Object o) throws Exception {
-                        Log.e("解析异常内容",String.valueOf(o));
-                        return null;
-                    }
-                });
                 return observable
 //                        .map(new HandleFuc<T>())  //这里可以取出BaseResponse中的Result
                         .onErrorResumeNext(new HttpResponseFunc());

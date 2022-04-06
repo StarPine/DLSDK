@@ -148,6 +148,13 @@ public class UserDetailEntity extends BaseObservable {
     @SerializedName("news_number")
     private Integer newsNumber;
 
+    //当前用户im id
+    @SerializedName("imId")
+    private String ImUserId;
+    //对方用户 IM iD
+    @SerializedName("toImId")
+    private String ImToUserId;
+
     @Bindable
     public Integer getBlacklistStatus() {
         return blacklistStatus;
@@ -530,6 +537,22 @@ public class UserDetailEntity extends BaseObservable {
         notifyPropertyChanged(BR.chat);
     }
 
+    public String getImUserId() {
+        return ImUserId;
+    }
+
+    public void setImUserId(String imUserId) {
+        ImUserId = imUserId;
+    }
+
+    public String getImToUserId() {
+        return ImToUserId;
+    }
+
+    public void setImToUserId(String imToUserId) {
+        ImToUserId = imToUserId;
+    }
+
     @Override
     public String toString() {
         return "UserDetailEntity{" +
@@ -543,6 +566,7 @@ public class UserDetailEntity extends BaseObservable {
                 ", constellation='" + constellation + '\'' +
                 ", distance=" + distance +
                 ", isOnline=" + isOnline +
+                ", callingStatus=" + callingStatus +
                 ", isVip=" + isVip +
                 ", certification=" + certification +
                 ", programIds=" + programIds +
@@ -553,12 +577,14 @@ public class UserDetailEntity extends BaseObservable {
                 ", height=" + height +
                 ", isWeixinShow=" + isWeixinShow +
                 ", isUnlockAccount=" + isUnlockAccount +
+                ", unlockAccountMoney=" + unlockAccountMoney +
                 ", weixin='" + weixin + '\'' +
                 ", insgram='" + insgram + '\'' +
                 ", topicalId=" + topicalId +
                 ", news=" + news +
                 ", albumType=" + albumType +
                 ", albumImgTotal=" + albumImgTotal +
+                ", blacklistStatus=" + blacklistStatus +
                 ", albumApply=" + albumApply +
                 ", albumPayMoney=" + albumPayMoney +
                 ", album=" + album +
@@ -571,6 +597,12 @@ public class UserDetailEntity extends BaseObservable {
                 ", useType=" + useType +
                 ", isConnectionMic=" + isConnectionMic +
                 ", isView=" + isView +
+                ", sound='" + sound + '\'' +
+                ", soundTime=" + soundTime +
+                ", soundStatus=" + soundStatus +
+                ", newsNumber=" + newsNumber +
+                ", ImUserId='" + ImUserId + '\'' +
+                ", ImToUserId='" + ImToUserId + '\'' +
                 '}';
     }
 }

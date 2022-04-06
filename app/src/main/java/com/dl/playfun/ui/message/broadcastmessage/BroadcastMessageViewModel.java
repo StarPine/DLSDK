@@ -1,12 +1,13 @@
 package com.dl.playfun.ui.message.broadcastmessage;
 
 import android.app.Application;
-import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableArrayList;
 import androidx.databinding.ObservableList;
 
+import com.dl.playfun.BR;
+import com.dl.playfun.R;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.observer.BaseListEmptyObserver;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
@@ -14,9 +15,6 @@ import com.dl.playfun.data.source.http.response.BaseListDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.BoradCastMessageEntity;
 import com.dl.playfun.viewmodel.BaseRefreshViewModel;
-import com.dl.playfun.BR;
-import com.dl.playfun.R;
-import com.dl.playfun.ui.program.programdetail.ProgramDetailFragment;
 
 import java.util.List;
 
@@ -43,12 +41,6 @@ public class BroadcastMessageViewModel extends BaseRefreshViewModel<AppRepositor
     public void onEnterAnimationEnd() {
         super.onEnterAnimationEnd();
         startRefresh();
-    }
-
-    public void itemClick(int position) {
-        BoradCastMessageEntity itemEntity = observableList.get(position).itemEntity.get();
-        Bundle bundle = ProgramDetailFragment.getStartBundle(itemEntity.getTopicalId());
-        start(ProgramDetailFragment.class.getCanonicalName(), bundle);
     }
 
     @Override

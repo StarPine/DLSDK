@@ -33,26 +33,6 @@ public class FaceVerifySuccessViewModel extends BaseViewModel<AppRepository> {
 
     }
 
-    //领取真人认证积分
-    public void ToaskSubBonus() {
-        model.TaskRewardReceive("certification")    //1.3.0新接口
-                .doOnSubscribe(this)
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseDataResponse<TaskRewardReceiveEntity>>() {
-                    @Override
-                    public void onSuccess(BaseDataResponse<TaskRewardReceiveEntity> response) {
-                        uc.realPenson.postValue(response.getData());
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        dismissHUD();
-                    }
-                });
-    }
-
     public class UIChangeObservable {
         public SingleLiveEvent<TaskRewardReceiveEntity> realPenson = new SingleLiveEvent<>();
 

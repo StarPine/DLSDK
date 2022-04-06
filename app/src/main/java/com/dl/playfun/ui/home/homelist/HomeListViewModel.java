@@ -1,6 +1,7 @@
 package com.dl.playfun.ui.home.homelist;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
@@ -107,6 +108,9 @@ public class HomeListViewModel extends BaseParkViewModel<AppRepository> {
         if (homeMainViewModel == null) {
             return;
         }
+        if (currentPage == 1 && observableList.size()>0) {
+            observableList.clear();
+        }
         model.homeList(homeMainViewModel.cityId.get(),
                 type.get(),
                 homeMainViewModel.online.get() ? 1 : 0,
@@ -122,10 +126,8 @@ public class HomeListViewModel extends BaseParkViewModel<AppRepository> {
                 .subscribe(new BaseListEmptyObserver<BaseListDataResponse<ParkItemEntity>>(this) {
                     @Override
                     public void onSuccess(BaseListDataResponse<ParkItemEntity> response) {
+                        Log.e("请求返回数据",response.getData().getData().size()+"");
                         super.onSuccess(response);
-                        if (currentPage == 1) {
-                            observableList.clear();
-                        }
                         int sex = model.readUserData().getSex();
                         for (ParkItemEntity itemEntity : response.getData().getData()) {
                             BaseParkItemViewModel item = new BaseParkItemViewModel(HomeListViewModel.this, sex, itemEntity);

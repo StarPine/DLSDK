@@ -39,6 +39,7 @@ import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.entity.AuthLoginUserEntity;
 import com.dl.playfun.entity.TokenEntity;
 import com.dl.playfun.entity.UserDataEntity;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.WebUrlViewActivity;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -442,17 +443,17 @@ public class PlayFunLoginView extends DialogFragment implements Consumer<Disposa
 
     //第三方登录
     public void authLoginPost(String authId,String type,PlayFunAuthUserEntity playFunAuthUserEntity){
-        AppContext.instance().appRepository.authLoginPost(authId,type)
+        ConfigManager.getInstance().getAppRepository().authLoginPost(authId,type)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
                 .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseDataResponse<AuthLoginUserEntity>>(){
+                .subscribe(new BaseObserver<BaseDataResponse<UserDataEntity>>(){
                     @Override
-                    public void onSuccess(BaseDataResponse<AuthLoginUserEntity> authLoginUserEntityBaseDataResponse) {
-                        AuthLoginUserEntity authLoginUserEntity = authLoginUserEntityBaseDataResponse.getData();
+                    public void onSuccess(BaseDataResponse<UserDataEntity> authLoginUserEntityBaseDataResponse) {
+                        UserDataEntity authLoginUserEntity = authLoginUserEntityBaseDataResponse.getData();
                         TokenEntity tokenEntity = new TokenEntity(authLoginUserEntity.getToken(),authLoginUserEntity.getUserID(),authLoginUserEntity.getUserSig(), authLoginUserEntity.getIsContract());
-                        AppContext.instance().appRepository.saveLoginInfo(tokenEntity);
+                        ConfigManager.getInstance().getAppRepository().saveLoginInfo(tokenEntity);
                         if(authLoginUserEntity!=null){
                             playFunAuthUserEntity.setToken(authLoginUserEntity.getToken());
                             playFunAuthUserEntity.setUserID(authLoginUserEntity.getUserID());
@@ -460,7 +461,15 @@ public class PlayFunLoginView extends DialogFragment implements Consumer<Disposa
                             playFunAuthUserEntity.setIsContract(authLoginUserEntity.getIsContract());
                             playFunAuthUserEntity.setIsNewUser(authLoginUserEntity.getIsNewUser());
                             playFunAuthUserEntity.setIsBindGame(authLoginUserEntity.getIsBindGame());
-                            loadProfile(playFunAuthUserEntity);
+
+                            AppContext.instance().mFirebaseAnalytics.setUserId(String.valueOf(authLoginUserEntity.getId()));
+                            ConfigManager.getInstance().getAppRepository().saveUserData(authLoginUserEntity);
+                            if (authLoginUserEntity.getCertification() == 1) {
+                                ConfigManager.getInstance().getAppRepository().saveNeedVerifyFace(true);
+                            }
+                            if(loginResultListener!=null){
+                                loginResultListener.authLoginSuccess(playFunAuthUserEntity);
+                            }
                         }
 
                     }
@@ -471,37 +480,6 @@ public class PlayFunLoginView extends DialogFragment implements Consumer<Disposa
                 });
     }
 
-    /**
-     * 加载用户资料
-     */
-    private void loadProfile(PlayFunAuthUserEntity playFunAuthUserEntity) {
-        //RaJava模拟登录
-        Injection.provideDemoRepository().getUserData()
-                .doOnSubscribe(this)
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseDataResponse<UserDataEntity>>() {
-                    @Override
-                    public void onSuccess(BaseDataResponse<UserDataEntity> response) {
-                        UserDataEntity userDataEntity = response.getData();
-                        AppContext.instance().mFirebaseAnalytics.setUserId(String.valueOf(userDataEntity.getId()));
-                        AppContext.instance().appRepository.saveUserData(userDataEntity);
-                        if (userDataEntity.getCertification() == 1) {
-                            AppContext.instance().appRepository.saveNeedVerifyFace(true);
-                        }
-                        if(loginResultListener!=null){
-                            loginResultListener.authLoginSuccess(playFunAuthUserEntity);
-                        }
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-    }
-    
     public void setLoginResultListener(AuthLoginResultListener loginResultListener){
         this.loginResultListener = loginResultListener;
     }

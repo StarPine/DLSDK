@@ -111,7 +111,7 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
         } else {//被动接听
             toId = V2TIMManager.getInstance().getLoginUser();
             viewModel.init(callUserId, toId, role);
-            viewModel.getCallingInvitedInfo(1, ChatUtils.imUserIdToSystemUserId(callUserId));
+            viewModel.getCallingInvitedInfo(1, callUserId);
         }
         try {
             new RxPermissions(this)

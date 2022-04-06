@@ -3,7 +3,7 @@ package com.dl.playfun.data.source.http;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.dl.playfun.BuildConfig;
+import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.data.source.http.interceptor.TokenInterceptor;
 import com.ihsanbal.logging.Level;
@@ -74,10 +74,15 @@ public class RetrofitClient {
         if (headers == null) {
             headers = new HashMap<>();
         }
+//        - PlayChat source值 1648626888 user_
+//                - 宠物世界-俄罗斯 source值 1642158125 ru_
+//                - OKEY土耳其 source值 1648520220 troken_
+//                - 宠物大富翁-台湾繁体 source值 1648699860 twpet_
         headers.put("client", "Android");
         headers.put("version", AppConfig.VERSION_NAME_PUSH);
-        //source 来源ID 1642158125=喵遊 1648520220=杜拉克
-        headers.put("source","1648520220");
+        //source 来源ID 1642158125=喵遊(俄语) 1648520220=杜拉克 //playchat 1648626888
+        headers.put("appId","1648626888");
+        headers.put("Accept-Language", mContext.getString(R.string.playfun_local_language));
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .cookieJar(new CookieJarImpl(new PersistentCookieStore(mContext)))
 //                .cache(cache)
@@ -86,7 +91,7 @@ public class RetrofitClient {
                 .addInterceptor(new TokenInterceptor())
                 .addInterceptor(new LoggingInterceptor
                         .Builder()//构建者模式
-                        .loggable(BuildConfig.DEBUG) //是否开启日志打印
+                        .loggable(AppConfig.isDebug) //是否开启日志打印
                         .setLevel(Level.BASIC) //打印的等级
                         .log(Platform.INFO) // 打印类型
                         .request("Request") // request的Tag

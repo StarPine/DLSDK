@@ -170,13 +170,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/radio_money" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="кошелек"
-                    android:textSize="12sp" />
-
             </LinearLayout>
 
         </RelativeLayout>

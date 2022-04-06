@@ -659,10 +659,10 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
 
     private void payLockAlbum(Integer userId, String nickName, Integer coinPrice) {
         String btn1 = "";
-        if (AppContext.instance().appRepository.readUserData().getSex() == 1) {
+        if (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == 1) {
             btn1 = getString(R.string.playfun_to_be_member_free_albums);
         } else {
-            if (AppContext.instance().appRepository.readUserData().getCertification() == 1) {
+            if (ConfigManager.getInstance().getAppRepository().readUserData().getCertification() == 1) {
                 btn1 = getString(R.string.playfun_to_be_goddess_free_albums);
             } else {
                 btn1 = getString(R.string.playfun_warn_no_certification);
@@ -674,7 +674,7 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
                 .setConfirmTwoText(String.format(getString(R.string.playfun_pay_ro_unlock_diamond), coinPrice))
                 .setConfirmOnlick(dialog -> {
                     dialog.dismiss();
-                    if (AppContext.instance().appRepository.readUserData().getSex() == 1) {
+                    if (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == 1) {
                         viewModel.start(VipSubscribeFragment.class.getCanonicalName());
                     } else {
                         viewModel.start(CertificationFemaleFragment.class.getCanonicalName());
@@ -740,19 +740,19 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
     }
 
     private boolean isVip() {
-        return AppContext.instance().appRepository.readUserData().getIsVip() == 1;
+        return ConfigManager.getInstance().getAppRepository().readUserData().getIsVip() == 1;
     }
 
     private void payCheckChat(Integer coinPrice) {
         String btn1 = "";
         String title = "";
-        int sex = AppContext.instance().appRepository.readUserData().getSex();
+        int sex = ConfigManager.getInstance().getAppRepository().readUserData().getSex();
         if (sex == AppConfig.MALE) {
             title = getString(R.string.playfun_to_chat_her);
             btn1 = getString(R.string.playfun_to_be_member_free_chat);
         } else {
             title = getString(R.string.playfun_to_chat_he);
-            if (AppContext.instance().appRepository.readUserData().getCertification() == 1) {
+            if (ConfigManager.getInstance().getAppRepository().readUserData().getCertification() == 1) {
                 btn1 = getString(R.string.playfun_to_be_goddess_free_chat);
             } else {
                 btn1 = getString(R.string.playfun_warn_no_certification);

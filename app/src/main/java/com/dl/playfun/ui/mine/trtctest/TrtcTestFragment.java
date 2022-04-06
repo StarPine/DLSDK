@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.entity.TokenEntity;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.dl.playfun.BR;
@@ -50,7 +51,7 @@ public class TrtcTestFragment extends BaseToolbarFragment<FragmentTrtcTestBindin
         binding.btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TokenEntity tokenEntity = AppContext.instance().appRepository.readLoginInfo();
+                TokenEntity tokenEntity = ConfigManager.getInstance().getAppRepository().readLoginInfo();
                 sb = new StringBuilder();
                 TRTCCloud.sharedInstance(mActivity).setListener(new TRTCCloudListener() {
                     @Override

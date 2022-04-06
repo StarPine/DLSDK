@@ -24,101 +24,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/transparentyin"
-            android:clickable="true"
-            android:elevation="1dp"
-            android:gravity="center"
-            android:visibility="gone"
-            >
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="396dp"
-                android:layout_marginLeft="17dp"
-                android:layout_marginRight="17dp"
-                android:background="@drawable/location_alert"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="149dp"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="10dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/playfun_dialog_location_title"
-                        android:textColor="@color/black"
-                        android:textSize="17sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="48dp"
-                        android:layout_marginTop="6dp"
-                        android:layout_marginEnd="48dp"
-                        android:gravity="center"
-                        android:text="@string/playfun_dialog_location_title1"
-                        android:textSize="11sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_marginTop="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="15dp"
-                        android:text="@string/playfun_dialog_location_title_sel"
-                        android:textColor="@color/black"
-                        android:textSize="13sp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="45dp"
-                        android:layout_marginStart="15dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="15dp"
-                        android:background="@drawable/location_alert_sel_icon"
-                        android:drawableRight="@drawable/lication_alert_sel_zk"
-                        android:ellipsize="end"
-                        android:gravity="center|start"
-                        android:hint="@string/playfun_dialog_location_title_sel_hint"
-                        android:maxLines="1"
-                        android:paddingStart="14dp"
-                        android:paddingRight="14dp"
-                        android:text="@{viewModel.SelConfigItemEntity.name}"
-                        android:textSize="16dp"
-                        app:onClickCommand="@{viewModel.clickLocationSelCommand}" />
-                </LinearLayout>
-
-                <Button
-                    android:id="@+id/btn_confirm"
-                    style="@style/ButtonPrimary"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="42dp"
-                    android:layout_marginLeft="42dp"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginRight="42dp"
-                    android:text="@string/playfun_confirm"
-                    android:textStyle="normal"
-                    android:textSize="14sp"
-                    app:onClickCommand="@{viewModel.clickbtnConfirm}" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
             android:orientation="vertical"
             tools:context="com.dl.playfun.ui.home.HomeMainFragment">
 
@@ -172,22 +77,6 @@
                             android:track="@null"
                             binding:onClickCommand="@{viewModel.genderOnClickCommand}"
                             binding:switchState="@{safeUnbox(viewModel.gender)}" />
-
-                        <TextView
-                            android:id="@+id/tv_location"
-                            style="@style/ActionBarTitle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:drawableRight="@drawable/ic_arrow_down"
-                            android:drawablePadding="5dp"
-                            android:padding="5dp"
-                            android:text="@{viewModel.regionTitle}"
-                            binding:onClickCommand="@{viewModel.regionOnClickCommand}"
-                            android:maxLines="1"
-                            android:ellipsize="end"
-                            tools:text=""
-                            />
 
                         <Switch
                             android:layout_width="wrap_content"

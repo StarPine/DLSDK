@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
 import com.dl.playfun.widget.dialog.MVDialog;
@@ -62,10 +63,10 @@ public class TwDollarMoneyFragment extends BaseToolbarFragment<FragmentWalletDol
                     .setConfirmOnlick(new MVDialog.ConfirmOnclick() {
                         @Override
                         public void confirm(MVDialog dialog) {
-                            if (AppContext.instance().appRepository.readUserData().getSex() == AppConfig.MALE) {
+                            if (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == AppConfig.MALE) {
                                 viewModel.start(CertificationMaleFragment.class.getCanonicalName());
                                 return;
-                            } else if (AppContext.instance().appRepository.readUserData().getSex() == AppConfig.FEMALE) {
+                            } else if (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == AppConfig.FEMALE) {
                                 viewModel.start(CertificationFemaleFragment.class.getCanonicalName());
                                 return;
                             }

@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.databinding.ObservableArrayList;
 import androidx.databinding.ObservableList;
 
+import com.dl.playfun.BR;
+import com.dl.playfun.R;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
@@ -19,16 +21,13 @@ import com.dl.playfun.entity.MessageGroupEntity;
 import com.dl.playfun.event.PushMessageEvent;
 import com.dl.playfun.event.SystemMessageCountChangeEvent;
 import com.dl.playfun.ui.message.applymessage.ApplyMessageFragment;
+import com.dl.playfun.ui.message.broadcastmessage.BroadcastMessageFragment;
 import com.dl.playfun.ui.message.commentmessage.CommentMessageFragment;
 import com.dl.playfun.ui.message.evaluatemessage.EvaluateMessageFragment;
 import com.dl.playfun.ui.message.givemessage.GiveMessageFragment;
 import com.dl.playfun.ui.message.profitmessage.ProfitMessageFragment;
-import com.dl.playfun.ui.message.signmessage.SignMessageFragment;
 import com.dl.playfun.ui.message.systemmessage.SystemMessageFragment;
 import com.dl.playfun.viewmodel.BaseRefreshViewModel;
-import com.dl.playfun.BR;
-import com.dl.playfun.R;
-import com.dl.playfun.ui.message.broadcastmessage.BroadcastMessageFragment;
 
 import java.util.List;
 
@@ -82,9 +81,7 @@ public class SystemMessageGroupViewModel extends BaseRefreshViewModel<AppReposit
                 start(BroadcastMessageFragment.class.getCanonicalName());
             } else if ("comment".equals(mold)) {
                 start(CommentMessageFragment.class.getCanonicalName());
-            } else if ("sign".equals(mold)) {
-                start(SignMessageFragment.class.getCanonicalName());
-            } else if ("give".equals(mold)) {
+            }  else if ("give".equals(mold)) {
                 start(GiveMessageFragment.class.getCanonicalName());
             } else if ("evaluate".equals(mold)) {
                 start(EvaluateMessageFragment.class.getCanonicalName());

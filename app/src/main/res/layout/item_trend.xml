@@ -48,25 +48,27 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="80dp"
                 binding:onClickCommand="@{viewModel.avatarClick}">
+
                 <com.dl.playfun.widget.image.CircleImageView
-                    binding:onClickCommand="@{viewModel.avatarClick}"
                     android:id="@+id/user_img"
                     android:layout_width="34dp"
                     android:layout_height="34dp"
                     android:layout_marginStart="14dp"
                     android:layout_marginTop="24dp"
                     android:clickable="true"
+                    android:scaleType="centerCrop"
                     android:src="@drawable/default_address_user"
                     app:riv_corner_radius="8dp"
                     binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
-                    android:scaleType="centerCrop"
                     binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
                     binding:imageThumbPath="@{viewModel.newsEntityObservableField.user.avatar}"
+                    binding:onClickCommand="@{viewModel.avatarClick}"
                     tools:ignore="MissingConstraints" />
 
                 <TextView

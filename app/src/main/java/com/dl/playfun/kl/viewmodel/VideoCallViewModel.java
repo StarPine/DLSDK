@@ -113,8 +113,8 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
         mCallVideoView.hangup();
     }
 
-    public Integer mfromUserId;
-    public Integer mtoUserId;
+    public String mfromUserId;
+    public String mtoUserId;
 
     public BigDecimal coinTotal;
     //当前用户是否男性
@@ -317,9 +317,9 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
     private TUICalling.Role mRole;
 
     //拨打语音、视频
-    public void getCallingInvitedInfo(int callingType, Integer fromUserId) {
-        int userId = model.readUserData().getId();
-        model.callingInviteInfo(callingType, fromUserId, userId, userId)
+    public void getCallingInvitedInfo(int callingType, String fromUserId) {
+        String userId = model.readUserData().getImUserId();
+        model.callingInviteInfo(callingType, fromUserId, userId)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
@@ -490,13 +490,13 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
     }
 
     //通话中获取资料
-    public void getCallingInfo(Integer roomId, Integer fromUserId, Integer toUserId) {
+    public void getCallingInfo(Integer roomId, String fromUserId, String toUserId) {
         if (isCallingInviteInfoNull) {
             return;
         }
         isCallingInviteInfoNull = true;
         Log.e("通话中调用接口", "====================" + roomId + "======" + fromUserId + "==========" + toUserId);
-        model.getCallingInfo(roomId, 2, fromUserId, toUserId, model.readUserData().getId())
+        model.getCallingInfo(roomId, 2, fromUserId, toUserId)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
@@ -727,7 +727,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
                     if (roomId != 0 && mfromUserId != null && mtoUserId != null) {
                         getCallingInfo(roomId, mfromUserId, mtoUserId);
                     } else {
-                        getCallingInfo(roomId, model.readUserData().getId(), ChatUtils.imUserIdToSystemUserId(event.getUserId()));
+                        getCallingInfo(roomId, model.readUserData().getImUserId(), event.getUserId());
                     }
 
                 });
@@ -756,8 +756,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
                 if (msg != null && callingVideoInviteInfoField.get() != null) {
                     MessageInfo info = ChatMessageInfoUtil.createMessageInfo(msg);
                     if (info != null) {
-                        Integer msgFromUserId = ChatUtils.imUserIdToSystemUserId(info.getFromUser());
-                        if (msgFromUserId.intValue() == callingVideoInviteInfoField.get().getId().intValue()) {
+                        if (info.getFromUser().equals(callingVideoInviteInfoField.get().getImId())) {
                             Log.e("确定是聊天对象发送的消息", "==================");
                             String text = String.valueOf(info.getExtra());
                             Log.e("聊天消息体未", text);

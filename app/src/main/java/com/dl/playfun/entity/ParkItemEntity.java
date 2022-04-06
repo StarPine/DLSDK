@@ -28,6 +28,7 @@ public class ParkItemEntity extends BaseObservable {
      * is_collect : 0
      * album_type : 1
      */
+
     private int id;
     private String nickname;
     private Integer sex;
@@ -76,6 +77,29 @@ public class ParkItemEntity extends BaseObservable {
     //是否搭讪过
     @SerializedName("is_accost")
     private Integer isAccost;
+
+    //当前用户im id
+    @SerializedName("imId")
+    private String ImUserId;
+    //对方用户 IM iD
+    @SerializedName("toImId")
+    private String ImToUserId;
+
+    public String getImUserId() {
+        return ImUserId;
+    }
+
+    public void setImUserId(String imUserId) {
+        ImUserId = imUserId;
+    }
+
+    public String getImToUserId() {
+        return ImToUserId;
+    }
+
+    public void setImToUserId(String imToUserId) {
+        ImToUserId = imToUserId;
+    }
 
     public Integer getIsAccost() {
         if (isAccost == null) {

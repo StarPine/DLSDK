@@ -29,7 +29,6 @@ import com.dl.playfun.ui.message.applymessage.ApplyMessageViewModel;
 import com.dl.playfun.ui.message.broadcastmessage.BroadcastMessageViewModel;
 import com.dl.playfun.ui.message.chatdetail.ChatDetailViewModel;
 import com.dl.playfun.ui.message.chatmessage.ChatMessageViewModel;
-import com.dl.playfun.ui.message.chooselocation.ChooseLocationViewModel;
 import com.dl.playfun.ui.message.coinredpackagedetail.CoinRedPackageDetailViewModel;
 import com.dl.playfun.ui.message.commentmessage.CommentMessageViewModel;
 import com.dl.playfun.ui.message.evaluatemessage.EvaluateMessageViewModel;
@@ -37,9 +36,7 @@ import com.dl.playfun.ui.message.givemessage.GiveMessageViewModel;
 import com.dl.playfun.ui.message.photoreview.PhotoReviewViewModel;
 import com.dl.playfun.ui.message.profitmessage.ProfitMessageViewModel;
 import com.dl.playfun.ui.message.pushsetting.PushSettingViewModel;
-import com.dl.playfun.ui.message.searchaddress.SearchAddressViewModel;
 import com.dl.playfun.ui.message.sendcoinredpackage.SendCoinRedPackageViewModel;
-import com.dl.playfun.ui.message.signmessage.SignMessageViewModel;
 import com.dl.playfun.ui.message.systemmessage.SystemMessageViewModel;
 import com.dl.playfun.ui.message.systemmessagegroup.SystemMessageGroupViewModel;
 import com.dl.playfun.ui.mine.MineViewModel;
@@ -47,7 +44,6 @@ import com.dl.playfun.ui.mine.audio.TapeAudioViewModel;
 import com.dl.playfun.ui.mine.blacklist.BlacklistViewModel;
 import com.dl.playfun.ui.mine.broadcast.BroadcastViewModel;
 import com.dl.playfun.ui.mine.broadcast.myall.MyAllBroadcastViewModel;
-import com.dl.playfun.ui.mine.broadcast.myprogram.MyprogramViewModel;
 import com.dl.playfun.ui.mine.broadcast.mytrends.MyTrendsViewModel;
 import com.dl.playfun.ui.mine.broadcast.mytrends.givelist.GiveListViewModel;
 import com.dl.playfun.ui.mine.broadcast.mytrends.trenddetail.TrendDetailViewModel;
@@ -60,7 +56,7 @@ import com.dl.playfun.ui.mine.myphotoalbum.MyPhotoAlbumViewModel;
 import com.dl.playfun.ui.mine.photosetting.PhotoSettingViewModel;
 import com.dl.playfun.ui.mine.privacysetting.PrivacySettingViewModel;
 import com.dl.playfun.ui.mine.profile.EditProfileViewModel;
-import com.dl.playfun.ui.mine.profile.choosesex.ChooseSexViewModel;
+import com.dl.playfun.ui.mine.profile.PerfectProfileViewModel;
 import com.dl.playfun.ui.mine.resetpassword.ResetPasswordViewModel;
 import com.dl.playfun.ui.mine.setredpackagephoto.SetRedPackagePhotoViewModel;
 import com.dl.playfun.ui.mine.setredpackagevideo.SetRedPackageVideoViewModel;
@@ -77,10 +73,6 @@ import com.dl.playfun.ui.mine.wallet.coin.CoinViewModel;
 import com.dl.playfun.ui.mine.wallet.girl.TwDollarMoneyViewModel;
 import com.dl.playfun.ui.mine.webdetail.WebDetailViewModel;
 import com.dl.playfun.ui.mine.webview.FukubuViewModel;
-import com.dl.playfun.ui.program.chooseprogramsite.ChooseProgramSiteViewModel;
-import com.dl.playfun.ui.program.programdetail.ProgramDetailViewModel;
-import com.dl.playfun.ui.program.programsubject.ProgramSubjectViewModel;
-import com.dl.playfun.ui.program.searchprogramsite.SearchProgramSiteViewModel;
 import com.dl.playfun.ui.radio.issuanceprogram.IssuanceProgramViewModel;
 import com.dl.playfun.ui.radio.issuanceprogram.clip.ClipImageVideoViewModel;
 import com.dl.playfun.ui.radio.radiohome.RadioViewModel;
@@ -156,14 +148,10 @@ public class AppViewModelFactory extends ViewModelProvider.NewInstanceFactory {
             return (T) new FaceRecognitionViewModel(mApplication, mRepository);
         } else if (modelClass.isAssignableFrom(RadioViewModel.class)) {
             return (T) new RadioViewModel(mApplication, mRepository);
-        } else if (modelClass.isAssignableFrom(ProgramSubjectViewModel.class)) {
-            return (T) new ProgramSubjectViewModel(mApplication, mRepository);
         } else if (modelClass.isAssignableFrom(BroadcastViewModel.class)) {
             return (T) new BroadcastViewModel(mApplication, mRepository);
         } else if (modelClass.isAssignableFrom(MyTrendsViewModel.class)) {
             return (T) new MyTrendsViewModel(mApplication, mRepository);
-        } else if (modelClass.isAssignableFrom(ChooseProgramSiteViewModel.class)) {
-            return (T) new ChooseProgramSiteViewModel(mApplication, mRepository);
         } else if (modelClass.isAssignableFrom(LikeListViewModel.class)) {
             return (T) new LikeListViewModel(mApplication, mRepository);
         } else if (modelClass.isAssignableFrom(UserDetailViewModel.class)) {
@@ -180,12 +168,6 @@ public class AppViewModelFactory extends ViewModelProvider.NewInstanceFactory {
             return (T) new CashViewModel(mApplication, mRepository);
         } else if (modelClass.isAssignableFrom(CoinViewModel.class)) {
             return (T) new CoinViewModel(mApplication, mRepository);
-        } else if (modelClass.isAssignableFrom(ProgramDetailViewModel.class)) {
-            return (T) new ProgramDetailViewModel(mApplication, mRepository);
-        } else if (modelClass.isAssignableFrom(SearchProgramSiteViewModel.class)) {
-            return (T) new SearchProgramSiteViewModel(mApplication, mRepository);
-        } else if (modelClass.isAssignableFrom(MyprogramViewModel.class)) {
-            return (T) new MyprogramViewModel(mApplication, mRepository);
         } else if (modelClass.isAssignableFrom(HomeListViewModel.class)) {
             return (T) new HomeListViewModel(mApplication, mRepository);
         } else if (modelClass.isAssignableFrom(FaceVerifySuccessViewModel.class)) {
@@ -212,8 +194,6 @@ public class AppViewModelFactory extends ViewModelProvider.NewInstanceFactory {
             return (T) new EvaluateMessageViewModel(mApplication, mRepository);
         } else if (modelClass.isAssignableFrom(GiveMessageViewModel.class)) {
             return (T) new GiveMessageViewModel(mApplication, mRepository);
-        } else if (modelClass.isAssignableFrom(SignMessageViewModel.class)) {
-            return (T) new SignMessageViewModel(mApplication, mRepository);
         } else if (modelClass.isAssignableFrom(SystemMessageViewModel.class)) {
             return (T) new SystemMessageViewModel(mApplication, mRepository);
         } else if (modelClass.isAssignableFrom(ProfitMessageViewModel.class)) {
@@ -242,14 +222,10 @@ public class AppViewModelFactory extends ViewModelProvider.NewInstanceFactory {
             return (T) new UpdateFaceSuccessViewModel(mApplication, mRepository);
         } else if (modelClass.isAssignableFrom(WebDetailViewModel.class)) {
             return (T) new WebDetailViewModel(mApplication, mRepository);
-        } else if (modelClass.isAssignableFrom(ChooseLocationViewModel.class)) {
-            return (T) new ChooseLocationViewModel(mApplication, mRepository);
         } else if (modelClass.isAssignableFrom(SendCoinRedPackageViewModel.class)) {
             return (T) new SendCoinRedPackageViewModel(mApplication, mRepository);
         } else if (modelClass.isAssignableFrom(CoinRedPackageDetailViewModel.class)) {
             return (T) new CoinRedPackageDetailViewModel(mApplication, mRepository);
-        } else if (modelClass.isAssignableFrom(SearchAddressViewModel.class)) {
-            return (T) new SearchAddressViewModel(mApplication, mRepository);
         } else if (modelClass.isAssignableFrom(ScreenLockViewModel.class)) {
             return (T) new ScreenLockViewModel(mApplication, mRepository);
         } else if (modelClass.isAssignableFrom(VipPrivilegeViewModel.class)) {
@@ -288,8 +264,8 @@ public class AppViewModelFactory extends ViewModelProvider.NewInstanceFactory {
             return (T) new AudioCallChatingViewModel(mApplication, mRepository);
         } else if (modelClass.isAssignableFrom(VideoCallViewModel.class)) {
             return (T) new VideoCallViewModel(mApplication, mRepository);
-        } else if (modelClass.isAssignableFrom(ChooseSexViewModel.class)){
-            return (T) new ChooseSexViewModel(mApplication, mRepository);
+        } else if (modelClass.isAssignableFrom(PerfectProfileViewModel.class)){
+            return (T) new PerfectProfileViewModel(mApplication, mRepository);
         }
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
     }

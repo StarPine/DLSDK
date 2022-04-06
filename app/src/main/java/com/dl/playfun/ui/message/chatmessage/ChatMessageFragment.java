@@ -12,24 +12,22 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.SizeUtils;
+import com.dl.playfun.BR;
+import com.dl.playfun.R;
+import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.Injection;
+import com.dl.playfun.databinding.FragmentChatMessageBinding;
 import com.dl.playfun.entity.BrowseNumberEntity;
 import com.dl.playfun.entity.TokenEntity;
-import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.MessageCountChangeTagEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.ThirdPushTokenMgr;
 import com.dl.playfun.tim.TUIUtils;
 import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.ui.message.chatdetail.ChatDetailFragment;
-import com.dl.playfun.utils.ChatUtils;
-import com.dl.playfun.BR;
-import com.dl.playfun.R;
-import com.dl.playfun.databinding.FragmentChatMessageBinding;
-import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMConversationListener;
@@ -122,14 +120,6 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
     @Override
     public void initViewObservable() {
         super.initViewObservable();
-        viewModel.uc.askUseChatNumber.observe(this, param -> {
-            UserDataEntity userDataEntity = viewModel.uc.localUserDataEntity.getValue();
-            startChatActivity(selectedConversationInfo);
-        });
-
-        viewModel.uc.useChatNumberSuccess.observe(this, integer -> {
-            startChatActivity(selectedConversationInfo);
-        });
     }
 
     private void initIM() {
@@ -153,30 +143,25 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
         binding.conversationLayout.getConversationList().setOnItemAvatarClickListener(new ConversationListLayout.OnItemAvatarClickListener() {
             @Override
             public void onItemAvatarClick(View view, int position, ConversationInfo messageInfo) {
+                //点击用户头像
                 String id = messageInfo.getId();
-                if ("administrator".equals(id)) {
+                if (id.trim().contains(AppConfig.CHAT_SERVICE_USER_ID)) {
                     return;
                 }
-                int userId = ChatUtils.imUserIdToSystemUserId(id);
-                if (userId == 0) {
-                    return;
-                }
-                Bundle bundle = UserDetailFragment.getStartBundle(userId);
-                viewModel.start(UserDetailFragment.class.getCanonicalName(), bundle);
+                viewModel.transUserIM(id,true);
             }
         });
 
         binding.conversationLayout.getConversationList().setOnItemClickListener(new ConversationListLayout.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position, ConversationInfo messageInfo) {
-                int userId = ChatUtils.imUserIdToSystemUserId(messageInfo.getId());
-                startChatActivity(messageInfo);
-//                if (userId != 0) {
-//                    selectedConversationInfo = messageInfo;
-//                    viewModel.checkChatNumber(userId);
-//                } else {
-//                    startChatActivity(messageInfo);
-//                }
+                //点击用户头像
+                String id = messageInfo.getId();
+                if (id.trim().contains(AppConfig.CHAT_SERVICE_USER_ID)) {
+                    return;
+                }
+                selectedConversationInfo = messageInfo;
+                viewModel.transUserIM(id,false);
             }
         });
 
@@ -199,6 +184,14 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
                 AlertDialog dialog = builder.create();
                 dialog.show();
                 dialog.setCanceledOnTouchOutside(true);
+            }
+        });
+        viewModel.uc.startChatUserView.observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer toUserId) {
+                if(selectedConversationInfo!=null){
+                    startChatActivity(selectedConversationInfo,toUserId);
+                }
             }
         });
         viewModel.uc.loadBrowseNumber.observe(this, new Observer<BrowseNumberEntity>() {
@@ -240,7 +233,7 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
         }
     }
 
-    private void startChatActivity(ConversationInfo conversationInfo) {
+    private void startChatActivity(ConversationInfo conversationInfo,Integer toUserId) {
         ChatInfo chatInfo = new ChatInfo();
         chatInfo.setType(V2TIMConversation.V2TIM_C2C);
         chatInfo.setId(conversationInfo.getId());
@@ -248,6 +241,7 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
         AppContext.instance().logEvent(AppsFlyerEvent.IM);
         Bundle bundle = new Bundle();
         bundle.putSerializable(ChatDetailFragment.CHAT_INFO, chatInfo);
+        bundle.putSerializable("toUserId", toUserId);
         startContainerActivity(ChatDetailFragment.class.getCanonicalName(), bundle);
     }
 

@@ -181,44 +181,6 @@
                     android:background="@drawable/edittext_background"
                     android:orientation="horizontal"
                     android:paddingLeft="14dp"
-                    android:visibility="gone"
-                    android:paddingRight="14dp">
-
-                    <TextView
-                        android:id="@+id/city_tv"
-                        style="@style/EditLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="@string/playfun_fragment_edit_profile_city" />
-
-                    <TextView
-                        style="@style/EditLabel"
-                        android:layout_toEndOf="@+id/city_tv"
-                        android:layout_width="35dp"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="*"
-                        android:textColor="@color/purple" />
-
-                    <TextView
-                        android:id="@+id/tv_choose_city"
-                        style="@style/EditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:layout_marginStart="135dp"
-                        android:gravity="center_vertical"
-                        android:hint="@string/playfun_much_choose"
-                        android:text='@{SystemDictUtils.getCityByIds(viewModel.userDataEntity.permanentCityIds)}'
-                        app:onClickCommand="@{viewModel.chooseCity}" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:background="@drawable/edittext_background"
-                    android:orientation="horizontal"
-                    android:paddingLeft="14dp"
                     android:paddingRight="14dp">
 
                     <TextView
@@ -292,6 +254,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"
                     android:background="@color/window_background"
                     android:orientation="vertical"
                     android:visibility="@{viewModel.userDataEntity.sex==0?View.VISIBLE:View.GONE}">
@@ -438,9 +401,9 @@
                     <TextView
                         android:id="@+id/tv_weight"
                         style="@style/EditText"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="48dp"
-                        android:layout_weight="1"
+                        android:layout_marginStart="150dp"
                         android:gravity="center_vertical"
                         android:hint="@string/playfun_please_choose"
                         android:text='@{SystemDictUtils.getWidthById(viewModel.userDataEntity.weight)}'

@@ -1,23 +1,23 @@
 package com.dl.playfun.ui.mine.broadcast.mytrends;
 
+import static com.dl.playfun.ui.radio.radiohome.RadioViewModel.RadioRecycleType_New;
+import static me.goldze.mvvmhabit.utils.StringUtils.getString;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
 
 import com.blankj.utilcode.util.StringUtils;
-import com.dl.playfun.app.AppContext;
+import com.dl.playfun.R;
 import com.dl.playfun.entity.CommentEntity;
+import com.dl.playfun.manager.ConfigManager;
+import com.dl.playfun.ui.mine.broadcast.mytrends.trenddetail.TrendDetailFragment;
+import com.dl.playfun.ui.mine.broadcast.mytrends.trenddetail.TrendDetailViewModel;
+import com.dl.playfun.ui.radio.radiohome.RadioViewModel;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.ExceptionReportUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
-import com.dl.playfun.R;
-import com.dl.playfun.ui.mine.broadcast.myprogram.MyprogramViewModel;
-import com.dl.playfun.ui.mine.broadcast.mytrends.trenddetail.TrendDetailFragment;
-import com.dl.playfun.ui.mine.broadcast.mytrends.trenddetail.TrendDetailViewModel;
-import com.dl.playfun.ui.program.programdetail.ProgramDetailFragment;
-import com.dl.playfun.ui.program.programdetail.ProgramDetailViewModel;
-import com.dl.playfun.ui.radio.radiohome.RadioViewModel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,9 +25,6 @@ import java.util.Map;
 import me.goldze.mvvmhabit.base.MultiItemViewModel;
 import me.goldze.mvvmhabit.binding.command.BindingAction;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
-
-import static com.dl.playfun.ui.radio.radiohome.RadioViewModel.RadioRecycleType_Topical;
-import static me.goldze.mvvmhabit.utils.StringUtils.getString;
 
 
 /**
@@ -46,25 +43,19 @@ public class CommentItemViewModel extends MultiItemViewModel<BaseViewModel> {
             try {
                 if (isMore) {
                     try {
-                        if (!(viewModel instanceof ProgramDetailViewModel)) {
-                            if (type.equals(RadioRecycleType_Topical)) {
-                                Bundle bundle = ProgramDetailFragment.getStartBundle(id);
-                                viewModel.start(ProgramDetailFragment.class.getCanonicalName(), bundle);
-                            } else {
-                                if (viewModel instanceof TrendDetailViewModel) {
-                                    ApiUitl.isShow = true;
-                                    ((TrendDetailViewModel) viewModel).newsDetail();
-                                    return;
-                                }
-                                Bundle bundle = TrendDetailFragment.getStartBundle(id);
-                                viewModel.start(TrendDetailFragment.class.getCanonicalName(), bundle);
+                        if (type.equals(RadioRecycleType_New)){
+                            if (viewModel instanceof TrendDetailViewModel) {
+                                ApiUitl.isShow = true;
+                                ((TrendDetailViewModel) viewModel).newsDetail();
+                                return;
                             }
-
+                            Bundle bundle = TrendDetailFragment.getStartBundle(id);
+                            viewModel.start(TrendDetailFragment.class.getCanonicalName(), bundle);
                         }
                     } catch (Exception e) {
                         ExceptionReportUtils.report(e);
                     }
-                } else if (isSelf && commentBeanObservableField.get().getUser().getId() != AppContext.instance().appRepository.readUserData().getId()) {
+                } else if (isSelf && commentBeanObservableField.get().getUser().getId() != ConfigManager.getInstance().getAppRepository().readUserData().getId()) {
                     Map<String, String> data = new HashMap<>();
                     data.put("id", String.valueOf(id));
                     data.put("toUseriD", commentBeanObservableField.get().getUser() == null ? null : String.valueOf(commentBeanObservableField.get().getUser().getId()));
@@ -72,13 +63,9 @@ public class CommentItemViewModel extends MultiItemViewModel<BaseViewModel> {
                     data.put("type", type);
                     if (viewModel instanceof MyTrendsViewModel) {
                         ((MyTrendsViewModel) viewModel).uc.clickComment.setValue(data);
-                    } else if (viewModel instanceof MyprogramViewModel) {
-                        ((MyprogramViewModel) viewModel).uc.clickComment.setValue(data);
                     } else if (viewModel instanceof TrendDetailViewModel) {
                         ((TrendDetailViewModel) viewModel).uc.clickComment.setValue(data);
-                    } else if (viewModel instanceof ProgramDetailViewModel) {
-                        ((ProgramDetailViewModel) viewModel).uc.clickComment.setValue(data);
-                    } else if (viewModel instanceof RadioViewModel) {
+                    }else if (viewModel instanceof RadioViewModel) {
                         ((RadioViewModel) viewModel).radioUC.clickComment.setValue(data);
                     }
                 }

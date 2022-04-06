@@ -19,6 +19,7 @@ import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.helper.StringResHelper;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseRefreshFragment;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
 import com.dl.playfun.utils.PictureSelectorUtil;
@@ -168,7 +169,7 @@ public class MyTrendsFragment extends BaseRefreshFragment<FragmentMyTrendsBindin
                             .chooseType(MVDialog.TypeEnum.CENTER)
                             .setConfirmOnlick(dialog -> {
                                 dialog.dismiss();
-                                if (AppContext.instance().appRepository.readUserData().getSex() == 1) {
+                                if (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == 1) {
                                     viewModel.start(VipSubscribeFragment.class.getCanonicalName());
                                 } else {
                                     viewModel.start(CertificationFemaleFragment.class.getCanonicalName());

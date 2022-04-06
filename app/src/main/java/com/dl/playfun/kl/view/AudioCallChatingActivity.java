@@ -77,8 +77,8 @@ import me.tatarka.bindingcollectionadapter2.BR;
 
 public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChatingBinding, AudioCallChatingViewModel> implements CustomAdapt, Ifinish {
 
-    private Integer fromUserId;
-    private Integer toUserId;
+    private String fromUserId;
+    private String toUserId;
     private Integer mRole;
     private Integer roomId;
     private Context mContext;
@@ -140,8 +140,8 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         SVGAParser.Companion.shareParser().init(this);
         mContext = this;
         Intent intent = getIntent();
-        fromUserId = intent.getIntExtra("fromUserId", 0);
-        toUserId = intent.getIntExtra("toUserId", 0);
+        fromUserId = intent.getStringExtra("fromUserId");
+        toUserId = intent.getStringExtra("toUserId");
         mRole = intent.getIntExtra("mRole", 0);
         roomId = intent.getIntExtra("roomId", 0);
         userCall = intent.getBooleanExtra("userCall",false);
@@ -703,9 +703,9 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
 
                                 //通知女生男生这边余额不足
                                 if (viewModel.audioUserDataEntity.get().getId().intValue() == viewModel.audioCallingInfoEntity.get().getFromUserProfile().getId().intValue()) {
-                                    viewModel.getTips(toUserId,2,"1");
+                                    viewModel.getTips(viewModel.audioCallingInfoEntity.get().getToUserProfile().getId(),2,"1");
                                 } else {
-                                    viewModel.getTips(fromUserId,2,"1");
+                                    viewModel.getTips(viewModel.audioCallingInfoEntity.get().getFromUserProfile().getId(),2,"1");
                                 }
 
                             }
