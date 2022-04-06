@@ -73,6 +73,9 @@ public class TUIChatUtils {
         if (str == null || str.size() == 0 || message == null || message.length() == 0)return false;
         String all = message.replaceAll("\\s+", "").toLowerCase();
         for (String words : str) {
+            if (words.equals("")){
+                continue;
+            }
             boolean contains = all.contains(words.toLowerCase());
             if (contains)return true;
         }
