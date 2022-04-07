@@ -434,7 +434,7 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
                         detailEntity.set(userDisable);
                         isShowCanTrack();
                         RxBus.getDefault().post(new LikeChangeEvent(userId.get(), true));
-                        ToastUtil.showToast(AppContext.instance(),R.string.playfun_cancel_zuizong_3);
+                        ToastUtils.showShort(R.string.playfun_cancel_zuizong_3);
                     }
 
                     @Override

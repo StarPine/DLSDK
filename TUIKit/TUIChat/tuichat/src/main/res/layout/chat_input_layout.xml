@@ -143,7 +143,7 @@
             android:textColor="@color/white"
             android:visibility="gone"
             tools:visibility="visible"
-            tools:text="收益新台幣399鑽石/分鐘" />
+            tools:text="收入新台幣399鑽石/分鐘" />
 
     </RelativeLayout>
 
