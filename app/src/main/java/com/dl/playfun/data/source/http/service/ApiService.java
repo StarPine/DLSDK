@@ -2174,7 +2174,7 @@ public interface ApiService {
      * @return
      */
     @FormUrlEncoded
-    @POST("api/broadcast/publishCheck")
+    @POST("api/news/publishCheck")
     Observable<BaseDataResponse<StatusEntity>> publishCheck(
             @Field("type") int type
     );
