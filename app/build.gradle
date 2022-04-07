@@ -210,7 +210,7 @@ android {
             // 图片HOST
             buildConfigField "String", "IMAGE_BASE_URL", "\"https://img.joy-mask.com/\""
             //H5网页地址
-            buildConfigField "String", "WEB_BASE_URL", "\"http://t-m.joy-mask.com/\""
+            buildConfigField "String", "WEB_BASE_URL", "\"http://web-playfun.joy-mask.com/\""
             // Ali OSS BucketName
             buildConfigField "String", "BUCKET_NAME", "\"joymask\""
             //app名字
