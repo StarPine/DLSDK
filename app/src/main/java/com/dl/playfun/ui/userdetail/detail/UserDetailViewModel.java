@@ -169,7 +169,7 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
 
         if (detailEntity.get().isConnectionMic()) {
             //视频拨打
-            getCallingInvitedInfo(2, detailEntity.get().getImToUserId(), detailEntity.get().getImUserId());
+            getCallingInvitedInfo(1, detailEntity.get().getImUserId(), detailEntity.get().getImToUserId());
         } else {
             ToastUtils.showShort(R.string.user_detail_him_disable_mic2);
         }
@@ -184,7 +184,7 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
 
         if (detailEntity.get().isConnectionMic()) {
             //语音拨打
-            getCallingInvitedInfo(1, detailEntity.get().getImToUserId(), detailEntity.get().getImUserId());
+            getCallingInvitedInfo(1, detailEntity.get().getImUserId(), detailEntity.get().getImToUserId());
         } else {
             ToastUtils.showShort(R.string.user_detail_him_disable_mic);
         }
@@ -853,7 +853,7 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
             return;
         }
         if (isLinkMic) {
-            getCallingInvitedInfo(1, detailEntity.get().getImToUserId(), detailEntity.get().getImUserId());
+            getCallingInvitedInfo(1, detailEntity.get().getImUserId(), detailEntity.get().getImToUserId());
         } else {
             ChatUtils.chatUser(detailEntity.get().getImToUserId(), userId.get(), detailEntity.get().getNickname(), this);
         }

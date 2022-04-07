@@ -299,8 +299,8 @@ public interface ApiService {
     Observable<BaseDataResponse<CallingInfoEntity>> getCallingInfo(
             @Query("roomId") Integer roomId, //房间号
             @Query("callingType") Integer callingType, //通话类型：1=语音，2=视频
-            @Query("fromImId") String fromUserId, //拔打人用户ID
-            @Query("toImId") String toUserId//接收人用户ID
+            @Query("inviterImId") String inviterImId, //拔打人用户ID
+            @Query("receiverImId") String toUserId//接收人用户ID
     );
 
     /**
@@ -313,8 +313,8 @@ public interface ApiService {
     @GET("/calling/getCallingInvitedInfo/v2")
     Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(
             @Query("callingType") Integer callingType,
-            @Query("fromImId") String fromUserId,
-            @Query("toImId") String toUserId
+            @Query("inviterImId") String inviterImId,
+            @Query("receiverImId") String receiverImId
     );
 
     /**
