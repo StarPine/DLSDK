@@ -382,6 +382,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_below="@+id/zuizong"
+                                android:visibility="@{viewModel.detailEntity.blacklistStatus == 0 ? View.VISIBLE : View.GONE}"
                                 android:layout_marginTop="-19dp"
                                 app:cardCornerRadius="20dp"
                                 app:cardElevation="0dp">
@@ -971,6 +972,41 @@
                                     </RelativeLayout>
                                 </LinearLayout>
                             </androidx.cardview.widget.CardView>
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_below="@+id/zuizong"
+                                android:layout_marginTop="-19dp"
+                                android:visibility="@{viewModel.detailEntity.blacklistStatus == 0 ? View.GONE : View.VISIBLE}"
+                                app:cardCornerRadius="20dp"
+                                app:cardElevation="0dp"
+                                tools:visibility="gone">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="120dp"
+                                    android:background="@color/white"
+                                    android:gravity="center_horizontal"
+                                    android:orientation="vertical">
+
+                                    <ImageView
+                                        android:layout_width="50dp"
+                                        android:layout_height="52dp"
+                                        android:src="@drawable/user_detail_block_data" />
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="11dp"
+                                        android:gravity="center_horizontal"
+                                        android:text="@{viewModel.detailEntity.blacklistStatus != 2 ? @string/playfun_blocked_each_other : @string/playfun_block_each_other}"
+                                        android:textColor="@color/gray_middle"
+                                        android:textSize="@dimen/text_size_42" />
+
+                                </LinearLayout>
+
+                            </androidx.cardview.widget.CardView>
                         </RelativeLayout>
                     </LinearLayout>
                 </androidx.core.widget.NestedScrollView>
@@ -982,6 +1018,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:visibility="@{viewModel.detailEntity.blacklistStatus == 0 ? View.VISIBLE : View.GONE}"
             android:background="@drawable/bottom_navigation_backgroup_user_detail">
 
             <include
