@@ -150,6 +150,14 @@ public class EditProfileFragment extends BaseToolbarFragment<FragmentEditProfile
                         .show();
             }
         });
+        //社群账号解锁价格
+        viewModel.uc.clickUnlock.observe(this, new Observer() {
+            @Override
+            public void onChanged(@Nullable Object o) {
+                shouChooseUnlock();
+                clearNicknameFocus();
+            }
+        });
     }
 
     private void chooseAvatar() {
