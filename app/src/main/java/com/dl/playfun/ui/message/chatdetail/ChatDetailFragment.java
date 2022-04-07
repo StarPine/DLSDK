@@ -416,7 +416,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                             start(reportUserFragment);
                         }
                     }
-                }).setCancelButton(getString(R.string.cancel), new BottomSheet.CancelClickListener() {
+                }).setCancelButton(getString(R.string.playfun_cancel), new BottomSheet.CancelClickListener() {
                     @Override
                     public void onCancelClick(BottomSheet bottomSheet) {
                         bottomSheet.dismiss();
