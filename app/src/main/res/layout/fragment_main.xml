@@ -28,6 +28,7 @@
             android:layout_height="80dp"
             android:elevation="888dp"
             android:layout_alignParentBottom="true"
+            android:layout_marginBottom="0dp"
             android:background="@drawable/main_bottom_navigation_img"
             android:orientation="horizontal">
 
