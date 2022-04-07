@@ -201,7 +201,7 @@ public class GameCoinExchargeSheetView extends BasePopupWindow implements View.O
                         loadingView.setVisibility(View.GONE);
                         mBoxInfo = response.getData();
                         adapter.setData(mBoxInfo.getPriceList());
-                        tvGameTotal.setText(String.valueOf(mBoxInfo.getTotalGameCoins()));
+                        tvGameTotal.setText(String.valueOf(mBoxInfo.getTotalAppCoins()));
                         int totalCoin = mBoxInfo.getTotalCoins().intValue();
                         if (isCallMedia) {
                             totalCoin = maleBalance;
@@ -229,7 +229,7 @@ public class GameCoinExchargeSheetView extends BasePopupWindow implements View.O
     public void onBuyClick(View view, int position) {
         if(mBoxInfo == null) return;
         CoinExchangePriceInfo exChangeInfo = mBoxInfo.getPriceList().get(position);
-        if(mBoxInfo.getTotalGameCoins() < exChangeInfo.getGameCoins()){
+        if(mBoxInfo.getTotalAppCoins() < exChangeInfo.getGameCoins()){
             ToastUtils.showShort(R.string.playfun_exchange_coin_not_enough_toast);
             topupGameCoins();
             return;

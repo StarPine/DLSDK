@@ -20,7 +20,7 @@ public class CoinExchangeBoxInfo extends BaseObservable {
      */
 
     private Integer totalCoins;
-    private Integer totalGameCoins;
+    private Integer totalAppCoins;
     private List<CoinExchangePriceInfo> priceList;
 
     @Bindable
@@ -34,13 +34,13 @@ public class CoinExchangeBoxInfo extends BaseObservable {
     }
 
     @Bindable
-    public Integer getTotalGameCoins() {
-        return totalGameCoins;
+    public Integer getTotalAppCoins() {
+        return totalAppCoins;
     }
 
-    public void setTotalGameCoins(Integer totalGameCoins) {
-        this.totalGameCoins = totalGameCoins;
-        notifyPropertyChanged(BR.totalGameCoins);
+    public void setTotalAppCoins(Integer totalAppCoins) {
+        this.totalAppCoins = totalAppCoins;
+        notifyPropertyChanged(BR.totalAppCoins);
     }
 
     @Bindable

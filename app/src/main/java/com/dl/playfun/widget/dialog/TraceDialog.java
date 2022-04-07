@@ -278,7 +278,7 @@ public class TraceDialog {
         View contentView = LayoutInflater.from(context).inflate(R.layout.dialog_trace_vip, null);
         bottomDialog.setContentView(contentView);
         TextView title = contentView.findViewById(R.id.tv_title);
-        TextView tv_content = contentView.findViewById(R.id.tv_content);
+        Button tv_content = contentView.findViewById(R.id.tv_content);
         ViewGroup.LayoutParams layoutParams = contentView.getLayoutParams();
         contentView.setLayoutParams(layoutParams);
         bottomDialog.getWindow().setGravity(Gravity.CENTER);

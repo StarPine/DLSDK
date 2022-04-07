@@ -19,7 +19,6 @@ import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableInt;
 import androidx.databinding.ObservableList;
 
-import com.aliyun.common.utils.ToastUtil;
 import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
@@ -563,7 +562,6 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
         V2TIMManager.getMessageManager().addAdvancedMsgListener(new V2TIMAdvancedMsgListener() {
             @Override
             public void onRecvNewMessage(V2TIMMessage msg) {//新消息提醒
-                super.onRecvNewMessage(msg);
                 if (msg != null && leftUserInfoField.get() != null) {
                     MessageInfo info = ChatMessageInfoUtil.createMessageInfo(msg);
                     if (info != null) {
@@ -804,7 +802,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                         } else {
                             collected = 1;
                             collectedField.set(1);
-                            ToastUtil.showToast(AppContext.instance(), R.string.playfun_cancel_zuizong_3);
+                            ToastUtils.showShort(R.string.playfun_cancel_zuizong_3);
                             String sexText = isMale ? StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt3) : StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt2);
                             String msgText = sexText + StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt4) + leftUserInfoField.get().getNickname();
                             SpannableString stringBuilder = new SpannableString(msgText);

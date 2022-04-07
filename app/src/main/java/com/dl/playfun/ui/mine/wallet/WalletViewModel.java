@@ -93,7 +93,7 @@ public class WalletViewModel extends BaseViewModel<AppRepository> {
                             totalCoin.set(String.valueOf(gameCoinWalletEntity.getTotalCoins()));
                             totalProfit.set(String.format("%.2f", gameCoinWalletEntity.getTotalProfit()));
                             coinName.set(gameCoinWalletEntity.getCurrencyName());
-                            totalGameCoin.set(String.valueOf(gameCoinWalletEntity.getTotalGameCoins()));
+                            totalGameCoin.set(String.valueOf(gameCoinWalletEntity.getTotalAppCoins()));
                         }
                     }
 

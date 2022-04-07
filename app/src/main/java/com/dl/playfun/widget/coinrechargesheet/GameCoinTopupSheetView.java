@@ -254,7 +254,7 @@ public class GameCoinTopupSheetView extends BasePopupWindow implements View.OnCl
                 .subscribe(new BaseObserver<BaseDataResponse<GameCoinWalletEntity>>() {
                     @Override
                     public void onSuccess(BaseDataResponse<GameCoinWalletEntity> response) {
-                        tvBalance.setText(String.valueOf(response.getData().getTotalGameCoins()));
+                        tvBalance.setText(String.valueOf(response.getData().getTotalAppCoins()));
                     }
 
                     @Override
