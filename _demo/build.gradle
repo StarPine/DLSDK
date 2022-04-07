@@ -16,6 +16,8 @@ android {
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+        //过滤多余的语言包
+        resConfigs "en", "ru", "tr", "zh"
 
         // vectorDrawables.useSupportLibrary = true
         javaCompileOptions {
