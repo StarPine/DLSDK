@@ -161,4 +161,6 @@
 	<string name="opponent_in_game">In Game</string>
 	<string name="call_ended">Call ended</string>
 
+	<string name="custom_message_txt8">餘額不足，請儲值</string>
+
 </resources>

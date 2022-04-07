@@ -794,8 +794,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
             @Override
             public void onError(String module, int errCode, String errMsg) {
                 if (errCode == 20006){
-//                    ToastUtil.toastLongMessage(getContext().getString(R.string.custom_message_txt8));
-                    ToastUtil.toastLongMessage("餘額不足，請儲值");
+                    ToastUtil.toastLongMessage(getContext().getString(R.string.custom_message_txt8));
                 }else {
                     ToastUtil.toastLongMessage(errMsg);
                 }
