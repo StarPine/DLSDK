@@ -8,6 +8,7 @@ public class BaseResponse {
     public static final String STATUS_SUCCESS = "success";
     public static final String STATUS_FAIL = "fail";
     public static final String STATUS_ERROR = "error";
+    public static final String STATUS_INFO = "info";
 
     private Integer code;
     private String status;
@@ -47,6 +48,10 @@ public class BaseResponse {
 
     public boolean isError() {
         return STATUS_ERROR.equals(status);
+    }
+
+    public boolean isInfo() {
+        return STATUS_INFO.equals(status);
     }
 
     @Override

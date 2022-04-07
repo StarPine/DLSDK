@@ -23,6 +23,8 @@ public abstract class BaseDisposableObserver<T extends BaseResponse> extends Dis
         } else if (t.isError()) {
             ApiErrorException apiErrorException = new ApiErrorException(t.getCode(), t.getMessage());
             onError(apiErrorException);
+        }else if (t.isInfo()) {
+            onSuccess(t);
         }
     }
 
