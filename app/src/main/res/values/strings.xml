@@ -917,7 +917,7 @@
     <string name="playfun_chat_detail_blocked2">Have been blocked by the other party and cannot give gifts</string>
     <string name="playfun_network_text">Network anomalies!</string>
     <string name="playfun_fragment_edit_profile_line_account_explai">1. Please fill in the real account, fill in the fake account / invalid account may be frozen</string>
-    <string name="playfun_fragment_edit_profile_line_account_explai2">2, the other party needs to pay to unlock and view your Social Account,</string>
+    <string name="playfun_fragment_edit_profile_line_account_explai2">2, the other party needs to pay to unlock and view your Social Account</string>
     <string name="playfun_fragment_edit_profile_line_account_explai3"><u>Set the unlock price</u></string>
     <string name="playfun_opposite_mic_disabled">The other party prohibits voice calls</string>
     <string name="playfun_unlock_price">Unlock Social Account earnings</string>

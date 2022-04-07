@@ -269,44 +269,14 @@ public class EditProfileViewModel extends BaseViewModel<AppRepository> {
             return;
         }
         //女性用户进入
-        if (userEntity.getSex() == 0 ) {
-            if (StringUtils.isTrimEmpty(userEntity.getWeixin()) && StringUtils.isTrimEmpty(userEntity.getInsgram())) {
-                ToastUtils.showShort(R.string.playfun_line_must);
+        if (userEntity.getSex() == 0) {
+            if (ApiUitl.isContainChinese(userEntity.getWeixin())) {
+                ToastUtils.showShort(R.string.playfun_line_error_hanzi);
                 return;
             }
-
-            if (StringUtils.isEmpty(userEntity.getInsgram())){
-                if(StringUtils.isEmpty(userEntity.getWeixin()) ){
-                    ToastUtils.showShort(R.string.playfun_line_error_hanzi);
-                    return;
-                }else{
-                    if(ApiUitl.isContainChinese(userEntity.getWeixin())){
-                        ToastUtils.showShort(R.string.playfun_line_error_hanzi);
-                        return;
-                    }
-//                    if(StringUtils.isTrimEmpty(userEntity.getInsgram())){
-//                        ToastUtils.showShort(R.string.line_error_hanzi2);
-//                        return;
-//                    }
-                }
-            }else{
-//                if(StringUtils.isEmpty(userEntity.getWeixin()) || !StringUtils.isTrimEmpty(userEntity.getWeixin())){
-//                    ToastUtils.showShort(R.string.line_error_hanzi);
-//                    return;
-//                }
-                if(!StringUtils.isTrimEmpty(userEntity.getWeixin()) && ApiUitl.isContainChinese(userEntity.getWeixin()) ){
-                    ToastUtils.showShort(R.string.playfun_line_error_hanzi);
-                    return;
-                }
-            }
-
         }
 
         // 保存数据
-//        String birthdayStr = userEntity.getBirthday().replace(StringUtils.getString(R.string.year), "-").replace(StringUtils.getString(R.string.month), "-").replace(StringUtils.getString(R.string.daily), "");
-//        if (userEntity.getBirthdayCal() != null) {
-//            birthdayStr = userEntity.getBirthdayCal().get(Calendar.YEAR) + "-" + (userEntity.getBirthdayCal().get(Calendar.MONTH) + 1) + "-" + userEntity.getBirthdayCal().get(Calendar.DAY_OF_MONTH);
-//        }
         String birthdayStr = "";
         Calendar birthdayCal = userEntity.getBirthdayCal();
         if (birthdayCal != null) {

@@ -976,7 +976,7 @@
     <string name="playfun_chat_detail_blocked2">已被對方封鎖，無法贈送禮物</string>
     <string name="playfun_network_text">網路異常！</string>
     <string name="playfun_fragment_edit_profile_line_account_explai">1、請填寫真實賬號，填寫虛假賬號/無效賬號可能會被凍結</string>
-    <string name="playfun_fragment_edit_profile_line_account_explai2">2、對方需付費解鎖查看妳的社群賬號，</string>
+    <string name="playfun_fragment_edit_profile_line_account_explai2">2、對方需付費解鎖查看妳的社群賬號</string>
     <string name="playfun_fragment_edit_profile_line_account_explai3"><u>設定解鎖價格</u></string>
     <string name="playfun_opposite_mic_disabled">對方禁止語音通話</string>
     <string name="playfun_unlock_price">解鎖社群賬號收入</string>

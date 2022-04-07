@@ -978,7 +978,7 @@
     <string name="playfun_chat_detail_blocked2">Другой стороной был заблокирован и не могут отправить подарки</string>
     <string name="playfun_network_text">Сетевые аномалии!</string>
     <string name="playfun_fragment_edit_profile_line_account_explai">1. Пожалуйста, заполните реальный аккаунт, заполните поддельный счет/ недействительный счет может быть заморожен</string>
-    <string name="playfun_fragment_edit_profile_line_account_explai2">2. Другая сторона должна заплатить, чтобы разблокировать вашу социальний аккуант,</string>
+    <string name="playfun_fragment_edit_profile_line_account_explai2">2. Другая сторона должна заплатить, чтобы разблокировать вашу социальний аккуант</string>
     <string name="playfun_fragment_edit_profile_line_account_explai3"><u>Установите цену разблокировки</u></string>
     <string name="playfun_opposite_mic_disabled">Другая сторона запрещает голосовые звонки</string>
     <string name="playfun_unlock_price">Заработок в социальной сети разаблокирован</string>
