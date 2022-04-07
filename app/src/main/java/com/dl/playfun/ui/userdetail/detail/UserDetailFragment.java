@@ -164,7 +164,7 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
                     .setTitle(getString(R.string.playfun_addlike_title_tip))
                     .setTitleSize(16)
                     .setCannelText(getString(R.string.playfun_mine_trace_like_confirm))//左边按钮
-                    .setConfirmText(getString(R.string.cancel))//右边按钮
+                    .setConfirmText(getString(R.string.playfun_cancel))//右边按钮
                     .chooseType(TraceDialog.TypeEnum.CENTER)
                     .setCannelOnclick(dialog -> {
                         viewModel.addLike();
@@ -914,7 +914,7 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
                 .setTitleSize(16)
                 .setTitle(getString(R.string.playfun_she_social_account))
                 .setContent(account)
-                .setConfirmText(getString(R.string.cancel))
+                .setConfirmText(getString(R.string.playfun_cancel))
                 .setConfirmTwoText(getString(R.string.playfun_copy))
                 .setConfirmTwoOnclick(dialog -> {
                     dialog.dismiss();

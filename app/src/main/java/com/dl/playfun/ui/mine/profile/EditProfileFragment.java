@@ -416,7 +416,7 @@ public class EditProfileFragment extends BaseToolbarFragment<FragmentEditProfile
                 viewModel.updateSocialLevel(viewModel.price.get(options1).getLevel());
             }
         })
-                .setCancelText(getString(R.string.cancel))//取消按钮文字
+                .setCancelText(getString(R.string.playfun_cancel))//取消按钮文字
                 .setSubmitText(getString(R.string.playfun_confirm))//确认按钮文字
                 .setContentTextSize(14)//滚轮文字大小
                 .setSubCalSize(14)
