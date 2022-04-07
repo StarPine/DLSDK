@@ -168,7 +168,7 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
 
         if (detailEntity.get().isConnectionMic()) {
             //视频拨打
-            getCallingInvitedInfo(1, detailEntity.get().getImUserId(), detailEntity.get().getImToUserId());
+            getCallingInvitedInfo(2, detailEntity.get().getImUserId(), detailEntity.get().getImToUserId());
         } else {
             ToastUtils.showShort(R.string.user_detail_him_disable_mic2);
         }

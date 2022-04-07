@@ -189,7 +189,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             return;
         }
         //非客服账号加载用户标签和状态
-        if (!mChatInfo.getId().equals(AppConfig.CHAT_SERVICE_USER_ID)) {
+        if (!mChatInfo.getId().contains(AppConfig.CHAT_SERVICE_USER_ID)) {
             viewModel.loadUserInfo(getTaUserIdIM());
             viewModel.loadTagUser(String.valueOf(getTaUserIdIM()));
         }
