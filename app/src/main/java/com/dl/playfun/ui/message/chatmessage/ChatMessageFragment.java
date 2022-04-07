@@ -158,10 +158,11 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
                 //点击用户头像
                 String id = messageInfo.getId();
                 if (id.trim().contains(AppConfig.CHAT_SERVICE_USER_ID)) {
-                    return;
+                    startChatActivity(messageInfo,0);
+                }else{
+                    selectedConversationInfo = messageInfo;
+                    viewModel.transUserIM(id,false);
                 }
-                selectedConversationInfo = messageInfo;
-                viewModel.transUserIM(id,false);
             }
         });
 
