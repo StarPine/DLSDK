@@ -429,23 +429,12 @@ public class UserDataEntity extends BaseObservable {
         if (StringUtils.isEmpty(nickname)) {
             return false;
         }
-        if (ObjectUtils.isEmpty(permanentCityIds)) {
-            return false;
-        }
         if (ObjectUtils.isEmpty(birthday)) {
             return false;
         }
         if (ObjectUtils.isEmpty(occupationId) || occupationId.intValue() == 0) {
             return false;
         }
-        if (sex == 0 && (StringUtils.isEmpty(weixin) && StringUtils.isEmpty(insgram))) {
-            return false;
-        }
-        if (sex == 0 && (!StringUtils.isEmpty(weixin) || !StringUtils.isEmpty(insgram))) {
-            return true;
-        }
-
-        return sex != 0 || (!StringUtils.isEmpty(weixin) && !ApiUitl.isContainChinese(weixin));
-
+        return true;
     }
 }
