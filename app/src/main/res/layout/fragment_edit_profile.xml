@@ -109,8 +109,8 @@
                         style="@style/EditLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="60dp"
                         android:layout_marginLeft="5dp"
+                        android:layout_marginRight="60dp"
                         android:text="*"
                         android:textColor="@color/purple" />
 
@@ -147,8 +147,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:background="@drawable/edittext_background"
-                    android:orientation="horizontal"
                     android:gravity="center_vertical"
+                    android:orientation="horizontal"
                     android:paddingLeft="14dp"
                     android:paddingRight="14dp">
 
@@ -161,8 +161,8 @@
                         style="@style/EditLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="60dp"
                         android:layout_marginLeft="5dp"
+                        android:layout_marginRight="60dp"
                         android:text="*"
                         android:textColor="@color/purple" />
 
@@ -181,8 +181,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:background="@drawable/edittext_background"
-                    android:orientation="horizontal"
                     android:gravity="center_vertical"
+                    android:orientation="horizontal"
                     android:paddingLeft="14dp"
                     android:paddingRight="14dp">
 
@@ -195,8 +195,8 @@
                         style="@style/EditLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="60dp"
                         android:layout_marginLeft="5dp"
+                        android:layout_marginRight="60dp"
                         android:text="*"
                         android:textColor="@color/purple" />
 
@@ -217,9 +217,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:background="@drawable/edittext_background"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingLeft="14dp"
-                    android:gravity="center_vertical"
                     android:paddingRight="14dp">
 
                     <ImageView
@@ -231,8 +231,8 @@
                         style="@style/EditLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="60dp"
                         android:layout_marginLeft="5dp"
+                        android:layout_marginRight="60dp"
                         android:text="*"
                         android:textColor="@color/purple" />
 
@@ -276,8 +276,8 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
                         android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
                         android:layout_marginBottom="10dp"
                         android:orientation="vertical"
                         android:visibility="@{viewModel.getTipMoneyShowFlag?View.VISIBLE:View.GONE}"
@@ -295,9 +295,9 @@
                             onClickCommand="@{viewModel.setUnlockPrice}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
                             android:autoLink="all"
                             android:gravity="center"
-                            android:layout_marginTop="5dp"
                             android:text="@string/playfun_fragment_edit_profile_line_account_explai3"
                             android:textColor="@color/purple_text"
                             android:textSize="@dimen/text_size_small" />
@@ -353,9 +353,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:background="@drawable/edittext_background"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingLeft="14dp"
-                    android:gravity="center_vertical"
                     android:paddingRight="14dp">
 
                     <ImageView
@@ -380,8 +380,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:background="@drawable/edittext_background"
-                    android:orientation="horizontal"
                     android:gravity="center_vertical"
+                    android:orientation="horizontal"
                     android:paddingLeft="14dp"
                     android:paddingRight="14dp">
 
@@ -414,6 +414,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
                         android:layout_marginRight="65dp"
                         android:src="@drawable/edit_profile_self" />
 
