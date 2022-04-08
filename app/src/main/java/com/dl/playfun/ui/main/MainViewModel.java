@@ -42,6 +42,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageInfoUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -108,7 +109,8 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         if (configManager.getRecommendClose()) {
             return;
         }
-
+        //加载屏蔽字数据
+        getSensitiveWords();
     }
 
     @Override
@@ -329,6 +331,28 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                 }
             }
         });
+    }
+
+    public void getSensitiveWords() {
+        model.getSensitiveWords()
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .subscribe(new BaseObserver<BaseDataResponse>() {
+
+                    @Override
+                    public void onSuccess(BaseDataResponse baseDataResponse) {
+                        String data = (String) baseDataResponse.getData();
+                        String[] split = data.split(",");
+                        List<String> config = Arrays.asList(split);
+                        model.saveSensitiveWords(config);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
     }
 
     public class UIChangeObservable {
