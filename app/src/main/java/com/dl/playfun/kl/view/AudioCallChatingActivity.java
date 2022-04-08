@@ -260,25 +260,6 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
 
             @Override
             public void onChanged(Boolean isGiftSend) {
-//                ChatDetailCoinRechargeSheetView coinRechargeSheetView = new ChatDetailCoinRechargeSheetView(AudioCallChatingActivity.this, null, 0, isGiftSend, true);
-//                coinRechargeSheetView.show();
-//                coinRechargeSheetView.setCoinRechargeSheetViewListener(new ChatDetailCoinRechargeSheetView.CoinRechargeSheetViewListener() {
-//                    @Override
-//                    public void onPaySuccess(ChatDetailCoinRechargeSheetView sheetView, GoodsEntity sel_goodsEntity) {
-//                        sheetView.dismiss();
-//                        int actualValue = sel_goodsEntity.getActualValue().intValue();
-//                        viewModel.coinBalance += actualValue;
-//                        viewModel.maleBalanceMoney += ((((viewModel.coinBalance + viewModel.unitPrice.intValue()) + actualValue) / viewModel.unitPrice.intValue()) * 60) - viewModel.TimeCount;
-//                    }
-//
-//                    @Override
-//                    public void onPayFailed(ChatDetailCoinRechargeSheetView sheetView, String msg) {
-//                        sheetView.dismiss();
-//                        // do nothing
-//                        Log.e("IM充值失败", "=================");
-//                    }
-//                });
-
                 GameCoinExchargeSheetView coinRechargeSheetView = new GameCoinExchargeSheetView(AudioCallChatingActivity.this);
                 coinRechargeSheetView.setCallMedia(true);
                 coinRechargeSheetView.setMaleBalance(viewModel.coinBalance);
