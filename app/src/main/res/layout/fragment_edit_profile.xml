@@ -25,7 +25,7 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:orientation="vertical"
-        tools:context="com.dl.playfun.ui.mine.profile.EditProfileFragment">
+        tools:context=".ui.mine.profile.EditProfileFragment">
 
         <View
             android:id="@+id/status_bar_view"
@@ -60,7 +60,6 @@
                         android:paddingTop="5dp"
                         android:paddingBottom="5dp"
                         android:text="@string/playfun_save"
-                        android:textSize="12sp"
                         binding:onClickCommand="@{viewModel.clickSave}" />
                 </RelativeLayout>
             </com.dl.playfun.widget.BasicToolbar>
@@ -90,43 +89,49 @@
                     android:textColor="@color/gray_light"
                     android:textSize="@dimen/text_size_42" />
 
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:background="@drawable/edittext_background"
+                    android:gravity="center_vertical"
                     android:paddingLeft="14dp"
                     android:paddingRight="14dp"
                     app:onClickCommand="@{viewModel.uploadAvatarOnClickCommand}">
 
-                    <TextView
+                    <ImageView
                         android:id="@+id/tv_tag"
-                        style="@style/EditLabel"
-                        android:layout_width="50dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="@string/playfun_fragment_edit_profile_head" />
+                        android:src="@drawable/edit_profile_avatar" />
 
                     <TextView
                         android:id="@+id/tv_tag1"
                         style="@style/EditLabel"
-                        android:layout_width="60dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_toRightOf="@+id/tv_tag"
+                        android:layout_marginRight="60dp"
+                        android:layout_marginLeft="5dp"
                         android:text="*"
                         android:textColor="@color/purple" />
 
-                    <com.dl.playfun.widget.image.CircleImageView
-                        android:id="@+id/iv_avatar"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_centerVertical="true"
-                        android:layout_marginStart="135dp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/default_avatar"
-                        binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
-                        binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
-                        binding:imageThumbPath="@{viewModel.userDataEntity.avatar}" />
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical">
+
+                        <com.dl.playfun.widget.image.CircleImageView
+                            android:id="@+id/iv_avatar"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/default_avatar"
+                            binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
+                            binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
+                            binding:imageThumbPath="@{viewModel.userDataEntity.avatar}" />
+
+                    </LinearLayout>
+
 
                     <TextView
                         android:id="@+id/tv_uploading_head"
@@ -136,31 +141,28 @@
                         android:layout_centerVertical="true"
                         android:gravity="center"
                         android:text="@string/playfun_fragment_edit_profile_updata_head" />
-                </RelativeLayout>
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:background="@drawable/edittext_background"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     android:paddingLeft="14dp"
                     android:paddingRight="14dp">
 
-                    <TextView
-                        android:id="@+id/name_tv"
-                        style="@style/EditLabel"
-                        android:layout_centerInParent="true"
-                        android:layout_alignParentStart="true"
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/playfun_fragment_edit_profile_name" />
+                        android:src="@drawable/edit_profile_nike_name" />
 
                     <TextView
-                        android:id="@+id/name_tv_hint"
-                        android:layout_toEndOf="@+id/name_tv"
                         style="@style/EditLabel"
-                        android:layout_width="60dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
+                        android:layout_marginRight="60dp"
+                        android:layout_marginLeft="5dp"
                         android:text="*"
                         android:textColor="@color/purple" />
 
@@ -169,9 +171,9 @@
                         style="@style/EditText"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
-                        android:layout_marginStart="135dp"
+                        android:hint="@string/playfun_name_number_too_long2"
                         android:inputType="text"
-                        android:maxLength="12"
+                        android:maxLength="10"
                         android:text="@={viewModel.userDataEntity.nickname}" />
                 </LinearLayout>
 
@@ -180,33 +182,30 @@
                     android:layout_height="48dp"
                     android:background="@drawable/edittext_background"
                     android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     android:paddingLeft="14dp"
                     android:paddingRight="14dp">
 
-                    <TextView
-                        android:id="@+id/day_tv"
-                        style="@style/EditLabel"
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="13sp"
-                        android:layout_centerVertical="true"
-                        android:text="@string/playfun_fragment_edit_profile_brithday" />
+                        android:src="@drawable/edit_profile_birthday" />
 
                     <TextView
-                        android:layout_toEndOf="@+id/day_tv"
                         style="@style/EditLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
+                        android:layout_marginRight="60dp"
+                        android:layout_marginLeft="5dp"
                         android:text="*"
                         android:textColor="@color/purple" />
 
                     <TextView
                         android:id="@+id/tv_brithday"
                         style="@style/EditText"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="48dp"
-                        android:layout_marginStart="135dp"
+                        android:layout_weight="1"
                         android:gravity="center_vertical"
                         android:hint="@string/playfun_please_choose"
                         android:text="@{viewModel.userDataEntity.birthday}"
@@ -220,31 +219,28 @@
                     android:background="@drawable/edittext_background"
                     android:orientation="horizontal"
                     android:paddingLeft="14dp"
+                    android:gravity="center_vertical"
                     android:paddingRight="14dp">
 
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/edit_profile_profession" />
+
                     <TextView
-                        android:id="@+id/occupation_tv"
                         style="@style/EditLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:textSize="15sp"
-                        android:text="@string/playfun_fragment_edit_profile_occupation" />
-
-                    <TextView
-                        android:layout_toEndOf="@+id/occupation_tv"
-                        style="@style/EditLabel"
-                        android:layout_width="30dp"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
+                        android:layout_marginRight="60dp"
+                        android:layout_marginLeft="5dp"
                         android:text="*"
                         android:textColor="@color/purple" />
 
                     <TextView
                         style="@style/EditText"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="48dp"
-                        android:layout_marginStart="135dp"
+                        android:layout_weight="1"
                         android:gravity="center_vertical"
                         android:hint="@string/playfun_please_choose"
                         android:text='@{SystemDictUtils.getOccupationById(safeUnbox(viewModel.userDataEntity.occupationId))}'
@@ -254,7 +250,6 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="10dp"
                     android:background="@color/window_background"
                     android:orientation="vertical"
                     android:visibility="@{viewModel.userDataEntity.sex==0?View.VISIBLE:View.GONE}">
@@ -282,12 +277,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
-                        android:layout_marginBottom="10dp"
                         android:layout_marginLeft="15dp"
+                        android:layout_marginBottom="10dp"
                         android:orientation="vertical"
-                        tools:visibility="gone"
                         android:visibility="@{viewModel.getTipMoneyShowFlag?View.VISIBLE:View.GONE}"
-                        >
+                        tools:visibility="gone">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -298,13 +292,14 @@
 
                         <TextView
                             android:id="@+id/dd"
+                            onClickCommand="@{viewModel.setUnlockPrice}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:autoLink="all"
+                            android:gravity="center"
                             android:layout_marginTop="5dp"
                             android:text="@string/playfun_fragment_edit_profile_line_account_explai3"
                             android:textColor="@color/purple_text"
-                            onClickCommand="@{viewModel.setUnlockPrice}"
                             android:textSize="@dimen/text_size_small" />
                     </LinearLayout>
                 </LinearLayout>
@@ -338,17 +333,18 @@
                         android:singleLine="true"
                         android:text="@={viewModel.userDataEntity.weixin}" />
                 </LinearLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="7dp"
-                    android:background="@color/window_background"/>
+                    android:background="@color/window_background" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:paddingLeft="15dp"
-                    android:gravity="center_vertical"
                     android:background="@color/status_bar_color"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
                     android:text="@string/playfun_more_information_optional"
                     android:textColor="@color/gray_middle"
                     android:textSize="@dimen/text_size_42" />
@@ -359,21 +355,21 @@
                     android:background="@drawable/edittext_background"
                     android:orientation="horizontal"
                     android:paddingLeft="14dp"
+                    android:gravity="center_vertical"
                     android:paddingRight="14dp">
 
-                    <TextView
-                        style="@style/EditLabel"
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="@string/playfun_height" />
+                        android:layout_marginRight="65dp"
+                        android:src="@drawable/edit_profile_height" />
 
                     <TextView
                         android:id="@+id/tv_height"
                         style="@style/EditText"
-                        android:layout_marginStart="150dp"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="48dp"
+                        android:layout_weight="1"
                         android:gravity="center_vertical"
                         android:hint="@string/playfun_please_choose"
                         android:text='@{SystemDictUtils.getHeightById(viewModel.userDataEntity.height)}'
@@ -385,23 +381,22 @@
                     android:layout_height="48dp"
                     android:background="@drawable/edittext_background"
                     android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     android:paddingLeft="14dp"
                     android:paddingRight="14dp">
 
-                    <TextView
-                        android:id="@+id/tv_weight_hint"
-                        style="@style/EditLabel"
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:text="@string/playfun_weight" />
+                        android:layout_marginRight="65dp"
+                        android:src="@drawable/edit_profile_weight" />
 
                     <TextView
                         android:id="@+id/tv_weight"
                         style="@style/EditText"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="48dp"
-                        android:layout_marginStart="150dp"
+                        android:layout_weight="1"
                         android:gravity="center_vertical"
                         android:hint="@string/playfun_please_choose"
                         android:text='@{SystemDictUtils.getWidthById(viewModel.userDataEntity.weight)}'
@@ -416,11 +411,11 @@
                     android:paddingLeft="14dp"
                     android:paddingRight="14dp">
 
-                    <TextView
-                        style="@style/EditLabel"
-                        android:layout_width="90dp"
+                    <ImageView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/playfun_fragment_edit_profile_self_explain" />
+                        android:layout_marginRight="65dp"
+                        android:src="@drawable/edit_profile_self" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
