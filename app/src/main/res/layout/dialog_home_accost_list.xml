@@ -14,16 +14,15 @@
         <ImageView
             android:id="@+id/iv_accost_match"
             android:layout_width="290dp"
-            android:layout_height="420dp"
+            android:layout_height="350dp"
             android:scaleType="fitXY"
-            android:src="@drawable/accost_backdrop_img"
+            android:src="@drawable/accost_backdrop_img2"
             android:visibility="gone"
             tools:visibility="visible"
             />
         <RelativeLayout
             android:layout_width="290dp"
             android:layout_height="350dp"
-            android:layout_marginTop="70dp"
             >
             <ImageView
                 android:id="@+id/iv_accost_incomplete"
