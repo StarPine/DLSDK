@@ -30,6 +30,7 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.Injection;
 import com.dl.playfun.databinding.FragmentUserDetailBinding;
+import com.dl.playfun.entity.CoinExchangePriceInfo;
 import com.dl.playfun.entity.EvaluateEntity;
 import com.dl.playfun.entity.EvaluateItemEntity;
 import com.dl.playfun.entity.EvaluateObjEntity;
@@ -53,6 +54,7 @@ import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.widget.AppBarStateChangeListener;
 import com.dl.playfun.widget.bottomsheet.BottomSheet;
 import com.dl.playfun.widget.coinpaysheet.CoinPaySheet;
+import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
 import com.dl.playfun.widget.coinrechargesheet.GameCoinTopupSheetView;
 import com.dl.playfun.widget.custom.FlowAdapter;
 import com.dl.playfun.widget.dialog.MMAlertDialog;
@@ -979,42 +981,21 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
         if (!isGiftSend) {
             AppContext.instance().logEvent(AppsFlyerEvent.im_topup);
         }
-        String url = AppConfig.WEB_BASE_URL + "recharge/recharge.html";
-        if (AppConfig.isDebug) {
-            url = "http://t-m.joy-mask.com/recharge/recharge.html";
-        }
-        new WebViewDialog(getContext(), mActivity, url, new WebViewDialog.ConfirmOnclick() {
+        AppContext.instance().logEvent(AppsFlyerEvent.Top_up);
+        GameCoinExchargeSheetView coinRechargeSheetView = new GameCoinExchargeSheetView(mActivity);
+        coinRechargeSheetView.show();
+        coinRechargeSheetView.setCoinRechargeSheetViewListener(new GameCoinExchargeSheetView.CoinRechargeSheetViewListener() {
             @Override
-            public void webToVipRechargeVC(Dialog dialog) {
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
-                viewModel.start(VipSubscribeFragment.class.getCanonicalName());
+            public void onPaySuccess(GameCoinExchargeSheetView sheetView, CoinExchangePriceInfo sel_goodsEntity) {
+                sheetView.dismiss();
             }
 
             @Override
-            public void vipRechargeDiamondSuccess(Dialog dialog, Integer coinValue) {
-                if (dialog != null) {
-                    this.cancel();
-                    dialog.dismiss();
-                }
+            public void onPayFailed(GameCoinExchargeSheetView sheetView, String msg) {
+                sheetView.dismiss();
+                com.blankj.utilcode.util.ToastUtils.showShort(msg);
             }
-
-            @Override
-            public void moreRechargeDiamond(Dialog dialog) {
-                dialog.dismiss();
-                mActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        googleCoinValueBox(isGiftSend);
-                    }
-                });
-            }
-
-            @Override
-            public void cancel() {
-            }
-        }).noticeDialog().show();
+        });
     }
 
     @Override

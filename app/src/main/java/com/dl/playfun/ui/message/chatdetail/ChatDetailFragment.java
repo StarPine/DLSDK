@@ -34,6 +34,7 @@ import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.data.source.local.LocalDataSourceImpl;
 import com.dl.playfun.databinding.FragmentChatDetailBinding;
 import com.dl.playfun.entity.AlbumPhotoEntity;
+import com.dl.playfun.entity.CoinExchangePriceInfo;
 import com.dl.playfun.entity.EvaluateItemEntity;
 import com.dl.playfun.entity.GameCoinBuy;
 import com.dl.playfun.entity.GiftBagEntity;
@@ -44,6 +45,7 @@ import com.dl.playfun.entity.TagEntity;
 import com.dl.playfun.entity.TaskRewardReceiveEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.BubbleTopShowEvent;
+import com.dl.playfun.kl.view.AudioCallChatingActivity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
@@ -68,6 +70,7 @@ import com.dl.playfun.utils.PictureSelectorUtil;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.utils.Utils;
 import com.dl.playfun.widget.bottomsheet.BottomSheet;
+import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
 import com.dl.playfun.widget.coinrechargesheet.GameCoinTopupSheetView;
 import com.dl.playfun.widget.dialog.MMAlertDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
@@ -1164,61 +1167,45 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         if (!isGiftSend) {
             AppContext.instance().logEvent(AppsFlyerEvent.im_topup);
         }
-        String url = AppConfig.WEB_BASE_URL+"recharge/recharge.html";
-        if(AppConfig.isDebug){
-            url = "http://t-m.joy-mask.com/recharge/recharge.html";
-        }
-        new WebViewDialog(getContext(), mActivity, url, new WebViewDialog.ConfirmOnclick() {
+        AppContext.instance().logEvent(AppsFlyerEvent.Top_up);
+        GameCoinExchargeSheetView coinRechargeSheetView = new GameCoinExchargeSheetView(mActivity);
+        coinRechargeSheetView.show();
+        coinRechargeSheetView.setCoinRechargeSheetViewListener(new GameCoinExchargeSheetView.CoinRechargeSheetViewListener() {
             @Override
-            public void webToVipRechargeVC(Dialog dialog) {
-                if(dialog!=null){
-                    dialog.dismiss();
-                }
-                viewModel.start(VipSubscribeFragment.class.getCanonicalName());
+            public void onPaySuccess(GameCoinExchargeSheetView sheetView, CoinExchangePriceInfo sel_goodsEntity) {
+                sheetView.dismiss();
+                int actualValue = sel_goodsEntity.getCoins().intValue();
+                viewModel.maleBalance += actualValue;
             }
 
             @Override
-            public void vipRechargeDiamondSuccess(Dialog dialog, Integer coinValue) {
-                if(dialog!=null){
-                    this.cancel();
-                    dialog.dismiss();
-                }
-                viewModel.maleBalance += coinValue.intValue();
+            public void onPayFailed(GameCoinExchargeSheetView sheetView, String msg) {
+                sheetView.dismiss();
+                ToastUtils.showShort(msg);
+                AppContext.instance().logEvent(AppsFlyerEvent.Failed_to_top_up);
             }
-
-            @Override
-            public void moreRechargeDiamond(Dialog dialog) {
-                dialog.dismiss();
-                mActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        googleCoinValueBox(isGiftSend);
-                    }
-                });
-            }
-
-            @Override
-            public void cancel() {
-            }
-        }).noticeDialog().show();
+        });
     }
 
     private void googleCoinValueBox(boolean isGiftSend) {
-
-        GameCoinTopupSheetView gameCoinTopupSheetView = new GameCoinTopupSheetView(mActivity);
-        gameCoinTopupSheetView.show();
-        gameCoinTopupSheetView.setCoinRechargeSheetViewListener(new GameCoinTopupSheetView.CoinRechargeSheetViewListener() {
+        if (!isGiftSend) {
+            AppContext.instance().logEvent(AppsFlyerEvent.im_topup);
+        }
+        AppContext.instance().logEvent(AppsFlyerEvent.Top_up);
+        GameCoinExchargeSheetView coinRechargeSheetView = new GameCoinExchargeSheetView(mActivity);
+        coinRechargeSheetView.show();
+        coinRechargeSheetView.setCoinRechargeSheetViewListener(new GameCoinExchargeSheetView.CoinRechargeSheetViewListener() {
             @Override
-            public void onPaySuccess(GameCoinTopupSheetView sheetView, GameCoinBuy sel_goodsEntity) {
-                sheetView.endGooglePlayConnect();
+            public void onPaySuccess(GameCoinExchargeSheetView sheetView, CoinExchangePriceInfo sel_goodsEntity) {
                 sheetView.dismiss();
-                viewModel.maleBalance += sel_goodsEntity.getActualValue().intValue();
+                int actualValue = sel_goodsEntity.getCoins().intValue();
+                viewModel.maleBalance += actualValue;
             }
 
             @Override
-            public void onPayFailed(GameCoinTopupSheetView sheetView, String msg) {
+            public void onPayFailed(GameCoinExchargeSheetView sheetView, String msg) {
                 sheetView.dismiss();
-                me.goldze.mvvmhabit.utils.ToastUtils.showShort(msg);
+                ToastUtils.showShort(msg);
                 AppContext.instance().logEvent(AppsFlyerEvent.Failed_to_top_up);
             }
         });
