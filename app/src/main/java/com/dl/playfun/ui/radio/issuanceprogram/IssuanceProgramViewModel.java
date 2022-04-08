@@ -241,7 +241,7 @@ public class IssuanceProgramViewModel extends BaseViewModel<AppRepository> {
                 video = selectMediaPath.get();
             }
         }
-        model.topicalCreateMood(programDesc.get(), null, images == null ? null : images, is_comment.get(), is_hide.get(), lng.get(), lat.get(), video, 1)
+        model.topicalCreateMood(programDesc.get(), null, images == null ? null : images, is_comment.get(), is_hide.get(), lng.get(), lat.get(), video, $datingObjItemEntity.getId())
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
                 .doOnSubscribe(this)

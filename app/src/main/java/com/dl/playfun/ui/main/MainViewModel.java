@@ -300,11 +300,6 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                                         if (AppContext.isHomePage){
                                             uc.clickAccountDialog.setValue("1");
                                         }
-                                        if (ConfigManager.getInstance().getRemoveImMessageFlag()){
-                                            //清除云端缓存
-                                            remove(msg);
-                                        }
-
                                         break;
                                     case "message_pushPay"://未支付儲值鑽石
                                         if (AppContext.isShowNotPaid){
@@ -316,17 +311,13 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                                                 uc.notPaidDialog.setValue("2");
                                             }
                                         }
-
-                                        if (ConfigManager.getInstance().getRemoveImMessageFlag()){
-                                            //清除云端缓存
-                                            remove(msg);
-                                        }
                                         break;
                                     case "message_gift"://接收礼物
                                         if (map_data.get("is_accost") == null) {//不是搭讪礼物
                                             GiftEntity giftEntity = IMGsonUtils.fromJson(data, GiftEntity.class);
                                             //是特效礼物才发送订阅通知事件
                                             if (!StringUtils.isEmpty(giftEntity.getSvgaPath())) {
+                                                Log.e("进入礼物效果发送",info.getFromUser()+"===="+info.getNickName());
                                                 RxBus.getDefault().post(new MessageGiftNewEvent(giftEntity));
                                             }
                                         }
@@ -339,27 +330,6 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
             }
         });
     }
-    /**
-     * 删除本地和云端的数据
-     * @param msg
-     */
-    private void remove(V2TIMMessage msg) {
-        List<V2TIMMessage> v2TIMMessages = new ArrayList<>();
-        v2TIMMessages.add(msg);
-
-        V2TIMManager.getMessageManager().deleteMessages(v2TIMMessages, new V2TIMCallback() {
-            @Override
-            public void onError(int code, String desc) {
-                LogUtils.i("onError: "+code);
-            }
-
-            @Override
-            public void onSuccess() {
-                LogUtils.i("IM -onSuccess: ");
-            }
-        });
-    }
-
 
     public class UIChangeObservable {
         //气泡提示

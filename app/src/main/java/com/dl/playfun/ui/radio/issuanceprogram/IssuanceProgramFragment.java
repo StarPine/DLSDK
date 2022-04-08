@@ -286,7 +286,7 @@ public class IssuanceProgramFragment extends BaseToolbarFragment<FragmentIssuanc
         datingObjItemEntity5.setName(StringUtils.getString(R.string.playfun_mood_item_id1));
         datingObjItemEntity5.setSelect(true);
         datingObjItemEntity5.setIconChecked(getResources().getResourceName(R.mipmap.dating_obj_mood1_img));
-
+        viewModel.$datingObjItemEntity = datingObjItemEntity5;
         DatingObjItemEntity datingObjItemEntity1 = new DatingObjItemEntity();
         datingObjItemEntity1.setType(0);
         datingObjItemEntity1.setId(2);

@@ -175,7 +175,7 @@ public abstract class BaseParkViewModel<T extends AppRepository> extends BaseRef
                         ToastUtils.showShort(R.string.playfun_text_accost_success1);
                         parkItemEntity.setCollect(false);
                         adapter.getAdapterItem(position).itemEntity.get().setIsAccost(1);
-                        adapter.notifyDataSetChanged();
+                        adapter.notifyItemChanged(position);
                         AccostFirstSuccess(parkItemEntity, position);
                         //刷新任务列表状态
                         if (accostThree || dayAccost)RxBus.getDefault().post(new TaskListEvent());
