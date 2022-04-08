@@ -49,6 +49,7 @@
                 android:text="@{stateModel.emptyText}"
                 android:textColor="@color/gray_light"
                 android:textSize="@dimen/text_size_middle"
+                android:visibility="gone"
                 tootls:text="@string/playfun_tw_money_empty" />
 
         </LinearLayout>

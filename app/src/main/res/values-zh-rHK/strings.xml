@@ -924,7 +924,7 @@
     <string name="playfun_exchange_success_toast">兌換</string>
     <string name="playfun_exchange_coin_not_enough_toast">紅鑽不足，請儲值</string>
     <string name="playfun_topup_title">儲值</string>
-    <string name="playfun_member_free_not_member_need_pay">VIP免費，非VIP付費。</string>
+    <string name="playfun_member_free_not_member_need_pay">VIP免費，非VIP付費</string>
     <string name="playfun_text_all">全部</string>
 
     <string name="playfun_dialog_hint_txt1">我已閱讀並同意</string>
