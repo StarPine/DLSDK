@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="playfun_local_language">zh</string>
+    <string name="playfun_local_language">zh-TW</string>
     <string name="playfun_title_home">首頁</string>
     <string name="playfun_title_notifications">訊息</string>
     <string name="playfun_title_mine">我的</string>
