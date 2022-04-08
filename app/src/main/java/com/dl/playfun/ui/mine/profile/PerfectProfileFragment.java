@@ -157,6 +157,7 @@ public class PerfectProfileFragment extends BaseFragment<FragmentPerfectProfileB
             .setItemVisibleCount(5)//设置最大可见数目
             .setDividerType(WheelView.DividerType.WRAP)
             .setLineSpacingMultiplier(2.8f)
+                .setLabel("", "", "", "", "", "")
             .isDialog(true)//f是否显示为对话框样式
             .build();
         Dialog mDialog = pvTime.getDialog();

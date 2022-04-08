@@ -247,7 +247,7 @@ public class EditProfileFragment extends BaseToolbarFragment<FragmentEditProfile
                 .setItemVisibleCount(5)//设置最大可见数目
                 .setDividerType(WheelView.DividerType.WRAP)
                 .setLineSpacingMultiplier(2.8f)
-                .setLabel(getString(R.string.playfun_year), getString(R.string.playfun_month), getString(R.string.playfun_daily), getString(R.string.playfun_hour), getString(R.string.playfun_minute), getString(R.string.playfun_second))
+                .setLabel("", "", "", "", "", "")
                 .isDialog(true)//f是否显示为对话框样式
                 .build();
         Dialog mDialog = pvTime.getDialog();
