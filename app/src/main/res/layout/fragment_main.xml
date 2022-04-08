@@ -59,6 +59,7 @@
                     android:layout_marginBottom="5dp"
                     android:includeFontPadding="false"
                     android:text="@string/playfun_title_home"
+                    android:visibility="invisible"
                     android:textColor="@color/black"
                     android:textSize="9sp" />
             </RelativeLayout>
@@ -90,6 +91,7 @@
                     android:layout_marginBottom="5dp"
                     android:includeFontPadding="false"
                     android:text="@string/playfun_title_nearby"
+                    android:visibility="invisible"
                     android:textColor="@color/black"
                     android:textSize="9sp" />
             </RelativeLayout>
@@ -134,6 +136,7 @@
                     android:layout_marginBottom="5dp"
                     android:includeFontPadding="false"
                     android:text="@string/playfun_task_fragment_title1"
+                    android:visibility="invisible"
                     android:textColor="@color/black"
                     android:textSize="9sp" />
             </RelativeLayout>
@@ -182,6 +185,7 @@
                     android:layout_centerInParent="true"
                     android:layout_marginBottom="5dp"
                     android:includeFontPadding="false"
+                    android:visibility="invisible"
                     android:text="@string/playfun_title_notifications"
                     android:textColor="@color/black"
                     android:textSize="9sp" />
@@ -215,6 +219,7 @@
                     android:layout_marginBottom="5dp"
                     android:includeFontPadding="false"
                     android:text="@string/playfun_title_mine"
+                    android:visibility="invisible"
                     android:textColor="@color/black"
                     android:textSize="9sp" />
             </RelativeLayout>

@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:ellipsize="end"
-                android:text="@string/playfun_radio_fragment_posts"
+                android:text="@string/playfun_fragment_issuance_program_title"
                 android:textColor="@color/purple"
                 android:textSize="16sp" />
 

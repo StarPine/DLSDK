@@ -71,16 +71,6 @@
                     android:textSize="@dimen/text_size_big"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10dp"
-                    android:gravity="center"
-                    android:text="@string/playfun_fragment_certification_male_two"
-                    android:textColor="@color/gray_light"
-                    android:textSize="@dimen/text_size_small" />
-
                 <Button
                     android:id="@+id/btn_start"
                     style="@style/ButtonGreen"

@@ -61,7 +61,7 @@
 
                 <com.google.android.material.appbar.AppBarLayout
                     android:layout_width="match_parent"
-                    android:layout_height="283dp"
+                    android:layout_height="233dp"
                     app:elevation="0dp">
 
                     <RelativeLayout
@@ -101,14 +101,16 @@
                             android:layout_height="1dp"/>
 
                         <ImageView
-                            android:layout_marginStart="16dp"
-                            android:layout_marginTop="166dp"
                             android:layout_width="32dp"
                             android:layout_height="32dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="166dp"
                             android:scaleType="fitXY"
+                            android:visibility="gone"
                             android:src="@drawable/wallet_tips_1" />
 
                         <TextView
+                            android:visibility="gone"
                             android:layout_marginTop="167dp"
                             android:layout_marginStart="59dp"
                             android:layout_width="match_parent"
@@ -121,7 +123,7 @@
                             android:layout_width="32dp"
                             android:layout_height="32dp"
                             android:layout_marginStart="16dp"
-                            android:layout_marginTop="223dp"
+                            android:layout_marginTop="166dp"
                             android:scaleType="fitXY"
                             android:src="@drawable/wallet_tips_2" />
 
@@ -129,12 +131,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="59dp"
-                            android:layout_marginTop="220dp"
+                            android:layout_marginTop="166dp"
                             android:text="@string/playfun_our_coin_hint2"
                             android:textColor="#90919F"
                             android:textSize="12sp" />
-
-
 
 
                     </RelativeLayout>

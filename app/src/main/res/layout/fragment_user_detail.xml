@@ -856,12 +856,13 @@
                                                     <TextView
                                                         android:id="@+id/account_line"
                                                         style="@style/LabelContent"
-                                                        android:layout_toEndOf="@+id/account_line_img"
-                                                        android:layout_centerInParent="true"
-                                                        android:layout_marginStart="48dp"
                                                         android:layout_width="wrap_content"
                                                         android:layout_height="wrap_content"
+                                                        android:layout_centerInParent="true"
+                                                        android:layout_marginStart="48dp"
+                                                        android:layout_toEndOf="@+id/account_line_img"
                                                         android:text='@string/playfun_click_check_social_account'
+                                                        android:visibility="@{StringUtils.isEmpty(viewModel.detailEntity.weixin)?View.GONE:View.VISIBLE}"
                                                         binding:onClickCommand="@{viewModel.checkChatAccountOnClickCommand}" />
 
                                                     <TextView
