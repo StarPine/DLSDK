@@ -28,6 +28,7 @@
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_trace.xml" value="0.1875" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_trace_vip.xml" value="0.1875" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_vertical_two_button.xml" value="0.22916666666666666" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/empty_view_all_broadcast.xml" value="0.278125" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/empty_view_wallet.xml" value="0.1875" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragent_tape_audio.xml" value="0.25" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_broadcast.xml" value="0.17604166666666668" />
@@ -50,6 +51,7 @@
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_message_main.xml" value="0.24114583333333334" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_mine.xml" value="0.25" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_my_program.xml" value="0.16927083333333334" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_my_trends.xml" value="0.278125" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_perfect_profile.xml" value="0.25" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_profit_message.xml" value="0.2046875" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_program_detail.xml" value="0.16927083333333334" />

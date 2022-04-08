@@ -1179,7 +1179,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
 
             @Override
             public void vipRechargeDiamondSuccess(Dialog dialog, Integer coinValue) {
-                Log.e("支付上报成功回传","=========="+(dialog==null));
                 if(dialog!=null){
                     this.cancel();
                     dialog.dismiss();
