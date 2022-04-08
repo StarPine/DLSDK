@@ -692,7 +692,6 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                         unitPrice = unitPriceList.get(0).getUnitPrice();
                         fromMinute = unitPriceList.get(0).getFromMinute();
                         timePrice = unitPrice.divide(BigDecimal.valueOf(60), 2, BigDecimal.ROUND_HALF_UP);
-                        uc.callAudioStart.call();
 
                         mTRTCCalling.enableAGC(true);
                         mTRTCCalling.enableAEC(true);
