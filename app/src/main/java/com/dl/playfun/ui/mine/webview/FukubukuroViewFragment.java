@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebResourceRequest;
@@ -156,8 +158,26 @@ public class FukubukuroViewFragment extends BaseFragment<WebviewFukubukuroFragme
         webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         //正在加载网页动画
         showLoading();
+        setCookie(mActivity,webUrl);
         //设置打开的页面地址
         webView.loadUrl(webUrl);
+    }
+
+    public static void setCookie(Context context, String url) {
+        try {
+            CookieSyncManager.createInstance(context);
+            CookieManager cookieManager = CookieManager.getInstance();
+            cookieManager.setAcceptCookie(true);
+            cookieManager.removeSessionCookie();//移除
+            cookieManager.removeAllCookie();
+            StringBuilder sbCookie = new StringBuilder();
+            sbCookie.append("local=" + context.getString(R.string.playfun_local_language));
+            String cookieValue = sbCookie.toString();
+            cookieManager.setCookie(url, cookieValue);
+            CookieSyncManager.getInstance().sync();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     //重新加载页面
@@ -386,6 +406,11 @@ public class FukubukuroViewFragment extends BaseFragment<WebviewFukubukuroFragme
             ApiUitl.taskTop = true;
            // RxBus.getDefault().post(new TaskMainTabEvent(false));
             pop();
+        }
+
+        @JavascriptInterface
+        public String getLocal() {
+            return "zh-TW";
         }
 
         @JavascriptInterface
