@@ -8,6 +8,7 @@
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/login_checkbox_button.xml" value="0.229" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/mine_radius.xml" value="0.158" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/radio_filter_text_arrow.xml" value="0.1845" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/status_empty_ic.xml" value="0.2025" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/activity_call_audio_chating.xml" value="0.14" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/activity_call_video.xml" value="0.24114583333333334" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/alert_address.xml" value="0.25" />
@@ -87,6 +88,8 @@
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/view_game_coin_topup_sheet.xml" value="0.24166666666666667" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/view_radio_filter.xml" value="0.315625" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/view_user_detail_bottom_toolbar.xml" value="0.22916666666666666" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/webview_fukubukuro_fragment.xml" value="0.19437206878582594" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/widget_status_layout.xml" value="0.23125" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/customDrawable/src/main/res/drawable/aliyun_svideo_shape_oval_gray.xml" value="0.1845" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/customDrawable/src/main/res/drawable/btn_circle_purple.xml" value="0.1845" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/customDrawable/src/main/res/drawable/circle_gray_backdrop_layout.xml" value="0.1845" />

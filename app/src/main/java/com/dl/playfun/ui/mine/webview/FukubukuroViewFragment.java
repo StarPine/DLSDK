@@ -48,6 +48,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
 import me.goldze.mvvmhabit.utils.ToastUtils;
+import me.jessyan.autosize.AutoSizeCompat;
 
 /**
  * Author: 彭石林
@@ -69,6 +70,7 @@ public class FukubukuroViewFragment extends BaseFragment<WebviewFukubukuroFragme
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        AutoSizeCompat.autoConvertDensityOfGlobal(this.getResources());
         return R.layout.webview_fukubukuro_fragment;
     }
 
