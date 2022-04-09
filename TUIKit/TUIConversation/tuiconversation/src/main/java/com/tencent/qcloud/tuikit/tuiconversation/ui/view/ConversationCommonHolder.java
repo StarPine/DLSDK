@@ -17,6 +17,7 @@ import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuicore.util.DateTimeUtil;
+import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
 import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationConstants;
@@ -194,6 +195,14 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             leftItemLayout.setBackgroundColor(rootView.getResources().getColor(R.color.conversation_top_color));
         } else {
             leftItemLayout.setBackgroundColor(Color.WHITE);
+        }
+        //如果是发送图片、快照 = 组定义讯息
+        if(lastMsg!=null && lastMsg.getMsgType() == MessageInfo.MSG_TYPE_CUSTOM){
+            if(lastMsg.isSelf()){
+                messageText.setText(rootView.getResources().getText(R.string.default_message_content3));
+            }else{
+                messageText.setText(rootView.getResources().getText(R.string.default_message_content));
+            }
         }
 
         titleText.setText(conversation.getTitle());
