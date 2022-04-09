@@ -9,8 +9,10 @@ import com.tencent.coustom.GiftEntity;
  */
 public class MessageGiftNewEvent {
     private GiftEntity giftEntity;
+    //IM消息Id 做防抖用
+    private String msgId;
 
-    public MessageGiftNewEvent(GiftEntity giftEntity) {
+    public MessageGiftNewEvent(GiftEntity giftEntity,String msgId) {
         this.giftEntity = giftEntity;
     }
 
@@ -20,5 +22,13 @@ public class MessageGiftNewEvent {
 
     public void setGiftEntity(GiftEntity giftEntity) {
         this.giftEntity = giftEntity;
+    }
+
+    public String getMsgId() {
+        return msgId;
+    }
+
+    public void setMsgId(String msgId) {
+        this.msgId = msgId;
     }
 }

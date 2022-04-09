@@ -29,6 +29,8 @@ import me.goldze.mvvmhabit.utils.ToastUtils;
 public class BaseParkItemViewModel extends MultiItemViewModel<BaseParkViewModel> {
     public ObservableField<Boolean> collectEnable = new ObservableField<>();
     public ObservableField<ParkItemEntity> itemEntity = new ObservableField<>();
+    //单次搭讪成功
+    public ObservableField<Boolean> accountCollect = new ObservableField<>();
     //条目的点击事件
     public BindingCommand itemClick = new BindingCommand(() -> {
 //        try {
@@ -50,8 +52,12 @@ public class BaseParkItemViewModel extends MultiItemViewModel<BaseParkViewModel>
             ExceptionReportUtils.report(e);
         }
     });
+    //搭讪 or  聊天
     public BindingCommand accostOnClickCommand = new BindingCommand(() -> {
         try {
+            if (!PermissionManager.getInstance().VerifyJumpUserDetailView(itemEntity.get().getSex())) {
+                return;
+            }
             //拿到position
             if (itemEntity.get().getIsAccost() == 1) {
                 ChatUtils.chatUser(itemEntity.get().getImUserId(), itemEntity.get().getId(), itemEntity.get().getNickname(), viewModel);

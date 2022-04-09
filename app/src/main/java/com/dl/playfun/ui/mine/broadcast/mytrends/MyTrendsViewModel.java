@@ -160,6 +160,7 @@ public class MyTrendsViewModel extends BaseRefreshViewModel<AppRepository> {
                         observableList.remove(posion);
                         if(observableList.size()<=0){
                             stateModel.setEmptyBroadcastCommand(StringUtils.getString(R.string.playfun_my_all_broadcast_empty), R.drawable.my_all_broadcast_empty_img, R.color.all_broadcast_empty,StringUtils.getString(R.string.playfun_task_fragment_task_new10),toProgramVIew);
+                            stateModel.setEmptyState(EmptyState.EMPTY);
                         }
                     }
 

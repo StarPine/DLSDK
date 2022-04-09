@@ -91,8 +91,7 @@ public class HomeListViewModel extends BaseParkViewModel<AppRepository> {
         if (itemEntity == null) {//提醒充值钻石
             sendAccostFirstError.call();
         } else {
-            loadLoteAnime.postValue(position);
-
+            //loadLoteAnime.postValue(position);
 //            ChatUtils.chatUser(itemEntity.getId(), itemEntity.getNickname(), HomeListViewModel.this);
         }
     }
