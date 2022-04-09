@@ -18,6 +18,7 @@ import com.dl.playfun.utils.ChatUtils;
 import com.dl.playfun.utils.ExceptionReportUtils;
 import com.dl.playfun.utils.TimeUtils;
 import com.dl.playfun.R;
+import com.tencent.qcloud.tuicore.util.ToastUtil;
 
 import me.goldze.mvvmhabit.base.MultiItemViewModel;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
@@ -56,6 +57,7 @@ public class BaseParkItemViewModel extends MultiItemViewModel<BaseParkViewModel>
     public BindingCommand accostOnClickCommand = new BindingCommand(() -> {
         try {
             if (!PermissionManager.getInstance().VerifyJumpUserDetailView(itemEntity.get().getSex())) {
+                ToastUtils.showShort(R.string.playfun_accost_same_sex);
                 return;
             }
             //拿到position
