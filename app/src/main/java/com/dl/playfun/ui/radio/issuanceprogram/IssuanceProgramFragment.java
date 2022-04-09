@@ -190,7 +190,7 @@ public class IssuanceProgramFragment extends BaseToolbarFragment<FragmentIssuanc
                                     showDialog(typeDating);
                                 }
                             })
-                            .chooseType(MVDialog.TypeEnum.CENTER)
+                            .getTop2BottomDialog()
                             .show();
                 }else{
                     MVDialog.getInstance(IssuanceProgramFragment.this.getContext())
@@ -223,7 +223,7 @@ public class IssuanceProgramFragment extends BaseToolbarFragment<FragmentIssuanc
                                     showDialog(typeDating);
                                 }
                             })
-                            .chooseType(MVDialog.TypeEnum.CENTER)
+                            .getTop2BottomDialog()
                             .show();
                 }
             }
