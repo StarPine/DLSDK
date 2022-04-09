@@ -196,14 +196,6 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
         } else {
             leftItemLayout.setBackgroundColor(Color.WHITE);
         }
-        //如果是发送图片、快照 = 组定义讯息
-        if(lastMsg!=null && lastMsg.getMsgType() == MessageInfo.MSG_TYPE_CUSTOM){
-            if(lastMsg.isSelf()){
-                messageText.setText(rootView.getResources().getText(R.string.default_message_content3));
-            }else{
-                messageText.setText(rootView.getResources().getText(R.string.default_message_content));
-            }
-        }
 
         titleText.setText(conversation.getTitle());
         messageText.setText("");
@@ -315,6 +307,14 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             timelineText.setVisibility(View.GONE);
             unreadText.setVisibility(View.GONE);
             atInfoText.setVisibility(View.GONE);
+        }
+        //如果是发送图片、快照 = 组定义讯息
+        if(lastMsg!=null && lastMsg.getMsgType() == MessageInfo.MSG_TYPE_CUSTOM){
+            if(lastMsg.isSelf()){
+                messageText.setText(rootView.getResources().getText(R.string.default_message_content3));
+            }else{
+                messageText.setText(rootView.getResources().getText(R.string.default_message_content));
+            }
         }
 
         //// 由子类设置指定消息类型的views
