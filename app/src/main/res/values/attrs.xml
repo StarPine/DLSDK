@@ -221,5 +221,6 @@
         <attr name="can_back_scale" format="boolean"/>
         <attr name="animator_time" format="integer"/>
     </declare-styleable>
-
+    <!--    单次播放搭讪成功-->
+    <attr name="accountCollect" format="boolean"/>
 </resources>

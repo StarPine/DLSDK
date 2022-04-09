@@ -15,7 +15,6 @@
 
         <import type="com.blankj.utilcode.util.StringUtils" />
 
-        <import type="com.blankj.utilcode.util.ObjectUtils" />
 
         <variable
             name="viewModel"
@@ -52,7 +51,8 @@
             android:visibility="gone"
             app:lottie_autoPlay="false"
             app:lottie_loop="false"
-            app:lottie_rawRes="@raw/accost_animation" />
+            app:lottie_rawRes="@raw/accost_animation"
+            binding:accountCollect="@{viewModel.accountCollect}"/>
 
         <LinearLayout
             android:layout_width="wrap_content"

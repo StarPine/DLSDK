@@ -63,7 +63,7 @@ public class SearchViewModel extends BaseParkViewModel<AppRepository> {
         if (itemEntity == null) {//提醒充值钻石
             sendAccostFirstError.call();
         } else {
-            loadLoteAnime.postValue(position);
+            //loadLoteAnime.postValue(position);
             //跳转到聊天界面
 //            ChatUtils.chatUser(itemEntity.getId(), itemEntity.getNickname(), SearchViewModel.this);
         }

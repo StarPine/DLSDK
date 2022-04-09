@@ -74,6 +74,8 @@ public class HomeListFragment extends BaseRefreshFragment<FragmentHomeListBindin
     public void initData() {
         super.initData();
 //        binding.setAdapter(new HomeListRecyclerViewAdapter());
+        //加大rcv缓存机制。再低于500数量的的时候。不会进行复用item
+        binding.rcvLayout.setItemViewCacheSize(500);
     }
 
     @Override

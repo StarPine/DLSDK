@@ -209,86 +209,37 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
                     if (sexMale) {
                         if (lastMsg.isSelf()) {
                             if (isJSON2(lastMsg.getExtra().toString())) {
-                                Map<String, Object> map_data = new Gson().fromJson(String.valueOf(lastMsg.getExtra()), Map.class);
-                                if (map_data != null && map_data.get("type") != null && (map_data.get("type").equals("message_gift") || map_data.get("type").equals("send_male_error"))) {
-                                    messageText.setText(rootView.getResources().getText(R.string.default_message_content3));
-                                } else {
-                                    messageText.setText(rootView.getResources().getText(R.string.default_message_content2));
-                                }
+                                messageText.setText(rootView.getResources().getText(R.string.default_message_content3));
                             } else {
                                 FaceManager.handlerEmojiText(messageText, (lastMsg.getExtra().toString()), false);
                             }
                         } else {
-                            if (isJSON2(lastMsg.getExtra().toString())) {
-                                Map<String, Object> map_data = new Gson().fromJson(String.valueOf(lastMsg.getExtra()), Map.class);
-                                if (map_data != null && map_data.get("type") != null && (map_data.get("type").equals("message_gift") || map_data.get("type").equals("send_male_error"))) {
-                                    messageText.setText(rootView.getResources().getText(R.string.default_message_content));
-                                } else {
-                                    messageText.setText(rootView.getResources().getText(R.string.default_message_content2));
-                                }
-                            } else {
-                                messageText.setText(rootView.getResources().getText(R.string.default_message_content));
-                            }
+                            messageText.setText(rootView.getResources().getText(R.string.default_message_content));
                         }
                     } else {
                         if (lastMsg.isSelf()) {
                             if (isJSON2(lastMsg.getExtra().toString())) {
-                                Map<String, Object> map_data = new Gson().fromJson(String.valueOf(lastMsg.getExtra()), Map.class);
-                                if (map_data != null && map_data.get("type") != null && (map_data.get("type").equals("message_gift") || map_data.get("type").equals("send_male_error"))) {
                                     messageText.setText(rootView.getResources().getText(R.string.default_message_content3));
-                                } else {
-                                    messageText.setText(rootView.getResources().getText(R.string.default_message_content2));
-                                }
                             } else {
                                 FaceManager.handlerEmojiText(messageText, (lastMsg.getExtra().toString()), false);
                             }
                         } else {
                             if (isJSON2(lastMsg.getExtra().toString())) {
-                                Map<String, Object> map_data = new Gson().fromJson(String.valueOf(lastMsg.getExtra()), Map.class);
-                                if (map_data != null && map_data.get("type") != null && (map_data.get("type").equals("message_gift") || map_data.get("type").equals("send_male_error"))) {
                                     messageText.setText(rootView.getResources().getText(R.string.default_message_content));
-                                } else {
-                                    messageText.setText(rootView.getResources().getText(R.string.default_message_content2));
-                                }
                             } else {
                                 messageText.setText(rootView.getResources().getText(R.string.text_message2));
                             }
                         }
                     }
-//                    if (lastMsg.isSelf()) {
-//                        if (isJSON2(lastMsg.getExtra().toString())) {//判断C2c本地添加记录自定义。通常用来做弹窗
-//                            Map<String, Object> map_data = new Gson().fromJson(lastMsg.getExtra().toString(), Map.class);
-//                            if (map_data != null && map_data.get("type") != null) {
-//                                if (map_data.get("type").equals("toast_local")) {
-//                                    messageText.setText(Html.fromHtml(map_data.get("text").toString()));
-//                                } else if (map_data.get("type").equals("message_tag")) {
-//                                    messageText.setText(Html.fromHtml(map_data.get("text").toString()));
-//                                } else if (map_data.get("type").equals("message_photo")) {
-//                                    messageText.setText(rootView.getResources().getText(R.string.default_message_content));
-//                                } else if (map_data.get("type").equals("message_evaluate")) {
-//                                    messageText.setText(rootView.getResources().getText(R.string.default_message_content));
-//                                }
-//                            }
-//                        } else {
-//                            //messageText.setText(Html.fromHtml(lastMsg.getExtra().toString()));
-//                            FaceManager.handlerEmojiText(messageText, (lastMsg.getExtra().toString()), false);
-//                        }
-//                    } else {
-//                        if (isJSON2(lastMsg.getExtra().toString())) {
-//                            messageText.setText(rootView.getResources().getText(R.string.default_message_content));
-//                        } else {
-//                            //信令消息
-//                            if (lastMsg.getTimMessage() != null && lastMsg.getTimMessage().getCustomElem() != null && lastMsg.getCustomElemData() != null) {
-//                                messageText.setText(lastMsg.getExtra().toString());
-//                            } else {
-//                                messageText.setText(rootView.getResources().getText(R.string.text_message2));
-//                            }
-//                        }
-//
-//                    }
                     messageText.setTextColor(rootView.getResources().getColor(R.color.list_bottom_text_bg));
                 }
                 timelineText.setText(DateTimeUtil.getTimeFormatText(new Date(lastMsg.getMsgTime() * 1000)));
+            }
+        }
+        if(!lastMsg.isSelf()){
+            //额外处理判断。如果是客服人员则默认显示===收到一则讯息
+            if (conversation.getId().trim().contains("administrator")) {
+                messageText.setText(rootView.getResources().getText(R.string.text_message));
             }
         }
 

@@ -110,6 +110,9 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
     //RxBus订阅事件
     private Disposable messageGiftNewEventSubscriber;
     private Disposable CallChatingHangupSubscriber;
+    //礼物消息防抖
+    private String lastClickFunName;
+    private long lastClickTime;
     public BindingCommand moreOnClickCommand = new BindingCommand(new BindingAction() {
         @Override
         public void call() {
@@ -727,10 +730,23 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
         super.registerRxBus();
 
         messageGiftNewEventSubscriber = RxBus.getDefault().toObservable(MessageGiftNewEvent.class).subscribe(event -> {
-            GiftEntity giftEntity = event.getGiftEntity();
-            animGiftList.add(giftEntity);
-            if (!animGiftPlaying) {
-                uc.signGiftAnimEvent.call();
+            if(event!=null){
+                //加入礼物接收防抖。相同礼物id 1秒内只播放一次
+                long currentClickTime = System.currentTimeMillis();
+                if(lastClickFunName == null){
+                    lastClickTime = currentClickTime;
+                    lastClickFunName = event.getMsgId();
+                }else{
+                    boolean isFastClick = (currentClickTime - lastClickTime) <= 1000;
+                    if(isFastClick){
+                        return;
+                    }
+                }
+                GiftEntity giftEntity = event.getGiftEntity();
+                animGiftList.add(giftEntity);
+                if (!animGiftPlaying) {
+                    uc.signGiftAnimEvent.call();
+                }
             }
         });
         CallChatingHangupSubscriber = RxBus.getDefault().toObservable(CallChatingHangupEvent.class).subscribe(event -> {
