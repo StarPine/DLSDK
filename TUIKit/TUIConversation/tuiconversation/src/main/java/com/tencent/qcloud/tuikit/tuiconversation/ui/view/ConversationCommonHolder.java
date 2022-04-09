@@ -245,7 +245,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
                 timelineText.setText(DateTimeUtil.getTimeFormatText(new Date(lastMsg.getMsgTime() * 1000)));
             }
         }
-        if(!lastMsg.isSelf()){
+        if(lastMsg != null && !lastMsg.isSelf()){
             //额外处理判断。如果是客服人员则默认显示===收到一则讯息
             if (conversation.getId().trim().contains("administrator")) {
                 messageText.setText(rootView.getResources().getText(R.string.text_message));
