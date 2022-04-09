@@ -698,7 +698,7 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
                         }
                     }).build().show();
                 })
-                .chooseType(MVDialog.TypeEnum.CENTER)
+                .getTop2BottomDialog()
                 .show();
     }
 
