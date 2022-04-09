@@ -742,6 +742,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                         return;
                     }
                 }
+                lastClickTime = currentClickTime;
                 GiftEntity giftEntity = event.getGiftEntity();
                 animGiftList.add(giftEntity);
                 if (!animGiftPlaying) {
