@@ -589,6 +589,21 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                                         stringBuilder.setSpan(blueSpan, 0, msgText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                         putRcvItemMessage(stringBuilder, null, false);
                                     }
+                                }else if (map_data != null && map_data.get("type") != null && map_data.get("type").equals("message_countdown")) {//对方余额不足
+                                    if (!isMale && ConfigManager.getInstance().getTipMoneyShowFlag()) {
+                                        String data = (String) map_data.get("data");
+                                        Map<String, Object> dataMapCountdown = new Gson().fromJson(data, Map.class);
+                                        String isShow = (String) dataMapCountdown.get("is_show");
+                                        if (isShow != null && isShow.equals("1")) {
+                                            isShowCountdown.set(true);
+                                            girlEarningsField.set(true);
+                                            String girlEarningsTex = StringUtils.getString(R.string.playfun_insufficient_balance_of_counterparty);
+                                            SpannableString stringBuilder = new SpannableString(girlEarningsTex);
+                                            stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, girlEarningsTex.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                            girlEarningsText.set(stringBuilder);
+
+                                        }
+                                    }
                                 }
                             }
                         }

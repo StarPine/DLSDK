@@ -12,7 +12,6 @@ import android.os.Message;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,12 +31,13 @@ import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
+import com.dl.playfun.databinding.ActivityCallAudioChatingBinding;
 import com.dl.playfun.entity.CoinExchangePriceInfo;
 import com.dl.playfun.entity.GiftBagEntity;
-import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.event.CallChatingHangupEvent;
 import com.dl.playfun.kl.Utils;
 import com.dl.playfun.kl.viewmodel.AudioCallChatingViewModel;
@@ -51,10 +51,6 @@ import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
 import com.dl.playfun.widget.dialog.MessageDetailDialog;
 import com.dl.playfun.widget.dialog.TraceDialog;
 import com.dl.playfun.widget.image.CircleImageView;
-import com.dl.playfun.R;
-import com.dl.playfun.databinding.ActivityCallAudioChatingBinding;
-import com.dl.playfun.kl.Utils;
-import com.dl.playfun.ui.dialog.GiftBagDialog;
 import com.opensource.svgaplayer.SVGACallback;
 import com.opensource.svgaplayer.SVGAImageView;
 import com.opensource.svgaplayer.SVGAParser;
@@ -144,7 +140,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         toUserId = intent.getStringExtra("toUserId");
         mRole = intent.getIntExtra("mRole", 0);
         roomId = intent.getIntExtra("roomId", 0);
-        userCall = intent.getBooleanExtra("userCall",false);
+        userCall = intent.getBooleanExtra("userCall", false);
     }
 
     @Override
@@ -171,7 +167,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         });
 
         //关注按钮点击
-        viewModel.uc.clickLike.observe(this,unused -> {
+        viewModel.uc.clickLike.observe(this, unused -> {
             TraceDialog.getInstance(AudioCallChatingActivity.this)
                     .setTitle(getString(R.string.playfun_addlike_title_tip))
                     .setTitleSize(16)
@@ -187,10 +183,10 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         viewModel.uc.startUpSayHiAnimotor.observe(this, new Observer<Void>() {
             @Override
             public void onChanged(Void unused) {
-                if (rotation == null){
+                if (rotation == null) {
                     rotation = ObjectAnimator.ofFloat(binding.ivUpSayHi, "rotation", 0.0F, 360.0F);
                 }
-                if (!rotation.isRunning()){
+                if (!rotation.isRunning()) {
 //                    rotation.setRepeatMode(ValueAnimator.RESTART);
 //                    rotation.setRepeatCount(-1);
                     rotation.addListener(new AnimatorListenerAdapter() {
@@ -683,11 +679,8 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                                 viewModel.flagMoney = true;
 
                                 //通知女生男生这边余额不足
-                                if (viewModel.audioUserDataEntity.get().getId().intValue() == viewModel.audioCallingInfoEntity.get().getFromUserProfile().getId().intValue()) {
-                                    viewModel.getTips(viewModel.audioCallingInfoEntity.get().getToUserProfile().getId(),2,"1");
-                                } else {
-                                    viewModel.getTips(viewModel.audioCallingInfoEntity.get().getFromUserProfile().getId(),2,"1");
-                                }
+                                viewModel.getTips(viewModel.leftUserInfoField.get().getId(),2,"1");
+                                LogUtils.i("run: "+viewModel.leftUserInfoField.get().getId());
 
                             }
                         }
@@ -728,7 +721,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                     }
                     if (viewModel.profitTipsIntervalSeconds != null && mTimeCount % viewModel.profitTipsIntervalSeconds == 0) {
                         if (ConfigManager.getInstance().getTipMoneyShowFlag()) {
-                            if (!viewModel.isShowCountdown.get()){//对方余额不足没有展示
+                            if (!viewModel.isShowCountdown.get()) {//对方余额不足没有展示
                                 viewModel.coinTotal = (viewModel.timePrice.multiply(BigDecimal.valueOf(10)));
                                 viewModel.girlEarningsField.set(true);
                                 mTimeTen++;
