@@ -33,7 +33,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="14dp"
                         android:layout_marginTop="10dp"
-                        android:text="@string/playfun_dialong_coin_rechaege_top_up"
+                        android:text="@string/playfun_txt_exchange_game_coin"
                         android:textColor="@color/black"
                         android:textSize="17sp" />
 
