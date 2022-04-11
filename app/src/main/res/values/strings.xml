@@ -590,7 +590,7 @@
     <string name="playfun_upgrade_goddess">Get Queen Verification</string>
     <string name="playfun_not_vip_everyday_browse_home_num">Non-VIP users can view %s ladies\' profiles only.</string>
     <string name="playfun_not_goddess_everyday_browse_home_num">Non-Queen users can view %s men\'s profiles.</string>
-    <string name="playfun_comfirm_delete_message">Delete?</string>
+    <string name="playfun_comfirm_delete_message">Delete this message?</string>
     <string name="playfun_immediately_renewal">Renew now</string>
     <string name="playfun_check_more_commment">View more comments</string>
     <string name="playfun_redpackage_photo">Paid photo</string>
@@ -933,17 +933,17 @@
     <string name="auth_external_login_vk">VK</string>
     <string name="auth_external_login_yk">Guest login ></string>
     <string name="auth_external_login_more">Other login methods </string>
-    <string name="playfun_fragment_perfect_name_hint">請輸入暱稱</string>
-    <string name="playfun_fragment_perfect_brithday">生日</string>
-    <string name="playfun_fragment_perfect_avatar">請上傳頭像</string>
-    <string name="playfun_fragment_perfect_sex_hint">請選擇性別</string>
-    <string name="playfun_fragment_perfect_sex_hint2">確認後性別不可更改，請謹慎選擇</string>
+    <string name="playfun_fragment_perfect_name_hint">Please enter a nickname</string>
+    <string name="playfun_fragment_perfect_brithday">Birthday</string>
+    <string name="playfun_fragment_perfect_avatar">Please upload an avatar</string>
+    <string name="playfun_fragment_perfect_sex_hint">Please select a gender</string>
+    <string name="playfun_fragment_perfect_sex_hint2">The gender cannot be changed after confirmation, please choose carefully</string>
     <string name="playfun_fragment_perfect_sex_hint3">Tip: Gender cannot be changed once selected</string>
     <string name="playfun_fragment_perfect_error">You must be at least 18 years old to register!</string>
-    <string name="playfun_userdetail_same_sex">無法查看同性詳情</string>
-    <string name="playfun_accost_same_sex">無法搭訕同性</string>
-    <string name="playfun_block_each_other">由於對方設定，你無法查看其主頁內容</string>
-    <string name="playfun_blocked_each_other">已將對方封鎖，您無法查看其主頁內容</string>
-    <string name="playfun_name_number_too_long2">不能超出10個字</string>
+    <string name="playfun_userdetail_same_sex">Same-sex details cannot be viewed</string>
+    <string name="playfun_block_each_other">Because of the other person\'s settings, you can't view their Page content</string>
+    <string name="playfun_blocked_each_other">They\'ve been blocked and you can\'t view their Page content</string>
+    <string name="playfun_accost_same_sex">Can\'t talk to the same sex</string>
+    <string name="playfun_name_number_too_long2">Can\'t exceed 10 words</string>
 
 </resources>

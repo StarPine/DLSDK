@@ -994,15 +994,17 @@
     <string name="auth_external_login_vk">ВК</string>
     <string name="auth_external_login_yk">Гостевой вход ></string>
     <string name="auth_external_login_more">Другие способы входа ></string>
-    <string name="playfun_fragment_perfect_name_hint">請輸入暱稱</string>
-    <string name="playfun_fragment_perfect_brithday">生日</string>
-    <string name="playfun_fragment_perfect_avatar">請上傳頭像</string>
+    <string name="playfun_fragment_perfect_name_hint">Пожалуйста, введите никнейм</string>
+    <string name="playfun_fragment_perfect_brithday">День рождения</string>
+    <string name="playfun_fragment_perfect_avatar">Пожалуйста, загрузите аватар</string>
     <string name="playfun_fragment_perfect_sex_hint3">Совет:после выбора пол не может быть изменен</string>
     <string name="playfun_fragment_perfect_error">Для регистрации вам должно быть не менее 18 лет!</string>
-    <string name="playfun_fragment_perfect_sex_hint">請選擇性別</string>
-    <string name="playfun_fragment_perfect_sex_hint2">確認後性別不可更改，請謹慎選擇</string>
-    <string name="playfun_userdetail_same_sex">無法查看同性詳情</string>
-    <string name="playfun_block_each_other">由於對方設定，你無法查看其主頁內容</string>
-    <string name="playfun_blocked_each_other">已將對方封鎖，您無法查看其主頁內容</string>
+    <string name="playfun_fragment_perfect_sex_hint">Выберите пол</string>
+    <string name="playfun_fragment_perfect_sex_hint2">После подтверждения пол не может быть изменен, пожалуйста,будьте внимательны</string>
+    <string name="playfun_userdetail_same_sex">Сведения о представителях однинакого пола просмотреть нельзя</string>
+    <string name="playfun_block_each_other">Из-за настроек другого пользователи вы не можете просматривать его страницу</string>
+    <string name="playfun_blocked_each_other">Вы заблокировали этих пользователей, и не можете просматривать их страницу</string>
+    <string name="playfun_accost_same_sex">Вы не можете общаться с представителями своего пола</string>
+    <string name="playfun_name_number_too_long2">Не более 10 слов</string>
 </resources>
 
