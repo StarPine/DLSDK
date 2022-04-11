@@ -594,7 +594,7 @@
     <string name="playfun_upgrade_goddess">認證女神</string>
     <string name="playfun_not_vip_everyday_browse_home_num">非會員用戶每天只能查看%s位女士</string>
     <string name="playfun_not_goddess_everyday_browse_home_num">非女神用戶每天只能查看%s位男士</string>
-    <string name="playfun_comfirm_delete_message">Удалить это сообщение?</string>
+    <string name="playfun_comfirm_delete_message">是否刪除這條訊息？</string>
 
     <string name="playfun_immediately_renewal">馬上續費</string>
     <string name="playfun_check_more_commment">查看更多留言</string>
@@ -989,7 +989,7 @@
     <string name="playfun_coustom_time_picker_text">活動時間衹能選擇一周內</string>
     <string name="playfun_fragment_issuance_program_explain">若發佈裸露低俗等違規照片，平台將做封號處置。</string>
     <string name="auth_external_login_facebook">Facebook</string>
-    <string name="auth_external_login_google">谷歌</string>
+    <string name="auth_external_login_google">Google</string>
     <string name="auth_external_login_line">Line</string>
     <string name="auth_external_login_vk">VK</string>
     <string name="auth_external_login_yk">遊客登入 ></string>
