@@ -939,6 +939,8 @@
     <string name="playfun_fragment_perfect_avatar">請上傳頭像</string>
     <string name="playfun_fragment_perfect_sex_hint">請選擇性別</string>
     <string name="playfun_fragment_perfect_sex_hint2">確認後性別不可更改，請謹慎選擇</string>
+    <string name="playfun_fragment_perfect_sex_hint3">Tip: Gender cannot be changed once selected</string>
+    <string name="playfun_fragment_perfect_error">You must be at least 18 years old to register!</string>
     <string name="playfun_userdetail_same_sex">無法查看同性詳情</string>
     <string name="playfun_block_each_other">由於對方設定，你無法查看其主頁內容</string>
     <string name="playfun_blocked_each_other">已將對方封鎖，您無法查看其主頁內容</string>

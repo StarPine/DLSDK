@@ -390,6 +390,65 @@ public class MainContainerActivity extends MySupportActivity {
                     }
 
                 });
+        //购买商品上报补偿机制
+        billingClient.queryPurchaseHistoryAsync(BillingClient.SkuType.INAPP,
+                new PurchaseHistoryResponseListener() {
+                    @Override
+                    public void onPurchaseHistoryResponse(BillingResult billingResult,
+                                                          List<PurchaseHistoryRecord> purchaseHistoryRecordList) {
+                        //开始连接进入以下：
+                        if (purchaseHistoryRecordList != null) {
+                            List<Map> purchaseList = new ArrayList<>();
+                            Date endTime = new Date();
+                            Date beginTime = ApiUitl.toDayMinTwo(endTime);
+                            for (PurchaseHistoryRecord purchaseHistoryRecord : purchaseHistoryRecordList) {
+                                try {
+                                    Purchase purchase = new Purchase(purchaseHistoryRecord.getOriginalJson(), purchaseHistoryRecord.getSignature());
+                                    Date date = new Date();
+                                    date.setTime(purchase.getPurchaseTime());
+                                    if (purchase.isAcknowledged()) {
+                                        if (ApiUitl.belongCalendar(date, beginTime, endTime)) {
+                                            String pack = purchase.getPackageName();
+                                            if (StringUtil.isEmpty(pack)) {
+                                                //pack = BuildConfig.APPLICATION_ID;
+                                            }
+                                            Map<String, Object> maps = new HashMap<>();
+                                            maps.put("orderId", purchase.getOrderId());
+                                            maps.put("token", purchase.getPurchaseToken());
+                                            maps.put("sku", purchase.getSkus().toString());
+                                            maps.put("package", pack);
+                                            purchaseList.add(maps);
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            UserDataEntity userDataEntity = ConfigManager.getInstance().getAppRepository().readUserData();
+                            if (userDataEntity == null || userDataEntity.getId() == null) {
+                                return;
+                            }
+                            if (!ObjectUtils.isEmpty(purchaseList) && purchaseList.size() > 0) {
+                                Map<String, Object> map = new HashMap<>();
+                                map.put("data", purchaseList);
+                                ConfigManager.getInstance().getAppRepository().repoetLocalGoogleOrder(map)
+                                        .compose(RxUtils.schedulersTransformer())
+                                        .compose(RxUtils.exceptionTransformer())
+                                        .subscribe(new BaseObserver<BaseResponse>() {
+                                            @Override
+                                            public void onSuccess(BaseResponse baseResponse) {
+                                            }
+
+                                            @Override
+                                            public void onComplete() {
+                                                billingClient.endConnection();
+                                            }
+                                        });
+                            }
+                        }
+                    }
+
+                });
     }
 
     /**

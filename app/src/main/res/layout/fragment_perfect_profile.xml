@@ -153,7 +153,7 @@
             android:layout_marginStart="30dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="年滿18歲才可以註冊！"
+            android:text="@string/playfun_fragment_perfect_error"
             android:textColor="#ffff921e"
             android:textSize="11sp"
             />

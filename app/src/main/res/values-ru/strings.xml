@@ -997,6 +997,8 @@
     <string name="playfun_fragment_perfect_name_hint">請輸入暱稱</string>
     <string name="playfun_fragment_perfect_brithday">生日</string>
     <string name="playfun_fragment_perfect_avatar">請上傳頭像</string>
+    <string name="playfun_fragment_perfect_sex_hint3">Совет:после выбора пол не может быть изменен</string>
+    <string name="playfun_fragment_perfect_error">Для регистрации вам должно быть не менее 18 лет!</string>
     <string name="playfun_fragment_perfect_sex_hint">請選擇性別</string>
     <string name="playfun_fragment_perfect_sex_hint2">確認後性別不可更改，請謹慎選擇</string>
     <string name="playfun_userdetail_same_sex">無法查看同性詳情</string>
