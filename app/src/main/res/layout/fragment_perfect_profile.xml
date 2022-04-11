@@ -60,55 +60,62 @@
                 android:textSize="14sp"
                 tools:ignore="TouchTargetSizeCheck" />
         </LinearLayout>
-        <LinearLayout
-            android:background="@drawable/perfect_input_backdrop"
+        <androidx.cardview.widget.CardView
             android:layout_marginTop="20dp"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
-            android:orientation="horizontal">
-            <FrameLayout
-                android:background="@drawable/perfect_input_left"
-                binding:onClickCommand="@{viewModel.chooseMaleClick}"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="0dp">
+            <LinearLayout
+                android:background="@drawable/perfect_input_backdrop"
                 android:layout_width="match_parent"
-                android:layout_weight="1"
-                android:layout_height="match_parent">
+                android:layout_height="45dp"
+                android:orientation="horizontal">
                 <FrameLayout
-                    android:id="@+id/male_layout"
+                    android:background="@drawable/perfect_input_left"
+                    binding:onClickCommand="@{viewModel.chooseMaleClick}"
                     android:layout_width="match_parent"
+                    android:layout_weight="1"
                     android:layout_height="match_parent">
-                    <ImageView
-                        android:layout_gravity="center"
-                        app:srcCompat="@drawable/icon_male"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"/>
+                    <FrameLayout
+                        android:id="@+id/male_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <ImageView
+                            android:layout_gravity="center"
+                            app:srcCompat="@drawable/icon_male"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"/>
+                    </FrameLayout>
                 </FrameLayout>
-            </FrameLayout>
-            <FrameLayout
-                android:background="@drawable/perfect_input_right"
-                binding:onClickCommand="@{viewModel.chooseGirlClick}"
-                android:layout_width="match_parent"
-                android:layout_weight="1"
-                android:layout_height="match_parent">
                 <FrameLayout
-                    android:id="@+id/girl_layout"
+                    android:background="@drawable/perfect_input_right"
+                    binding:onClickCommand="@{viewModel.chooseGirlClick}"
                     android:layout_width="match_parent"
+                    android:layout_weight="1"
                     android:layout_height="match_parent">
-                    <ImageView
-                        android:layout_gravity="center"
-                        app:srcCompat="@drawable/icon_girl"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"/>
+                    <FrameLayout
+                        android:id="@+id/girl_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <ImageView
+                            android:layout_gravity="center"
+                            app:srcCompat="@drawable/icon_girl"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"/>
+                    </FrameLayout>
                 </FrameLayout>
-            </FrameLayout>
-        </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
         <TextView
             android:layout_marginTop="10dp"
             android:layout_marginStart="30dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="提示：性別一旦選擇即不可更改"
+            android:text="@string/playfun_fragment_perfect_sex_hint3"
             android:textColor="#ffff921e"
             android:textSize="11sp"
             />
