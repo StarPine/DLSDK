@@ -300,17 +300,21 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                                 switch (type) {
                                     case "message_pushGreet"://今日搭訕
                                         if (AppContext.isHomePage){
-                                            uc.clickAccountDialog.setValue("1");
+                                            if(!FastCallFunUtil.getInstance().isFastCallFun("message_pushGreet",5000)){
+                                                uc.clickAccountDialog.setValue("1");
+                                            }
                                         }
                                         break;
                                     case "message_pushPay"://未支付儲值鑽石
                                         if (AppContext.isShowNotPaid){
-                                            Map<String, Object> dataMapPushPay = new Gson().fromJson(data, Map.class);
-                                            String dataType = Objects.requireNonNull(dataMapPushPay.get("type")).toString();
-                                            if (dataType.equals("1") || dataType.equals("1.0")) {
-                                                uc.notPaidDialog.setValue("1");
-                                            } else {
-                                                uc.notPaidDialog.setValue("2");
+                                            if(!FastCallFunUtil.getInstance().isFastCallFun("message_pushPay",5000)){
+                                                Map<String, Object> dataMapPushPay = new Gson().fromJson(data, Map.class);
+                                                String dataType = Objects.requireNonNull(dataMapPushPay.get("type")).toString();
+                                                if (dataType.equals("1") || dataType.equals("1.0")) {
+                                                    uc.notPaidDialog.setValue("1");
+                                                } else {
+                                                    uc.notPaidDialog.setValue("2");
+                                                }
                                             }
                                         }
                                         break;

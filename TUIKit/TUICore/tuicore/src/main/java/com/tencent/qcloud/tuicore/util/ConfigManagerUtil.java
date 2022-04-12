@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class ConfigManagerUtil {
     private static ConfigManagerUtil mCacheManager;
-    private final String cryptKey = "playfun@2020";
+    private final String cryptKey = "playfun@2022";
     private static final String KEY_GAME_CONFIG = "key_game_config";
     private static final String KEY_PLAY_GAME_FLAG = "key_play_game_flag";
     private final MMKV kv = MMKV.mmkvWithID("cache", MMKV.SINGLE_PROCESS_MODE, cryptKey);

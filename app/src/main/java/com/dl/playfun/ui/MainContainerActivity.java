@@ -232,9 +232,13 @@ public class MainContainerActivity extends MySupportActivity {
 
         //登錄過期
         Disposable loginExpiredRe = RxBus.getDefault().toObservable(LoginExpiredEvent.class)
+                .compose(RxUtils.schedulersTransformer())
                 .subscribe(event -> {
 
                     if (AppConfig.userClickOut) {
+                        return;
+                    }
+                    if(this.isFinishing()){
                         return;
                     }
                     ConfigManager.getInstance().getAppRepository().logout();

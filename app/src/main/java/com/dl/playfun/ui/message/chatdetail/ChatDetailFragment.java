@@ -1553,7 +1553,9 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
 
                                     @Override
                                     public void onFinished() {
-                                        viewModel.animGiftList.remove(0);
+                                        if (viewModel.animGiftList != null && viewModel.animGiftList.size() > 0) {
+                                            viewModel.animGiftList.remove(0);
+                                        }
                                         //播放完成
                                         giftView.setVisibility(View.GONE);
                                         viewModel.animGiftPlaying = false;
@@ -1578,7 +1580,9 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                         public void onError() {
                             Log.e("播放失败", "===========");
                             viewModel.animGiftPlaying = false;
-                            viewModel.animGiftList.remove(0);
+                            if (viewModel.animGiftList != null && viewModel.animGiftList.size() > 0) {
+                                viewModel.animGiftList.remove(0);
+                            }
                             if (viewModel.animGiftList.size() > 0) {
                                 startSVGAnimotion();
                             }
@@ -1586,7 +1590,9 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                     }, null);
                 } catch (Exception e) {
                     Log.e("播放异常", "===========");
-                    viewModel.animGiftList.remove(0);
+                    if (viewModel.animGiftList != null && viewModel.animGiftList.size() > 0) {
+                        viewModel.animGiftList.remove(0);
+                    }
                     viewModel.animGiftPlaying = false;
                     if (viewModel.animGiftList.size() > 0) {
                         startSVGAnimotion();

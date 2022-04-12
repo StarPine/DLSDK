@@ -125,7 +125,6 @@ public class HomeListViewModel extends BaseParkViewModel<AppRepository> {
                 .subscribe(new BaseListEmptyObserver<BaseListDataResponse<ParkItemEntity>>(this) {
                     @Override
                     public void onSuccess(BaseListDataResponse<ParkItemEntity> response) {
-                        Log.e("请求返回数据",response.getData().getData().size()+"");
                         super.onSuccess(response);
                         int sex = model.readUserData().getSex();
                         for (ParkItemEntity itemEntity : response.getData().getData()) {

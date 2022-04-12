@@ -1,12 +1,9 @@
 package com.tencent.qcloud.tuikit.tuichat.util;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.tencent.mmkv.MMKV;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * @Description：
@@ -16,7 +13,7 @@ import java.util.List;
  */
 public class ConfigManagerUtil {
     private static ConfigManagerUtil mCacheManager;
-    private final String cryptKey = "playfun@2020";
+    private final String cryptKey = "playfun@2022";
     private static final String KEY_GAME_CONFIG = "key_game_config";
     private static final String KEY_PLAY_GAME_FLAG = "key_play_game_flag";
     private static final String KEY_IS_CHAT_PUSH = "key_is_chat_push";

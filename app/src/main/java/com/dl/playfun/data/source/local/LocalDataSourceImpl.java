@@ -59,7 +59,7 @@ public class LocalDataSourceImpl implements LocalDataSource {
     private static final String KEY_DEFAULT_HOME_PAGE_NAME = "default_home_page_name";
     private static final String KEY_IS_FIRST = "is_first";
     private volatile static LocalDataSourceImpl INSTANCE = null;
-    private final String cryptKey = "playfun@2020";
+    private final String cryptKey = "playfun@2022";
     private final MMKV kv = MMKV.mmkvWithID("cache", MMKV.SINGLE_PROCESS_MODE, cryptKey);
 
     private LocalDataSourceImpl() {
