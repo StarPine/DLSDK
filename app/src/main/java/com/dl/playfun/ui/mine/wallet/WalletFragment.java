@@ -22,20 +22,21 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
 import com.dl.playfun.ui.certification.certificationmale.CertificationMaleFragment;
+import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
 import com.dl.playfun.widget.coinrechargesheet.GameCoinTopupSheetView;
 import com.dl.playfun.widget.dialog.MVDialog;
 
 import me.goldze.mvvmhabit.utils.ToastUtils;
-import me.jessyan.autosize.internal.CustomAdapt;
 
 /**
  * @author wulei
  */
-public class WalletFragment extends BaseToolbarFragment<FragmentWalletBinding, WalletViewModel> implements CustomAdapt,View.OnClickListener{
+public class WalletFragment extends BaseToolbarFragment<FragmentWalletBinding, WalletViewModel> implements View.OnClickListener{
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        AutoSizeUtils.applyAdapt(this.getResources());
         return R.layout.fragment_wallet;
     }
 
@@ -134,13 +135,4 @@ public class WalletFragment extends BaseToolbarFragment<FragmentWalletBinding, W
 
     }
 
-    @Override
-    public boolean isBaseOnWidth() {
-        return true;
-    }
-
-    @Override
-    public float getSizeInDp() {
-        return 360;
-    }
 }

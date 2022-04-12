@@ -24,17 +24,23 @@ import androidx.lifecycle.ViewModelProviders;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
+import com.dl.playfun.BR;
+import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.Injection;
+import com.dl.playfun.databinding.FragmentMineBinding;
 import com.dl.playfun.entity.BrowseNumberEntity;
 import com.dl.playfun.entity.EvaluateEntity;
 import com.dl.playfun.entity.EvaluateItemEntity;
 import com.dl.playfun.entity.EvaluateObjEntity;
 import com.dl.playfun.ui.base.BaseRefreshFragment;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
+import com.dl.playfun.ui.dialog.MyEvaluateDialog;
 import com.dl.playfun.ui.mine.setredpackagephoto.SetRedPackagePhotoFragment;
+import com.dl.playfun.ui.mine.setredpackagevideo.SetRedPackageVideoFragment;
+import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.PictureSelectorUtil;
 import com.dl.playfun.utils.SoftKeyBoardListener;
@@ -47,25 +53,17 @@ import com.dl.playfun.widget.dialog.MVDialog;
 import com.google.android.material.appbar.AppBarLayout;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.listener.OnResultCallbackListener;
-import com.dl.playfun.BR;
-import com.dl.playfun.R;
-import com.dl.playfun.databinding.FragmentMineBinding;
-import com.dl.playfun.ui.dialog.MyEvaluateDialog;
-import com.dl.playfun.ui.mine.setredpackagevideo.SetRedPackageVideoFragment;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.utils.ToastUtils;
-import me.jessyan.autosize.AutoSizeCompat;
-import me.jessyan.autosize.internal.CustomAdapt;
 
 /**
  * @author wulei
  */
-public class MineFragment extends BaseRefreshFragment<FragmentMineBinding, MineViewModel> implements CustomAdapt {
+public class MineFragment extends BaseRefreshFragment<FragmentMineBinding, MineViewModel> {
 
     protected InputMethodManager inputMethodManager;
     private boolean SoftKeyboardShow = false;
@@ -84,7 +82,7 @@ public class MineFragment extends BaseRefreshFragment<FragmentMineBinding, MineV
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        AutoSizeCompat.autoConvertDensityOfGlobal(this.getResources());
+        AutoSizeUtils.applyAdapt(this.getResources());
         return R.layout.fragment_mine;
     }
 
@@ -489,16 +487,6 @@ public class MineFragment extends BaseRefreshFragment<FragmentMineBinding, MineV
             spans[pos - startPos] = jumpingBean;
         }
         return spans;
-    }
-
-    @Override
-    public boolean isBaseOnWidth() {
-        return true;
-    }
-
-    @Override
-    public float getSizeInDp() {
-        return 360;
     }
 
     @SuppressLint("MissingSuperCall")

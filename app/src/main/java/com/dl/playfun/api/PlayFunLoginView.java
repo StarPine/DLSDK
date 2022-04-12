@@ -41,6 +41,7 @@ import com.dl.playfun.entity.TokenEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.WebUrlViewActivity;
+import com.dl.playfun.utils.AutoSizeUtils;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -69,15 +70,13 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import me.goldze.mvvmhabit.utils.RxUtils;
 import me.goldze.mvvmhabit.utils.ToastUtils;
-import me.jessyan.autosize.AutoSizeCompat;
-import me.jessyan.autosize.internal.CustomAdapt;
 
 /**
  * Author: 彭石林
  * Time: 2022/3/29 15:01
  * Description: This is PlayFunLoginView
  */
-public class PlayFunLoginView extends DialogFragment implements Consumer<Disposable>, CustomAdapt {
+public class PlayFunLoginView extends DialogFragment implements Consumer<Disposable> {
     private CompositeDisposable mCompositeDisposable;
     //加载进度条
     private KProgressHUD hud;
@@ -120,7 +119,7 @@ public class PlayFunLoginView extends DialogFragment implements Consumer<Disposa
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         //初始化适配--防止部分机型失效
-        AutoSizeCompat.autoConvertDensityOfGlobal(this.getResources());
+        AutoSizeUtils.applyAdapt(this.getResources());
         View view = inflater.inflate(com.dl.playfun.R.layout.dialog_login_fragment, container, false);
         init(view);
         return view;
@@ -516,14 +515,5 @@ public class PlayFunLoginView extends DialogFragment implements Consumer<Disposa
 
     public Context getContext(){
         return mContext;
-    }
-    @Override
-    public boolean isBaseOnWidth() {
-        return true;
-    }
-
-    @Override
-    public float getSizeInDp() {
-        return 360;
     }
 }

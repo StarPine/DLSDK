@@ -21,25 +21,26 @@ import com.dl.playfun.databinding.FragmentMineTraceManBinding;
 import com.dl.playfun.event.TraceEmptyEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
+import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.widget.coinpaysheet.CoinPaySheet;
 import com.dl.playfun.widget.coinrechargesheet.GameCoinTopupSheetView;
 import com.dl.playfun.widget.dialog.TraceDialog;
 
 import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.utils.ToastUtils;
-import me.jessyan.autosize.internal.CustomAdapt;
 
 /**
  * Author: 彭石林
  * Time: 2021/8/4 12:26
  * Description: This is TraceManFragment
  */
-public class TraceManFragment extends BaseToolbarFragment<FragmentMineTraceManBinding, TraeManViewModel> implements CustomAdapt {
+public class TraceManFragment extends BaseToolbarFragment<FragmentMineTraceManBinding, TraeManViewModel> {
     Dialog vipDialog = null;
     private Integer userId;
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        AutoSizeUtils.applyAdapt(this.getResources());
         return R.layout.fragment_mine_trace_man;
     }
 
@@ -183,14 +184,5 @@ public class TraceManFragment extends BaseToolbarFragment<FragmentMineTraceManBi
                 binding.refreshLayout.finishLoadMore(100);
             }
         });
-    }
-    @Override
-    public boolean isBaseOnWidth() {
-        return true;
-    }
-
-    @Override
-    public float getSizeInDp() {
-        return 360;
     }
 }

@@ -26,14 +26,13 @@ import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
 
 import me.goldze.mvvmhabit.utils.ToastUtils;
-import me.jessyan.autosize.internal.CustomAdapt;
 
 /**
  * 搜索
  *
  * @author wulei
  */
-public class SearchFragment extends BaseRefreshToolbarFragment<FragmentSearchBinding, SearchViewModel> implements CustomAdapt {
+public class SearchFragment extends BaseRefreshToolbarFragment<FragmentSearchBinding, SearchViewModel> {
 
     @Nullable
     @Override
@@ -126,13 +125,4 @@ public class SearchFragment extends BaseRefreshToolbarFragment<FragmentSearchBin
         });
     }
 
-    @Override
-    public boolean isBaseOnWidth() {
-        return true;
-    }
-
-    @Override
-    public float getSizeInDp() {
-        return 360;
-    }
 }

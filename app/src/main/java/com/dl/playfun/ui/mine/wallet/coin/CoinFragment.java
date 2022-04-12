@@ -19,18 +19,18 @@ import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.FragmentCoinBinding;
 import com.dl.playfun.entity.GameCoinBuy;
 import com.dl.playfun.ui.base.BaseRefreshToolbarFragment;
+import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.SoftKeyBoardListener;
 import com.dl.playfun.widget.coinrechargesheet.GameCoinTopupSheetView;
 import com.dl.playfun.widget.dialog.MVDialog;
 
 import me.goldze.mvvmhabit.utils.ToastUtils;
-import me.jessyan.autosize.internal.CustomAdapt;
 
 /**
  * @author wulei
  */
 @SuppressLint("StringFormatMatches")
-public class CoinFragment extends BaseRefreshToolbarFragment<FragmentCoinBinding, CoinViewModel> implements CustomAdapt,View.OnClickListener {
+public class CoinFragment extends BaseRefreshToolbarFragment<FragmentCoinBinding, CoinViewModel> implements View.OnClickListener {
     public static final String TAG = "CoinFragment";
     protected InputMethodManager inputMethodManager;
 
@@ -38,6 +38,7 @@ public class CoinFragment extends BaseRefreshToolbarFragment<FragmentCoinBinding
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        AutoSizeUtils.applyAdapt(this.getResources());
         return R.layout.fragment_coin;
     }
 
@@ -123,16 +124,6 @@ public class CoinFragment extends BaseRefreshToolbarFragment<FragmentCoinBinding
         if (SoftKeyboardShow) {
             inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
         }
-    }
-
-    @Override
-    public boolean isBaseOnWidth() {
-        return true;
-    }
-
-    @Override
-    public float getSizeInDp() {
-        return 360;
     }
 
 

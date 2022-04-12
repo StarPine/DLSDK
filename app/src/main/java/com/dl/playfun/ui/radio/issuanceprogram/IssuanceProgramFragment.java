@@ -34,17 +34,17 @@ import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
 import com.dl.playfun.ui.certification.certificationmale.CertificationMaleFragment;
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
+import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.widget.coinpaysheet.CoinPaySheet;
 import com.dl.playfun.widget.coinrechargesheet.GameCoinTopupSheetView;
 import com.dl.playfun.widget.dialog.MVDialog;
 
 import me.goldze.mvvmhabit.utils.ToastUtils;
-import me.jessyan.autosize.internal.CustomAdapt;
 
 /**
  * @author wulei
  */
-public class IssuanceProgramFragment extends BaseToolbarFragment<FragmentIssuanceProgramBinding, IssuanceProgramViewModel> implements CustomAdapt {
+public class IssuanceProgramFragment extends BaseToolbarFragment<FragmentIssuanceProgramBinding, IssuanceProgramViewModel> {
     public static final String ARG_PROGRAM_ENTITY = "arg_program_entity";
     public static final String ARG_CHOOSE_CITY = "arg_choose_city";
     public static final String ARG_ADDRESS_NAME = "arg_address_name";
@@ -93,6 +93,7 @@ public class IssuanceProgramFragment extends BaseToolbarFragment<FragmentIssuanc
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        AutoSizeUtils.applyAdapt(this.getResources());
         return R.layout.fragment_issuance_program;
     }
 
@@ -380,13 +381,4 @@ public class IssuanceProgramFragment extends BaseToolbarFragment<FragmentIssuanc
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    @Override
-    public boolean isBaseOnWidth() {
-        return true;
-    }
-
-    @Override
-    public float getSizeInDp() {
-        return 360;
-    }
 }

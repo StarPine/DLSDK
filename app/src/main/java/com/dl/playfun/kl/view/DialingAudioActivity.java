@@ -27,11 +27,9 @@ import com.tencent.liteav.trtccalling.model.util.TUICallingConstants;
 
 import me.goldze.mvvmhabit.base.BaseActivity;
 import me.goldze.mvvmhabit.bus.RxBus;
-import me.jessyan.autosize.AutoSizeCompat;
-import me.jessyan.autosize.internal.CustomAdapt;
 import me.tatarka.bindingcollectionadapter2.BR;
 
-public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Binding, AudioCallingViewModel2> implements CustomAdapt {
+public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Binding, AudioCallingViewModel2> {
 
     private CallingInviteInfo callingInviteInfo;
     //拨打方UserId
@@ -55,7 +53,6 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
 
     @Override
     public int initContentView(Bundle savedInstanceState) {
-        AutoSizeCompat.autoConvertDensityOfGlobal(this.getResources());
         return R.layout.activity_call_waiting2;
     }
 
@@ -162,15 +159,5 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
     public void onBackPressed() {
         super.onBackPressed();
         RxBus.getDefault().post(new AudioCallingCancelEvent());
-    }
-
-    @Override
-    public boolean isBaseOnWidth() {
-        return true;
-    }
-
-    @Override
-    public float getSizeInDp() {
-        return 360;
     }
 }

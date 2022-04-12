@@ -21,7 +21,7 @@ import com.dl.playfun.R;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.databinding.FragmentPerfectProfileBinding;
 import com.dl.playfun.ui.base.BaseFragment;
-import com.dl.playfun.ui.certification.certificationmale.CertificationMaleViewModel;
+import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.DateUtil;
 import com.dl.playfun.utils.PictureSelectorUtil;
 import com.luck.picture.lib.entity.LocalMedia;
@@ -30,19 +30,17 @@ import com.luck.picture.lib.listener.OnResultCallbackListener;
 import java.util.Calendar;
 import java.util.List;
 
-import me.jessyan.autosize.AutoSizeCompat;
-import me.jessyan.autosize.internal.CustomAdapt;
 
 /**
  * Author: 彭石林
  * Time: 2022/4/4 11:19
  * Description: This is PerfectProfileFragment
  */
-public class PerfectProfileFragment extends BaseFragment<FragmentPerfectProfileBinding,PerfectProfileViewModel> implements CustomAdapt {
+public class PerfectProfileFragment extends BaseFragment<FragmentPerfectProfileBinding,PerfectProfileViewModel> {
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        AutoSizeCompat.autoConvertDensityOfGlobal(this.getResources());
+        AutoSizeUtils.applyAdapt(this.getResources());
         return R.layout.fragment_perfect_profile;
     }
 
@@ -183,15 +181,5 @@ public class PerfectProfileFragment extends BaseFragment<FragmentPerfectProfileB
         if (binding.editNickname.isFocused()) {
             binding.editNickname.clearFocus();
         }
-    }
-
-    @Override
-    public boolean isBaseOnWidth() {
-        return true;
-    }
-
-    @Override
-    public float getSizeInDp() {
-        return 360;
     }
 }

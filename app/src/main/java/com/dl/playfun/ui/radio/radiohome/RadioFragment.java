@@ -38,6 +38,7 @@ import com.dl.playfun.ui.base.BaseRefreshFragment;
 import com.dl.playfun.ui.mine.broadcast.mytrends.TrendItemViewModel;
 import com.dl.playfun.ui.radio.issuanceprogram.IssuanceProgramFragment;
 import com.dl.playfun.ui.userdetail.report.ReportUserFragment;
+import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.PictureSelectorUtil;
 import com.dl.playfun.widget.RadioFilterView;
 import com.dl.playfun.widget.dialog.MMAlertDialog;
@@ -56,13 +57,11 @@ import java.util.List;
 import java.util.Map;
 
 import me.goldze.mvvmhabit.utils.ToastUtils;
-import me.jessyan.autosize.AutoSizeCompat;
-import me.jessyan.autosize.internal.CustomAdapt;
 
 /**
  * @author wulei
  */
-public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, RadioViewModel> implements RadioFilterView.RadioFilterListener, CustomAdapt {
+public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, RadioViewModel> implements RadioFilterView.RadioFilterListener {
     private Context mContext;
     private EasyPopup mCirclePop;
     private List<RadioFilterView.RadioFilterItemEntity> sexs;
@@ -74,7 +73,7 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        AutoSizeCompat.autoConvertDensityOfGlobal(RadioFragment.this.getResources());
+        AutoSizeUtils.applyAdapt(this.getResources());
         return R.layout.fragment_radio;
     }
 
@@ -446,13 +445,4 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
         viewModel.setCityId(gameId,cityId);
     }
 
-    @Override
-    public boolean isBaseOnWidth() {
-        return true;
-    }
-
-    @Override
-    public float getSizeInDp() {
-        return 360;
-    }
 }

@@ -22,6 +22,7 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.event.TaskMainTabEvent;
 import com.dl.playfun.ui.base.BaseFragment;
+import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.widget.dialog.MMAlertDialog;
 import com.dl.playfun.widget.dialog.TraceDialog;
 import com.dl.playfun.BR;
@@ -34,15 +35,13 @@ import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 import java.io.File;
 
 import me.goldze.mvvmhabit.bus.RxBus;
-import me.jessyan.autosize.AutoSizeCompat;
-import me.jessyan.autosize.internal.CustomAdapt;
 
 /**
  * Author: 彭石林
  * Time: 2021/10/21 10:21
  * Description: This is TapeAudioFragment
  */
-public class TapeAudioFragment extends BaseFragment<FragentTapeAudioBinding,TapeAudioViewModel> implements CustomAdapt {
+public class TapeAudioFragment extends BaseFragment<FragentTapeAudioBinding,TapeAudioViewModel> {
 
     private final Handler myHandler = new Handler();
 
@@ -77,6 +76,7 @@ public class TapeAudioFragment extends BaseFragment<FragentTapeAudioBinding,Tape
     }
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        AutoSizeUtils.applyAdapt(this.getResources());
         return R.layout.fragent_tape_audio;
     }
 
@@ -88,7 +88,6 @@ public class TapeAudioFragment extends BaseFragment<FragentTapeAudioBinding,Tape
     @Override
     public void initParam() {
         super.initParam();
-        AutoSizeCompat.autoConvertDensityBaseOnWidth(TapeAudioFragment.this.getResources(), 360);
     }
 
     @Override
@@ -276,13 +275,4 @@ public class TapeAudioFragment extends BaseFragment<FragentTapeAudioBinding,Tape
         }
     }
 
-    @Override
-    public boolean isBaseOnWidth() {
-        return true;
-    }
-
-    @Override
-    public float getSizeInDp() {
-        return 360;
-    }
 }

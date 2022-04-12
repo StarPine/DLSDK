@@ -34,6 +34,7 @@ import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.utils.ApiUitl;
+import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.widget.action.StatusAction;
 import com.dl.playfun.widget.action.StatusLayout;
 import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralDialog;
@@ -48,7 +49,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
 import me.goldze.mvvmhabit.utils.ToastUtils;
-import me.jessyan.autosize.AutoSizeCompat;
 
 /**
  * Author: 彭石林
@@ -70,7 +70,7 @@ public class FukubukuroViewFragment extends BaseFragment<WebviewFukubukuroFragme
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        AutoSizeCompat.autoConvertDensityOfGlobal(this.getResources());
+        AutoSizeUtils.applyAdapt(this.getResources());
         return R.layout.webview_fukubukuro_fragment;
     }
 

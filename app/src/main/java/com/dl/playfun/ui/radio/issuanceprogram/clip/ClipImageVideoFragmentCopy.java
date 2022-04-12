@@ -84,14 +84,13 @@ import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 
 import me.goldze.mvvmhabit.bus.RxBus;
-import me.jessyan.autosize.internal.CustomAdapt;
 
 /**
  * Author: 彭石林
  * Time: 2021/10/27 19:03
  * Description: This is ClipImageVideoFragmentCopy
  */
-public class ClipImageVideoFragmentCopy extends BaseFragment<FragmentClipImageVideoBinding, ClipImageVideoViewModel> implements CustomAdapt, TextureView.SurfaceTextureListener, HorizontalListView.OnScrollCallBack, SizeChangedNotifier.Listener,
+public class ClipImageVideoFragmentCopy extends BaseFragment<FragmentClipImageVideoBinding, ClipImageVideoViewModel> implements TextureView.SurfaceTextureListener, HorizontalListView.OnScrollCallBack, SizeChangedNotifier.Listener,
         MediaPlayer.OnVideoSizeChangedListener, VideoTrimFrameLayout.OnVideoScrollCallBack{
     private CustonImgVideoEntity $custonEntity;
     private RelativeLayout.LayoutParams $layoutParams = null;
@@ -428,16 +427,6 @@ public class ClipImageVideoFragmentCopy extends BaseFragment<FragmentClipImageVi
                         }
                     }
                 });
-    }
-
-    @Override
-    public boolean isBaseOnWidth() {
-        return true;
-    }
-
-    @Override
-    public float getSizeInDp() {
-        return 360;
     }
 
     private void getData(String VideoPath) {

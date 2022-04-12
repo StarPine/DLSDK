@@ -43,6 +43,7 @@ import com.dl.playfun.kl.Utils;
 import com.dl.playfun.kl.viewmodel.AudioCallChatingViewModel;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.dialog.GiftBagDialog;
+import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.StringUtil;
@@ -67,11 +68,9 @@ import java.util.Map;
 
 import me.goldze.mvvmhabit.base.BaseActivity;
 import me.goldze.mvvmhabit.bus.RxBus;
-import me.jessyan.autosize.AutoSizeCompat;
-import me.jessyan.autosize.internal.CustomAdapt;
 import me.tatarka.bindingcollectionadapter2.BR;
 
-public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChatingBinding, AudioCallChatingViewModel> implements CustomAdapt, Ifinish {
+public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChatingBinding, AudioCallChatingViewModel> implements Ifinish {
 
     private String fromUserId;
     private String toUserId;
@@ -112,7 +111,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
 
     @Override
     public int initContentView(Bundle savedInstanceState) {
-        AutoSizeCompat.autoConvertDensityOfGlobal(this.getResources());
+        AutoSizeUtils.applyAdapt(this.getResources());
         return R.layout.activity_call_audio_chating;
     }
 
@@ -820,16 +819,6 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
             RxBus.getDefault().post(new CallChatingHangupEvent());
         }
         Utils.runOnUiThread(this::finish);
-    }
-
-    @Override
-    public boolean isBaseOnWidth() {
-        return true;
-    }
-
-    @Override
-    public float getSizeInDp() {
-        return 360;
     }
 
     /**

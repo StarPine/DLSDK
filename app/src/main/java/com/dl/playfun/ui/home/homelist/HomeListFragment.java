@@ -25,12 +25,11 @@ import com.dl.playfun.ui.home.HomeMainViewModel;
 import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
 
 import me.goldze.mvvmhabit.utils.ToastUtils;
-import me.jessyan.autosize.internal.CustomAdapt;
 
 /**
  * @author wulei
  */
-public class HomeListFragment extends BaseRefreshFragment<FragmentHomeListBinding, HomeListViewModel> implements CustomAdapt {
+public class HomeListFragment extends BaseRefreshFragment<FragmentHomeListBinding, HomeListViewModel> {
     public static final String ARG_HOME_LIST_TYPE = "arg_home_list_type";
     public static final String ARG_HOME_LIST_GENDER = "arg_home_list_gender";
 
@@ -138,15 +137,5 @@ public class HomeListFragment extends BaseRefreshFragment<FragmentHomeListBindin
                 }
             }
         });
-    }
-
-    @Override
-    public boolean isBaseOnWidth() {
-        return true;
-    }
-
-    @Override
-    public float getSizeInDp() {
-        return 360;
     }
 }

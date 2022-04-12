@@ -45,6 +45,7 @@ import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.event.CallChatingHangupEvent;
 import com.dl.playfun.kl.viewmodel.VideoCallViewModel;
 import com.dl.playfun.manager.ConfigManager;
+import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ChatUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.LogUtils;
@@ -77,11 +78,9 @@ import java.util.Map;
 
 import me.goldze.mvvmhabit.base.BaseActivity;
 import me.goldze.mvvmhabit.bus.RxBus;
-import me.jessyan.autosize.AutoSizeCompat;
-import me.jessyan.autosize.internal.CustomAdapt;
 import me.tatarka.bindingcollectionadapter2.BR;
 
-public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding, VideoCallViewModel> implements CustomAdapt {
+public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding, VideoCallViewModel>  {
 
 
     private Context mContext;
@@ -128,7 +127,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
 
     @Override
     public int initContentView(Bundle savedInstanceState) {
-        AutoSizeCompat.autoConvertDensityOfGlobal(this.getResources());
+        AutoSizeUtils.applyAdapt(this.getResources());
         return R.layout.activity_call_video;
     }
 
@@ -910,16 +909,6 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
             mHandler.removeCallbacks(timerRunnable);
             mHandler = null;
         }
-    }
-
-    @Override
-    public boolean isBaseOnWidth() {
-        return true;
-    }
-
-    @Override
-    public float getSizeInDp() {
-        return 360;
     }
 
     /**

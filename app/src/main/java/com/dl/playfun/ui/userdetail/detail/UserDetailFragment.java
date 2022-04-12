@@ -47,6 +47,7 @@ import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
 import com.dl.playfun.ui.mine.wallet.coin.CoinFragment;
 import com.dl.playfun.ui.userdetail.playnum.CoinPaySheetUserMain;
 import com.dl.playfun.ui.userdetail.report.ReportUserFragment;
+import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.ListUtils;
 import com.dl.playfun.utils.PictureSelectorUtil;
@@ -71,13 +72,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.goldze.mvvmhabit.utils.ToastUtils;
-import me.jessyan.autosize.internal.CustomAdapt;
 
 /**
  * @author wulei 用户详情fragment
  */
 @SuppressLint("StringFormatMatches")
-public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBinding, UserDetailViewModel> implements View.OnClickListener, CustomAdapt {
+public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBinding, UserDetailViewModel> implements View.OnClickListener {
 
     public static final String ARG_USER_DETAIL_USER_ID = "arg_user_detail_user_id";
     public static final String ARG_USER_DETAIL_MORENUMBER = "arg_user_detail_morenumber";
@@ -109,6 +109,7 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        AutoSizeUtils.applyAdapt(this.getResources());
         return R.layout.fragment_user_detail;
     }
 
@@ -998,13 +999,4 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
         });
     }
 
-    @Override
-    public boolean isBaseOnWidth() {
-        return true;
-    }
-
-    @Override
-    public float getSizeInDp() {
-        return 360;
-    }
 }

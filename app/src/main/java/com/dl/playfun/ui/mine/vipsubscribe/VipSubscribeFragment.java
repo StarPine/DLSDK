@@ -36,6 +36,7 @@ import com.dl.playfun.entity.VipPackageItemEntity;
 import com.dl.playfun.event.VipRechargeSuccessEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
+import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.widget.coinpaysheet.CoinPaySheet;
@@ -46,12 +47,11 @@ import java.util.List;
 
 import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.utils.ToastUtils;
-import me.jessyan.autosize.internal.CustomAdapt;
 
 /**
  * @author wulei
  */
-public class VipSubscribeFragment extends BaseToolbarFragment<FragmentVipSubscribeBinding, VipSubscribeViewModel> implements CustomAdapt, View.OnClickListener, PurchasesUpdatedListener, BillingClientStateListener {
+public class VipSubscribeFragment extends BaseToolbarFragment<FragmentVipSubscribeBinding, VipSubscribeViewModel> implements View.OnClickListener, PurchasesUpdatedListener, BillingClientStateListener {
     public static final String TAG = "VipSubscribeFragment";
 
     @Override
@@ -68,6 +68,7 @@ public class VipSubscribeFragment extends BaseToolbarFragment<FragmentVipSubscri
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        AutoSizeUtils.applyAdapt(this.getResources());
         return R.layout.fragment_vip_subscribe;
     }
 
@@ -336,13 +337,4 @@ public class VipSubscribeFragment extends BaseToolbarFragment<FragmentVipSubscri
         }
     }
 
-    @Override
-    public boolean isBaseOnWidth() {
-        return true;
-    }
-
-    @Override
-    public float getSizeInDp() {
-        return 360;
-    }
 }

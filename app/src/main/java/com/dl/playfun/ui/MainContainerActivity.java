@@ -37,6 +37,7 @@ import com.dl.playfun.ui.base.MySupportActivity;
 import com.dl.playfun.ui.main.MainFragment;
 import com.dl.playfun.ui.mine.profile.PerfectProfileFragment;
 import com.dl.playfun.utils.ApiUitl;
+import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.utils.TimeUtils;
@@ -61,7 +62,6 @@ import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.utils.RxUtils;
 import me.goldze.mvvmhabit.utils.ToastUtils;
-import me.jessyan.autosize.AutoSizeConfig;
 import me.yokeyword.fragmentation.ISupportFragment;
 import me.yokeyword.fragmentation.anim.DefaultHorizontalAnimator;
 import me.yokeyword.fragmentation.anim.FragmentAnimator;
@@ -86,8 +86,8 @@ public class MainContainerActivity extends MySupportActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AutoSizeUtils.applyAdapt(this.getResources());
         setContentView(R.layout.activity_main_container);
-        AutoSizeConfig.getInstance().setCustomFragment(true);
         ImmersionBarUtils.setupStatusBar(this, true, false);
 
         UserDataEntity userDataEntity = ConfigManager.getInstance().getAppRepository().readUserData();

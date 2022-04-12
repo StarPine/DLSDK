@@ -62,6 +62,7 @@ import com.dl.playfun.ui.userdetail.locationmaps.LocationMapsFragment;
 import com.dl.playfun.ui.userdetail.photobrowse.PhotoBrowseFragment;
 import com.dl.playfun.ui.userdetail.report.ReportUserFragment;
 import com.dl.playfun.utils.ApiUitl;
+import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ChatUtils;
 import com.dl.playfun.utils.ImageUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
@@ -113,14 +114,12 @@ import java.util.List;
 import java.util.Map;
 
 import me.goldze.mvvmhabit.bus.RxBus;
-import me.jessyan.autosize.AutoSizeCompat;
-import me.jessyan.autosize.internal.CustomAdapt;
 import me.yokeyword.fragmentation.ISupportFragment;
 
 /**
  * @author wulei
  */
-public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBinding, ChatDetailViewModel> implements CustomChatInputFragment.CustomChatInputFragmentListener, InputView.SendOnClickCallback, CustomAdapt {
+public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBinding, ChatDetailViewModel> implements CustomChatInputFragment.CustomChatInputFragmentListener, InputView.SendOnClickCallback {
     public static final String CHAT_INFO = "chatInfo";
 
     public static final String TAG = "ChatDetailFragment";
@@ -163,7 +162,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        AutoSizeCompat.autoConvertDensityOfGlobal(this.getResources());
+        AutoSizeUtils.applyAdapt(this.getResources());
         return R.layout.fragment_chat_detail;
     }
 
@@ -1453,24 +1452,12 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
 
     }
 
-
-    @Override
-    public boolean isBaseOnWidth() {
-        return true;
-    }
-
-    @Override
-    public float getSizeInDp() {
-        return 360;
-    }
-
     //获取聊天对象的UserId
     public Integer getTaUserIdIM() {
         return toUserDataId == null ? 0 : toUserDataId;
     }
     //获取当前用户的IM id
     public String getUserIdIM(){
-        Log.e("聊天页面","获取当前用户缓存腾讯id"+String.valueOf(ConfigManager.getInstance().getUserImID()));
         return ConfigManager.getInstance().getUserImID();
     }
 

@@ -30,6 +30,7 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocationManager;
 import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.ui.dialog.HomeAccostDialog;
+import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.google.android.material.tabs.TabLayout;
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -37,19 +38,17 @@ import com.tbruyelle.rxpermissions2.RxPermissions;
 import java.util.List;
 
 import me.goldze.mvvmhabit.bus.RxBus;
-import me.jessyan.autosize.AutoSizeCompat;
-import me.jessyan.autosize.internal.CustomAdapt;
 
 /**
  * @author wulei
  */
-public class HomeMainFragment extends BaseFragment<FragmentHomeMainBinding, HomeMainViewModel> implements CustomAdapt {
+public class HomeMainFragment extends BaseFragment<FragmentHomeMainBinding, HomeMainViewModel> {
 
     private List<ConfigItemEntity> citys;
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        AutoSizeCompat.autoConvertDensityOfGlobal(this.getResources());
+        AutoSizeUtils.applyAdapt(this.getResources());
         return R.layout.fragment_home_main;
     }
 
@@ -280,15 +279,5 @@ public class HomeMainFragment extends BaseFragment<FragmentHomeMainBinding, Home
     @Override
     protected boolean isUmengReportPage() {
         return false;
-    }
-
-    @Override
-    public boolean isBaseOnWidth() {
-        return true;
-    }
-
-    @Override
-    public float getSizeInDp() {
-        return 360;
     }
 }
