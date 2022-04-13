@@ -28,7 +28,6 @@ import com.dl.playfun.event.LoginExpiredEvent;
 import com.dl.playfun.tim.TUIUtils;
 import com.dl.playfun.ui.MainContainerActivity;
 import com.dl.playfun.utils.ExceptionReportUtils;
-import com.dl.playfun.utils.Utility;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.scwang.smart.refresh.footer.ClassicsFooter;
@@ -159,12 +158,6 @@ public class AppContext extends Application {
         sUiThread = Thread.currentThread();
         // 主线程的Handler
         sUiThreadHandler = new Handler();
-        try {
-            Utility.bypassHiddenApiRestrictions();
-        } catch (Exception e) {
-
-        }
-
         BaseApplication.setApplication(this);
 
         FirebaseApp firebase = FirebaseApp.initializeApp(this);

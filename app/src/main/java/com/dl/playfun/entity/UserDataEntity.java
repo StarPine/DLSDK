@@ -216,14 +216,7 @@ public class UserDataEntity extends BaseObservable {
     }
 
     public void setBirthday(Calendar calendar) {
-        this.birthdayCal = calendar;
-        if (Utils.isManilaApp(AppContext.instance())) {
-            String dayNumberSuffix = StringUtil.getDayNumberSuffix(calendar.get(Calendar.DAY_OF_MONTH));
-            DateFormat dateFormat = new SimpleDateFormat("MMMM d'" + dayNumberSuffix + "',yyyy", Locale.ENGLISH);
-            this.birthday = TimeUtils.millis2String(calendar.getTimeInMillis(), dateFormat);
-        } else {
-            this.birthday = (calendar.get(Calendar.YEAR)) + "/" + (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.DAY_OF_MONTH) ;
-        }
+        this.birthday = (calendar.get(Calendar.YEAR)) + "/" + (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.DAY_OF_MONTH) ;
         notifyPropertyChanged(BR.birthday);
     }
 

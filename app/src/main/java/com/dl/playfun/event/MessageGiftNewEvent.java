@@ -14,6 +14,7 @@ public class MessageGiftNewEvent {
 
     public MessageGiftNewEvent(GiftEntity giftEntity,String msgId) {
         this.giftEntity = giftEntity;
+        this.msgId = msgId;
     }
 
     public GiftEntity getGiftEntity() {

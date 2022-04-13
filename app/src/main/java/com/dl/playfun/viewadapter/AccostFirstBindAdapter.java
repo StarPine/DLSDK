@@ -19,7 +19,7 @@ public class AccostFirstBindAdapter {
     @BindingAdapter(value = {"accountCollect"}, requireAll = false)
     public static void setAccostFirst(LottieAnimationView itemLottie, Boolean accountCollect) {
         try {
-            if (accountCollect) {
+            if (accountCollect!=null && accountCollect.booleanValue()) {
                 if (itemLottie != null) {
                     itemLottie.setImageAssetsFolder("images/");
                     itemLottie.addAnimatorListener(new AnimatorListenerAdapter() {

@@ -1,5 +1,6 @@
 package com.dl.playfun.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,6 +33,7 @@ import com.dl.playfun.event.GameLoginExpiredEvent;
 import com.dl.playfun.event.LoginExpiredEvent;
 import com.dl.playfun.event.UserDisableEvent;
 import com.dl.playfun.manager.ConfigManager;
+import com.dl.playfun.manager.LocaleManager;
 import com.dl.playfun.tim.TUIUtils;
 import com.dl.playfun.ui.base.MySupportActivity;
 import com.dl.playfun.ui.main.MainFragment;
@@ -82,6 +84,12 @@ public class MainContainerActivity extends MySupportActivity {
     private MVDialog loginExpiredDialog;
 
     private Handler mHandler = new Handler();
+
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocal(newBase));
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

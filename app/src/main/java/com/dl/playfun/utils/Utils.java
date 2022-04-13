@@ -29,9 +29,6 @@ public class Utils {
     public static SimpleDateFormat formatTime = new SimpleDateFormat("HH:mm:ss");
     public static SimpleDateFormat formatYYMMSS = new SimpleDateFormat("yyyyMMdd");
 
-    public static boolean isManilaApp() {
-        return isManilaApp(AppContext.instance());
-    }
 
     public static boolean isManilaApp(Context context) {
         return context.getApplicationInfo().packageName.contains("manila");

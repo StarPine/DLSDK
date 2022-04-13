@@ -1,5 +1,6 @@
 package com.dl.playfun.ui.base;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -8,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.dl.playfun.manager.LocaleManager;
 import com.dl.playfun.utils.ApiUitl;
 
 import me.yokeyword.fragmentation.ExtraTransaction;
@@ -39,6 +41,12 @@ public class MySupportActivity extends AppCompatActivity implements ISupportActi
         return mDelegate.extraTransaction();
     }
 
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocal(newBase));
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,15 +65,15 @@ public class MySupportActivity extends AppCompatActivity implements ISupportActi
         super.onDestroy();
     }
 
-    /**
-     * 从写适配规则适配360dp
-     *
-     * @return
-     */
-    @Override
-    public Resources getResources() {
-        return ApiUitl.autoXDpi(360f, super.getResources());
-    }
+//    /**
+//     * 从写适配规则适配360dp
+//     *
+//     * @return
+//     */
+//    @Override
+//    public Resources getResources() {
+//        return ApiUitl.autoXDpi(360f, super.getResources());
+//    }
 
     /**
      * Note： return mDelegate.dispatchTouchEvent(ev) || super.dispatchTouchEvent(ev);

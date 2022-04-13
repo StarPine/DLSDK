@@ -51,7 +51,6 @@ import com.dl.playfun.tim.TUIUtils;
 import com.dl.playfun.ui.MainContainerActivity;
 import com.dl.playfun.utils.ExceptionReportUtils;
 import com.dl.playfun.utils.StringUtil;
-import com.dl.playfun.utils.Utility;
 import com.scwang.smart.refresh.footer.ClassicsFooter;
 import com.scwang.smart.refresh.header.MaterialHeader;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
@@ -181,12 +180,6 @@ public class AppContext extends Application {
         sUiThread = Thread.currentThread();
         // 主线程的Handler
         sUiThreadHandler = new Handler();
-        try {
-            Utility.bypassHiddenApiRestrictions();
-        } catch (Exception e) {
-
-        }
-
         BaseApplication.setApplication(this);
 
         FirebaseApp.initializeApp(this);

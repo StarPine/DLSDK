@@ -163,23 +163,6 @@ public class StringUtil {
         return str;
     }
 
-    public static String getDayString(String time) {
-        String str = "";
-        if (time != null) {
-            long timeStamp = TimeUtils.string2Millis(time, TimeUtils.getSafeDateFormat("yyyy-MM-dd"));
-            if (Utils.isManilaApp(AppContext.instance())) {
-                Calendar calDate = Calendar.getInstance();
-                calDate.setTimeInMillis(timeStamp);
-                String dayNumberSuffix = getDayNumberSuffix(calDate.get(Calendar.DAY_OF_MONTH));
-                DateFormat dateFormat = new SimpleDateFormat("MMMM d'" + dayNumberSuffix + "'", Locale.ENGLISH);
-                str = TimeUtils.millis2String(timeStamp, dateFormat);
-            } else {
-                str = TimeUtils.millis2String(timeStamp, TimeUtils.getSafeDateFormat("M月d日"));
-            }
-        }
-        return str;
-    }
-
     public static String getDayNumberSuffix(int day) {
         if (day >= 11 && day <= 13) {
             return "th";
