@@ -303,6 +303,15 @@ public class TRTCCallingImpl extends TRTCCalling {
         @Override
         public void onExitRoom(int reason) {
             TRTCLogger.d(TAG, "onExitRoom reason:" + reason);
+            //1 后台执行踢出房间。 2 后台解散房间
+            if(reason ==1 || reason == 2){
+                //执行挂断 变量值初始化
+                stopCall();
+                //执行挂断，返回上一页
+                if (mTRTCInternalListenerManager != null) {
+                    mTRTCInternalListenerManager.onCallEnd();
+                }
+            }
         }
 
         @Override

@@ -146,7 +146,10 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
     @Override
     public void initParam() {
         super.initParam();
+        //防窥屏
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+        //屏幕常亮
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mContext = this;
         SVGASoundManager.INSTANCE.init();
         SVGAParser.Companion.shareParser().init(this);
@@ -904,7 +907,10 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
     @Override
     public void onDestroy() {
         super.onDestroy();
+        //取消窥屏
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
+        //取消常亮
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         if (mHandler != null) {
             mHandler.removeCallbacks(timerRunnable);
             mHandler = null;
