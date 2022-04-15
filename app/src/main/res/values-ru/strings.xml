@@ -2,6 +2,7 @@
 
 <resources>
     <string name="playfun_local_language">ru-RU</string>
+    <string name="playfun_local_language_val">ru</string>
     <string name="playfun_title_home">Домой</string>
     <string name="playfun_title_notifications">Cообщение</string>
     <string name="playfun_title_mine">Мне</string>
@@ -992,7 +993,7 @@
     <string name="auth_external_login_google">Google</string>
     <string name="auth_external_login_line">Линия</string>
     <string name="auth_external_login_vk">ВК</string>
-    <string name="auth_external_login_yk">Гостевой вход ></string>
+    <string name="auth_external_login_yk">Гостевой</string>
     <string name="auth_external_login_more">Другие способы входа ></string>
     <string name="playfun_fragment_perfect_name_hint">Пожалуйста, введите никнейм</string>
     <string name="playfun_fragment_perfect_brithday">День рождения</string>

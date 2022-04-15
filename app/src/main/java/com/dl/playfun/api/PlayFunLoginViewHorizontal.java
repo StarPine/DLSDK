@@ -186,6 +186,8 @@ public class PlayFunLoginViewHorizontal  extends DialogFragment implements View.
         LinearLayout btnGoogle = viewRoot.findViewById(R.id.btn_google);
         LinearLayout btnLine = viewRoot.findViewById(R.id.btn_line);
         LinearLayout btnVk = viewRoot.findViewById(R.id.btn_vk);
+        LinearLayout btnVn = viewRoot.findViewById(R.id.btn_tourists);
+        btnVn.setOnClickListener(this);
         btnVk.setOnClickListener(this);
         btnLine.setOnClickListener(this);
         btnFacebook.setOnClickListener(this);
@@ -523,6 +525,10 @@ public class PlayFunLoginViewHorizontal  extends DialogFragment implements View.
                 playFunAuthUserEntity.setTypeLogin(4);
                 loginResultListener.authLoginSuccess(playFunAuthUserEntity);
             }else if(v.getId() == R.id.btn_yk){//游客登录
+                PlayFunAuthUserEntity playFunAuthUserEntity = new PlayFunAuthUserEntity();
+                playFunAuthUserEntity.setTypeLogin(5);
+                loginResultListener.authLoginSuccess(playFunAuthUserEntity);
+            }else if(v.getId() == R.id.btn_tourists){ //游客登录
                 PlayFunAuthUserEntity playFunAuthUserEntity = new PlayFunAuthUserEntity();
                 playFunAuthUserEntity.setTypeLogin(5);
                 loginResultListener.authLoginSuccess(playFunAuthUserEntity);

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="playfun_local_language">tr-TR</string>
+    <string name="playfun_local_language_val">tr</string>
     <string name="playfun_title_home">Ana Sayfa</string>
     <string name="playfun_title_notifications">Mesaj</string>
     <string name="playfun_title_mine">Benim</string>
@@ -932,7 +933,7 @@
     <string name="auth_external_login_google">Google</string>
     <string name="auth_external_login_line">Линия</string>
     <string name="auth_external_login_vk">ВК</string>
-    <string name="auth_external_login_yk">Misafir girişi ></string>
+    <string name="auth_external_login_yk">Misafir</string>
     <string name="auth_external_login_more">Diğer oturum açma yöntemleri ></string>
     <string name="playfun_fragment_perfect_name_hint">Lütfen bir rumuz girin</string>
     <string name="playfun_fragment_perfect_brithday">Doğumgünü</string>

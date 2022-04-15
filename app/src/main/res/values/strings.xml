@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="playfun_local_language">en-US</string>
+    <string name="playfun_local_language_val">en</string>
     <string name="playfun_title_home">Home</string>
     <string name="playfun_title_notifications">Message</string>
     <string name="playfun_title_mine">Me</string>
@@ -931,7 +932,7 @@
     <string name="auth_external_login_google">Google</string>
     <string name="auth_external_login_line">Line</string>
     <string name="auth_external_login_vk">VK</string>
-    <string name="auth_external_login_yk">Guest login ></string>
+    <string name="auth_external_login_yk">Guest</string>
     <string name="auth_external_login_more">Other login methods </string>
     <string name="playfun_fragment_perfect_name_hint">Please enter a nickname</string>
     <string name="playfun_fragment_perfect_brithday">Birthday</string>

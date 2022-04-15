@@ -20,9 +20,8 @@ public class LocaleManager {
      * @return Locale对象
      */
     public static Locale getSystemLocale() {
-        String text = Utils.getContext().getString(R.string.playfun_local_language);
-        Log.e("当前修改语言为",text+"==="+text.substring(0,text.indexOf("-")));
-        return new Locale(text.substring(0,text.indexOf("-")));
+        String text = Utils.getContext().getString(R.string.playfun_local_language_val);
+        return new Locale(text);
     }
 
 
