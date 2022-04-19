@@ -50,14 +50,6 @@ public class AppConfig {
     public static final String WEB_BASE_URL = BuildConfig.WEB_BASE_URL;
 
     public static final String IMAGE_BASE_URL = BuildConfig.IMAGE_BASE_URL;
-    /**
-     * 服务条款url
-     */
-    public static final String TERMS_OF_SERVICE_URL = "https://sites.google.com/view/playfun-software-license/";
-    /**
-     * 隐私政策url
-     */
-    public static final String PRIVACY_POLICY_URL = "https://sites.google.com/view/playfun-privacypolicy/";
     // 访问的endpoint地址
     public static final String OSS_ENDPOINT = "https://oss-ap-southeast-1.aliyuncs.com";
 //    // 或者根据工程sts_local_server目录中本地鉴权服务脚本代码启动本地STS 鉴权服务器。详情参见sts_local_server 中的脚本内容。

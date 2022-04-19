@@ -36,6 +36,8 @@ import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
+import com.blankj.utilcode.util.ObjectUtils;
+import com.dl.playfun.api.AppGameConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.Injection;
@@ -48,6 +50,7 @@ import com.dl.playfun.entity.GameCoinBuy;
 import com.dl.playfun.entity.GameCoinWalletEntity;
 import com.dl.playfun.event.MyCardPayResultEvent;
 import com.dl.playfun.event.UMengCustomEvent;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.R;
 //import com.dl.playfun.entity.GoodsEntity;
@@ -95,6 +98,9 @@ public class GameCoinTopupSheetView extends BasePopupWindow implements View.OnCl
 
     private GameCoinBuy sel_goodsEntity;
 
+    //游戏货币图标
+    private ImageView imgGameCoin;
+
     public GameCoinTopupSheetView(AppCompatActivity activity) {
         super(activity);
         this.mActivity = activity;
@@ -118,7 +124,14 @@ public class GameCoinTopupSheetView extends BasePopupWindow implements View.OnCl
     private void init(Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
         mPopView = inflater.inflate(R.layout.view_game_coin_topup_sheet, null);
-
+        imgGameCoin = mPopView.findViewById(R.id.img_game_coin);
+        //设置游戏货币图标。根据用户传递
+        AppGameConfig appGameConfig = ConfigManager.getInstance().getAppRepository().readGameConfigSetting();
+        if(!ObjectUtils.isEmpty(appGameConfig)){
+            if(appGameConfig.getGamePlayCoinSmallImg()!=0){
+                imgGameCoin.setImageResource(appGameConfig.getGamePlayCoinSmallImg());
+            }
+        }
         recyclerView = mPopView.findViewById(R.id.recycler_view);
         tvBalance = mPopView.findViewById(R.id.tv_balance);
         ivRefresh = mPopView.findViewById(R.id.iv_refresh);

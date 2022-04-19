@@ -7,10 +7,6 @@ package com.dl.playfun.api;
  */
 public class AppGameConfig {
     private String appId;
-    //区服ID
-    private String serverId;
-    //角色ID
-    private String roleId;
     //返回游戏图标
     private int GamePlayLogoImg;
     //金币小图
@@ -28,22 +24,6 @@ public class AppGameConfig {
 
     public void setAppId(String appId) {
         this.appId = appId;
-    }
-
-    public String getServerId() {
-        return serverId;
-    }
-
-    public void setServerId(String serverId) {
-        this.serverId = serverId;
-    }
-
-    public String getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(String roleId) {
-        this.roleId = roleId;
     }
 
     public int getGamePlayLogoImg() {
@@ -83,6 +63,18 @@ public class AppGameConfig {
     }
 
     public void setPrivacyPolicyUrl(String privacyPolicyUrl) {
+        this.privacyPolicyUrl = privacyPolicyUrl;
+    }
+
+    public AppGameConfig() {
+    }
+
+    public AppGameConfig(String appId, int gamePlayLogoImg, int gamePlayCoinSmallImg, int gamePlayCoinBigImg, String termsOfServiceUrl, String privacyPolicyUrl) {
+        this.appId = appId;
+        GamePlayLogoImg = gamePlayLogoImg;
+        GamePlayCoinSmallImg = gamePlayCoinSmallImg;
+        GamePlayCoinBigImg = gamePlayCoinBigImg;
+        this.termsOfServiceUrl = termsOfServiceUrl;
         this.privacyPolicyUrl = privacyPolicyUrl;
     }
 }

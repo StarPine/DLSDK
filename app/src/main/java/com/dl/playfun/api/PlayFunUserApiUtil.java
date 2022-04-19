@@ -19,6 +19,7 @@ import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.GamePayEntity;
 import com.dl.playfun.entity.GamePhotoAlbumEntity;
 import com.dl.playfun.entity.RoleInfoEntity;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.MainContainerActivity;
 import com.dl.playfun.utils.AESUtil;
 import com.dl.playfun.utils.ApiUitl;
@@ -47,6 +48,16 @@ public class PlayFunUserApiUtil {
             }
         }
         return  INSTANCE;
+    }
+    /**
+    * @Desc TODO(保存游戏配置)
+    * @author 彭石林
+    * @parame [appGameConfig]
+    * @return void
+    * @Date 2022/4/19
+    */
+    public void saveGameConfigSetting(@NonNull @NotNull AppGameConfig appGameConfig){
+        ConfigManager.getInstance().getAppRepository().saveGameConfigSetting(appGameConfig);
     }
 
     /**

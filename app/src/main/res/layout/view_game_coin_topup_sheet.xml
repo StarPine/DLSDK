@@ -38,12 +38,12 @@
                         />
 
                     <ImageView
+                        android:id="@+id/icon_game_coin"
                         android:layout_width="14dp"
                         android:layout_height="14dp"
-                        android:src="@drawable/icon_game_coin"
-                        android:layout_marginTop="39dp"
                         android:layout_marginLeft="14dp"
-                        />
+                        android:layout_marginTop="39dp"
+                        android:src="@drawable/icon_game_coin" />
 
                     <TextView
                         android:id="@+id/tv_balance"

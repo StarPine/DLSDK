@@ -3,6 +3,7 @@ package com.dl.playfun.data;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 
+import com.dl.playfun.api.AppGameConfig;
 import com.dl.playfun.data.source.HttpDataSource;
 import com.dl.playfun.data.source.LocalDataSource;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
@@ -446,6 +447,16 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     @Override
     public Observable<BaseDataResponse<GooglePoiBean>> textSearchPlace(RequestBody requestBody) {
         return mHttpDataSource.textSearchPlace(requestBody);
+    }
+
+    @Override
+    public void saveGameConfigSetting(AppGameConfig appGameConfig) {
+        mLocalDataSource.saveGameConfigSetting(appGameConfig);
+    }
+
+    @Override
+    public AppGameConfig readGameConfigSetting() {
+        return mLocalDataSource.readGameConfigSetting();
     }
 
     @Override
