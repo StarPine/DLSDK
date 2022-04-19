@@ -106,55 +106,6 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         AppContext.instance().logEvent(AppsFlyerEvent.main_open);
         //未付费弹窗
         viewModel.uc.notPaidDialog.observe(this,s -> {
-//            String url;
-//            if (s.equals("2")) {
-//                url = AppConfig.WEB_BASE_URL+"recharge_vip/recharge_vip.html";
-//            } else {
-//                url = AppConfig.WEB_BASE_URL+"recharge_zuan/recharge_zuan.html";
-//            }
-//            if(AppConfig.isDebug){
-//                if (s.equals("2")) {
-//                    url = "http://t-m.joy-mask.com/recharge_vip/recharge_vip.html";
-//                } else {
-//                    url = "http://t-m.joy-mask.com/recharge_zuan/recharge_zuan.html";
-//                }
-//            }
-//            new WebViewDialog(getContext(), mActivity, url, new WebViewDialog.ConfirmOnclick() {
-//                @Override
-//                public void webToVipRechargeVC(Dialog dialog) {
-//                    if(dialog!=null){
-//                        dialog.dismiss();
-//                    }
-//                    viewModel.start(VipSubscribeFragment.class.getCanonicalName());
-//                }
-//
-//                @Override
-//                public void vipRechargeDiamondSuccess(Dialog dialog, Integer coinValue) {
-//                    if(dialog!=null){
-//                        dialog.dismiss();
-//                    }
-//                }
-//
-//                @Override
-//                public void moreRechargeDiamond(Dialog dialog) {
-//                    dialog.dismiss();
-//                    mActivity.runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            showRecharge();
-//                        }
-//                    });
-//                }
-//
-//                @Override
-//                public void cancel() {
-//                }
-//            }).noticeDialog().show();
-//            if (s.equals("2")){//vip
-//                viewModel.pushGreet(3);
-//            }else {
-//                viewModel.pushGreet(2);
-//            }
 
         });
         //搭讪弹窗-今日缘分

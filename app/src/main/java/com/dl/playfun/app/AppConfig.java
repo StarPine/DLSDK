@@ -110,4 +110,8 @@ public class AppConfig {
     public static final String GAME_SOURCES_AES_KEY = "game_sources_key";
     //游戏activity绝对路径 （实际包名+类名）
     public static final String GAME_SOURCES_ACTIVITY_NAME = "game_sources_activity_name";
+    //游戏请求头APP id
+    public static final String GAME_SOURCES_APP_ID = "game_sources_app_id";
+    //游戏配置类
+    public static final String GAME_SOURCES_APP_CONFIG = "game_sources_app_config";
 }

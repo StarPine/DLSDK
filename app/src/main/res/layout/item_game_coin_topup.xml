@@ -11,6 +11,7 @@
         android:background="@drawable/bg_topup_item" />
 
     <ImageView
+        android:id="@+id/game_big_img"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_marginLeft="14dp"

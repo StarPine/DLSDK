@@ -11,8 +11,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.blankj.utilcode.util.ObjectUtils;
+import com.blankj.utilcode.util.StringUtils;
+import com.dl.playfun.api.AppGameConfig;
 import com.dl.playfun.entity.GameCoinBuy;
 import com.dl.playfun.R;
+import com.dl.playfun.manager.ConfigManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,14 +61,22 @@ public class GameCoinTopupAdapter extends RecyclerView.Adapter<GameCoinTopupAdap
         holder.tvGoodsLabel.setText(goodsEntity.getGoodsLabel());
         holder.tvGoodsName.setText(goodsEntity.getGoodsName());
         holder.tvPayPrice.setText(goodsEntity.getPayPrice());
-
+        //设置游戏货币图标。根据用户传递
+        AppGameConfig appGameConfig = ConfigManager.getInstance().getAppRepository().readGameConfigSetting();
+        if(!ObjectUtils.isEmpty(appGameConfig)){
+            if(appGameConfig.getGamePlayCoinBigImg()!=0){
+                holder.gameBigImg.setImageResource(appGameConfig.getGamePlayCoinBigImg());
+            }
+        }
         if(goodsEntity.getIsFirst() != null && goodsEntity.getIsFirst() == 1){
             holder.tvGoodsLabel.setVisibility(View.VISIBLE);
             holder.imgFirst.setVisibility(View.VISIBLE);
         }else{
             holder.tvGoodsLabel.setVisibility(View.GONE);
             holder.imgFirst.setVisibility(View.GONE);
-            holder.tvGoodsName.setText(goodsEntity.getGoodsLabel());
+            if(!StringUtils.isEmpty(goodsEntity.getGoodsLabel())){
+                holder.tvGoodsName.setText(goodsEntity.getGoodsLabel());
+            }
         }
         holder.itemView.setTag(position);
         holder.itemView.setOnClickListener(v -> {
@@ -89,6 +101,8 @@ public class GameCoinTopupAdapter extends RecyclerView.Adapter<GameCoinTopupAdap
         TextView tvGoodsName = null;
         TextView tvPayPrice = null;
         ImageView imgFirst = null;
+        //游戏货币图标
+        ImageView gameBigImg = null;
 
         private RecyclerHolder(View itemView) {
             super(itemView);
@@ -96,7 +110,7 @@ public class GameCoinTopupAdapter extends RecyclerView.Adapter<GameCoinTopupAdap
             tvGoodsName = itemView.findViewById(R.id.tv_goods_name);
             tvPayPrice = itemView.findViewById(R.id.tv_pay_price);
             imgFirst = itemView.findViewById(R.id.img_first);
-
+            gameBigImg = itemView.findViewById(R.id.game_big_img);
             tvGoodsLabel.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
 
         }

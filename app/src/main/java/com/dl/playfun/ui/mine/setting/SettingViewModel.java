@@ -4,8 +4,11 @@ import android.app.Application;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 
+import com.blankj.utilcode.util.ObjectUtils;
+import com.dl.playfun.api.AppGameConfig;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
@@ -14,6 +17,7 @@ import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.PrivacyEntity;
 import com.dl.playfun.entity.UserInfoEntity;
 import com.dl.playfun.event.IsAuthBindingEvent;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.GlideCacheManager;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.dl.playfun.R;
@@ -29,6 +33,7 @@ import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.RxUtils;
+import me.goldze.mvvmhabit.utils.StringUtils;
 import me.goldze.mvvmhabit.utils.ToastUtils;
 
 /**
@@ -39,6 +44,10 @@ public class SettingViewModel extends BaseViewModel<AppRepository> {
     public ObservableField<PrivacyEntity> privacyEntity = new ObservableField<>(new PrivacyEntity());
     public ObservableField<String> cacheSize = new ObservableField<>();
     public ObservableField<Integer> isAuth = new ObservableField<>(0);
+    //服务条款
+    public ObservableBoolean showUrl = new ObservableBoolean(false);
+    //隐私政策
+    public ObservableBoolean showUrl2 = new ObservableBoolean(false);
     public BindingCommand isConnectionOnClickCommand = new BindingCommand(() -> {
         setConnectPrivacy();
     });
@@ -57,11 +66,11 @@ public class SettingViewModel extends BaseViewModel<AppRepository> {
         ToastUtils.showShort(R.string.playfun_cleared_image_cache);
     });
     public BindingCommand termsOfServiceOnClickCommand = new BindingCommand(() -> {
-        Bundle bundle = WebDetailFragment.getStartBundle(AppConfig.TERMS_OF_SERVICE_URL);
+        Bundle bundle = WebDetailFragment.getStartBundle(model.readGameConfigSetting().getTermsOfServiceUrl());
         start(WebDetailFragment.class.getCanonicalName(), bundle);
     });
     public BindingCommand privacyPolicyPasswordOnClickCommand = new BindingCommand(() -> {
-        Bundle bundle = WebDetailFragment.getStartBundle(AppConfig.PRIVACY_POLICY_URL);
+        Bundle bundle = WebDetailFragment.getStartBundle(model.readGameConfigSetting().getPrivacyPolicyUrl());
         start(WebDetailFragment.class.getCanonicalName(), bundle);
     });
     public BindingCommand settintAppLockOnClickCommand = new BindingCommand(() -> {
@@ -88,6 +97,15 @@ public class SettingViewModel extends BaseViewModel<AppRepository> {
         super.onCreate();
         String strCacheSize = GlideCacheManager.getInstance().getCacheSize(getApplication());
         cacheSize.set(strCacheSize);
+        AppGameConfig appGameConfig = ConfigManager.getInstance().getAppRepository().readGameConfigSetting();
+        if(!ObjectUtils.isEmpty(appGameConfig)){
+            if(!StringUtils.isEmpty(appGameConfig.getTermsOfServiceUrl())){
+                showUrl.set(true);
+            }
+            if(!StringUtils.isEmpty(appGameConfig.getPrivacyPolicyUrl())){
+                showUrl2.set(true);
+            }
+        }
     }
 
     @Override

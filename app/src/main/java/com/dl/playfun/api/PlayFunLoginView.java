@@ -91,6 +91,8 @@ public class PlayFunLoginView extends DialogFragment implements Consumer<Disposa
     private LoginManager loginManager;
 
     private AuthLoginResultListener loginResultListener= null;
+
+    private AppGameConfig appGameConfig = null;
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -152,24 +154,38 @@ public class PlayFunLoginView extends DialogFragment implements Consumer<Disposa
         getPermission();
         //初始化Google Facebook
         initGoogleFaceBookLogin();
+        if(appGameConfig==null){
+            appGameConfig = ConfigManager.getInstance().getAppRepository().readGameConfigSetting();
+        }
         TextView text_view1 = viewRoot.findViewById(com.dl.playfun.R.id.text_view1);
-        text_view1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(PlayFunLoginView.this.mActivity, WebUrlViewActivity.class);
-                intent.putExtra("arg_web_url", AppConfig.TERMS_OF_SERVICE_URL);
-                startActivity(intent);
-            }
-        });
+        if(StringUtils.isEmpty(appGameConfig.getTermsOfServiceUrl())){
+            text_view1.setVisibility(View.GONE);
+        }else{
+            text_view1.setVisibility(View.VISIBLE);
+            text_view1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mActivity, WebUrlViewActivity.class);
+                    intent.putExtra("arg_web_url", appGameConfig.getTermsOfServiceUrl());
+                    startActivity(intent);
+                }
+            });
+        }
+
         TextView text_view2 = viewRoot.findViewById(com.dl.playfun.R.id.text_view2);
-        text_view2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(PlayFunLoginView.this.mActivity, WebUrlViewActivity.class);
-                intent.putExtra("arg_web_url",AppConfig.PRIVACY_POLICY_URL);
-                startActivity(intent);
-            }
-        });
+        if(StringUtils.isEmpty(appGameConfig.getPrivacyPolicyUrl())){
+            text_view2.setVisibility(View.GONE);
+        }else{
+            text_view2.setVisibility(View.VISIBLE);
+            text_view2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mActivity, WebUrlViewActivity.class);
+                    intent.putExtra("arg_web_url",appGameConfig.getPrivacyPolicyUrl());
+                    startActivity(intent);
+                }
+            });
+        }
         ImageView faceBookLoginButton = viewRoot.findViewById(com.dl.playfun.R.id.facebook_login_button);
         ImageView googleLoginButton = viewRoot.findViewById(com.dl.playfun.R.id.google_login_button);
         CheckBox loginCheckBox = viewRoot.findViewById(com.dl.playfun.R.id.login_check);

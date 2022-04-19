@@ -1,5 +1,6 @@
 package com.dl.playfun.data.source;
 
+import com.dl.playfun.api.AppGameConfig;
 import com.dl.playfun.entity.ConfigItemEntity;
 import com.dl.playfun.entity.EvaluateObjEntity;
 import com.dl.playfun.entity.GameConfigEntity;
@@ -18,6 +19,10 @@ import java.util.Map;
  * @date 2019/3/26
  */
 public interface LocalDataSource {
+    //保存游戏配置
+    void saveGameConfigSetting(AppGameConfig appGameConfig);
+    //读取游戏配置
+    AppGameConfig readGameConfigSetting();
     //保存键值对
     void putKeyValue(String key, String value);
 

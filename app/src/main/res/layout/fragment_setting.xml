@@ -208,6 +208,7 @@
 
                 <RelativeLayout
                     style="@style/ProfileItem"
+                    android:visibility="@{viewModel.showUrl?View.VISIBLE:View.GONE}"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/profile_item_height"
                     android:layout_marginTop="10dp"
@@ -223,6 +224,7 @@
 
                 <RelativeLayout
                     style="@style/ProfileItem"
+                    android:visibility="@{viewModel.showUrl2?View.VISIBLE:View.GONE}"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/profile_item_height"
                     android:background="@color/white"

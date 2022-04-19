@@ -19,7 +19,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
+import com.dl.playfun.api.AppGameConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.Injection;
@@ -30,6 +32,7 @@ import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.CoinExchangeBoxInfo;
 import com.dl.playfun.entity.CoinExchangePriceInfo;
 import com.dl.playfun.entity.GameCoinBuy;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.dl.playfun.R;
 import com.dl.playfun.ui.base.BasePopupWindow;
@@ -58,6 +61,8 @@ public class GameCoinExchargeSheetView extends BasePopupWindow implements View.O
     private ViewGroup loadingView;
     private GameCoinExchargeAdapter adapter;
     private CoinExchangeBoxInfo mBoxInfo = null;
+    //游戏货币图标
+    private ImageView imgGameCoin;
 
     private CoinRechargeSheetViewListener coinRechargeSheetViewListener;
 
@@ -108,7 +113,14 @@ public class GameCoinExchargeSheetView extends BasePopupWindow implements View.O
     private void init(Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
         mPopView = inflater.inflate(R.layout.view_coin_exchange_sheet, null);
-
+        imgGameCoin = mPopView.findViewById(R.id.img_game_coin);
+        //设置游戏货币图标。根据用户传递
+        AppGameConfig appGameConfig = ConfigManager.getInstance().getAppRepository().readGameConfigSetting();
+        if(!ObjectUtils.isEmpty(appGameConfig)){
+            if(appGameConfig.getGamePlayCoinSmallImg()!=0){
+                imgGameCoin.setImageResource(appGameConfig.getGamePlayCoinSmallImg());
+            }
+        }
         recyclerView = mPopView.findViewById(R.id.recycler_view);
         tvGameTotal = mPopView.findViewById(R.id.tv_game_coin_total);
         tvJmTotal = mPopView.findViewById(R.id.tv_jm_coin_total);

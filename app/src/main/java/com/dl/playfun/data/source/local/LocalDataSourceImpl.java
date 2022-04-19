@@ -2,6 +2,8 @@ package com.dl.playfun.data.source.local;
 
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.ObjectUtils;
+import com.dl.playfun.api.AppGameConfig;
+import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.data.source.LocalDataSource;
 import com.dl.playfun.entity.ConfigItemEntity;
 import com.dl.playfun.entity.EvaluateObjEntity;
@@ -123,6 +125,24 @@ public class LocalDataSourceImpl implements LocalDataSource {
 
     public static void destroyInstance() {
         INSTANCE = null;
+    }
+
+    @Override
+    public void saveGameConfigSetting(AppGameConfig appGameConfig) {
+        if (ObjectUtils.isEmpty(appGameConfig)) {
+            return;
+        }
+        String json = GsonUtils.toJson(appGameConfig);
+        kv.encode(AppConfig.GAME_SOURCES_APP_CONFIG, json);
+    }
+
+    @Override
+    public AppGameConfig readGameConfigSetting() {
+        String json = kv.decodeString(AppConfig.GAME_SOURCES_APP_CONFIG);
+        if (StringUtil.isEmpty(json)) {
+            return null;
+        }
+        return GsonUtils.fromJson(json, AppGameConfig.class);
     }
 
     @Override

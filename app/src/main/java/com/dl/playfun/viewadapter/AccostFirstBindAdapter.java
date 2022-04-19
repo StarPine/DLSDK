@@ -35,6 +35,11 @@ public class AccostFirstBindAdapter {
                         itemLottie.playAnimation();
                     }
                 }
+            }else{
+                if (itemLottie!=null && itemLottie.isAnimating()) {
+                    itemLottie.clearAnimation();
+                    itemLottie.removeAllAnimatorListeners();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
