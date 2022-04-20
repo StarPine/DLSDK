@@ -16,6 +16,7 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.blankj.utilcode.util.DeviceUtils;
+import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.Utils;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
@@ -336,59 +337,4 @@ public class ApiUitl {
     public interface CallBackUploadFileNameCallback {
         void success(String fileName);
     }
-
-    public static Resources autoXDpi(float designWidth, Resources resources) {
-        return autoSizeWidth(resources, 360);
-//        AutoSizeCompat.autoConvertDensityBaseOnWidth(resources, designWidth);
-////        DisplayMetrics displayMetrics = resources.getDisplayMetrics();
-////        displayMetrics.xdpi = ScreenUtils.getScreenWidth() * 25.4f / designWidth;
-//        return resources;
-    }
-
-    public static Resources autoSizeWidth(Resources resources, float designWidth) {
-        float newXdpi = (resources.getDisplayMetrics().widthPixels * 72f) / designWidth;
-        resources.getDisplayMetrics().xdpi = newXdpi;
-        if (sMetricsFields == null) {
-            sMetricsFields = new ArrayList<>();
-            Class resCls = resources.getClass();
-            Field[] declaredFields = resCls.getDeclaredFields();
-            while (declaredFields != null && declaredFields.length > 0) {
-                for (Field field : declaredFields) {
-                    if (field.getType().isAssignableFrom(DisplayMetrics.class)) {
-                        field.setAccessible(true);
-                        DisplayMetrics tmpDm = getMetricsFromField(resources, field);
-                        if (tmpDm != null) {
-                            sMetricsFields.add(field);
-                            tmpDm.xdpi = newXdpi;
-                        }
-                    }
-                }
-                resCls = resCls.getSuperclass();
-                if (resCls != null) {
-                    declaredFields = resCls.getDeclaredFields();
-                } else {
-                    break;
-                }
-            }
-        } else {
-            for (Field metricsField : sMetricsFields) {
-                try {
-                    DisplayMetrics dm = (DisplayMetrics) metricsField.get(resources);
-                    if (dm != null) dm.xdpi = newXdpi;
-                } catch (Exception e) {
-                    Log.e("AdaptScreenUtils", "applyMetricsFields: " + e);
-                }
-            }
-        }
-        return resources;
-    }
-
-    private static DisplayMetrics getMetricsFromField(final Resources resources, final Field field) {
-        try {
-            return (DisplayMetrics) field.get(resources);
-        } catch (Exception ignore) {
-            return null;
-        }
-    }
-
 }

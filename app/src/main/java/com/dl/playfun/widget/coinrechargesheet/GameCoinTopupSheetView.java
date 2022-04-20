@@ -53,7 +53,6 @@ import com.dl.playfun.event.UMengCustomEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.R;
-//import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.ui.base.BasePopupWindow;
 import com.dl.playfun.ui.dialog.PayMethodDialog;
 import com.dl.playfun.ui.dialog.adapter.GameCoinTopupAdapter;
@@ -259,7 +258,7 @@ public class GameCoinTopupSheetView extends BasePopupWindow implements View.OnCl
     @SuppressLint("StringFormatMatches")
     private void loadBalance() {
         // 要用新接口：getUserAccountPageInfo
-        Injection.provideDemoRepository()
+        ConfigManager.getInstance().getAppRepository()
                 .getUserAccountPageInfo()
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
@@ -283,7 +282,7 @@ public class GameCoinTopupSheetView extends BasePopupWindow implements View.OnCl
     }
 
     private void loadGoods() {
-        Injection.provideDemoRepository()
+        ConfigManager.getInstance().getAppRepository()
                 .buyGameCoins()
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
@@ -293,8 +292,12 @@ public class GameCoinTopupSheetView extends BasePopupWindow implements View.OnCl
                     public void onSuccess(BaseDataResponse<List<GameCoinBuy>> response) {
                         loadingView.setVisibility(View.GONE);
                         mGoodsList = response.getData();
-                        adapter.setData(mGoodsList);
-//                        querySkuList(response.getData());
+                        if(mGoodsList!=null){
+                            adapter.setData(mGoodsList);
+                            recyclerView.postDelayed(() -> {
+                                recyclerView.invalidate(); // 刷新界面
+                            },100);
+                        }
                     }
 
                     @Override
@@ -305,7 +308,7 @@ public class GameCoinTopupSheetView extends BasePopupWindow implements View.OnCl
 
     public void createOrder(GameCoinBuy goodsEntity) {
         loadingView.setVisibility(View.VISIBLE);
-        Injection.provideDemoRepository()
+         ConfigManager.getInstance().getAppRepository()
                 .createOrder(goodsEntity.getId(), 1, 2, null)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
@@ -357,7 +360,7 @@ public class GameCoinTopupSheetView extends BasePopupWindow implements View.OnCl
 
         }
        //Log.e("开始执行上上报请求",packageName+"==="+orderNumber+"======"+token+"======="+event+"======"+productId.toString());
-        Injection.provideDemoRepository()
+         ConfigManager.getInstance().getAppRepository()
                 .paySuccessNotify(packageName, orderNumber, productId, token, 1, event)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
