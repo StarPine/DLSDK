@@ -17,6 +17,7 @@ import com.dl.playfun.api.AppGameConfig;
 import com.dl.playfun.entity.GameCoinBuy;
 import com.dl.playfun.R;
 import com.dl.playfun.manager.ConfigManager;
+import com.dl.playfun.utils.ApiUitl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ import java.util.List;
 public class GameCoinTopupAdapter extends RecyclerView.Adapter<GameCoinTopupAdapter.RecyclerHolder> {
 
     private final Context mContext;
-    private List<GameCoinBuy> dataList = new ArrayList<>();
+    public List<GameCoinBuy> dataList = new ArrayList<>();
 
     private GameCoinTopupAdapterListener gameCoinTopupAdapterListener = null;
 
@@ -89,7 +90,7 @@ public class GameCoinTopupAdapter extends RecyclerView.Adapter<GameCoinTopupAdap
 
     @Override
     public int getItemCount() {
-        return dataList.size();
+        return dataList == null ? 0 : dataList.size();
     }
 
     public interface GameCoinTopupAdapterListener {

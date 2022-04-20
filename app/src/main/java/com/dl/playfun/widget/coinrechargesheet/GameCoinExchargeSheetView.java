@@ -202,7 +202,7 @@ public class GameCoinExchargeSheetView extends BasePopupWindow implements View.O
 
     private void loadCoinExchangeBoxInfo() {
         loading(true);
-        Injection.provideDemoRepository()
+         ConfigManager.getInstance().getAppRepository()
                 .getCoinExchangeBoxInfo()
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
@@ -261,7 +261,7 @@ public class GameCoinExchargeSheetView extends BasePopupWindow implements View.O
 
     private void exchangeCoins(CoinExchangePriceInfo exChangeInfo){
         loading(true);
-        Injection.provideDemoRepository()
+         ConfigManager.getInstance().getAppRepository()
                 .exchangeCoins(exChangeInfo.getId())
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
