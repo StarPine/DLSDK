@@ -187,6 +187,10 @@ public class PlayFunLoginViewHorizontal  extends DialogFragment implements View.
                 }
             });
         }
+        if(StringUtils.isEmpty(appGameConfig.getTermsOfServiceUrl()) && StringUtils.isEmpty(appGameConfig.getPrivacyPolicyUrl())){
+            viewRoot.findViewById(com.dl.playfun.R.id.bottom_layout).setVisibility(View.GONE);
+
+        }
         loginCheckBox = viewRoot.findViewById(com.dl.playfun.R.id.login_check);
         TextView text_view = viewRoot.findViewById(com.dl.playfun.R.id.text_view);
         text_view.setOnClickListener(new View.OnClickListener() {

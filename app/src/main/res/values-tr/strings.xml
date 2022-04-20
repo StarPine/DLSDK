@@ -724,7 +724,7 @@
     <string name="playfun_radio_daily_atendance_fen1">+%s puan kazandınız, tebrikler!</string>
     <string name="playfun_radio_program_hint">Katılmak için tıklayın</string>
     <string name="playfun_task_fragment_title1">Avantajlar</string>
-    <string name="playfun_coin_fragment_empty">Burası halen boş!\n%s</string>
+    <string name="playfun_coin_fragment_empty">Burası halen boş!</string>
     <string name="playfun_coin_fragment_empty_female">Takas ile Elmas alabilirsiniz!</string>
     <string name="playfun_coin_fragment_empty_male">Takas ile Elmas alabilirsiniz!</string>
     <string name="playfun_task_fragment_task_new10">Yayınla</string>

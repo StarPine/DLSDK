@@ -124,7 +124,7 @@ public class GameCoinTopupSheetView extends BasePopupWindow implements View.OnCl
     private void init(Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
         mPopView = inflater.inflate(R.layout.view_game_coin_topup_sheet, null);
-        imgGameCoin = mPopView.findViewById(R.id.img_game_coin);
+        imgGameCoin = mPopView.findViewById(R.id.icon_game_coin);
         //设置游戏货币图标。根据用户传递
         AppGameConfig appGameConfig = ConfigManager.getInstance().getAppRepository().readGameConfigSetting();
         if(!ObjectUtils.isEmpty(appGameConfig)){

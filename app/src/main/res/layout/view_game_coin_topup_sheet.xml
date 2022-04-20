@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/pop_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -49,9 +50,10 @@
                         android:id="@+id/tv_balance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="34dp"
+                        android:layout_toEndOf="@+id/icon_game_coin"
+                        android:layout_marginStart="5dp"
                         android:layout_marginTop="37dp"
-                        android:text="-"
+                        android:text="0"
                         android:textColor="@color/white"
                         android:textSize="13sp" />
 
@@ -74,7 +76,10 @@
                     android:padding="14dp"
                     android:paddingTop="19dp"
                     android:paddingBottom="3dp"
-                    android:scrollbars="vertical" />
+                    android:scrollbars="vertical"
+                    tools:itemCount="6"
+                    tools:layoutManager="LinearLayoutManager"
+                    tools:listitem="@layout/item_game_coin_topup"/>
             </LinearLayout>
 
             <RelativeLayout

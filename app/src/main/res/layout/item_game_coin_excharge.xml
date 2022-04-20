@@ -25,6 +25,7 @@
         />
 
     <ImageView
+        android:id="@+id/img_game_coin"
         android:layout_width="21dp"
         android:layout_height="21dp"
         android:src="@drawable/icon_game_coin"

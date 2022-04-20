@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="88dp"
-    >
+    xmlns:tools="http://schemas.android.com/tools">
 
     <View
         android:layout_width="match_parent"
@@ -36,6 +36,7 @@
         android:layout_marginLeft="68dp"
         android:layout_marginTop="31dp"
         android:text="-"
+        tools:text="24,950,000"
         android:textColor="#EF5345"
         android:textSize="23sp" />
 

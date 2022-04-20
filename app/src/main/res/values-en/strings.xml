@@ -725,7 +725,7 @@
     <string name="playfun_radio_daily_atendance_fen1">Congratulations, +%s points.</string>
     <string name="playfun_radio_program_hint">join in</string>
     <string name="playfun_task_fragment_title1">benefits</string>
-    <string name="playfun_coin_fragment_empty">Empty.\n%s</string>
+    <string name="playfun_coin_fragment_empty">Empty</string>
     <string name="playfun_coin_fragment_empty_female">You can top up to get diamonds.</string>
     <string name="playfun_coin_fragment_empty_male">You can top up to get diamonds.</string>
     <string name="playfun_task_fragment_task_new10">Do Task</string>
