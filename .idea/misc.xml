@@ -6,10 +6,24 @@
         <entry key="..\:/Android-Project/PlayFun_Google/app/src/playChat/res/layout/dialog_home_accost_list.xml" value="0.1" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/AlivcMedia/src/main/res/layout/alivc_media_activity_media_import.xml" value="0.24895833333333334" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/AliyunCrop/crop/src/main/res/layout/alivc_crop_activity_media.xml" value="0.24895833333333334" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/TUIKit/TUIContact/tuicontact/src/main/res/layout/contact_add_activity.xml" value="0.25" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/border_purple_background_white.xml" value="0.199" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/btn_yellow_cicle.xml" value="0.252" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/button_green_background.xml" value="0.252" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/button_pink_background.xml" value="0.252" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/button_purple_background.xml" value="0.252" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/button_purple_background1.xml" value="0.252" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/button_purple_background5.xml" value="0.158" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/button_secondary_background.xml" value="0.252" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/button_secondary_gray_background.xml" value="0.252" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/button_send_red_package_background.xml" value="0.252" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/button_vip_alert_sub.xml" value="0.252" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/login_checkbox_button.xml" value="0.229" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/mine_radius.xml" value="0.158" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/radio_filter_text_arrow.xml" value="0.1845" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/seek_bar_bg_layer.xml" value="0.199" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/shape_login_bg.xml" value="0.17" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/shape_radius_6.xml" value="0.17" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/status_empty_ic.xml" value="0.2025" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/activity_call_audio_chating.xml" value="0.14" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/activity_call_video.xml" value="0.24114583333333334" />
@@ -23,10 +37,11 @@
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_check_img_video.xml" value="0.17604166666666668" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_choose_sex_warn.xml" value="0.5" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_city_choose.xml" value="0.28802083333333334" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_email_login_activity.xml" value="0.33" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_exchange_integral.xml" value="0.22916666666666666" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_home_accost_list.xml" value="0.2536136662286465" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_login_fragment.xml" value="0.22239583333333332" />
-        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_login_horizontal_fragment.xml" value="0.22" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_login_horizontal_fragment.xml" value="0.25" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_permissions_media_video.xml" value="0.1875" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_title.xml" value="0.22916666666666666" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_trace.xml" value="0.1875" />
@@ -78,6 +93,7 @@
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/item_choose_location.xml" value="0.2046875" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/item_game_coin_excharge.xml" value="0.23541666666666666" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/item_game_coin_topup.xml" value="0.25" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/item_login_agreement.xml" value="0.24791666666666667" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/item_park.xml" value="0.16" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/item_program.xml" value="0.25" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/item_program_choose.xml" value="0.16927083333333334" />
@@ -91,6 +107,7 @@
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/pickerview_options_dl.xml" value="0.17604166666666668" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/pop_drop_down_filter.xml" value="0.23489583333333333" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/trace_item_park_list.xml" value="0.24114583333333334" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/trace_item_park_man.xml" value="0.67" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/view_coin_exchange_sheet.xml" value="0.23645833333333333" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/view_coin_exrcharge_integral_sheet.xml" value="0.25" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/view_coin_pay_sheet.xml" value="0.19635416666666666" />
@@ -133,12 +150,14 @@
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/customDrawable/src/main/res/drawable/icon_top_triangle_img.xml" value="0.1845" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/customDrawable/src/main/res/drawable/icon_video_play.xml" value="0.1845" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/customDrawable/src/main/res/drawable/item_park_radius_back.xml" value="0.1845" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/customDrawable/src/main/res/drawable/login_email_btn.xml" value="0.199" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/customDrawable/src/main/res/drawable/my_evaluation_icon.xml" value="0.1845" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/customDrawable/src/main/res/drawable/perfect_input_backdrop.xml" value="0.1845" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/customDrawable/src/main/res/drawable/perfect_input_left.xml" value="0.1845" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/customDrawable/src/main/res/drawable/perfect_input_right.xml" value="0.1845" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/customDrawable/src/main/res/drawable/radius_purple.xml" value="0.1845" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/customDrawable/src/main/res/drawable/radius_purple_22dp.xml" value="0.1845" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/customDrawable/src/main/res/drawable/shape_radius_6.xml" value="0.17" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/customDrawable/src/main/res/drawable/suspend_yellow_layout_back.xml" value="0.178" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/customDrawable/src/main/res/drawable/theme_backdrop_ed.xml" value="0.1845" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/customDrawable/src/main/res/drawable/theme_backdrop_no.xml" value="0.1845" />

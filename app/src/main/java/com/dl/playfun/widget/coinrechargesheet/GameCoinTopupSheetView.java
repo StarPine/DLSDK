@@ -497,12 +497,18 @@ public class GameCoinTopupSheetView extends BasePopupWindow implements View.OnCl
     private void queryAndConsumePurchase() {
         //queryPurchases() 方法会使用 Google Play 商店应用的缓存，而不会发起网络请求
         loadingView.setVisibility(View.VISIBLE);
+        if(billingClient==null){
+            return;
+        }
         billingClient.queryPurchaseHistoryAsync(BillingClient.SkuType.INAPP,
                 new PurchaseHistoryResponseListener() {
                     @Override
                     public void onPurchaseHistoryResponse(BillingResult billingResult,
                                                           List<PurchaseHistoryRecord> purchaseHistoryRecordList) {
                         loadingView.setVisibility(View.GONE);
+                        if(billingResult==null || purchaseHistoryRecordList==null){
+                            return;
+                        }
                         if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && purchaseHistoryRecordList != null) {
                             for (PurchaseHistoryRecord purchaseHistoryRecord : purchaseHistoryRecordList) {
                                 // Process the result.
@@ -558,12 +564,14 @@ public class GameCoinTopupSheetView extends BasePopupWindow implements View.OnCl
                 //如果消耗不成功，那就再消耗一次
                 Log.i(TAG, "onConsumeResponse=getDebugMessage==" + billingResult.getDebugMessage());
                 if (state == consumeDelay && billingResult.getDebugMessage().contains("Server error, please try again")) {
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            queryAndConsumePurchase();
-                        }
-                    }, 5 * 1000);
+                    if(handler!=null){
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                queryAndConsumePurchase();
+                            }
+                        }, 5 * 1000);
+                    }
                 }
             }
         });
