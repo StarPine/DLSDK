@@ -179,6 +179,7 @@
                     android:layout_below="@+id/tv_game_coin_num"
                     android:layout_alignStart="@+id/tv_game_coin_num"
                     android:elevation="11dp"
+                    android:visibility="invisible"
                     android:text="@string/playfun_game_coin_name"
                     android:textColor="@color/white"
                     android:textSize="15sp" />

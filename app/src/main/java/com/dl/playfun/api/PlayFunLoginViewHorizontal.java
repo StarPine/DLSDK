@@ -259,7 +259,9 @@ public class PlayFunLoginViewHorizontal  extends DialogFragment implements View.
                     @Override
                     public void onError(FacebookException exception) {
                         Log.e("FaceBook登入异常返回:", exception.getMessage());
-                        loginResultListener.authLoginError(-1,1,exception.getMessage());
+                        if(loginResultListener!=null){
+                            loginResultListener.authLoginError(-1,1,exception.getMessage());
+                        }
                         // App code
                         ToastUtils.showShort(com.dl.playfun.R.string.playfun_error_facebook);
                     }
@@ -368,7 +370,9 @@ public class PlayFunLoginViewHorizontal  extends DialogFragment implements View.
                     errorMessage = StringUtils.getString(R.string.playfun_error_google);
                     break;
             }
-            loginResultListener.authLoginError(e.getStatusCode(),2,errorMessage);
+            if(loginResultListener!=null){
+                loginResultListener.authLoginError(e.getStatusCode(),2,errorMessage);
+            }
         }
 
     }
@@ -539,19 +543,27 @@ public class PlayFunLoginViewHorizontal  extends DialogFragment implements View.
             }else if(v.getId() == R.id.btn_line){ //line登录
                 PlayFunAuthUserEntity playFunAuthUserEntity = new PlayFunAuthUserEntity();
                 playFunAuthUserEntity.setTypeLogin(3);
-                loginResultListener.authLoginSuccess(playFunAuthUserEntity);
+                if(loginResultListener!=null){
+                    loginResultListener.authLoginSuccess(playFunAuthUserEntity);
+                }
             }else if(v.getId() == R.id.btn_vk){ //vk登录
                 PlayFunAuthUserEntity playFunAuthUserEntity = new PlayFunAuthUserEntity();
                 playFunAuthUserEntity.setTypeLogin(4);
-                loginResultListener.authLoginSuccess(playFunAuthUserEntity);
+                if(loginResultListener!=null){
+                    loginResultListener.authLoginSuccess(playFunAuthUserEntity);
+                }
             }else if(v.getId() == R.id.btn_yk){//游客登录
                 PlayFunAuthUserEntity playFunAuthUserEntity = new PlayFunAuthUserEntity();
                 playFunAuthUserEntity.setTypeLogin(5);
-                loginResultListener.authLoginSuccess(playFunAuthUserEntity);
+                if(loginResultListener!=null){
+                    loginResultListener.authLoginSuccess(playFunAuthUserEntity);
+                }
             }else if(v.getId() == R.id.btn_tourists){ //游客登录
                 PlayFunAuthUserEntity playFunAuthUserEntity = new PlayFunAuthUserEntity();
                 playFunAuthUserEntity.setTypeLogin(5);
-                loginResultListener.authLoginSuccess(playFunAuthUserEntity);
+                if(loginResultListener!=null){
+                    loginResultListener.authLoginSuccess(playFunAuthUserEntity);
+                }
             }
         }
     }
