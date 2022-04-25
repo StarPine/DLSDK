@@ -49,10 +49,6 @@ public class GameCoinExchargeSheetView extends BasePopupWindow implements View.O
     public static final String TAG = "GameCoinExchargeS...";
 
     private final AppCompatActivity mActivity;
-    private final Handler handler = new Handler();
-    private final int consumeImmediately = 0;
-    private final int consumeDelay = 1;
-    private final int selPosition = 0;
     private View mPopView;
     private RecyclerView recyclerView;
     private TextView tvGameTotal;

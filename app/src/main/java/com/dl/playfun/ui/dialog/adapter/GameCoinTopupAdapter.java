@@ -2,6 +2,7 @@ package com.dl.playfun.ui.dialog.adapter;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +29,7 @@ import java.util.List;
 public class GameCoinTopupAdapter extends RecyclerView.Adapter<GameCoinTopupAdapter.RecyclerHolder> {
 
     private final Context mContext;
-    public List<GameCoinBuy> dataList = new ArrayList<>();
+    public List<GameCoinBuy> dataList;
 
     private GameCoinTopupAdapterListener gameCoinTopupAdapterListener = null;
 
@@ -45,7 +46,7 @@ public class GameCoinTopupAdapter extends RecyclerView.Adapter<GameCoinTopupAdap
     }
 
     public void setData(List<GameCoinBuy> goodsList) {
-        this.dataList = goodsList;
+        dataList = (goodsList);
         notifyDataSetChanged();
     }
 
@@ -58,6 +59,9 @@ public class GameCoinTopupAdapter extends RecyclerView.Adapter<GameCoinTopupAdap
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerHolder holder, int position) {
+        if(holder.itemView.getTag()!=null){
+            return;
+        }
         GameCoinBuy goodsEntity = dataList.get(position);
         holder.tvGoodsLabel.setText(goodsEntity.getGoodsLabel());
         holder.tvGoodsName.setText(goodsEntity.getGoodsName());

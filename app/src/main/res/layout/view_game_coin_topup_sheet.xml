@@ -50,9 +50,9 @@
                         android:id="@+id/tv_balance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_toEndOf="@+id/icon_game_coin"
                         android:layout_marginStart="5dp"
                         android:layout_marginTop="37dp"
+                        android:layout_toEndOf="@+id/icon_game_coin"
                         android:text="0"
                         android:textColor="@color/white"
                         android:textSize="13sp" />
@@ -79,7 +79,6 @@
                         android:id="@+id/recycler_view"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:minHeight="250dp"
                         android:elevation="11dp"
                         android:padding="14dp"
                         android:paddingTop="19dp"
