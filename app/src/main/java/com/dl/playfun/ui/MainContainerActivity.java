@@ -2,6 +2,8 @@ package com.dl.playfun.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
@@ -89,6 +91,24 @@ public class MainContainerActivity extends MySupportActivity {
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LocaleManager.setLocal(newBase));
+    }
+
+    /**
+     * 就算你在Manifest.xml设置横竖屏切换不重走生命周期。横竖屏切换还是会走这里
+
+     */
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        if(newConfig!=null){
+            LocaleManager.setLocal(this);
+        }
+        super.onConfigurationChanged(newConfig);
+            LocaleManager.setLocal(this);
+    }
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        LocaleManager.setLocal(this);
     }
 
     @Override
