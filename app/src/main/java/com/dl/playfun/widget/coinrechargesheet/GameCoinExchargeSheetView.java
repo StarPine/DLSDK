@@ -3,7 +3,6 @@ package com.dl.playfun.widget.coinrechargesheet;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Handler;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -24,7 +23,6 @@ import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.api.AppGameConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
-import com.dl.playfun.app.Injection;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
@@ -288,11 +286,11 @@ public class GameCoinExchargeSheetView extends BasePopupWindow implements View.O
     }
 
     private void topupGameCoins(){
-        GameCoinTopupSheetView coinRechargeSheetView = new GameCoinTopupSheetView(mActivity);
+        CoinExchargeItegralPayDialog coinRechargeSheetView = new CoinExchargeItegralPayDialog(mActivity,mActivity);
         coinRechargeSheetView.show();
-        coinRechargeSheetView.setCoinRechargeSheetViewListener(new GameCoinTopupSheetView.CoinRechargeSheetViewListener() {
+        coinRechargeSheetView.setCoinRechargeSheetViewListener(new CoinExchargeItegralPayDialog.CoinRechargeSheetViewListener() {
             @Override
-            public void onPaySuccess(GameCoinTopupSheetView sheetView, GameCoinBuy sel_goodsEntity) {
+            public void onPaySuccess(CoinExchargeItegralPayDialog sheetView, GameCoinBuy sel_goodsEntity) {
                 sheetView.endGooglePlayConnect();
                 sheetView.dismiss();
                 loadCoinExchangeBoxInfo();
@@ -308,7 +306,7 @@ public class GameCoinExchargeSheetView extends BasePopupWindow implements View.O
             }
 
             @Override
-            public void onPayFailed(GameCoinTopupSheetView sheetView, String msg) {
+            public void onPayFailed(CoinExchargeItegralPayDialog sheetView, String msg) {
                 sheetView.dismiss();
                 ToastUtils.showShort(msg);
                 AppContext.instance().logEvent(AppsFlyerEvent.Failed_to_top_up);

@@ -36,7 +36,7 @@ import com.dl.playfun.ui.certification.certificationmale.CertificationMaleFragme
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.widget.coinpaysheet.CoinPaySheet;
-import com.dl.playfun.widget.coinrechargesheet.GameCoinTopupSheetView;
+import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralPayDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
 
 import me.goldze.mvvmhabit.utils.ToastUtils;
@@ -350,7 +350,7 @@ public class IssuanceProgramFragment extends BaseToolbarFragment<FragmentIssuanc
             }
 
             @Override
-            public void onRechargeSuccess(GameCoinTopupSheetView gameCoinTopupSheetView) {
+            public void onRechargeSuccess(CoinExchargeItegralPayDialog coinExchargeItegralPayDialog) {
                 // do nothing
             }
         }).build().show();

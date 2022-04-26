@@ -23,7 +23,7 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.widget.coinpaysheet.CoinPaySheet;
-import com.dl.playfun.widget.coinrechargesheet.GameCoinTopupSheetView;
+import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralPayDialog;
 import com.dl.playfun.widget.dialog.TraceDialog;
 
 import me.goldze.mvvmhabit.bus.RxBus;
@@ -149,7 +149,7 @@ public class TraceManFragment extends BaseToolbarFragment<FragmentMineTraceManBi
                                     }
 
                                     @Override
-                                    public void onRechargeSuccess(GameCoinTopupSheetView gameCoinTopupSheetView) {
+                                    public void onRechargeSuccess(CoinExchargeItegralPayDialog coinExchargeItegralPayDialog) {
                                         // do nothing
                                     }
                                 }).build().show();

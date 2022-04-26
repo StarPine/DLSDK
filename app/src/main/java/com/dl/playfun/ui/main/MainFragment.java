@@ -28,13 +28,9 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.tim.TUIUtils;
 import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.ui.dialog.HomeAccostDialog;
-import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
-import com.dl.playfun.ui.mine.wallet.coin.CoinFragment;
 import com.dl.playfun.utils.ImmersionBarUtils;
-import com.dl.playfun.widget.coinrechargesheet.GameCoinTopupSheetView;
+import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralPayDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
-import com.dl.playfun.widget.dialog.TraceDialog;
-import com.dl.playfun.widget.dialog.WebViewDialog;
 import com.dl.playfun.widget.pageview.FragmentAdapter;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
@@ -46,7 +42,6 @@ import com.dl.playfun.ui.mine.MineFragment;
 import com.dl.playfun.ui.radio.radiohome.RadioFragment;
 import com.dl.playfun.ui.ranklisk.ranklist.RankListFragment;
 import com.tencent.imsdk.v2.V2TIMCallback;
-import com.tencent.liteav.trtccalling.model.impl.TUICallingManager;
 import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.view.ConversationCommonHolder;
 
@@ -494,17 +489,17 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
 
 
     private void showRecharge() {
-        GameCoinTopupSheetView gameCoinTopupSheetView = new GameCoinTopupSheetView(mActivity);
-        gameCoinTopupSheetView.show();
-        gameCoinTopupSheetView.setCoinRechargeSheetViewListener(new GameCoinTopupSheetView.CoinRechargeSheetViewListener() {
+        CoinExchargeItegralPayDialog coinExchargeItegralPayDialog = new CoinExchargeItegralPayDialog(getContext(),mActivity);
+        coinExchargeItegralPayDialog.show();
+        coinExchargeItegralPayDialog.setCoinRechargeSheetViewListener(new CoinExchargeItegralPayDialog.CoinRechargeSheetViewListener() {
             @Override
-            public void onPaySuccess(GameCoinTopupSheetView sheetView, GameCoinBuy sel_goodsEntity) {
+            public void onPaySuccess(CoinExchargeItegralPayDialog sheetView, GameCoinBuy sel_goodsEntity) {
                 sheetView.endGooglePlayConnect();
                 sheetView.dismiss();
             }
 
             @Override
-            public void onPayFailed(GameCoinTopupSheetView sheetView, String msg) {
+            public void onPayFailed(CoinExchargeItegralPayDialog sheetView, String msg) {
                 sheetView.dismiss();
                 ToastUtils.showShort(msg);
             }

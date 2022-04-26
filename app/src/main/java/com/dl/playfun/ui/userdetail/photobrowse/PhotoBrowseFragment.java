@@ -15,7 +15,7 @@ import com.dl.playfun.databinding.FragmentPhotoBrowseBinding;
 import com.dl.playfun.entity.AlbumPhotoEntity;
 import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.widget.coinpaysheet.CoinPaySheet;
-import com.dl.playfun.widget.coinrechargesheet.GameCoinTopupSheetView;
+import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralPayDialog;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 
 import java.util.ArrayList;
@@ -124,7 +124,7 @@ public class PhotoBrowseFragment extends BaseFragment<FragmentPhotoBrowseBinding
             }
 
             @Override
-            public void onRechargeSuccess(GameCoinTopupSheetView gameCoinTopupSheetView) {
+            public void onRechargeSuccess(CoinExchargeItegralPayDialog coinExchargeItegralPayDialog) {
 
             }
         }).build().show();
@@ -140,7 +140,7 @@ public class PhotoBrowseFragment extends BaseFragment<FragmentPhotoBrowseBinding
             }
 
             @Override
-            public void onRechargeSuccess(GameCoinTopupSheetView gameCoinTopupSheetView) {
+            public void onRechargeSuccess(CoinExchargeItegralPayDialog coinExchargeItegralPayDialog) {
 
             }
         }).build().show();

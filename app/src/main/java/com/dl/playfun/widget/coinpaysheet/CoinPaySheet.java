@@ -30,7 +30,7 @@ import com.dl.playfun.entity.CoinWalletEntity;
 import com.dl.playfun.entity.CreateOrderEntity;
 import com.dl.playfun.entity.GameCoinBuy;
 import com.dl.playfun.ui.base.BasePopupWindow;
-import com.dl.playfun.widget.coinrechargesheet.GameCoinTopupSheetView;
+import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralPayDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
 
 import me.goldze.mvvmhabit.utils.RxUtils;
@@ -84,7 +84,7 @@ public class CoinPaySheet {
     public interface CoinPayDialogListener {
         void onPaySuccess(CoinPaySheet sheet, String orderNo, Integer payPrice);
 
-        void onRechargeSuccess(GameCoinTopupSheetView rechargeSheetView);
+        void onRechargeSuccess(CoinExchargeItegralPayDialog rechargeSheetView);
     }
 
     public interface CoinRedPackagePayDialogListener {
@@ -285,11 +285,11 @@ public class CoinPaySheet {
         private void showRecharge() {
             this.dismiss();
 
-            GameCoinTopupSheetView gameCoinTopupSheetView = new GameCoinTopupSheetView(mActivity);
-            gameCoinTopupSheetView.show();
-            gameCoinTopupSheetView.setCoinRechargeSheetViewListener(new GameCoinTopupSheetView.CoinRechargeSheetViewListener() {
+            CoinExchargeItegralPayDialog coinExchargeItegralPayDialog = new CoinExchargeItegralPayDialog(mActivity,mActivity);
+            coinExchargeItegralPayDialog.show();
+            coinExchargeItegralPayDialog.setCoinRechargeSheetViewListener(new CoinExchargeItegralPayDialog.CoinRechargeSheetViewListener() {
                 @Override
-                public void onPaySuccess(GameCoinTopupSheetView sheetView, GameCoinBuy sel_goodsEntity) {
+                public void onPaySuccess(CoinExchargeItegralPayDialog sheetView, GameCoinBuy sel_goodsEntity) {
                     sheetView.endGooglePlayConnect();
                     sheetView.dismiss();
                     loadBalance();//刷新钻石
@@ -301,7 +301,7 @@ public class CoinPaySheet {
                 }
 
                 @Override
-                public void onPayFailed(GameCoinTopupSheetView sheetView, String msg) {
+                public void onPayFailed(CoinExchargeItegralPayDialog sheetView, String msg) {
                     sheetView.dismiss();
                     // do nothing
                     Log.e("IM充值失败", "=================");

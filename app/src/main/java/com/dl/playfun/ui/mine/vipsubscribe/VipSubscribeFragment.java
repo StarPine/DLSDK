@@ -40,7 +40,7 @@ import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.widget.coinpaysheet.CoinPaySheet;
-import com.dl.playfun.widget.coinrechargesheet.GameCoinTopupSheetView;
+import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralPayDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -178,7 +178,7 @@ public class VipSubscribeFragment extends BaseToolbarFragment<FragmentVipSubscri
             }
 
             @Override
-            public void onRechargeSuccess(GameCoinTopupSheetView gameCoinTopupSheetView) {
+            public void onRechargeSuccess(CoinExchargeItegralPayDialog coinExchargeItegralPayDialog) {
 
             }
         }).build().show();

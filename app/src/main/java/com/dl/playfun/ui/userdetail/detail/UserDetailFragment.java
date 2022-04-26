@@ -11,8 +11,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 
 import androidx.annotation.Nullable;
 import androidx.core.widget.NestedScrollView;
@@ -41,10 +39,8 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
 import com.dl.playfun.ui.dialog.CommitEvaluateDialog;
-import com.dl.playfun.ui.dialog.CopyAccountDialog;
 import com.dl.playfun.ui.dialog.MyEvaluateDialog;
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
-import com.dl.playfun.ui.mine.wallet.coin.CoinFragment;
 import com.dl.playfun.ui.userdetail.playnum.CoinPaySheetUserMain;
 import com.dl.playfun.ui.userdetail.report.ReportUserFragment;
 import com.dl.playfun.utils.AutoSizeUtils;
@@ -56,12 +52,11 @@ import com.dl.playfun.widget.AppBarStateChangeListener;
 import com.dl.playfun.widget.bottomsheet.BottomSheet;
 import com.dl.playfun.widget.coinpaysheet.CoinPaySheet;
 import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
-import com.dl.playfun.widget.coinrechargesheet.GameCoinTopupSheetView;
+import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralPayDialog;
 import com.dl.playfun.widget.custom.FlowAdapter;
 import com.dl.playfun.widget.dialog.MMAlertDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.dl.playfun.widget.dialog.TraceDialog;
-import com.dl.playfun.widget.dialog.WebViewDialog;
 import com.dl.playfun.widget.emptyview.EmptyState;
 import com.google.android.material.appbar.AppBarLayout;
 import com.luck.picture.lib.entity.LocalMedia;
@@ -694,7 +689,7 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
                         }
 
                         @Override
-                        public void onRechargeSuccess(GameCoinTopupSheetView gameCoinTopupSheetView) {
+                        public void onRechargeSuccess(CoinExchargeItegralPayDialog coinExchargeItegralPayDialog) {
                             // do nothing
                         }
                     }).build().show();
@@ -719,7 +714,7 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
                             }
 
                             @Override
-                            public void onRechargeSuccess(GameCoinTopupSheetView gameCoinTopupSheetView) {
+                            public void onRechargeSuccess(CoinExchargeItegralPayDialog coinExchargeItegralPayDialog) {
                                 // do nothing
                             }
                         }).build().show();
@@ -804,10 +799,10 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
             }
 
             @Override
-            public void onRechargeSuccess(GameCoinTopupSheetView gameCoinTopupSheetView) {
+            public void onRechargeSuccess(CoinExchargeItegralPayDialog coinExchargeItegralPayDialog) {
                 // 充值成功，再次唤起浮层，且自动支付
                 try {
-                    AppContext.runOnUIThread(gameCoinTopupSheetView::dismiss, 100);
+                    AppContext.runOnUIThread(coinExchargeItegralPayDialog::dismiss, 100);
                     AppContext.runOnUIThread(() -> showCoinPaySheet(true), 500);
                 } catch (Throwable e) {
                     e.printStackTrace();
@@ -833,7 +828,7 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
                             }
 
                             @Override
-                            public void onRechargeSuccess(GameCoinTopupSheetView gameCoinTopupSheetView) {
+                            public void onRechargeSuccess(CoinExchargeItegralPayDialog coinExchargeItegralPayDialog) {
                                 // do nothing
                             }
                         }).build().show();
@@ -891,7 +886,7 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
                                 }
 
                                 @Override
-                                public void onRechargeSuccess(GameCoinTopupSheetView rechargeSheetView) {
+                                public void onRechargeSuccess(CoinExchargeItegralPayDialog rechargeSheetView) {
 
                                 }
                             }).build().show();
@@ -950,11 +945,11 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
     }
 
     private void googleCoinValueBox(boolean isGiftSend) {
-        GameCoinTopupSheetView gameCoinTopupSheetView = new GameCoinTopupSheetView(mActivity);
-        gameCoinTopupSheetView.show();
-        gameCoinTopupSheetView.setCoinRechargeSheetViewListener(new GameCoinTopupSheetView.CoinRechargeSheetViewListener() {
+        CoinExchargeItegralPayDialog coinExchargeItegralPayDialog = new CoinExchargeItegralPayDialog(getContext(),mActivity);
+        coinExchargeItegralPayDialog.show();
+        coinExchargeItegralPayDialog.setCoinRechargeSheetViewListener(new CoinExchargeItegralPayDialog.CoinRechargeSheetViewListener() {
             @Override
-            public void onPaySuccess(GameCoinTopupSheetView sheetView, GameCoinBuy sel_goodsEntity) {
+            public void onPaySuccess(CoinExchargeItegralPayDialog sheetView, GameCoinBuy sel_goodsEntity) {
                 sheetView.endGooglePlayConnect();
                 sheetView.dismiss();
                 MVDialog.getInstance(UserDetailFragment.this.getContext())
@@ -968,7 +963,7 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
             }
 
             @Override
-            public void onPayFailed(GameCoinTopupSheetView sheetView, String msg) {
+            public void onPayFailed(CoinExchargeItegralPayDialog sheetView, String msg) {
                 sheetView.dismiss();
                 ToastUtils.showShort(msg);
                 AppContext.instance().logEvent(AppsFlyerEvent.Failed_to_top_up);
