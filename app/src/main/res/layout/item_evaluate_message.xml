@@ -9,6 +9,7 @@
         <import type="com.dl.playfun.utils.TimeUtils" />
 
         <import type="android.view.View" />
+        <import type="com.dl.playfun.R" />
 
         <variable
             name="viewModel"
@@ -25,16 +26,21 @@
         binding:onClickCommand="@{viewModel.itemClick}"
         binding:onLongClickCommand="@{viewModel.itemLongClick}">
 
-        <ImageView
-            android:id="@+id/iv_icon"
+        <com.dl.playfun.widget.roundedimageview.RoundedImageView
+            android:id="@+id/iv_avatar"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/icon_msg_evaluate" />
+            android:scaleType="centerCrop"
+            android:src="@drawable/default_avatar"
+            app:riv_oval="true"
+            binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
+            binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
+            binding:imageThumbPath="@{viewModel.itemEntity.user.avatar}" />
 
         <TextView
             android:id="@+id/tv_content"
             style="@style/MessageItem"
-            android:layout_toRightOf="@+id/iv_icon"
+            android:layout_toRightOf="@+id/iv_avatar"
             app:htmlText="@{viewModel.itemEntity.content}"
             tools:text="@string/playfun_message_hint_all" />
         <TextView

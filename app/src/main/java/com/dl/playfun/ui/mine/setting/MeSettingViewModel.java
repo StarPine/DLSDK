@@ -32,6 +32,10 @@ public class MeSettingViewModel extends BaseViewModel<AppRepository> {
    public UIChangeObservable uc = new UIChangeObservable();
 
     public ObservableField<String> currentVersion = new ObservableField<>();
+    //美顏跳转
+    public BindingCommand facebeauty = new BindingCommand(() -> {
+        uc.starFacebeautyActivity.call();
+    });
     //黑名单按钮的点击事件
     public BindingCommand blacklistOnClickCommand = new BindingCommand(() -> {
         AppContext.instance().logEvent(AppsFlyerEvent.Blocked_List);
@@ -85,5 +89,6 @@ public class MeSettingViewModel extends BaseViewModel<AppRepository> {
 
     public class UIChangeObservable {
         public SingleLiveEvent<VersionEntity> versionEntitySingl = new SingleLiveEvent<>();
+        public SingleLiveEvent<Void> starFacebeautyActivity = new SingleLiveEvent<>();
     }
 }

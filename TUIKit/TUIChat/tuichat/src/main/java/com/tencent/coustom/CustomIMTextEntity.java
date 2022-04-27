@@ -31,12 +31,33 @@ public class CustomIMTextEntity {
 
     private String inGame;
 
+    //通话时间
+    private int totalSeconds;
+    //通话类型 1语音，2视频
+    private int callingType;
+
     @SerializedName("text_profit")
     private String textProfit;
 
     private String msgID;
 
     private Integer isRefundMoney;
+
+    public int getTotalSeconds() {
+        return totalSeconds;
+    }
+
+    public void setTotalSeconds(int totalSeconds) {
+        this.totalSeconds = totalSeconds;
+    }
+
+    public int getCallingType() {
+        return callingType;
+    }
+
+    public void setCallingType(int callingType) {
+        this.callingType = callingType;
+    }
 
     public String getInGame() {
         return inGame;

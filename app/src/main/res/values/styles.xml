@@ -40,6 +40,24 @@
         <item name="android:windowExitAnimation">@anim/pop_exit_anim</item>
     </style>
 
+    <!--==================APP更新弹窗==================-->
+    <style name="UpdateAppNumberProgressBar_Red">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+
+        <item name="progress_max">100</item>
+        <item name="progress_current">0</item>
+
+        <item name="progress_unreached_color">#CCCCCC</item>
+        <item name="progress_reached_color">#e94339</item>
+
+        <item name="progress_text_size">12sp</item>
+        <item name="progress_text_color">#e94339</item>
+
+        <item name="progress_reached_bar_height">4dp</item>
+        <item name="progress_unreached_bar_height">3dp</item>
+    </style>
+
     <!--PictureSeletor Style 白色主题样式，，注意每一项都不能少-->
     <style name="picture_white_style_custom" parent="AppTheme.NoActionBar">
         <!-- Customize your theme here. -->

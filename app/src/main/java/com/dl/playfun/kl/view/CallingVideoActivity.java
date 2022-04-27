@@ -55,6 +55,9 @@ import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
 import com.dl.playfun.widget.dialog.MessageDetailDialog;
 import com.dl.playfun.widget.dialog.TraceDialog;
 import com.dl.playfun.widget.image.CircleImageView;
+import com.faceunity.nama.FURenderer;
+import com.faceunity.nama.data.FaceUnityDataFactory;
+import com.faceunity.nama.ui.FaceUnityView;
 import com.google.gson.Gson;
 import com.dl.playfun.R;
 import com.dl.playfun.databinding.ActivityCallVideoBinding;
@@ -356,7 +359,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
 
                 GameCoinExchargeSheetView coinRechargeSheetView = new GameCoinExchargeSheetView(CallingVideoActivity.this);
                 coinRechargeSheetView.setCallMedia(true);
-                coinRechargeSheetView.setMaleBalance(viewModel.coinBalance);
+                coinRechargeSheetView.setMaleBalance(viewModel.maleBalanceMoney);
                 coinRechargeSheetView.show();
                 coinRechargeSheetView.setCoinRechargeSheetViewListener(new GameCoinExchargeSheetView.CoinRechargeSheetViewListener() {
                     @Override
@@ -809,7 +812,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
             public void run() {
                 mTimeCount++;
                 viewModel.TimeCount++;
-                viewModel.timeTextField.set(mContext.getString(R.string.call_message_deatail_time_msg, mTimeCount / 60, mTimeCount % 60));
+                viewModel.timeTextField.set(mContext.getString(R.string.playfun_call_message_deatail_time_msg, mTimeCount / 60, mTimeCount % 60));
                 if (!viewModel.sayHiEntityHidden.get() && mTimeCount % 10 == 0) {
                     //没10秒更新一次破冰文案
                     viewModel.getSayHiList();
@@ -825,9 +828,9 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                                 viewModel.hangup();
                                 return;
                             }
-                            String minute = StringUtils.getString(R.string.minute);
+                            String minute = StringUtils.getString(R.string.playfun_minute);
                             String textHint = (viewModel.totalMinutesRemaining / 60) + minute + (viewModel.totalMinutesRemaining % 60);
-                            String txt = String.format(StringUtils.getString(R.string.call_message_deatail_girl_txt14), textHint);
+                            String txt = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt14), textHint);
                             viewModel.maleTextMoneyField.set(txt);
                             if (!viewModel.flagMoneyNotWorth) {
                                 moneyNoWorthSwich(true);
@@ -844,7 +847,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                                 if (!viewModel.girlEarningsField.get()){
                                     viewModel.girlEarningsField.set(true);
                                 }
-                                String girlEarningsTex = String.format(StringUtils.getString(R.string.call_message_deatail_girl_txt), viewModel.payeeProfits);
+                                String girlEarningsTex = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt), viewModel.payeeProfits);
                                 SpannableString stringBuilder = new SpannableString(girlEarningsTex);
                                 ForegroundColorSpan blueSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint1));
                                 stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -869,12 +872,10 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         viewModel.flagMoneyNotWorth = isShow;
         viewModel.maleTextLayoutSHow.set(isShow);
         //通知女生男生这边余额不足
-        String otherUserId = (role == TUICalling.Role.CALL ? userIds[0] : callUserId);
-        int toUserid = ChatUtils.imUserIdToSystemUserId(otherUserId);
         if (isShow){
-            viewModel.getTips(toUserid, 2, "1");
+            viewModel.getTips(viewModel.callingVideoInviteInfoField.get().getId(),2,"1");
         }else {
-            viewModel.getTips(toUserid, 2, "0");
+            viewModel.getTips(viewModel.callingVideoInviteInfoField.get().getId(),2,"0");
         }
     }
 

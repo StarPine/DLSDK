@@ -131,6 +131,8 @@ public class LikeListViewModel extends BaseViewModel<AppRepository> {
                         dismissHUD();
                         observableList.remove(position);
                         RxBus.getDefault().post(new LikeChangeEvent(LikeListViewModel.this, traceEntity.getId(), false));
+                        totalCount--;
+                        uc.loadRefresh.call();
                     }
 
                     @Override

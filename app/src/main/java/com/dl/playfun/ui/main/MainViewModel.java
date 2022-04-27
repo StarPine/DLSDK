@@ -9,6 +9,7 @@ import androidx.databinding.ObservableField;
 
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
+import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.Injection;
 import com.dl.playfun.data.AppRepository;
@@ -20,6 +21,7 @@ import com.dl.playfun.entity.BannerItemEntity;
 import com.dl.playfun.entity.BubbleEntity;
 import com.dl.playfun.entity.CoinWalletEntity;
 import com.dl.playfun.entity.LikeRecommendEntity;
+import com.dl.playfun.entity.VersionEntity;
 import com.dl.playfun.event.BubbleTopShowEvent;
 import com.dl.playfun.event.MainTabEvent;
 import com.dl.playfun.event.MessageCountChangeEvent;
@@ -146,6 +148,24 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
     public void logout() {
         model.logout();
         //startWithPopTo(LoginFragment.class.getCanonicalName(), MainFragment.class.getCanonicalName(), true);
+    }
+
+    //显示公告
+    public void showAnnouncemnet() {
+        try {
+            boolean versionAlert = model.readVersion();
+            if (ConfigManager.getInstance().isMale()) {//只有男生才弹公告
+                if (!versionAlert) {
+                    model.saveVersion(AppConfig.VERSION_NAME);
+                    uc.versionAlertSl.call();
+                    return;
+                }
+            }
+        }catch (Exception e){
+
+        }
+
+        uc.newUserRegis.postValue(false);
     }
 
     public void loadSendLocation(Double lat, Double lng, String county_name, String province_name) {
@@ -320,10 +340,12 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                                         break;
                                     case "message_gift"://接收礼物
                                         if (map_data.get("is_accost") == null) {//不是搭讪礼物
-                                            GiftEntity giftEntity = IMGsonUtils.fromJson(data, GiftEntity.class);
-                                            //是特效礼物才发送订阅通知事件
-                                            if (!StringUtils.isEmpty(giftEntity.getSvgaPath())) {
-                                                RxBus.getDefault().post(new MessageGiftNewEvent(giftEntity,msg.getMsgID()));
+                                            if (!AppContext.isCalling){
+                                                GiftEntity giftEntity = IMGsonUtils.fromJson(data, GiftEntity.class);
+                                                //是特效礼物才发送订阅通知事件
+                                                if (!StringUtils.isEmpty(giftEntity.getSvgaPath())) {
+                                                    RxBus.getDefault().post(new MessageGiftNewEvent(giftEntity,msg.getMsgID()));
+                                                }
                                             }
                                         }
                                         break;
@@ -361,6 +383,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
     public class UIChangeObservable {
         //气泡提示
         public SingleLiveEvent<Boolean> bubbleTopShow = new SingleLiveEvent<>();
+        public SingleLiveEvent<Boolean> newUserRegis = new SingleLiveEvent<>();
         //        public SingleLiveEvent<Void> showAgreementDialog = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> showFaceRecognitionDialog = new SingleLiveEvent<>();
         public SingleLiveEvent<String> startFace = new SingleLiveEvent<>();
@@ -371,6 +394,8 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<LikeRecommendEntity> showRecommendUserDialog = new SingleLiveEvent<>();
         public ObservableField<Boolean> gender = new ObservableField<>(false);
         public SingleLiveEvent<MainTabEvent> mainTab = new SingleLiveEvent<>();
+        //更新版本
+        public SingleLiveEvent<VersionEntity> versionEntitySingl = new SingleLiveEvent<>();
         //每个新版本只会弹出一次
         public SingleLiveEvent<Void> versionAlertSl = new SingleLiveEvent<>();
         //打开批量搭讪

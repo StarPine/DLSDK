@@ -16,8 +16,7 @@ android {
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
-        //过滤多余的语言包
-        resConfigs "en", "ru", "tr", "zh"
+        buildConfigField "String", "BUILD_TIME", "\"${releaseTime()}\""
 
         // vectorDrawables.useSupportLibrary = true
         javaCompileOptions {
@@ -115,7 +114,7 @@ android {
 
 def releaseTime() {
 
-    return new Date().format("yyyyMMddHHmm", TimeZone.getTimeZone("GMT+08:00"))
+    return new Date().format("yyyy-MM-dd_HH-mm", TimeZone.getTimeZone("GMT+08:00"))
 
 }
 

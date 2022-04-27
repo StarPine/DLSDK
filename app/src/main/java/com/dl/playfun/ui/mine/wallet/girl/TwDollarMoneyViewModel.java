@@ -44,6 +44,7 @@ public class TwDollarMoneyViewModel extends BaseViewModel<AppRepository> {
     //RecyclerView多布局添加ItemBinding
     public ItemBinding<TwDollarMoneyItemViewModel> itemBinding = ItemBinding.of(BR.viewModel, R.layout.item_wallet_dollar_money);
 
+    public ObservableField<Integer> enableWithdraw = new ObservableField<>();
     public ObservableField<String> totalProfits = new ObservableField<>();
 
     public ObservableField<Boolean> isShowEmpty = new ObservableField<Boolean>(false);
@@ -129,6 +130,7 @@ public class TwDollarMoneyViewModel extends BaseViewModel<AppRepository> {
                     @Override
                     public void onSuccess(BaseDataResponse<UserProfitPageEntity> response) {
                         totalProfits.set(String.valueOf(response.getData().getTotalProfits()));
+                        enableWithdraw.set(response.getData().getEnableWithdraw());
                         UserProfitPageEntity.CustomProfitList pageData = response.getData().getUserProfitList();
                     List<UserProfitPageInfoEntity> listData = pageData.getData();
                     if(!ObjectUtils.isEmpty(listData) && listData.size()>0){

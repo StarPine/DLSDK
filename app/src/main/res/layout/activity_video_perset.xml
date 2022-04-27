@@ -1,115 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/video_preset_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/jm_line"
+    <com.tencent.liteav.trtccalling.ui.videocall.videolayout.TRTCVideoLayoutManager
+        android:id="@+id/trtc_layout_manager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="vertical"
-        android:background="@drawable/beauty_manager_bg"
-        android:paddingBottom="30dp">
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:layout_marginLeft="10dp"
-            android:layout_marginBottom="10dp"
-            android:text="美白" />
-        <LinearLayout
+    <RelativeLayout
+        android:id="@+id/mian_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="10dp">
+            android:layout_marginTop="40dp">
 
-            <SeekBar
-                android:id="@+id/seekbar_one"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:max="9"
-                android:maxHeight="2dp"
-                android:progress="0"
-                android:progressDrawable="@drawable/seek_bar_bg_layer"
-                android:thumb="@drawable/seek_bar_thumb" />
+                android:layout_marginLeft="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/text_one"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:text="9" />
-        </LinearLayout>
+                <ImageView
+                    android:id="@+id/iv_back"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/shape_text_bg"
+                    android:padding="5dp"
+                    android:src="@drawable/call_back" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:layout_marginLeft="10dp"
-            android:layout_marginBottom="10dp"
-            android:text="紅潤" />
-        <LinearLayout
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="15dp"
+                    android:background="@drawable/shape_text_bg"
+                    android:gravity="center"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:text="美顏設置"
+                    android:textColor="@color/white"
+                    android:textSize="13sp" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/iv_camera_change"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:src="@drawable/switch_camera" />
+        </RelativeLayout>
+
+
+        <com.faceunity.nama.ui.FaceUnityView
+            android:id="@+id/fu_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="10dp">
-
-            <SeekBar
-                android:id="@+id/seekbar_two"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:max="9"
-                android:maxHeight="2dp"
-                android:progress="2"
-                android:progressDrawable="@drawable/seek_bar_bg_layer"
-                android:thumb="@drawable/seek_bar_thumb" />
-
-            <TextView
-                android:id="@+id/text_two"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:text="9" />
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:layout_marginLeft="10dp"
-            android:layout_marginBottom="10dp"
-            android:text="美顏" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="10dp">
-
-            <SeekBar
-                android:id="@+id/seekbar_three"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:max="9"
-                android:maxHeight="2dp"
-                android:progress="2"
-                android:progressDrawable="@drawable/seek_bar_bg_layer"
-                android:thumb="@drawable/seek_bar_thumb" />
-
-            <TextView
-                android:id="@+id/text_three"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:text="9" />
-        </LinearLayout>
-
-    </LinearLayout>
+            android:layout_alignParentBottom="true"
+            android:visibility="visible" />
+    </RelativeLayout>
 
 
 </RelativeLayout>

@@ -94,6 +94,7 @@ public class AppContext extends Application {
     public static final String DL_ATTRS = "dl_attrs";
     public static String currPage = "not_in";
     public static boolean isHomePage = false;
+    public static boolean isCalling = false;
     public static boolean isShowNotPaid = false;
     public static Handler sUiThreadHandler;
     public static CountDownTimer downTimer = null;
@@ -167,6 +168,9 @@ public class AppContext extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        //注册美颜渲染
+        FURenderer.getInstance().setup(this);
+
         try {
             File cacheDir = new File(this.getApplicationContext().getExternalCacheDir().getPath(), "https");
             HttpResponseCache.install(cacheDir, 1024 * 1024 * 128);

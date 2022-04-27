@@ -47,4 +47,6 @@ dependencies {
     api "com.tencent.liteav:LiteAVSDK_TRTC:9.2.10641"
     api project(':tuicore')
     implementation 'org.jetbrains:annotations:15.0'
+    implementation project(':faceunity')
+
 }

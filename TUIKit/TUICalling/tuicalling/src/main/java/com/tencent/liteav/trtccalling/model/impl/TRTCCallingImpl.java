@@ -1,8 +1,8 @@
 package com.tencent.liteav.trtccalling.model.impl;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
-import android.graphics.BitmapFactory;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -12,6 +12,10 @@ import android.os.PowerManager;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.faceunity.core.enumeration.CameraFacingEnum;
+import com.faceunity.nama.FURenderer;
+import com.faceunity.nama.profile.CSVUtils;
+import com.faceunity.nama.profile.Constant;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
@@ -55,12 +59,16 @@ import com.tencent.trtc.TRTCCloudListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -73,16 +81,16 @@ public class TRTCCallingImpl extends TRTCCalling {
     /**
      * 超时时间，单位秒
      */
-    public static final  int    TIME_OUT_COUNT = 30;
-    private static final String TAG            = "TRTCCallingImpl";
+    public static final int TIME_OUT_COUNT = 30;
+    private static final String TAG = "TRTCCallingImpl";
     /**
      * room id 的取值范围
      */
-    private static final int     ROOM_ID_MIN = 1;
-    private static final int     ROOM_ID_MAX = Integer.MAX_VALUE;
-    private static final int USER_TYPE_NONE    = 0;
+    private static final int ROOM_ID_MIN = 1;
+    private static final int ROOM_ID_MAX = Integer.MAX_VALUE;
+    private static final int USER_TYPE_NONE = 0;
     private static final int USER_TYPE_CALLING = 1;
-    private final        Context mContext;
+    private final Context mContext;
     /**
      * 底层SDK调用实例
      */
@@ -93,11 +101,11 @@ public class TRTCCallingImpl extends TRTCCalling {
      * IM群组通话时会同步群组内邀请的用户
      * 当用户接听、拒绝、忙线、超时会从列表中移除该用户
      */
-    private final List<String> mCurInvitedList       = new ArrayList<>();
+    private final List<String> mCurInvitedList = new ArrayList<>();
     /**
      * 当前语音通话中的远端用户
      */
-    private final Set<String>  mCurRoomRemoteUserSet = new HashSet<>();
+    private final Set<String> mCurRoomRemoteUserSet = new HashSet<>();
     private final Map<Integer, String> mInviteIdMap = new HashMap<>();
     /**
      * 上层传入回调
@@ -106,20 +114,20 @@ public class TRTCCallingImpl extends TRTCCalling {
     /**
      * 当前IM登录用户名
      */
-    private String       mCurUserId            = "";
-    private int          mSdkAppId;
-    private String       mCurUserSig;
+    private String mCurUserId = "";
+    private int mSdkAppId;
+    private String mCurUserSig;
     /**
      * 是否首次邀请
      */
-    private boolean      isOnCalling           = false;
-    private String       mCurCallID            = "";
-    private int          mCurRoomID            = 0;
+    private boolean isOnCalling = false;
+    private String mCurCallID = "";
+    private int mCurRoomID = 0;
     /**
      * 当前是否在TRTC房间中
      */
-    private boolean      mIsInRoom             = false;
-    private long         mEnterRoomTime        = 0;
+    private boolean mIsInRoom = false;
+    private long mEnterRoomTime = 0;
     /**
      * C2C通话的邀请人
      * 例如A邀请B，B存储的mCurSponsorForMe为A
@@ -128,25 +136,28 @@ public class TRTCCallingImpl extends TRTCCalling {
     /**
      * 当前通话的类型
      */
-    private int                         mCurCallType   = TYPE_UNKNOWN;
+    private int mCurCallType = TYPE_UNKNOWN;
     /**
      * 当前群组通话的群组ID
      */
-    private String                      mCurGroupId    = "";
+    private String mCurGroupId = "";
     /**
      * 最近使用的通话信令，用于快速处理
      */
-    private CallModel                   mLastCallModel = new CallModel();
-    private String                      mNickName;
-    private String                      mFaceUrl;
+    private CallModel mLastCallModel = new CallModel();
+    private String mNickName;
+    private String mFaceUrl;
     private boolean mIsUseFrontCamera;
     private boolean mWaitingLastActivityFinished;
     private boolean mIsInitIMSDK;
     private MediaPlayHelper mMediaPlayHelper;        // 音效
-    private SensorManager       mSensorManager;
+    private SensorManager mSensorManager;
     private SensorEventListener mSensorEventListener;
     private boolean mIsBeingCalled = true;
     private int mUserType = USER_TYPE_NONE;
+
+    private boolean mIsFuEffect;
+    private FURenderer mFURenderer;
     /**
      * 信令监听器
      */
@@ -217,7 +228,7 @@ public class TRTCCallingImpl extends TRTCCalling {
                         mTRTCInternalListenerManager.onReject(invitee);
                     }
                 }
-                TRTCLogger.d(TAG, "mIsInRoom="+mIsInRoom);
+                TRTCLogger.d(TAG, "mIsInRoom=" + mIsInRoom);
                 preExitRoom(null);
                 stopDialingMusic();
                 unregisterSensorEventListener();
@@ -304,7 +315,7 @@ public class TRTCCallingImpl extends TRTCCalling {
         public void onExitRoom(int reason) {
             TRTCLogger.d(TAG, "onExitRoom reason:" + reason);
             //1 后台执行踢出房间。 2 后台解散房间
-            if(reason ==1 || reason == 2){
+            if (reason == 1 || reason == 2) {
                 //执行挂断 变量值初始化
                 stopCall();
                 //执行挂断，返回上一页
@@ -377,6 +388,13 @@ public class TRTCCallingImpl extends TRTCCalling {
                 mTRTCInternalListenerManager.onNetworkQuality(trtcQuality, arrayList);
             }
         }
+
+        @Override
+        public void onTryToReconnect() {
+            if (mTRTCInternalListenerManager != null) {
+                mTRTCInternalListenerManager.onTryToReconnect();
+            }
+        }
     };
     private TXBeautyManager txBeautyManager;
 
@@ -388,6 +406,26 @@ public class TRTCCallingImpl extends TRTCCalling {
         V2TIMManager.getMessageManager();
         V2TIMManager.getSignalingManager().addSignalingListener(mTIMSignallingListener);
     }
+
+    @Override
+    public FURenderer createCustomRenderer(Activity activity, boolean isFrontCamera, boolean isFuEffect) {
+        super.createCustomRenderer(activity, isFrontCamera, isFuEffect);
+        mIsFuEffect = isFuEffect;
+        if (mIsFuEffect) {
+            mFURenderer = FURenderer.getInstance();
+        }
+
+        return mFURenderer;
+    }
+
+    @Override
+    public void setLocalVideoRenderListener(TRTCCloudListener.TRTCVideoFrameListener listener) {
+        if (mTRTCCloud != null) {
+            mTRTCCloud.setLocalVideoProcessListener(TRTCCloudDef.TRTC_VIDEO_PIXEL_FORMAT_Texture_2D, TRTCCloudDef.TRTC_VIDEO_BUFFER_TYPE_TEXTURE, listener);
+            mTRTCCloud.setLocalVideoProcessListener(TRTCCloudDef.TRTC_VIDEO_PIXEL_FORMAT_NV21, TRTCCloudDef.TRTC_VIDEO_BUFFER_TYPE_BYTE_ARRAY, listener);
+        }
+    }
+
 
     private static boolean isCollectionEmpty(Collection coll) {
         return coll == null || coll.size() == 0;
@@ -672,7 +710,7 @@ public class TRTCCallingImpl extends TRTCCalling {
         mMediaPlayHelper = new MediaPlayHelper(mContext);
         isOnCalling = true;
         mUserType = USER_TYPE_CALLING;
-        registerSensorEventListener();
+//        registerSensorEventListener();
     }
 
     /**
@@ -1040,13 +1078,15 @@ public class TRTCCallingImpl extends TRTCCalling {
         stopRing();
     }
 
-    public void presetWhitenessLevel(int level){
+    public void presetWhitenessLevel(int level) {
         txBeautyManager.setWhitenessLevel(level);
     }
-    public void presetBeautyLevel(int level){
+
+    public void presetBeautyLevel(int level) {
         txBeautyManager.setBeautyLevel(level);
     }
-    public void presetRuddyLevel(int level){
+
+    public void presetRuddyLevel(int level) {
         txBeautyManager.setRuddyLevel(level);
     }
 
@@ -1057,15 +1097,6 @@ public class TRTCCallingImpl extends TRTCCalling {
     private void enterTRTCRoom() {
         if (mCurCallType == TRTCCalling.TYPE_VIDEO_CALL) {
             // 开启基础美颜
-            txBeautyManager = mTRTCCloud.getBeautyManager();
-            // 自然美颜
-            txBeautyManager.setBeautyStyle(1);
-            txBeautyManager.setBeautyLevel(0);
-            txBeautyManager.setWhitenessLevel(0);
-            txBeautyManager.setRuddyLevel(0);
-            txBeautyManager.setFilterStrength(0);
-            txBeautyManager.setFilter(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.beauty_filter_bailan));
-            // 进房前需要设置一下关键参数
             TRTCCloudDef.TRTCVideoEncParam encParam = new TRTCCloudDef.TRTCVideoEncParam();
             encParam.videoResolution = TRTCCloudDef.TRTC_VIDEO_RESOLUTION_960_540;
             encParam.videoFps = 15;
@@ -1149,6 +1180,32 @@ public class TRTCCallingImpl extends TRTCCalling {
             return;
         }
         mIsUseFrontCamera = isFrontCamera;
+        if (mIsFuEffect) {
+            mTRTCCloud.setLocalVideoProcessListener(TRTCCloudDef.TRTC_VIDEO_PIXEL_FORMAT_Texture_2D,
+                    TRTCCloudDef.TRTC_VIDEO_BUFFER_TYPE_TEXTURE, new TRTCCloudListener.TRTCVideoFrameListener() {
+                        @Override
+                        public void onGLContextCreated() {
+                            mFURenderer.prepareRenderer(null);
+                        }
+
+                        @Override
+                        public int onProcessVideoFrame(TRTCCloudDef.TRTCVideoFrame src, TRTCCloudDef.TRTCVideoFrame dest) {
+                            mFURenderer.setCameraFacing(mIsUseFrontCamera ? CameraFacingEnum.CAMERA_FRONT : CameraFacingEnum.CAMERA_BACK);
+                            long start = System.nanoTime();
+                            dest.texture.textureId = mFURenderer.onDrawFrameSingleInput(src.texture.textureId, src.width, src.height);
+                            if (mCSVUtils != null) {
+                                long renderTime = System.nanoTime() - start;
+                                mCSVUtils.writeCsv(null, renderTime);
+                            }
+                            return 0;
+                        }
+
+                        @Override
+                        public void onGLContextDestory() {
+                            mFURenderer.release();
+                        }
+                    });
+        }
         mTRTCCloud.startLocalPreview(isFrontCamera, txCloudVideoView);
     }
 
@@ -1634,7 +1691,7 @@ public class TRTCCallingImpl extends TRTCCalling {
                 model == null) {
             mLastCallModel = (CallModel) realCallModel.clone();
         }
-        TRTCLogger.d(TAG, "callID="+callID);
+        TRTCLogger.d(TAG, "callID=" + callID);
         return callID;
     }
 
@@ -1912,12 +1969,12 @@ public class TRTCCallingImpl extends TRTCCalling {
     }
 
     /**
-    * @Desc TODO(是否开启自动增益补偿功能, 可以自动调麦克风的收音量到一定的音量水平)
-    * @author 彭石林
-    * @parame [enable]
-    * @return void
-    * @Date 2022/2/14
-    */
+     * @return void
+     * @Desc TODO(是否开启自动增益补偿功能, 可以自动调麦克风的收音量到一定的音量水平)
+     * @author 彭石林
+     * @parame [enable]
+     * @Date 2022/2/14
+     */
     @Override
     public void enableAGC(boolean enable) {
         JSONObject jsonObject = new JSONObject();
@@ -1934,12 +1991,12 @@ public class TRTCCallingImpl extends TRTCCalling {
     }
 
     /**
-    * @Desc TODO(回声消除器，可以消除各种延迟的回声)
-    * @author 彭石林
-    * @parame [enable]
-    * @return void
-    * @Date 2022/2/14
-    */
+     * @return void
+     * @Desc TODO(回声消除器 ， 可以消除各种延迟的回声)
+     * @author 彭石林
+     * @parame [enable]
+     * @Date 2022/2/14
+     */
     @Override
     public void enableAEC(boolean enable) {
         JSONObject jsonObject = new JSONObject();
@@ -1956,12 +2013,12 @@ public class TRTCCallingImpl extends TRTCCalling {
     }
 
     /**
-    * @Desc TODO(背景噪音抑制功能，可探测出背景固定频率的杂音并消除背景噪音)
-    * @author 彭石林
-    * @parame [enable]
-    * @return void
-    * @Date 2022/2/14
-    */
+     * @return void
+     * @Desc TODO(背景噪音抑制功能 ， 可探测出背景固定频率的杂音并消除背景噪音)
+     * @author 彭石林
+     * @parame [enable]
+     * @Date 2022/2/14
+     */
     @Override
     public void enableANS(boolean enable) {
         JSONObject jsonObject = new JSONObject();
@@ -1975,6 +2032,31 @@ public class TRTCCallingImpl extends TRTCCalling {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
 
+
+    private CSVUtils mCSVUtils;
+
+    //性能测试部分
+    private void initCsvUtil(Context context) {
+        mCSVUtils = new CSVUtils(context);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault());
+        String dateStrDir = format.format(new Date(System.currentTimeMillis()));
+        dateStrDir = dateStrDir.replaceAll("-", "").replaceAll("_", "");
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS", Locale.getDefault());
+        String dateStrFile = df.format(new Date());
+        String filePath = Constant.filePath + dateStrDir + File.separator + "excel-" + dateStrFile + ".csv";
+        Log.d(TAG, "initLog: CSV file path:" + filePath);
+        StringBuilder headerInfo = new StringBuilder();
+        headerInfo.append("version：").append(FURenderer.getInstance().getVersion()).append(CSVUtils.COMMA)
+                .append("机型：").append(android.os.Build.MANUFACTURER).append(android.os.Build.MODEL).append(CSVUtils.COMMA)
+                .append("处理方式：双输入纹理输出").append(CSVUtils.COMMA)
+                .append("编码方式：硬件编码").append(CSVUtils.COMMA);
+//                .append("编码分辨率：").append(ENCODE_FRAME_WIDTH).append("x").append(ENCODE_FRAME_HEIGHT).append(CSVUtils.COMMA)
+//                .append("编码帧率：").append(ENCODE_FRAME_FPS).append(CSVUtils.COMMA)
+//                .append("编码码率：").append(ENCODE_FRAME_BITRATE).append(CSVUtils.COMMA)
+//                .append("预览分辨率：").append(CAPTURE_WIDTH).append("x").append(CAPTURE_HEIGHT).append(CSVUtils.COMMA)
+//                .append("预览帧率：").append(CAPTURE_FRAME_RATE).append(CSVUtils.COMMA);
+        mCSVUtils.initHeader(filePath, headerInfo);
     }
 }

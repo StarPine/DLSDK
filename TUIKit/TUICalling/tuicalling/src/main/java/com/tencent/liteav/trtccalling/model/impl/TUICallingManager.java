@@ -321,6 +321,11 @@ public final class TUICallingManager implements TUICalling, TRTCCallingDelegate 
     }
 
     @Override
+    public void onTryToReconnect() {
+        Log.i(TAG, "onTryToReconnect: ");
+    }
+
+    @Override
     public void onSwitchToAudio(boolean success, String message) {
         Log.d(TAG, "onSwitchToAudio enter");
     }

@@ -61,6 +61,52 @@
             android:textColor="@color/text_tips_color"
             android:textSize="12.6sp"
             android:visibility="gone" />
+        <TextView
+            android:id="@+id/content_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/msg_content_ll"
+            android:background="@drawable/custom_text_backdrop_layout"
+            android:paddingStart="5dp"
+            android:paddingTop="1dp"
+            android:paddingEnd="5dp"
+            android:paddingBottom="1dp"
+            android:includeFontPadding="false"
+            android:layout_marginTop="3.68dp"
+            android:layout_centerHorizontal="true"
+            android:textSize="11sp"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/custom_sufficient_view_tip"
+            android:layout_centerHorizontal="true"
+            android:layout_width="235dp"
+            android:layout_height="71dp"
+            android:layout_below="@+id/msg_content_ll"
+            android:layout_marginTop="11dp"
+            android:background="@drawable/custom_text_backdrop_layout"
+            android:visibility="gone"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="@string/custom_send_error_message_txt1"
+                android:textColor="#ff828282"
+                android:textSize="11sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:autoLink="all"
+                android:gravity="center"
+                android:text="@string/custom_send_error_message_txt2"
+                android:textColor="#A72DFE"
+                android:textSize="11sp" />
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/msg_content_ll"

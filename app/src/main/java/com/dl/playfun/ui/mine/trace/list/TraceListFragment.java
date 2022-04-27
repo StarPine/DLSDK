@@ -100,21 +100,6 @@ public class TraceListFragment extends BaseToolbarFragment<FragmentTraceListBind
                         }).show();
             }
         });
-        viewModel.uc.clickAddLike.observe(this, new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-                TraceDialog.getInstance(TraceListFragment.this.getContext())
-                        .setTitle(getString(R.string.playfun_addlike_title_tip))
-                        .setTitleSize(16)
-                        .setCannelText(getString(R.string.playfun_mine_trace_like_confirm))//左边按钮
-                        .setConfirmText(getString(R.string.playfun_cancel))//右边按钮
-                        .chooseType(TraceDialog.TypeEnum.CENTER)
-                        .setCannelOnclick(dialog -> {
-                            viewModel.addLike(integer);
-                        }).show();
-            }
-        });
-
         viewModel.uc.loadRefresh.observe(this, new Observer<Void>() {
             @Override
             public void onChanged(Void unused) {

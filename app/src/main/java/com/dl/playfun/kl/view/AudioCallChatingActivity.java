@@ -253,7 +253,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
             public void onChanged(Boolean isGiftSend) {
                 GameCoinExchargeSheetView coinRechargeSheetView = new GameCoinExchargeSheetView(AudioCallChatingActivity.this);
                 coinRechargeSheetView.setCallMedia(true);
-                coinRechargeSheetView.setMaleBalance(viewModel.coinBalance);
+                coinRechargeSheetView.setMaleBalance(viewModel.maleBalanceMoney);
                 coinRechargeSheetView.show();
                 coinRechargeSheetView.setCoinRechargeSheetViewListener(new GameCoinExchargeSheetView.CoinRechargeSheetViewListener() {
                     @Override
@@ -647,7 +647,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
             public void run() {
                 mTimeCount++;
                 viewModel.TimeCount++;
-                viewModel.timeTextField.set(mContext.getString(R.string.call_message_deatail_time_msg, mTimeCount / 60, mTimeCount % 60));
+                viewModel.timeTextField.set(mContext.getString(R.string.playfun_call_message_deatail_time_msg, mTimeCount / 60, mTimeCount % 60));
                 if (mTimeCount % 30 == 0){
                     viewModel.getRoomStatus(roomId);
                 }
@@ -663,9 +663,9 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                                 viewModel.hangup();
                                 return;
                             }
-                            String minute = StringUtils.getString(R.string.minute);
+                            String minute = StringUtils.getString(R.string.playfun_minute);
                             String textHint = (viewModel.totalMinutesRemaining / 60) + minute + (viewModel.totalMinutesRemaining % 60);
-                            String txt = String.format(StringUtils.getString(R.string.call_message_deatail_girl_txt14), textHint);
+                            String txt = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt14), textHint);
                             viewModel.maleTextMoneyField.set(txt);
                             if (!viewModel.flagMoneyNotWorth) {
                                 moneyNoWorthSwich(true);
@@ -682,7 +682,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                                 if (!viewModel.girlEarningsField.get()){
                                     viewModel.girlEarningsField.set(true);
                                 }
-                                String girlEarningsTex = String.format(StringUtils.getString(R.string.call_message_deatail_girl_txt), viewModel.payeeProfits);
+                                String girlEarningsTex = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt), viewModel.payeeProfits);
                                 SpannableString stringBuilder = new SpannableString(girlEarningsTex);
                                 ForegroundColorSpan blueSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint1));
                                 stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -708,20 +708,11 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         viewModel.flagMoneyNotWorth = isShow;
         viewModel.maleTextLayoutSHow.set(isShow);
         //通知女生男生这边余额不足
-        if (viewModel.audioUserDataEntity.get().getId().intValue() == viewModel.audioCallingInfoEntity.get().getFromUserProfile().getId().intValue()) {
             if (isShow){
-                viewModel.getTips(toUserId, 2, "1");
+                viewModel.getTips(viewModel.leftUserInfoField.get().getId(),2,"1");
             }else {
-                viewModel.getTips(toUserId, 2, "0");
+                viewModel.getTips(viewModel.leftUserInfoField.get().getId(),2,"0");
             }
-        } else {
-            if (isShow){
-                viewModel.getTips(fromUserId, 2, "1");
-            }else {
-
-                viewModel.getTips(fromUserId, 2, "0");
-            }
-        }
     }
 
     @Override

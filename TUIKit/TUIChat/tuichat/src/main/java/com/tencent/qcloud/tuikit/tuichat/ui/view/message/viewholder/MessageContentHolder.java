@@ -114,7 +114,11 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
             usernameText.setTextColor(properties.getNameFontColor());
         }
         if (properties.getNameFontSize() != 0) {
-            usernameText.setTextSize(properties.getNameFontSize());
+            try{
+                usernameText.setTextSize((float) properties.getNameFontSize());
+            }catch (Exception e){
+
+            }
         }
         // 聊天界面设置头像和昵称
         if (!TextUtils.isEmpty(msg.getNameCard())) {

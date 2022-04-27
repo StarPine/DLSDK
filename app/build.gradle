@@ -46,7 +46,12 @@ android {
             v2SigningEnabled true
         }
         playFunDebug{
-
+            storeFile file('../../keystore/PlayChat.jks')
+            storePassword 'playchat'
+            keyAlias 'playchat'
+            keyPassword 'playchat'
+            v1SigningEnabled true
+            v2SigningEnabled true
         }
     }
     compileSdkVersion 30
@@ -64,8 +69,8 @@ android {
 
         // Maps SDK for Android 地图服务API_KEY https://developers.google.com/maps/documentation/android-sdk/get-api-key
         manifestPlaceholders = [mapsApiKey: "AIzaSyB0KW8QXuw7RNRAEeF2sUaFSWoqO0kUf_o"]
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "BUILD_TIME", "\"${releaseTime()}\""
         if(!rootProject.ext.BuildSdkPlayfun){
             if(rootProject.ext.BuildPlayChatRelease){
                 signingConfig signingConfigs.playChatRelease
@@ -99,7 +104,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             if(!rootProject.ext.BuildSdkPlayfun){
                 if(!rootProject.ext.BuildPlayChatRelease){
-                    signingConfig signingConfigs.playChatDebug
+                    signingConfig signingConfigs.playFunDebug
                 }
             }
         }
@@ -257,13 +262,32 @@ android {
                     //在这里修改apk文件名
                     outputFileName = "PlayChat-${variant.name}-v${variant.versionName}-${releaseTime()}.apk"
                 }
+                //删除多余的特效资源
+                variant.mergeAssetsProvider.configure {
+                    doLast {
+                        delete(fileTree(dir: outputDir, includes: ['model/ai_human_processor.bundle',
+                                                                   'model/ai_face_processor.bundle',
+                                                                   'model/ai_human_processor_mb_fast.bundle',
+                                                                   'model/ai_hand_processor.bundle',
+                                                                   'model/ai_hairseg.bundle',
+                                                                   'model/ai_bgseg_green.bundle',
+                                                                   'graphics/controller.bundle',
+                                                                   'graphics/fuzzytoonfilter.bundle',
+                                                                   'graphics/fxaa.bundle',
+                                                                   'graphics/controller_cpp.bundle',
+                                                                   'graphics/face_makeup.bundle',
+                                                                   'graphics/body_slim.bundle',
+                                                                   'graphics/tongue.bundle']))
+                    }
+                }
         }
+
     }
+
 }
 
 def releaseTime() {
-    return new Date().format("yyyyMMddHHmm", TimeZone.getTimeZone("GMT+08:00"))
-
+    return new Date().format("yyyy-MM-dd_HH-mm", TimeZone.getTimeZone("GMT+08:00"))
 }
 
 repositories {

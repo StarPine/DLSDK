@@ -18,27 +18,6 @@ public class GlideImageLoader extends ImageLoader {
     @Override
     public void displayImage(Context context, Object o, ImageView imageView) {
         AdItemEntity adItemEntity = (AdItemEntity) o;
-        myHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
-                int dp = 0;
-                if (adItemEntity.getLink() != null && adItemEntity.getLink().indexOf("dp") != -1) {
-                    String title = adItemEntity.getLink();
-                    title = title.substring(title.lastIndexOf("dp") + 2);
-                    dp = (int) dp2px(context, Integer.parseInt(title));
-                    if (layoutParams == null) {
-                        layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp);
-                    }
-                    layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
-                    layoutParams.height = dp;
-                    imageView.setLayoutParams(layoutParams);
-                    imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-                }
-
-            }
-        });
-        //Glide 加载图片简单用法
         //Glide.with(context).load(StringUtil.getFullImageUrl(adItemEntity.getImg())).into(imageView);
         Glide.with(context)
                 .load(StringUtil.getFullImageUrl(adItemEntity.getImg()))

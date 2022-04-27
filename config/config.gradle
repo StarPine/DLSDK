@@ -55,6 +55,7 @@ ext {
             "AliyunSVideoBase" : "default",
             "AliyunVideoCommon": "default",
             "AlivcMedia"       : "default",
+            "faceunity"       : "default",
     ]
 
     dependenciesID = [
@@ -72,6 +73,8 @@ ext {
             // facebook
             "facebook-core"                : 'com.facebook.android:facebook-core:11.1.1',
             "facebook-login"               : 'com.facebook.android:facebook-login:11.1.1',
+            "faceunity-core"               : 'com.faceunity:core:8.1.0',
+            "faceunity-model"               : 'com.faceunity:model:8.1.0',
 
             //firebase
             "firebase-core"                : 'com.google.firebase:firebase-core:18.0.0',

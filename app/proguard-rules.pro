@@ -422,3 +422,4 @@
 -keep class com.google.**{*;}
 -keep class com.facebook.**{*;}
 -keep class com.appsflyer.**{*;}
+-keep class com.faceunity.**{*;}

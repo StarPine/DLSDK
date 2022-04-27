@@ -130,10 +130,11 @@
             </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 
             <LinearLayout
-                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="89dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="@{viewModel.enableWithdraw == 1?View.VISIBLE:View.GONE}"
+                >
 
                 <Button
                     style="@style/ButtonPrimary"

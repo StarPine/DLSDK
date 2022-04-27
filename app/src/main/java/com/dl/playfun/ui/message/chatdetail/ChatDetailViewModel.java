@@ -356,14 +356,14 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
         if (detailEntity == null)return null;
         if (detailEntity.getCallingStatus() == 0) {
             if (detailEntity.getIsOnline() == 1) {
-                return AppContext.instance().getResources().getDrawable(R.drawable.user_detail_online2);
+                return com.blankj.utilcode.util.Utils.getApp().getResources().getDrawable(R.drawable.user_detail_online2);
             }
         } else if (detailEntity.getCallingStatus() == 1) {
-            return AppContext.instance().getResources().getDrawable(R.drawable.user_detail_calling2);
+            return com.blankj.utilcode.util.Utils.getApp().getResources().getDrawable(R.drawable.user_detail_calling2);
         } else if (detailEntity.getCallingStatus() == 2) {
-            return AppContext.instance().getResources().getDrawable(R.drawable.user_detail_video2);
+            return com.blankj.utilcode.util.Utils.getApp().getResources().getDrawable(R.drawable.user_detail_video2);
         }
-        return AppContext.instance().getResources().getDrawable(R.drawable.user_detail_online2);
+        return com.blankj.utilcode.util.Utils.getApp().getResources().getDrawable(R.drawable.user_detail_online2);
     }
 
     //根据用户ID获取评价

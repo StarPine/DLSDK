@@ -28,6 +28,7 @@ import com.dl.playfun.event.LoginExpiredEvent;
 import com.dl.playfun.tim.TUIUtils;
 import com.dl.playfun.ui.MainContainerActivity;
 import com.dl.playfun.utils.ExceptionReportUtils;
+import com.faceunity.nama.FURenderer;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.scwang.smart.refresh.footer.ClassicsFooter;
@@ -69,6 +70,7 @@ public class AppContext extends Application {
     public static String currPage = "not_in";
     public static boolean isHomePage = false;
     public static boolean isShowNotPaid = false;
+    public static boolean isCalling = false;
     public static Handler sUiThreadHandler;
     private static AppContext instance;
     private static Thread sUiThread;
@@ -147,6 +149,9 @@ public class AppContext extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        //注册美颜渲染
+        FURenderer.getInstance().setup(this);
+
         try {
             File cacheDir = new File(this.getApplicationContext().getExternalCacheDir().getPath(), "https");
             HttpResponseCache.install(cacheDir, 1024 * 1024 * 128);

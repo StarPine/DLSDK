@@ -426,6 +426,11 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
     }
 
     @Override
+    public void onTryToReconnect() {
+
+    }
+
+    @Override
     public void onSwitchToAudio(boolean success, String message) {
         if (success) {
             updateAudioCallView();

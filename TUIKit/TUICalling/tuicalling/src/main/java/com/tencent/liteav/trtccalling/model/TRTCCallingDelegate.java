@@ -113,6 +113,11 @@ public interface TRTCCallingDelegate {
     void onNetworkQuality(TRTCCloudDef.TRTCQuality localQuality, ArrayList<TRTCCloudDef.TRTCQuality> remoteQuality);
 
     /**
+     * 网络重连
+     */
+    void onTryToReconnect();
+
+    /**
      * 视频通话切换为语音通话回调
      * @param success 切换是否成功，true:切换成功  false:切换失败
      * @param message 切换结果信息，如果切换失败，会有切换失败的错误信息

@@ -189,6 +189,16 @@ public class TRTCInternalListenerManager implements TRTCCallingDelegate {
     }
 
     @Override
+    public void onTryToReconnect() {
+        for (WeakReference<TRTCCallingDelegate> reference : mWeakReferenceList) {
+            TRTCCallingDelegate listener = reference.get();
+            if (listener != null) {
+                listener.onTryToReconnect();
+            }
+        }
+    }
+
+    @Override
     public void onSwitchToAudio(boolean success, String message) {
         for (WeakReference<TRTCCallingDelegate> reference : mWeakReferenceList) {
             TRTCCallingDelegate listener = reference.get();

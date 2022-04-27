@@ -319,6 +319,11 @@ public class TUIGroupCallAudioView extends BaseTUICallView {
         updateNetworkQuality(localQuality, remoteQuality);
     }
 
+    @Override
+    public void onTryToReconnect() {
+
+    }
+
     private void startInviting() {
         List<String> userIds = new ArrayList<>(mCallUserInfoList.size());
         for (UserModel userModel : mCallUserInfoList) {

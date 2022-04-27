@@ -46,6 +46,7 @@ public class TraceListViewModel extends BaseViewModel<AppRepository> {
     public UIChangeObservable uc = new UIChangeObservable();
     public TraceViewModel traceViewModel;
     private int currentPage = 1;
+    private int total = 1;
     //下拉刷新
     public BindingCommand onRefreshCommand = new BindingCommand(() -> {
         currentPage = 1;
@@ -99,6 +100,7 @@ public class TraceListViewModel extends BaseViewModel<AppRepository> {
                         if (currentPage == 1) {
                             observableList.clear();
                         }
+                        total = response.getData().getTotal();
                         RxBus.getDefault().post(new TraceEvent(response.getData().getTotal(), grend));
                         for (TraceEntity itemEntity : response.getData().getData()) {
                             TraceItemViewModel item = new TraceItemViewModel(TraceListViewModel.this, itemEntity, grend);
@@ -161,6 +163,7 @@ public class TraceListViewModel extends BaseViewModel<AppRepository> {
                             adapter.notifyDataSetChanged();
                         }
                         RxBus.getDefault().post(new LikeChangeEvent(TraceListViewModel.this, traceEntity.getId(), false));
+                        collect(1);
                     }
 
                     @Override
@@ -219,9 +222,6 @@ public class TraceListViewModel extends BaseViewModel<AppRepository> {
     public class UIChangeObservable {
         //取消关注
         public SingleLiveEvent<Integer> clickDelLike = new SingleLiveEvent<>();
-        //添加关注
-        public SingleLiveEvent<Integer> clickAddLike = new SingleLiveEvent<>();
-
         //完成刷新
         public SingleLiveEvent<Void> loadRefresh = new SingleLiveEvent<>();
 

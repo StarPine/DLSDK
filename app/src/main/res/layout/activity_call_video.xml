@@ -5,7 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <import type="com.dl.playfun.utils.SystemDictUtils" />
+
         <import type="android.view.View" />
 
         <import type="com.dl.playfun.R" />
@@ -17,6 +19,7 @@
         <import type="com.dl.playfun.widget.recyclerview.LineManagers" />
 
         <import type="androidx.recyclerview.widget.LinearLayoutManager" />
+
         <variable
             name="viewModel"
             type="com.dl.playfun.kl.viewmodel.VideoCallViewModel" />
@@ -67,7 +70,6 @@
                     android:layout_marginStart="9dp"
                     android:layout_marginTop="3dp"
                     android:layout_toEndOf="@+id/iv_avatar"
-                    android:gravity="center"
                     android:orientation="horizontal">
 
                     <TextView
@@ -83,22 +85,23 @@
                         android:textSize="12sp" />
 
                     <ImageView
-                        android:layout_width="14dp"
-                        android:layout_height="13dp"
+                        android:id="@+id/iv_goddess"
+                        android:layout_width="21dp"
+                        android:layout_height="9dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="2dp"
                         android:src="@{viewModel.getVipGodsImg(viewModel.callingInviteInfoField)}"
-                        android:visibility="@{viewModel.getVipGodsImg(viewModel.callingInviteInfoField) == null?View.GONE:View.VISIBLE}"
-                        />
+                        android:visibility="@{viewModel.callingInviteInfoField.userProfileInfo.isVip==1?View.VISIBLE:View.GONE}" />
 
                     <ImageView
-                        android:layout_width="31dp"
-                        android:layout_height="13dp"
-                        android:layout_marginStart="5dp"
-                        binding:imagePath="@{viewModel.gameUrl(viewModel.callingInviteInfoField.userProfileInfo.gameChannel)}"
-                        android:visibility="@{viewModel.isEmpty(viewModel.gameUrl(viewModel.callingInviteInfoField.userProfileInfo.gameChannel))?View.GONE:View.VISIBLE}"
-                        tools:src="@drawable/ic_vip"
-                        />
+                        android:id="@+id/iv_real_man"
+                        android:layout_width="21dp"
+                        android:layout_height="9dp"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="2dp"
+                        android:src="@drawable/ic_real_man"
+                        android:visibility="@{viewModel.callingInviteInfoField.userProfileInfo.certification==1?View.VISIBLE:View.GONE}" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -187,8 +190,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="47dp"
                 android:layout_marginRight="17dp"
-                binding:onClickCommand="@{viewModel.closeOnclick}"
-                    android:src="@drawable/call_video_close" />
+                android:src="@drawable/call_video_close"
+                binding:onClickCommand="@{viewModel.closeOnclick}" />
 
             <ImageView
                 android:layout_width="31dp"
@@ -197,8 +200,8 @@
                 android:layout_marginTop="47dp"
                 android:layout_marginRight="24dp"
                 android:layout_toLeftOf="@id/img_close"
-                binding:onClickCommand="@{viewModel.switchCameraOnclick}"
-                android:src="@drawable/call_switch_camera" />
+                android:src="@drawable/call_switch_camera"
+                binding:onClickCommand="@{viewModel.switchCameraOnclick}" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -285,23 +288,22 @@
 
                     <ImageView
                         android:id="@+id/iv_goddesses"
-                        android:layout_width="14dp"
-                        android:layout_height="13dp"
+                        android:layout_width="21dp"
+                        android:layout_height="9dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="2dp"
                         android:src="@{viewModel.getVipGodsImg(viewModel.callingInviteInfoField)}"
-                        android:visibility="@{viewModel.getVipGodsImg(viewModel.callingInviteInfoField) == null?View.GONE:View.VISIBLE}"
-                        />
+                        android:visibility="@{viewModel.callingVideoInviteInfoField.isVip==1?View.VISIBLE:View.GONE}" />
 
                     <ImageView
-                        android:layout_width="31dp"
-                        android:layout_height="13dp"
-                        android:layout_marginStart="5dp"
-                        binding:imagePath="@{viewModel.gameUrl(viewModel.callingInviteInfoField.userProfileInfo.gameChannel)}"
-                        android:visibility="@{viewModel.isEmpty(viewModel.gameUrl(viewModel.callingInviteInfoField.userProfileInfo.gameChannel))?View.GONE:View.VISIBLE}"
-                        tools:src="@drawable/ic_vip"
-                        />
-
+                        android:id="@+id/iv_real_manes"
+                        android:layout_width="21dp"
+                        android:layout_height="9dp"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="2dp"
+                        android:src="@drawable/ic_real_man"
+                        android:visibility="@{viewModel.callingVideoInviteInfoField.certification==1?View.VISIBLE:View.GONE}" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -321,9 +323,7 @@
                         android:includeFontPadding="false"
                         android:text="@{viewModel.callingVideoInviteInfoField.cityName}"
                         android:textColor="@color/white"
-                        android:textSize="9sp"
-                        tools:text="城市"
-                        />
+                        android:textSize="9sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -374,6 +374,7 @@
                     android:visibility="@{viewModel.collectedField==1?View.GONE:View.VISIBLE}"
                     binding:onClickCommand="@{viewModel.addlikeOnClickCommand}" />
             </RelativeLayout>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -397,8 +398,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="47dp"
                 android:layout_marginRight="17dp"
-                binding:onClickCommand="@{viewModel.closeOnclick}"
-                android:src="@drawable/call_video_close" />
+                android:src="@drawable/call_video_close"
+                binding:onClickCommand="@{viewModel.closeOnclick}" />
 
             <ImageView
                 android:layout_width="31dp"
@@ -407,8 +408,8 @@
                 android:layout_marginTop="47dp"
                 android:layout_marginRight="24dp"
                 android:layout_toLeftOf="@id/img_closes"
-                binding:onClickCommand="@{viewModel.switchCameraOnclick}"
-                android:src="@drawable/call_switch_camera" />
+                android:src="@drawable/call_switch_camera"
+                binding:onClickCommand="@{viewModel.switchCameraOnclick}" />
 
             <RelativeLayout
                 android:id="@+id/rect_layout"
@@ -464,7 +465,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rcv_layout"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="130dp"
                 android:layout_above="@+id/bottom_layout"
                 android:layout_marginBottom="54dp"
                 android:paddingLeft="14dp"
@@ -473,7 +474,17 @@
                 binding:items="@{viewModel.observableList}"
                 binding:layoutManager="@{LayoutManagers.linear(LinearLayoutManager.VERTICAL,false)}" />
 
+            <ImageView
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_above="@+id/bottom_layout"
+                android:layout_marginLeft="15dp"
+                android:layout_marginBottom="14dp"
+                android:src="@drawable/call_video_beauty"
+                binding:onClickCommand="@{viewModel.beauty}" />
+
             <LinearLayout
+                android:id="@+id/linear_balance_tip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/bottom_layout"
@@ -507,7 +518,6 @@
                     android:visibility="@{viewModel.isShowCountdown?View.VISIBLE:View.GONE}"
                     binding:onClickCommand="@{viewModel.closeMoney2}" />
             </LinearLayout>
-
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -588,6 +598,29 @@
                     binding:stateActivated="@{viewModel.handsFreeField}" />
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="@{viewModel.isShowBeauty?View.VISIBLE:View.GONE}"
+                >
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    binding:onClickCommand="@{viewModel.beauty}" />
+
+                <com.faceunity.nama.ui.FaceUnityView
+                    android:id="@+id/fu_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/black"
+                    tools:visibility="visible"
+                    />
+            </LinearLayout>
+
+
             <com.opensource.svgaplayer.SVGAImageView
                 android:id="@+id/gift_effects"
                 android:layout_width="match_parent"
@@ -596,5 +629,6 @@
                 android:visibility="gone"
                 app:autoPlay="true" />
         </RelativeLayout>
+
     </RelativeLayout>
 </layout>

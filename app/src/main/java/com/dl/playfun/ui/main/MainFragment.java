@@ -22,6 +22,7 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.config.TbarCenterImgConfig;
 import com.dl.playfun.entity.GameCoinBuy;
+import com.dl.playfun.entity.VersionEntity;
 import com.dl.playfun.event.MainTabEvent;
 import com.dl.playfun.event.TaskListEvent;
 import com.dl.playfun.manager.ConfigManager;
@@ -31,6 +32,7 @@ import com.dl.playfun.ui.dialog.HomeAccostDialog;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralPayDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
+import com.dl.playfun.widget.dialog.version.view.UpdateDialogView;
 import com.dl.playfun.widget.pageview.FragmentAdapter;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
@@ -42,6 +44,7 @@ import com.dl.playfun.ui.mine.MineFragment;
 import com.dl.playfun.ui.radio.radiohome.RadioFragment;
 import com.dl.playfun.ui.ranklisk.ranklist.RankListFragment;
 import com.tencent.imsdk.v2.V2TIMCallback;
+import com.tencent.qcloud.tuicore.util.BackgroundTasks;
 import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.view.ConversationCommonHolder;
 
@@ -179,6 +182,32 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                             break;
                     }
                 }
+            }
+        });
+        //版本更新提示
+        viewModel.uc.versionEntitySingl.observe(this, new Observer<VersionEntity>() {
+            @Override
+            public void onChanged(VersionEntity versionEntity) {
+                BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (versionEntity.getVersion_code().intValue() <= AppConfig.VERSION_CODE.intValue()) {
+                            //ToastUtils.showShort(R.string.version_latest);
+                            viewModel.showAnnouncemnet();
+                        } else {
+                            boolean isUpdate = versionEntity.getIs_update().intValue() == 1;
+                            UpdateDialogView.getInstance(mActivity)
+                                    .getUpdateDialogView(versionEntity.getVersion_name(), versionEntity.getContent(), versionEntity.getUrl(), isUpdate, "playchat", versionEntity.getLinkUrl())
+                                    .setConfirmOnlick(new UpdateDialogView.CancelOnclick() {
+                                        @Override
+                                        public void cancel() {
+                                            viewModel.showAnnouncemnet();
+                                        }
+                                    })
+                                    .show();
+                        }
+                    }
+                });
             }
         });
         viewModel.uc.showFaceRecognitionDialog.observe(this, new Observer<Void>() {

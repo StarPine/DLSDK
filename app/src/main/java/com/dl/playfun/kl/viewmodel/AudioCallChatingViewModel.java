@@ -86,8 +86,10 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     //是否发送过礼物
     public boolean sendGiftBagSuccess = false;
     public Integer roomId;
-    public Integer fromUserId;
-    public Integer toUserId;
+    public String fromUserId;
+    public String toUserId;
+    //是否是拨打方
+    public boolean userCall = false;
 
     //通话数据加载完成
     public boolean callInfoLoaded = false;
@@ -280,9 +282,9 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                         String textTip = null;
 
                         if (isMale) {
-                            textTip = StringUtils.getString(R.string.call_message_deatail_girl_txt_male);
+                            textTip = StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt_male);
                         } else {
-                            textTip = StringUtils.getString(R.string.call_message_deatail_girl_txt_gift);
+                            textTip = StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt_gift);
                         }
                         String nickname = leftUserInfoField.get().getNickname();
                         textTip += " " + nickname;
@@ -308,7 +310,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                         dialog.dismiss();
                         dismissHUD();
                         if (e.getCode() != null && e.getCode().intValue() == 21001) {
-                            ToastCenterUtils.showToast(R.string.dialog_exchange_integral_total_text1);
+                            ToastCenterUtils.showToast(R.string.playfun_dialog_exchange_integral_total_text1);
                             AppContext.instance().logEvent(AppsFlyerEvent.voicecall_gift_Ins_topup);
                             uc.sendUserGiftError.postValue(true);
                         }

@@ -8,12 +8,15 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.tencent.coustom.CustomIMTextEntity;
 import com.tencent.coustom.IMGsonUtils;
+import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMSignalingInfo;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ThreadHelper;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
+import com.tencent.qcloud.tuikit.tuichat.bean.CallModel;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
@@ -591,6 +594,17 @@ public abstract class ChatPresenter {
                 //未付费推送和今日缘分推送拦截，不展示在聊天界面
                 msg.remove();//删除当前消息
                 return true;
+            }
+            V2TIMSignalingInfo signalingInfo = V2TIMManager.getSignalingManager().getSignalingInfo(msg.getTimMessage());
+            if (signalingInfo != null){
+                int actionType = signalingInfo.getActionType();
+                Map extraMap = new Gson().fromJson(signalingInfo.getData(), Map.class);
+                if (actionType == V2TIMSignalingInfo.SIGNALING_ACTION_TYPE_INVITE && extraMap != null){
+                    if (extraMap.containsKey(CallModel.SIGNALING_EXTRA_KEY_CALL_END)) {
+                        msg.remove();//删除当前消息
+                        return true;
+                    }
+                }
             }
             String msgId = msg.getId();
             for (int i = loadedMessageInfoList.size() - 1; i >= 0; i--) {

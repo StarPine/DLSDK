@@ -1,9 +1,12 @@
 package com.tencent.liteav.trtccalling.model;
 
+import android.app.Activity;
 import android.content.Context;
 
+import com.faceunity.nama.FURenderer;
 import com.tencent.liteav.trtccalling.model.impl.TRTCCallingImpl;
 import com.tencent.rtmp.ui.TXCloudVideoView;
+import com.tencent.trtc.TRTCCloudListener;
 
 import java.util.List;
 
@@ -75,6 +78,22 @@ public abstract class TRTCCalling {
             }
         }
     }
+
+    /**
+     * 初始化自定义采集和渲染的对象
+     *
+     * @return
+     */
+    public FURenderer createCustomRenderer(Activity activity, boolean isFrontCamera, boolean mIsEffect) {
+        return null;
+    }
+
+    /**
+     * 添加render监听
+     * @param listener
+     */
+    public abstract void setLocalVideoRenderListener(TRTCCloudListener.TRTCVideoFrameListener listener);
+
 
     /**
      * 销毁函数，如果不需要再运行该实例，请调用该接口

@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context="com.dl.playfun.ui.mine.setting.SettingFragment">
+        tools:context=".ui.mine.setting.SettingFragment">
 
         <View
             android:id="@+id/status_bar_view"
@@ -52,6 +52,34 @@
                 android:layout_marginTop="10dp"
                 android:orientation="vertical"
                 android:paddingBottom="30dp">
+
+                <RelativeLayout
+                    style="@style/ProfileItem"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/profile_item_height"
+                    binding:onClickCommand="@{viewModel.facebeauty}">
+                    <ImageView
+                        android:id="@+id/face_beauty"
+                        android:layout_width="19dp"
+                        android:layout_height="19dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/icon_beauty"/>
+                    <TextView
+                        style="@style/ProfileItemTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_toEndOf="@+id/face_beauty"
+                        android:text="@string/playfun_mine_face_beauty"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        style="@style/ProfileItemTitleNormal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true" />
+                </RelativeLayout>
 
 
                 <RelativeLayout
@@ -95,6 +123,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="" />
+
+                    <TextView
+                        style="@style/ProfileItemSubTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/mine_setting_desc" />
                 </RelativeLayout>
                 <RelativeLayout
                     style="@style/ProfileItem"
@@ -112,10 +146,10 @@
 
                     <TextView
                         style="@style/ProfileItemTitle"
+                        android:layout_toEndOf="@+id/mine_setting"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:layout_toEndOf="@+id/mine_setting"
                         android:text="@string/playfun_mine_setting"
                         android:textSize="13sp" />
 
@@ -131,8 +165,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/profile_item_height"
                     android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp">
-<!--                    binding:onClickCommand="@{viewModel.versionOnClickCommand}">-->
+                    android:layout_marginBottom="10dp"
+                    binding:onClickCommand="@{viewModel.versionOnClickCommand}">
                     <ImageView
                         android:id="@+id/setting_version"
                         android:layout_width="19dp"

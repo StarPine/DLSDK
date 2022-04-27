@@ -365,6 +365,7 @@ public class MessageTextHolder extends MessageContentHolder {
                     rootView.findViewById(R.id.user_content).setVisibility(View.GONE);
                     rootView.findViewById(R.id.full_toast).setVisibility(View.GONE);
                     rootView.findViewById(R.id.custom_layout).setVisibility(View.VISIBLE);
+
                     TextView customHintText = rootView.findViewById(R.id.custom_hint_text);
                     CustomIMTextEntity customIMTextEntity = IMGsonUtils.fromJson(String.valueOf(map_data.get("data")), CustomIMTextEntity.class);
                     LinearLayout.LayoutParams customHintTextLayoutParams2 = (LinearLayout.LayoutParams) customHintText.getLayoutParams();
@@ -373,25 +374,49 @@ public class MessageTextHolder extends MessageContentHolder {
                         rootView.findViewById(R.id.custom_sufficient_view).setVisibility(View.GONE);
                     } else {
                         if (customIMTextEntity != null) {
-                            if (customIMTextEntity.getInGame() != null) {
-                                TextView customIngame = rootView.findViewById(R.id.custom_ingame_text);
-                                if (!msg.isSelf()){
-                                    customIngame.setText(rootView.getContext().getString(R.string.opponent_in_game));
+                            //callingtype：1语音，2视频
+                            int totalSeconds = customIMTextEntity.getTotalSeconds();
+                            int callingType = customIMTextEntity.getCallingType();
+                            if (totalSeconds > 0 && callingType> 0){
+                                customHintText = rootView.findViewById(R.id.content_tip);
+                                msgContentFrame.setVisibility(View.VISIBLE);
+                                rootView.findViewById(R.id.user_content).setVisibility(View.VISIBLE);
+                                if (msg.isSelf()) {
+                                    if (properties.getRightChatContentFontColor() != 0) {
+                                        msgBodyText.setTextColor(properties.getRightChatContentFontColor());
+                                    }
+                                    rootView.findViewById(R.id.left_call_img).setVisibility(View.GONE);
+                                    rootView.findViewById(R.id.right_call_img).setVisibility(View.VISIBLE);
+                                    rootView.findViewById(R.id.right_call_img).setBackgroundResource(callingType == 1 ? R.drawable.custom_audio_right_img_1 : R.drawable.custom_video_right_img_1);
                                 }else {
-                                    customIngame.setText(rootView.getContext().getString(R.string.call_ended));
+                                    rootView.findViewById(R.id.right_call_img).setVisibility(View.GONE);
+                                    rootView.findViewById(R.id.left_call_img).setVisibility(View.VISIBLE);
+                                    rootView.findViewById(R.id.left_call_img).setBackgroundResource(callingType == 1 ? R.drawable.custom_audio_left_img_1 : R.drawable.custom_video_left_img_1);
+                                    if (properties.getLeftChatContentFontColor() != 0) {
+                                        msgBodyText.setTextColor(properties.getLeftChatContentFontColor());
+                                    }
                                 }
-                                customIngame.setVisibility(View.VISIBLE);
+                                if (properties.getChatContextFontSize() != 0) {
+                                    msgBodyText.setTextSize(properties.getChatContextFontSize());
+                                }
+                                msgBodyText.setText(rootView.getContext().getString(R.string.custom_message_call_message_deatail_time_msg,totalSeconds/60,totalSeconds%60));
+                            }else {
+                                rootView.findViewById(R.id.custom_sufficient_view_tip).setVisibility(View.GONE);
+                                msgContentFrame.setVisibility(View.GONE);
+                                rootView.findViewById(R.id.user_content).setVisibility(View.GONE);
                             }
-
                             if (customIMTextEntity.getContent() == null) {
-                                if (!MessageRecyclerView.isFlagTipMoney()) {
-                                    rootView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
-                                } else {
-                                    rootView.findViewById(R.id.custom_layout).setVisibility(View.VISIBLE);
-                                }
                                 if (MessageRecyclerView.sex) {
                                     //余额不足-需要充值
                                     if (customIMTextEntity.getIsRemindPay() != null && customIMTextEntity.getIsRemindPay().intValue() > 0) {
+                                        if (totalSeconds > 0 && callingType> 0){
+                                            rootView.findViewById(R.id.custom_sufficient_view_tip).setVisibility(View.VISIBLE);
+                                            rootView.findViewById(R.id.custom_sufficient_view_tip).setOnClickListener(v -> {
+                                                onItemLongClickListener.onClickDialogRechargeShow();
+                                            });
+                                        }else {
+                                            rootView.findViewById(R.id.user_content).setVisibility(View.GONE);
+                                        }
                                         FrameLayout custom_sufficient_view = rootView.findViewById(R.id.custom_sufficient_view);
                                         View custom_not_sufficient_view = View.inflate(rootView.getContext(), R.layout.custom_not_sufficient_view, null);
                                         LinearLayout male_hint_layout = custom_not_sufficient_view.findViewById(R.id.male_hint_layout);
@@ -413,8 +438,6 @@ public class MessageTextHolder extends MessageContentHolder {
                                 } else {
                                     rootView.findViewById(R.id.custom_sufficient_view).setVisibility(View.GONE);
                                     if (Double.valueOf(customIMTextEntity.getPrice()).doubleValue() > 0) {
-//                                        String custom_message_txt2 = rootView.getContext().getString(R.string.custom_message_txt2);
-//                                        customHintText.setText(String.format(custom_message_txt2, customIMTextEntity.getPrice()));
                                         if (MessageRecyclerView.isCertification()) {
                                             String custom_message_txt2 = rootView.getContext().getString(R.string.custom_message_txt2);
                                             customHintText.setText(String.format(custom_message_txt2, customIMTextEntity.getPrice()));
@@ -439,6 +462,7 @@ public class MessageTextHolder extends MessageContentHolder {
                                         }
                                     }
                                     customHintText.setVisibility(View.VISIBLE);
+
                                 }
                             } else {
                                 String likeText = "一鍵追蹤她，不再失聯噢 已追蹤";
@@ -481,6 +505,15 @@ public class MessageTextHolder extends MessageContentHolder {
                                         onItemLongClickListener.onClickCustomText(position, msg, customIMTextEntity);
                                     }
                                 });
+                            }
+                            if (totalSeconds > 0 && callingType> 0){
+                                rootView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
+                            }else {
+                                if (!MessageRecyclerView.isFlagTipMoney()) {
+                                    rootView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
+                                }else {
+                                    rootView.findViewById(R.id.custom_layout).setVisibility(View.VISIBLE);
+                                }
                             }
                         }
                     }

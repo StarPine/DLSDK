@@ -34,5 +34,10 @@
     <dimen name="px_20">8.5333dp</dimen>
     <dimen name="px_40">17.0667dp</dimen>
     <dimen name="px_42">17.9200dp</dimen>
+    <dimen name="px_45">19.2000dp</dimen>
+    <dimen name="px_48">20.4800dp</dimen>
     <dimen name="px_69">29.4400dp</dimen>
+    <dimen name="px_130">55.4667dp</dimen>
+    <dimen name="px_177">75.5200dp</dimen>
+    <dimen name="px_180">76.8000dp</dimen>
 </resources>

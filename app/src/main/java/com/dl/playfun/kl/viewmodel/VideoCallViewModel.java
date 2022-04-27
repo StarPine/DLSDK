@@ -102,14 +102,16 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
     public ObservableField<String> callHintBinding = new ObservableField<>("");
     public ObservableField<Boolean> mainVIewShow = new ObservableField<>(false);
     protected JMTUICallVideoView mCallVideoView;
-    public Integer mfromUserId;
-    public Integer mtoUserId;
+    public String mfromUserId;
+    public String mtoUserId;
     //当前用户是否男性
     public boolean isMale = false;
     public boolean videoSuccess = false;
     private String mMyUserId;
     private String mOtherUserId;
     private TUICalling.Role mRole;
+    //是否是拨打方
+    public boolean userCall = false;
     //通话数据加载完成
     public boolean callInfoLoaded = false;
     //男生钻石总余额
@@ -589,9 +591,9 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
                         dialog.dismiss();
                         String textTip = null;
                         if (isMale) {
-                            textTip = StringUtils.getString(R.string.call_message_deatail_girl_txt_male);
+                            textTip = StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt_male);
                         } else {
-                            textTip = StringUtils.getString(R.string.call_message_deatail_girl_txt_gift);
+                            textTip = StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt_gift);
                         }
                         String nickname = callingVideoInviteInfoField.get().getNickname();
                         textTip += " " + nickname;
