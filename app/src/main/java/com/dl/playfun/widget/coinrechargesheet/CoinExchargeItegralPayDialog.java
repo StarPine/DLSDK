@@ -118,19 +118,19 @@ public class CoinExchargeItegralPayDialog extends BaseDialog implements View.OnC
     private void init(Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
         if (this.mPopView == null) {
-            this.mPopView = inflater.inflate(com.dl.playfun.R.layout.view_game_coin_topup_sheet, (ViewGroup)null);
+            this.mPopView = inflater.inflate(R.layout.view_game_coin_topup_sheet, (ViewGroup)null);
         }
 
-        this.imgGameCoin = (ImageView)this.mPopView.findViewById(com.dl.playfun.R.id.icon_game_coin);
+        this.imgGameCoin = (ImageView)this.mPopView.findViewById(R.id.icon_game_coin);
         AppGameConfig appGameConfig = ConfigManager.getInstance().getAppRepository().readGameConfigSetting();
         if (!ObjectUtils.isEmpty(appGameConfig) && appGameConfig.getGamePlayCoinSmallImg() != 0) {
             this.imgGameCoin.setImageResource(appGameConfig.getGamePlayCoinSmallImg());
         }
 
-        this.recyclerView = (RecyclerView)this.mPopView.findViewById(com.dl.playfun.R.id.recycler_view);
-        this.tvBalance = (TextView)this.mPopView.findViewById(com.dl.playfun.R.id.tv_balance);
-        this.ivRefresh = (ImageView)this.mPopView.findViewById(com.dl.playfun.R.id.iv_refresh);
-        this.loadingView = (ViewGroup)this.mPopView.findViewById(com.dl.playfun.R.id.rl_loading);
+        this.recyclerView = (RecyclerView)this.mPopView.findViewById(R.id.recycler_view);
+        this.tvBalance = (TextView)this.mPopView.findViewById(R.id.tv_balance);
+        this.ivRefresh = (ImageView)this.mPopView.findViewById(R.id.iv_refresh);
+        this.loadingView = (ViewGroup)this.mPopView.findViewById(R.id.rl_loading);
         this.ivRefresh.setOnClickListener(this);
         this.adapter = new GameCoinTopupAdapter(this.recyclerView);
         this.adapter.setCoinRechargeAdapterListener(this);
@@ -143,12 +143,12 @@ public class CoinExchargeItegralPayDialog extends BaseDialog implements View.OnC
                         this.coinRechargeSheetViewListener.onPayFailed(this, event.getErrorMsg());
                     } else {
                         this.dismiss();
-                        ToastUtils.showShort(com.dl.playfun.R.string.playfun_pay_success);
+                        ToastUtils.showShort(R.string.playfun_pay_success);
                         this.loadBalance();
                         this.dismiss();
                     }
                 } else if (event.getStatus() == 2) {
-                    ToastUtils.showShort(com.dl.playfun.R.string.playfun_pay_cancel);
+                    ToastUtils.showShort(R.string.playfun_pay_cancel);
                 }
             }
 
@@ -215,11 +215,13 @@ public class CoinExchargeItegralPayDialog extends BaseDialog implements View.OnC
         super.show();
     }
 
-    @SuppressLint({"StringFormatMatches"})
     private void loadBalance() {
         ConfigManager.getInstance().getAppRepository().getUserAccountPageInfo().doOnSubscribe(this).compose(RxUtils.schedulersTransformer()).compose(RxUtils.exceptionTransformer()).subscribe(new BaseObserver<BaseDataResponse<GameCoinWalletEntity>>() {
             public void onSuccess(BaseDataResponse<GameCoinWalletEntity> response) {
-                CoinExchargeItegralPayDialog.this.tvBalance.setText(String.valueOf(((GameCoinWalletEntity)response.getData()).getTotalAppCoins()));
+                GameCoinWalletEntity gameCoinWalletEntity = response.getData();
+                if(gameCoinWalletEntity!=null){
+                    tvBalance.setText(String.valueOf(gameCoinWalletEntity.getTotalAppCoins()));
+                }
             }
 
             public void onError(RequestException e) {
@@ -310,7 +312,7 @@ public class CoinExchargeItegralPayDialog extends BaseDialog implements View.OnC
                     CoinExchargeItegralPayDialog.this.dismiss();
                     RxView.clicks(CoinExchargeItegralPayDialog.this.tvBalance).throttleFirst(5L, TimeUnit.SECONDS).subscribe(new Consumer<Object>() {
                         public void accept(Object object) throws Exception {
-                            ToastUtils.showShort(com.dl.playfun.R.string.playfun_pay_success);
+                            ToastUtils.showShort(R.string.playfun_pay_success);
                         }
                     });
                     CoinExchargeItegralPayDialog.this.loadBalance();
@@ -341,7 +343,7 @@ public class CoinExchargeItegralPayDialog extends BaseDialog implements View.OnC
     }
 
     public void onClick(View v) {
-        if (v.getId() == com.dl.playfun.R.id.iv_refresh) {
+        if (v.getId() == R.id.iv_refresh) {
             this.loadBalance();
         }
 
@@ -398,7 +400,7 @@ public class CoinExchargeItegralPayDialog extends BaseDialog implements View.OnC
                             AppContext.instance().logEvent("One_Click_Purchase");
                             this.pay(((SkuDetails)skuDetailsList.get(0)).getSku());
                         } else {
-                            ToastUtils.showShort(com.dl.playfun.R.string.playfun_goods_not_exits);
+                            ToastUtils.showShort(R.string.playfun_goods_not_exits);
                         }
                         break;
                     case 1:
