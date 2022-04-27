@@ -34,6 +34,9 @@ public abstract class BaseDisposableObserver<T extends BaseResponse> extends Dis
         if (e instanceof ResponseThrowable) {
             ResponseThrowable responseThrowable = (ResponseThrowable) e;
             onError(new RequestException(responseThrowable.code, responseThrowable.message));
+        } else if (e instanceof ApiFailException) {
+            ApiFailException responseThrowable = (ApiFailException) e;
+            onError(new RequestException(responseThrowable.getCode(), responseThrowable.getMessage()));
         } else {
             onError(new RequestException(-1, e.getMessage()));
         }

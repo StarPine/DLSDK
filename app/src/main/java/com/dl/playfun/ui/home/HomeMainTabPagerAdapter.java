@@ -9,9 +9,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.blankj.utilcode.util.StringUtils;
+import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
-import com.dl.playfun.R;
 import com.dl.playfun.ui.home.homelist.HomeListFragment;
 
 /**
@@ -20,7 +20,7 @@ import com.dl.playfun.ui.home.homelist.HomeListFragment;
 public class HomeMainTabPagerAdapter extends FragmentStatePagerAdapter {
 
     @StringRes
-    public static final int[] TAB_FEMALE_TITLES = new int[]{R.string.playfun_tab_female_1, R.string.playfun_tab_female_2, R.string.playfun_tab_female_3};
+    public static final int[] TAB_FEMALE_TITLES = new int[]{R.string.playfun_tab_female_3, R.string.playfun_tab_female_1, R.string.playfun_tab_female_2};
     //女生分类类型
     public static final int[] TAB_FEMALE_IDX_TYPE = new int[]{3, 1, 2};
     @StringRes
@@ -49,6 +49,7 @@ public class HomeMainTabPagerAdapter extends FragmentStatePagerAdapter {
         }else {
             type = TAB_FEMALE_IDX_TYPE[position];
         }
+
         HomeListFragment homeListFragment = HomeListFragment.newInstance(type, gender);
         homeListFragment.setHomeMainViewModel(homeMainViewModel);
         return homeListFragment;

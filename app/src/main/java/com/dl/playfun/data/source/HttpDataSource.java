@@ -19,6 +19,7 @@ import com.dl.playfun.entity.BrowseNumberEntity;
 import com.dl.playfun.entity.BubbleEntity;
 import com.dl.playfun.entity.CallingInfoEntity;
 import com.dl.playfun.entity.CallingInviteInfo;
+import com.dl.playfun.entity.CallingStatusEntity;
 import com.dl.playfun.entity.CashWalletEntity;
 import com.dl.playfun.entity.ChatDetailCoinEntity;
 import com.dl.playfun.entity.ChatRedPackageEntity;
@@ -97,6 +98,24 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface HttpDataSource {
+
+    /**
+     * 获取通话状态 需要两个人都已进入房间，分两种情况：1、已解散房间；2、未解散房间。房间已解散状态下部分字段返回0
+     * @param roomId
+     * @return
+     */
+    Observable<BaseDataResponse<CallingStatusEntity>> getCallingStatus(
+            Integer roomId //房间号
+    );
+
+    /**
+     * 获取房间状态，用于检查是否已解散
+     * @param roomId
+     * @return
+     */
+    Observable<BaseDataResponse<CallingStatusEntity>> getRoomStatus(
+            Integer roomId //房间号
+    );
 
     /**
      * @Desc TODO(IM用户Id转成数值id)

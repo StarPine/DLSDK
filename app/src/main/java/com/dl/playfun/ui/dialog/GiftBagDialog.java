@@ -337,7 +337,7 @@ public class GiftBagDialog extends BaseDialog {
         initData();
     }
     private void initData() {
-        appRepository = AppContext.instance().appRepository;
+        appRepository = ConfigManager.getInstance().getAppRepository();
         appRepository.getBagGiftInfo()
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())

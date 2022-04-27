@@ -1,26 +1,18 @@
 package com.dl.playfun.kl.view;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.SeekBar;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.aliyun.svideo.common.utils.FastClickUtil;
-import com.dl.playfun.R;
-import com.dl.playfun.app.AppContext;
-import com.dl.playfun.event.CallChatingHangupEvent;
+import com.dl.play.chat.R;
+import com.faceunity.nama.FURenderer;
+import com.faceunity.nama.data.FaceUnityDataFactory;
+import com.faceunity.nama.ui.FaceUnityView;
 import com.tencent.liteav.trtccalling.model.TRTCCalling;
-import com.tencent.liteav.trtccalling.model.TUICalling;
-
-import me.goldze.mvvmhabit.bus.RxBus;
+import com.tencent.liteav.trtccalling.ui.videocall.videolayout.TRTCVideoLayout;
+import com.tencent.liteav.trtccalling.ui.videocall.videolayout.TRTCVideoLayoutManager;
 
 /**
  * @Name： PlayFun_Google
@@ -31,99 +23,65 @@ import me.goldze.mvvmhabit.bus.RxBus;
  */
 public class VideoPresetActivity extends AppCompatActivity {
 
-    private RelativeLayout video_preset_container;
-    private LinearLayout jm_line;
-    private JMTUICallVideoView mCallView;
-    private TUICalling.Role role;
+    private FaceUnityView faceUnityView;
     protected TRTCCalling mTRTCCalling;
-
-    private String[] userIds =new String[1];
-    private SeekBar seekbar_one;
-    private SeekBar seekbar_two;
-    private SeekBar seekbar_three;
-    private TextView text_one,text_two,text_three;
-    private int whitenessProgress;
-    private int beautyProgress;
+    private FaceUnityDataFactory mFaceUnityDataFactory;
+    private FURenderer mFURenderer;
+    private boolean isFuEffect = true;
+    private TRTCVideoLayoutManager mLayoutManagerTrtc;
+    private String userId = "userInfo";
+    private ImageView mCameraChange,mBack;
+    private boolean isFrontCamera = true; //是否为前置
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_perset);
+        faceUnityView = findViewById(R.id.fu_view);
+        mLayoutManagerTrtc = findViewById(R.id.trtc_layout_manager);
+        mCameraChange = findViewById(R.id.iv_camera_change);
+        mBack = findViewById(R.id.iv_back);
+
+        initListener();
+
+        //1.先打开渲染器
         mTRTCCalling = TRTCCalling.sharedInstance(this);
-        video_preset_container = findViewById(R.id.video_preset_container);
-        jm_line = findViewById(R.id.jm_line);
-        role = TUICalling.Role.CALL;
-        userIds[0] ="preset";
-        mCallView = new JMTUICallVideoView(this, role, userIds, null, null, false) {
-            @Override
-            public void finish() {
-                super.finish();
-                //2秒最多发一次
-            }
-        };
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
-        video_preset_container.addView(mCallView, params);
-        jm_line.bringToFront();
-        initView();
+        mFURenderer = FURenderer.getInstance();
+        mFaceUnityDataFactory = new FaceUnityDataFactory(0);
+        faceUnityView.bindDataFactory(mFaceUnityDataFactory);
+        mTRTCCalling.createCustomRenderer(this, true, isFuEffect);
+
+        //2.再打开摄像头
+        TRTCVideoLayout videoLayout = mLayoutManagerTrtc.allocCloudVideoView(userId);
+        mTRTCCalling.openCamera(true, videoLayout.getVideoView());
     }
 
-    private void initView() {
-        seekbar_one = findViewById(R.id.seekbar_one);
-        seekbar_two = findViewById(R.id.seekbar_two);
-        seekbar_three = findViewById(R.id.seekbar_three);
-        text_one = findViewById(R.id.text_one);
-        text_two = findViewById(R.id.text_two);
-        text_three = findViewById(R.id.text_three);
-        seekbar_one.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                mTRTCCalling.presetWhitenessLevel(progress);
-                text_one.setText(progress+"");
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-//                seekbar_one.setProgress(whitenessProgress);
-            }
+    private void initListener() {
+        mBack.setOnClickListener(v -> {
+            stopCameraAndFinish();
         });
-        seekbar_two.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                mTRTCCalling.presetRuddyLevel(progress);
-                text_two.setText(progress+"");
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-//                seekbar_two.setProgress(beautyProgress);
-            }
-        });
-        seekbar_three.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                mTRTCCalling.presetBeautyLevel(progress);
-                text_three.setText(progress+"");
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
+        mCameraChange.setOnClickListener(v -> {
+            isFrontCamera = !isFrontCamera;
+            mTRTCCalling.switchCamera(isFrontCamera);
         });
     }
+
+    private void stopCameraAndFinish() {
+        mTRTCCalling.closeCamera();
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        stopCameraAndFinish();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (isFuEffect && mFURenderer != null) {
+            mFaceUnityDataFactory.bindCurrentRenderer();
+        }
+    }
+
 }

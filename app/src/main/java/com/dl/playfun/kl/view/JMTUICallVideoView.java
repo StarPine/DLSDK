@@ -18,7 +18,9 @@ import androidx.constraintlayout.widget.Group;
 import com.blankj.utilcode.constant.PermissionConstants;
 import com.blankj.utilcode.util.PermissionUtils;
 import com.blankj.utilcode.util.ToastUtils;
+import com.dl.playfun.entity.CallingVideoTryToReconnectEvent;
 import com.dl.playfun.event.CallVideoUserEnterEvent;
+import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.widget.dialog.TraceDialog;
 import com.dl.playfun.R;
 import com.tencent.liteav.trtccalling.model.TRTCCalling;
@@ -69,6 +71,8 @@ public class JMTUICallVideoView extends BaseTUICallView {
     private boolean mIsFrontCamera = true;
     private boolean isChatting = false;  // 是否已经接通
     private int roomId = 0;
+    //断网总时间
+    int disconnectTime = 0;
 
 
     public JMTUICallVideoView(Context context, TUICalling.Role role, String[] userIDs, String sponsorID, String groupID, boolean isFromGroup) {
@@ -404,7 +408,22 @@ public class JMTUICallVideoView extends BaseTUICallView {
 
     @Override
     public void onNetworkQuality(TRTCCloudDef.TRTCQuality localQuality, ArrayList<TRTCCloudDef.TRTCQuality> remoteQuality) {
+        //两秒回调一次
+        if (localQuality.quality == 6 || remoteQuality.isEmpty()) {
+            disconnectTime++;
+            if (disconnectTime > 30 || (remoteQuality.isEmpty() && disconnectTime >15)) {
+                hangup();
+            }
+        }else {
+            disconnectTime  = 0;
+        }
         updateNetworkQuality(localQuality, remoteQuality);
+    }
+
+    @Override
+    public void onTryToReconnect() {
+        LogUtils.i("onTryToReconnect: vidoe");
+        RxBus.getDefault().post(new CallingVideoTryToReconnectEvent());
     }
 
     @Override

@@ -11,6 +11,7 @@ import java.util.List;
 public class UserProfitPageEntity {
     private BigDecimal totalProfits;
     private CustomProfitList   userProfitList;
+    private int  enableWithdraw;
 
     public BigDecimal getTotalProfits() {
         return totalProfits;
@@ -26,6 +27,14 @@ public class UserProfitPageEntity {
 
     public void setUserProfitList(CustomProfitList userProfitList) {
         this.userProfitList = userProfitList;
+    }
+
+    public int getEnableWithdraw() {
+        return enableWithdraw;
+    }
+
+    public void setEnableWithdraw(int enableWithdraw) {
+        this.enableWithdraw = enableWithdraw;
     }
 
     public class CustomProfitList{

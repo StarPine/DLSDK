@@ -22,6 +22,7 @@ import com.dl.playfun.entity.BrowseNumberEntity;
 import com.dl.playfun.entity.BubbleEntity;
 import com.dl.playfun.entity.CallingInfoEntity;
 import com.dl.playfun.entity.CallingInviteInfo;
+import com.dl.playfun.entity.CallingStatusEntity;
 import com.dl.playfun.entity.CashWalletEntity;
 import com.dl.playfun.entity.ChatDetailCoinEntity;
 import com.dl.playfun.entity.ChatRedPackageEntity;
@@ -1087,5 +1088,15 @@ public class HttpDataSourceImpl implements HttpDataSource {
     @Override
     public Observable<BaseDataResponse<List<GameCoinBuy>>> buyGameCoins() {
         return apiService.buyGameCoins("recharge");
+    }
+
+    @Override
+    public Observable<BaseDataResponse<CallingStatusEntity>> getCallingStatus(Integer roomId) {
+        return apiService.getCallingStatus(roomId);
+    }
+
+    @Override
+    public Observable<BaseDataResponse<CallingStatusEntity>> getRoomStatus(Integer roomId) {
+        return apiService.getRoomStatus(roomId);
     }
 }

@@ -62,6 +62,10 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
             if (!audioSuccess) {
                 return;
             }
+            if (isCancel){
+                finishView();
+                return;
+            }
             mTRTCCalling.accept();
             unListen();
             startChattingView(false);
@@ -87,6 +91,7 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
     private Disposable mSubscription;
     private long mSelfLowQualityTime;
     private long mOtherPartyLowQualityTime;
+    private boolean isCancel;
 
     public AudioCallingViewModel2(@NonNull @NotNull Application application, AppRepository model) {
         super(application, model);
@@ -176,6 +181,14 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
                 unListen();
                 finishView();
                 ToastUtils.showLong(AppContext.instance().getString(com.tencent.liteav.trtccalling.R.string.trtccalling_toast_call_error_msg, code, msg));
+            }
+
+            @Override
+            public void onCallingCancel() {
+                unListen();
+                finishView();
+                Utils.show("對方取消通話");
+                isCancel = true;
             }
 
             @Override

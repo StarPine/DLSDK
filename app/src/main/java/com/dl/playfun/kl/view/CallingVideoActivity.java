@@ -66,6 +66,7 @@ import com.opensource.svgaplayer.SVGASoundManager;
 import com.opensource.svgaplayer.SVGAVideoEntity;
 import com.tencent.coustom.GiftEntity;
 import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.liteav.trtccalling.model.TRTCCalling;
 import com.tencent.liteav.trtccalling.model.TUICalling;
 import com.tencent.liteav.trtccalling.model.util.TUICallingConstants;
 
@@ -75,6 +76,8 @@ import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import me.goldze.mvvmhabit.base.BaseActivity;
 import me.goldze.mvvmhabit.bus.RxBus;
@@ -82,6 +85,14 @@ import me.tatarka.bindingcollectionadapter2.BR;
 
 public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding, VideoCallViewModel>  {
 
+    /**
+     * 美颜相关
+     */
+    protected TRTCCalling mTRTCCalling;
+    private FaceUnityView mFaceUnityView;
+    private FaceUnityDataFactory mFaceUnityDataFactory;
+    private FURenderer mFURenderer;
+    private final boolean isFuEffect = true;
 
     private Context mContext;
 
@@ -102,6 +113,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
     private int mTimeCount;
     //每个10秒+1
     private int mTimeTen;
+    private Timer timer;
 
     private SVGAImageView giftEffects;
 
@@ -116,7 +128,11 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
     @Override
     protected void onResume() {
         super.onResume();
+        AppContext.isCalling = true;
         ImmersionBarUtils.setupStatusBar(this, false, true);
+        if (isFuEffect && mFURenderer != null) {
+            mFaceUnityDataFactory.bindCurrentRenderer();
+        }
     }
 
     @Override
@@ -156,6 +172,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
 
         Intent intent = getIntent();
         role = (TUICalling.Role) intent.getExtras().get(TUICallingConstants.PARAM_NAME_ROLE);
+        roomId = intent.getIntExtra("roomId", 0);
         //被动接收
         userIds = intent.getExtras().getStringArray(TUICallingConstants.PARAM_NAME_USERIDS);
         if (userIds != null && userIds.length > 0) {
@@ -173,6 +190,14 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
     public void initData() {
         super.initData();
         giftEffects = binding.giftEffects;
+        mFaceUnityView = binding.fuView;
+        //1.先打开渲染器
+        mTRTCCalling = TRTCCalling.sharedInstance(this);
+        mFURenderer = FURenderer.getInstance();
+        mFaceUnityDataFactory = new FaceUnityDataFactory(0);
+        mFaceUnityView.bindDataFactory(mFaceUnityDataFactory);
+        mTRTCCalling.createCustomRenderer(this, true, isFuEffect);
+
         mContainerView = findViewById(R.id.container);
         mJMView = findViewById(R.id.jm_view);
         if (callingInviteInfo != null) {
@@ -259,19 +284,6 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
 
             }
         });
-
-        //关注按钮点击
-        viewModel.uc.clickLike.observe(this,unused -> {
-            TraceDialog.getInstance(CallingVideoActivity.this)
-                    .setTitle(getString(R.string.playfun_addlike_title_tip))
-                    .setTitleSize(16)
-                    .setCannelText(getString(R.string.playfun_mine_trace_like_confirm))//左边按钮
-                    .setConfirmText(getString(R.string.playfun_cancel))//右边按钮
-                    .chooseType(TraceDialog.TypeEnum.CENTER)
-                    .setCannelOnclick(dialog -> {
-                        viewModel.addLike(false);
-                    }).show();
-        });
         //公屏消息滚动到底部
         viewModel.uc.scrollToEnd.observe(this, new Observer<Void>() {
             @Override
@@ -290,6 +302,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         viewModel.uc.acceptUserGift.observe(this, new Observer<GiftEntity>() {
             @Override
             public void onChanged(GiftEntity giftEntity) {
+                viewModel.getCallingStatus(viewModel.roomId);
                 try {
                     int account = giftEntity.getAmount();
                     //启动SVG动画
@@ -333,33 +346,13 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                 viewModel.putRcvItemMessage(stringBuilder, null, false);
                 //开始记时
                 TimeCallMessage();
+                setTimerForCallinfo();
             }
         });
         //钻石不足充值弹窗
         viewModel.uc.sendUserGiftError.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean isGiftSend) {
-//                ChatDetailCoinRechargeSheetView coinRechargeSheetView = new ChatDetailCoinRechargeSheetView(CallingVideoActivity.this, null, 0, isGiftSend, false);
-//                coinRechargeSheetView.show();
-//                coinRechargeSheetView.setCoinRechargeSheetViewListener(new ChatDetailCoinRechargeSheetView.CoinRechargeSheetViewListener() {
-//                    @Override
-//                    public void onPaySuccess(ChatDetailCoinRechargeSheetView sheetView, GoodsEntity sel_goodsEntity) {
-//                        sheetView.dismiss();
-////                        int actualValue = sel_goodsEntity.getActualValue().intValue();
-////                        viewModel.coinBalance += actualValue;
-////                        viewModel.maleBalanceMoney += BigDecimal.valueOf(actualValue).divide(viewModel.timePrice, 0, BigDecimal.ROUND_HALF_UP).intValue();
-//                        int actualValue = sel_goodsEntity.getActualValue().intValue();
-//                        viewModel.coinBalance += actualValue;
-//                        viewModel.maleBalanceMoney += ((((viewModel.coinBalance + viewModel.unitPrice.intValue()) + actualValue) / viewModel.unitPrice.intValue()) * 60) - viewModel.TimeCount;
-//                    }
-//
-//                    @Override
-//                    public void onPayFailed(ChatDetailCoinRechargeSheetView sheetView, String msg) {
-//                        sheetView.dismiss();
-//                        // do nothing
-//                        Log.e("IM充值失败", "=================");
-//                    }
-//                });
 
                 GameCoinExchargeSheetView coinRechargeSheetView = new GameCoinExchargeSheetView(CallingVideoActivity.this);
                 coinRechargeSheetView.setCallMedia(true);
@@ -369,9 +362,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                     @Override
                     public void onPaySuccess(GameCoinExchargeSheetView sheetView, CoinExchangePriceInfo sel_goodsEntity) {
                         sheetView.dismiss();
-                        int actualValue = sel_goodsEntity.getCoins().intValue();
-                        viewModel.coinBalance += actualValue;
-                        viewModel.maleBalanceMoney += ((((viewModel.coinBalance + viewModel.unitPrice.intValue()) + actualValue) / viewModel.unitPrice.intValue()) * 60) - viewModel.TimeCount;
+                        viewModel.getCallingStatus(viewModel.roomId);
                     }
 
                     @Override
@@ -385,14 +376,17 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         viewModel.uc.callGiftBagAlert.observe(this, new Observer<Void>() {
             @Override
             public void onChanged(Void unused) {
-                GiftBagDialog giftBagDialog = new GiftBagDialog(mContext, true, viewModel.coinBalance, viewModel.unitPriceList.size() > 1 ? 4 : 0);
+                if (viewModel.unitPriceList == null ||  viewModel.maleBalanceMoney == 0){
+                    return;
+                }
+                GiftBagDialog giftBagDialog = new GiftBagDialog(mContext, true, viewModel.maleBalanceMoney, viewModel.unitPriceList.size() > 1 ? 4 : 0);
                 giftBagDialog.setGiftOnClickListener(new GiftBagDialog.GiftOnClickListener() {
                     @Override
                     public void sendGiftClick(Dialog dialog, int number, GiftBagEntity.giftEntity giftEntity) {
                         AppContext.instance().logEvent(AppsFlyerEvent.videocall_send_gift);
                         if (viewModel.isMale) {
                             //男生情况下。钻石减去送礼物的价格少于0==余额不足。不允许发送
-                            if (viewModel.coinBalance - (giftEntity.getMoney().intValue() * number) < 0) {
+                            if (viewModel.maleBalanceMoney - (giftEntity.getMoney().intValue() * number) < 0) {
                                 dialog.dismiss();
                                 AppContext.instance().logEvent(AppsFlyerEvent.videocall_gift_Insu_topup);
                                 ToastCenterUtils.showToast(R.string.playfun_dialog_exchange_integral_total_text1);
@@ -413,6 +407,17 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                 giftBagDialog.show();
             }
         });
+    }
+
+    private void setTimerForCallinfo() {
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+
+            @Override
+            public void run() {
+                viewModel.getCallingStatus(viewModel.roomId);
+            }
+        }, 1000,10000);
     }
 
     private void startVideoSendHeadAnimotion(GiftBagEntity.giftEntity giftEntity) {
@@ -804,91 +809,42 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
             public void run() {
                 mTimeCount++;
                 viewModel.TimeCount++;
-                viewModel.timeTextField.set(mContext.getString(R.string.playfun_call_message_deatail_time_msg, mTimeCount / 60, mTimeCount % 60));
+                viewModel.timeTextField.set(mContext.getString(R.string.call_message_deatail_time_msg, mTimeCount / 60, mTimeCount % 60));
                 if (!viewModel.sayHiEntityHidden.get() && mTimeCount % 10 == 0) {
                     //没10秒更新一次破冰文案
                     viewModel.getSayHiList();
                 }
-                if (viewModel.isMale) {//男
-                    if (mTimeCount == 120 && !viewModel.sendGiftBagSuccess) {//两分钟
-                        String maleTextSendGift = StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt16);
-                        SpannableString itemMessageBuilder = new SpannableString(maleTextSendGift);
-                        itemMessageBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, maleTextSendGift.length() - 5, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        itemMessageBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint1)), maleTextSendGift.length() - 5, maleTextSendGift.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        viewModel.putRcvItemMessage(itemMessageBuilder, null, true);
-                    }
-                    if (!viewModel.flagMoney) {
-                        //免费聊天卡
-                        if (viewModel.unitPriceList.size() > 1 && viewModel.maleBalanceMoney == 0) {
-                            viewModel.unitPrice = viewModel.unitPriceList.get(1).getUnitPrice();
-                            viewModel.fromMinute = viewModel.unitPriceList.get(1).getFromMinute();
-                            //每秒扣费
-                            viewModel.timePrice = viewModel.unitPrice.divide(BigDecimal.valueOf(60), 2, BigDecimal.ROUND_HALF_UP);
-                            viewModel.maleBalanceMoney = (viewModel.coinBalance.intValue() / viewModel.unitPrice.intValue()) * 60;
-                            viewModel.maleBalanceMoney += 60;
-                        }
-                        if (viewModel.unitPrice.intValue() != 0) {//免费卡
-                            if (viewModel.maleBalanceMoney == 0) {
-                                viewModel.maleBalanceMoney = (viewModel.coinBalance.intValue() / viewModel.unitPrice.intValue()) * 60;
-                                viewModel.coinBalance = viewModel.coinBalance - viewModel.unitPrice.intValue();
-                                viewModel.$coinBalance += viewModel.unitPrice.intValue();
+                if (mTimeCount % 30 == 0){
+                    viewModel.getRoomStatus(viewModel.roomId);
+                }
+                if (viewModel.callInfoLoaded){
+                    if (viewModel.isMale) {//男
+                        if (viewModel.totalMinutesRemaining <= viewModel.balanceNotEnoughTipsMinutes * 60) {
+                            viewModel.totalMinutesRemaining--;
+                            if (viewModel.totalMinutesRemaining < 0) {
+                                viewModel.hangup();
+                                return;
                             }
-                            if ((viewModel.maleBalanceMoney) <= viewModel.balanceNotEnoughTipsMinutes.intValue() * 60) {
-                                String minute = StringUtils.getString(R.string.playfun_minute);
-                                String textHint = (viewModel.maleBalanceMoney / 60) + minute + (viewModel.maleBalanceMoney % 60);
-                                String txt = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt14), textHint);
-                                viewModel.maleTextMoneyField.set(txt);
-                                viewModel.maleTextLayoutSHow.set(true);
-                                viewModel.flagMoney = true;
+                            String minute = StringUtils.getString(R.string.minute);
+                            String textHint = (viewModel.totalMinutesRemaining / 60) + minute + (viewModel.totalMinutesRemaining % 60);
+                            String txt = String.format(StringUtils.getString(R.string.call_message_deatail_girl_txt14), textHint);
+                            viewModel.maleTextMoneyField.set(txt);
+                            if (!viewModel.flagMoneyNotWorth) {
+                                moneyNoWorthSwich(true);
+                            }
 
-                                //通知女生男生这边余额不足
-                                viewModel.getTips(viewModel.callingVideoInviteInfoField.get().getId(),2,"1");
-
+                        }else{
+                            if (viewModel.flagMoneyNotWorth) {
+                                moneyNoWorthSwich(false);
                             }
                         }
-                    }
-
-                    if (viewModel.flagMoney) {
-                        viewModel.maleBalanceMoney--;
-                        String minute = StringUtils.getString(R.string.playfun_minute);
-                        String textHint = (viewModel.maleBalanceMoney / 60) + minute + (viewModel.maleBalanceMoney % 60);
-                        String txt = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt14), textHint);
-                        viewModel.maleTextMoneyField.set(txt);
-                        if (viewModel.maleBalanceMoney <= 0) {
-                            viewModel.hangup();
-                            return;
-                        }
-                    }
-
-                    if (mTimeCount == (viewModel.fromMinute * 60)) {
-                        viewModel.formSelIndex++;
-                        if (viewModel.formSelIndex == viewModel.unitPriceList.size()) {
-                            viewModel.coinBalance = viewModel.coinBalance - viewModel.unitPrice.intValue();
-                            viewModel.$coinBalance += viewModel.unitPrice.intValue();
-                        } else {
-                            viewModel.unitPrice = viewModel.unitPriceList.get(viewModel.formSelIndex).getUnitPrice();
-                            viewModel.fromMinute = viewModel.unitPriceList.get(viewModel.formSelIndex).getFromMinute();
-                            viewModel.coinBalance = viewModel.coinBalance - viewModel.unitPrice.intValue();
-                            viewModel.$coinBalance += viewModel.unitPrice.intValue();
-                        }
-                    }
-                } else {//女性
-                    if (mTimeCount == (viewModel.fromMinute * 60)) {
-                        viewModel.formSelIndex++;
-                        if (viewModel.formSelIndex == viewModel.unitPriceList.size()) {
-
-                        } else {
-                            viewModel.unitPrice = viewModel.unitPriceList.get(viewModel.formSelIndex).getUnitPrice();
-                            viewModel.fromMinute = viewModel.unitPriceList.get(viewModel.formSelIndex).getFromMinute();
-                        }
-                    }
-                    if (viewModel.profitTipsIntervalSeconds != null && mTimeCount % viewModel.profitTipsIntervalSeconds == 0) {
+                    } else {//女性
                         if (ConfigManager.getInstance().getTipMoneyShowFlag()) {
-                            if (!viewModel.isShowCountdown.get()) {//对方余额不足没有展示
-                                viewModel.coinTotal = (viewModel.timePrice.multiply(BigDecimal.valueOf(10)));
-                                viewModel.girlEarningsField.set(true);
-                                mTimeTen++;
-                                String girlEarningsTex = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt), (viewModel.timePrice.multiply(BigDecimal.valueOf(mTimeTen * 10))));
+                            if (!viewModel.isShowCountdown.get() && viewModel.payeeProfits > 0) {//对方余额不足没有展示
+                                if (!viewModel.girlEarningsField.get()){
+                                    viewModel.girlEarningsField.set(true);
+                                }
+                                String girlEarningsTex = String.format(StringUtils.getString(R.string.call_message_deatail_girl_txt), viewModel.payeeProfits);
                                 SpannableString stringBuilder = new SpannableString(girlEarningsTex);
                                 ForegroundColorSpan blueSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint1));
                                 stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -898,15 +854,34 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                         }
                     }
                 }
+
                 mHandler.postDelayed(timerRunnable, 1000);
             }
         };
         mHandler.postDelayed(timerRunnable, 1000);
     }
 
+    /**
+     * 余额不足推送与显示
+     * @param isShow
+     */
+    private void moneyNoWorthSwich(boolean isShow) {
+        viewModel.flagMoneyNotWorth = isShow;
+        viewModel.maleTextLayoutSHow.set(isShow);
+        //通知女生男生这边余额不足
+        String otherUserId = (role == TUICalling.Role.CALL ? userIds[0] : callUserId);
+        int toUserid = ChatUtils.imUserIdToSystemUserId(otherUserId);
+        if (isShow){
+            viewModel.getTips(toUserid, 2, "1");
+        }else {
+            viewModel.getTips(toUserid, 2, "0");
+        }
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
+        AppContext.isCalling = false;
         //取消窥屏
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
         //取消常亮
@@ -914,6 +889,9 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         if (mHandler != null) {
             mHandler.removeCallbacks(timerRunnable);
             mHandler = null;
+        }
+        if (timer != null){
+            timer.cancel();
         }
     }
 

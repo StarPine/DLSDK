@@ -23,34 +23,34 @@ public class TagEntity {
     @SerializedName("is_online")
     private Integer isOnline;
     @SerializedName("calling_status")
-    private int callingStatus;
+    private Integer callingStatus;
     @SerializedName("is_blacklist")
-    private int isBlacklist;
+    private Integer isBlacklist;
     @SerializedName("blacklist_status")
-    private int blacklistStatus;
-    private int isChatPush;
+    private Integer blacklistStatus;
+    private Integer isChatPush;
 
-    public int getIsChatPush() {
+    public Integer getIsChatPush() {
         return isChatPush;
     }
 
-    public void setIsChatPush(int isChatPush) {
+    public void setIsChatPush(Integer isChatPush) {
         this.isChatPush = isChatPush;
     }
 
-    public int getIsBlacklist() {
+    public Integer getIsBlacklist() {
         return isBlacklist;
     }
 
-    public void setIsBlacklist(int isBlacklist) {
+    public void setIsBlacklist(Integer isBlacklist) {
         this.isBlacklist = isBlacklist;
     }
 
-    public int getBlacklistStatus() {
+    public Integer getBlacklistStatus() {
         return blacklistStatus;
     }
 
-    public void setBlacklistStatus(int blacklistStatus) {
+    public void setBlacklistStatus(Integer blacklistStatus) {
         this.blacklistStatus = blacklistStatus;
     }
 
@@ -62,11 +62,11 @@ public class TagEntity {
         this.isOnline = isOnline;
     }
 
-    public int getCallingStatus() {
+    public Integer getCallingStatus() {
         return callingStatus;
     }
 
-    public void setCallingStatus(int callingStatus) {
+    public void setCallingStatus(Integer callingStatus) {
         this.callingStatus = callingStatus;
     }
 

@@ -9,6 +9,10 @@ import com.dl.playfun.entity.BannerItemEntity;
 public class AppConfig {
     public static final boolean isDebug = BuildConfig.DEBUG;
     /**
+     * 网络请求版本号
+     */
+    public static final String VERSION_NAME_PUSH = "1.3.5";
+    /**
      * 版本编号
      */
     public static final Integer VERSION_CODE = 100;
