@@ -226,6 +226,7 @@ public class EditProfileFragment extends BaseToolbarFragment<FragmentEditProfile
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
             viewModel.userDataEntity.get().setBirthday(calendar);
+            viewModel.userDataEntity.get().setBirthdayCal(calendar);
         })
                 .setType(new boolean[]{true, true, true, false, false, false})//分别对应年月日时分秒，默认全部显示
                 .setCancelText(getString(R.string.playfun_cancel))//取消按钮文字
