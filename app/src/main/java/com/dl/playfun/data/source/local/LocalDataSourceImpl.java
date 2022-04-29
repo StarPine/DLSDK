@@ -561,7 +561,7 @@ public class LocalDataSourceImpl implements LocalDataSource {
 
     @Override
     public List<EvaluateObjEntity> readEvaluateConfig() {
-        if (readUserData() != null && readUserData().getSex() == 1) {
+        if (readUserData() != null && readUserData().getSex() != null && readUserData().getSex() == 1) {
             return readMaleEvaluateConfig();
         }
         return readFemaleEvaluateConfig();

@@ -28,6 +28,12 @@
         android:paddingBottom="3dp"
         binding:onClickCommand="@{viewModel.sendGiftBagOnClick}">
 
+        <ImageView
+            android:layout_width="17dp"
+            android:layout_height="17dp"
+            android:src="@drawable/icon_crystal"
+            android:visibility="@{viewModel.isShowProfit?View.VISIBLE:View.GONE}"
+            tools:visibility="gone" />
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"

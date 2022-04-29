@@ -240,7 +240,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                 SpannableString stringBuilder = new SpannableString(call_message_deatail_hint);
                 ForegroundColorSpan blueSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint));
                 stringBuilder.setSpan(blueSpan, 0, call_message_deatail_hint.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                viewModel.putRcvItemMessage(stringBuilder, null, false);
+                viewModel.putRcvItemMessage(stringBuilder, null, false, false);
                 //开始记时
                 TimeCallMessage();
                 setTimerForCallinfo();
@@ -384,7 +384,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
             });
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             layoutParams.leftMargin = dip2px(14);
-            layoutParams.topMargin = dip2px(279);
+            layoutParams.topMargin = dip2px(249);
             streamerView.setLayoutParams(layoutParams);
             binding.mainView.addView(streamerView);
             streamerView.startAnimation(animation);
@@ -534,7 +534,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
             });
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             layoutParams.leftMargin = dip2px(14);
-            layoutParams.topMargin = dip2px(279);
+            layoutParams.topMargin = dip2px(249);
             streamerView.setLayoutParams(layoutParams);
             binding.mainView.addView(streamerView);
             streamerView.startAnimation(animation);

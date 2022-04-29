@@ -96,9 +96,10 @@ public class MainActivity extends Activity implements View.OnClickListener, Radi
                                 AppContext.instance().logEvent(AppsFlyerEvent.LOG_IN_WITH_PHONE_NUMBER);
                                 AppContext.instance().mFirebaseAnalytics.setUserId(String.valueOf(authLoginUserEntity.getId()));
                                 AppContext.instance().appRepository.saveUserData(authLoginUserEntity);
-                                if (authLoginUserEntity.getCertification() == 1) {
+                                if (authLoginUserEntity.getCertification() != null && authLoginUserEntity.getCertification() == 1) {
                                     AppContext.instance().appRepository.saveNeedVerifyFace(true);
                                 }
+
                                 loginSuccess = true;
                                 to_play_fun.setVisibility(View.VISIBLE);
                             }
