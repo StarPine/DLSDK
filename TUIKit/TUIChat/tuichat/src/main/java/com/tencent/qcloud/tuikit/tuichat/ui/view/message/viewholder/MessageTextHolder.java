@@ -324,17 +324,17 @@ public class MessageTextHolder extends MessageContentHolder {
                             custom_gift_hint_text.setVisibility(View.VISIBLE);
                             if (MessageRecyclerView.sex) {
                                 if (giftEntity.getProfitDiamond() != null) {
-                                    String custom_message_txt7 = rootView.getContext().getString(R.string.custom_message_txt7);
+                                    String custom_message_txt7 = rootView.getContext().getString(R.string.profit);
                                     custom_gift_hint_text.setText(String.format(custom_message_txt7, giftEntity.getProfitDiamond() * giftEntity.getAmount()));
                                 }
                             } else {
                                 if (giftEntity.getProfitTwd() != null) {
                                     double total = giftEntity.getProfitTwd() * giftEntity.getAmount();
                                     if (MessageRecyclerView.isCertification()) {
-                                        String custom_message_txt2 = rootView.getContext().getString(R.string.custom_message_txt2);
+                                        String custom_message_txt2 = rootView.getContext().getString(R.string.profit);
                                         custom_gift_hint_text.setText(String.format(custom_message_txt2, String.format("%.2f", total)));
                                     } else {
-                                        String custom_message_txt2 = rootView.getContext().getString(R.string.custom_message_txt2_test2);
+                                        String custom_message_txt2 = rootView.getContext().getString(R.string.profit);
                                         custom_gift_hint_text.setText(matcherSearchText("#A72DFE", String.format(custom_message_txt2, String.format("%.2f", total)), rootView.getContext().getString(R.string.custom_message_txt1_key)));
                                         custom_gift_hint_text.setOnClickListener(new View.OnClickListener() {
                                             @Override
@@ -439,10 +439,10 @@ public class MessageTextHolder extends MessageContentHolder {
                                     rootView.findViewById(R.id.custom_sufficient_view).setVisibility(View.GONE);
                                     if (Double.valueOf(customIMTextEntity.getPrice()).doubleValue() > 0) {
                                         if (MessageRecyclerView.isCertification()) {
-                                            String custom_message_txt2 = rootView.getContext().getString(R.string.custom_message_txt2);
+                                            String custom_message_txt2 = rootView.getContext().getString(R.string.profit);
                                             customHintText.setText(String.format(custom_message_txt2, customIMTextEntity.getPrice()));
                                         } else {
-                                            String custom_message_txt2 = rootView.getContext().getString(R.string.custom_message_txt2_test2);
+                                            String custom_message_txt2 = rootView.getContext().getString(R.string.profit);
                                             customHintTextLayoutParams2.gravity = Gravity.CENTER;
                                             customHintTextLayoutParams2.rightMargin = dip2px(rootView.getContext(), 0);
                                             customHintText.setText(matcherSearchText("#A72DFE", String.format(custom_message_txt2, customIMTextEntity.getPrice()), rootView.getContext().getString(R.string.custom_message_txt1_key)));
@@ -636,13 +636,13 @@ public class MessageTextHolder extends MessageContentHolder {
                         }
                     } else {
                         if (MessageRecyclerView.isCertification()) {
-                            custom_message_txt2 = rootView.getContext().getString(R.string.custom_message_txt2);
+                            custom_message_txt2 = rootView.getContext().getString(R.string.profit);
                             customHintTextLayoutParams.gravity = Gravity.END;
                             customHintTextLayoutParams.rightMargin = dip2px(rootView.getContext(), 62);
                             customHintText.setText(String.format(custom_message_txt2, customIMTextEntity.getTextProfit()));
                         } else {
                             customIMTextEntity.setEvent(11);
-                            custom_message_txt2 = rootView.getContext().getString(R.string.custom_message_txt1);
+                            custom_message_txt2 = rootView.getContext().getString(R.string.profit);
                             customHintTextLayoutParams.gravity = Gravity.CENTER;
                             customHintTextLayoutParams.rightMargin = dip2px(rootView.getContext(), 0);
                             customHintText.setText(matcherSearchText("#A72DFE", String.format(custom_message_txt2, customIMTextEntity.getTextProfit()), rootView.getContext().getString(R.string.custom_message_txt1_key)));

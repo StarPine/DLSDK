@@ -33,6 +33,7 @@
             android:background="@color/status_bar_color" />
 
         <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/top_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:theme="@style/AppTheme.AppBarOverlay"
@@ -128,6 +129,16 @@
             android:layout_height="match_parent"
             android:visibility="gone"
             app:autoPlay="true" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:src="@drawable/icon_big_crystal"
+            android:layout_marginTop="@dimen/dp_145"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="13dp"
+            tools:visibility="visible" />
     </RelativeLayout>
 
 </layout>
