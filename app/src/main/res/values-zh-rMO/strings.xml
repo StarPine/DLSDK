@@ -1009,4 +1009,5 @@
     <string name="playfun_accost_same_sex">無法搭訕同性</string>
     <string name="playfun_name_number_too_long2">不能超出10個字</string>
     <string name="playfun_mine_vip_hint">會員特權</string>
+    <string name="playfun_vipsubscribe_item_vip_txt_currency">₽</string>
 </resources>

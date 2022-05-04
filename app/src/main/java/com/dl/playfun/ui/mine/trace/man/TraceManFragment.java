@@ -129,6 +129,14 @@ public class TraceManFragment extends BaseToolbarFragment<FragmentMineTraceManBi
                 if (vipDialog != null && vipDialog.isShowing()) {
                     return;
                 }
+                String UseBrowseMoney = null;
+                try {
+                    //临时捕获谁看过我金额为null
+                    Integer numMoney = ConfigManager.getInstance().GetViewUseBrowseMoney();
+                    UseBrowseMoney = numMoney==null?"":String.valueOf(numMoney);
+                }catch (Exception e){
+                    UseBrowseMoney = "";
+                }
                 vipDialog = TraceDialog.getInstance(TraceManFragment.this.getContext())
                         .chooseType(TraceDialog.TypeEnum.CENTER)
                         .setConfirmText(String.format(StringUtils.getString(R.string.playfun_mine_trace_man_play_confirm), ConfigManager.getInstance().GetViewUseBrowseMoney()))

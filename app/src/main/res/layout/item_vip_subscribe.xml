@@ -60,7 +60,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignBottom="@+id/payPrice"
                         android:layout_marginBottom="7px"
-                        android:text="₽"
+                        android:text="@string/playfun_vipsubscribe_item_vip_txt_currency"
                         android:textAlignment="center"
                         android:textColor="@{viewModel.itemEntity.selected ? @color/vip_sub_color_selected:@color/vip_sub_color_normal}"
                         android:textSize="12sp"

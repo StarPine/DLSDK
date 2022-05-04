@@ -950,4 +950,5 @@
     <string name="playfun_accost_same_sex">Aynı cinsiyetten olanla sohbet başlatılamaz</string>
     <string name="playfun_name_number_too_long2">10 kelimeden fazla olamaz</string>
     <string name="playfun_mine_vip_hint">VIP ayrıcalıkları</string>
+    <string name="playfun_vipsubscribe_item_vip_txt_currency">₽</string>
 </resources>

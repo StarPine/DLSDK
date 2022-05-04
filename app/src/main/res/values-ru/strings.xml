@@ -1010,5 +1010,6 @@
     <string name="playfun_accost_same_sex">Вы не можете общаться с представителями своего пола</string>
     <string name="playfun_name_number_too_long2">Не более 10 слов</string>
     <string name="playfun_mine_vip_hint">VIP-привилегии</string>
+    <string name="playfun_vipsubscribe_item_vip_txt_currency">₽</string>
 </resources>
 
