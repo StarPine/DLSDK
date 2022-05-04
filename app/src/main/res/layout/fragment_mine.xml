@@ -380,7 +380,7 @@
                                             android:layout_marginStart="5dp"
                                             android:layout_toEndOf="@+id/mine_vip_icon_text"
                                             android:includeFontPadding="false"
-                                            android:text="PlayFun Privileges"
+                                            android:text="@string/playfun_mine_vip_hint"
                                             android:textColor="#ff6b3f24"
                                             android:textSize="13sp" />
 

@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android-Project/PlayFun_Google/app/src/main/res/layout/fragment_mine.xml" value="0.1" />
         <entry key="..\:/Android-Project/PlayFun_Google/app/src/playChat/res/layout/dialog_home_accost_list.xml" value="0.1" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/AlivcMedia/src/main/res/layout/alivc_media_activity_media_import.xml" value="0.24895833333333334" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/AliyunCrop/crop/src/main/res/layout/alivc_crop_activity_media.xml" value="0.24895833333333334" />
@@ -27,8 +28,6 @@
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/status_empty_ic.xml" value="0.2025" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/activity_call_audio_chating.xml" value="0.14" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/activity_call_video.xml" value="0.24114583333333334" />
-        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/activity_call_waiting2.xml" value="0.15989583333333332" />
-        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/activity_video_perset.xml" value="0.15989583333333332" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/alert_address.xml" value="0.25" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/alert_audio_success.xml" value="0.33" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/alert_daily_attendance_success.xml" value="0.1875" />

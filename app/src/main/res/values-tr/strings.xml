@@ -34,8 +34,8 @@
     <string name="playfun_user_detail_profile_lock">%1$s kısıtlama ayarladı ve %2$s onayladıktan sonra ancak verileri görüntüleyebilirsiniz</string>
     <string name="playfun_user_detail_profile_lock_sended">Başvuru gönderildi ve karşı taraf onayladıktan sonra bir hatırlatma mesajı alacaksınız.</string>
     <string name="playfun_user_detail_paying_user">Ödeme yaparak platforma katıldı.</string>
-    <string name="playfun_user_detail_height">Boy</string>
-    <string name="playfun_user_detail_weight">Kilo</string>
+    <string name="playfun_user_detail_height">Yükseklik</string>
+    <string name="playfun_user_detail_weight">Ağırlık</string>
     <string name="playfun_user_detail_resident_city">Yaşadığınız şehir</string>
     <string name="playfun_user_detail_hope_obj">Beklentiniz</string>
     <string name="playfun_user_detail_self_intro">Hakkımda</string>
@@ -812,12 +812,12 @@
     <string name="playfun_text_accost_error3">Bir sonraki sohbet başlatmaya\n</string>
     <string name="playfun_text_accost_empty">Bugünkü haklar tükendi\nLütfen yarın tekrar gelin</string>
     <string name="playfun_text_accost_hint">Değiştir</string>
-    <string name="playfun_tw_money_text">Ruble</string>
+    <string name="playfun_tw_money_text">TRY</string>
     <string name="playfun_tw_money_text1">Gelir</string>
     <string name="playfun_tw_money_text2">Gelir Açıklaması</string>
     <string name="playfun_tw_money_empty">Burası halen bomboş!\nGörevler yaparak, hediyeler alarak, mesajlara yanıt vererek,\nsesli aramalar ve görüntülü aramalar yaparak Elmas elde edebilirsiniz!</string>
     <string name="playfun_gift_bag_number_hint">Miktar:</string>
-    <string name="playfun_gift_bag_text1">İlk yükleme ödülü</string>
+    <string name="playfun_gift_bag_text1">Yükle</string>
     <string name="playfun_gift_bag_more_text">1 tane</string>
     <string name="playfun_gift_bag_more_text1">Bugün, yarın ve daima</string>
     <string name="playfun_gift_bag_more_text2">Sonsuza kadar</string>
@@ -833,7 +833,7 @@
     <string name="playfun_message_deatail_call_video">Görüntülü arama</string>
     <string name="playfun_call_message_deatail_hint">Özel 1v1 sohbete hoş geldiniz</string>
     <string name="playfun_call_message_deatail_time_msg">Çağrı süresi %02d:%02d</string>
-    <string name="playfun_call_message_deatail_girl_txt">%s Ruble arama geliri elde edildi</string>
+    <string name="playfun_call_message_deatail_girl_txt">%s TRY arama geliri elde edildi</string>
     <string name="playfun_call_message_deatail_girl_txt1">gönder</string>
     <string name="playfun_call_message_deatail_girl_txt2">siz</string>
     <string name="playfun_call_message_deatail_girl_txt3">siz</string>
@@ -885,7 +885,9 @@
 
     <string name="playfun_chat_detail_tool_bar_title">Davet kodunu girin</string>
     <string name="playfun_homt_main_lication_title">Konum hizmetleri etkinleştirilmeden, sistem sizinle diğer kullanıcılar arasındaki mesafeyi hesaplayamaz.</string>
-    <string name="playfun_message_hint_all">Merhaba, PlayFun\'a hoş geldiniz, yeni arkadaşlar edinmeden önce, size birkaç şey hatırlatmak istiyoruz: \n1) Lütfen platform kurallarına ve standartlarına uyun, bu kural ve standartlara göre Playfun hesabınıza erişimi sınırlama ve hatta hesabınızı dondurma hakkına sahiptir. \n2) Platformu kullanırken, herhangi bir sorunla karşılaşırsanız, yardıma ihtiyacınız olursa veya değerli görüşlerinizi iletmek isterseniz, lütfen Kişisel Merkez\'deki Kişisel  Müşteri Hizmetleri ile iletişime geçiniz. "Arkadaşlık insanları güçlendirir!" bizim felsefemizdir. Playfun\'da değerli arkadaşlıklar bulmanızı umar ve iyi eğlenceler dileriz.</string>
+    <string name="playfun_message_hint_all">Merhaba, yeni arkadaşlar edinmeden önce, size birkaç şey hatırlatmak istiyoruz: \n
+1) Lütfen "Platform Kullanım Şartları" ve "Yayın Açma Kuralları"na uyun, eğer yasadışı içerik yayınlarsanız (örneğin: pornografi, müstehcen ve çıplak içerikler gibi), platform, hesapta kısıtlama yapma hakkına sahiptir ve hatta hesabınızı dondurabilir. \n
+2) Platformu kullanırken, herhangi bir sorunla karşılaşırsanız, yardıma ihtiyacınız olursa veya değerli görüşlerinizi iletmek isterseniz, lütfen Kişisel Merkez -  Müşteri Hizmetleri adımlarını izleyerek bizimle iletişime geçiniz.</string>
     <string name="playfun_edit_profile_weight_empty">Kilo</string>
     <string name="playfun_edit_profile_height_empty">Boy</string>
     <string name="playfun_edit_profile_desc_empty">Lütfen kişisel profilinizi doldurun</string>
@@ -947,4 +949,5 @@
     <string name="playfun_blocked_each_other">Karşı tarafı engellediniz, onun ana sayfa içeriğini görüntüleyemezsiniz</string>
     <string name="playfun_accost_same_sex">Aynı cinsiyetten olanla sohbet başlatılamaz</string>
     <string name="playfun_name_number_too_long2">10 kelimeden fazla olamaz</string>
+    <string name="playfun_mine_vip_hint">VIP ayrıcalıkları</string>
 </resources>

@@ -885,7 +885,9 @@
     <string name="playfun_fragment_edit_profile_female">Female</string>
     <string name="playfun_chat_detail_tool_bar_title">Enter the invitation code</string>
     <string name="playfun_homt_main_lication_title">PlayFun can\'t calculate the distance between you and other users without enabling location services</string>
-    <string name="playfun_message_hint_all">Hello, welcome to PlayFun, before we make new friends, we remind you: \n1 Please follow the rules and guidelines of the platform, according to which PlayFun has the right to restrict access to your account and even freeze them. \n2) During the use of the platform, if you need help or valuable advice, please contact the personal customer service of the personal center. Our philosophy is Freeship Powers People! I hope you find valuable friendships and have fun on PlayFun</string>
+    <string name="playfun_message_hint_all">Hi, before making new friends, we warmly inform you:\n
+ 1) Please abide by the "Platform Usage Specifications" and "Broadcast Publication Instructions", if you publish illegal content (such as pornographic and vulgar nudity content, etc.), the platform has the right to restrict the account permissions, and even freeze the account processing. \n
+2) In the process of using the platform, if you encounter any problems and need help or provide valuable advice, please contact the customer service in the personal center to deal with it.</string>
     <string name="playfun_edit_profile_weight_empty">Weight</string>
     <string name="playfun_edit_profile_height_empty">Height</string>
     <string name="playfun_edit_profile_desc_empty">Please fill in the personal profile</string>
@@ -946,4 +948,5 @@
     <string name="playfun_blocked_each_other">They\'ve been blocked and you can\'t view their Page content</string>
     <string name="playfun_accost_same_sex">Can\'t talk to the same sex</string>
     <string name="playfun_name_number_too_long2">Can\'t exceed 10 words</string>
+    <string name="playfun_mine_vip_hint">VIP privileges</string>
 </resources>
