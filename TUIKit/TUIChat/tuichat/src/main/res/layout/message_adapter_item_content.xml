@@ -72,7 +72,7 @@
             android:paddingEnd="5dp"
             android:paddingBottom="1dp"
             android:includeFontPadding="false"
-            android:drawableLeft="@drawable/icon_crystal"
+            android:gravity="center_vertical"
             android:layout_marginTop="3.68dp"
             android:layout_centerHorizontal="true"
             android:textSize="11sp"

@@ -10,6 +10,7 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.ImageSpan;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -40,6 +41,7 @@ import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
 import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
+import com.tencent.qcloud.tuikit.tuichat.ui.view.MyImageSpan;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.MessageRecyclerView;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
@@ -333,10 +335,15 @@ public class MessageTextHolder extends MessageContentHolder {
                                     double total = giftEntity.getProfitTwd() * giftEntity.getAmount();
                                     if (MessageRecyclerView.isCertification()) {
                                         String custom_message_txt2 = rootView.getContext().getString(R.string.profit);
-                                        custom_gift_hint_text.setText(String.format(custom_message_txt2, String.format("%.2f", total)));
+                                        String format = String.format(custom_message_txt2, String.format("%.2f", total));
+                                        SpannableString iconSpannable = new SpannableString(format);
+                                        iconSpannable.setSpan(new MyImageSpan(rootView.getContext(),R.drawable.icon_crystal),0,1,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                        custom_gift_hint_text.setText(iconSpannable);
                                     } else {
-                                        String custom_message_txt2 = rootView.getContext().getString(R.string.profit);
-                                        custom_gift_hint_text.setText(matcherSearchText("#A72DFE", String.format(custom_message_txt2, String.format("%.2f", total)), rootView.getContext().getString(R.string.custom_message_txt1_key)));
+                                        String custom_message_txt2 = rootView.getContext().getString(R.string.custom_message_txt2_test2);
+                                        SpannableString iconSpannable = matcherSearchText("#A72DFE", String.format(custom_message_txt2, String.format("%.2f", total)), rootView.getContext().getString(R.string.custom_message_txt1_key));
+                                        iconSpannable.setSpan(new MyImageSpan(rootView.getContext(),R.drawable.icon_crystal),0,1,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                        custom_gift_hint_text.setText(iconSpannable);
                                         custom_gift_hint_text.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
@@ -441,12 +448,17 @@ public class MessageTextHolder extends MessageContentHolder {
                                     if (Double.valueOf(customIMTextEntity.getPrice()).doubleValue() > 0) {
                                         if (MessageRecyclerView.isCertification()) {
                                             String custom_message_txt2 = rootView.getContext().getString(R.string.profit);
-                                            customHintText.setText(String.format(custom_message_txt2, customIMTextEntity.getPrice()));
+                                            String format = String.format(custom_message_txt2, customIMTextEntity.getPrice());
+                                            SpannableString iconSpannable = new SpannableString(format);
+                                            iconSpannable.setSpan(new MyImageSpan(rootView.getContext(),R.drawable.icon_crystal),0,1,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                            customHintText.setText(iconSpannable);
                                         } else {
-                                            String custom_message_txt2 = rootView.getContext().getString(R.string.profit);
                                             customHintTextLayoutParams2.gravity = Gravity.CENTER;
                                             customHintTextLayoutParams2.rightMargin = dip2px(rootView.getContext(), 0);
-                                            customHintText.setText(matcherSearchText("#A72DFE", String.format(custom_message_txt2, customIMTextEntity.getPrice()), rootView.getContext().getString(R.string.custom_message_txt1_key)));
+                                            String custom_message_txt2 = rootView.getContext().getString(R.string.custom_message_txt2_test2);
+                                            SpannableString iconSpannable = matcherSearchText("#A72DFE", String.format(custom_message_txt2, String.format("%.2f", customIMTextEntity.getPrice())), rootView.getContext().getString(R.string.custom_message_txt1_key));
+                                            iconSpannable.setSpan(new MyImageSpan(rootView.getContext(),R.drawable.icon_crystal),0,1,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                            customHintText.setText(iconSpannable);
                                             customHintText.setOnClickListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {
@@ -640,13 +652,18 @@ public class MessageTextHolder extends MessageContentHolder {
                             custom_message_txt2 = rootView.getContext().getString(R.string.profit);
                             customHintTextLayoutParams.gravity = Gravity.END;
                             customHintTextLayoutParams.rightMargin = dip2px(rootView.getContext(), 62);
-                            customHintText.setText(String.format(custom_message_txt2, customIMTextEntity.getTextProfit()));
+                            String format = String.format(custom_message_txt2, customIMTextEntity.getTextProfit());
+                            SpannableString iconSpannable = new SpannableString(format);
+                            iconSpannable.setSpan(new MyImageSpan(rootView.getContext(),R.drawable.icon_crystal),0,1,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            customHintText.setText(iconSpannable);
                         } else {
                             customIMTextEntity.setEvent(11);
-                            custom_message_txt2 = rootView.getContext().getString(R.string.profit);
                             customHintTextLayoutParams.gravity = Gravity.CENTER;
                             customHintTextLayoutParams.rightMargin = dip2px(rootView.getContext(), 0);
-                            customHintText.setText(matcherSearchText("#A72DFE", String.format(custom_message_txt2, customIMTextEntity.getTextProfit()), rootView.getContext().getString(R.string.custom_message_txt1_key)));
+                            custom_message_txt2 = rootView.getContext().getString(R.string.custom_message_txt1);
+                            SpannableString iconSpannable = matcherSearchText("#A72DFE", String.format(custom_message_txt2, String.format("%.2f", customIMTextEntity.getTextProfit())), rootView.getContext().getString(R.string.custom_message_txt1_key));
+                            iconSpannable.setSpan(new MyImageSpan(rootView.getContext(),R.drawable.icon_crystal),0,1,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            customHintText.setText(iconSpannable);
                         }
                     }
 
@@ -756,6 +773,7 @@ public class MessageTextHolder extends MessageContentHolder {
             }
         }
     }
+
     public void setBackColor(MessageInfo msg) {
         if (properties.getChatContextFontSize() != 0) {
             msgBodyText.setTextSize(properties.getChatContextFontSize());

@@ -62,11 +62,10 @@
         android:paddingTop="1dp"
         android:paddingEnd="5dp"
         android:paddingBottom="1dp"
-        android:drawableLeft="@drawable/icon_crystal"
         android:textSize="11sp"
         android:visibility="gone"
         android:gravity="center_vertical"
-        tools:text="收入"
+        tools:text="@string/custom_message_txt2_test2"
         tools:visibility="visible"
         />
 </LinearLayout>
