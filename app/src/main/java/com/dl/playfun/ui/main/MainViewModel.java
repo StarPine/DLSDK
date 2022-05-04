@@ -340,6 +340,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                                         break;
                                     case "message_gift"://接收礼物
                                         if (map_data.get("is_accost") == null) {//不是搭讪礼物
+                                            uc.giftBanner.call();
                                             if (!AppContext.isCalling){
                                                 GiftEntity giftEntity = IMGsonUtils.fromJson(data, GiftEntity.class);
                                                 //是特效礼物才发送订阅通知事件
@@ -402,6 +403,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<String> clickAccountDialog = new SingleLiveEvent<>();
         //未付费弹窗
         public SingleLiveEvent<String> notPaidDialog = new SingleLiveEvent<>();
+        public SingleLiveEvent<String> giftBanner = new SingleLiveEvent<>();
     }
 
 }

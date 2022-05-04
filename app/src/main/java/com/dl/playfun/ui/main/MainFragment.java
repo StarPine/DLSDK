@@ -2,11 +2,13 @@ package com.dl.playfun.ui.main;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -25,6 +27,7 @@ import com.dl.playfun.entity.GameCoinBuy;
 import com.dl.playfun.entity.VersionEntity;
 import com.dl.playfun.event.MainTabEvent;
 import com.dl.playfun.event.TaskListEvent;
+import com.dl.playfun.kl.view.AudioCallChatingActivity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.tim.TUIUtils;
 import com.dl.playfun.ui.base.BaseFragment;
@@ -98,14 +101,59 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         super.onViewCreated(view, savedInstanceState);
     }
 
+    public int dip2px(float dpValue) {
+        final float scale = mActivity.getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
+    }
+
+    //异步移除view
+    private void postRemoveView(ViewGroup viewGroup, View IiageTrans) {
+        viewGroup.post(new Runnable() {
+            public void run() {
+                mActivity.runOnUiThread(new Runnable() {
+                    public void run() {
+                        viewGroup.removeView(IiageTrans);
+                    }
+                });
+            }
+        });
+    }
+
     @Override
     public void initViewObservable() {
         super.initViewObservable();
         AppContext.instance().logEvent(AppsFlyerEvent.main_open);
+
         //未付费弹窗
         viewModel.uc.notPaidDialog.observe(this,s -> {
 
         });
+        //主页礼物横幅
+        viewModel.uc.giftBanner.observe(this,s -> {
+            View streamerView = View.inflate(MainFragment.this.getContext(), R.layout.fragment_main_gift_banner, null);
+            Animation animation = AnimationUtils
+                    .loadAnimation(MainFragment.this.getContext(), R.anim.anim_main_gift_banner_right_to_left);
+            animation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    postRemoveView(binding.container, streamerView);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                }
+            });
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.gravity= Gravity.CENTER_HORIZONTAL;
+            streamerView.setLayoutParams(layoutParams);
+            binding.container.addView(streamerView);
+            streamerView.startAnimation(animation);
+        });
+
         //搭讪弹窗-今日缘分
         viewModel.uc.clickAccountDialog.observe(this, new Observer<String>() {
             @Override
