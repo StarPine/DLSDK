@@ -107,6 +107,8 @@ public class TraceDialog {
             this.dialog.show();
         } else if (this.CHOOSRTYPE == TypeEnum.SET_MONEY) {
             this.dialog.show();
+        }else {
+            this.dialog.show();
         }
     }
 
@@ -134,6 +136,8 @@ public class TraceDialog {
             this.dialog.dismiss();
         } else if (this.CHOOSRTYPE == TypeEnum.SET_MONEY) {
             this.dialog.dismiss();
+        }else {
+            this.dialog.dismiss();
         }
 
     }
@@ -158,8 +162,6 @@ public class TraceDialog {
         this.titleSize = size;
         return INSTANCE;
     }
-
-
 
     /**
      * 设置确定按钮文案
@@ -272,6 +274,38 @@ public class TraceDialog {
         });
         return bottomDialog;
     }
+
+    /**
+     * 水晶兑换dialog
+     * @return
+     */
+    public Dialog getCrystalExchange() {
+        Dialog bottomDialog = new Dialog(context, R.style.BottomDialog);
+        View contentView = LayoutInflater.from(context).inflate(R.layout.dialog_crystal_exchange, null);
+        bottomDialog.setContentView(contentView);
+        ViewGroup.LayoutParams layoutParams = contentView.getLayoutParams();
+        contentView.setLayoutParams(layoutParams);
+        bottomDialog.getWindow().setGravity(Gravity.CENTER);
+//        bottomDialog.getWindow().setWindowAnimations(R.style.BottomDialog_Animation);
+        Button confirmBtn = contentView.findViewById(R.id.confirm);
+        TextView questionMark = contentView.findViewById(R.id.question_mark);
+        TextView questionMark2 = contentView.findViewById(R.id.question_mark2);
+
+        questionMark.setText("???");
+        questionMark2.setText("???");
+        confirmBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (confirmOnclick != null) {
+                    confirmOnclick.confirm(bottomDialog);
+                }
+                bottomDialog.dismiss();
+            }
+        });
+        return bottomDialog;
+    }
+
+
 
     public Dialog TraceVipDialog() {
         Dialog bottomDialog = new Dialog(context, R.style.BottomDialog);

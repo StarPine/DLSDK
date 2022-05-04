@@ -121,6 +121,17 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
         }
     });
 
+    /**
+     * 水晶兑换规则
+     */
+    public BindingCommand crystalOnClick = new BindingCommand(new BindingAction() {
+            @Override
+            public void call() {
+                uc.clickCrystalExchange.call();
+            }
+    });
+
+
     public ChatDetailViewModel(@NonNull Application application, AppRepository repository) {
         super(application, repository);
         sensitiveWords.set(model.readSensitiveWords());
@@ -771,6 +782,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<Void> clickConnMic = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> imProfit = new SingleLiveEvent<>();
         public SingleLiveEvent clickMore = new SingleLiveEvent<>();
+        public SingleLiveEvent clickCrystalExchange = new SingleLiveEvent<>();
         //对方忙线
         public SingleLiveEvent otherBusy = new SingleLiveEvent<>();
         //新增

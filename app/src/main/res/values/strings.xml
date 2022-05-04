@@ -947,10 +947,12 @@
     <string name="playfun_accost_same_sex">Can\'t talk to the same sex</string>
     <string name="playfun_name_number_too_long2">Can\'t exceed 10 words</string>
 
-    <string name="version_latest">已是最新版本!</string>
-    <string name="mine_setting_desc">無痕與隱藏</string>
+    <string name="playfun_version_latest">已是最新版本!</string>
+    <string name="playfun_mine_setting_desc">無痕與隱藏</string>
     <string name="playfun_mine_face_beauty">美顏</string>
-    <string name="version_update_store_error">請先安裝Google Play商店</string>
+    <string name="playfun_version_update_store_error">請先安裝Google Play商店</string>
+    <string name="playfun_dialog_crystal_exchange_button">我了解了</string>
+    <string name="playfun_dialog_question_mark">---</string>
 
 
 

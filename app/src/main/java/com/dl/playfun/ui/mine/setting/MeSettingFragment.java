@@ -73,7 +73,7 @@ public class MeSettingFragment extends BaseToolbarFragment<FragmentMeSettingBind
                     @Override
                     public void run() {
                         if (versionEntity.getVersion_code().intValue() <= AppConfig.VERSION_CODE.intValue()) {
-                            ToastUtils.showShort(R.string.version_latest);
+                            ToastUtils.showShort(R.string.playfun_version_latest);
                         } else {
                             boolean isUpdate = versionEntity.getIs_update().intValue() == 1;
                             UpdateDialogView.getInstance(mActivity)

@@ -138,6 +138,7 @@
             android:layout_marginTop="@dimen/dp_145"
             android:layout_alignParentRight="true"
             android:layout_marginRight="13dp"
+            onClickCommand="@{viewModel.crystalOnClick}"
             tools:visibility="visible" />
     </RelativeLayout>
 

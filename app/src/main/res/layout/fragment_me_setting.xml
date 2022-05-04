@@ -128,7 +128,7 @@
                         style="@style/ProfileItemSubTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/mine_setting_desc" />
+                        android:text="@string/playfun_mine_setting_desc" />
                 </RelativeLayout>
                 <RelativeLayout
                     style="@style/ProfileItem"

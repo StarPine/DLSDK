@@ -375,6 +375,11 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                         }
                     }).TraceVipDialog().show();
         });
+        //水晶兑换规则
+        viewModel.uc.clickCrystalExchange.observe(this, o -> {
+            TraceDialog.getInstance(ChatDetailFragment.this.getContext()).getCrystalExchange().show();
+        });
+
         viewModel.uc.clickMore.observe(this, new Observer() {
             @Override
             public void onChanged(Object o) {
