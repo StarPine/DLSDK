@@ -84,6 +84,7 @@
                     android:id="@+id/tv_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:visibility="invisible"
                     android:text="@string/playfun_send_red_package_look_photo"
                     android:textColor="#F4B56F"
                     android:textSize="@dimen/text_size_middle" />

@@ -260,7 +260,7 @@ public class EditProfileViewModel extends BaseViewModel<AppRepository> {
             ToastUtils.showShort(R.string.playfun_name_nust);
             return;
         }
-        if (userEntity.getBirthdayCal() == null) {
+        if (userEntity.getBirthday() == null) {
             ToastUtils.showShort(R.string.playfun_brithday_must);
             return;
         }
