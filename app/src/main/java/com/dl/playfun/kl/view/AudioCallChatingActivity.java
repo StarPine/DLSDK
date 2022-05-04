@@ -43,6 +43,7 @@ import com.dl.playfun.kl.Utils;
 import com.dl.playfun.kl.viewmodel.AudioCallChatingViewModel;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.dialog.GiftBagDialog;
+import com.dl.playfun.ui.message.chatdetail.ChatDetailFragment;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.LogUtils;
@@ -170,6 +171,10 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
             public void onChanged(Void unused) {
                 binding.rcvLayout.scrollToPosition(viewModel.adapter.getItemCount() - 1);
             }
+        });
+        //水晶兑换规则
+        viewModel.uc.clickCrystalExchange.observe(this, o -> {
+            TraceDialog.getInstance(AudioCallChatingActivity.this).getCrystalExchange().show();
         });
 
         //破冰文案刷新動畫

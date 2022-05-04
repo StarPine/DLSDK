@@ -12,59 +12,65 @@
     <RelativeLayout
         android:layout_width="260dp"
         android:layout_height="50dp"
-        android:background="@drawable/bg_crystal_exchange"
-        >
+        android:background="@drawable/bg_crystal_exchange">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:text="你可通過水晶兌換"
-            android:textSize="@dimen/text_size_small_12"
             android:textColor="@color/white"
-            />
+            android:textSize="@dimen/text_size_small_12" />
 
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:background="@drawable/bg_grey_exchange"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:layout_marginTop="25dp"
-        >
+        android:layout_marginRight="10dp"
+        android:background="@drawable/bg_grey_exchange"
+        android:gravity="center"
+        android:orientation="horizontal">
+
         <ImageView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
-            android:src="@drawable/icon_bigger_crystal"/>
+            android:layout_weight="1"
+            android:src="@drawable/icon_bigger_crystal" />
+
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="999.00"
-            android:textColor="@color/toolbar_title_color"/>
+            android:textColor="@color/toolbar_title_color" />
+
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="15dp"
-            android:layout_marginLeft="15dp"
+            android:layout_weight="1"
+            android:gravity="center"
             android:text="="
-            android:textColor="@color/toolbar_title_color"/>
+            android:textColor="@color/toolbar_title_color" />
+
         <ImageView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
             android:src="@drawable/icon_cash"
-            android:layout_marginRight="5dp"
 
             />
+
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="200"
-            android:textColor="@color/toolbar_title_color"/>
+            android:textColor="@color/toolbar_title_color" />
 
 
     </LinearLayout>
@@ -72,42 +78,49 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:background="@drawable/bg_grey_exchange"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="25dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="15dp"
-        >
+        android:background="@drawable/bg_grey_exchange"
+        android:gravity="center"
+        android:orientation="horizontal">
+
         <ImageView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
-            android:src="@drawable/icon_bigger_crystal"/>
+            android:layout_weight="1"
+            android:src="@drawable/icon_bigger_crystal" />
+
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="999.00"
-            android:textColor="@color/toolbar_title_color"/>
+            android:textColor="@color/toolbar_title_color" />
+
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="15dp"
-            android:layout_marginLeft="15dp"
+            android:layout_weight="1"
+            android:gravity="center"
             android:text="="
-            android:textColor="@color/toolbar_title_color"/>
+            android:textColor="@color/toolbar_title_color" />
+
         <ImageView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
             android:src="@drawable/icon_cash"
-            android:layout_marginRight="5dp"
 
             />
+
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="200"
-            android:textColor="@color/toolbar_title_color"/>
+            android:textColor="@color/toolbar_title_color" />
 
 
     </LinearLayout>
@@ -115,44 +128,49 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:background="@drawable/bg_grey_exchange"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="25dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="15dp"
-        >
+        android:background="@drawable/bg_grey_exchange"
+        android:gravity="center"
+        android:orientation="horizontal">
+
         <ImageView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/icon_bigger_crystal"/>
+            android:layout_weight="1"
+            android:src="@drawable/icon_bigger_crystal" />
+
         <TextView
             android:id="@+id/question_mark"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/playfun_dialog_question_mark"
-            android:paddingRight="15dp"
-            android:paddingLeft="10dp"
-            android:textColor="@color/toolbar_title_color"/>
+            android:layout_weight="1"
+            android:text="999.00"
+            android:textColor="@color/toolbar_title_color" />
+
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="15dp"
-            android:layout_marginLeft="15dp"
+            android:layout_weight="1"
+            android:gravity="center"
             android:text="="
-            android:textColor="@color/toolbar_title_color"/>
+            android:textColor="@color/toolbar_title_color" />
+
         <ImageView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/icon_cash"
-            android:layout_marginRight="5dp"
-            />
+            android:layout_weight="1"
+            android:gravity="center"
+            android:src="@drawable/icon_cash" />
+
         <TextView
             android:id="@+id/question_mark2"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/playfun_dialog_question_mark"
-            android:textColor="@color/toolbar_title_color"/>
+            android:layout_weight="1"
+            android:text="200"
+            android:textColor="@color/toolbar_title_color" />
 
 
     </LinearLayout>
@@ -162,10 +180,10 @@
         style="@style/ButtonPrimary"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginBottom="25dp"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="25dp"
         android:layout_marginRight="10dp"
+        android:layout_marginBottom="25dp"
         android:text="@string/playfun_dialog_crystal_exchange_button"
         android:textSize="@dimen/text_size_1067"
         android:textStyle="normal" />

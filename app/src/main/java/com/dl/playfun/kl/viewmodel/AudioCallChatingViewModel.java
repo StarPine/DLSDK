@@ -162,6 +162,15 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
             uc.sendUserGiftError.postValue(false);
         }
     });
+    /**
+     * 水晶兑换规则
+     */
+    public BindingCommand crystalOnClick = new BindingCommand(new BindingAction() {
+        @Override
+        public void call() {
+            uc.clickCrystalExchange.call();
+        }
+    });
 
     protected Ifinish mView;
     protected TRTCCalling mTRTCCalling;
@@ -751,6 +760,8 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     }
 
     public class UIChangeObservable {
+        //水晶兑换规则
+        public SingleLiveEvent clickCrystalExchange = new SingleLiveEvent<>();
         //接听成功
         public SingleLiveEvent<Void> callAudioStart = new SingleLiveEvent<>();
         //调用发送礼物弹窗
