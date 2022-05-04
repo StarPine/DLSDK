@@ -99,14 +99,14 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
     /**
      * 彭石林新增--自定义按钮组
      */
-    protected Button sendBtnDisplay;
+    protected ImageView sendBtnDisplay;
     protected ImageView phoneVideoBtn;
     protected ImageView giftBtn;
     protected ImageView callPhoneVideoBtn;
     /**
      * 消息发送按钮
      */
-    protected Button mSendTextButton;
+    protected ImageView mSendTextButton;
     /**
      * 语音长按按钮
      */

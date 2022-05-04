@@ -98,6 +98,7 @@ public class MessageTextHolder extends MessageContentHolder {
     public void layoutVariableViews(MessageInfo msg, int position) {
         msgBodyText.setVisibility(View.VISIBLE);
         chat_system_tip_tv.setVisibility(View.GONE);
+        rootView.findViewById(R.id.content_tip).setVisibility(View.GONE);
         if (msg.getExtra() != null) {
             String text = String.valueOf(msg.getExtra());
             if (TUIChatUtils.isJSON2(text) && text.indexOf("type") != -1) {//做自定义通知判断

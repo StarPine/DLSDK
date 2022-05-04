@@ -54,23 +54,21 @@
             android:text="@string/hold_say"
             android:textColor="@color/text_color_gray"
             android:visibility="gone" />
-        <Button
+        <ImageView
             android:id="@+id/send_btn_display"
-            android:layout_width="67dp"
-            android:layout_height="33dp"
-            android:background="@drawable/custom_send_btn_display"
-            android:text="@string/send"
-            android:textColor="#fff"
-            android:textSize="11sp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/icon_send_normal"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:visibility="visible" />
-        <Button
+        <ImageView
             android:id="@+id/send_btn"
-            android:layout_width="67dp"
-            android:layout_height="33dp"
-            android:background="@drawable/custom_send_btn"
-            android:text="@string/send"
-            android:textColor="#fff"
-            android:textSize="11sp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/icon_send_usable"
             android:visibility="gone" />
 
     </LinearLayout>
