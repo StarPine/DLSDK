@@ -131,8 +131,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
                 msgId = msg.getId();
             }
 
-            int msgType = msg.getMsgType();
-            switch (msgType) {
+            switch (getItemViewType(position)) {
                 case MSG_TYPE_HEADER_VIEW:
                     if (isForwardMode) {
                         ((MessageHeaderHolder) baseHolder).setLoadingStatus(false);
