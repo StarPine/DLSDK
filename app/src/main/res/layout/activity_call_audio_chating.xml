@@ -390,14 +390,20 @@
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             app:autoPlay="true"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/icon_big_crystal"
+        <FrameLayout
+            android:layout_width="36dp"
+            android:layout_height="56dp"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_marginRight="13dp"
             onClickCommand="@{viewModel.crystalOnClick}"
-            tools:visibility="visible" />
+            >
+
+            <com.opensource.svgaplayer.SVGAImageView
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                app:source="floating.svga"
+                app:autoPlay="true"/>
+        </FrameLayout>
     </RelativeLayout>
 </layout>
