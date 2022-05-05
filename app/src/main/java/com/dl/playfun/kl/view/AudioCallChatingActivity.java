@@ -245,7 +245,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                 SpannableString stringBuilder = new SpannableString(call_message_deatail_hint);
                 ForegroundColorSpan blueSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint));
                 stringBuilder.setSpan(blueSpan, 0, call_message_deatail_hint.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                viewModel.putRcvItemMessage(stringBuilder, null, false, false);
+                viewModel.putRcvItemMessage(stringBuilder, null, false);
                 //开始记时
                 TimeCallMessage();
                 setTimerForCallinfo();

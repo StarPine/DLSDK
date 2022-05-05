@@ -22,7 +22,6 @@ public class AudioCallChatingItemViewModel extends MultiItemViewModel<AudioCallC
     public ObservableField<SpannableString> itemText = new ObservableField<>();
     public ObservableField<String> imgPath = new ObservableField<>();
     public ObservableBoolean sendGiftBag = new ObservableBoolean(false);
-    public ObservableBoolean isShowProfit = new ObservableBoolean(false);
 
     public BindingCommand sendGiftBagOnClick = new BindingCommand(new BindingAction() {
         @Override
@@ -34,11 +33,10 @@ public class AudioCallChatingItemViewModel extends MultiItemViewModel<AudioCallC
         }
     });
 
-    public AudioCallChatingItemViewModel(@NonNull AudioCallChatingViewModel viewModel, SpannableString stringBuilder, String img, boolean sendGiftBag, boolean isShowProfit) {
+    public AudioCallChatingItemViewModel(@NonNull AudioCallChatingViewModel viewModel, SpannableString stringBuilder, String img, boolean sendGiftBag) {
         super(viewModel);
         this.itemText.set(stringBuilder);
         this.imgPath.set(img);
         this.sendGiftBag.set(sendGiftBag);
-        this.isShowProfit.set(isShowProfit);
     }
 }

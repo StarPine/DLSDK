@@ -57,6 +57,7 @@ import com.tencent.imsdk.v2.V2TIMMessageReceipt;
 import com.tencent.liteav.trtccalling.model.TRTCCalling;
 import com.tencent.liteav.trtccalling.model.TRTCCallingDelegate;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
+import com.tencent.qcloud.tuikit.tuichat.ui.view.MyImageSpan;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageInfoUtil;
 import com.tencent.trtc.TRTCCloudDef;
 
@@ -307,7 +308,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                         stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 2, 4, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         stringBuilder.setSpan(blueSpan, 5, 5 + nickname.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         stringBuilder.setSpan(blueSpanWhite, startLength, textTip.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        putRcvItemMessage(stringBuilder, giftEntity.getImg(), false, false);
+                        putRcvItemMessage(stringBuilder, giftEntity.getImg(), false);
                         Map<String, Object> mapData = new HashMap<>();
                         mapData.put("account", amount);
                         mapData.put("giftEntity", giftEntity);
@@ -532,7 +533,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                                         SpannableString stringBuilder = new SpannableString(msgText);
                                         ForegroundColorSpan blueSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint2));
                                         stringBuilder.setSpan(blueSpan, 0, msgText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                        putRcvItemMessage(stringBuilder, null, false, false);
+                                        putRcvItemMessage(stringBuilder, null, false);
                                     }
                                 }else if (map_data != null && map_data.get("type") != null && map_data.get("type").equals("message_countdown")) {//对方余额不足
                                     if (!isMale && ConfigManager.getInstance().getTipMoneyShowFlag()) {
@@ -591,7 +592,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
         stringBuilder.setSpan(blueSpanWhite, 0, messageText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint2)), 0, nickNameLength, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint2)), youIndex, youIndex + sexText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        putRcvItemMessage(stringBuilder, giftEntity.getImgPath(), false, false);
+        putRcvItemMessage(stringBuilder, giftEntity.getImgPath(), false);
     }
 
     /**
@@ -601,10 +602,11 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
      */
     private void giftIncome(GiftEntity giftEntity) {
         double total = giftEntity.getAmount().intValue() * giftEntity.getProfitTwd().doubleValue();
-        String itemMessage = String.format(StringUtils.getString(R.string.playfun_coin_earnings_money_add), String.format("%.2f", total));
+        String itemMessage = String.format(StringUtils.getString(R.string.profit), String.format("%.2f", total));
         SpannableString itemMessageBuilder = new SpannableString(itemMessage);
-        itemMessageBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, itemMessage.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        putRcvItemMessage(itemMessageBuilder, null, false,true);
+        itemMessageBuilder.setSpan(new MyImageSpan(getApplication(),R.drawable.icon_crystal),0,1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        itemMessageBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 1, itemMessage.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        putRcvItemMessage(itemMessageBuilder, null, false);
     }
 
 
@@ -754,8 +756,8 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     }
 
     //添加文案到公屏
-    public void putRcvItemMessage(SpannableString stringBuilder, String imgPath, boolean sendGiftBagShow, boolean isShowProfit) {
-        observableList.add(new AudioCallChatingItemViewModel(AudioCallChatingViewModel.this, stringBuilder, imgPath, sendGiftBagShow,isShowProfit));
+    public void putRcvItemMessage(SpannableString stringBuilder, String imgPath, boolean sendGiftBagShow) {
+        observableList.add(new AudioCallChatingItemViewModel(AudioCallChatingViewModel.this, stringBuilder, imgPath, sendGiftBagShow));
         uc.scrollToEnd.postValue(null);
     }
 
@@ -801,7 +803,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                             SpannableString stringBuilder = new SpannableString(msgText);
                             ForegroundColorSpan blueSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint2));
                             stringBuilder.setSpan(blueSpan, 0, msgText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            putRcvItemMessage(stringBuilder, null, false, false);
+                            putRcvItemMessage(stringBuilder, null, false);
                         }
                     }
 
