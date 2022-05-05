@@ -73,7 +73,7 @@
     <string name="playfun_mine_burn">Снимок</string>
     <string name="playfun_mine_burn_recover">Восстановить</string>
     <string name="playfun_set_red_package_photo_tip">Только 1 фото может быть выбрана в качестве платной. Для просмотра необходимо заплатить %s бриллиантов.</string>
-    <string name="playfun_mine_burn_total">%s пользователей просматривали ваши снимки.</string>
+    <string name="playfun_mine_burn_total">%s человек просмотрели</string>
     <string name="playfun_mine_once_ertification">Верифицируйтесь прямо сейчас.</string>
     <string name="playfun_chat_action_location">Место</string>
     <string name="playfun_chat_action_burn">снимок</string>

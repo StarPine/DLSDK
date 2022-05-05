@@ -69,7 +69,7 @@
     <string name="playfun_mine_burn">Anlık Fotoğraf</string>
     <string name="playfun_mine_burn_recover">Tek tıkla kurtar</string>
     <string name="playfun_set_red_package_photo_tip">Kırmızı Zarf resmi olarak en fazla bir fotoğraf seçilebilir ve kullanıcı %s Elmas ödeyerek ancak bunu görüntüleyebilir.</string>
-    <string name="playfun_mine_burn_total">%s kişi Anlık Fotoğrafınızı görüntüledi</string>
+    <string name="playfun_mine_burn_total">%s kişi görüntülendi</string>
     <string name="playfun_mine_once_ertification">Daha fazla kişinin seni tanımasını sağla</string>
     <string name="playfun_chat_action_location">Konum</string>
     <string name="playfun_chat_action_burn">Anlık Fotoğraf</string>
@@ -329,7 +329,7 @@
     <string name="playfun_upload_failed">Yükleme başarısız</string>
     <string name="playfun_reading_after_burn_photo">Anlık Fotoğraf</string>
     <string name="playfun_reading_after_burn_video">Anlık Fotoğraf</string>
-    <string name="playfun_reading_after_burn_red_photo">Kırmızı Zarf Anlık Fotoğrafı</string>
+    <string name="playfun_reading_after_burn_red_photo">Elmas fotoğraf</string>
     <string name="playfun_delete">Sil</string>
     <string name="playfun_please_iput_phone">Lütfen telefon numarasını girin!</string>
     <string name="playfun_conflirm_log_out">Hesaptan çıkmak istediğinizden emin misiniz?</string>
@@ -485,9 +485,9 @@
     <string name="playfun_self">Ben</string>
     <string name="playfun_passed">Geçti</string>
     <string name="playfun_apply_browse">Görüntülemek için başvur</string>
-    <string name="playfun_press_screen_check">Görüntülemek için ekranı basılı tutun</string>
+    <string name="playfun_press_screen_check">Ekrana uzun basın</string>
     <string name="playfun_photo_burned">Fotoğraf silindi</string>
-    <string name="playfun_send_red_package">Kırmızı Zarf gönder</string>
+    <string name="playfun_send_red_package">Göndermek</string>
     <string name="playfun_send_red_package_look_photo">Fotoğrafları görmek için Kırmızı Zarf gönderin</string>
     <string name="playfun_over">Sona erdi</string>
     <string name="playfun_sign_up_your_radio">Etkinliğinize kaydoldu</string>
@@ -833,7 +833,7 @@
     <string name="playfun_message_deatail_call_video">Görüntülü arama</string>
     <string name="playfun_call_message_deatail_hint">Özel 1v1 sohbete hoş geldiniz</string>
     <string name="playfun_call_message_deatail_time_msg">Çağrı süresi %02d:%02d</string>
-    <string name="playfun_call_message_deatail_girl_txt">%s TRY arama geliri elde edildi</string>
+    <string name="playfun_call_message_deatail_girl_txt">%s arama geliri elde edildi</string>
     <string name="playfun_call_message_deatail_girl_txt1">gönder</string>
     <string name="playfun_call_message_deatail_girl_txt2">siz</string>
     <string name="playfun_call_message_deatail_girl_txt3">siz</string>
@@ -847,7 +847,7 @@
     <string name="playfun_call_message_deatail_girl_txt11">Muhabbete devam et</string>
     <string name="playfun_call_message_deatail_girl_txt12">Kapatırsanız, gelir kazanmaya devam edemezsiniz!</string>
     <string name="playfun_call_message_deatail_girl_txt13">Sohbeti bitirilsin mi?</string>
-    <string name="playfun_call_message_deatail_girl_txt14">Bakiye yetersiz, arama %s saniye sonra kesilecek</string>
+    <string name="playfun_call_message_deatail_girl_txt14">Arama %s saniye sonra kesilecek</string>
     <string name="playfun_call_message_deatail_girl_txt15">Sadece kapat</string>
     <string name="playfun_call_message_deatail_girl_txt16">Hediye vermek yakınlık duygusunu artırabilir, gönderin bakalım bir tane hediye!>></string>
     <string name="playfun_call_message_deatail_girl_txt17">Ben</string>

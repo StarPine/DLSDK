@@ -72,7 +72,7 @@
     <string name="playfun_mine_burn">快照</string>
     <string name="playfun_mine_burn_recover">恢復</string>
     <string name="playfun_set_red_package_photo_tip">只可以設定一張紅包照片，用戶支付%s鑽石查看</string>
-    <string name="playfun_mine_burn_total">有%s個人看了你的快照</string>
+    <string name="playfun_mine_burn_total">%s個人看過</string>
     <string name="playfun_mine_once_ertification">讓你更受歡迎</string>
     <string name="playfun_chat_action_location">位置</string>
     <string name="playfun_chat_action_burn">快照</string>

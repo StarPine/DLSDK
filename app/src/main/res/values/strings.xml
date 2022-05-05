@@ -69,7 +69,7 @@
     <string name="playfun_mine_burn">Snapshots</string>
     <string name="playfun_mine_burn_recover">Recover</string>
     <string name="playfun_set_red_package_photo_tip">Only one photo can be selected as a paid photo. Others must pay %s diamonds to view it.</string>
-    <string name="playfun_mine_burn_total">%s users viewed your snapshots.</string>
+    <string name="playfun_mine_burn_total">%s people viewed</string>
     <string name="playfun_mine_once_ertification">Verify now.</string>
     <string name="playfun_chat_action_location">Location</string>
     <string name="playfun_chat_action_burn">Snapshot</string>
