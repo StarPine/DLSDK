@@ -7,6 +7,13 @@
         <entry key="..\:/Android-Project/PlayFun_Google/app/src/playChat/res/layout/dialog_home_accost_list.xml" value="0.1" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/AlivcMedia/src/main/res/layout/alivc_media_activity_media_import.xml" value="0.24895833333333334" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/AliyunCrop/crop/src/main/res/layout/alivc_crop_activity_media.xml" value="0.24895833333333334" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/TUIKit/TUIChat/tuichat/src/main/res/layout/custom_gift_view.xml" value="0.25" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/TUIKit/TUIChat/tuichat/src/main/res/layout/fragment_face.xml" value="0.25226449275362317" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/TUIKit/TUIChat/tuichat/src/main/res/layout/item_face.xml" value="0.25226449275362317" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/TUIKit/TUIChat/tuichat/src/main/res/layout/layout_face_grid.xml" value="0.25226449275362317" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/TUIKit/TUIChat/tuichat/src/main/res/layout/loading_progress_bar.xml" value="0.25226449275362317" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/TUIKit/TUIChat/tuichat/src/main/res/layout/message_adapter_content_text.xml" value="0.25226449275362317" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/TUIKit/TUIChat/tuichat/src/main/res/layout/message_adapter_item_content.xml" value="0.26197916666666665" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/TUIKit/TUIContact/tuicontact/src/main/res/layout/contact_add_activity.xml" value="0.25" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/border_purple_background_white.xml" value="0.199" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/btn_yellow_cicle.xml" value="0.252" />
@@ -28,6 +35,7 @@
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/status_empty_ic.xml" value="0.2025" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/activity_call_audio_chating.xml" value="0.14" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/activity_call_video.xml" value="0.24114583333333334" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/activity_call_waiting2.xml" value="0.26197916666666665" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/alert_address.xml" value="0.25" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/alert_audio_success.xml" value="0.33" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/alert_daily_attendance_success.xml" value="0.1875" />
