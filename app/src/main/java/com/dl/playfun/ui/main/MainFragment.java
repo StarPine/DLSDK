@@ -1,13 +1,18 @@
 package com.dl.playfun.ui.main;
 
 import android.app.Dialog;
+import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -17,6 +22,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.aliyun.svideo.common.utils.ScreenUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
@@ -33,6 +39,7 @@ import com.dl.playfun.tim.TUIUtils;
 import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.ui.dialog.HomeAccostDialog;
 import com.dl.playfun.utils.ImmersionBarUtils;
+import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralPayDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.dl.playfun.widget.dialog.version.view.UpdateDialogView;
@@ -101,11 +108,6 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         super.onViewCreated(view, savedInstanceState);
     }
 
-    public int dip2px(float dpValue) {
-        final float scale = mActivity.getResources().getDisplayMetrics().density;
-        return (int) (dpValue * scale + 0.5f);
-    }
-
     //异步移除view
     private void postRemoveView(ViewGroup viewGroup, View IiageTrans) {
         viewGroup.post(new Runnable() {
@@ -147,10 +149,13 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                 public void onAnimationRepeat(Animation animation) {
                 }
             });
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            layoutParams.gravity= Gravity.CENTER_HORIZONTAL;
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+            int deviceStatusHeight = ScreenUtils.getDeviceStatusHeight(mActivity);
+            layoutParams.setMargins(0,deviceStatusHeight+5,0,0);
             streamerView.setLayoutParams(layoutParams);
             binding.container.addView(streamerView);
+            animation.setInterpolator(new AccelerateInterpolator());
             streamerView.startAnimation(animation);
         });
 

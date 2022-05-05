@@ -160,6 +160,17 @@ public class ScreenUtils {
         return statusBarHeight;
     }
 
+    public static int getDeviceStatusHeight(Context mContext) {
+        int statusID = mContext.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        //>0表示获取成功
+        if (statusID > 0) {
+            return mContext.getResources().getDimensionPixelSize(statusID);
+        }
+
+        return 0;
+
+    }
+
     public static int getDisplayHeight(Activity activity) {
         Rect rect = new Rect();
         if (activity != null) {
