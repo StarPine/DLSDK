@@ -671,7 +671,9 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
                 .setConfirmText(btn1)
                 .setConfirmTwoText(String.format(getString(R.string.playfun_pay_ro_unlock_diamond), coinPrice))
                 .setConfirmOnlick(dialog -> {
-                    dialog.dismiss();
+                    if(dialog!=null){
+                        dialog.dismiss();
+                    }
                     if (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == 1) {
                         viewModel.start(VipSubscribeFragment.class.getCanonicalName());
                     } else {
@@ -679,7 +681,9 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
                     }
                 })
                 .setConfirmTwoOnclick(dialog -> {
-                    dialog.dismiss();
+                    if(dialog!=null){
+                        dialog.dismiss();
+                    }
                     new CoinPaySheet.Builder(mActivity).setPayParams(3, userId, getString(R.string.playfun_unlock_album), false, new CoinPaySheet.CoinPayDialogListener() {
                         @Override
                         public void onPaySuccess(CoinPaySheet sheet, String orderNo, Integer payPrice) {
