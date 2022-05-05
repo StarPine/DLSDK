@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android-Project/PlayFun_Google/app/src/main/res/layout/fragment_mine.xml" value="0.1" />
         <entry key="..\:/Android-Project/PlayFun_Google/app/src/playChat/res/layout/dialog_home_accost_list.xml" value="0.1" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/AlivcMedia/src/main/res/layout/alivc_media_activity_media_import.xml" value="0.24895833333333334" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/AliyunCrop/crop/src/main/res/layout/alivc_crop_activity_media.xml" value="0.24895833333333334" />
@@ -67,7 +68,7 @@
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_home_list.xml" value="0.1875" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_home_main.xml" value="0.11752786220871327" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_issuance_program.xml" value="0.22916666666666666" />
-        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_main.xml" value="0.25" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_main.xml" value="0.43157076205287714" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_message_main.xml" value="0.24114583333333334" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_mine.xml" value="0.25" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/fragment_my_program.xml" value="0.16927083333333334" />
@@ -104,7 +105,6 @@
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/item_sign_message.xml" value="0.33" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/item_sign_up.xml" value="0.25" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/item_trend.xml" value="0.25677083333333334" />
-        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/item_vip_subscribe.xml" value="0.25" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/pickerview_options_dl.xml" value="0.17604166666666668" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/pop_drop_down_filter.xml" value="0.23489583333333333" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/trace_item_park_list.xml" value="0.24114583333333334" />
