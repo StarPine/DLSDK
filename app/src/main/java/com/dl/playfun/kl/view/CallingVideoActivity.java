@@ -45,6 +45,7 @@ import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.event.CallChatingHangupEvent;
 import com.dl.playfun.kl.viewmodel.VideoCallViewModel;
 import com.dl.playfun.manager.ConfigManager;
+import com.dl.playfun.ui.message.chatdetail.ChatDetailFragment;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ChatUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
@@ -263,6 +264,10 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
     @Override
     public void initViewObservable() {
         super.initViewObservable();
+        //水晶兑换规则
+        viewModel.uc.clickCrystalExchange.observe(this, o -> {
+            TraceDialog.getInstance(CallingVideoActivity.this).getCrystalExchange().show();
+        });
 
         //破冰文案刷新動畫
         viewModel.uc.startVideoUpSayHiAnimotor.observe(this, new Observer<Void>() {

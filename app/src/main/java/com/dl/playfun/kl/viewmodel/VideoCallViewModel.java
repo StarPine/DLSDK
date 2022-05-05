@@ -213,6 +213,17 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
         }
     });
 
+
+    /**
+     * 水晶兑换规则
+     */
+    public BindingCommand crystalOnClick = new BindingCommand(new BindingAction() {
+        @Override
+        public void call() {
+            uc.clickCrystalExchange.call();
+        }
+    });
+
     public BindingCommand closeOnclick = new BindingCommand(new BindingAction() {
         @Override
         public void call() {
@@ -832,6 +843,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<GiftEntity> acceptUserGift = new SingleLiveEvent<>();
         //关闭消息
         public SingleLiveEvent<Void> closeViewHint = new SingleLiveEvent<>();
+        public SingleLiveEvent clickCrystalExchange = new SingleLiveEvent<>();
         //滚动到屏幕底部
         public SingleLiveEvent<Void> scrollToEnd = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> startVideoUpSayHiAnimotor = new SingleLiveEvent<>();
