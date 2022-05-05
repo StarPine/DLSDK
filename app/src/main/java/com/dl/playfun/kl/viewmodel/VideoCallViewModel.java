@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.graphics.drawable.Drawable;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
@@ -54,6 +55,7 @@ import com.tencent.imsdk.v2.V2TIMMessageReceipt;
 import com.tencent.liteav.trtccalling.model.TRTCCalling;
 import com.tencent.liteav.trtccalling.model.TUICalling;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
+import com.tencent.qcloud.tuikit.tuichat.ui.view.MyImageSpan;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageInfoUtil;
 
 import org.jetbrains.annotations.NotNull;
@@ -819,10 +821,10 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
      * @param giftEntity
      */
     private void giftIncome(GiftEntity giftEntity) {
-        String itemMessage = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt5), String.format("%.2f", giftEntity.getAmount().intValue() * giftEntity.getProfitTwd().doubleValue()));
+        String itemMessage = String.format(StringUtils.getString(R.string.profit), String.format("%.2f", giftEntity.getAmount().intValue() * giftEntity.getProfitTwd().doubleValue()));
         SpannableString itemMessageBuilder = new SpannableString(itemMessage);
-        itemMessageBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, itemMessage.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        itemMessageBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint1)), itemMessage.indexOf("+"), itemMessage.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        itemMessageBuilder.setSpan(new MyImageSpan(getApplication(),R.drawable.icon_crystal),0,1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        itemMessageBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 1, itemMessage.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         putRcvItemMessage(itemMessageBuilder, null, false);
     }
 
