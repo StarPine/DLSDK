@@ -138,11 +138,15 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
             animation.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
+                    viewModel.playing = true;
                 }
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     postRemoveView(binding.container, streamerView);
+                    viewModel.publicScreenBannerGiftEntity.remove(0);
+                    viewModel.playing = false;
+                    viewModel.playBannerGift();
                 }
 
                 @Override

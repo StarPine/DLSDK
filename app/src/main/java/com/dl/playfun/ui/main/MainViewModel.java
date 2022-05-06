@@ -65,8 +65,10 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
     public ObservableField<String> lockPassword = new ObservableField<>("");
     public ObservableField<Boolean> isHaveRewards = new ObservableField<>(false);
     public List<BannerItemEntity> bannerEntity;
+    public List<String> publicScreenBannerGiftEntity = new ArrayList<>();
     public LikeRecommendEntity likeRecommendEntity;
     public boolean isNewUser = false;
+    public boolean playing = false;
     UIChangeObservable uc = new UIChangeObservable();
     //退出登录
     public BindingCommand logoutOnClickCommand = new BindingCommand(() -> uc.clickLogout.call());
@@ -340,7 +342,8 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                                         break;
                                     case "message_gift"://接收礼物
                                         if (map_data.get("is_accost") == null) {//不是搭讪礼物
-                                            uc.giftBanner.call();
+                                            publicScreenBannerGiftEntity.add("1");
+                                            playBannerGift();
                                             if (!AppContext.isCalling){
                                                 GiftEntity giftEntity = IMGsonUtils.fromJson(data, GiftEntity.class);
                                                 //是特效礼物才发送订阅通知事件
@@ -357,6 +360,12 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                 }
             }
         });
+    }
+
+    public void playBannerGift(){
+        if (publicScreenBannerGiftEntity.size() > 0 && !playing){
+            uc.giftBanner.call();
+        }
     }
 
     public void getSensitiveWords() {
