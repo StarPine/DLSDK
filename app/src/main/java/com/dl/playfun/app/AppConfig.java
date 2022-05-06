@@ -14,7 +14,7 @@ public class AppConfig {
     public static final Integer VERSION_CODE = 100;
     public static final String VERSION_NAME = "PlayFun";
     //上报
-    public static final String VERSION_NAME_PUSH = "1.0.1-beta";
+    public static final String VERSION_NAME_PUSH = "1.0.1";
     /**
      * 腾讯IM Appkey
      */

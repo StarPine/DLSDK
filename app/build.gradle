@@ -226,6 +226,36 @@ android {
             // 版本名
             versionName "1.0.1-beta"
         }
+        pplayFunOnkey101{
+            signingConfig signingConfigs.playFunDebug
+            dimension "distribute"
+            // 腾讯IM App KEY
+            buildConfigField "int", "IM_APP_KEY", "1400413943"//"1400510510"
+            // 腾讯IM FCM离线推送ID
+            //buildConfigField "int", "GOOGLE_FCM_PUSH_BUZID", "13127"17321
+            buildConfigField "int", "GOOGLE_FCM_PUSH_BUZID", "18414"
+            // 服务端接口HOST
+            buildConfigField "String", "API_BASE_URL", "\"https://api.playfungame.net/\""
+//            buildConfigField "String", "API_BASE_URL", "\"https://t-api.play-chat.net/\""
+            // 图片HOST
+            buildConfigField "String", "IMAGE_BASE_URL", "\"https://img.playfungame.net/\""
+            //H5网页地址
+            buildConfigField "String", "WEB_BASE_URL", "\"https://m.playfungame.net/\""
+            // Ali OSS BucketName
+            buildConfigField "String", "BUCKET_NAME", "\"joymask\""
+            //app名字
+            resValue "string","app_name","PlayFun-beta"
+            //Facebook APPID
+            resValue "string","facebook_app_id","5173832349346696"
+            //Flyerid
+            resValue "string","app_flyer","J4YbG6jNVHaFWuAeixmCuC"
+            //facebook 登录key
+            resValue "string","fb_login_protocol_scheme","fb5173832349346696"
+            // 版本号
+            versionCode 10
+            // 版本名
+            versionName "1.0.1"
+        }
 
     }
     //模块化设计方案 sourceSets配置

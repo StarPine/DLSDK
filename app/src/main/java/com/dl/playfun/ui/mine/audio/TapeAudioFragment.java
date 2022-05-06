@@ -5,7 +5,9 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,6 +35,7 @@ import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 
 import java.io.File;
+import java.math.BigDecimal;
 
 import me.goldze.mvvmhabit.bus.RxBus;
 
@@ -43,34 +46,24 @@ import me.goldze.mvvmhabit.bus.RxBus;
  */
 public class TapeAudioFragment extends BaseFragment<FragentTapeAudioBinding,TapeAudioViewModel> {
 
-    private final Handler myHandler = new Handler();
 
     private final String default_time_text = "00:00/00:20";
     private final int MaxTime = 20;
     private int startTime = 0;
-    public Runnable mRunnable = new Runnable() {
-        @Override
-        public void run() {
-            startTime++;
-            if(startTime>=MaxTime){
-                stopAudioCall();
-                binding.circleRecordSurfaceView.stopDraw();
-            }else{
-                myHandler.postDelayed(this,1000);
-            }
-            binding.myTime.setText("00:"+getTimeText(startTime)+"/00:20");
-        }
-    };
+    private CountDownTimer downTimer;
     private boolean deleteFlag = false;
     private String playPath = null;
     private int playgDuration = 0;
 
     public  String getTimeText(int time) {
         String val = "";
-        if(startTime<10){
+        if(time<10){
             val = "0"+time;
         }else{
-            val = String.valueOf(time);
+            if(time>MaxTime){
+                time  =MaxTime;
+            }
+            val = time+"";
         }
         return val;
     }
@@ -123,12 +116,6 @@ public class TapeAudioFragment extends BaseFragment<FragentTapeAudioBinding,Tape
 
         }
 
-        binding.circleRecordSurfaceView.setDuration(6);
-        binding.circleRecordSurfaceView.setStartBitmap(R.drawable.audio_backdrop_img_start);
-        binding.circleRecordSurfaceView.setStopBitmap(R.drawable.audio_backdrop_img_stop);
-        binding.circleRecordSurfaceView.setArcColor(ContextCompat.getColor(getContext(), R.color.circle_border_z));
-        binding.circleRecordSurfaceView.setSmallCircleColor(ContextCompat.getColor(getContext(), R.color.white));
-        binding.circleRecordSurfaceView.setDefaultRadius(50);
         binding.circleRecordSurfaceView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -138,8 +125,7 @@ public class TapeAudioFragment extends BaseFragment<FragentTapeAudioBinding,Tape
                         startAudioCall();
                         binding.myTime.setText(default_time_text);
                         binding.myTime.setVisibility(View.VISIBLE);
-                        binding.circleRecordSurfaceView.startDraw();
-                        myHandler.postDelayed(mRunnable,1000);
+                        startAudio();
                         deleteFlag = false;
                         AppContext.instance().logEvent(AppsFlyerEvent.voice_record);
                         break;
@@ -152,17 +138,17 @@ public class TapeAudioFragment extends BaseFragment<FragentTapeAudioBinding,Tape
                             startTime = 0;
                             deleteFlag = true;
                         } else {
-                            binding.circleRecordSurfaceView.reset();
-                            binding.circleRecordSurfaceView.stopDraw();
-                            myHandler.removeCallbacks(mRunnable);
-                            binding.circleRecordSurfaceView.setVisibility(View.GONE);
+                            binding.circleRecordSurfaceView.resetView();
+                            binding.startAudio.setImageResource(R.drawable.audio_backdrop_img_start);
+                            stopAudio();
+                            binding.audioLayoutTouch.setVisibility(View.GONE);
                             binding.audioStartLayout.setVisibility(View.GONE);
                             binding.audioSuccessLayout.setVisibility(View.VISIBLE);
                         }
                         binding.myTime.setVisibility(View.GONE);
-                        binding.circleRecordSurfaceView.reset();
-                        binding.circleRecordSurfaceView.stopDraw();
-                        myHandler.removeCallbacks(mRunnable);
+                        binding.circleRecordSurfaceView.resetView();
+                        binding.startAudio.setImageResource(R.drawable.audio_backdrop_img_start);
+                        stopAudio();
                         break;
                     default:
                         break;
@@ -178,9 +164,10 @@ public class TapeAudioFragment extends BaseFragment<FragentTapeAudioBinding,Tape
                     binding.startPlay.setImageResource(R.drawable.audio_backdrop_img_start_play);
                     AudioPlayer.getInstance().stopPlay();
                 }
+                binding.circleRecordSurfaceView.setVisibility(View.VISIBLE);
                 binding.audioSuccessLayout.setVisibility(View.GONE);
                 binding.audioStartLayout.setVisibility(View.VISIBLE);
-                binding.circleRecordSurfaceView.setVisibility(View.VISIBLE);
+                binding.audioLayoutTouch.setVisibility(View.VISIBLE);
             }
         });
         //播放按钮
@@ -227,7 +214,7 @@ public class TapeAudioFragment extends BaseFragment<FragentTapeAudioBinding,Tape
                     if(success){
                         playPath = AudioPlayer.getInstance().getPath();
                         playgDuration = AudioPlayer.getInstance().getDuration();
-                        binding.myTime.setText(getTimeText(playgDuration));
+                        binding.myTime.setText("00:"+getTimeText(playgDuration>=MaxTime?MaxTime:playgDuration)+"/00:20");
                     }
                 }
             }
@@ -272,6 +259,50 @@ public class TapeAudioFragment extends BaseFragment<FragentTapeAudioBinding,Tape
         super.onDestroy();
         if (AudioPlayer.getInstance().isPlaying()) {
             AudioPlayer.getInstance().stopPlay();
+        }
+    }
+
+    public void startAudio(){
+        /**
+         * 倒计时15秒，一次1秒
+         */
+        downTimer = new CountDownTimer(20 * 1000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                startTime ++;
+                BigDecimal result1 = new BigDecimal(millisUntilFinished);
+                BigDecimal divideBigDecimal = result1.divide(new BigDecimal(20000),2,BigDecimal.ROUND_FLOOR);
+                binding.circleRecordSurfaceView.setProgress(divideBigDecimal.floatValue());
+                int val =(int)(20000-millisUntilFinished)/1000;
+                binding.myTime.setText("00:"+getTimeText(val>=MaxTime?MaxTime:val)+"/00:20");
+                Log.e("当前倒计时",millisUntilFinished+"========="+val+"======"+startTime);
+            }
+
+            @Override
+            public void onFinish() {
+                stopAudioCall();
+                if (startTime < 5) {
+                    ToastUtil.toastShortMessage(StringUtils.getString(R.string.playfun_tape_audio_error_text));
+                    //ToastCenterUtils.showShort(R.string.tape_audio_error_text);
+                    //ToastUtils.showShort(R.string.tape_audio_error_text);
+                    startTime = 0;
+                    deleteFlag = true;
+                } else {
+                    binding.circleRecordSurfaceView.resetView();
+                    binding.circleRecordSurfaceView.setVisibility(View.GONE);
+                    binding.audioStartLayout.setVisibility(View.GONE);
+                    binding.audioSuccessLayout.setVisibility(View.VISIBLE);
+                }
+                binding.circleRecordSurfaceView.resetView();
+                binding.startAudio.setImageResource(R.drawable.audio_backdrop_img_start);
+                stopAudio();
+            }
+        };
+        downTimer.start();
+    }
+    public void stopAudio(){
+        if(downTimer!=null){
+            downTimer.cancel();
         }
     }
 

@@ -108,8 +108,10 @@ public class GiftBagDialog extends BaseDialog {
     }
 
     public void setBalanceValue(int balanceValue){
-
-        balance_value.setText(maleBalance - balanceValue+"");
+        balance_value.post(()->{
+            balance_value.setText((maleBalance - balanceValue)+"");
+            maleBalance = maleBalance-balanceValue;
+        });
     }
 
     public void show() {

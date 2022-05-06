@@ -35,7 +35,7 @@
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/status_empty_ic.xml" value="0.2025" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/activity_call_audio_chating.xml" value="0.14" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/activity_call_video.xml" value="0.24114583333333334" />
-        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/activity_call_waiting2.xml" value="0.26197916666666665" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/activity_call_waiting2.xml" value="0.2" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/alert_address.xml" value="0.25" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/alert_audio_success.xml" value="0.33" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/alert_daily_attendance_success.xml" value="0.1875" />
@@ -48,6 +48,7 @@
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_city_choose.xml" value="0.28802083333333334" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_email_login_activity.xml" value="0.33" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_exchange_integral.xml" value="0.22916666666666666" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_gift_bag.xml" value="0.1466565349544073" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_home_accost_list.xml" value="0.2536136662286465" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_login_fragment.xml" value="0.22239583333333332" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_login_horizontal_fragment.xml" value="0.25" />

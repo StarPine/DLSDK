@@ -179,6 +179,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:orientation="horizontal"
+                android:gravity="center_horizontal"
                 android:visibility="@{safeUnbox(viewModel.isCallBinding) ? View.VISIBLE:View.GONE}"
                 tools:visibility="gone"
                 >
