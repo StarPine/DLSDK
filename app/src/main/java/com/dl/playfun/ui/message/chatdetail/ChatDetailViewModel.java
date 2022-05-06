@@ -120,6 +120,13 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
             uc.clickMore.call();
         }
     });
+    public BindingCommand noteOnClickCommand = new BindingCommand(new BindingAction() {
+        @Override
+        public void call() {
+
+        }
+    });
+
 
     /**
      * 水晶兑换规则

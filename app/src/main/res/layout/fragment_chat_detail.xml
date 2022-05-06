@@ -87,6 +87,18 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/iv_setting"
+                        android:src="@drawable/icon_notepad"
+                        android:layout_marginRight="10dp"
+                        binding:onClickCommand="@{viewModel.noteOnClickCommand}"
+                        android:visibility="gone"
+                        />
+
+                    <ImageView
+                        android:id="@+id/iv_setting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:src="@drawable/ic_toolbar_more"
@@ -108,17 +120,11 @@
                 android:layout_height="wrap_content"
                 android:text="@string/playfun_chat_detail_warn" />
 
-            <androidx.core.widget.NestedScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/container_background"
-                android:fillViewport="true">
 
-                <com.tencent.qcloud.tuikit.tuichat.ui.view.ChatView
-                    android:id="@+id/chat_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-            </androidx.core.widget.NestedScrollView>
+            <com.tencent.qcloud.tuikit.tuichat.ui.view.ChatView
+                android:id="@+id/chat_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
         </LinearLayout>
 
         </LinearLayout>
