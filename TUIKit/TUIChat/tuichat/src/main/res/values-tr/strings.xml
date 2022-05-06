@@ -145,7 +145,7 @@
     <string name="custom_send_error_message_txt2">Şimdi al>></string>
     <string name="custom_message_txt1">Gelir +%s. Gerçek kişi doğrulaması ile gelir ikiye katlanır. Doğrulamaya git>></string>
     <string name="custom_message_txt1_key">Doğrulamaya git>></string>
-    <string name="custom_message_txt2">Geliriniz: +%s.</string>
+    <string name="custom_message_txt2">Geliriniz: +%s</string>
     <string name="custom_message_txt2_test2">Geliriniz +%s NTD, gerçek kişi kimlik doğrulamasından sonra gelir iki katına çıkar Kimlik doğrulamaya gidin</string>
     <string name="custom_message_txt3">Onun bakiyesi yetersiz. Lütfen ona yükleme yapmasını hatırlatın.</string>
     <string name="custom_message_txt4">takip et</string>
