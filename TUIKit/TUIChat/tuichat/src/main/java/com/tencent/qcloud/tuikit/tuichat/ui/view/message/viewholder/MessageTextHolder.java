@@ -1,5 +1,6 @@
 package com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
@@ -93,6 +94,7 @@ public class MessageTextHolder extends MessageContentHolder {
         chat_system_tip_tv = rootView.findViewById(R.id.chat_system_tip_tv);
     }
 
+    @SuppressLint("StringFormatInvalid")
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void layoutVariableViews(MessageInfo msg, int position) {
@@ -311,21 +313,22 @@ public class MessageTextHolder extends MessageContentHolder {
                         }
                         if (msg.isSelf()) {
                             gift_title.setText(rootView.getContext().getString(R.string.custom_gift_left_title));
-                            gift_title.setTextColor(rootView.getContext().getColor(R.color.gift_right_color));
-                            gift_text.setTextColor(rootView.getContext().getColor(R.color.gift_right_txt_color));
+                            gift_title.setTextColor(rootView.getResources().getColor(R.color.gift_right_color));
+                            gift_text.setTextColor(rootView.getResources().getColor(R.color.gift_right_txt_color));
                             custom_gift_layout.setBackground(rootView.getContext().getDrawable(R.drawable.custom_right_gift_backdrop));
                             GiftView.findViewById(R.id.custom_gift_hint_text).setVisibility(View.GONE);
                         } else {
                             gift_title.setText(rootView.getContext().getString(R.string.custom_gift_right_title));
-                            gift_title.setTextColor(rootView.getContext().getColor(R.color.gift_left_color));
-                            gift_text.setTextColor(rootView.getContext().getColor(R.color.gift_left_txt_color));
+                            gift_title.setTextColor(rootView.getResources().getColor(R.color.gift_left_color));
+                            gift_text.setTextColor(rootView.getResources().getColor(R.color.gift_left_txt_color));
                             custom_gift_layout.setBackground(rootView.getContext().getDrawable(R.drawable.custom_left_gift_backdrop));
                             TextView custom_gift_hint_text = GiftView.findViewById(R.id.custom_gift_hint_text);
                             custom_gift_hint_text.setVisibility(View.VISIBLE);
                             if (MessageRecyclerView.sex) {
                                 if (giftEntity.getProfitDiamond() != null) {
                                     String custom_message_txt7 = rootView.getContext().getString(R.string.custom_message_txt7);
-                                    custom_gift_hint_text.setText(String.format(custom_message_txt7, giftEntity.getProfitDiamond() * giftEntity.getAmount()));
+                                    String custom_message_txt7_val = (giftEntity.getProfitDiamond() * giftEntity.getAmount())+"";
+                                    custom_gift_hint_text.setText(String.format(custom_message_txt7, custom_message_txt7_val));
                                 }
                             } else {
                                 if (giftEntity.getProfitTwd() != null) {
