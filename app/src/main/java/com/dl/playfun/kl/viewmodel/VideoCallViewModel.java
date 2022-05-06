@@ -103,6 +103,8 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
     // 未接听时的收入提示（黄色字体）
     public ObservableField<String> callHintBinding = new ObservableField<>("");
     public ObservableField<Boolean> mainVIewShow = new ObservableField<>(false);
+    //防录屏提示开关
+    public ObservableField<Boolean> tipSwitch = new ObservableField(true);
     protected JMTUICallVideoView mCallVideoView;
     public String mfromUserId;
     public String mtoUserId;

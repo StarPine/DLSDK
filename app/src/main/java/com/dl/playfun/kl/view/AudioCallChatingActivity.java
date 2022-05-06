@@ -653,6 +653,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                 mTimeCount++;
                 viewModel.TimeCount++;
                 viewModel.timeTextField.set(mContext.getString(R.string.playfun_call_message_deatail_time_msg, mTimeCount / 60, mTimeCount % 60));
+                if (mTimeCount>=5){viewModel.tipSwitch.set(false);}
                 if (mTimeCount % 30 == 0){
                     viewModel.getRoomStatus(roomId);
                 }

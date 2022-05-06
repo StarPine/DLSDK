@@ -43,6 +43,7 @@
             android:textSize="12sp" />
 
         <ImageView
+            android:id="@+id/iv_close"
             android:layout_width="19dp"
             android:layout_height="19dp"
             android:layout_alignParentTop="true"
@@ -51,6 +52,19 @@
             android:layout_marginRight="14dp"
             android:onClick="@{viewModel.closeOnclick}"
             android:src="@drawable/call_close" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:layout_below="@+id/iv_close"
+            android:text="@string/playfun_chat_detail_warn"
+            android:textSize="@dimen/text_size_middle"
+            android:textColor="@color/text_yellow"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:visibility="@{viewModel.tipSwitch?View.VISIBLE:View.GONE}"
+            android:padding="5dp"/>
+
 
         <RelativeLayout
             android:id="@+id/tip_img_layout"

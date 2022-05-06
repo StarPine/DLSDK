@@ -7,6 +7,7 @@
     <color name="transparent">#00000000</color>
     <color name="transparentyin">#80B4B9BC</color>
     <color name="ic_default_bg_color">#33000000</color>
+    <color name="text_yellow">#FFB400</color>
 
     <color name="window_background">#F8F8F8</color>
     <color name="container_background">#F8F8F8</color>

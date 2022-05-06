@@ -119,6 +119,8 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     //余额不足提示标记
     public boolean flagMoneyNotWorth = false;
     public ObservableField<Boolean> isShowCountdown = new ObservableField(false);
+    //防录屏提示开关
+    public ObservableField<Boolean> tipSwitch = new ObservableField(true);
     //价格配置表
     public List<CallingInfoEntity.CallingUnitPriceInfo> unitPriceList;
 

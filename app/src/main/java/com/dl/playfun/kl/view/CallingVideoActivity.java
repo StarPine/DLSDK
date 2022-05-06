@@ -818,6 +818,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                 mTimeCount++;
                 viewModel.TimeCount++;
                 viewModel.timeTextField.set(mContext.getString(R.string.playfun_call_message_deatail_time_msg, mTimeCount / 60, mTimeCount % 60));
+                if (mTimeCount>=5){viewModel.tipSwitch.set(false);}
                 if (!viewModel.sayHiEntityHidden.get() && mTimeCount % 10 == 0) {
                     //没10秒更新一次破冰文案
                     viewModel.getSayHiList();

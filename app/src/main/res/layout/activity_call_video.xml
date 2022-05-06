@@ -400,6 +400,18 @@
                 android:layout_marginRight="17dp"
                 android:src="@drawable/call_video_close"
                 binding:onClickCommand="@{viewModel.closeOnclick}" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:layout_below="@+id/img_closes"
+                android:text="@string/playfun_chat_detail_warn"
+                android:textSize="@dimen/text_size_middle"
+                android:textColor="@color/text_yellow"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:visibility="@{viewModel.tipSwitch?View.VISIBLE:View.GONE}"
+                android:padding="5dp"/>
 
             <ImageView
                 android:layout_width="31dp"
