@@ -130,7 +130,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         viewModel.uc.notPaidDialog.observe(this,s -> {
 
         });
-        //主页礼物横幅
+        //主页公屏礼物
         viewModel.uc.giftBanner.observe(this,s -> {
             View streamerView = View.inflate(MainFragment.this.getContext(), R.layout.fragment_main_gift_banner, null);
             Animation animation = AnimationUtils
@@ -138,12 +138,13 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
             animation.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
-                    viewModel.playing = true;
+
                 }
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     postRemoveView(binding.container, streamerView);
+                    if (viewModel.publicScreenBannerGiftEntity.size()>0)
                     viewModel.publicScreenBannerGiftEntity.remove(0);
                     viewModel.playing = false;
                     viewModel.playBannerGift();
@@ -161,6 +162,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
             binding.container.addView(streamerView);
             animation.setInterpolator(new AccelerateInterpolator());
             streamerView.startAnimation(animation);
+            viewModel.playing = true;
         });
 
         //搭讪弹窗-今日缘分
