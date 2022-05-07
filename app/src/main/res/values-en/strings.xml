@@ -281,7 +281,7 @@
     <string name="playfun_program_must">Event is required</string>
     <string name="playfun_hope_object_must">Expectation is required</string>
     <string name="playfun_line_must">Enter the social account</string>
-    <string name="playfun_line_error_hanzi">The LINE ID is wrong.</string>
+    <string name="playfun_line_error_hanzi">The ID is wrong.</string>
     <string name="playfun_updata_head_success">Avatar changed</string>
     <string name="playfun_please_input_code">Verification code</string>
     <string name="playfun_send_code">Get code</string>
@@ -612,9 +612,9 @@
     <string name="playfun_vip_free_chat">Subscribe to VIP to chat for free.</string>
     <string name="playfun_goddess_free_chat">Get Queen Verification to chat for free.</string>
     <string name="playfun_pay_coin_chat">Pay to view and chat (%s diamonds)</string>
-    <string name="playfun_line_name">Line</string>
+    <string name="playfun_line_name">Facebook</string>
     <string name="playfun_insgram_name">Instagram</string>
-    <string name="playfun_edit_profile_line_input_hint">Enter LINE account</string>
+    <string name="playfun_edit_profile_line_input_hint">Enter Facebook account</string>
     <string name="playfun_edit_profile_insgram_input_hint">Enter Instagram account</string>
     <string name="playfun_individual">""</string>
     <string name="playfun_burn_photo_review">Snapshot preview</string>

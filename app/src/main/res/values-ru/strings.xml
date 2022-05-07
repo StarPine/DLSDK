@@ -286,7 +286,7 @@
     <string name="playfun_program_must">Введите событие</string>
     <string name="playfun_hope_object_must">Введите ожидание</string>
     <string name="playfun_line_must">Заполните аккаунт</string>
-    <string name="playfun_line_error_hanzi">Ошибка ID строки.</string>
+    <string name="playfun_line_error_hanzi">Ошибка ID</string>
     <string name="playfun_updata_head_success">Аватар изменен</string>
     <string name="playfun_please_input_code">Код верификации</string>
     <string name="playfun_send_code">Получить код</string>
@@ -618,9 +618,9 @@
     <string name="playfun_vip_free_chat">Статус VIP дает возможность переписываться бесплатно.</string>
     <string name="playfun_goddess_free_chat">Получите верификацию богини, чтобы переписываться бесплатно.</string>
     <string name="playfun_pay_coin_chat">Платить за просмотр и общение в чате (%s бриллиантов)</string>
-    <string name="playfun_line_name">Line</string>
+    <string name="playfun_line_name">Facebook</string>
     <string name="playfun_insgram_name">Instagram</string>
-    <string name="playfun_edit_profile_line_input_hint">Введите аккаунт LINE</string>
+    <string name="playfun_edit_profile_line_input_hint">Введите аккаунт Facebook</string>
     <string name="playfun_edit_profile_insgram_input_hint">Введите аккаунт Instagram</string>
     <string name="playfun_individual"></string>
     <string name="playfun_burn_photo_review">Предпросмотр снимка</string>

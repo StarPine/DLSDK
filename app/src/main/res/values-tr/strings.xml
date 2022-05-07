@@ -279,7 +279,7 @@
     <string name="playfun_program_must">Etkinlik içeriğinin girilmesi gerekir</string>
     <string name="playfun_hope_object_must">Beklentinin girilmesi gerekir</string>
     <string name="playfun_line_must">Lütfen sosyal hesabınızı yazın</string>
-    <string name="playfun_line_error_hanzi">Line ID yanlış!</string>
+    <string name="playfun_line_error_hanzi">ID yanlış!</string>
     <string name="playfun_updata_head_success">Avatar değişimi başarılı</string>
     <string name="playfun_please_input_code">Lütfen doğrulama kodunu girin</string>
     <string name="playfun_send_code">Doğrulama kodunu gönder</string>
@@ -611,9 +611,9 @@
     <string name="playfun_vip_free_chat">VIP olun, ücretsiz özel mesaj gönderin</string>
     <string name="playfun_goddess_free_chat">Kraliçe ol, ücretsiz özel mesaj gönder</string>
     <string name="playfun_pay_coin_chat">Ödeyerek görüntüle ve özel mesaj gönder (%s Elmas)</string>
-    <string name="playfun_line_name">Line</string>
+    <string name="playfun_line_name">Facebook</string>
     <string name="playfun_insgram_name">Instagram</string>
-    <string name="playfun_edit_profile_line_input_hint">Lütfen Line hesabını girin</string>
+    <string name="playfun_edit_profile_line_input_hint">Lütfen Facebook hesabını girin</string>
     <string name="playfun_edit_profile_insgram_input_hint">Lütfen Instagram hesabını girin</string>
     <string name="playfun_individual">tane</string>
     <string name="playfun_burn_photo_review">Anlık Fotoğraf Önizlemesi</string>
