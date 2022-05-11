@@ -955,6 +955,7 @@
     <string name="playfun_version_update_store_error">請先安裝Google Play商店</string>
     <string name="playfun_dialog_crystal_exchange_button">我了解了</string>
     <string name="playfun_dialog_question_mark">---</string>
+    <string name="auth_external_login_btn_next">下一步</string>
 
 
 

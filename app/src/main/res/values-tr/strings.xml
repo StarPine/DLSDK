@@ -951,4 +951,5 @@
     <string name="playfun_name_number_too_long2">10 kelimeden fazla olamaz</string>
     <string name="playfun_mine_vip_hint">VIP ayrıcalıkları</string>
     <string name="playfun_vipsubscribe_item_vip_txt_currency">₺</string>
+    <string name="auth_external_login_btn_next">下一步</string>
 </resources>
