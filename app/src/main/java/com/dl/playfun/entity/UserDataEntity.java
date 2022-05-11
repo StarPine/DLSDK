@@ -60,8 +60,8 @@ public class UserDataEntity extends BaseObservable {
     private int id;
     private String nickname;
     private String avatar;
+    @Bindable
     private String birthday;
-    private transient Calendar birthdayCal;
     @SerializedName("occupation_id")
     private Integer occupationId;
     @SerializedName("program_ids")
@@ -122,10 +122,6 @@ public class UserDataEntity extends BaseObservable {
 
     public void setBirthday(String birthday) {
         this.birthday = birthday;
-    }
-
-    public void setBirthdayCal(Calendar birthdayCal) {
-        this.birthdayCal = birthdayCal;
     }
 
     public Integer getCityId() {
@@ -213,15 +209,6 @@ public class UserDataEntity extends BaseObservable {
     @Bindable
     public String getBirthday() {
         return birthday;
-    }
-
-    public void setBirthday(Calendar calendar) {
-        this.birthday = (calendar.get(Calendar.YEAR)) + "/" + (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.DAY_OF_MONTH) ;
-        notifyPropertyChanged(BR.birthday);
-    }
-
-    public Calendar getBirthdayCal() {
-        return birthdayCal;
     }
 
     @Bindable

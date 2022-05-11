@@ -22,6 +22,7 @@ import com.dl.playfun.databinding.FragmentHomeListBinding;
 import com.dl.playfun.entity.CoinExchangePriceInfo;
 import com.dl.playfun.ui.base.BaseRefreshFragment;
 import com.dl.playfun.ui.home.HomeMainViewModel;
+import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
 
 import me.goldze.mvvmhabit.utils.ToastUtils;
@@ -61,6 +62,7 @@ public class HomeListFragment extends BaseRefreshFragment<FragmentHomeListBindin
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        AutoSizeUtils.applyAdapt(this.getResources());
         return R.layout.fragment_home_list;
     }
 
@@ -73,8 +75,6 @@ public class HomeListFragment extends BaseRefreshFragment<FragmentHomeListBindin
     public void initData() {
         super.initData();
 //        binding.setAdapter(new HomeListRecyclerViewAdapter());
-        //加大rcv缓存机制。再低于500数量的的时候。不会进行复用item
-        binding.rcvLayout.setItemViewCacheSize(500);
     }
 
     @Override

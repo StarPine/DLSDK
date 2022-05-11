@@ -81,7 +81,14 @@ public class HomeMainFragment extends BaseFragment<FragmentHomeMainBinding, Home
         //
         boolean isMale = ConfigManager.getInstance().isMale();
         HomeMainTabPagerAdapter adapter = new HomeMainTabPagerAdapter(mActivity, this.getChildFragmentManager(), !isMale ? AppConfig.MALE : AppConfig.FEMALE, viewModel);
-        binding.viewPager.setOffscreenPageLimit(2);
+        if(isMale){
+            //男缓存3个viewpage
+            binding.viewPager.setOffscreenPageLimit(3);
+        }else{
+            //男缓存2个viewpage
+            binding.viewPager.setOffscreenPageLimit(2);
+        }
+
         binding.viewPager.setAdapter(adapter);
         binding.tabs.setSelectedTabIndicatorHeight(0);
         binding.tabs.setupWithViewPager(binding.viewPager);

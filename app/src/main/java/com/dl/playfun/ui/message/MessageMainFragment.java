@@ -21,6 +21,7 @@ import com.dl.playfun.entity.SystemConfigTaskEntity;
 import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.ui.message.chatmessage.ChatMessageFragment;
 import com.dl.playfun.ui.message.systemmessagegroup.SystemMessageGroupFragment;
+import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.StringUtil;
 
 /**
@@ -32,6 +33,7 @@ public class MessageMainFragment extends BaseFragment<FragmentMessageMainBinding
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        AutoSizeUtils.applyAdapt(this.getResources());
         return R.layout.fragment_message_main;
     }
 

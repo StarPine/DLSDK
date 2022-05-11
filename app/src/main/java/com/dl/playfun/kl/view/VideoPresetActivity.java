@@ -1,5 +1,7 @@
 package com.dl.playfun.kl.view;
 
+import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.widget.ImageView;
 
@@ -7,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.dl.playfun.R;
+import com.dl.playfun.manager.LocaleManager;
 import com.faceunity.nama.FURenderer;
 import com.faceunity.nama.data.FaceUnityDataFactory;
 import com.faceunity.nama.ui.FaceUnityView;
@@ -32,6 +35,29 @@ public class VideoPresetActivity extends AppCompatActivity {
     private String userId = "userInfo";
     private ImageView mCameraChange,mBack;
     private boolean isFrontCamera = true; //是否为前置
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocal(newBase));
+    }
+
+    /**
+     * 就算你在Manifest.xml设置横竖屏切换不重走生命周期。横竖屏切换还是会走这里
+
+     */
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        if(newConfig!=null){
+            LocaleManager.setLocal(this);
+        }
+        super.onConfigurationChanged(newConfig);
+        LocaleManager.setLocal(this);
+    }
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        LocaleManager.setLocal(this);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

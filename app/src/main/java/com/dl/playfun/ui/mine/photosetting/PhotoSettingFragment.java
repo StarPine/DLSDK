@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.entity.AlbumPhotoEntity;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
+import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
@@ -45,6 +46,7 @@ public class PhotoSettingFragment extends BaseToolbarFragment<FragmentPhotoSetti
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        AutoSizeUtils.applyAdapt(this.getResources());
         return R.layout.fragment_photo_setting;
     }
 

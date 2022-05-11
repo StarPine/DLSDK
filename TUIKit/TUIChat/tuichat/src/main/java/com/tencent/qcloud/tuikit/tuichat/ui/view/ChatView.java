@@ -1,5 +1,6 @@
 package com.tencent.qcloud.tuikit.tuichat.ui.view;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ClipData;
@@ -178,6 +179,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
 
     private void loadApplyList() {
         presenter.loadApplyList(new IUIKitCallback<List<GroupApplyInfo>>() {
+            @SuppressLint("StringFormatInvalid")
             @Override
             public void onSuccess(List<GroupApplyInfo> data) {
                 if (data != null && data.size() > 0) {

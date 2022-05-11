@@ -19,11 +19,14 @@ import com.dl.playfun.event.AvatarChangeEvent;
 import com.dl.playfun.event.ProfileChangeEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.utils.ApiUitl;
+import com.dl.playfun.utils.DateUtil;
 import com.dl.playfun.utils.FileUploadUtils;
 import com.dl.playfun.utils.LogUtils;
+import com.dl.playfun.utils.Utils;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.dl.playfun.R;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -177,18 +180,6 @@ public class EditProfileViewModel extends BaseViewModel<AppRepository> {
                         if(userDataEntity.get().getSex() != null){
                             gender.set(StringUtils.getString((userDataEntity.get().getSex() == 0 ? R.string.playfun_fragment_edit_profile_male : R.string.playfun_fragment_edit_profile_female)));
                         }
-                        String birthdayString = userDataEntity.get().getBirthday();
-                        if (!StringUtils.isEmpty(birthdayString)) {
-                            // 数据返回不为空，设置生日
-                            String[] str = birthdayString.split("-");
-                            if (str.length == 3) {
-                                Calendar calendar = Calendar.getInstance();
-                                calendar.set(Calendar.YEAR, Integer.parseInt(str[0]));
-                                calendar.set(Calendar.MONTH, Integer.parseInt(str[1]) - 1);
-                                calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(str[2]));
-                                userDataEntity.get().setBirthday(calendar);
-                            }
-                        }
                         if (!StringUtils.isEmpty(userDataEntity.get().getWeixin())) {
                             lineChoose.set(true);
                         } else if (!StringUtils.isEmpty(userDataEntity.get().getInsgram())) {
@@ -260,7 +251,7 @@ public class EditProfileViewModel extends BaseViewModel<AppRepository> {
             ToastUtils.showShort(R.string.playfun_name_nust);
             return;
         }
-        if (userEntity.getBirthdayCal() == null) {
+        if (userEntity.getBirthday() == null) {
             ToastUtils.showShort(R.string.playfun_brithday_must);
             return;
         }
@@ -276,16 +267,10 @@ public class EditProfileViewModel extends BaseViewModel<AppRepository> {
             }
         }
 
-        // 保存数据
-        String birthdayStr = "";
-        Calendar birthdayCal = userEntity.getBirthdayCal();
-        if (birthdayCal != null) {
-            birthdayStr = birthdayCal.get(Calendar.YEAR) + "-" + (birthdayCal.get(Calendar.MONTH) + 1) + "-" + birthdayCal.get(Calendar.DAY_OF_MONTH);
-        }
         model.updateUserData(
                 userEntity.getNickname(),
                 userEntity.getPermanentCityIds(),
-                birthdayStr,
+                userEntity.getBirthday(),
                 String.valueOf(userEntity.getOccupationId()),
                 userEntity.getProgramIds(),
                 userEntity.getHopeObjectIds(),

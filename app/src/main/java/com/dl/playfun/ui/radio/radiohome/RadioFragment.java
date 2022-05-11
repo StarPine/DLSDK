@@ -422,7 +422,7 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
             }
             if(((Integer)obj.getData()).intValue() == 2){//追踪的人
                 viewModel.type = 1;//发布时间
-                binding.radioFilterView.cityClick(0);
+                binding.radioFilterView.sexClick(0);
                 viewModel.cityId = null;
                 viewModel.gameId = null;
                 viewModel.setIsCollect(1);

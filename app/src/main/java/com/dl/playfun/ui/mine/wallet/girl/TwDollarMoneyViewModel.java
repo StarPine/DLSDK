@@ -129,8 +129,7 @@ public class TwDollarMoneyViewModel extends BaseViewModel<AppRepository> {
                 .subscribe(new BaseObserver<BaseDataResponse<UserProfitPageEntity>>() {
                     @Override
                     public void onSuccess(BaseDataResponse<UserProfitPageEntity> response) {
-                        totalProfits.set(String.valueOf(response.getData().getTotalProfits()));
-                        enableWithdraw.set(response.getData().getEnableWithdraw());
+                        totalProfits.set(String.format("%.2f", response.getData().getTotalProfits()));
                         UserProfitPageEntity.CustomProfitList pageData = response.getData().getUserProfitList();
                     List<UserProfitPageInfoEntity> listData = pageData.getData();
                     if(!ObjectUtils.isEmpty(listData) && listData.size()>0){

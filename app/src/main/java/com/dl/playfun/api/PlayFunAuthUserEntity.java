@@ -2,12 +2,14 @@ package com.dl.playfun.api;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Author: 彭石林
  * Time: 2022/3/29 17:38
  * Description: This is PlayFunAuthUserEntity
  */
-public class PlayFunAuthUserEntity {
+public class PlayFunAuthUserEntity implements Serializable {
     private String authName;
     private String authEmail ;
     //第三方 userId

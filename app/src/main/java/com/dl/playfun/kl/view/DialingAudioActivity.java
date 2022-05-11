@@ -2,7 +2,9 @@ package com.dl.playfun.kl.view;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.lifecycle.Observer;
@@ -14,6 +16,7 @@ import com.dl.playfun.entity.CallingInviteInfo;
 import com.dl.playfun.event.AudioCallingCancelEvent;
 import com.dl.playfun.kl.viewmodel.AudioCallingViewModel2;
 import com.dl.playfun.manager.ConfigManager;
+import com.dl.playfun.manager.LocaleManager;
 import com.dl.playfun.utils.ChatUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.widget.dialog.TraceDialog;
@@ -38,6 +41,28 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
     private Integer roomId;
     private TUICalling.Role role;
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocal(newBase));
+    }
+
+    /**
+     * 就算你在Manifest.xml设置横竖屏切换不重走生命周期。横竖屏切换还是会走这里
+
+     */
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        if(newConfig!=null){
+            LocaleManager.setLocal(this);
+        }
+        super.onConfigurationChanged(newConfig);
+        LocaleManager.setLocal(this);
+    }
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        LocaleManager.setLocal(this);
+    }
 
     @Override
     protected void onResume() {

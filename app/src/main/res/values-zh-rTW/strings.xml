@@ -72,7 +72,7 @@
     <string name="playfun_mine_burn">快照</string>
     <string name="playfun_mine_burn_recover">恢復</string>
     <string name="playfun_set_red_package_photo_tip">只可以設定一張紅包照片，用戶支付%s鑽石查看</string>
-    <string name="playfun_mine_burn_total">有%s個人看了你的快照</string>
+    <string name="playfun_mine_burn_total">%s個人看過</string>
     <string name="playfun_mine_once_ertification">讓你更受歡迎</string>
     <string name="playfun_chat_action_location">位置</string>
     <string name="playfun_chat_action_burn">快照</string>
@@ -941,7 +941,9 @@
 
     <string name="playfun_chat_detail_tool_bar_title">輸入PlayFun邀請碼</string>
     <string name="playfun_homt_main_lication_title">PlayFun 無法在未啟用位置服務的情況下計算您與其他用戶之間的距離</string>
-    <string name="playfun_message_hint_all">您好，歡迎來到 PlayFun，在我們結交新朋友之前，我們提醒您：\n1 請遵守平台規則和準則，根據這些規則和準則，PlayFun 有權限制訪問您的帳戶，甚至凍結他們。 \n2) 平台使用過程中，如有問題需要幫助或寶貴意見，請聯繫個人中心個人客服處理。我們的理念是 Freeship Powers People！我希望你在 PlayFun 上找到了有價值的友誼並玩得開心</string>
+    <string name="playfun_message_hint_all">Hi，在結交新朋友前，我們溫馨提醒您：\n
+1） 請遵守《平臺使用規範》和《廣播發佈須知》，若發佈違規內容（如：色情低俗裸露內容等），平臺有權對帳號作出限制許可權，甚至凍結帳號處理。\n
+2） 在使用平臺過程中 ，若遇到任何問題需要幫助或者提供寶貴意見，請在個人中心—聯繫人工客服，進行處理。</string>
 
     <string name="playfun_edit_profile_weight_empty">請選擇體重</string>
     <string name="playfun_edit_profile_height_empty">請選擇身高</string>
@@ -1006,4 +1008,6 @@
     <string name="playfun_blocked_each_other">已將對方封鎖，您無法查看其主頁內容</string>
     <string name="playfun_accost_same_sex">無法搭訕同性</string>
     <string name="playfun_name_number_too_long2">不能超出10個字</string>
+    <string name="playfun_mine_vip_hint">會員特權</string>
+    <string name="playfun_vipsubscribe_item_vip_txt_currency">$</string>
 </resources>

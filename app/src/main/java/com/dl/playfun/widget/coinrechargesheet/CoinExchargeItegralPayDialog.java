@@ -180,7 +180,13 @@ public class CoinExchargeItegralPayDialog extends BaseDialog implements View.OnC
         }
 
         this.coinRechargeSheetViewListener = null;
-        super.dismiss();
+        try {
+            if(isShowing()){
+                super.dismiss();
+            }
+        }catch (Exception e) {
+
+        }
     }
 
     public void endGooglePlayConnect() {

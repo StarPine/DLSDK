@@ -26,6 +26,7 @@ import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.entity.OccupationConfigItemEntity;
+import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.ui.mine.adapter.HopeAdapter;
 import com.dl.playfun.ui.view.wheelview.DlOptionsPickerBuilder;
@@ -33,6 +34,7 @@ import com.dl.playfun.ui.view.wheelview.DlOptionsPickerView;
 import com.dl.playfun.utils.DateUtil;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.PictureSelectorUtil;
+import com.dl.playfun.utils.Utils;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.listener.OnResultCallbackListener;
@@ -40,6 +42,7 @@ import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.databinding.FragmentEditProfileBinding;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -215,17 +218,22 @@ public class EditProfileFragment extends BaseToolbarFragment<FragmentEditProfile
             return;
         }
         Calendar selectedDate = Calendar.getInstance();
-        if (viewModel.userDataEntity.get().getBirthdayCal() != null) {
-            selectedDate = viewModel.userDataEntity.get().getBirthdayCal();
+        if (viewModel.userDataEntity.get().getBirthday() != null) {
+            try {
+                selectedDate.setTime(Utils.format.parse(viewModel.userDataEntity.get().getBirthday()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
         Calendar startDate = Calendar.getInstance();
         startDate.set(1931, 0, 1);
         Calendar endDate = Calendar.getInstance();
         endDate.set(DateUtil.getYear() - 18, DateUtil.getMonth() - 1, DateUtil.getCurrentMonthDay());
         TimePickerView pvTime = new TimePickerBuilder(this.getContext(), (date, v) -> {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            viewModel.userDataEntity.get().setBirthday(calendar);
+            UserDataEntity userEntity = viewModel.userDataEntity.get();
+            userEntity.setBirthday(Utils.formatday.format(date));
+            viewModel.userDataEntity.set(userEntity);
+            viewModel.userDataEntity.notifyChange();
         })
                 .setType(new boolean[]{true, true, true, false, false, false})//分别对应年月日时分秒，默认全部显示
                 .setCancelText(getString(R.string.playfun_cancel))//取消按钮文字
