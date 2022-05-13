@@ -404,6 +404,7 @@ public class AppContext extends Application {
                             appRepository.saveSystemConfigTask(response.getData().getTask());
                             appRepository.saveDefaultHomePageConfig(response.getData().getDefaultHomePage());
                             appRepository.saveGameConfig(response.getData().getGame());
+                            appRepository.putSwitches(EaringlSwitchUtil.KEY_TIPS, response.getData().getIsTips());
                         } catch (Exception e) {
                             ExceptionReportUtils.report(e);
                         }
@@ -444,24 +445,6 @@ public class AppContext extends Application {
                         }
                     });
         }
-        appRepository.getListSwitches()
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .subscribe(new BaseObserver<BaseDataResponse<SwitchesEntity>>() {
-                    @Override
-                    public void onSuccess(BaseDataResponse<SwitchesEntity> response) {
-                        if (response.getData() != null) {
-                            for (SwitchesEntity.SwitchInfoSet switches : response.getData().getSwitchInfos()) {
-                                if (switches.getKey().equals(EaringlSwitchUtil.KEY_TIPS)) {
-                                    appRepository.putSwitches(EaringlSwitchUtil.KEY_TIPS, switches.getValue());
-                                } else if (switches.getKey().equals(EaringlSwitchUtil.KEY_GUIDE)) {
-                                    appRepository.putSwitches(EaringlSwitchUtil.KEY_GUIDE, switches.getValue());
-                                }
-                            }
-                        }
-                    }
-                });
-
     }
 
     public void pushDeviceToken(String deviceToken) {

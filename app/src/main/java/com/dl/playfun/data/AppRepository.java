@@ -195,11 +195,6 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
-    public Observable<BaseDataResponse<SwitchesEntity>> getListSwitches() {
-        return mHttpDataSource.getListSwitches();
-    }
-
-    @Override
     public Observable<BaseDataResponse<Map<String, Integer>>> verifyGoddessTips(Integer toUserId) {
         return mHttpDataSource.verifyGoddessTips(toUserId);
     }

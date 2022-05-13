@@ -180,11 +180,6 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
-    public Observable<BaseDataResponse<SwitchesEntity>> getListSwitches() {
-        return apiService.getListSwitches();
-    }
-
-    @Override
     public Observable<BaseDataResponse<Map<String, Integer>>> verifyGoddessTips(Integer toUserId) {
         return apiService.verifyGoddessTips(toUserId);
     }

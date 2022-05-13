@@ -232,15 +232,6 @@ public interface HttpDataSource {
             Integer type);
 
     /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse < com.dl.playfun.entity.SwitchesEntity>>
-     * @Desc TODO(收益提示开关列表)
-     * @author 彭石林
-     * @parame []
-     * @Date 2021/12/25
-     */
-    Observable<BaseDataResponse<SwitchesEntity>> getListSwitches();
-
-    /**
      * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse < java.util.Map < java.lang.String, java.lang.Integer>>>
      * @Desc TODO(真人 / 女神提醒)
      * @author 彭石林
