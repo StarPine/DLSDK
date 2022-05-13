@@ -662,16 +662,4 @@ public class LocalDataSourceImpl implements LocalDataSource {
     public String readDefaultHomePageConfig() {
         return kv.decodeString(KEY_DEFAULT_HOME_PAGE_NAME, "home");
     }
-
-    @Override
-    public void saveIsFrist(Boolean isFrist) {
-        boolean b = kv.encode(KEY_IS_FIRST, isFrist);
-        System.out.println(b);
-    }
-
-    @Override
-    public Boolean readIsFrist() {
-        Boolean isFrist = kv.decodeBool(KEY_IS_FIRST, true);
-        return isFrist;
-    }
 }

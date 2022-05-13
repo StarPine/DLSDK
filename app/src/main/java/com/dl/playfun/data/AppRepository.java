@@ -782,16 +782,6 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
-    public void saveIsFrist(Boolean isFrist) {
-        mLocalDataSource.saveIsFrist(isFrist);
-    }
-
-    @Override
-    public Boolean readIsFrist() {
-        return mLocalDataSource.readIsFrist();
-    }
-
-    @Override
     public void savePassword(String password) {
         mLocalDataSource.savePassword(password);
     }

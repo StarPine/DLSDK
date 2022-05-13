@@ -442,18 +442,4 @@ public interface LocalDataSource {
      * @return
      */
     String readDefaultHomePageConfig();
-
-    /**
-     * 保存是否第一次进入
-     *
-     * @param isFrist
-     */
-    void saveIsFrist(Boolean isFrist);
-
-    /**
-     * 读取是否第一次进入
-     *
-     * @return
-     */
-    Boolean readIsFrist();
 }
