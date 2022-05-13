@@ -1,9 +1,8 @@
 package com.dl.playfun.utils;
 
-import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
-import com.dl.playfun.app.Injection;
 import com.dl.playfun.R;
+import com.dl.playfun.app.Injection;
 import com.dl.playfun.entity.ConfigItemEntity;
 import com.dl.playfun.entity.OccupationConfigItemEntity;
 
@@ -88,20 +87,6 @@ public class SystemDictUtils {
     }
 
 
-    public static String getProgramTimeById(Integer id) {
-        if (id == null) {
-            return "";
-        }
-        List<ConfigItemEntity> data = Injection.provideDemoRepository().readProgramTimeConfig();
-        StringBuffer sb = new StringBuffer();
-        for (ConfigItemEntity c : data) {
-            if (c.getId() == id) {
-                sb.append(c.getName());
-            }
-        }
-        return sb.toString();
-    }
-
     public static String getWeightById(Integer id) {
         if (id == null) {
             return "";
@@ -129,24 +114,6 @@ public class SystemDictUtils {
         }
         return sb.toString();
     }
-
-//    /**
-//     * 根据工作ID查询工作名称
-//     *
-//     * @param id 工作ID
-//     * @return
-//     */
-//    public static String getOccupationById(int id) {
-//        List<OccupationConfigItemEntity> list = Injection.provideDemoRepository().readOccupationConfig();
-//        String name = StringUtils.getString(R.string.unknown);
-//        for (OccupationConfigItemEntity itemEntity : list) {
-//            if (itemEntity.getId() == id) {
-//                name = itemEntity.getName();
-//                break;
-//            }
-//        }
-//        return name;
-//    }
 
     /**
      * 根据工作ID查询工作名称
@@ -199,24 +166,6 @@ public class SystemDictUtils {
      */
     public static String getWidthById(int id) {
         List<ConfigItemEntity> list = Injection.provideDemoRepository().readWeightConfig();
-        String name = StringUtils.getString(R.string.playfun_unknown);
-        for (ConfigItemEntity configItemEntity : list) {
-            if (configItemEntity.getId().intValue() == id) {
-                name = configItemEntity.getName();
-                break;
-            }
-        }
-        return name;
-    }
-
-    /**
-     * 根据节目时间ID查询体重
-     *
-     * @param id 体重ID
-     * @return
-     */
-    public static String getTimeById(int id) {
-        List<ConfigItemEntity> list = Injection.provideDemoRepository().readProgramTimeConfig();
         String name = StringUtils.getString(R.string.playfun_unknown);
         for (ConfigItemEntity configItemEntity : list) {
             if (configItemEntity.getId().intValue() == id) {
