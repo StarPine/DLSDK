@@ -239,20 +239,6 @@ public interface LocalDataSource {
     List<GameConfigEntity> readGameConfig();
 
     /**
-     * 保存节目时间配置
-     *
-     * @param configs
-     */
-    void saveProgramTimeConfig(List<ConfigItemEntity> configs);
-
-    /**
-     * 获取节目时间配置
-     *
-     * @return
-     */
-    List<ConfigItemEntity> readProgramTimeConfig();
-
-    /**
      * 保存身高配置
      *
      * @param configs

@@ -647,16 +647,6 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
-    public void saveProgramTimeConfig(List<ConfigItemEntity> configs) {
-        mLocalDataSource.saveProgramTimeConfig(configs);
-    }
-
-    @Override
-    public List<ConfigItemEntity> readProgramTimeConfig() {
-        return mLocalDataSource.readProgramTimeConfig();
-    }
-
-    @Override
     public void saveHeightConfig(List<ConfigItemEntity> configs) {
         mLocalDataSource.saveHeightConfig(configs);
     }

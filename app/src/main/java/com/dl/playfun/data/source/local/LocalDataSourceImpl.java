@@ -399,26 +399,6 @@ public class LocalDataSourceImpl implements LocalDataSource {
     }
 
     @Override
-    public void saveProgramTimeConfig(List<ConfigItemEntity> configs) {
-        String json = GsonUtils.toJson(configs);
-        boolean b = kv.encode(KEY_PROGRAM_TIME_CONFIG, json);
-        System.out.println(b);
-    }
-
-    @Override
-    public List<ConfigItemEntity> readProgramTimeConfig() {
-        String json = kv.decodeString(KEY_PROGRAM_TIME_CONFIG);
-        if (json == null) {
-            return new ArrayList<>();
-        } else if (json.isEmpty()) {
-            return new ArrayList<>();
-        }
-        List<ConfigItemEntity> list = GsonUtils.fromJson(json, new TypeToken<List<ConfigItemEntity>>() {
-        }.getType());
-        return list;
-    }
-
-    @Override
     public void saveHeightConfig(List<ConfigItemEntity> configs) {
         String json = GsonUtils.toJson(configs);
         boolean b = kv.encode(KEY_HEIGHT_CONFIG, json);

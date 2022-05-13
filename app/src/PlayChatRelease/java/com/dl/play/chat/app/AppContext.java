@@ -577,7 +577,6 @@ public class AppContext extends Application {
     private void loadAllConfig() {
         if (appRepository.readSystemConfig() == null) {
             AllConfigEntity allConfigEntity = GsonUtils.fromJson(AppConfig.CONFIG_DEFAULT, AllConfigEntity.class);
-            appRepository.saveProgramTimeConfig(allConfigEntity.getProgramTime());
             appRepository.saveHeightConfig(allConfigEntity.getHeight());
             appRepository.saveWeightConfig(allConfigEntity.getWeight());
             appRepository.saveReportReasonConfig(allConfigEntity.getReportReason());
@@ -614,7 +613,6 @@ public class AppContext extends Application {
                     @Override
                     public void onSuccess(BaseDataResponse<AllConfigEntity> response) {
                         try {
-                            appRepository.saveProgramTimeConfig(response.getData().getProgramTime());
                             appRepository.saveHeightConfig(response.getData().getHeight());
                             appRepository.saveWeightConfig(response.getData().getWeight());
                             appRepository.saveReportReasonConfig(response.getData().getReportReason());
