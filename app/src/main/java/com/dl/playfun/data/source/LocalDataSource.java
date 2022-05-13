@@ -372,20 +372,6 @@ public interface LocalDataSource {
     List<OccupationConfigItemEntity> readOccupationConfig();
 
     /**
-     * 保存主题配置
-     *
-     * @param configs
-     */
-    void saveThemeConfig(List<ConfigItemEntity> configs);
-
-    /**
-     * 获取主题配置
-     *
-     * @return
-     */
-    List<ConfigItemEntity> readThemeConfig();
-
-    /**
      * 保存城市配置
      *
      * @param configs

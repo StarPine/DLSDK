@@ -742,16 +742,6 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
-    public void saveThemeConfig(List<ConfigItemEntity> configs) {
-        mLocalDataSource.saveThemeConfig(configs);
-    }
-
-    @Override
-    public List<ConfigItemEntity> readThemeConfig() {
-        return mLocalDataSource.readThemeConfig();
-    }
-
-    @Override
     public void saveCityConfig(List<ConfigItemEntity> configs) {
         mLocalDataSource.saveCityConfig(configs);
     }

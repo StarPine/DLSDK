@@ -377,7 +377,6 @@ public class AppContext extends Application {
             appRepository.saveHopeObjectConfig(allConfigEntity.getHopeObject());
             appRepository.saveOccupationConfig(allConfigEntity.getOccupation());
             appRepository.saveCityConfig(allConfigEntity.getCity());
-            appRepository.saveThemeConfig(allConfigEntity.getTheme());
             appRepository.saveSystemConfig(allConfigEntity.getConfig());
             appRepository.saveGameConfig(allConfigEntity.getGame());
 
@@ -399,7 +398,6 @@ public class AppContext extends Application {
                             appRepository.saveHopeObjectConfig(response.getData().getHopeObject());
                             appRepository.saveOccupationConfig(response.getData().getOccupation());
                             appRepository.saveCityConfig(response.getData().getCity());
-                            appRepository.saveThemeConfig(response.getData().getTheme());
                             appRepository.saveSystemConfig(response.getData().getConfig());
                             appRepository.saveSystemConfigTask(response.getData().getTask());
                             appRepository.saveDefaultHomePageConfig(response.getData().getDefaultHomePage());

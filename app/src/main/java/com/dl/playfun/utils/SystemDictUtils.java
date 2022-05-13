@@ -87,55 +87,6 @@ public class SystemDictUtils {
         return sb.toString();
     }
 
-    public static String getProgramByIds(Integer id) {
-        List<Integer> ids = new ArrayList<>();
-        ids.add(id);
-        return getProgramByIds(ids);
-    }
-
-    //根据主题ID查询主题名
-    public static String getProgramThemeById(Integer id) {
-        if (ObjectUtils.isEmpty(id)) {
-            return StringUtils.getString(R.string.playfun_fragment_issuance_program_title);
-        }
-        List<ConfigItemEntity> data = Injection.provideDemoRepository().readThemeConfig();
-        String str = null;
-        if (data != null && !data.isEmpty()) {
-            for (ConfigItemEntity config : data) {
-                if (config.getThemeId() != null && id.intValue() == config.getThemeId().intValue()) {
-                    str = config.getName();
-                }
-            }
-        }
-        if (ObjectUtils.isEmpty(str)) {
-            return StringUtils.getString(R.string.playfun_fragment_issuance_program_title);
-        }
-        return str;
-    }
-
-    public static String getProgramByIds(List<Integer> ids) {
-        if (ids == null) {
-            return "";
-        }
-        List<ConfigItemEntity> data = Injection.provideDemoRepository().readThemeConfig();
-        StringBuffer sb = new StringBuffer();
-        if (data != null && !data.isEmpty()) {
-            for (ConfigItemEntity config : data) {
-                for (int i = 0; i < ids.size(); i++) {
-                    if (config.getThemeId() != null && ids.get(i).intValue() == config.getThemeId().intValue()) {
-                        if (i == ids.size() - 1) {
-                            sb.append(config.getName());
-                        } else {
-                            sb.append(config.getName()).append("/");
-                        }
-                    }
-
-                }
-            }
-        }
-        return sb.toString();
-    }
-
 
     public static String getProgramTimeById(Integer id) {
         if (id == null) {

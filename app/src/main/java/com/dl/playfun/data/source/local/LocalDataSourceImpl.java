@@ -608,26 +608,6 @@ public class LocalDataSourceImpl implements LocalDataSource {
     }
 
     @Override
-    public void saveThemeConfig(List<ConfigItemEntity> configs) {
-        String json = GsonUtils.toJson(configs);
-        boolean b = kv.encode(KEY_THEME_CONFIG, json);
-        System.out.println(b);
-    }
-
-    @Override
-    public List<ConfigItemEntity> readThemeConfig() {
-        String json = kv.decodeString(KEY_THEME_CONFIG);
-        if (json == null) {
-            return new ArrayList<>();
-        } else if (json.isEmpty()) {
-            return new ArrayList<>();
-        }
-        List<ConfigItemEntity> list = GsonUtils.fromJson(json, new TypeToken<List<ConfigItemEntity>>() {
-        }.getType());
-        return list;
-    }
-
-    @Override
     public void saveCityConfig(List<ConfigItemEntity> configs) {
         String json = GsonUtils.toJson(configs);
         boolean b = kv.encode(KEY_CITY_CONFIG, json);
