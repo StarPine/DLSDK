@@ -366,57 +366,6 @@ public class AppContext extends Application {
     }
 
     private void loadAllConfig() {
-        if (appRepository.readSystemConfig() == null) {
-            AllConfigEntity allConfigEntity = GsonUtils.fromJson(AppConfig.CONFIG_DEFAULT, AllConfigEntity.class);
-            appRepository.saveHeightConfig(allConfigEntity.getHeight());
-            appRepository.saveWeightConfig(allConfigEntity.getWeight());
-            appRepository.saveReportReasonConfig(allConfigEntity.getReportReason());
-            appRepository.saveFemaleEvaluateConfig(allConfigEntity.getEvaluate().getEvaluateFemale());
-            appRepository.saveMaleEvaluateConfig(allConfigEntity.getEvaluate().getEvaluateMale());
-            appRepository.saveHopeObjectConfig(allConfigEntity.getHopeObject());
-            appRepository.saveOccupationConfig(allConfigEntity.getOccupation());
-            appRepository.saveCityConfig(allConfigEntity.getCity());
-            appRepository.saveSystemConfig(allConfigEntity.getConfig());
-            appRepository.saveGameConfig(allConfigEntity.getGame());
-
-        }
-        appRepository.getAllConfig()
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .subscribe(new BaseDisposableObserver<BaseDataResponse<AllConfigEntity>>() {
-
-                    @Override
-                    public void onSuccess(BaseDataResponse<AllConfigEntity> response) {
-                        try {
-                            appRepository.saveHeightConfig(response.getData().getHeight());
-                            appRepository.saveWeightConfig(response.getData().getWeight());
-                            appRepository.saveReportReasonConfig(response.getData().getReportReason());
-                            appRepository.saveFemaleEvaluateConfig(response.getData().getEvaluate().getEvaluateFemale());
-                            appRepository.saveMaleEvaluateConfig(response.getData().getEvaluate().getEvaluateMale());
-                            appRepository.saveHopeObjectConfig(response.getData().getHopeObject());
-                            appRepository.saveOccupationConfig(response.getData().getOccupation());
-                            appRepository.saveCityConfig(response.getData().getCity());
-                            appRepository.saveSystemConfig(response.getData().getConfig());
-                            appRepository.saveSystemConfigTask(response.getData().getTask());
-                            appRepository.saveDefaultHomePageConfig(response.getData().getDefaultHomePage());
-                            appRepository.saveGameConfig(response.getData().getGame());
-                            appRepository.putSwitches(EaringlSwitchUtil.KEY_TIPS, response.getData().getIsTips());
-                        } catch (Exception e) {
-                            ExceptionReportUtils.report(e);
-                        }
-                    }
-
-                    @Override
-                    public void onError(RequestException e) {
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-
-                });
         LocalGooglePayCache localGooglePayCache = appRepository.readGooglePlay();
         if (localGooglePayCache != null) {
             UserDataEntity userDataEntity = appRepository.readUserData();
