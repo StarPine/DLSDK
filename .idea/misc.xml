@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="ASMIdeaPluginConfiguration">
-    <asm skipDebug="false" skipFrames="false" skipCode="false" expandFrames="false" />
-    <groovy codeStyle="LEGACY" />
-  </component>
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
@@ -11,6 +7,9 @@
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/AlivcMedia/src/main/res/layout/alivc_media_activity_media_import.xml" value="0.24895833333333334" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/AliyunCrop/crop/src/main/res/layout/alivc_crop_activity_media.xml" value="0.24895833333333334" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/TUIKit/TUIContact/tuicontact/src/main/res/layout/contact_add_activity.xml" value="0.25" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/TUIKit/TUIConversation/tuiconversation/src/main/res/layout/conversation_adapter.xml" value="0.22871376811594202" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/accost_refresh_backdrop.xml" value="0.1515" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/add_pic_bg.xml" value="0.1515" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/border_purple_background_white.xml" value="0.199" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/btn_yellow_cicle.xml" value="0.252" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/button_green_background.xml" value="0.252" />
@@ -23,14 +22,13 @@
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/button_send_red_package_background.xml" value="0.252" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/button_vip_alert_sub.xml" value="0.252" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/login_checkbox_button.xml" value="0.229" />
-        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/login_email_btn_sub.xml" value="0.2635" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/mine_radius.xml" value="0.158" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/radio_filter_text_arrow.xml" value="0.1845" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/seek_bar_bg_layer.xml" value="0.199" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/shape_login_bg.xml" value="0.17" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/shape_radius_6.xml" value="0.17" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/status_empty_ic.xml" value="0.2025" />
-        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/actitvity_email_manger_dialog.xml" value="0.25833333333333336" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/actitvity_email_manger_dialog.xml" value="0.1625" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/activity_call_audio_chating.xml" value="0.14" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/activity_call_video.xml" value="0.24114583333333334" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/alert_address.xml" value="0.25" />
@@ -39,15 +37,13 @@
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/alert_task_gold.xml" value="0.1875" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/alert_task_gold1.xml" value="0.33" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/coustom_time_picker.xml" value="0.22916666666666666" />
-        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_account_email_bound.xml" value="0.25833333333333336" />
-        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_account_email_bound_pwd.xml" value="0.25833333333333336" />
-        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_account_email_pwd_alter.xml" value="0.25833333333333336" />
-        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_account_email_pwd_alter2.xml" value="0.25833333333333336" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_certification_girl_tw_money.xml" value="0.22" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_check_img_video.xml" value="0.17604166666666668" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_choose_sex_warn.xml" value="0.5" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_city_choose.xml" value="0.28802083333333334" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_email_login.xml" value="0.2" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_email_login_activity.xml" value="0.33" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_email_pwd_login.xml" value="0.22" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_exchange_integral.xml" value="0.22916666666666666" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_home_accost_list.xml" value="0.2536136662286465" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_login_fragment.xml" value="0.22239583333333332" />
@@ -114,6 +110,7 @@
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/item_sign_message.xml" value="0.33" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/item_sign_up.xml" value="0.25" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/item_trend.xml" value="0.25677083333333334" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/item_vip_subscribe.xml" value="0.25" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/pickerview_options_dl.xml" value="0.17604166666666668" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/pop_drop_down_filter.xml" value="0.23489583333333333" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/trace_item_park_list.xml" value="0.24114583333333334" />
@@ -179,9 +176,6 @@
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/gradle-build/app/intermediates/exploded-aar/PlayFun_Google/tuicontact/unspecified/playFunDebugDebug/res/drawable/switch_thumb.xml" value="0.16" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/gradle-build/app/intermediates/exploded-aar/PlayFun_Google/tuicore/unspecified/playFunDebugDebug/res/drawable/switch_thumb.xml" value="0.1155" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/gradle-build/app/intermediates/exploded-aar/PlayFun_Google/tuicore/unspecified/playFunDebugDebug/res/drawable/switch_thumb_blue.xml" value="0.1" />
-        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/sdk-login/src/main/res/drawable/login_email_btn_sub.xml" value="0.2635" />
-        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/sdk-login/src/main/res/layout/actitvity_email_manger_dialog.xml" value="0.2453125" />
-        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/sdk-login/src/main/res/layout/dialog_account_email_bound.xml" value="0.2598958333333333" />
       </map>
     </option>
   </component>

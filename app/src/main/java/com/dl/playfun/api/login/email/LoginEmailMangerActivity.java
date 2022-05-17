@@ -2,8 +2,10 @@ package com.dl.playfun.api.login.email;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.widget.ProgressBar;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +15,7 @@ import com.blankj.utilcode.util.FragmentUtils;
 import com.dl.playfun.R;
 import com.dl.playfun.api.PlayFunAuthUserEntity;
 import com.dl.playfun.ui.WebUrlViewActivity;
+import com.kaopiz.kprogresshud.KProgressHUD;
 
 /**
  * Author: 彭石林
@@ -20,6 +23,10 @@ import com.dl.playfun.ui.WebUrlViewActivity;
  * Description: This is LoginEmailMangerAvtivity
  */
 public class LoginEmailMangerActivity extends AppCompatActivity {
+
+    //加载进度条
+    private KProgressHUD hud;
+
     private Fragment[] mFragments = new Fragment[2];
     private int curIndex;
 
@@ -47,7 +54,6 @@ public class LoginEmailMangerActivity extends AppCompatActivity {
     }
 
     public void setResultPoP(PlayFunAuthUserEntity playFunAuthUserEntity){
-        //裁剪结束
         Intent intent = getIntent();
         intent.putExtra("authUser", playFunAuthUserEntity);
         setResult(Activity.RESULT_OK, intent);
@@ -80,6 +86,33 @@ public class LoginEmailMangerActivity extends AppCompatActivity {
             showFragment(0);
         }else{
             super.onBackPressed();
+        }
+    }
+    @Override
+    public void onDestroy(){
+        FragmentUtils.removeAll(getSupportFragmentManager());
+        super.onDestroy();
+    }
+
+    void showHUD(){
+        if (hud == null) {
+            ProgressBar progressBar = new ProgressBar(this);
+            progressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(com.dl.playfun.R.color.white), PorterDuff.Mode.SRC_IN);
+
+            hud = KProgressHUD.create(this)
+                    .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                    .setBackgroundColor(getResources().getColor(com.dl.playfun.R.color.hud_background))
+                    .setLabel(null)
+                    .setCustomView(progressBar)
+                    .setSize(100, 100)
+                    .setCancellable(false);
+        }
+        hud.show();
+    }
+
+    void dismissHud() {
+        if (hud != null && hud.isShowing()) {
+            hud.dismiss();
         }
     }
 }

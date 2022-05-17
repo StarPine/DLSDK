@@ -26,12 +26,16 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.WebUrlViewActivity;
 import com.dl.playfun.widget.custom.InputTextManager;
 
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+
 /**
  * Author: 彭石林
  * Time: 2022/4/28 16:05
  * Description: This is LoginEmailPwdViewFragment
  */
-public class LoginEmailPwdViewFragment extends Fragment implements View.OnClickListener {
+public class LoginEmailPwdViewFragment extends Fragment implements Consumer<Disposable>,View.OnClickListener {
 
     private Activity mActivity;
     private Context mContext;
@@ -41,6 +45,9 @@ public class LoginEmailPwdViewFragment extends Fragment implements View.OnClickL
     private EditText editEmailPwd;
     private Button btnSubmit;
     private AppGameConfig  appGameConfig;
+
+    private CompositeDisposable mCompositeDisposable;
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -140,4 +147,40 @@ public class LoginEmailPwdViewFragment extends Fragment implements View.OnClickL
             ((LoginEmailMangerActivity) mActivity).showFragment(0);
         }
     }
+
+    protected void addSubscribe(Disposable disposable) {
+        if (mCompositeDisposable == null) {
+            mCompositeDisposable = new CompositeDisposable();
+        }
+        mCompositeDisposable.add(disposable);
+    }
+
+    @Override
+    public void accept(Disposable disposable) throws Exception {
+        if (disposable != null) {
+            addSubscribe(disposable);
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        //View销毁时会执行，同时取消所有异步任务
+        if (mCompositeDisposable != null) {
+            mCompositeDisposable.clear();
+        }
+    }
+
+    private void showHUD() {
+        if (mActivity instanceof LoginEmailMangerActivity) {
+            ((LoginEmailMangerActivity) mActivity).showHUD();
+        }
+    }
+
+    public void dismissHud() {
+        if (mActivity instanceof LoginEmailMangerActivity) {
+            ((LoginEmailMangerActivity) mActivity).dismissHud();
+        }
+    }
+
 }

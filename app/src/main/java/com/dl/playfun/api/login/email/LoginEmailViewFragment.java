@@ -23,10 +23,21 @@ import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.R;
 import com.dl.playfun.api.AppGameConfig;
 import com.dl.playfun.api.PlayFunAuthUserEntity;
+import com.dl.playfun.app.AppContext;
+import com.dl.playfun.data.source.http.exception.RequestException;
+import com.dl.playfun.data.source.http.observer.BaseObserver;
+import com.dl.playfun.data.source.http.response.BaseDataResponse;
+import com.dl.playfun.data.source.http.response.BaseResponse;
+import com.dl.playfun.entity.TokenEntity;
+import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.WebUrlViewActivity;
 import com.dl.playfun.widget.custom.InputTextManager;
 
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import me.goldze.mvvmhabit.utils.RxUtils;
 import me.goldze.mvvmhabit.utils.ToastUtils;
 
 /**
@@ -34,7 +45,7 @@ import me.goldze.mvvmhabit.utils.ToastUtils;
  * Time: 2022/4/28 14:52
  * Description: This is LoginEmailView
  */
-public class LoginEmailViewFragment extends Fragment implements View.OnClickListener {
+public class LoginEmailViewFragment extends Fragment implements Consumer<Disposable>,View.OnClickListener {
 
     private Activity mActivity;
     private TextView pwdTextView;
@@ -46,6 +57,8 @@ public class LoginEmailViewFragment extends Fragment implements View.OnClickList
     private Button btnCode;
 
     private AppGameConfig appGameConfig;
+
+    private CompositeDisposable mCompositeDisposable;
 
     /**
      * 倒计时60秒，一次1秒
@@ -103,13 +116,15 @@ public class LoginEmailViewFragment extends Fragment implements View.OnClickList
         } else if (id == R.id.img_back) {
             mActivity.finish();
         } else if (id == R.id.btn_submit) {
-            cancelDownTime();
-            PlayFunAuthUserEntity playFunAuthUserEntity = new PlayFunAuthUserEntity();
-            playFunAuthUserEntity.setTypeLogin(4);
-            ((LoginEmailMangerActivity) mActivity).setResultPoP(playFunAuthUserEntity);
+            bindUserEmail(editEmailAccount.getText().toString(),editEmailCode.getText().toString());
         } else if (id == R.id.btn_code) {
             if (!isDownTime) {
-                verifyCodeDownTime();
+                String userEmailCode = editEmailAccount.getText().toString();
+                if(StringUtils.isTrimEmpty(userEmailCode)){
+                    ToastUtils.showShort("请填写邮箱");
+                    return;
+                }
+                sendUserEmailCode(userEmailCode);
             } else {
                 ToastUtils.showShort("你以发送过验证码");
             }
@@ -188,5 +203,109 @@ public class LoginEmailViewFragment extends Fragment implements View.OnClickList
         if(StringUtils.isEmpty(appGameConfig.getTermsOfServiceUrl()) && StringUtils.isEmpty(appGameConfig.getPrivacyPolicyUrl())){
             viewRoot.findViewById(R.id.bottom_layout).setVisibility(View.GONE);
         }
+    }
+
+    protected void addSubscribe(Disposable disposable) {
+        if (mCompositeDisposable == null) {
+            mCompositeDisposable = new CompositeDisposable();
+        }
+        mCompositeDisposable.add(disposable);
+    }
+
+    @Override
+    public void accept(Disposable disposable) throws Exception {
+        if (disposable != null) {
+            addSubscribe(disposable);
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        //View销毁时会执行，同时取消所有异步任务
+        if (mCompositeDisposable != null) {
+            mCompositeDisposable.clear();
+        }
+    }
+
+    private void showHUD() {
+        if (mActivity instanceof LoginEmailMangerActivity) {
+            ((LoginEmailMangerActivity) mActivity).showHUD();
+        }
+    }
+
+    public void dismissHud() {
+        if (mActivity instanceof LoginEmailMangerActivity) {
+            ((LoginEmailMangerActivity) mActivity).dismissHud();
+        }
+    }
+
+    /**
+     * 发送邮箱验证码
+     * @param userEmailCode
+     */
+    public void sendUserEmailCode(String userEmailCode){
+        ConfigManager.getInstance().getAppRepository()
+                .sendEmailCode(userEmailCode)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseResponse>(){
+                    @Override
+                    public void onSuccess(BaseResponse baseResponse) {
+                        dismissHud();
+                        verifyCodeDownTime();
+                    }
+                    @Override
+                    public void onError(RequestException e) {
+                        dismissHud();
+                    }
+                });
+    }
+
+    /**
+     * 绑定用户邮箱
+     * @param userEmail
+     * @param userCode
+     */
+    public void bindUserEmail(String userEmail,String userCode){
+        if(StringUtils.isTrimEmpty(userEmail)){
+            ToastUtils.showShort("请填写邮箱");
+            return;
+        }
+        if(StringUtils.isTrimEmpty(userCode)){
+            ToastUtils.showShort("请填写验证码");
+            return;
+        }
+        ConfigManager.getInstance().getAppRepository()
+                .bindUserEmail(userEmail,userCode,null,1)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseDataResponse<UserDataEntity>>(){
+                    @Override
+                    public void onSuccess(BaseDataResponse<UserDataEntity> authLoginUserEntityBaseDataResponse) {
+                        UserDataEntity authLoginUserEntity = authLoginUserEntityBaseDataResponse.getData();
+                        TokenEntity tokenEntity = new TokenEntity(authLoginUserEntity.getToken(),authLoginUserEntity.getUserID(),authLoginUserEntity.getUserSig(), authLoginUserEntity.getIsContract());
+                        ConfigManager.getInstance().getAppRepository().saveLoginInfo(tokenEntity);
+                        if(authLoginUserEntity!=null){
+                            AppContext.instance().mFirebaseAnalytics.setUserId(String.valueOf(authLoginUserEntity.getId()));
+                            ConfigManager.getInstance().getAppRepository().saveUserData(authLoginUserEntity);
+                            if (authLoginUserEntity.getCertification() == 1) {
+                                ConfigManager.getInstance().getAppRepository().saveNeedVerifyFace(true);
+                            }
+                        }
+                        cancelDownTime();
+                        PlayFunAuthUserEntity playFunAuthUserEntity = new PlayFunAuthUserEntity();
+                        playFunAuthUserEntity.setTypeLogin(4);
+                        ((LoginEmailMangerActivity) mActivity).setResultPoP(playFunAuthUserEntity);
+                    }
+                    @Override
+                    public void onComplete() {
+                        dismissHud();
+                    }
+                });
     }
 }
