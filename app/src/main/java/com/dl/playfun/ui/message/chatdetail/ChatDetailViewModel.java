@@ -100,6 +100,8 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
     public Integer refundMsgNumber = 0;
     //是否首次存在收入
     public Integer firstImMsg = 0;
+    //是否当前用户付费
+    public boolean isPlay = false;
 
     public Integer ChatInfoId = null;
     public UIChangeObservable uc = new UIChangeObservable();
@@ -547,6 +549,11 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                             uc.imProfit.call();
                             isFollower = priceConfigEntity.getIsFollow().intValue() == 1;
                             UserDataEntity userDataEntity = getLocalUserDataEntity();
+
+                            isPlay = priceConfigEntity.getIsPay().intValue() ==1;
+                            maleBalance = priceConfigEntityField.getCurrent().getBalance();
+                            maleCardNumber = priceConfigEntityField.getCurrent().getPropTotal();
+                            maleMessagePrice = priceConfigEntityField.getCurrent().getTextPrice();
                             if(userDataEntity.getSex()==1) {
                                 maleBalance = priceConfigEntityField.getCurrent().getBalance();
                                 maleCardNumber = priceConfigEntityField.getCurrent().getPropTotal();
