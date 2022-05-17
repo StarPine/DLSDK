@@ -43,6 +43,7 @@ import com.dl.playfun.event.CallChatingHangupEvent;
 import com.dl.playfun.event.MessageGiftNewEvent;
 import com.dl.playfun.event.RewardRedDotEvent;
 import com.dl.playfun.manager.ConfigManager;
+import com.dl.playfun.ui.dialog.GiftBagDialog;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.utils.FileUploadUtils;
 import com.dl.playfun.utils.ToastCenterUtils;
@@ -444,6 +445,13 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                 });
     }
 
+    /**
+     * 发送礼物
+     * @param dialog
+     * @param giftEntity
+     * @param to_user_id
+     * @param amount
+     */
     public void sendUserGift(Dialog dialog, GiftBagEntity.giftEntity giftEntity, Integer to_user_id, Integer amount) {
         model.sendUserGift(giftEntity.getId(), to_user_id, amount, 1)
                 .doOnSubscribe(this)
@@ -455,6 +463,9 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                     public void onSuccess(BaseResponse baseResponse) {
                         dismissHUD();
                         maleBalance -= giftEntity.getMoney();
+                        //礼物数量*礼物钻石
+                        int amountMoney = giftEntity.getMoney().intValue() * amount;
+                        ((GiftBagDialog) dialog).setBalanceValue(amountMoney);
 //                        GiftEntity _giftEntity = new GiftEntity();
 //                        _giftEntity.setSvgaPath(giftEntity.getLink());
 //                        animGiftList.add(_giftEntity);
