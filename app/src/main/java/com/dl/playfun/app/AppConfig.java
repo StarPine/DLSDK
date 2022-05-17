@@ -40,6 +40,10 @@ public class AppConfig {
      */
     public static final String CHAT_SERVICE_USER_ID = "administrator";
     /**
+     * 联系客服id
+     */
+    public static final String CHAT_SERVICE_USER_ID_SEND = "administrator_okey101";
+    /**
      * 服务端接口HOST
      */
     public static final String API_BASE_URL = BuildConfig.API_BASE_URL;
