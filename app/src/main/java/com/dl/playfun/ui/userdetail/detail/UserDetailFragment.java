@@ -913,7 +913,7 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
             }
         }
         MVDialog.getInstance(mActivity)
-                .setTitleSize(16)
+                //.setTitleSize(16)
                 .setTitle(getString(R.string.playfun_she_social_account))
                 .setContent(account)
                 .setConfirmText(getString(R.string.playfun_cancel))

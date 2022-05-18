@@ -38,6 +38,7 @@ import com.dl.playfun.entity.UserProfileInfo;
 import com.dl.playfun.event.CallVideoUserEnterEvent;
 import com.dl.playfun.kl.view.JMTUICallVideoView;
 import com.dl.playfun.manager.ConfigManager;
+import com.dl.playfun.ui.dialog.GiftBagDialog;
 import com.dl.playfun.utils.ChatUtils;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
@@ -570,6 +571,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
                         String textTip = null;
                         //礼物数量*礼物钻石
                         int amountMoney = giftEntity.getMoney().intValue() * amount;
+                        ((GiftBagDialog) dialog).setBalanceValue(amountMoney);
                         if (isMale) {
                             if (TimeCount < 60) {//不满1分钟
                                 if (unitPriceList.size() > 1) {//聊天卡

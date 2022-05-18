@@ -5,7 +5,6 @@
     android:layout_height="wrap_content"
     android:layout_marginStart="16dp"
     android:layout_marginEnd="16dp"
-    android:minWidth="300dp"
     android:orientation="vertical">
 
     <LinearLayout
@@ -74,7 +73,7 @@
                 android:text="@string/cancel"
                 android:textColor="@color/purple_text"
                 android:textSize="@dimen/text_size_42"
-                tools:visibility="visible" />
+                tools:visibility="gone" />
 
         </LinearLayout>
 
@@ -87,5 +86,6 @@
         android:layout_height="39dp"
         android:layout_gravity="center"
         android:layout_marginTop="28dp"
-        android:src="@drawable/ic_dialog_close" />
+        android:src="@drawable/ic_dialog_close"
+        tools:visibility="gone" />
 </LinearLayout>

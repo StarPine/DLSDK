@@ -1036,7 +1036,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     }
 
     public void giftBagDialogShow() {
-        giftBagDialog = new GiftBagDialog(getContext(), false, 0, 0);
+        giftBagDialog = new GiftBagDialog(getContext(), false, viewModel.maleBalance, 0);
         giftBagDialog.setGiftOnClickListener(new GiftBagDialog.GiftOnClickListener() {
             @Override
             public void sendGiftClick(Dialog dialog, int number, GiftBagEntity.giftEntity giftEntity) {

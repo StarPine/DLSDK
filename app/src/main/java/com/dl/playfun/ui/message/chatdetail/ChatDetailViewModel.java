@@ -462,10 +462,10 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                     @Override
                     public void onSuccess(BaseResponse baseResponse) {
                         dismissHUD();
-                        maleBalance -= giftEntity.getMoney();
                         //礼物数量*礼物钻石
                         int amountMoney = giftEntity.getMoney().intValue() * amount;
                         ((GiftBagDialog) dialog).setBalanceValue(amountMoney);
+                        maleBalance -= amountMoney;
 //                        GiftEntity _giftEntity = new GiftEntity();
 //                        _giftEntity.setSvgaPath(giftEntity.getLink());
 //                        animGiftList.add(_giftEntity);
