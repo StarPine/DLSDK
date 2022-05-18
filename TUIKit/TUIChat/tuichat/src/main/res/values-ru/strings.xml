@@ -146,7 +146,7 @@
     <string name="custom_message_txt1">Доход +%s. Доход удваивается при проверке реального лица. Перейти к проверке>></string>
     <string name="custom_message_txt1_key">Перейти к проверке>></string>
     <string name="custom_message_txt2">Ваш доход +%s</string>
-    <string name="custom_message_txt2_test2">Ваш доход +%s NTD, доход удвоится после аутентификации реального человека Перейти к аутентификации>></string>
+    <string name="custom_message_txt2_test2">Ваш доход +%s, доход удвоится после аутентификации реального человека Перейти к аутентификации>></string>
     <string name="custom_message_txt3">Его равновесие недостаточное. Пожалуйста, напомните ему, чтобы он подзарядился.</string>
     <string name="custom_message_txt4">последовал</string>
     <string name="custom_message_txt5">ты</string>
