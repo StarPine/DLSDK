@@ -62,6 +62,11 @@ public class CommunityAccountFragment extends BaseToolbarFragment<FragmentSettin
     }
 
     @Override
+    public void initData(){
+        super.initData();
+    }
+
+    @Override
     public void initViewObservable() {
         super.initViewObservable();
     }

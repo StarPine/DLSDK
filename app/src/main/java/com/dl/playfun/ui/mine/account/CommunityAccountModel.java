@@ -8,8 +8,11 @@ import androidx.databinding.ObservableField;
 
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.entity.PrivacyEntity;
+import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.viewmodel.BaseViewModel;
 
+import me.goldze.mvvmhabit.binding.command.BindingAction;
+import me.goldze.mvvmhabit.binding.command.BindingCommand;
 import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.RxUtils;
@@ -31,9 +34,20 @@ public class CommunityAccountModel extends BaseViewModel<AppRepository> {
 
     public UIChangeObservable UC = new UIChangeObservable();
 
+    public ObservableField<UserDataEntity> userEntity = new ObservableField<>();
+
     public CommunityAccountModel(@NonNull Application application, AppRepository repository) {
         super(application, repository);
+        userEntity.set(model.readUserData());
     }
+    //绑定 、 修改邮箱
+    public BindingCommand bindingEmailCommand = new BindingCommand(() -> {
+
+    });
+    //绑定 、 修改邮箱
+    public BindingCommand bindingPwdCommand = new BindingCommand(() -> {
+
+    });
 
     @Override
     public void onEnterAnimationEnd() {
