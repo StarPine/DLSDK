@@ -124,19 +124,7 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
         }
         AppContext.instance().logEvent(AppsFlyerEvent.Following_2);
         if (!detailEntity.get().getCollect()) {
-            if (!ConfigManager.getInstance().isMale()) {
-                //是女生提示
-                int guideFlag = model.readSwitches(EaringlSwitchUtil.KEY_TIPS);
-                //后台开关 1提示  0隐藏
-                if (guideFlag == 1) {
-                    uc.clickLike.call();
-                } else {
-                    addLike();
-                }
-
-            } else {
-                addLike();
-            }
+            addLike();
         } else {
             delLike();
         }

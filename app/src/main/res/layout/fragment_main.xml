@@ -25,10 +25,10 @@
             android:id="@+id/navigation_view"
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            android:elevation="888dp"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="0dp"
             android:background="@drawable/main_bottom_navigation_img"
+            android:elevation="888dp"
             android:orientation="horizontal">
 
             <RelativeLayout
@@ -58,9 +58,9 @@
                     android:layout_marginBottom="5dp"
                     android:includeFontPadding="false"
                     android:text="@string/playfun_title_home"
-                    android:visibility="invisible"
                     android:textColor="@color/black"
-                    android:textSize="9sp" />
+                    android:textSize="9sp"
+                    android:visibility="invisible" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -90,9 +90,9 @@
                     android:layout_marginBottom="5dp"
                     android:includeFontPadding="false"
                     android:text="@string/playfun_title_nearby"
-                    android:visibility="invisible"
                     android:textColor="@color/black"
-                    android:textSize="9sp" />
+                    android:textSize="9sp"
+                    android:visibility="invisible" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -119,9 +119,9 @@
                     <TextView
                         android:layout_width="@dimen/red_dot"
                         android:layout_height="@dimen/red_dot"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginTop="4dp"
                         android:layout_alignParentRight="true"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginRight="5dp"
                         android:background="@drawable/shape_red_dot"
                         android:visibility="@{viewModel.isHaveRewards?View.VISIBLE:View.GONE}" />
                 </RelativeLayout>
@@ -135,9 +135,9 @@
                     android:layout_marginBottom="5dp"
                     android:includeFontPadding="false"
                     android:text="@string/playfun_task_fragment_title1"
-                    android:visibility="invisible"
                     android:textColor="@color/black"
-                    android:textSize="9sp" />
+                    android:textSize="9sp"
+                    android:visibility="invisible" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -184,10 +184,10 @@
                     android:layout_centerInParent="true"
                     android:layout_marginBottom="5dp"
                     android:includeFontPadding="false"
-                    android:visibility="invisible"
                     android:text="@string/playfun_title_notifications"
                     android:textColor="@color/black"
-                    android:textSize="9sp" />
+                    android:textSize="9sp"
+                    android:visibility="invisible" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -218,9 +218,9 @@
                     android:layout_marginBottom="5dp"
                     android:includeFontPadding="false"
                     android:text="@string/playfun_title_mine"
-                    android:visibility="invisible"
                     android:textColor="@color/black"
-                    android:textSize="9sp" />
+                    android:textSize="9sp"
+                    android:visibility="invisible" />
             </RelativeLayout>
         </LinearLayout>
         <ImageView

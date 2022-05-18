@@ -280,18 +280,19 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
         @Override
         public void call() {
             AppContext.instance().logEvent(AppsFlyerEvent.videocall_follow);
-            if (ConfigManager.getInstance().isMale()){
-                addLike(false);
-            }else {
-                //是女生提示
-                int guideFlag = model.readSwitches(EaringlSwitchUtil.KEY_TIPS);
-                //后台开关 1提示  0隐藏
-                if (guideFlag == 1) {
-                    uc.clickLike.call();
-                } else {
-                    addLike(false);
-                }
-            }
+            addLike(false);
+//            if (ConfigManager.getInstance().isMale()){
+//                addLike(false);
+//            }else {
+//                //是女生提示
+//                int guideFlag = model.readSwitches(EaringlSwitchUtil.KEY_TIPS);
+//                //后台开关 1提示  0隐藏
+//                if (guideFlag == 1) {
+//                    uc.clickLike.call();
+//                } else {
+//                    addLike(false);
+//                }
+//            }
         }
     });
     //切换破冰文案提示
