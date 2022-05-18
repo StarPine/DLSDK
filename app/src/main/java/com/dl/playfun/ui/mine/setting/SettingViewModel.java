@@ -19,6 +19,7 @@ import com.dl.playfun.entity.UserInfoEntity;
 import com.dl.playfun.event.IsAuthBindingEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.GlideCacheManager;
+import com.dl.playfun.ui.mine.account.CommunityAccountFragment;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.dl.playfun.R;
 import com.dl.playfun.ui.message.pushsetting.PushSettingFragment;
@@ -53,7 +54,7 @@ public class SettingViewModel extends BaseViewModel<AppRepository> {
     });
     //绑定社群账号
     public BindingCommand bindingCommunityAccount = new BindingCommand(() ->{
-//        start(CommunityAccountFragment.class.getCanonicalName());
+        start(CommunityAccountFragment.class.getCanonicalName());
     });
     //推送设置按钮的点击事件
     public BindingCommand pushSettingOnClickCommand = new BindingCommand(() -> start(PushSettingFragment.class.getCanonicalName()));

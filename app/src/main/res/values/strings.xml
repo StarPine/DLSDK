@@ -958,6 +958,9 @@
     <string name="auth_external_login_btn_next">下一步</string>
     <string name="auth_external_login_btn">确认</string>
 
+    <string name="playfun_mine_setting_account">賬戶管理</string>
+    <string name="playfun_mine_setting_account_bindEmail">綁定郵箱</string>
+    <string name="playfun_mine_setting_account_pwd">賬號密碼</string>
 
 
 

@@ -105,7 +105,8 @@
                     android:layout_marginTop="10dp"
                     android:background="@color/white"
                     android:visibility="gone"
-                    binding:onClickCommand="@{viewModel.bindingCommunityAccount}">
+                    binding:onClickCommand="@{viewModel.bindingCommunityAccount}"
+                    tools:visibility="visible">
 
                     <TextView
                         style="@style/ProfileItemTitle"

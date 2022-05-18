@@ -40,6 +40,7 @@ import com.dl.playfun.ui.message.sendcoinredpackage.SendCoinRedPackageViewModel;
 import com.dl.playfun.ui.message.systemmessage.SystemMessageViewModel;
 import com.dl.playfun.ui.message.systemmessagegroup.SystemMessageGroupViewModel;
 import com.dl.playfun.ui.mine.MineViewModel;
+import com.dl.playfun.ui.mine.account.CommunityAccountModel;
 import com.dl.playfun.ui.mine.audio.TapeAudioViewModel;
 import com.dl.playfun.ui.mine.blacklist.BlacklistViewModel;
 import com.dl.playfun.ui.mine.broadcast.BroadcastViewModel;
@@ -266,6 +267,8 @@ public class AppViewModelFactory extends ViewModelProvider.NewInstanceFactory {
             return (T) new VideoCallViewModel(mApplication, mRepository);
         } else if (modelClass.isAssignableFrom(PerfectProfileViewModel.class)){
             return (T) new PerfectProfileViewModel(mApplication, mRepository);
+        } else if (modelClass.isAssignableFrom(CommunityAccountModel.class)){
+            return (T) new CommunityAccountModel(mApplication, mRepository);
         }
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
     }
