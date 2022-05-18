@@ -146,15 +146,15 @@
                 android:layout_width="85dp"
                 android:layout_height="28dp"
                 android:background="@drawable/mine_trace_live3"
+                android:ellipsize="end"
                 android:gravity="center_vertical|right"
+                android:maxLines="1"
+                android:paddingStart="30dp"
                 android:paddingEnd="9dp"
                 android:text="@string/playfun_mine_trace_live3"
                 android:textColor="#FF834CFF"
                 android:textSize="12sp"
                 android:textStyle="bold"
-                android:paddingStart="30dp"
-                android:maxLines="1"
-                android:ellipsize="end"
                 android:visibility="@{viewModel.traceLive3}" />
         </RelativeLayout>
 

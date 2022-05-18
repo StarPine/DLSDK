@@ -147,6 +147,9 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
             public void onItemAvatarClick(View view, int position, ConversationInfo messageInfo) {
                 //点击用户头像
                 String id = messageInfo.getId();
+                if(id==null){
+                    return;
+                }
                 if (id.trim().contains(AppConfig.CHAT_SERVICE_USER_ID)) {
                     return;
                 }

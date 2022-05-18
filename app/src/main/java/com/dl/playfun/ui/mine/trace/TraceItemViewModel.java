@@ -46,21 +46,22 @@ public class TraceItemViewModel extends MultiItemViewModel<TraceListViewModel> {
                 if (itemEntity.get().getFollow()) {
                     viewModel.uc.clickDelLike.setValue(position);
                 } else {
+                    viewModel.addLike(position);
                     //拿到position
-                    if (ConfigManager.getInstance().isMale()){
-
-                        viewModel.addLike(position);
-                    }else {
-                        //是女生提示
-                        int guideFlag = ConfigManager.getInstance().getAppRepository().readSwitches(EaringlSwitchUtil.KEY_TIPS);
-                        //后台开关 1提示  0隐藏
-                        if (guideFlag == 1) {
-                            viewModel.uc.clickAddLike.setValue(position);
-                        } else {
-                            viewModel.addLike(position);
-                        }
-
-                    }
+//                    if (ConfigManager.getInstance().isMale()){
+//
+//                        viewModel.addLike(position);
+//                    }else {
+//                        //是女生提示
+//                        int guideFlag = ConfigManager.getInstance().getAppRepository().readSwitches(EaringlSwitchUtil.KEY_TIPS);
+//                        //后台开关 1提示  0隐藏
+//                        if (guideFlag == 1) {
+//                            viewModel.uc.clickAddLike.setValue(position);
+//                        } else {
+//                            viewModel.addLike(position);
+//                        }
+//
+//                    }
                 }
             }
         }

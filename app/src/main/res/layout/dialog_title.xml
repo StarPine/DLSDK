@@ -13,18 +13,17 @@
         android:layout_height="wrap_content"
         android:background="@drawable/white_round_bg"
         android:clipToPadding="false"
-        android:orientation="vertical"
-        android:padding="30dp">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="25dp"
             android:gravity="center"
             android:text="@string/playfun_dialog_choose_sex_warm_content"
-            android:textColor="@color/gray_middle"
+            android:textColor="@color/text_default"
             android:textSize="@dimen/text_size_middle"
             android:textStyle="bold" />
 
@@ -43,6 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="21dp"
+            android:layout_marginBottom="20dp"
             android:dividerPadding="15dp"
             android:gravity="center_horizontal"
             android:orientation="horizontal">

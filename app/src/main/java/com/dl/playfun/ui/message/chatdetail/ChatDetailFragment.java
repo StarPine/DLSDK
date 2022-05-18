@@ -552,7 +552,10 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                 if (null == messageInfo) {
                     return;
                 }
-                String id = messageInfo.getId();
+                String id = messageInfo.getFromUser();
+                if(id==null){
+                    return;
+                }
                 //客服不允许进入主页
                 if (id.trim().contains(AppConfig.CHAT_SERVICE_USER_ID)) {
                     return;
@@ -561,7 +564,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                 if(id.trim().equals(getUserIdIM())){
                     return;
                 }
-                viewModel.transUserIM(messageInfo.getFromUser());
+                viewModel.transUserIM(id);
             }
 
             @Override

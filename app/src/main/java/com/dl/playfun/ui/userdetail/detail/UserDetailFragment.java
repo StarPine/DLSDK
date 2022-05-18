@@ -909,7 +909,7 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
         String account = null;
         if (viewModel.detailEntity.get().getIsUnlockAccount() == 1 && viewModel.detailEntity.get().getIsWeixinShow() == 1) {
             if (viewModel.detailEntity.get().getWeixin() != null && viewModel.detailEntity.get().getWeixin().length() > 0) {
-                account = "Line: " + viewModel.detailEntity.get().getWeixin();
+                account = " " + viewModel.detailEntity.get().getWeixin();
             }
         }
         MVDialog.getInstance(mActivity)
