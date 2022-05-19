@@ -104,7 +104,7 @@
                     android:layout_height="@dimen/profile_item_height"
                     android:layout_marginTop="10dp"
                     android:background="@color/white"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     binding:onClickCommand="@{viewModel.bindingCommunityAccount}"
                     tools:visibility="visible">
 

@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
 
 
+import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.entity.PrivacyEntity;
 import com.dl.playfun.entity.UserDataEntity;
@@ -46,7 +47,11 @@ public class CommunityAccountModel extends BaseViewModel<AppRepository> {
     });
     //绑定 、 修改邮箱
     public BindingCommand bindingPwdCommand = new BindingCommand(() -> {
-
+        if (StringUtils.isTrimEmpty(userEntity.get().getEmail())){
+            UC.alertEmailHintView.setValue(true);
+        }else{
+            UC.alertEmailHintView.setValue(false);
+        }
     });
 
     @Override
@@ -55,7 +60,7 @@ public class CommunityAccountModel extends BaseViewModel<AppRepository> {
     }
 
     public class UIChangeObservable {
-        SingleLiveEvent<Boolean> loadUserFlag = new SingleLiveEvent<>();
-        SingleLiveEvent<Boolean> loginAuth = new SingleLiveEvent<>();
+        SingleLiveEvent<Boolean> alertEmailHintView = new SingleLiveEvent<>();
+        SingleLiveEvent<Void> dialogBindEmail = new SingleLiveEvent<>();
     }
 }

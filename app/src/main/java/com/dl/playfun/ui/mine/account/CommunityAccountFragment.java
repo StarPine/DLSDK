@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.dl.playfun.BR;
@@ -15,6 +16,8 @@ import com.dl.playfun.R;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.databinding.FragmentSettingAccountBinding;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
+import com.dl.playfun.ui.dialog.GmailBindDialog;
+import com.dl.playfun.ui.mine.account.bind.EmailMangerBindActivity;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -69,6 +72,21 @@ public class CommunityAccountFragment extends BaseToolbarFragment<FragmentSettin
     @Override
     public void initViewObservable() {
         super.initViewObservable();
+        //跳转绑定邮箱页面
+        viewModel.UC.dialogBindEmail.observe(this, unused -> startBindEmailView(true));
+        //弹出绑定邮箱提示
+        viewModel.UC.alertEmailHintView.observe(this, isBind -> {
+                    GmailBindDialog.getHintEmailDialog(getContext(), false, () -> {
+                        startBindEmailView(isBind);
+                    }).show();
+                }
+        );
+    }
+    //跳转绑定邮箱弹窗view
+    public void startBindEmailView(boolean bindEmail){
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("bindEmail",bindEmail);
+        startActivity(EmailMangerBindActivity.class,bundle);
     }
 
 }
