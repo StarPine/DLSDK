@@ -104,11 +104,6 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
             }
         });
         sendInviteCode();
-
-        ConfigManager configManager = ConfigManager.getInstance();
-        if (configManager.getRecommendClose()) {
-            return;
-        }
         //加载屏蔽字数据
         getSensitiveWords();
     }
