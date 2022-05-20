@@ -77,17 +77,17 @@ public class AccountEmailBoundFragment extends Fragment implements Consumer<Disp
         return R.layout.dialog_account_email_bound;
     }
     private void initView(View view){
-        edtEmail = view.findViewById(R.id.edt_email);
+        edtEmail = view.findViewById(R.id.edit_email);
         editCode = view.findViewById(R.id.edit_code);
         btnCode = view.findViewById(R.id.btn_code);
         btnSubmit = view.findViewById(R.id.btn_submit);
         btnCode.setOnClickListener(this);
         btnSubmit.setOnClickListener(this);
-        InputTextManager.with(this.getActivity())
+        InputTextManager.with(mActivity)
                 .addView(edtEmail)
                 .setMain(btnCode)
                 .build();
-        InputTextManager.with(this.getActivity())
+        InputTextManager.with(mActivity)
                 .addView(edtEmail)
                 .addView(editCode)
                 .setMain(btnSubmit)

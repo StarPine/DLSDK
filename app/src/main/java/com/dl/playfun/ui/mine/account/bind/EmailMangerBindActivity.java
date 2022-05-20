@@ -15,6 +15,7 @@ import com.blankj.utilcode.util.FragmentUtils;
 import com.dl.playfun.R;
 import com.dl.playfun.api.PlayFunAuthUserEntity;
 import com.dl.playfun.api.login.email.LoginEmailPwdViewFragment;
+import com.dl.playfun.utils.AutoSizeUtils;
 import com.kaopiz.kprogresshud.KProgressHUD;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class EmailMangerBindActivity extends AppCompatActivity {
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AutoSizeUtils.applyAdapt(this.getResources());
         initParam();
         this.setContentView(R.layout.actitvity_email_manger_dialog);
         if(isBindEmail){

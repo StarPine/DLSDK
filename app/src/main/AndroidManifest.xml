@@ -151,12 +151,12 @@
             android:launchMode="singleTop"
             android:requestLegacyExternalStorage="true"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/dialog_activity_style"/>
         <activity android:name="com.dl.playfun.ui.mine.account.bind.EmailMangerBindActivity"
             android:launchMode="singleTop"
             android:requestLegacyExternalStorage="true"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/dialog_activity_style"/>
 
     </application>
 

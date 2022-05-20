@@ -15,6 +15,7 @@ import com.blankj.utilcode.util.FragmentUtils;
 import com.dl.playfun.R;
 import com.dl.playfun.api.PlayFunAuthUserEntity;
 import com.dl.playfun.ui.WebUrlViewActivity;
+import com.dl.playfun.utils.AutoSizeUtils;
 import com.kaopiz.kprogresshud.KProgressHUD;
 
 /**
@@ -32,6 +33,7 @@ public class LoginEmailMangerActivity extends AppCompatActivity {
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AutoSizeUtils.applyAdapt(this.getResources());
         this.setContentView(R.layout.actitvity_email_manger_dialog);
         if (savedInstanceState != null) {
             curIndex = savedInstanceState.getInt("curIndex");
