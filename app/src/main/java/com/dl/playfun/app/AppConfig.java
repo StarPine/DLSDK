@@ -43,7 +43,7 @@ public class AppConfig {
     /**
      * 联系客服id
      */
-    public static final String CHAT_SERVICE_USER_ID_SEND = "administrator_okey101";
+    public static final String CHAT_SERVICE_USER_ID_SEND = BuildConfig.CHAT_SERVICE_USER_ID_SEND;
     /**
      * 服务端接口HOST
      */

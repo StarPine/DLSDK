@@ -847,11 +847,15 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
      * @param giftEntity
      */
     private void giftIncome(GiftEntity giftEntity) {
-        String itemMessage = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt5), String.format("%.2f", giftEntity.getAmount().intValue() * giftEntity.getProfitTwd().doubleValue()));
-        SpannableString itemMessageBuilder = new SpannableString(itemMessage);
-        itemMessageBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, itemMessage.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        itemMessageBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint1)), itemMessage.indexOf("+"), itemMessage.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        putRcvItemMessage(itemMessageBuilder, null, false);
+        try {
+            if(!isMale){
+                String itemMessage = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt5), String.format("%.2f", giftEntity.getAmount().intValue() * giftEntity.getProfitTwd().doubleValue()));
+                SpannableString itemMessageBuilder = new SpannableString(itemMessage);
+                itemMessageBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, itemMessage.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                itemMessageBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint1)), itemMessage.indexOf("+"), itemMessage.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                putRcvItemMessage(itemMessageBuilder, null, false);
+            }
+        }catch (Exception e) {}
     }
 
     public UserDataEntity readUserData() {

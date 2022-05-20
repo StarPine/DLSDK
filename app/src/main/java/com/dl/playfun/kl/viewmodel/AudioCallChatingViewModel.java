@@ -653,12 +653,18 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
      * @param giftEntity
      */
     private void giftIncome(GiftEntity giftEntity) {
-        double total = giftEntity.getAmount().intValue() * giftEntity.getProfitTwd().doubleValue();
-        String itemMessage = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt5), String.format("%.2f", total));
-        SpannableString itemMessageBuilder = new SpannableString(itemMessage);
-        itemMessageBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, itemMessage.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        itemMessageBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint1)), itemMessage.indexOf("+"), itemMessage.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        putRcvItemMessage(itemMessageBuilder, null, false);
+        try {
+            if(!isMale){
+                double total = giftEntity.getAmount().intValue() * giftEntity.getProfitTwd().doubleValue();
+                String itemMessage = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt5), String.format("%.2f", total));
+                SpannableString itemMessageBuilder = new SpannableString(itemMessage);
+                itemMessageBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, itemMessage.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                itemMessageBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint1)), itemMessage.indexOf("+"), itemMessage.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                putRcvItemMessage(itemMessageBuilder, null, false);
+            }
+        }catch (Exception e) {
+
+        }
     }
 
     public void getCallingInfo(Integer roomId, String fromUserId, String toUserId) {

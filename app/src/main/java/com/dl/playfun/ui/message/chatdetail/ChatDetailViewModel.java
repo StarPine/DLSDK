@@ -546,6 +546,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                                 maleMessagePrice = priceConfigEntityField.getCurrent().getTextPrice();
                                 chargeMsgNumber = priceConfigEntityField.getCurrent().getChargeMsgNumber();
                             }else{
+                                maleBalance = priceConfigEntityField.getCurrent().getBalance();
                                 isCertification = priceConfigEntityField.getCurrent().getCertification().intValue() == 1;
                                 chargeMsgNumber = priceConfigEntityField.getCurrent().getChargeMsgNumber();
                                 refundMsgNumber = priceConfigEntityField.getCurrent().getRefundMsgNumber();
