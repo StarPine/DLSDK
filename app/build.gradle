@@ -213,6 +213,8 @@ android {
             buildConfigField "String", "WEB_BASE_URL", "\"http://web-playfun.joy-mask.com/\""
             // Ali OSS BucketName
             buildConfigField "String", "BUCKET_NAME", "\"joymask\""
+            //客服id聊天
+            buildConfigField "String", "CHAT_SERVICE_USER_ID_SEND", "\"administrator\""
             //app名字
             resValue "string","app_name","PlayFun-beta"
             //Facebook APPID
