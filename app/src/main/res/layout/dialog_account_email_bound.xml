@@ -65,7 +65,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="8dp"
-                    android:hint="@string/playfun_dialog_set_withdraw_account_name_hint"
+                    android:hint="@string/playfun_mine_setting_account_bindEmail_hint"
                     android:inputType="text"
                     android:maxLength="10"
                     android:textSize="14sp" />
@@ -98,7 +98,7 @@
                     android:layout_marginStart="12dp"
                     android:layout_marginEnd="12dp"
                     android:layout_weight="1"
-                    android:hint="@string/playfun_dialog_set_withdraw_account_name_hint"
+                    android:hint="@string/playfun_mine_setting_account_bindEmail_hint1"
                     android:inputType="text"
                     android:maxLength="10"
                     android:textSize="14sp" />
@@ -111,7 +111,7 @@
                     android:layout_gravity="center_vertical"
                     android:background="@drawable/login_email_btn_sub"
                     android:textColor="@color/white"
-                    android:text="獲取" />
+                    android:text="@string/playfun_mine_setting_account_bindEmail_hint2" />
             </LinearLayout>
 
             <Button
@@ -125,7 +125,7 @@
                 android:layout_marginEnd="@dimen/dp_20"
                 android:textColor="@color/white"
                 android:textSize="14sp"
-                android:text="@string/auth_external_login_btn_next"
+                android:text="@string/playfun_confirm"
                 />
         </LinearLayout>
 
