@@ -116,7 +116,7 @@ public interface ApiService {
     */
     @FormUrlEncoded
     @POST("api/email/bind")
-    Observable<BaseDataResponse<UserDataEntity>> bindUserEmail(
+    Observable<BaseResponse> bindUserEmail(
             @Field("email")String email, //邮箱账号
             @Field("code") String code, //验证码
             @Field("pass") String pass, //账户密码
@@ -132,7 +132,7 @@ public interface ApiService {
     */
     @FormUrlEncoded
     @POST("api/email/login")
-    Observable<BaseResponse> loginEmail(
+    Observable<BaseDataResponse<UserDataEntity>> loginEmail(
             @Field("email")String email, //邮箱账号
             @Field("code") String code, //验证码/密码
             @Field("type") Integer type //1验证码登陆 2密码登陆

@@ -24,11 +24,11 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:layout_width="72dp"
-                    android:layout_height="25dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:layout_gravity="center_horizontal"
-                    android:text="修改密碼"
+                    android:text="@string/playfun_mine_setting_account_pwd_hint"
                     android:textColor="#ff333333"
                     android:textSize="18sp" />
                 <androidx.appcompat.widget.AppCompatImageView
@@ -88,7 +88,7 @@
                     android:layout_marginStart="12dp"
                     android:layout_marginEnd="12dp"
                     android:layout_weight="1"
-                    android:hint="@string/playfun_dialog_set_withdraw_account_name_hint"
+                    android:hint="@string/playfun_mine_setting_account_bindEmail_hint1"
                     android:inputType="text"
                     android:maxLength="10"
                     android:textSize="14sp" />
@@ -126,7 +126,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="12dp"
                     android:layout_marginEnd="@dimen/dp_20"
-                    android:hint="输入账号"
+                    android:hint="@string/playfun_mine_setting_account_pwd_hint"
                     android:imeOptions="actionDone"
                     android:inputType="textPassword"
                     android:text=""
@@ -158,7 +158,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="12dp"
                     android:layout_marginEnd="@dimen/dp_20"
-                    android:hint="输入账号"
+                    android:hint="@string/playfun_mine_setting_account_pwd_hint2"
                     android:imeOptions="actionDone"
                     android:inputType="textPassword"
                     android:text=""

@@ -115,7 +115,7 @@ public interface HttpDataSource {
      * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse<com.dl.playfun.entity.UserDataEntity>>
      * @Date 2022/5/17
      */
-    Observable<BaseDataResponse<UserDataEntity>> bindUserEmail(
+    Observable<BaseResponse> bindUserEmail(
             String email, //邮箱账号
             String code, //验证码
             String pass, //账户密码
@@ -129,7 +129,7 @@ public interface HttpDataSource {
      * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
      * @Date 2022/5/17
      */
-    Observable<BaseResponse> loginEmail(
+    Observable<BaseDataResponse<UserDataEntity>> loginEmail(
             String email, //邮箱账号
             String code, //验证码/密码
             Integer type //1验证码登陆 2密码登陆

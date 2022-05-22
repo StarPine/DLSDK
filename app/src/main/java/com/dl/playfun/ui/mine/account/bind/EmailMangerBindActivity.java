@@ -78,11 +78,7 @@ public class EmailMangerBindActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(FragmentUtils.getTopShow(getSupportFragmentManager()) instanceof LoginEmailPwdViewFragment){
-            showFragment(0);
-        }else{
-            super.onBackPressed();
-        }
+        //返回按键处理。不通知调用父类 即关闭返回触发关闭页面
     }
 
     @Override

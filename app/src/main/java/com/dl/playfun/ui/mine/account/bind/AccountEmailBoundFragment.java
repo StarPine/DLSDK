@@ -212,12 +212,12 @@ public class AccountEmailBoundFragment extends Fragment implements Consumer<Disp
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
                 .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseDataResponse<UserDataEntity>>(){
+                .subscribe(new BaseObserver<BaseResponse>(){
                     @Override
-                    public void onSuccess(BaseDataResponse<UserDataEntity> authLoginUserEntityBaseDataResponse) {
-                        UserDataEntity authLoginUserEntity = authLoginUserEntityBaseDataResponse.getData();
-                        cancelDownTime();
+                    public void onSuccess(BaseResponse baseResponse) {
+
                     }
+
                     @Override
                     public void onComplete() {
                         dismissHud();

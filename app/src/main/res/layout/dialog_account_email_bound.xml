@@ -22,15 +22,15 @@
                 android:layout_marginTop="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <TextView
-                    android:layout_width="72dp"
-                    android:layout_height="25dp"
-                    android:text="郵箱綁定"
-                    android:layout_gravity="center_horizontal"
-                    android:textColor="#ff333333"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:textSize="18sp"
-                    />
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/playfun_mine_setting_account_bindEmail"
+                    android:textColor="#ff333333"
+                    android:textSize="18sp" />
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/img_close"
                     android:layout_width="@dimen/dp_20"
@@ -77,7 +77,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:text="推薦使用Gmail郵箱"
+                android:text="@string/playfun_mine_setting_account_bindEmail_hint3"
                 android:textColor="#ffbfbfbf"
                 android:textSize="11sp"
                 />

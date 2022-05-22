@@ -1091,12 +1091,12 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
-    public Observable<BaseDataResponse<UserDataEntity>> bindUserEmail(String email, String code, String pass, Integer type) {
+    public Observable<BaseResponse> bindUserEmail(String email, String code, String pass, Integer type) {
         return apiService.bindUserEmail(email, code, pass, type);
     }
 
     @Override
-    public Observable<BaseResponse> loginEmail(String email, String code, Integer type) {
+    public Observable<BaseDataResponse<UserDataEntity>> loginEmail(String email, String code, Integer type) {
         return apiService.loginEmail(email, code, type);
     }
 
