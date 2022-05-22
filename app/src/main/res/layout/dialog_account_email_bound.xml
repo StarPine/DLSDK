@@ -68,7 +68,7 @@
                     android:layout_marginStart="8dp"
                     android:hint="@string/playfun_mine_setting_account_bindEmail_hint"
                     android:inputType="textEmailAddress"
-                    android:maxLength="10"
+                    android:maxLength="320"
                     android:textSize="14sp" />
             </LinearLayout>
             <TextView
