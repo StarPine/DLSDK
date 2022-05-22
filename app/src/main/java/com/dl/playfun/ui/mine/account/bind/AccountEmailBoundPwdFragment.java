@@ -12,6 +12,7 @@ import android.widget.EditText;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.fragment.app.Fragment;
 
 import com.blankj.utilcode.util.StringUtils;
@@ -38,6 +39,8 @@ public class AccountEmailBoundPwdFragment extends Fragment implements Consumer<D
     private EditText pwd2;
     //提交绑定
     private Button btnSubmit;
+    //关闭弹窗
+    private AppCompatImageView imgClose;
 
     private CompositeDisposable mCompositeDisposable;
 
@@ -61,6 +64,8 @@ public class AccountEmailBoundPwdFragment extends Fragment implements Consumer<D
         pwd2 = view.findViewById(R.id.edit_email_pwd2);
         btnSubmit = view.findViewById(R.id.btn_submit);
         btnSubmit.setOnClickListener(this);
+        imgClose = view.findViewById(R.id.img_close);
+        imgClose.setOnClickListener(this);
         InputTextManager.with(this.getActivity())
                 .addView(pwd)
                 .addView(pwd2)
@@ -113,7 +118,13 @@ public class AccountEmailBoundPwdFragment extends Fragment implements Consumer<D
                 .subscribe(new BaseObserver<BaseDataResponse<UserDataEntity>>(){
                     @Override
                     public void onSuccess(BaseDataResponse<UserDataEntity> authLoginUserEntityBaseDataResponse) {
-
+                        UserDataEntity userDataEntity = ConfigManager.getInstance().getAppRepository().readUserData();
+                        if(userDataEntity!=null){
+                            userDataEntity.setIsPassword(1);
+                            ConfigManager.getInstance().getAppRepository().saveUserData(userDataEntity);
+                        }
+                        //关闭act弹窗
+                        mActivity.finish();
                     }
                     @Override
                     public void onComplete() {

@@ -31,7 +31,6 @@ import me.goldze.mvvmhabit.utils.ToastUtils;
 public class CommunityAccountModel extends BaseViewModel<AppRepository> {
 
 
-    public ObservableField<PrivacyEntity> privacyEntity = new ObservableField<>(new PrivacyEntity());
 
     public UIChangeObservable UC = new UIChangeObservable();
 

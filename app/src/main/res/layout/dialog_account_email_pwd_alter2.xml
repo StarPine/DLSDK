@@ -126,7 +126,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="12dp"
                     android:layout_marginEnd="@dimen/dp_20"
-                    android:hint="@string/playfun_mine_setting_account_pwd_hint"
+                    android:hint="@string/playfun_mine_setting_account_pwd_hint1"
                     android:imeOptions="actionDone"
                     android:inputType="textPassword"
                     android:text=""

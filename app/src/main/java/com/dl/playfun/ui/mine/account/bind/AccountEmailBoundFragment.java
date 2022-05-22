@@ -16,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.fragment.app.Fragment;
 
 import com.blankj.utilcode.util.StringUtils;
@@ -49,6 +50,8 @@ public class AccountEmailBoundFragment extends Fragment implements Consumer<Disp
     private Button btnCode;
     //提交绑定
     private Button btnSubmit;
+    //关闭弹窗
+    private AppCompatImageView imgClose;
 
     private CompositeDisposable mCompositeDisposable;
 
@@ -81,6 +84,8 @@ public class AccountEmailBoundFragment extends Fragment implements Consumer<Disp
         editCode = view.findViewById(R.id.edit_code);
         btnCode = view.findViewById(R.id.btn_code);
         btnSubmit = view.findViewById(R.id.btn_submit);
+        imgClose = view.findViewById(R.id.img_close);
+        imgClose.setOnClickListener(this);
         btnCode.setOnClickListener(this);
         btnSubmit.setOnClickListener(this);
         InputTextManager.with(mActivity)
@@ -92,12 +97,6 @@ public class AccountEmailBoundFragment extends Fragment implements Consumer<Disp
                 .addView(editCode)
                 .setMain(btnSubmit)
                 .build();
-    }
-    
-    public void backView(){
-        if(mActivity instanceof EmailMangerBindActivity){
-            ((EmailMangerBindActivity) mActivity).showFragment(0);
-        }
     }
     protected void addSubscribe(Disposable disposable) {
         if (mCompositeDisposable == null) {
@@ -215,7 +214,9 @@ public class AccountEmailBoundFragment extends Fragment implements Consumer<Disp
                 .subscribe(new BaseObserver<BaseResponse>(){
                     @Override
                     public void onSuccess(BaseResponse baseResponse) {
-
+                        if (mActivity instanceof EmailMangerBindActivity) {
+                            ((EmailMangerBindActivity) mActivity).showFragment(1);
+                        }
                     }
 
                     @Override

@@ -13,6 +13,7 @@ import android.widget.EditText;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.fragment.app.Fragment;
 
 import com.blankj.utilcode.util.StringUtils;
@@ -47,6 +48,8 @@ public class AccountEmailUpdatePwdFragment extends Fragment implements Consumer<
     private EditText pwd2;
     //提交绑定
     private Button btnSubmit;
+    //关闭弹窗
+    private AppCompatImageView imgClose;
 
     private CompositeDisposable mCompositeDisposable;
 
@@ -79,6 +82,8 @@ public class AccountEmailUpdatePwdFragment extends Fragment implements Consumer<
         pwd2 = view.findViewById(R.id.edit_email_pwd2);
         btnCode.setOnClickListener(this);
         btnSubmit.setOnClickListener(this);
+        imgClose = view.findViewById(R.id.img_close);
+        imgClose.setOnClickListener(this);
         InputTextManager.with(this.getActivity())
                 .addView(edtEmail)
                 .setMain(btnCode)
@@ -216,12 +221,18 @@ public class AccountEmailUpdatePwdFragment extends Fragment implements Consumer<
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
                 .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseDataResponse<UserDataEntity>>(){
+                .subscribe(new BaseObserver<BaseResponse>(){
+
                     @Override
-                    public void onSuccess(BaseDataResponse<UserDataEntity> authLoginUserEntityBaseDataResponse) {
-                        UserDataEntity authLoginUserEntity = authLoginUserEntityBaseDataResponse.getData();
+                    public void onSuccess(BaseResponse baseResponse) {
                         cancelDownTime();
+                        UserDataEntity userDataEntity = ConfigManager.getInstance().getAppRepository().readUserData();
+                        if(userDataEntity!=null){
+                            userDataEntity.setIsPassword(1);
+                            ConfigManager.getInstance().getAppRepository().saveUserData(userDataEntity);
+                        }
                     }
+
                     @Override
                     public void onComplete() {
                         dismissHud();

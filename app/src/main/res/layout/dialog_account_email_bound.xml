@@ -31,16 +31,17 @@
                     android:text="@string/playfun_mine_setting_account_bindEmail"
                     android:textColor="#ff333333"
                     android:textSize="18sp" />
+
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/img_close"
                     android:layout_width="@dimen/dp_20"
                     android:layout_height="@dimen/dp_20"
-                    android:layout_marginEnd="15dp"
-                    android:layout_centerInParent="true"
                     android:layout_alignParentEnd="true"
+                    android:layout_centerInParent="true"
                     android:layout_gravity="right"
+                    android:layout_marginEnd="15dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/radio_publish_close"/>
+                    android:src="@drawable/radio_publish_close" />
             </RelativeLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -66,7 +67,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="8dp"
                     android:hint="@string/playfun_mine_setting_account_bindEmail_hint"
-                    android:inputType="text"
+                    android:inputType="textEmailAddress"
                     android:maxLength="10"
                     android:textSize="14sp" />
             </LinearLayout>
