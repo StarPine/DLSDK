@@ -88,6 +88,8 @@ public class AccountEmailBoundPwdFragment extends Fragment implements Consumer<D
             }else{
                 ToastUtils.showShort("两次密码不一致");
             }
+        }else if(v.getId() == R.id.img_close){
+            mActivity.finish();
         }
     }
 

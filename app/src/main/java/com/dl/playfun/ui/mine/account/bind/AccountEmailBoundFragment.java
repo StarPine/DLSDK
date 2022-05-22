@@ -158,6 +158,8 @@ public class AccountEmailBoundFragment extends Fragment implements Consumer<Disp
             return;
         }else if (v.getId() == R.id.btn_submit){
             bindUserEmail(edtEmail.getText().toString(),editCode.getText().toString());
+        }else if(v.getId() == R.id.img_close){
+            mActivity.finish();
         }
     }
     public void cancelDownTime(){
