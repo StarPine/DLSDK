@@ -52,6 +52,7 @@ import com.google.gson.Gson;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.tencent.coustom.GiftEntity;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
+import com.tencent.qcloud.tuikit.tuichat.event.InsufficientBalanceEvent;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageInfoUtil;
 
 import java.util.ArrayList;
@@ -87,21 +88,6 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
     public PriceConfigEntity priceConfigEntityField = null;
     //男生钻石总额
     public Integer maleBalance = 0;
-    //男生聊天卡总额
-    public Integer maleCardNumber = 0;
-    //单条聊天信息钻石数量
-    public Integer maleMessagePrice = 0;
-    public boolean isCertification = false;
-    //是否相互追踪
-    public boolean isFollower = false;
-    //对方未结算消息条数
-    public Integer chargeMsgNumber = 0;
-    //对方未结算消息条数
-    public Integer refundMsgNumber = 0;
-    //是否首次存在收入
-    public Integer firstImMsg = 0;
-    //是否当前用户付费
-    public boolean isPlay = false;
 
     public Integer ChatInfoId = null;
     public UIChangeObservable uc = new UIChangeObservable();
@@ -548,25 +534,12 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                         if(priceConfigEntity != null){
                             priceConfigEntityField = priceConfigEntity;
                             uc.imProfit.call();
-                            isFollower = priceConfigEntity.getIsFollow().intValue() == 1;
-                            UserDataEntity userDataEntity = getLocalUserDataEntity();
-
-                            isPlay = priceConfigEntity.getIsPay().intValue() ==1;
-                            maleBalance = priceConfigEntityField.getCurrent().getBalance();
-                            maleCardNumber = priceConfigEntityField.getCurrent().getPropTotal();
-                            maleMessagePrice = priceConfigEntityField.getCurrent().getTextPrice();
-                            if(userDataEntity.getSex()==1) {
-                                maleBalance = priceConfigEntityField.getCurrent().getBalance();
-                                maleCardNumber = priceConfigEntityField.getCurrent().getPropTotal();
-                                maleMessagePrice = priceConfigEntityField.getCurrent().getTextPrice();
-                                chargeMsgNumber = priceConfigEntityField.getCurrent().getChargeMsgNumber();
-                            }else{
-                                isCertification = priceConfigEntityField.getCurrent().getCertification().intValue() == 1;
-                                chargeMsgNumber = priceConfigEntityField.getCurrent().getChargeMsgNumber();
-                                refundMsgNumber = priceConfigEntityField.getCurrent().getRefundMsgNumber();
-                                firstImMsg = priceConfigEntityField.getCurrent().getFirstImMsg();
-                            }
                         }
+                    }
+
+                    @Override
+                    public void onError(RequestException e) {
+
                     }
 
                     @Override

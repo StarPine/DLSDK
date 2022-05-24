@@ -880,11 +880,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
 
     @Override
     public void onCoinRedPackageActionClick() {
-        //男生发送判断
-        if (!sendVerifyMale()) {
-            paySelectionboxChoose(false);
-            return;
-        }
         if (mChatInfo == null) {
             return;
         }
@@ -957,12 +952,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
      */
     @Override
     public void sendOnClickAudioMessage(InputView.MessageHandler messageHandler, MessageInfo messageInfo) {
-        if (viewModel.priceConfigEntityField == null && getTaUserIdIM() != 0) {
-            return;
-        }
-        //男生发送判断
-        if (!sendVerifyMale()) {
-            paySelectionboxChoose(false);
+        if (viewModel.priceConfigEntityField == null) {
             return;
         }
         if (messageHandler != null) {
@@ -985,13 +975,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
 
     @Override
     public void onClickPhoneVideo() {//点击选中图片、视频
-        //没有钻石、聊天卡唤醒充值
-        //男生发送判断
-        if (!sendVerifyMale()) {
-            paySelectionboxChoose(false);
-            return;
-        }
-
         MessageDetailDialog.CheckImgViewFile(mActivity, true, new MessageDetailDialog.AudioCallHintOnClickListener() {
             @Override
             public void check1OnClick() {
@@ -1212,37 +1195,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
 
     }
 
-    //男士发送消息效验
-    private boolean sendVerifyMale() {
-        if (getTaUserIdIM().intValue() == 0) {
-            return true;
-        }
-        if (viewModel.isFollower) {
-            return true;
-        }
-        UserDataEntity userDataEntity = viewModel.getLocalUserDataEntity();
-        if (userDataEntity.getSex().intValue() == 1) {
-            //有聊天卡
-            if (viewModel.maleCardNumber > 0) {
-                viewModel.maleCardNumber--;
-                return true;
-            } else {
-                if (viewModel.maleBalance == 0) {
-                    return false;
-                } else {
-                    if (viewModel.maleBalance - viewModel.maleMessagePrice >= 0) {
-                        viewModel.maleBalance = viewModel.maleBalance - viewModel.maleMessagePrice;
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-            }
-        } else {
-            return true;
-        }
-    }
-
     @Override
     public void sendOnClickCallbackOk(InputView.MessageHandler messageHandler, MessageInfo messageInfo) {
         if (messageHandler != null) {
@@ -1250,60 +1202,16 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             if (userDataEntity == null) {
                 return;
             }
-            String value = String.valueOf(messageInfo.getExtra());
-            if (viewModel.priceConfigEntityField == null && getTaUserIdIM() != 0) {
-                sendLocalMessage(value);
-                return;
-            }
-            int sex = userDataEntity.getSex();
-            int isVip = userDataEntity.getIsVip();
-
-            if (isVip != 1 && MessageInfo.MSG_TYPE_TEXT == messageInfo.getMsgType() && sex == 1) { //賴  瀨  line
-                if (binding.chatLayout.getMessageLayout().getAdapter().getDataSource().size() < 3 && (value.indexOf("賴") != -1 || value.indexOf("瀨") != -1 || value.indexOf("line") != -1)) {
-                    sendLocalMessage(value);
-                    return;
-                }
-            }
             if (mChatInfo.getId().equals(AppConfig.CHAT_SERVICE_USER_ID)) { //客服放行
                 messageHandler.sendMessage(messageInfo);
                 return;
             }
-
             if (TUIChatUtils.isLineNumber(messageInfo.getExtra().toString()) || TUIChatUtils.isContains(messageInfo.getExtra().toString(), viewModel.sensitiveWords.get())) {
                 //包含台湾电话号码或者包含屏蔽关键字
                 sendLocalMessage(messageInfo.getExtra().toString(), "send_violation_message", null);
                 return;
             }
-            if (sex == 0) {//女性用户
-                messageHandler.sendMessage(messageInfo);
-
-                if (viewModel.isFollower) {
-                    RxBus.getDefault().post(new BubbleTopShowEvent(true));
-                    return;
-                }
-                viewModel.refundMsgNumber = 0;
-            } else {
-                if (viewModel.isFollower) {
-                    messageHandler.sendMessage(messageInfo);
-                } else {
-                    //男生发送判断
-                    if (!sendVerifyMale()) {
-                        if (isVip == 1){
-                            googleCoinValueBox(false);
-                            sendLocalMessage(messageInfo.getExtra().toString());
-                            sendLocalMessage("send_male_error", "send_male_error", null);
-                        }else {
-                            dialogRechargeShow(false);
-                            sendLocalMessage(messageInfo.getExtra().toString());
-                            sendLocalMessage("send_male_error", "send_male_error", null);
-                        }
-                        return;
-                    } else {
-                        messageHandler.sendMessage(messageInfo);
-                    }
-                }
-                viewModel.refundMsgNumber = 0;
-            }
+            messageHandler.sendMessage(messageInfo);
 
         }
     }
@@ -1433,18 +1341,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                 });
             }
         }
-    }
-
-    public static boolean isJSON2(String str) {
-        boolean result = false;
-        try {
-            new Gson().fromJson(str, Map.class);
-            result = true;
-        } catch (Exception e) {
-            result = false;
-        }
-        return result;
-
     }
 
     //获取聊天对象的UserId

@@ -54,8 +54,6 @@ public class PriceConfigEntity {
         private Integer sex;
         @SerializedName("prop_total")
         private Integer propTotal;
-        @SerializedName("charge_msg_number")
-        private Integer chargeMsgNumber;
         @SerializedName("refund_msg_number")
         private Integer refundMsgNumber;
         private Integer certification;
@@ -144,7 +142,6 @@ public class PriceConfigEntity {
                     "balance=" + balance +
                     ", sex=" + sex +
                     ", propTotal=" + propTotal +
-                    ", chargeMsgNumber=" + chargeMsgNumber +
                     ", refundMsgNumber=" + refundMsgNumber +
                     ", certification=" + certification +
                     ", videoProfitTips='" + videoProfitTips + '\'' +
