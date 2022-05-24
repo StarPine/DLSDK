@@ -109,6 +109,24 @@ android {
                 //在这里修改apk文件名
                 outputFileName = "PlayFun-${variant.name}-v${variant.versionName}-${releaseTime()}.apk"
             }
+            //删除多余的特效资源
+            variant.mergeAssetsProvider.configure {
+                doLast {
+                    delete(fileTree(dir: outputDir, includes: ['model/ai_human_processor.bundle',
+                                                               'model/ai_face_processor.bundle',
+                                                               'model/ai_human_processor_mb_fast.bundle',
+                                                               'model/ai_hand_processor.bundle',
+                                                               'model/ai_hairseg.bundle',
+                                                               'model/ai_bgseg_green.bundle',
+                                                               'graphics/controller.bundle',
+                                                               'graphics/fuzzytoonfilter.bundle',
+                                                               'graphics/fxaa.bundle',
+                                                               'graphics/controller_cpp.bundle',
+                                                               'graphics/face_makeup.bundle',
+                                                               'graphics/body_slim.bundle',
+                                                               'graphics/tongue.bundle']))
+                }
+            }
     }
 }
 
@@ -129,7 +147,7 @@ dependencies {
     dependenciesID.each {k,v -> implementation v}
     rxDependencies.each {k,v -> implementation v}
 
-//    implementation(name: 'playfun-lib-1.5', ext: 'aar')
+//    implementation(name: 'playfun-lib-1.5.6.1', ext: 'aar')
     implementation project(':app')
 
 }
