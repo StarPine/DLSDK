@@ -577,7 +577,6 @@ public class AppContext extends Application {
     private void loadAllConfig() {
         if (appRepository.readSystemConfig() == null) {
             AllConfigEntity allConfigEntity = GsonUtils.fromJson(AppConfig.CONFIG_DEFAULT, AllConfigEntity.class);
-            appRepository.saveProgramTimeConfig(allConfigEntity.getProgramTime());
             appRepository.saveHeightConfig(allConfigEntity.getHeight());
             appRepository.saveWeightConfig(allConfigEntity.getWeight());
             appRepository.saveReportReasonConfig(allConfigEntity.getReportReason());
@@ -586,7 +585,6 @@ public class AppContext extends Application {
             appRepository.saveHopeObjectConfig(allConfigEntity.getHopeObject());
             appRepository.saveOccupationConfig(allConfigEntity.getOccupation());
             appRepository.saveCityConfig(allConfigEntity.getCity());
-            appRepository.saveThemeConfig(allConfigEntity.getTheme());
             appRepository.saveSystemConfig(allConfigEntity.getConfig());
         }
         appRepository.getSensitiveWords()
@@ -615,7 +613,6 @@ public class AppContext extends Application {
                     @Override
                     public void onSuccess(BaseDataResponse<AllConfigEntity> response) {
                         try {
-                            appRepository.saveProgramTimeConfig(response.getData().getProgramTime());
                             appRepository.saveHeightConfig(response.getData().getHeight());
                             appRepository.saveWeightConfig(response.getData().getWeight());
                             appRepository.saveReportReasonConfig(response.getData().getReportReason());
@@ -624,7 +621,6 @@ public class AppContext extends Application {
                             appRepository.saveHopeObjectConfig(response.getData().getHopeObject());
                             appRepository.saveOccupationConfig(response.getData().getOccupation());
                             appRepository.saveCityConfig(response.getData().getCity());
-                            appRepository.saveThemeConfig(response.getData().getTheme());
                             appRepository.saveSystemConfig(response.getData().getConfig());
                             appRepository.saveSystemConfigTask(response.getData().getTask());
                             appRepository.saveDefaultHomePageConfig(response.getData().getDefaultHomePage());

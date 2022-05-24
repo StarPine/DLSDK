@@ -8,7 +8,7 @@ include ':AlivcMedia'
 include ':AliyunCrop:crop'
 include ':QueenBeauty'
 include ':faceunity'
-include ':_demo'
+//include ':_demo'
 
 /*IM聊天组件*/
 include ':tuicore'

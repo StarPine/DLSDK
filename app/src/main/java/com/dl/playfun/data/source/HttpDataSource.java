@@ -100,6 +100,42 @@ import retrofit2.http.Query;
 public interface HttpDataSource {
 
     /**
+     * @Desc TODO(根据邮箱发送验证码)
+     * @author 彭石林
+     * @parame []
+     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
+     * @Date 2022/5/17
+     */
+    Observable<BaseResponse> sendEmailCode(String email);
+
+    /**
+     * @Desc TODO(绑定用户邮箱)
+     * @author 彭石林
+     * @parame [email, code, pass, type]
+     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse<com.dl.playfun.entity.UserDataEntity>>
+     * @Date 2022/5/17
+     */
+    Observable<BaseResponse> bindUserEmail(
+            String email, //邮箱账号
+            String code, //验证码
+            String pass, //账户密码
+            Integer type //1绑定邮箱(邮箱/验证码) 2设置密码(两次密码) 3绑定邮箱(邮箱/验证码/两次密码) 4修改密码(验证码/两次密码)
+    );
+
+    /**
+     * @Desc TODO(邮箱登录)
+     * @author 彭石林
+     * @parame [email, code, type]
+     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
+     * @Date 2022/5/17
+     */
+    Observable<BaseDataResponse<UserDataEntity>> loginEmail(
+            String email, //邮箱账号
+            String code, //验证码/密码
+            Integer type //1验证码登陆 2密码登陆
+    );
+
+    /**
      * 获取通话状态 需要两个人都已进入房间，分两种情况：1、已解散房间；2、未解散房间。房间已解散状态下部分字段返回0
      * @param roomId
      * @return
@@ -230,15 +266,6 @@ public interface HttpDataSource {
     Observable<BaseResponse> addIMCollect(
             Integer userId,
             Integer type);
-
-    /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse < com.dl.playfun.entity.SwitchesEntity>>
-     * @Desc TODO(收益提示开关列表)
-     * @author 彭石林
-     * @parame []
-     * @Date 2021/12/25
-     */
-    Observable<BaseDataResponse<SwitchesEntity>> getListSwitches();
 
     /**
      * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse < java.util.Map < java.lang.String, java.lang.Integer>>>

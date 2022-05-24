@@ -96,6 +96,47 @@ import retrofit2.http.Query;
  */
 
 public interface ApiService {
+    /**
+    * @Desc TODO(根据邮箱发送验证码)
+    * @author 彭石林
+    * @parame []
+    * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
+    * @Date 2022/5/17
+    */
+    @FormUrlEncoded
+    @POST("api/email/send")
+    Observable<BaseResponse> sendEmailCode(@Field("email")String email);
+
+    /**
+    * @Desc TODO(绑定用户邮箱)
+    * @author 彭石林
+    * @parame [email, code, pass, type]
+    * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse<com.dl.playfun.entity.UserDataEntity>>
+    * @Date 2022/5/17
+    */
+    @FormUrlEncoded
+    @POST("api/email/bind")
+    Observable<BaseResponse> bindUserEmail(
+            @Field("email")String email, //邮箱账号
+            @Field("code") String code, //验证码
+            @Field("pass") String pass, //账户密码
+            @Field("type") Integer type //1绑定邮箱(邮箱/验证码) 2设置密码(两次密码) 3绑定邮箱(邮箱/验证码/两次密码) 4修改密码(验证码/两次密码)
+    );
+    
+    /**
+    * @Desc TODO(邮箱登录)
+    * @author 彭石林
+    * @parame [email, code, type]
+    * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
+    * @Date 2022/5/17
+    */
+    @FormUrlEncoded
+    @POST("api/email/login")
+    Observable<BaseDataResponse<UserDataEntity>> loginEmail(
+            @Field("email")String email, //邮箱账号
+            @Field("code") String code, //验证码/密码
+            @Field("type") Integer type //1验证码登陆 2密码登陆
+    );
 
     /**
      * 获取通话状态
@@ -272,16 +313,6 @@ public interface ApiService {
     Observable<BaseResponse> addIMCollect(
             @Field("user_id") Integer userId,
             @Field("type") Integer type);
-
-    /**
-     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse < com.dl.playfun.entity.SwitchesEntity>>
-     * @Desc TODO(收益提示开关列表)
-     * @author 彭石林
-     * @parame []
-     * @Date 2021/12/25
-     */
-    @GET("calling/switch/listSwitches")
-    Observable<BaseDataResponse<SwitchesEntity>> getListSwitches();
 
     /**
      * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse < java.util.Map < java.lang.String, java.lang.Integer>>>

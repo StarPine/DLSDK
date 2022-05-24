@@ -366,60 +366,6 @@ public class AppContext extends Application {
     }
 
     private void loadAllConfig() {
-        if (appRepository.readSystemConfig() == null) {
-            AllConfigEntity allConfigEntity = GsonUtils.fromJson(AppConfig.CONFIG_DEFAULT, AllConfigEntity.class);
-            appRepository.saveProgramTimeConfig(allConfigEntity.getProgramTime());
-            appRepository.saveHeightConfig(allConfigEntity.getHeight());
-            appRepository.saveWeightConfig(allConfigEntity.getWeight());
-            appRepository.saveReportReasonConfig(allConfigEntity.getReportReason());
-            appRepository.saveFemaleEvaluateConfig(allConfigEntity.getEvaluate().getEvaluateFemale());
-            appRepository.saveMaleEvaluateConfig(allConfigEntity.getEvaluate().getEvaluateMale());
-            appRepository.saveHopeObjectConfig(allConfigEntity.getHopeObject());
-            appRepository.saveOccupationConfig(allConfigEntity.getOccupation());
-            appRepository.saveCityConfig(allConfigEntity.getCity());
-            appRepository.saveThemeConfig(allConfigEntity.getTheme());
-            appRepository.saveSystemConfig(allConfigEntity.getConfig());
-            appRepository.saveGameConfig(allConfigEntity.getGame());
-
-        }
-        appRepository.getAllConfig()
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .subscribe(new BaseDisposableObserver<BaseDataResponse<AllConfigEntity>>() {
-
-                    @Override
-                    public void onSuccess(BaseDataResponse<AllConfigEntity> response) {
-                        try {
-                            appRepository.saveProgramTimeConfig(response.getData().getProgramTime());
-                            appRepository.saveHeightConfig(response.getData().getHeight());
-                            appRepository.saveWeightConfig(response.getData().getWeight());
-                            appRepository.saveReportReasonConfig(response.getData().getReportReason());
-                            appRepository.saveFemaleEvaluateConfig(response.getData().getEvaluate().getEvaluateFemale());
-                            appRepository.saveMaleEvaluateConfig(response.getData().getEvaluate().getEvaluateMale());
-                            appRepository.saveHopeObjectConfig(response.getData().getHopeObject());
-                            appRepository.saveOccupationConfig(response.getData().getOccupation());
-                            appRepository.saveCityConfig(response.getData().getCity());
-                            appRepository.saveThemeConfig(response.getData().getTheme());
-                            appRepository.saveSystemConfig(response.getData().getConfig());
-                            appRepository.saveSystemConfigTask(response.getData().getTask());
-                            appRepository.saveDefaultHomePageConfig(response.getData().getDefaultHomePage());
-                            appRepository.saveGameConfig(response.getData().getGame());
-                        } catch (Exception e) {
-                            ExceptionReportUtils.report(e);
-                        }
-                    }
-
-                    @Override
-                    public void onError(RequestException e) {
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-
-                });
         LocalGooglePayCache localGooglePayCache = appRepository.readGooglePlay();
         if (localGooglePayCache != null) {
             UserDataEntity userDataEntity = appRepository.readUserData();
@@ -444,24 +390,6 @@ public class AppContext extends Application {
                         }
                     });
         }
-        appRepository.getListSwitches()
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .subscribe(new BaseObserver<BaseDataResponse<SwitchesEntity>>() {
-                    @Override
-                    public void onSuccess(BaseDataResponse<SwitchesEntity> response) {
-                        if (response.getData() != null) {
-                            for (SwitchesEntity.SwitchInfoSet switches : response.getData().getSwitchInfos()) {
-                                if (switches.getKey().equals(EaringlSwitchUtil.KEY_TIPS)) {
-                                    appRepository.putSwitches(EaringlSwitchUtil.KEY_TIPS, switches.getValue());
-                                } else if (switches.getKey().equals(EaringlSwitchUtil.KEY_GUIDE)) {
-                                    appRepository.putSwitches(EaringlSwitchUtil.KEY_GUIDE, switches.getValue());
-                                }
-                            }
-                        }
-                    }
-                });
-
     }
 
     public void pushDeviceToken(String deviceToken) {

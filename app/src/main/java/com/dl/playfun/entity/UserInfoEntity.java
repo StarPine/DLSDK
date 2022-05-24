@@ -69,6 +69,27 @@ public class UserInfoEntity extends BaseObservable {
     @SerializedName("toImId")
     private String ImToUserId;
 
+    private String email;
+    //设置密码 1是0否
+    @SerializedName("is_password")
+    private Integer isPassword;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Integer getIsPassword() {
+        return isPassword;
+    }
+
+    public void setIsPassword(Integer isPassword) {
+        this.isPassword = isPassword;
+    }
+
     public Integer getSoundStatus() {
         return soundStatus;
     }

@@ -77,10 +77,6 @@ import me.goldze.mvvmhabit.utils.ToastUtils;
 public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
     //积分夺宝右侧提示
     public ObservableField<String> entryLabelLable = new ObservableField<>();
-    //推荐用户弹窗
-    public ObservableField<Boolean> isShowMessageTag = new ObservableField<>(false);
-    public ObservableField<MessageTagEntity> messageTagEntity = new ObservableField<>();
-    public ObservableField<String> countDownTimerUi = new ObservableField<>();
     //本地UserData
     public ObservableField<UserDataEntity> localUserDataEntity = new ObservableField<>();
     public ObservableField<BannerItemEntity> banner = new ObservableField<>();
@@ -206,7 +202,7 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
     public BindingCommand serviceOnClickCommand = new BindingCommand(() -> {
         try {
             AppContext.instance().logEvent(AppsFlyerEvent.Contact_Us);
-            ChatUtils.chatUser(AppConfig.CHAT_SERVICE_USER_ID, 0,StringUtils.getString(R.string.playfun_chat_service_name), MineViewModel.this);
+            ChatUtils.chatUser(AppConfig.CHAT_SERVICE_USER_ID_SEND, 0,StringUtils.getString(R.string.playfun_chat_service_name), MineViewModel.this);
         } catch (Exception e) {
             ExceptionReportUtils.report(e);
         }

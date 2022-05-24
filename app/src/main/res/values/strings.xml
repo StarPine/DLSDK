@@ -955,6 +955,25 @@
     <string name="playfun_version_update_store_error">請先安裝Google Play商店</string>
     <string name="playfun_dialog_crystal_exchange_button">我了解了</string>
     <string name="playfun_dialog_question_mark">---</string>
+    <string name="auth_external_login_btn_next">下一步</string>
+    <string name="auth_external_login_btn">确认</string>
+
+    <string name="playfun_mine_setting_account">賬戶管理</string>
+    <string name="playfun_mine_setting_account_bindEmail">綁定郵箱</string>
+    <string name="playfun_mine_setting_account_bindEmail_hint">請輸入郵箱</string>
+    <string name="playfun_mine_setting_account_bindEmail_hint1">請輸入驗證碼</string>
+    <string name="playfun_mine_setting_account_bindEmail_hint2">獲取</string>
+    <string name="playfun_mine_setting_account_bindEmail_hint3">推薦使用Gmail郵箱</string>
+    <string name="playfun_mine_setting_email_hint">設定密碼需要先綁定郵箱</string>
+    <string name="playfun_mine_setting_email_hint2">去綁定</string>
+
+    <string name="playfun_mine_setting_account_pwd_hint">修改密碼</string>
+
+
+    <string name="playfun_mine_setting_account_pwd_hint1">請輸入密碼</string>
+    <string name="playfun_mine_setting_account_pwd_hint2">請再次輸入密碼</string>
+
+    <string name="playfun_mine_setting_account_pwd">賬號密碼</string>
 
 
 

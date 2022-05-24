@@ -399,26 +399,6 @@ public class LocalDataSourceImpl implements LocalDataSource {
     }
 
     @Override
-    public void saveProgramTimeConfig(List<ConfigItemEntity> configs) {
-        String json = GsonUtils.toJson(configs);
-        boolean b = kv.encode(KEY_PROGRAM_TIME_CONFIG, json);
-        System.out.println(b);
-    }
-
-    @Override
-    public List<ConfigItemEntity> readProgramTimeConfig() {
-        String json = kv.decodeString(KEY_PROGRAM_TIME_CONFIG);
-        if (json == null) {
-            return new ArrayList<>();
-        } else if (json.isEmpty()) {
-            return new ArrayList<>();
-        }
-        List<ConfigItemEntity> list = GsonUtils.fromJson(json, new TypeToken<List<ConfigItemEntity>>() {
-        }.getType());
-        return list;
-    }
-
-    @Override
     public void saveHeightConfig(List<ConfigItemEntity> configs) {
         String json = GsonUtils.toJson(configs);
         boolean b = kv.encode(KEY_HEIGHT_CONFIG, json);
@@ -608,26 +588,6 @@ public class LocalDataSourceImpl implements LocalDataSource {
     }
 
     @Override
-    public void saveThemeConfig(List<ConfigItemEntity> configs) {
-        String json = GsonUtils.toJson(configs);
-        boolean b = kv.encode(KEY_THEME_CONFIG, json);
-        System.out.println(b);
-    }
-
-    @Override
-    public List<ConfigItemEntity> readThemeConfig() {
-        String json = kv.decodeString(KEY_THEME_CONFIG);
-        if (json == null) {
-            return new ArrayList<>();
-        } else if (json.isEmpty()) {
-            return new ArrayList<>();
-        }
-        List<ConfigItemEntity> list = GsonUtils.fromJson(json, new TypeToken<List<ConfigItemEntity>>() {
-        }.getType());
-        return list;
-    }
-
-    @Override
     public void saveCityConfig(List<ConfigItemEntity> configs) {
         String json = GsonUtils.toJson(configs);
         boolean b = kv.encode(KEY_CITY_CONFIG, json);
@@ -701,17 +661,5 @@ public class LocalDataSourceImpl implements LocalDataSource {
     @Override
     public String readDefaultHomePageConfig() {
         return kv.decodeString(KEY_DEFAULT_HOME_PAGE_NAME, "home");
-    }
-
-    @Override
-    public void saveIsFrist(Boolean isFrist) {
-        boolean b = kv.encode(KEY_IS_FIRST, isFrist);
-        System.out.println(b);
-    }
-
-    @Override
-    public Boolean readIsFrist() {
-        Boolean isFrist = kv.decodeBool(KEY_IS_FIRST, true);
-        return isFrist;
     }
 }

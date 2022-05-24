@@ -180,11 +180,6 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
-    public Observable<BaseDataResponse<SwitchesEntity>> getListSwitches() {
-        return apiService.getListSwitches();
-    }
-
-    @Override
     public Observable<BaseDataResponse<Map<String, Integer>>> verifyGoddessTips(Integer toUserId) {
         return apiService.verifyGoddessTips(toUserId);
     }
@@ -1088,6 +1083,21 @@ public class HttpDataSourceImpl implements HttpDataSource {
     @Override
     public Observable<BaseDataResponse<List<GameCoinBuy>>> buyGameCoins() {
         return apiService.buyGameCoins("recharge");
+    }
+
+    @Override
+    public Observable<BaseResponse> sendEmailCode(String email) {
+        return apiService.sendEmailCode(email);
+    }
+
+    @Override
+    public Observable<BaseResponse> bindUserEmail(String email, String code, String pass, Integer type) {
+        return apiService.bindUserEmail(email, code, pass, type);
+    }
+
+    @Override
+    public Observable<BaseDataResponse<UserDataEntity>> loginEmail(String email, String code, Integer type) {
+        return apiService.loginEmail(email, code, type);
     }
 
     @Override

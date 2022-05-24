@@ -195,11 +195,6 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
-    public Observable<BaseDataResponse<SwitchesEntity>> getListSwitches() {
-        return mHttpDataSource.getListSwitches();
-    }
-
-    @Override
     public Observable<BaseDataResponse<Map<String, Integer>>> verifyGoddessTips(Integer toUserId) {
         return mHttpDataSource.verifyGoddessTips(toUserId);
     }
@@ -652,16 +647,6 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
-    public void saveProgramTimeConfig(List<ConfigItemEntity> configs) {
-        mLocalDataSource.saveProgramTimeConfig(configs);
-    }
-
-    @Override
-    public List<ConfigItemEntity> readProgramTimeConfig() {
-        return mLocalDataSource.readProgramTimeConfig();
-    }
-
-    @Override
     public void saveHeightConfig(List<ConfigItemEntity> configs) {
         mLocalDataSource.saveHeightConfig(configs);
     }
@@ -747,16 +732,6 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
-    public void saveThemeConfig(List<ConfigItemEntity> configs) {
-        mLocalDataSource.saveThemeConfig(configs);
-    }
-
-    @Override
-    public List<ConfigItemEntity> readThemeConfig() {
-        return mLocalDataSource.readThemeConfig();
-    }
-
-    @Override
     public void saveCityConfig(List<ConfigItemEntity> configs) {
         mLocalDataSource.saveCityConfig(configs);
     }
@@ -804,16 +779,6 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     @Override
     public String readDefaultHomePageConfig() {
         return mLocalDataSource.readDefaultHomePageConfig();
-    }
-
-    @Override
-    public void saveIsFrist(Boolean isFrist) {
-        mLocalDataSource.saveIsFrist(isFrist);
-    }
-
-    @Override
-    public Boolean readIsFrist() {
-        return mLocalDataSource.readIsFrist();
     }
 
     @Override
@@ -1395,6 +1360,21 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     @Override
     public Observable<BaseDataResponse<List<GameCoinBuy>>> buyGameCoins() {
         return mHttpDataSource.buyGameCoins();
+    }
+
+    @Override
+    public Observable<BaseResponse> sendEmailCode(String email) {
+        return mHttpDataSource.sendEmailCode(email);
+    }
+
+    @Override
+    public Observable<BaseResponse> bindUserEmail(String email, String code, String pass, Integer type) {
+        return mHttpDataSource.bindUserEmail(email, code, pass, type);
+    }
+
+    @Override
+    public Observable<BaseDataResponse<UserDataEntity>> loginEmail(String email, String code, Integer type) {
+        return mHttpDataSource.loginEmail(email, code, type);
     }
 
     @Override

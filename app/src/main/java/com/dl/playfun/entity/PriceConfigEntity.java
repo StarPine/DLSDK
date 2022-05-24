@@ -12,6 +12,9 @@ public class PriceConfigEntity {
     private Integer isFollow;
     private Current current;
     private Current other;
+    //谁付费 0当前不付费 1付费
+    @SerializedName("is_pay")
+    private Integer isPay;
 
     public Integer getIsFollow() {
         return isFollow;
@@ -35,6 +38,14 @@ public class PriceConfigEntity {
 
     public void setOther(Current other) {
         this.other = other;
+    }
+
+    public Integer getIsPay() {
+        return isPay;
+    }
+
+    public void setIsPay(Integer isPay) {
+        this.isPay = isPay;
     }
 
     //男

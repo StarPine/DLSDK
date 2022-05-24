@@ -950,4 +950,5 @@
     <string name="playfun_name_number_too_long2">Can\'t exceed 10 words</string>
     <string name="playfun_mine_vip_hint">VIP privileges</string>
     <string name="playfun_vipsubscribe_item_vip_txt_currency">$</string>
+    <string name="auth_external_login_btn_next">下一步</string>
 </resources>

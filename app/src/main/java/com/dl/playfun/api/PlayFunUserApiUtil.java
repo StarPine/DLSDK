@@ -11,11 +11,15 @@ import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
+import com.dl.playfun.app.EaringlSwitchUtil;
 import com.dl.playfun.app.Injection;
+import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.exception.RequestException;
+import com.dl.playfun.data.source.http.observer.BaseDisposableObserver;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
+import com.dl.playfun.entity.AllConfigEntity;
 import com.dl.playfun.entity.GamePayEntity;
 import com.dl.playfun.entity.GamePhotoAlbumEntity;
 import com.dl.playfun.entity.RoleInfoEntity;
@@ -23,6 +27,7 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.MainContainerActivity;
 import com.dl.playfun.utils.AESUtil;
 import com.dl.playfun.utils.ApiUitl;
+import com.dl.playfun.utils.ExceptionReportUtils;
 import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
 
 import org.jetbrains.annotations.NotNull;
@@ -58,6 +63,54 @@ public class PlayFunUserApiUtil {
     */
     public void saveGameConfigSetting(@NonNull @NotNull AppGameConfig appGameConfig){
         ConfigManager.getInstance().getAppRepository().saveGameConfigSetting(appGameConfig);
+    }
+    /**
+    * @Desc TODO(初始化执行获取系统配置)
+    * @author 彭石林
+    * @parame [initSettingConfigListener]
+    * @return boolean
+    * @Date 2022/5/16
+    */
+    public void initSettingConfig(InitSettingConfigListener initSettingConfigListener){
+        ConfigManager.getInstance().getAppRepository().getAllConfig()
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .subscribe(new BaseDisposableObserver<BaseDataResponse<AllConfigEntity>>() {
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+
+                    @Override
+                    public void onSuccess(BaseDataResponse<AllConfigEntity> response) {
+                        try {
+                            AppRepository appRepository = ConfigManager.getInstance().getAppRepository();
+                            appRepository.saveHeightConfig(response.getData().getHeight());
+                            appRepository.saveWeightConfig(response.getData().getWeight());
+                            appRepository.saveReportReasonConfig(response.getData().getReportReason());
+                            appRepository.saveFemaleEvaluateConfig(response.getData().getEvaluate().getEvaluateFemale());
+                            appRepository.saveMaleEvaluateConfig(response.getData().getEvaluate().getEvaluateMale());
+                            appRepository.saveHopeObjectConfig(response.getData().getHopeObject());
+                            appRepository.saveOccupationConfig(response.getData().getOccupation());
+                            appRepository.saveCityConfig(response.getData().getCity());
+                            appRepository.saveSystemConfig(response.getData().getConfig());
+                            appRepository.saveSystemConfigTask(response.getData().getTask());
+                            appRepository.saveDefaultHomePageConfig(response.getData().getDefaultHomePage());
+                            appRepository.saveGameConfig(response.getData().getGame());
+                            appRepository.putSwitches(EaringlSwitchUtil.KEY_TIPS, response.getData().getIsTips());
+                            initSettingConfigListener.onSuccess();
+                        } catch (Exception e) {
+                            ExceptionReportUtils.report(e);
+                        }
+                    }
+                    @Override
+                    public void onError(RequestException e) {
+                        e.printStackTrace();
+                        initSettingConfigListener.OnError(e);
+                    }
+
+                });
     }
 
     /**
@@ -216,5 +269,10 @@ public class PlayFunUserApiUtil {
 
     public interface CommitRoleInfoListener{
         void RoleInfoCallback(boolean flagType);
+    }
+
+    public interface InitSettingConfigListener{
+        void onSuccess();
+        void OnError(RequestException e);
     }
 }

@@ -123,6 +123,7 @@
             android:includeFontPadding="false"
             android:src="@drawable/ic_disturb"
             android:visibility="gone" />
+
         <TextView
             android:id="@+id/conversation_unread"
             android:layout_width="wrap_content"

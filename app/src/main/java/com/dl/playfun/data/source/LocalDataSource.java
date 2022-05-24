@@ -239,20 +239,6 @@ public interface LocalDataSource {
     List<GameConfigEntity> readGameConfig();
 
     /**
-     * 保存节目时间配置
-     *
-     * @param configs
-     */
-    void saveProgramTimeConfig(List<ConfigItemEntity> configs);
-
-    /**
-     * 获取节目时间配置
-     *
-     * @return
-     */
-    List<ConfigItemEntity> readProgramTimeConfig();
-
-    /**
      * 保存身高配置
      *
      * @param configs
@@ -372,20 +358,6 @@ public interface LocalDataSource {
     List<OccupationConfigItemEntity> readOccupationConfig();
 
     /**
-     * 保存主题配置
-     *
-     * @param configs
-     */
-    void saveThemeConfig(List<ConfigItemEntity> configs);
-
-    /**
-     * 获取主题配置
-     *
-     * @return
-     */
-    List<ConfigItemEntity> readThemeConfig();
-
-    /**
      * 保存城市配置
      *
      * @param configs
@@ -470,18 +442,4 @@ public interface LocalDataSource {
      * @return
      */
     String readDefaultHomePageConfig();
-
-    /**
-     * 保存是否第一次进入
-     *
-     * @param isFrist
-     */
-    void saveIsFrist(Boolean isFrist);
-
-    /**
-     * 读取是否第一次进入
-     *
-     * @return
-     */
-    Boolean readIsFrist();
 }
