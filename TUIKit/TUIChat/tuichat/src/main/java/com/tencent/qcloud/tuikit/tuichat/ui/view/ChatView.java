@@ -40,6 +40,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
+import com.tencent.qcloud.tuikit.tuichat.event.InsufficientBalanceEvent;
 import com.tencent.qcloud.tuikit.tuichat.presenter.C2CChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.presenter.GroupChatPresenter;
@@ -52,6 +53,8 @@ import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import me.goldze.mvvmhabit.bus.RxBus;
 
 
 public class ChatView extends LinearLayout  implements IChatLayout {
@@ -796,7 +799,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
             @Override
             public void onError(String module, int errCode, String errMsg) {
                 if (errCode == 20006){
-                    ToastUtil.toastLongMessage(getContext().getString(R.string.custom_message_txt8));
+                    RxBus.getDefault().post(new InsufficientBalanceEvent());
                 }else {
                     ToastUtil.toastLongMessage(errMsg);
                 }

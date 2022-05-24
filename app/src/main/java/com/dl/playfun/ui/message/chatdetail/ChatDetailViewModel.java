@@ -52,6 +52,7 @@ import com.google.gson.Gson;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.tencent.coustom.GiftEntity;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
+import com.tencent.qcloud.tuikit.tuichat.event.InsufficientBalanceEvent;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageInfoUtil;
 
 import java.security.cert.PKIXRevocationChecker;
@@ -107,6 +108,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
     //RxBus订阅事件
     private Disposable messageGiftNewEventSubscriber;
     private Disposable CallChatingHangupSubscriber;
+    private Disposable InsufficientBalanceSubscriber;
     //礼物消息防抖
     private String lastClickFunName;
     private long lastClickTime;
@@ -767,6 +769,10 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                 getTotalCoins();
             }
         });
+        InsufficientBalanceSubscriber = RxBus.getDefault().toObservable(InsufficientBalanceEvent.class).subscribe(event -> {
+            uc.sendDialogViewEvent.call();
+        });
+
 
         //将订阅者加入管理站
         RxSubscriptions.add(messageGiftNewEventSubscriber);
