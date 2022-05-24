@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -856,6 +858,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     @Override
     public void onBurnActionClick() {
         PictureSelectorUtil.selectImage(mActivity, true, 1, new OnResultCallbackListener<LocalMedia>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onResult(List<LocalMedia> result) {
                 PhotoReviewFragment photoReviewFragment = new PhotoReviewFragment();
@@ -1278,11 +1281,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                     RxBus.getDefault().post(new BubbleTopShowEvent(true));
                     return;
                 }
-                if (viewModel.chargeMsgNumber != null && viewModel.chargeMsgNumber.intValue() > 0) {//有收入消息
-                    //收入气泡隐藏
-                    RxBus.getDefault().post(new BubbleTopShowEvent(true));
-                }
-                viewModel.chargeMsgNumber = 0;
                 viewModel.refundMsgNumber = 0;
             } else {
                 if (viewModel.isFollower) {
@@ -1304,7 +1302,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                         messageHandler.sendMessage(messageInfo);
                     }
                 }
-                viewModel.chargeMsgNumber = 0;
                 viewModel.refundMsgNumber = 0;
             }
 

@@ -54,9 +54,6 @@ public class PriceConfigEntity {
         private String audioProfitTips;
         @SerializedName("text_price")
         private Integer textPrice;
-        //是否是首次收入
-        @SerializedName("first_im_msg")
-        private Integer firstImMsg;
 
         public String getVideoTips() {
             return videoTips;
@@ -88,14 +85,6 @@ public class PriceConfigEntity {
 
         public void setPropTotal(Integer propTotal) {
             this.propTotal = propTotal;
-        }
-
-        public Integer getChargeMsgNumber() {
-            return chargeMsgNumber;
-        }
-
-        public void setChargeMsgNumber(Integer chargeMsgNumber) {
-            this.chargeMsgNumber = chargeMsgNumber;
         }
 
         public Integer getRefundMsgNumber() {
@@ -136,14 +125,6 @@ public class PriceConfigEntity {
 
         public void setTextPrice(Integer textPrice) {
             this.textPrice = textPrice;
-        }
-
-        public Integer getFirstImMsg() {
-            return firstImMsg;
-        }
-
-        public void setFirstImMsg(Integer firstImMsg) {
-            this.firstImMsg = firstImMsg;
         }
 
         @Override
