@@ -29,7 +29,6 @@ import com.dl.playfun.entity.EvaluateItemEntity;
 import com.dl.playfun.entity.EvaluateObjEntity;
 import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.entity.IMTransUserEntity;
-import com.dl.playfun.entity.MessageChatNumberEntity;
 import com.dl.playfun.entity.MessageRuleEntity;
 import com.dl.playfun.entity.PhotoAlbumEntity;
 import com.dl.playfun.entity.PriceConfigEntity;
@@ -41,16 +40,15 @@ import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.AddBlackListEvent;
 import com.dl.playfun.event.CallChatingHangupEvent;
 import com.dl.playfun.event.MessageGiftNewEvent;
-import com.dl.playfun.event.RewardRedDotEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.utils.FileUploadUtils;
+import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.utils.Utils;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.google.gson.Gson;
 import com.luck.picture.lib.entity.LocalMedia;
-import com.tencent.coustom.GiftEntity;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
 import com.tencent.qcloud.tuikit.tuichat.event.InsufficientBalanceEvent;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageInfoUtil;
@@ -92,7 +90,9 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
     public Integer ChatInfoId = null;
     public UIChangeObservable uc = new UIChangeObservable();
     //创建动画待播放数组
-    public volatile ArrayList<GiftEntity> animGiftList = new ArrayList<>();
+    public volatile ArrayList<MessageGiftNewEvent> animGiftList = new ArrayList<>();
+
+    public ArrayList<String> giftIDList = new ArrayList();
     //是否在播放动画
     public volatile boolean animGiftPlaying = false;
     //RxBus订阅事件
@@ -724,28 +724,24 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                 });
     }
 
+    public void playSVGAGift(){
+        if (animGiftList.size() > 0 && !animGiftPlaying){
+            animGiftPlaying = true;
+            uc.signGiftAnimEvent.call();
+        }
+    }
+
     @Override
     public void registerRxBus() {
         super.registerRxBus();
 
         messageGiftNewEventSubscriber = RxBus.getDefault().toObservable(MessageGiftNewEvent.class).subscribe(event -> {
-            if(event!=null){
-                //加入礼物接收防抖。相同礼物id 1秒内只播放一次
-                long currentClickTime = System.currentTimeMillis();
-                if(lastClickFunName == null){
-                    lastClickTime = currentClickTime;
-                    lastClickFunName = event.getMsgId();
-                }else{
-                    boolean isFastClick = (currentClickTime - lastClickTime) <= 1000;
-                    if(isFastClick){
-                        return;
-                    }
-                }
-                lastClickTime = currentClickTime;
-                GiftEntity giftEntity = event.getGiftEntity();
-                animGiftList.add(giftEntity);
-                if (!animGiftPlaying) {
-                    uc.signGiftAnimEvent.call();
+            if (event != null){
+                boolean containsKey = giftIDList.contains(event.getMsgId());
+                if (!containsKey){
+                    giftIDList.add(event.getMsgId());
+                    animGiftList.add(event);
+                    playSVGAGift();
                 }
             }
         });

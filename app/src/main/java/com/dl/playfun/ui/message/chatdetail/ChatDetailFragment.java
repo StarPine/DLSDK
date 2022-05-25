@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,7 +44,7 @@ import com.dl.playfun.entity.PhotoAlbumEntity;
 import com.dl.playfun.entity.TagEntity;
 import com.dl.playfun.entity.TaskRewardReceiveEntity;
 import com.dl.playfun.entity.UserDataEntity;
-import com.dl.playfun.event.BubbleTopShowEvent;
+import com.dl.playfun.event.MessageGiftNewEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
@@ -84,7 +83,6 @@ import com.opensource.svgaplayer.SVGASoundManager;
 import com.opensource.svgaplayer.SVGAVideoEntity;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.tencent.coustom.CustomIMTextEntity;
-import com.tencent.coustom.GiftEntity;
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
@@ -108,7 +106,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import me.goldze.mvvmhabit.bus.RxBus;
 import me.yokeyword.fragmentation.ISupportFragment;
 
 /**
@@ -461,7 +458,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         viewModel.uc.signUploadSendMessage.observe(this, new Observer<MessageInfo>() {
             @Override
             public void onChanged(MessageInfo messageInfo) {
-                if(messageInfo!=null){
+                if (messageInfo != null) {
                     binding.chatLayout.sendMessage(messageInfo, false);
                 }
             }
@@ -565,7 +562,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                     return;
                 }
                 //不能点击自己的用户头像进入主页
-                if(id.trim().equals(getUserIdIM())){
+                if (id.trim().equals(getUserIdIM())) {
                     return;
                 }
                 viewModel.transUserIM(messageInfo.getFromUser());
@@ -1013,12 +1010,12 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     }
 
     @Override
-    public void sendBlackStatus(int status){
+    public void sendBlackStatus(int status) {
         try {
-            if (!ObjectUtils.isEmpty(viewModel) && viewModel.tagEntitys.get() != null){
+            if (!ObjectUtils.isEmpty(viewModel) && viewModel.tagEntitys.get() != null) {
                 viewModel.tagEntitys.get().setBlacklistStatus(status);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             LogUtils.i("sendBlackStatus: ");
         }
     }
@@ -1045,11 +1042,11 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
 
     @Override
     public void onClickCallPlayUser() {//点击调用拨打通话
-        if (viewModel.tagEntitys.get() != null){
-            if (viewModel.tagEntitys.get().getBlacklistStatus() == 1 || viewModel.tagEntitys.get().getBlacklistStatus() == 3 ){
+        if (viewModel.tagEntitys.get() != null) {
+            if (viewModel.tagEntitys.get().getBlacklistStatus() == 1 || viewModel.tagEntitys.get().getBlacklistStatus() == 3) {
                 Toast.makeText(mActivity, R.string.playfun_chat_detail_pull_black_other, Toast.LENGTH_SHORT).show();
                 return;
-            }else if(viewModel.tagEntitys.get().getBlacklistStatus() == 2){
+            } else if (viewModel.tagEntitys.get().getBlacklistStatus() == 2) {
                 Toast.makeText(mActivity, R.string.playfun_chat_detail_blocked, Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -1347,8 +1344,9 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     public Integer getTaUserIdIM() {
         return toUserDataId == null ? 0 : toUserDataId;
     }
+
     //获取当前用户的IM id
-    public String getUserIdIM(){
+    public String getUserIdIM() {
         return ConfigManager.getInstance().getUserImID();
     }
 
@@ -1396,87 +1394,63 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
      * @Date 2022/3/12
      */
     private synchronized void startSVGAnimotion() {
-        if (!viewModel.animGiftPlaying) {
-            if (viewModel.animGiftList.size() > 0) {
-                viewModel.animGiftPlaying = true;
-                GiftEntity giftEntity = viewModel.animGiftList.get(0);
-                SVGAParser svgaParser = SVGAParser.Companion.shareParser();
-                try {
-                    svgaParser.decodeFromURL(new URL(StringUtil.getFullAudioUrl(giftEntity.getSvgaPath())), new SVGAParser.ParseCompletion() {
-                        @Override
-                        public void onComplete(@NotNull SVGAVideoEntity videoItem) {
-                            if (videoItem != null) {
-                                if (giftView == null) {
-                                    try {
-                                        if(getContext()==null || viewModel==null){
-                                            return;
-                                        }else{
-                                            ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                                            giftView = new SVGAImageView(getContext());
-                                            giftView.setLayoutParams(layoutParams);
-                                        }
-                                        return;
-                                    }catch (Exception e){
-
-                                    }
-                                }
-                                giftView.setVisibility(View.VISIBLE);
-                                giftView.setVideoItem(videoItem);
-                                giftView.setLoops(1);
-                                giftView.setElevation(999);
-                                giftView.setCallback(new SVGACallback() {
-                                    @Override
-                                    public void onPause() {
-                                    }
-
-                                    @Override
-                                    public void onFinished() {
-                                        if (viewModel.animGiftList != null && viewModel.animGiftList.size() > 0) {
-                                            viewModel.animGiftList.remove(0);
-                                        }
-                                        //播放完成
-                                        giftView.setVisibility(View.GONE);
-                                        viewModel.animGiftPlaying = false;
-                                        if (viewModel.animGiftList.size() > 0) {
-                                            startSVGAnimotion();
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onRepeat() {
-                                    }
-
-                                    @Override
-                                    public void onStep(int i, double v) {
-                                    }
-                                });
-                                giftView.startAnimation();
+        MessageGiftNewEvent giftEntity = viewModel.animGiftList.get(0);
+        String formUserId = giftEntity.getFormUserId();
+        if (!formUserId.equals(mChatInfo.getId()) && !formUserId.equals(getUserIdIM())){
+            finishSVGA();
+            return;
+        }
+        SVGAParser svgaParser = SVGAParser.Companion.shareParser();
+        try {
+            svgaParser.decodeFromURL(new URL(StringUtil.getFullAudioUrl(giftEntity.getGiftEntity().getSvgaPath())), new SVGAParser.ParseCompletion() {
+                @Override
+                public void onComplete(@NotNull SVGAVideoEntity videoItem) {
+                    if (videoItem != null && giftView != null) {
+                        giftView.setVisibility(View.VISIBLE);
+                        giftView.setVideoItem(videoItem);
+                        giftView.setLoops(1);
+                        giftView.setElevation(999);
+                        giftView.setCallback(new SVGACallback() {
+                            @Override
+                            public void onPause() {
                             }
-                        }
 
-                        @Override
-                        public void onError() {
-                            Log.e("播放失败", "===========");
-                            viewModel.animGiftPlaying = false;
-                            if (viewModel.animGiftList != null && viewModel.animGiftList.size() > 0) {
-                                viewModel.animGiftList.remove(0);
+                            @Override
+                            public void onFinished() {
+                                finishSVGA();
                             }
-                            if (viewModel.animGiftList.size() > 0) {
-                                startSVGAnimotion();
+
+                            @Override
+                            public void onRepeat() {
                             }
-                        }
-                    }, null);
-                } catch (Exception e) {
-                    Log.e("播放异常", "===========");
-                    if (viewModel.animGiftList != null && viewModel.animGiftList.size() > 0) {
-                        viewModel.animGiftList.remove(0);
-                    }
-                    viewModel.animGiftPlaying = false;
-                    if (viewModel.animGiftList.size() > 0) {
-                        startSVGAnimotion();
+
+                            @Override
+                            public void onStep(int i, double v) {
+                            }
+                        });
+                        giftView.startAnimation();
                     }
                 }
-            }
+
+                @Override
+                public void onError() {
+                    Log.e("播放失败", "===========");
+                    finishSVGA();
+                }
+            }, null);
+        } catch (Exception e) {
+            Log.e("播放异常", "===========");
+            finishSVGA();
         }
+    }
+
+    private void finishSVGA() {
+        if (viewModel.animGiftList != null && viewModel.animGiftList.size() > 0) {
+            viewModel.animGiftList.remove(0);
+        }
+        //播放完成
+        giftView.setVisibility(View.GONE);
+        viewModel.animGiftPlaying = false;
+        viewModel.playSVGAGift();
     }
 }
