@@ -35,7 +35,7 @@
     <string name="dismiss_tip_before">Grubunuz</string>
     <string name="dismiss_tip_after">dağıldı.</string>
     <string name="get_system_notice">Özel bir sistem bildirimi alındı:</string>
-    <string name="down_cancle_send">İptal etmek için yukarı kaydırın</string>
+    <string name="down_cancle_send">kaymak İptal etmek</string>
     <string name="say_time_short">Mesaj çok kısa</string>
     <string name="record_fail">Kayıt başarısız</string>
     <string name="up_cancle_send">İptal etmek için bırakın</string>

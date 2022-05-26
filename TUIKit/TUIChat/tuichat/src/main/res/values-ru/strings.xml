@@ -35,7 +35,7 @@
     <string name="dismiss_tip_before">Ваша группа</string>
     <string name="dismiss_tip_after">расформирован.</string>
     <string name="get_system_notice">Получено пользовательское системное уведомление:</string>
-    <string name="down_cancle_send">Сдвиньте вверх, чтобы отменить</string>
+    <string name="down_cancle_send">Проведите, чтобы отменить</string>
     <string name="say_time_short">Сообщение слишком короткое</string>
     <string name="record_fail">Запись не удалась</string>
     <string name="up_cancle_send">Отпустите, чтобы отменить</string>
