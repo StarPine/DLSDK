@@ -451,6 +451,8 @@ public class AppContext extends Application {
                                     appRepository.putSwitches(EaringlSwitchUtil.KEY_TIPS, switches.getValue());
                                 } else if (switches.getKey().equals(EaringlSwitchUtil.KEY_GUIDE)) {
                                     appRepository.putSwitches(EaringlSwitchUtil.KEY_GUIDE, switches.getValue());
+                                } else if (switches.getKey().equals(EaringlSwitchUtil.KEY_WALLET_ENTRANCE)){
+                                    appRepository.putSwitches(EaringlSwitchUtil.KEY_WALLET_ENTRANCE, switches.getValue());
                                 }
                             }
                         }

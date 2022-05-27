@@ -22,7 +22,7 @@ public class HomeMainTabPagerAdapter extends FragmentStatePagerAdapter {
     @StringRes
     public static final int[] TAB_FEMALE_TITLES = new int[]{R.string.playfun_tab_female_1, R.string.playfun_tab_female_2, R.string.playfun_tab_female_3};
     //女生分类类型
-    public static final int[] TAB_FEMALE_IDX_TYPE = new int[]{3, 1, 2};
+    public static final int[] TAB_FEMALE_IDX_TYPE = new int[]{1, 2, 3};
     @StringRes
     public static final int[] TAB_MALE_TITLES = new int[]{R.string.playfun_tab_male_1, R.string.playfun_tab_male_2};
     //男生分类类型

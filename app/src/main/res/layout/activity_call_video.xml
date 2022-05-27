@@ -290,17 +290,15 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="2dp"
                         android:src="@{viewModel.getVipGodsImg(viewModel.callingInviteInfoField)}"
-                        android:visibility="@{viewModel.getVipGodsImg(viewModel.callingInviteInfoField) == null?View.GONE:View.VISIBLE}"
-                        />
+                        android:visibility="@{viewModel.getVipGodsImg(viewModel.callingInviteInfoField) == null?View.GONE:View.VISIBLE}" />
 
                     <ImageView
                         android:layout_width="31dp"
                         android:layout_height="13dp"
                         android:layout_marginStart="5dp"
-                        binding:imagePath="@{viewModel.gameUrl(viewModel.callingInviteInfoField.userProfileInfo.gameChannel)}"
                         android:visibility="@{viewModel.isEmpty(viewModel.gameUrl(viewModel.callingInviteInfoField.userProfileInfo.gameChannel))?View.GONE:View.VISIBLE}"
-                        tools:src="@drawable/ic_vip"
-                        />
+                        binding:imagePath="@{viewModel.gameUrl(viewModel.callingInviteInfoField.userProfileInfo.gameChannel)}"
+                        tools:src="@drawable/ic_vip" />
 
                 </LinearLayout>
 
@@ -322,8 +320,7 @@
                         android:text="@{viewModel.callingVideoInviteInfoField.cityName}"
                         android:textColor="@color/white"
                         android:textSize="9sp"
-                        tools:text="城市"
-                        />
+                        tools:text="城市" />
 
                     <TextView
                         android:layout_width="wrap_content"

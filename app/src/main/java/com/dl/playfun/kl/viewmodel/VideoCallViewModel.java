@@ -778,7 +778,8 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
                                     CustomMessageIMTextEntity giftEntity = IMGsonUtils.fromJson(String.valueOf(map_data.get("data")), CustomMessageIMTextEntity.class);
                                     if (giftEntity != null) {
                                         String sexText = isMale ? StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt3) : StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt2);
-                                        String msgText = giftEntity.getToName() + StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt4) + sexText;
+                                        String toName = giftEntity.getUserId().equals(model.readUserData().getId())?callingVideoInviteInfoField.get().getNickname():model.readUserData().getNickname();
+                                        String msgText = toName + StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt4) + sexText;
                                         SpannableString stringBuilder = new SpannableString(msgText);
                                         ForegroundColorSpan blueSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint2));
                                         stringBuilder.setSpan(blueSpan, 0, msgText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
