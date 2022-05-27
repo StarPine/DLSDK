@@ -141,7 +141,7 @@
     <string name="test_custom_action">Özel mesajlar</string>
     <string name="welcome_tip">Anında Mesajlaşma\'ya katıldığınız için teşekkür ederiz!</string>
     <string name="custom_send_error_message">Gönderilemedi</string>
-    <string name="custom_send_error_message_txt1">Daha fazla ücretsiz sohbet yok. \nBirbirinizi takip ettikten sonra ücretsiz sohbet edebilirsiniz veya Elmas satın alarak sohbete devam edebilirsiniz.</string>
+    <string name="custom_send_error_message_txt1">Yetersiz elmas bakiyesi, sohbete devam etmek için elmasları alın</string>
     <string name="custom_send_error_message_txt2">Şimdi al>></string>
     <string name="custom_message_txt1">Gelir +%s. Gerçek kişi doğrulaması ile gelir ikiye katlanır. Doğrulamaya git>></string>
     <string name="custom_message_txt1_key">Doğrulamaya git>></string>

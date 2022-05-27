@@ -141,7 +141,7 @@
     <string name="test_custom_action">Custom Messages</string>
     <string name="welcome_tip">Thank you for joining Instant Messaging!</string>
     <string name="custom_send_error_message">Send Failed</string>
-    <string name="custom_send_error_message_txt1">There are no more free chats. \nYou can chat for free after following each other. Or get a diamond to continue chatting.</string>
+    <string name="custom_send_error_message_txt1">Diamond balance is insufficient, get diamonds to continue chatting</string>
     <string name="custom_send_error_message_txt2">Get now>></string>
     <string name="custom_message_txt1">Income +%s. Income doubles with real person verification. Go to verification>></string>
     <string name="custom_message_txt1_key">Go to Verification>></string>

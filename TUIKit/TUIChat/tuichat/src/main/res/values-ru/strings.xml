@@ -141,7 +141,7 @@
     <string name="test_custom_action">Пользовательские сообщения</string>
     <string name="welcome_tip">Спасибо, что присоединились к обмену мгновенными сообщениями!</string>
     <string name="custom_send_error_message">Отправить не удалось</string>
-    <string name="custom_send_error_message_txt1">Бесплатных чатов больше нет. Вы можете бесплатно общаться в чате, подписавшись друг на друга. Или получите бриллиант, чтобы продолжить общение.</string>
+    <string name="custom_send_error_message_txt1">Баланс алмазов недостаточен, получите алмазы, чтобы продолжить общение</string>
     <string name="custom_send_error_message_txt2">Получить сейчас>></string>
     <string name="custom_message_txt1">Доход +%s. Доход удваивается при проверке реального лица. Перейти к проверке>></string>
     <string name="custom_message_txt1_key">Перейти к проверке>></string>

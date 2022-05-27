@@ -173,7 +173,7 @@
     <string name="test_custom_action">自訂消息</string>
     <string name="welcome_tip">歡迎加入雲通訊IM大家庭！</string>
     <string name="custom_send_error_message">發送失敗</string>
-    <string name="custom_send_error_message_txt1">已經沒有免費聊天次數啦~\n互相關注後可免費暢聊，獲取鑽石繼續撩</string>
+    <string name="custom_send_error_message_txt1">鑽石餘額不足，獲取鑽石繼續聊天</string>
     <string name="custom_send_error_message_txt2">馬上獲取>></string>
     <string name="custom_message_txt1">收入+%s，真人認證後收入翻倍 去認證>></string>
     <string name="custom_message_txt1_key">去認證>></string>
