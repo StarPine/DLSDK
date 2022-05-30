@@ -183,6 +183,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         if (mChatInfo == null) {
             return;
         }
+        viewModel.TMToUserId = mChatInfo.getId();
         //非客服账号加载用户标签和状态
         if (!mChatInfo.getId().contains(AppConfig.CHAT_SERVICE_USER_ID)) {
             viewModel.loadUserInfo(getTaUserIdIM());

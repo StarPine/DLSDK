@@ -84,6 +84,8 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
     public ObservableField<Boolean> dialogShow = new ObservableField<>(false);
     public ObservableField<TagEntity> tagEntitys = new ObservableField<>();
     public ObservableField<List<String>> sensitiveWords = new ObservableField<>();
+    //聊天对方IM 用户ID
+    public String TMToUserId;
     //IM聊天价格配置
     public PriceConfigEntity priceConfigEntityField = null;
     //男生钻石总额
@@ -743,22 +745,29 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
 
         messageGiftNewEventSubscriber = RxBus.getDefault().toObservable(MessageGiftNewEvent.class).subscribe(event -> {
             if(event!=null){
-                //加入礼物接收防抖。相同礼物id 1秒内只播放一次
-                long currentClickTime = System.currentTimeMillis();
-                if(lastClickFunName == null){
-                    lastClickTime = currentClickTime;
-                    lastClickFunName = event.getMsgId();
-                }else{
-                    boolean isFastClick = (currentClickTime - lastClickTime) <= 1000;
-                    if(isFastClick){
-                        return;
+                try {
+                    //当前礼物发送人是对方。或者是自己才会进入播放队列
+                    if(event.getFromUser().equals(TMToUserId) || event.getFromUser().equals(model.readUserData().getImUserId())){
+                        //加入礼物接收防抖。相同礼物id 1秒内只播放一次
+                        long currentClickTime = System.currentTimeMillis();
+                        if(lastClickFunName == null){
+                            lastClickTime = currentClickTime;
+                            lastClickFunName = event.getMsgId();
+                        }else{
+                            boolean isFastClick = (currentClickTime - lastClickTime) <= 1000;
+                            if(isFastClick){
+                                return;
+                            }
+                        }
+                        lastClickTime = currentClickTime;
+                        GiftEntity giftEntity = event.getGiftEntity();
+                        animGiftList.add(giftEntity);
+                        if (!animGiftPlaying) {
+                            uc.signGiftAnimEvent.call();
+                        }
                     }
-                }
-                lastClickTime = currentClickTime;
-                GiftEntity giftEntity = event.getGiftEntity();
-                animGiftList.add(giftEntity);
-                if (!animGiftPlaying) {
-                    uc.signGiftAnimEvent.call();
+                }catch (Exception e) {
+
                 }
             }
         });
