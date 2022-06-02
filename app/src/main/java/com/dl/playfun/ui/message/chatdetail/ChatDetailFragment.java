@@ -182,6 +182,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         if (mChatInfo == null) {
             return;
         }
+        viewModel.TMToUserId = mChatInfo.getId();
         //非客服账号加载用户标签和状态
         if (!mChatInfo.getId().contains(AppConfig.CHAT_SERVICE_USER_ID)) {
             viewModel.loadUserInfo(getTaUserIdIM());
@@ -556,7 +557,10 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                 if (null == messageInfo) {
                     return;
                 }
-                String id = messageInfo.getId();
+                String id = messageInfo.getFromUser();
+                if(id==null){
+                    return;
+                }
                 //客服不允许进入主页
                 if (id.trim().contains(AppConfig.CHAT_SERVICE_USER_ID)) {
                     return;
@@ -565,7 +569,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                 if (id.trim().equals(getUserIdIM())) {
                     return;
                 }
-                viewModel.transUserIM(messageInfo.getFromUser());
+                viewModel.transUserIM(id);
             }
 
             @Override
@@ -1021,7 +1025,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     }
 
     public void giftBagDialogShow() {
-        giftBagDialog = new GiftBagDialog(getContext(), false, 0, 0);
+        giftBagDialog = new GiftBagDialog(getContext(), false, viewModel.maleBalance, 0);
         giftBagDialog.setGiftOnClickListener(new GiftBagDialog.GiftOnClickListener() {
             @Override
             public void sendGiftClick(Dialog dialog, int number, GiftBagEntity.giftEntity giftEntity) {

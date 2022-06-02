@@ -11,6 +11,9 @@ public class MessageGiftNewEvent {
     private GiftEntity giftEntity;
     //IM消息Id 做防抖用
     private String msgId;
+    //消息发送放ID
+    private String fromUser;
+
 
     private String formUserId;
 
@@ -28,6 +31,12 @@ public class MessageGiftNewEvent {
         this.formUserId = formUserId;
     }
 
+    public MessageGiftNewEvent(GiftEntity giftEntity,String msgId,String fromUsers) {
+        this.giftEntity = giftEntity;
+        this.msgId = msgId;
+        this.fromUser =  fromUsers;
+    }
+
     public GiftEntity getGiftEntity() {
         return giftEntity;
     }
@@ -42,5 +51,13 @@ public class MessageGiftNewEvent {
 
     public void setMsgId(String msgId) {
         this.msgId = msgId;
+    }
+
+    public String getFromUser() {
+        return fromUser;
+    }
+
+    public void setFromUser(String fromUser) {
+        this.fromUser = fromUser;
     }
 }

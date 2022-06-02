@@ -3,6 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android-Project/PlayFun_Google/app/src/main/res/drawable/accost_refresh_backdrop.xml" value="0.1" />
+        <entry key="..\:/Android-Project/PlayFun_Google/app/src/main/res/drawable/mine_vip_button_bg.xml" value="0.1" />
+        <entry key="..\:/Android-Project/PlayFun_Google/app/src/main/res/drawable/vip_sub_item_tip_selected.xml" value="0.1" />
+        <entry key="..\:/Android-Project/PlayFun_Google/app/src/main/res/layout/fragment_mine.xml" value="0.1" />
         <entry key="..\:/Android-Project/PlayFun_Google/app/src/playChat/res/layout/dialog_home_accost_list.xml" value="0.1" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/AlivcMedia/src/main/res/layout/alivc_media_activity_media_import.xml" value="0.24895833333333334" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/AliyunCrop/crop/src/main/res/layout/alivc_crop_activity_media.xml" value="0.24895833333333334" />

@@ -41,6 +41,7 @@ import com.dl.playfun.event.AddBlackListEvent;
 import com.dl.playfun.event.CallChatingHangupEvent;
 import com.dl.playfun.event.MessageGiftNewEvent;
 import com.dl.playfun.manager.ConfigManager;
+import com.dl.playfun.ui.dialog.GiftBagDialog;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.utils.FileUploadUtils;
 import com.dl.playfun.utils.LogUtils;
@@ -82,6 +83,8 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
     public ObservableField<Boolean> dialogShow = new ObservableField<>(false);
     public ObservableField<TagEntity> tagEntitys = new ObservableField<>();
     public ObservableField<List<String>> sensitiveWords = new ObservableField<>();
+    //聊天对方IM 用户ID
+    public String TMToUserId;
     //IM聊天价格配置
     public PriceConfigEntity priceConfigEntityField = null;
     //男生钻石总额
@@ -770,7 +773,6 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<Void> clickConnMic = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> imProfit = new SingleLiveEvent<>();
         public SingleLiveEvent clickMore = new SingleLiveEvent<>();
-        public SingleLiveEvent clickCrystalExchange = new SingleLiveEvent<>();
         //对方忙线
         public SingleLiveEvent otherBusy = new SingleLiveEvent<>();
         //新增

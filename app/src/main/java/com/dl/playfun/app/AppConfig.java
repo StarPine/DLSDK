@@ -7,7 +7,8 @@ import com.dl.playfun.entity.BannerItemEntity;
  * @author wulei
  */
 public class AppConfig {
-    public static final boolean isDebug = BuildConfig.DEBUG;
+    //是否开启日志打印
+    public static final boolean isDebug = false;
     /**
      * 版本编号
      */
@@ -42,7 +43,7 @@ public class AppConfig {
     /**
      * 联系客服id
      */
-    public static final String CHAT_SERVICE_USER_ID_SEND = "administrator_okey101";
+    public static final String CHAT_SERVICE_USER_ID_SEND = BuildConfig.CHAT_SERVICE_USER_ID_SEND;
     /**
      * 服务端接口HOST
      */

@@ -35,7 +35,7 @@
     <string name="dismiss_tip_before">Ваша группа</string>
     <string name="dismiss_tip_after">расформирован.</string>
     <string name="get_system_notice">Получено пользовательское системное уведомление:</string>
-    <string name="down_cancle_send">Сдвиньте вверх, чтобы отменить</string>
+    <string name="down_cancle_send">Проведите, чтобы отменить</string>
     <string name="say_time_short">Сообщение слишком короткое</string>
     <string name="record_fail">Запись не удалась</string>
     <string name="up_cancle_send">Отпустите, чтобы отменить</string>
@@ -141,12 +141,12 @@
     <string name="test_custom_action">Пользовательские сообщения</string>
     <string name="welcome_tip">Спасибо, что присоединились к обмену мгновенными сообщениями!</string>
     <string name="custom_send_error_message">Отправить не удалось</string>
-    <string name="custom_send_error_message_txt1">Бесплатных чатов больше нет. Вы можете бесплатно общаться в чате, подписавшись друг на друга. Или получите бриллиант, чтобы продолжить общение.</string>
+    <string name="custom_send_error_message_txt1">Баланс алмазов недостаточен, получите алмазы, чтобы продолжить общение</string>
     <string name="custom_send_error_message_txt2">Получить сейчас>></string>
     <string name="custom_message_txt1">Доход +%s. Доход удваивается при проверке реального лица. Перейти к проверке>></string>
     <string name="custom_message_txt1_key">Перейти к проверке>></string>
     <string name="custom_message_txt2">Ваш доход +%s</string>
-    <string name="custom_message_txt2_test2">Ваш доход +%s NTD, доход удвоится после аутентификации реального человека Перейти к аутентификации>></string>
+    <string name="custom_message_txt2_test2">Ваш доход +%s, доход удвоится после аутентификации реального человека Перейти к аутентификации>></string>
     <string name="custom_message_txt3">Его равновесие недостаточное. Пожалуйста, напомните ему, чтобы он подзарядился.</string>
     <string name="custom_message_txt4">последовал</string>
     <string name="custom_message_txt5">ты</string>

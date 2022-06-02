@@ -12,4 +12,6 @@ public class EaringlSwitchUtil {
     public static String KEY_GUIDE = "guide.entrance";
     //移除IM云端消息
     public static String REMOVE_IM_MESSAGE = "removeIMMessageSwitches";
+    //钱包入口点击开关
+    public static String KEY_WALLET_ENTRANCE = "wallet.entrance";
 }

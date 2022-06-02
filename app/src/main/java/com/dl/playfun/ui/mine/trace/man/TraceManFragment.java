@@ -139,7 +139,7 @@ public class TraceManFragment extends BaseToolbarFragment<FragmentMineTraceManBi
                 }
                 vipDialog = TraceDialog.getInstance(TraceManFragment.this.getContext())
                         .chooseType(TraceDialog.TypeEnum.CENTER)
-                        .setConfirmText(String.format(StringUtils.getString(R.string.playfun_mine_trace_man_play_confirm), ConfigManager.getInstance().GetViewUseBrowseMoney()))
+                        .setConfirmText(String.format(StringUtils.getString(R.string.playfun_mine_trace_man_play_confirm), UseBrowseMoney))
                         .setConfirmOnlick(new TraceDialog.ConfirmOnclick() {
                             @Override
                             public void confirm(Dialog dialog) {

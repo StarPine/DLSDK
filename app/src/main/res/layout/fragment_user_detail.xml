@@ -660,6 +660,7 @@
                                                     android:gravity="center"
                                                     android:orientation="vertical"
                                                     android:padding="20dp"
+                                                    android:clickable="true"
                                                     android:visibility="@{viewModel.detailEntity.albumType == 2 ? View.VISIBLE:View.GONE}"
                                                     tools:visibility="gone">
 

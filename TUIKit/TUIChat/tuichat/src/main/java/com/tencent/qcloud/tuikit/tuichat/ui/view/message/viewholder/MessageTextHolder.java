@@ -308,11 +308,7 @@ public class MessageTextHolder extends MessageContentHolder {
                         ImageView gift_img = GiftView.findViewById(R.id.gift_img);
                         TextView gift_text = GiftView.findViewById(R.id.gift_text);
                         TextView gift_title = GiftView.findViewById(R.id.gift_title);
-                        if (!MessageRecyclerView.isFlagTipMoney()) {
-                            GiftView.findViewById(R.id.custom_gift_hint_text).setVisibility(View.GONE);
-                        } else {
-                            GiftView.findViewById(R.id.custom_gift_hint_text).setVisibility(View.VISIBLE);
-                        }
+
                         if (msg.isSelf()) {
                             gift_title.setText(rootView.getContext().getString(R.string.custom_gift_left_title));
                             gift_title.setTextColor(rootView.getResources().getColor(R.color.gift_right_color));
@@ -355,6 +351,11 @@ public class MessageTextHolder extends MessageContentHolder {
                                     }
                                 }
                             }
+                        }
+                        if (!MessageRecyclerView.isFlagTipMoney()) {
+                            GiftView.findViewById(R.id.custom_gift_hint_text).setVisibility(View.GONE);
+                        } else {
+                            GiftView.findViewById(R.id.custom_gift_hint_text).setVisibility(View.VISIBLE);
                         }
                         gift_text.setText(giftEntity.getTitle() + " x" + giftEntity.getAmount());
                         Glide.with(TUIChatService.getAppContext())

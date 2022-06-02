@@ -897,11 +897,11 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
         String account = null;
         if (viewModel.detailEntity.get().getIsUnlockAccount() == 1 && viewModel.detailEntity.get().getIsWeixinShow() == 1) {
             if (viewModel.detailEntity.get().getWeixin() != null && viewModel.detailEntity.get().getWeixin().length() > 0) {
-                account = "Line: " + viewModel.detailEntity.get().getWeixin();
+                account = " " + viewModel.detailEntity.get().getWeixin();
             }
         }
         MVDialog.getInstance(mActivity)
-                .setTitleSize(16)
+                //.setTitleSize(16)
                 .setTitle(getString(R.string.playfun_she_social_account))
                 .setContent(account)
                 .setConfirmText(getString(R.string.playfun_cancel))

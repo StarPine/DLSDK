@@ -5,9 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <import type="com.dl.playfun.utils.SystemDictUtils" />
-
         <import type="android.view.View" />
 
         <import type="com.dl.playfun.R" />
@@ -19,7 +17,6 @@
         <import type="com.dl.playfun.widget.recyclerview.LineManagers" />
 
         <import type="androidx.recyclerview.widget.LinearLayoutManager" />
-
         <variable
             name="viewModel"
             type="com.dl.playfun.kl.viewmodel.VideoCallViewModel" />
@@ -70,6 +67,7 @@
                     android:layout_marginStart="9dp"
                     android:layout_marginTop="3dp"
                     android:layout_toEndOf="@+id/iv_avatar"
+                    android:gravity="center"
                     android:orientation="horizontal">
 
                     <TextView
@@ -85,23 +83,22 @@
                         android:textSize="12sp" />
 
                     <ImageView
-                        android:id="@+id/iv_goddess"
-                        android:layout_width="21dp"
-                        android:layout_height="9dp"
+                        android:layout_width="14dp"
+                        android:layout_height="13dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="2dp"
                         android:src="@{viewModel.getVipGodsImg(viewModel.callingInviteInfoField)}"
-                        android:visibility="@{viewModel.callingInviteInfoField.userProfileInfo.isVip==1?View.VISIBLE:View.GONE}" />
+                        android:visibility="@{viewModel.getVipGodsImg(viewModel.callingInviteInfoField) == null?View.GONE:View.VISIBLE}"
+                        />
 
                     <ImageView
-                        android:id="@+id/iv_real_man"
-                        android:layout_width="21dp"
-                        android:layout_height="9dp"
-                        android:layout_centerVertical="true"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="2dp"
-                        android:src="@drawable/ic_real_man"
-                        android:visibility="@{viewModel.callingInviteInfoField.userProfileInfo.certification==1?View.VISIBLE:View.GONE}" />
+                        android:layout_width="31dp"
+                        android:layout_height="13dp"
+                        android:layout_marginStart="5dp"
+                        binding:imagePath="@{viewModel.gameUrl(viewModel.callingInviteInfoField.userProfileInfo.gameChannel)}"
+                        android:visibility="@{viewModel.isEmpty(viewModel.gameUrl(viewModel.callingInviteInfoField.userProfileInfo.gameChannel))?View.GONE:View.VISIBLE}"
+                        tools:src="@drawable/ic_vip"
+                        />
                 </LinearLayout>
 
                 <LinearLayout
@@ -190,8 +187,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="47dp"
                 android:layout_marginRight="17dp"
-                android:src="@drawable/call_video_close"
-                binding:onClickCommand="@{viewModel.closeOnclick}" />
+                binding:onClickCommand="@{viewModel.closeOnclick}"
+                    android:src="@drawable/call_video_close" />
 
             <ImageView
                 android:layout_width="31dp"
@@ -200,8 +197,8 @@
                 android:layout_marginTop="47dp"
                 android:layout_marginRight="24dp"
                 android:layout_toLeftOf="@id/img_close"
-                android:src="@drawable/call_switch_camera"
-                binding:onClickCommand="@{viewModel.switchCameraOnclick}" />
+                binding:onClickCommand="@{viewModel.switchCameraOnclick}"
+                android:src="@drawable/call_switch_camera" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -288,22 +285,23 @@
 
                     <ImageView
                         android:id="@+id/iv_goddesses"
-                        android:layout_width="21dp"
-                        android:layout_height="9dp"
+                        android:layout_width="14dp"
+                        android:layout_height="13dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="2dp"
                         android:src="@{viewModel.getVipGodsImg(viewModel.callingInviteInfoField)}"
-                        android:visibility="@{viewModel.callingVideoInviteInfoField.isVip==1?View.VISIBLE:View.GONE}" />
+                        android:visibility="@{viewModel.getVipGodsImg(viewModel.callingInviteInfoField) == null?View.GONE:View.VISIBLE}"
+                        />
 
                     <ImageView
-                        android:id="@+id/iv_real_manes"
-                        android:layout_width="21dp"
-                        android:layout_height="9dp"
-                        android:layout_centerVertical="true"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="2dp"
-                        android:src="@drawable/ic_real_man"
-                        android:visibility="@{viewModel.callingVideoInviteInfoField.certification==1?View.VISIBLE:View.GONE}" />
+                        android:layout_width="31dp"
+                        android:layout_height="13dp"
+                        android:layout_marginStart="5dp"
+                        binding:imagePath="@{viewModel.gameUrl(viewModel.callingInviteInfoField.userProfileInfo.gameChannel)}"
+                        android:visibility="@{viewModel.isEmpty(viewModel.gameUrl(viewModel.callingInviteInfoField.userProfileInfo.gameChannel))?View.GONE:View.VISIBLE}"
+                        tools:src="@drawable/ic_vip"
+                        />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -374,7 +372,6 @@
                     android:visibility="@{viewModel.collectedField==1?View.GONE:View.VISIBLE}"
                     binding:onClickCommand="@{viewModel.addlikeOnClickCommand}" />
             </RelativeLayout>
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -420,8 +417,8 @@
                 android:layout_marginTop="47dp"
                 android:layout_marginRight="24dp"
                 android:layout_toLeftOf="@id/img_closes"
-                android:src="@drawable/call_switch_camera"
-                binding:onClickCommand="@{viewModel.switchCameraOnclick}" />
+                binding:onClickCommand="@{viewModel.switchCameraOnclick}"
+                android:src="@drawable/call_switch_camera" />
 
             <RelativeLayout
                 android:id="@+id/rect_layout"
@@ -477,7 +474,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rcv_layout"
                 android:layout_width="match_parent"
-                android:layout_height="130dp"
+                android:layout_height="200dp"
                 android:layout_above="@+id/bottom_layout"
                 android:layout_marginBottom="54dp"
                 android:paddingLeft="14dp"

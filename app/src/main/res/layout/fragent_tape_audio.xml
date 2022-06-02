@@ -124,12 +124,13 @@
                     app:color_bg="@color/white"
                     app:progress="@color/circle_border_z"
                     android:background="?android:selectableItemBackgroundBorderless"/>
+
                 <ImageView
                     android:id="@+id/startAudio"
-                    android:layout_centerInParent="true"
-                    android:src="@drawable/audio_backdrop_img_start"
                     android:layout_width="90dp"
-                    android:layout_height="90dp"/>
+                    android:layout_height="90dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/audio_backdrop_img_start" />
             </RelativeLayout>
 
             <TextView

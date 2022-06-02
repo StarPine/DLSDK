@@ -12,6 +12,7 @@ import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
+import com.dl.playfun.app.EaringlSwitchUtil;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
@@ -102,6 +103,10 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
 //        } else {
 //            start(WalletFragment.class.getCanonicalName());
 //        }
+        Integer walletClickFlag = model.readSwitches(EaringlSwitchUtil.KEY_WALLET_ENTRANCE);
+        if(walletClickFlag==null || walletClickFlag==0){
+            return;
+        }
         start(WalletFragment.class.getCanonicalName());
 
     }

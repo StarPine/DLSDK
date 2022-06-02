@@ -40,7 +40,7 @@
     <string name="playfun_user_detail_resident_city">常駐城市</string>
     <string name="playfun_user_detail_hope_obj">期望對象</string>
     <string name="playfun_user_detail_self_intro">文字自介</string>
-    <string name="playfun_user_detail_warn">通過PlayFun進行違法活動，經檢舉核實將對賬號進行封鎖</string>
+    <string name="playfun_user_detail_warn">通過平臺進行違法活動，經檢舉核實將對賬號進行封鎖</string>
     <string name="playfun_user_detail_btn_apply_check">請求查看</string>
     <string name="playfun_user_detail_social_account">社群賬號</string>
     <string name="playfun_user_detail_link_empty">她未填寫社群賬號，可先與她私訊</string>
