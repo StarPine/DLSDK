@@ -773,6 +773,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<Void> clickConnMic = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> imProfit = new SingleLiveEvent<>();
         public SingleLiveEvent clickMore = new SingleLiveEvent<>();
+        public SingleLiveEvent clickCrystalExchange = new SingleLiveEvent<>();
         //对方忙线
         public SingleLiveEvent otherBusy = new SingleLiveEvent<>();
         //新增

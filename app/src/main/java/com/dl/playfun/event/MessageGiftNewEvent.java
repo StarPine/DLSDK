@@ -31,12 +31,6 @@ public class MessageGiftNewEvent {
         this.formUserId = formUserId;
     }
 
-    public MessageGiftNewEvent(GiftEntity giftEntity,String msgId,String fromUsers) {
-        this.giftEntity = giftEntity;
-        this.msgId = msgId;
-        this.fromUser =  fromUsers;
-    }
-
     public GiftEntity getGiftEntity() {
         return giftEntity;
     }
