@@ -8,7 +8,7 @@ import com.dl.playfun.entity.BannerItemEntity;
  */
 public class AppConfig {
     //是否开启日志打印
-    public static final boolean isDebug = false;
+    public static final boolean isDebug = true;
     /**
      * 版本编号
      */

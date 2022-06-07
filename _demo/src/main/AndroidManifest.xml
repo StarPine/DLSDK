@@ -54,7 +54,7 @@
         tools:replace="android:allowBackup">
 
         <activity android:name=".MainActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:requestLegacyExternalStorage="true"
             android:screenOrientation="portrait"
             android:exported="true">
