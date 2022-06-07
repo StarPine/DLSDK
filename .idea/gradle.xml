@@ -12,22 +12,23 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/AlivcMedia" />
             <option value="$PROJECT_DIR$/AliyunCrop" />
-            <option value="$PROJECT_DIR$/AliyunCrop/crop" />
             <option value="$PROJECT_DIR$/AliyunSVideoBase" />
             <option value="$PROJECT_DIR$/AliyunVideoCommon" />
             <option value="$PROJECT_DIR$/QueenBeauty" />
-            <option value="$PROJECT_DIR$/TUIKit/TUICalling/tuicalling" />
-            <option value="$PROJECT_DIR$/TUIKit/TUIChat/tuichat" />
-            <option value="$PROJECT_DIR$/TUIKit/TUIContact/tuicontact" />
-            <option value="$PROJECT_DIR$/TUIKit/TUIConversation/tuiconversation" />
-            <option value="$PROJECT_DIR$/TUIKit/TUICore/tuicore" />
+            <option value="$PROJECT_DIR$/_demo" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/customDrawable" />
             <option value="$PROJECT_DIR$/faceunity" />
             <option value="$PROJECT_DIR$/jsBridge" />
             <option value="$PROJECT_DIR$/mvvmhabit" />
+            <option value="$PROJECT_DIR$/tuicalling" />
+            <option value="$PROJECT_DIR$/tuichat" />
+            <option value="$PROJECT_DIR$/tuicontact" />
+            <option value="$PROJECT_DIR$/tuiconversation" />
+            <option value="$PROJECT_DIR$/tuicore" />
           </set>
         </option>
+        <option name="resolveModulePerSourceSet" value="false" />
       </GradleProjectSettings>
     </option>
   </component>

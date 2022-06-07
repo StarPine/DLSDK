@@ -5,24 +5,15 @@ include ':customDrawable'
 include ':AliyunVideoCommon'
 include ':AliyunSVideoBase'
 include ':AlivcMedia'
-include ':AliyunCrop:crop'
+include ':AliyunCrop'
 include ':QueenBeauty'
 include ':faceunity'
 //include ':_demo'
 
 /*IM聊天组件*/
 include ':tuicore'
-project(':tuicore').projectDir = new File(settingsDir, 'TUIKit/TUICore/tuicore')
-
 include ':tuichat'
-project(':tuichat').projectDir = new File(settingsDir, 'TUIKit/TUIChat/tuichat')
-
 include ':tuicontact'
-project(':tuicontact').projectDir = new File(settingsDir, 'TUIKit/TUIContact/tuicontact')
-
 include ':tuiconversation'
-project(':tuiconversation').projectDir = new File(settingsDir, 'TUIKit/TUIConversation/tuiconversation')
-
 include ':tuicalling'
-project(':tuicalling').projectDir = new File(settingsDir, 'TUIKit/TUICalling/tuicalling')
 /*IM聊天组件*/

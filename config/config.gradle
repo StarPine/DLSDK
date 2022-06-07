@@ -51,7 +51,7 @@ ext {
             "mvvmhabit"        : "default",
             "jsBridge"         : "default",
             "customDrawable"   : "default",
-            "AliyunCrop:crop"  : "default",
+            "AliyunCrop"  : "default",
             "AliyunSVideoBase" : "default",
             "AliyunVideoCommon": "default",
             "AlivcMedia"       : "default",
