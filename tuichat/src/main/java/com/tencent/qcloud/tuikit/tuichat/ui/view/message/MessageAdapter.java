@@ -3,10 +3,14 @@ package com.tencent.qcloud.tuikit.tuichat.ui.view.message;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.tencent.coustom.CustomIMTextEntity;
+import com.tencent.coustom.EvaluateItemEntity;
+import com.tencent.coustom.PhotoAlbumItemEntity;
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
@@ -161,6 +165,13 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
             }
             setCheckBoxStatus(position, msgId, baseHolder);
             baseHolder.layoutViews(msg, position);
+            // 对于自定义消息，需要在正常布局之后，交给外部调用者重新加载渲染
+            if (getItemViewType(position) == MessageInfo.MSG_TYPE_CUSTOM) {
+                MessageCustomHolder customHolder = (MessageCustomHolder) holder;
+                if (mOnCustomMessageDrawListener != null) {
+                    mOnCustomMessageDrawListener.onDraw(customHolder, msg,position);
+                }
+            }
         }
     }
 
@@ -224,6 +235,56 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
                 @Override
                 public void onReplyMessageClick(View view, int position, String originMsgId) {
                     changeCheckedStatus(msgId, position);
+                }
+
+                @Override
+                public void onToastVipText(MessageInfo messageInfo) {
+
+                }
+
+                @Override
+                public void onTextReadUnlock(TextView textView, View view, MessageInfo messageInfo) {
+
+                }
+
+                @Override
+                public void onTextTOWebView(MessageInfo messageInfo) {
+
+                }
+
+                @Override
+                public void toUserHome() {
+
+                }
+
+                @Override
+                public void openUserImage(PhotoAlbumItemEntity itemEntity) {
+
+                }
+
+                @Override
+                public void onClickEvaluate(int position, MessageInfo messageInfo, EvaluateItemEntity evaluateItemEntity, boolean more) {
+
+                }
+
+                @Override
+                public void onClickCustomText(int position, MessageInfo messageInfo, CustomIMTextEntity customIMTextEntity) {
+
+                }
+
+                @Override
+                public void onClickDialogRechargeShow() {
+
+                }
+
+                @Override
+                public void clickToUserMain() {
+
+                }
+
+                @Override
+                public void onClickCustomText() {
+
                 }
 
                 @Override
@@ -443,4 +504,8 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         return mDataSource.subList(first - 1, last);
     }
 
+    //彭石林新增
+    public List<MessageInfo> getDataSource(){
+        return mDataSource;
+    }
 }

@@ -46,6 +46,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.InputMoreActionUnit;
 import com.tencent.qcloud.tuikit.tuichat.bean.ReplyPreviewBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.interfaces.CustomizeMessageListener;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 import com.tencent.qcloud.tuikit.tuichat.component.face.Emoji;
@@ -90,6 +91,14 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
     protected static final int AUDIO_RECORD = 2;
     protected static final int SEND_PHOTO = 4;
     protected static final int SEND_FILE = 5;
+
+    /**
+     * 彭石林新增--自定义按钮组
+     */
+    protected ImageView sendBtnDisplay;
+    protected ImageView phoneVideoBtn;
+    protected ImageView giftBtn;
+    protected ImageView callPhoneVideoBtn;
 
     // 音视频通话成员数限制
     protected static final int CALL_MEMBER_LIMIT = 8;
@@ -166,6 +175,26 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
     private ImageView replyCloseBtn;
     private ReplyPreviewBean replyPreviewBean;
 
+    private boolean isListenerCustomizeMessage = false;//是否已监听
+
+    /**
+     * 临时新增
+     */
+    private TextView tv_profit_tip;
+
+
+    public void setProfitTip(String tip,boolean isShow){
+        if (isShow){
+            tv_profit_tip.setVisibility(VISIBLE);
+            tv_profit_tip.setText(tip);
+        }else {
+            tv_profit_tip.setVisibility(GONE);
+        }
+
+    }
+
+    private SendOnClickCallback sendOnClickCallbacks;
+
     public InputView(Context context) {
         super(context);
         initViews();
@@ -181,8 +210,22 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
         initViews();
     }
 
+    public void  setSendOnClickCallbacks(SendOnClickCallback sendOnClickCallbacks){
+        this.sendOnClickCallbacks = sendOnClickCallbacks;
+    }
+
     public void setPresenter(ChatPresenter presenter) {
         this.presenter = presenter;
+        if (!isListenerCustomizeMessage){
+            isListenerCustomizeMessage = true;
+            presenter.setCustomizeMessageListener(new CustomizeMessageListener() {
+                @Override
+                public void blacklist(int status) {
+
+                    sendOnClickCallbacks.sendBlackStatus(status);
+                }
+            });
+        }
     }
 
     private void initViews() {
@@ -217,11 +260,43 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
         layoutParams.height = iconSize;
         mMoreInputButton.setLayoutParams(layoutParams);
 
+        //彭石林新增
+        sendBtnDisplay = findViewById(R.id.send_btn_display);
+        phoneVideoBtn = findViewById(R.id.phone_video_btn);
+        giftBtn = findViewById(R.id.gift_btn);
+        callPhoneVideoBtn = findViewById(R.id.call_phone_video_btn);
+        tv_profit_tip = findViewById(R.id.tv_profit_tip);
+
         init();
     }
 
     @SuppressLint("ClickableViewAccessibility")
     protected void init() {
+
+        phoneVideoBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                if(sendOnClickCallbacks!=null){
+                    sendOnClickCallbacks.onClickPhoneVideo();
+                }
+            }
+        });
+        giftBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                if(sendOnClickCallbacks!=null){
+                    sendOnClickCallbacks.onClickGift();
+                }
+            }
+        });
+        callPhoneVideoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (sendOnClickCallbacks != null) {
+                    sendOnClickCallbacks.onClickCallPlayUser();
+                }
+            }
+        });
 
         mAudioInputSwitchButton.setOnClickListener(this);
         mEmojiInputButton.setOnClickListener(this);
@@ -785,7 +860,8 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
                             List<String> atUserList = new ArrayList<>(mTextInput.getMentionIdList());
                             mMessageHandler.sendMessage(ChatMessageBuilder.buildAtReplyMessage(mTextInput.getText().toString().trim(), atUserList, replyPreviewBean));
                         } else {
-                            mMessageHandler.sendMessage(ChatMessageBuilder.buildReplyMessage(mTextInput.getText().toString().trim(), replyPreviewBean));
+                            sendOnClickCallbacks.sendOnClickCallbackOk(mMessageHandler,ChatMessageInfoUtil.buildTextMessage(mTextInput.getText().toString().trim()));
+                            //mMessageHandler.sendMessage(ChatMessageInfoUtil.buildTextMessage(mTextInput.getText().toString().trim()));
                         }
                         exitReply();
                     } else {
@@ -999,7 +1075,9 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
         }
 
         if (mMessageHandler != null && success) {
-            mMessageHandler.sendMessage(ChatMessageBuilder.buildAudioMessage(AudioPlayer.getInstance().getPath(), duration));
+            //发送拦截。
+            sendOnClickCallbacks.sendOnClickAudioMessage(mMessageHandler,ChatMessageInfoUtil.buildAudioMessage(AudioPlayer.getInstance().getPath(), duration));
+            //mMessageHandler.sendMessage(ChatMessageInfoUtil.buildAudioMessage(AudioPlayer.getInstance().getPath(), duration));
         }
     }
 
@@ -1099,6 +1177,23 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
                 mTextInput.setText(content);
                 mTextInput.setSelection(mTextInput.getText().length());
             }
+        }
+    }
+
+    //彭石林新增
+    public void startAudioCall(){
+        if (mChatInfo == null) {
+            return;
+        }
+        HashMap<String, Object> param = new HashMap<>();
+        param.put(TUIConstants.TUIChat.CHAT_ID, mChatInfo.getId());
+        param.put(TUIConstants.TUIChat.CHAT_NAME, mChatInfo.getChatName());
+        param.put(TUIConstants.TUIChat.CHAT_TYPE, mChatInfo.getType());
+        param.put(TUIConstants.TUIChat.CONTEXT, getContext());
+        Map<String, Object> audioCallExtension = TUICore.getExtensionInfo(TUIConstants.TUIChat.EXTENSION_INPUT_MORE_AUDIO_CALL, param);
+        if (audioCallExtension != null) {
+            int audioActionId = (Integer) audioCallExtension.get(TUIConstants.TUIChat.INPUT_MORE_ACTION_ID);
+            onCustomActionClick(audioActionId);
         }
     }
 
@@ -1328,10 +1423,12 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
     public void disableMoreInput(boolean disable) {
         mMoreInputDisable = disable;
         if (disable) {
-            mMoreInputButton.setVisibility(GONE);
+            //mMoreInputButton.setVisibility(GONE);
+            sendBtnDisplay.setVisibility(GONE);
             mSendTextButton.setVisibility(VISIBLE);
         } else {
-            mMoreInputButton.setVisibility(VISIBLE);
+            //mMoreInputButton.setVisibility(VISIBLE);
+            sendBtnDisplay.setVisibility(VISIBLE);
             mSendTextButton.setVisibility(GONE);
         }
     }
@@ -1456,6 +1553,17 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
 
     public interface OnStartActivityListener {
         void onStartGroupMemberSelectActivity();
+    }
+
+    public interface SendOnClickCallback{
+        void sendOnClickCallbackOk(MessageHandler messageHandler,MessageInfo messageInfo);
+        void sendOnClickAudioMessage(MessageHandler messageHandler,MessageInfo messageInfo);
+        void onClickPhoneVideo();
+        void onClickGift();
+
+        void onClickCallPlayUser();
+
+        void sendBlackStatus(int status);
     }
 
 }

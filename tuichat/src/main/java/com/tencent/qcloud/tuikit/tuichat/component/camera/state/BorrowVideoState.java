@@ -10,7 +10,7 @@ import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 public class BorrowVideoState implements State {
 
     private static final String TAG = BorrowVideoState.class.getSimpleName();
-    private CameraMachine machine;
+    private final CameraMachine machine;
 
     public BorrowVideoState(CameraMachine machine) {
         this.machine = machine;

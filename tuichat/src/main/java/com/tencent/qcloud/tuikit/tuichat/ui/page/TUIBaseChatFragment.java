@@ -6,9 +6,13 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+import com.tencent.coustom.CustomIMTextEntity;
+import com.tencent.coustom.EvaluateItemEntity;
+import com.tencent.coustom.PhotoAlbumItemEntity;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
@@ -160,6 +164,56 @@ public class TUIBaseChatFragment extends BaseFragment {
                 }
                 chatView.getMessageLayout().setSelectedPosition(position);
                 chatView.getMessageLayout().showItemPopMenu(position - 1, messageInfo, view);
+            }
+
+            @Override
+            public void onToastVipText(MessageInfo messageInfo) {
+
+            }
+
+            @Override
+            public void onTextReadUnlock(TextView textView, View view, MessageInfo messageInfo) {
+
+            }
+
+            @Override
+            public void onTextTOWebView(MessageInfo messageInfo) {
+
+            }
+
+            @Override
+            public void toUserHome() {
+
+            }
+
+            @Override
+            public void openUserImage(PhotoAlbumItemEntity itemEntity) {
+
+            }
+
+            @Override
+            public void onClickEvaluate(int position, MessageInfo messageInfo, EvaluateItemEntity evaluateItemEntity, boolean more) {
+
+            }
+
+            @Override
+            public void onClickCustomText(int position, MessageInfo messageInfo, CustomIMTextEntity customIMTextEntity) {
+
+            }
+
+            @Override
+            public void onClickDialogRechargeShow() {
+
+            }
+
+            @Override
+            public void clickToUserMain() {
+
+            }
+
+            @Override
+            public void onClickCustomText() {
+
             }
         });
 

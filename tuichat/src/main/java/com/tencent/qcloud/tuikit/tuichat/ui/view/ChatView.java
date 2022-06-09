@@ -60,6 +60,7 @@ import com.tencent.qcloud.tuikit.tuichat.component.noticelayout.NoticeLayout;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
 import com.tencent.qcloud.tuikit.tuichat.component.ProgressPresenter;
+import com.tencent.qcloud.tuikit.tuichat.event.InsufficientBalanceEvent;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.TotalUnreadCountListener;
 import com.tencent.qcloud.tuikit.tuichat.presenter.C2CChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
@@ -1077,6 +1078,14 @@ public class ChatView extends LinearLayout  implements IChatLayout {
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
+
+                //TODO
+                if (errCode == 20006){
+                    RxBus.getDefault().post(new InsufficientBalanceEvent());
+                }else {
+                    ToastUtil.toastLongMessage(errMsg);
+                }
+
                 if (errCode == ERR_SDK_INTERFACE_NOT_SUPPORT) {
                     showNotSupportDialog();
                 }

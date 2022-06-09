@@ -15,7 +15,11 @@ import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 
+import com.tencent.coustom.CustomIMTextEntity;
+import com.tencent.coustom.EvaluateItemEntity;
+import com.tencent.coustom.PhotoAlbumItemEntity;
 import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
@@ -34,6 +38,7 @@ import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class MessageRecyclerView extends RecyclerView implements IMessageLayout {
     private static final String TAG = MessageRecyclerView.class.getSimpleName();
@@ -67,6 +72,16 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
 
     private ChatPresenter presenter;
 
+    public static Map<String, String> is_read_Map = null;
+    public static boolean isVip = false;//自定义是否是VIP
+    public static boolean sex = false;
+    public static int read_sum = 1;//能看消息总数
+    public static int send_num = 1;//能发送消息总数
+    //追踪消息的msgId
+    public static String addLikeMsgId = null;
+    public static boolean certification = false;
+    public static boolean flagTipMoney = false;//收入提示开关
+
     private int mSelectedPosition = -1;
     private ChatPopMenu mChatPopMenu;
     private Handler handler = new Handler();
@@ -95,6 +110,58 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
     public MessageRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
+    }
+
+    public static String getAddLikeMsgId() {
+        return addLikeMsgId;
+    }
+
+    public static void setAddLikeMsgId(String addLikeMsgId) {
+        MessageRecyclerView.addLikeMsgId = addLikeMsgId;
+    }
+
+    public static boolean isCertification() {
+        return certification;
+    }
+
+    public static void setCertification(boolean certification) {
+        MessageRecyclerView.certification = certification;
+    }
+
+    public static boolean isFlagTipMoney() {
+        return flagTipMoney;
+    }
+
+    public static void setFlagTipMoney(boolean flagTipMoney) {
+        MessageRecyclerView.flagTipMoney = flagTipMoney;
+    }
+
+    public int getRead_sum() {
+        return read_sum;
+    }
+
+    public void setRead_sum(int read_sum) {
+        MessageRecyclerView.read_sum = read_sum;
+    }
+
+    public int getSend_num() {
+        return send_num;
+    }
+
+    public  void setSend_num(int send_num) {
+        MessageRecyclerView.send_num = send_num;
+    }
+
+    public void setSex(boolean sexs){
+        sex = sexs;
+    }
+
+    public void setIsReadMap(){
+        is_read_Map = null;
+    }
+
+    public void setIsVip(boolean vip){
+        isVip = vip;
     }
 
     private void init() {
@@ -459,6 +526,56 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
                 if (mOnItemClickListener != null) {
                     mOnItemClickListener.onTextSelected(view, position, messageInfo);
                 }
+            }
+
+            @Override
+            public void onToastVipText(MessageInfo messageInfo) {
+
+            }
+
+            @Override
+            public void onTextReadUnlock(TextView textView, View view, MessageInfo messageInfo) {
+
+            }
+
+            @Override
+            public void onTextTOWebView(MessageInfo messageInfo) {
+
+            }
+
+            @Override
+            public void toUserHome() {
+
+            }
+
+            @Override
+            public void openUserImage(PhotoAlbumItemEntity itemEntity) {
+
+            }
+
+            @Override
+            public void onClickEvaluate(int position, MessageInfo messageInfo, EvaluateItemEntity evaluateItemEntity, boolean more) {
+
+            }
+
+            @Override
+            public void onClickCustomText(int position, MessageInfo messageInfo, CustomIMTextEntity customIMTextEntity) {
+
+            }
+
+            @Override
+            public void onClickDialogRechargeShow() {
+
+            }
+
+            @Override
+            public void clickToUserMain() {
+
+            }
+
+            @Override
+            public void onClickCustomText() {
+
             }
         });
     }

@@ -88,9 +88,19 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_face, container, false);
-        ViewGroup.LayoutParams params = view.getLayoutParams();
-        params.height = SoftKeyBoardUtil.getSoftKeyBoardHeight();
-        view.setLayoutParams(params);
+        ViewGroup.LayoutParams params = null;
+        try {
+            if(params == null){
+                params = new ViewGroup.LayoutParams(-1,SoftKeyBoardUtil.getSoftKeyBoardHeight());
+                view.setLayoutParams(params);
+            }else{
+                params.height = SoftKeyBoardUtil.getSoftKeyBoardHeight();
+                view.setLayoutParams(params);
+            }
+        }catch (Exception e){
+            params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+            view.setLayoutParams(params);
+        }
         faceViewPager = view.findViewById(R.id.face_viewPager);
         faceIndicator = view.findViewById(R.id.face_indicator);
         faceFirstSetTv = view.findViewById(R.id.face_first_set);

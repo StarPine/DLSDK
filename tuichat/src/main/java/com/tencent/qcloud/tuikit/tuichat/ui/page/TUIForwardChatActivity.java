@@ -3,9 +3,13 @@ package com.tencent.qcloud.tuikit.tuichat.ui.page;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.tencent.coustom.CustomIMTextEntity;
+import com.tencent.coustom.EvaluateItemEntity;
+import com.tencent.coustom.PhotoAlbumItemEntity;
 import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
@@ -87,6 +91,56 @@ public class TUIForwardChatActivity extends BaseLightActivity {
 
             @Override
             public void onRecallClick(View view, int position, TUIMessageBean messageInfo) {
+
+            }
+
+            @Override
+            public void onToastVipText(MessageInfo messageInfo) {
+
+            }
+
+            @Override
+            public void onTextReadUnlock(TextView textView, View view, MessageInfo messageInfo) {
+
+            }
+
+            @Override
+            public void onTextTOWebView(MessageInfo messageInfo) {
+
+            }
+
+            @Override
+            public void toUserHome() {
+
+            }
+
+            @Override
+            public void openUserImage(PhotoAlbumItemEntity itemEntity) {
+
+            }
+
+            @Override
+            public void onClickEvaluate(int position, MessageInfo messageInfo, EvaluateItemEntity evaluateItemEntity, boolean more) {
+
+            }
+
+            @Override
+            public void onClickCustomText(int position, MessageInfo messageInfo, CustomIMTextEntity customIMTextEntity) {
+
+            }
+
+            @Override
+            public void onClickDialogRechargeShow() {
+
+            }
+
+            @Override
+            public void clickToUserMain() {
+
+            }
+
+            @Override
+            public void onClickCustomText() {
 
             }
         });

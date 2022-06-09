@@ -44,6 +44,7 @@ dependencies {
     api "com.google.code.gson:gson:2.3.1"
     api "com.blankj:utilcode:1.28.4"
     api "com.tencent.liteav:LiteAVSDK_TRTC:latest.release"
+    api project(':tuicore')
     implementation 'org.jetbrains:annotations:15.0'
     implementation project(':faceunity')
 }

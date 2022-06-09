@@ -15,6 +15,7 @@ import android.text.TextUtils;
 
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ServiceUtils;
+import com.faceunity.nama.FURenderer;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
@@ -70,7 +71,7 @@ import java.util.Set;
  * 视频/语音通话的具体实现
  * 本功能使用腾讯云实时音视频 / 腾讯云即时通信IM 组合实现
  */
-public class TRTCCalling {
+public abstract class TRTCCalling {
     private static final String TAG            = "TRTCCalling";
     /**
      * 超时时间，单位秒

@@ -7,7 +7,11 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.tencent.coustom.CustomIMTextEntity;
+import com.tencent.coustom.IMGsonUtils;
 import com.tencent.imsdk.v2.V2TIMConversation;
+import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMSignalingInfo;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
 import com.tencent.qcloud.tuicore.util.ThreadHelper;
@@ -15,6 +19,7 @@ import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
+import com.tencent.qcloud.tuikit.tuichat.bean.CallModel;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupMessageReceiptInfo;
@@ -33,6 +38,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
+import com.tencent.qcloud.tuikit.tuichat.interfaces.CustomizeMessageListener;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.IBaseMessageSender;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.model.ChatProvider;
@@ -47,6 +53,7 @@ import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 public abstract class ChatPresenter {
@@ -88,6 +95,7 @@ public abstract class ChatPresenter {
     protected boolean isHaveMoreNewMessage = false;
 
     protected boolean isLoading = false;
+    private CustomizeMessageListener customizeMessageListener;
 
     public ChatPresenter() {
         TUIChatLog.i(TAG, "ChatPresenter Init");
@@ -485,15 +493,117 @@ public abstract class ChatPresenter {
 
     }
 
-    protected void addMessageInfo(TUIMessageBean messageInfo) {
+    //彭石林 修改。同步锁。一次只接受处理一条消息
+    public synchronized void addMessageInfo(MessageInfo messageInfo) {
         if (messageInfo == null) {
             return;
         }
         if (checkExist(messageInfo)) {
             return;
         }
-        loadedMessageInfoList.add(messageInfo);
-        updateAdapter(MessageRecyclerView.DATA_CHANGE_NEW_MESSAGE, 1);
+        boolean ismessage_photo = false;
+        if (isJSON2(messageInfo.getExtra().toString())) {//判断C2c本地添加记录自定义。通常用来做弹窗
+            Map<String, Object> map_data = new Gson().fromJson(messageInfo.getExtra().toString(), Map.class);
+            if (map_data != null && map_data.get("type") != null) {
+                if (map_data.get("type").equals("chat_earnings")) {
+                    CustomIMTextEntity customIMTextEntity = IMGsonUtils.fromJson(String.valueOf(map_data.get("data")), CustomIMTextEntity.class);
+                    if (customIMTextEntity != null) {
+                        int itemCount = loadedMessageInfoList.size();
+                        String msgID = customIMTextEntity.getMsgID();
+                        if (msgID != null) {
+                            for (int i = 0; i < itemCount; i++) {
+                                MessageInfo backMsg = loadedMessageInfoList.get(i);
+                                if (backMsg.getId().lastIndexOf(msgID) != -1) {
+                                    loadedMessageInfoList.add(i + 1, messageInfo);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                } else if (map_data.get("type").equals("message_photo")) {
+                    loadedMessageInfoList.add(0, messageInfo);
+                    ismessage_photo = true;
+                } else {
+                    loadedMessageInfoList.add(messageInfo);
+                }
+
+            }
+        } else {
+            loadedMessageInfoList.add(messageInfo);
+        }
+        if (ismessage_photo) {
+            //调用重新刷新
+            updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_REFRESH, 0);
+        } else {
+            updateAdapter(MessageRecyclerView.DATA_CHANGE_NEW_MESSAGE, 1);
+        }
+
+
+    }
+
+    //彭石林新增
+    public boolean addMessageList(MessageInfo messageInfo, boolean front) {
+        if (messageInfo == null) {
+            return false;
+        }
+        if (checkExist(messageInfo)) {
+            return false;
+        }
+        boolean flag;
+        if (front) {
+            flag = loadedMessageInfoList.add(messageInfo);
+            updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_ADD_FRONT, 1);
+        } else {
+            flag = loadedMessageInfoList.add(messageInfo);
+            updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_ADD_BACK, 1);
+        }
+        return flag;
+    }
+
+    //彭石林新增
+    public void updateMessageInfoStatusByMessageId(String messageId) {
+        if (!safetyCall()) {
+            TUIChatLog.w(TAG, "updateMessageInfo unSafetyCall");
+            return;
+        }
+        for (int i = 0; i < loadedMessageInfoList.size(); i++) {
+            if (loadedMessageInfoList.get(i).getId().equals(messageId)) {
+                updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, i);
+            }
+        }
+    }
+
+    public static boolean isJSON2(String str) {
+        boolean result = false;
+        try {
+            new Gson().fromJson(str, Map.class);
+            result = true;
+        } catch (Exception e) {
+            result = false;
+        }
+        return result;
+
+    }
+
+    public void removeMessage(String msgId,String toUserId) {
+        boolean flag = false;
+        String msgIds = null;
+        if(msgId.indexOf(toUserId)!=-1){
+            flag = true;
+            msgIds = msgId.replace(toUserId+"-","");
+        }
+        for (int i = 0; i < loadedMessageInfoList.size(); i++) {
+            if(flag && (loadedMessageInfoList.get(i).getId().indexOf(msgIds)!=-1 || loadedMessageInfoList.get(i).getTimMessage().getMsgID().indexOf(msgIds)!=-1)){
+                loadedMessageInfoList.remove(i);
+                updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_DELETE, i);
+                return;
+            }
+            if (loadedMessageInfoList.get(i).checkEquals(msgId) || loadedMessageInfoList.get(i).getId().equals(msgId)) {
+                loadedMessageInfoList.remove(i);
+                updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_DELETE, i);
+                break;
+            }
+        }
     }
 
     protected void onRecvNewMessage(TUIMessageBean msg) {
@@ -840,11 +950,48 @@ public abstract class ChatPresenter {
         }
     }
 
-    protected boolean checkExist(TUIMessageBean msg) {
+    protected boolean checkExist(MessageInfo msg) {
         if (msg != null) {
+            String extra = (String) msg.getExtra();
+            if (extra != null && extra.contains("message_blacklist")){
+                Map<String, Object> map_data = new Gson().fromJson(extra, Map.class);
+                if (map_data != null){
+                    String data = String.valueOf(map_data.get("data"));
+                    if (data != null){
+                        Map<String, Object> dataMap = new Gson().fromJson(data, Map.class);
+                        Object blacklist_status = dataMap.get("blacklist_status");
+                        if (customizeMessageListener != null){
+                            if (blacklist_status instanceof Integer){
+                                customizeMessageListener.blacklist((Integer) blacklist_status);
+                            }else if (blacklist_status instanceof Double){
+                                customizeMessageListener.blacklist(((Double) blacklist_status).intValue());
+                            }
+                        }
+                    }
+                }
+                msg.remove();//删除当前消息
+                return true;
+            }else if(extra != null && (extra.contains("message_pushPay") || extra.contains("message_pushGreet"))){
+                //未付费推送和今日缘分推送拦截，不展示在聊天界面
+                msg.remove();//删除当前消息
+                return true;
+            }
+            V2TIMSignalingInfo signalingInfo = V2TIMManager.getSignalingManager().getSignalingInfo(msg.getTimMessage());
+            if (signalingInfo != null){
+                int actionType = signalingInfo.getActionType();
+                Map extraMap = new Gson().fromJson(signalingInfo.getData(), Map.class);
+                if (actionType == V2TIMSignalingInfo.SIGNALING_ACTION_TYPE_INVITE && extraMap != null){
+                    if (extraMap.containsKey(CallModel.SIGNALING_EXTRA_KEY_CALL_END)) {
+                        msg.remove();//删除当前消息
+                        return true;
+                    }
+                }
+            }
             String msgId = msg.getId();
             for (int i = loadedMessageInfoList.size() - 1; i >= 0; i--) {
-                if (loadedMessageInfoList.get(i).getId().equals(msgId)) {
+                if (loadedMessageInfoList.get(i).getId().equals(msgId)
+                        && loadedMessageInfoList.get(i).getUniqueId() == msg.getUniqueId()
+                        && TextUtils.equals(loadedMessageInfoList.get(i).getExtra().toString(), msg.getExtra().toString())) {
                     return true;
                 }
             }
@@ -1095,7 +1242,8 @@ public abstract class ChatPresenter {
 
                     OfflineMessageContainerBean containerBean = new OfflineMessageContainerBean();
                     OfflineMessageBean entity = new OfflineMessageBean();
-                    entity.content = message.getExtra().toString();
+//                    entity.content = message.getExtra().toString();
+                    entity.content = "收到一則訊息！";
                     entity.sender = message.getSender();
                     entity.nickname = TUIChatConfigs.getConfigs().getGeneralConfig().getUserNickname();
                     entity.faceUrl = TUIChatConfigs.getConfigs().getGeneralConfig().getUserFaceUrl();
@@ -1183,7 +1331,8 @@ public abstract class ChatPresenter {
 
         OfflineMessageContainerBean containerBean = new OfflineMessageContainerBean();
         OfflineMessageBean entity = new OfflineMessageBean();
-        entity.content = msgInfo.getExtra().toString();
+//        entity.content = msgInfo.getExtra().toString();
+        entity.content = "收到一則訊息！";
         entity.sender = msgInfo.getSender();
         entity.nickname = TUIChatConfigs.getConfigs().getGeneralConfig().getUserNickname();
         entity.faceUrl = TUIChatConfigs.getConfigs().getGeneralConfig().getUserFaceUrl();

@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuicore.util.FileUtil;
 import com.tencent.qcloud.tuicore.util.ImageUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
@@ -30,6 +31,19 @@ import java.util.List;
 import java.util.Map;
 
 public class ChatMessageBuilder {
+
+    /**
+     * @Desc TODO(往本地插入一条C2C本地消息)
+     * @author 彭石林
+     * @parame [msg, userId, callback]
+     * @return java.lang.String
+     * @Date 2021/11/26
+     */
+    public static String C2CMessageToLocal(String msg,String userId, V2TIMValueCallback<V2TIMMessage> callback){
+        V2TIMMessage message = V2TIMManager.getMessageManager().createTextMessage(msg);
+        String v2TIMMessage = V2TIMManager.getMessageManager().insertC2CMessageToLocalStorage(message, userId, V2TIMManager.getInstance().getLoginUser(), callback);
+        return v2TIMMessage;
+    }
 
     public static TextMessageBean buildTextMessage(String message) {
         V2TIMMessage v2TIMMessage = V2TIMManager.getMessageManager().createTextMessage(message);

@@ -47,4 +47,11 @@ public interface IMessageLayout extends IMessageProperties {
      * @param action 菜单选项 {@link PopMenuAction}, 可以自定义图片、文字以及点击事件
      */
     void addPopAction(ChatPopMenu.ChatPopMenuAction action);
+
+    /**
+     * 自定义消息回调 彭石林新增
+     *
+     * @return
+     */
+    void setOnCustomMessageDrawListener(IOnCustomMessageDrawListener iOnCustomMessageDrawListener);
 }

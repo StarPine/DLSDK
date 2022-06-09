@@ -152,7 +152,11 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
             usernameText.setTextColor(properties.getNameFontColor());
         }
         if (properties.getNameFontSize() != 0) {
-            usernameText.setTextSize(properties.getNameFontSize());
+            try{
+                usernameText.setTextSize((float) properties.getNameFontSize());
+            }catch (Exception e){
+
+            }
         }
         // 聊天界面设置头像和昵称
         if (!TextUtils.isEmpty(msg.getNameCard())) {
@@ -346,8 +350,10 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
                     } else {
                         isReadText.setVisibility(View.VISIBLE);
                         if (msg.isPeerRead()) {
+                            isReadText.setBackgroundResource(R.drawable.custom_read_backdrop);
                             isReadText.setText(R.string.has_read);
                         } else {
+                            isReadText.setBackgroundResource(R.drawable.custom_unread_backdrop);
                             isReadText.setText(R.string.unread);
                         }
                     }

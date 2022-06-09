@@ -184,7 +184,8 @@ public class ChatProvider {
     public String sendMessage(TUIMessageBean message, ChatInfo chatInfo, IUIKitCallback<TUIMessageBean> callBack) {
         OfflineMessageContainerBean containerBean = new OfflineMessageContainerBean();
         OfflineMessageBean entity = new OfflineMessageBean();
-        entity.content = message.getExtra();
+//        entity.content = message.getExtra();
+        entity.content = "收到一則訊息！";
         entity.sender = message.getSender();
         entity.nickname = chatInfo.getChatName();
         entity.faceUrl = TUIChatConfigs.getConfigs().getGeneralConfig().getUserFaceUrl();
@@ -210,6 +211,12 @@ public class ChatProvider {
         v2TIMOfflinePushInfo.setAndroidOPPOChannelID("tuikit");
         if (TUIChatConfigs.getConfigs().getGeneralConfig().isAndroidPrivateRing()) {
             v2TIMOfflinePushInfo.setAndroidSound(OfflinePushInfoUtils.PRIVATE_RING_NAME);
+        }
+
+        boolean isChatPush = ConfigManagerUtil.getInstance().readChatPushStatus();
+        Log.i("starpine","isChatPush: "+isChatPush);
+        if (!isChatPush){//不推送离线消息
+            v2TIMOfflinePushInfo.disablePush(true);
         }
 
         final V2TIMMessage v2TIMMessage = message.getV2TIMMessage();

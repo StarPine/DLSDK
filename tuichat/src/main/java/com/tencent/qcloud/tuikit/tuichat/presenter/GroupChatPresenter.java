@@ -218,7 +218,7 @@ public class GroupChatPresenter extends ChatPresenter {
         });
     }
 
-    protected void addMessageInfo(TUIMessageBean messageInfo) {
+    public void addMessageInfo(TUIMessageBean messageInfo) {
         super.addMessageInfo(messageInfo);
         addGroupMessage(messageInfo);
     }
