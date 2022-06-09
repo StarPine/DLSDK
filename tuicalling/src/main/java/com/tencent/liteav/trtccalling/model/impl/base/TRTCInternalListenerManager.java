@@ -13,7 +13,7 @@ import java.util.Map;
  * 这个类用来保存所有的监听个回调
  */
 public class TRTCInternalListenerManager implements TRTCCallingDelegate {
-    private List<WeakReference<TRTCCallingDelegate>> mWeakReferenceList;
+    private final List<WeakReference<TRTCCallingDelegate>> mWeakReferenceList;
 
     public TRTCInternalListenerManager() {
         mWeakReferenceList = new ArrayList<>();
@@ -194,6 +194,16 @@ public class TRTCInternalListenerManager implements TRTCCallingDelegate {
             TRTCCallingDelegate listener = reference.get();
             if (listener != null) {
                 listener.onSwitchToAudio(success, message);
+            }
+        }
+    }
+
+    @Override
+    public void onTryToReconnect() {
+        for (WeakReference<TRTCCallingDelegate> reference : mWeakReferenceList) {
+            TRTCCallingDelegate listener = reference.get();
+            if (listener != null) {
+                listener.onTryToReconnect();
             }
         }
     }

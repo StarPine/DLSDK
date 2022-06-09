@@ -216,6 +216,11 @@ public class TUICallAudioView extends BaseTUICallView {
         }
     }
 
+    @Override
+    public void onTryToReconnect() {
+
+    }
+
     /**
      * 等待接听界面
      */

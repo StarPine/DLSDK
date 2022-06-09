@@ -262,6 +262,11 @@ public class TUIGroupCallAudioView extends BaseTUICallView {
         }
     }
 
+    @Override
+    public void onTryToReconnect() {
+
+    }
+
     /**
      * 等待接听界面
      */

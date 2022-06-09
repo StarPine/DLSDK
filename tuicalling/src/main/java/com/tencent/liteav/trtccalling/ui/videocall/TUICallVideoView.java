@@ -342,6 +342,11 @@ public class TUICallVideoView extends BaseTUICallView {
         }
     }
 
+    @Override
+    public void onTryToReconnect() {
+
+    }
+
     private void enableHandsFree(boolean enable) {
         mIsHandsFree = enable;
         mTRTCCalling.setHandsFree(mIsHandsFree);

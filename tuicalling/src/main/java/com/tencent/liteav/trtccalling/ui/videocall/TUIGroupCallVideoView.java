@@ -386,6 +386,11 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
         }
     }
 
+    @Override
+    public void onTryToReconnect() {
+
+    }
+
     private void enableHandsFree(boolean enable) {
         mIsHandsFree = enable;
         mTRTCCalling.setHandsFree(mIsHandsFree);
@@ -687,7 +692,7 @@ public class TUIGroupCallVideoView extends BaseTUICallView {
     }
 
     @Override
-    protected void finish() {
+    public void finish() {
         super.finish();
         mTRTCCalling.closeCamera();
     }

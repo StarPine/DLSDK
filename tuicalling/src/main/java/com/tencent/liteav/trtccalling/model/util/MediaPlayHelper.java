@@ -18,12 +18,12 @@ import java.io.IOException;
 public class MediaPlayHelper {
     private static final String TAG = "MediaPlayHelper";
 
-    private       Context     mContext;
+    private final Context mContext;
     private final MediaPlayer mMediaPlayer;
-    private       Handler     mHandler;
-    private       int         mResId;   //资源ID,apk内置资源
-    private       String      mResPath; //资源路径,apk沙盒地址,例如:/sdcard/android/data/com.tencent.trtc/files/rain.mp3
-    private       Uri         mResUrl;  //网络资源,例如:https://web.sdk.qcloud.com/component/TUIKit/assets/uni-app/calling-bell-1.mp3
+    private Handler mHandler;
+    private int mResId;   //资源ID,apk内置资源
+    private String mResPath; //资源路径,apk沙盒地址,例如:/sdcard/android/data/com.tencent.trtc/files/rain.mp3
+    private Uri mResUrl;  //网络资源,例如:https://web.sdk.qcloud.com/component/TUIKit/assets/uni-app/calling-bell-1.mp3
 
     public MediaPlayHelper(Context context) {
         mContext = context;
@@ -113,6 +113,9 @@ public class MediaPlayHelper {
                     TRTCLogger.e(TAG, Log.getStackTraceString(e));
                 }
                 mMediaPlayer.start();
+
+                //临时新增，设置重复播放
+                mMediaPlayer.setLooping(true);
             }
         });
         if (duration > 0) {

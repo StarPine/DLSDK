@@ -1,5 +1,6 @@
 package com.tencent.liteav.trtccalling.model;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.hardware.Sensor;
@@ -203,6 +204,21 @@ public class TRTCCalling {
             }
         }
     }
+
+    /**
+     * 初始化自定义采集和渲染的对象
+     *
+     * @return
+     */
+    public FURenderer createCustomRenderer(Activity activity, boolean isFrontCamera, boolean mIsEffect) {
+        return null;
+    }
+
+    /**
+     * 添加render监听
+     * @param listener
+     */
+    public abstract void setLocalVideoRenderListener(TRTCCloudListener.TRTCVideoFrameListener listener);
 
     /**
      * 消息监听器,收到 C2C 自定义（信令）消息
@@ -1154,12 +1170,35 @@ public class TRTCCalling {
         internalCall(userIdList, type, "");
     }
 
+    /**
+     * kl 添加
+     * C2C邀请通话，被邀请方会收到 {@link TRTCCallingDelegate#onInvited } 的回调
+     * 如果当前处于通话中，可以调用该函数以邀请第三方进入通话
+     *
+     * @param roomId     房间Id
+     * @param userIdList 被邀请方
+     * @param type       1-语音通话，2-视频通话
+     */
+    public abstract void call(int roomId, List<String> userIdList, int type);
+
     public void groupCall(final List<String> userIdList, int type, String groupId) {
         if (isCollectionEmpty(userIdList)) {
             return;
         }
         internalCall(userIdList, type, groupId);
     }
+
+    /**
+     * kl 添加
+     * IM群组邀请通话，被邀请方会收到 {@link TRTCCallingDelegate#onInvited } 的回调
+     * 如果当前处于通话中，可以继续调用该函数继续邀请他人进入通话，同时正在通话的用户会收到 {@link TRTCCallingDelegate#onGroupCallInviteeListUpdate(List)} 的回调
+     *
+     * @param roomId     房间Id
+     * @param userIdList 邀请列表
+     * @param type       1-语音通话，2-视频通话
+     * @param groupId    IM群组ID
+     */
+    public abstract void groupCall(int roomId, List<String> userIdList, int type, String groupId);
 
     /**
      * 统一的拨打逻辑
@@ -2147,4 +2186,35 @@ public class TRTCCalling {
             e.printStackTrace();
         }
     }
+
+    public interface ActionCallBack {
+        void onError(int code, String msg);
+
+        void onSuccess();
+    }
+
+    /**
+     * @Desc TODO(是否开启自动增益补偿功能, 可以自动调麦克风的收音量到一定的音量水平)
+     * @author 彭石林
+     * @parame [openAGC]
+     * @return void
+     * @Date 2022/2/14
+     */
+    public abstract void enableAGC(boolean openAGC);
+    /**
+     * @Desc TODO(回声消除器，可以消除各种延迟的回声)
+     * @author 彭石林
+     * @parame [openAEC]
+     * @return void
+     * @Date 2022/2/14
+     */
+    public abstract void enableAEC(boolean openAEC);
+    /**
+     * @Desc TODO(背景噪音抑制功能，可探测出背景固定频率的杂音并消除背景噪音)
+     * @author 彭石林
+     * @parame [openANS]
+     * @return void
+     * @Date 2022/2/14
+     */
+    public abstract void enableANS(boolean openANS);
 }

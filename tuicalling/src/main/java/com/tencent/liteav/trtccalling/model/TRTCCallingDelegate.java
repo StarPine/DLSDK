@@ -118,4 +118,9 @@ public interface TRTCCallingDelegate {
      * @param message 切换结果信息，如果切换失败，会有切换失败的错误信息
      */
     void onSwitchToAudio(boolean success, String message);
+
+    /**
+     * 网络重连
+     */
+    void onTryToReconnect();
 }

@@ -44,6 +44,10 @@ public class TRTCVideoLayout extends RelativeLayout {
         return mImageHead;
     }
 
+    public TextView getUserNameTv() {
+        return mTextUserName;
+    }
+
     public void setVideoAvailable(boolean available) {
         if (available) {
             mTCCloudViewTRTC.setVisibility(VISIBLE);

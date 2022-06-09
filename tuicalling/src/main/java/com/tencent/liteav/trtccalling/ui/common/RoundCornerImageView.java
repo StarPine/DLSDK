@@ -14,7 +14,7 @@ import com.tencent.liteav.trtccalling.R;
 public class RoundCornerImageView extends AppCompatImageView {
 
     private float mWidth, mHeight;
-    private int mDefaultRadius = 0;
+    private final int mDefaultRadius = 0;
     private int mRadius;
     private int mLeftTopRadius;
     private int mRightTopRadius;
