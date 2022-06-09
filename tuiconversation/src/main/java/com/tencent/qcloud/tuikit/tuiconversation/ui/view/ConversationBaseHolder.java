@@ -2,9 +2,9 @@ package com.tencent.qcloud.tuikit.tuiconversation.ui.view;
 
 import android.view.View;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public abstract class ConversationBaseHolder extends RecyclerView.ViewHolder {
 

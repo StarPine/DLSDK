@@ -21,12 +21,12 @@ public class SuspensionDecoration extends RecyclerView.ItemDecoration {
 
     private static final String TAG = SuspensionDecoration.class.getSimpleName();
     private static int COLOR_TITLE_BG = Color.parseColor("#FFEDEDED");
-    private static final int COLOR_TITLE_BOTTOM_LINE = Color.parseColor("#FFCACACA");
+    private static int COLOR_TITLE_BOTTOM_LINE = Color.parseColor("#FFCACACA");
     private static int COLOR_TITLE_FONT = Color.parseColor("#FF888888");
-    private final int mTitleFontSize;//title字体大小
+    private int mTitleFontSize;//title字体大小
     private List<? extends ISuspensionInterface> mDatas;
-    private final Paint mPaint;
-    private final Rect mBounds;//用于存放测量文字Rect
+    private Paint mPaint;
+    private Rect mBounds;//用于存放测量文字Rect
     private int mTitleHeight;//title的高
     private int mHeaderViewCount = 0;
 

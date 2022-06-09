@@ -1,37 +1,41 @@
 package com.tencent.qcloud.tuikit.tuichat.util;
 
-import static com.tencent.qcloud.tuicore.TUIConstants.TUIConversation.CONVERSATION_C2C_PREFIX;
-import static com.tencent.qcloud.tuicore.TUIConstants.TUIConversation.CONVERSATION_GROUP_PREFIX;
-
-import com.google.gson.Gson;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMImageElem;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ImageUtil;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 
 import java.io.File;
-import java.util.List;
-import java.util.Map;
+
+import static com.tencent.qcloud.tuicore.TUIConstants.TUIConversation.CONVERSATION_C2C_PREFIX;
+import static com.tencent.qcloud.tuicore.TUIConstants.TUIConversation.CONVERSATION_GROUP_PREFIX;
 
 public class TUIChatUtils {
 
     public static <T> void callbackOnError(IUIKitCallback<T> callBack, String module, int errCode, String desc) {
         if (callBack != null) {
-            callBack.onError(module, errCode, desc);
+            callBack.onError(module, errCode, ErrorMessageConverter.convertIMError(errCode, desc));
         }
     }
 
     public static <T> void callbackOnError(IUIKitCallback<T> callBack, int errCode, String desc) {
         if (callBack != null) {
-            callBack.onError(null, errCode, desc);
+            callBack.onError(null, errCode, ErrorMessageConverter.convertIMError(errCode, desc));
         }
     }
 
     public static <T> void callbackOnSuccess(IUIKitCallback<T> callBack, T data) {
         if (callBack != null) {
             callBack.onSuccess(data);
+        }
+    }
+
+    public static void callbackOnProgress(IUIKitCallback callBack, Object data) {
+        if (callBack != null) {
+            callBack.onProgress(data);
         }
     }
 
@@ -49,49 +53,15 @@ public class TUIChatUtils {
     }
 
     /**
-     * 匹配包含0开头的十位数字
-     * @param str
-     * @return
-     */
-    /**
-     * 匹配包含0开头的十位数字
-     * @param str
-     * @return
-     */
-    public static boolean isLineNumber(String str){
-        if (str == null || str.length() < 10)return false;
-        String all = str.replaceAll("\\s+", "").toLowerCase();
-        String s = all.replaceAll("isLine", "");
-        String replace = s.replaceAll("0[0-9]{9}", "isLine");
-        return replace.contains("isLine");
-    }
-
-    /**
-     * 判断是否包含相关字段，默认小写匹配
-     */
-    public static boolean isContains(String message, List<String> str){
-        if (str == null || str.size() == 0 || message == null || message.length() == 0)return false;
-        String all = message.replaceAll("\\s+", "").toLowerCase();
-        for (String words : str) {
-            if (words.equals("")){
-                continue;
-            }
-            boolean contains = all.contains(words.toLowerCase());
-            if (contains)return true;
-        }
-        return false;
-    }
-
-    /**
      * 获取 MessageInfo 中原图的路径
      * @param msg
      * @return
      */
-    public static String getOriginImagePath(final MessageInfo msg) {
+    public static String getOriginImagePath(final TUIMessageBean msg) {
         if (msg == null) {
             return null;
         }
-        V2TIMMessage v2TIMMessage = msg.getTimMessage();
+        V2TIMMessage v2TIMMessage = msg.getV2TIMMessage();
         if (v2TIMMessage == null) {
             return null;
         }
@@ -99,7 +69,7 @@ public class TUIChatUtils {
         if (v2TIMImageElem == null) {
             return null;
         }
-        String localImgPath = ChatMessageInfoUtil.getLocalImagePath(msg);
+        String localImgPath = ChatMessageParser.getLocalImagePath(msg);
         if (localImgPath == null) {
             String originUUID = null;
             for(V2TIMImageElem.V2TIMImage image : v2TIMImageElem.getImageList()) {
@@ -115,18 +85,6 @@ public class TUIChatUtils {
             }
         }
         return localImgPath;
-    }
-
-    public static boolean isJSON2(String str) {
-        boolean result = false;
-        try {
-            new Gson().fromJson(str, Map.class);
-            result = true;
-        } catch (Exception e) {
-            result = false;
-        }
-        return result;
-
     }
 
 }

@@ -7,7 +7,7 @@ public class ConversationLayoutSetting {
 
     public static void customizeConversation(final ConversationLayout layout) {
 
-        ConversationListLayout listLayout = layout.getConversationList();
+        ConversationListLayout listLayout = (ConversationListLayout) layout.getConversationList();
 
         listLayout.setItemTopTextSize(16); // 设置adapter item中top文字大小
         listLayout.setItemBottomTextSize(12);// 设置adapter item中bottom文字大小

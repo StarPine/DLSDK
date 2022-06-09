@@ -33,7 +33,8 @@ public final class TUIConstants {
         public static final String TUI_GROUP = "TUIGroupService";
         public static final String TUI_CALLING = "TUICallingService";
         public static final String TUI_LIVE = "TUILiveService";
-
+        public static final String TUI_BEAUTY = "TUIBeauty";
+        public static final String TUI_OFFLINEPUSH = "TUIOfflinePushService";
     }
 
     /**
@@ -50,6 +51,16 @@ public final class TUIConstants {
         // 用户个人信息变化
         public static final String EVENT_SUB_KEY_USER_INFO_UPDATED = "eventSubKeyUserInfoUpdated";
 
+        // imsdk 初始化状态变化
+        public static final String EVENT_IMSDK_INIT_STATE_CHANGED = "eventIMSDKInitStateChanged";
+        // 开始初始化
+        public static final String EVENT_SUB_KEY_START_INIT = "eventSubKeyStartInit";
+        // 开始反初始化
+        public static final String EVENT_SUB_KEY_START_UNINIT = "eventSubKeyStartUnInit";
+        // 登录成功
+        public static final String EVENT_SUB_KEY_USER_LOGIN_SUCCESS = "eventSubKeyUserLoginSuccess";
+        // 登出成功
+        public static final String EVENT_SUB_KEY_USER_LOGOUT_SUCCESS = "eventSubKeyUserLogoutSuccess";
 
         public static final String SELF_ID = "selfId";
         public static final String SELF_SIGNATURE = "selfSignature";
@@ -72,6 +83,8 @@ public final class TUIConstants {
         public static final String METHOD_SEND_MESSAGE = "sendMessage";
         // 结束聊天
         public static final String METHOD_EXIT_CHAT = "exitChat";
+        // 获取消息摘要 用来显示在会话列表
+        public static final String METHOD_GET_DISPLAY_STRING = "getDisplayString";
 
         // 更多输入按钮扩展
         public static final String EXTENSION_INPUT_MORE_CUSTOM_MESSAGE = "inputMoreCustomMessage";
@@ -104,6 +117,7 @@ public final class TUIConstants {
         public static final String OWNER = "owner";
         public static final String MEMBER_DETAILS = "memberDetails";
         public static final String IS_GROUP_CHAT = "isGroupChat";
+        public static final String V2TIMMESSAGE = "v2TIMMessage";
 
 
         // 发送自定义消息字段
@@ -134,6 +148,7 @@ public final class TUIConstants {
         public static final String METHOD_GET_TOTAL_UNREAD_COUNT = "getTotalUnreadCount";
         public static final String METHOD_UPDATE_TOTAL_UNREAD_COUNT = "updateTotalUnreadCount";
         public static final String METHOD_DELETE_CONVERSATION = "deleteConversation";
+        public static final String METHOD_CLEAR_CONVERSATION_MESSAGE = "clearConversationMessage";
 
         public static final String EVENT_UNREAD = "eventTotalUnreadCount";
         public static final String EVENT_SUB_KEY_UNREAD_CHANGED = "unreadCountChanged";
@@ -144,6 +159,7 @@ public final class TUIConstants {
         public static final String CONVERSATION_ID = "conversationId";
         public static final String IS_SET_TOP = "isSetTop";
         public static final String IS_TOP = "isTop";
+        public static final String IS_GROUP = "isGroup";
         public static final String TOTAL_UNREAD_COUNT = "totalUnreadCount";
         public static final String CONTEXT = "context";
         public static final String SEARCH_VIEW = "searchView";
@@ -166,7 +182,7 @@ public final class TUIConstants {
 
     }
 
-        /**
+    /**
      * TUICalling 相关字段
      */
     public static final class TUICalling {
@@ -174,7 +190,7 @@ public final class TUIConstants {
 
         public static final String METHOD_NAME_CALL = "call";
         public static final String METHOD_NAME_RECEIVEAPNSCALLED = "receiveAPNSCalled";
-        
+
         public static final String PARAM_NAME_TYPE = "type";
         public static final String PARAM_NAME_USERIDS = "userIDs";
         public static final String PARAM_NAME_GROUPID = "groupId";
@@ -193,7 +209,7 @@ public final class TUIConstants {
 
         public static final String TYPE_AUDIO = "audio";
         public static final String TYPE_VIDEO = "video";
-        
+
         public static final int ACTION_ID_AUDIO_CALL = 1;
         public static final int ACTION_ID_VIDEO_CALL = 2;
 
@@ -244,6 +260,7 @@ public final class TUIConstants {
         public static final String EVENT_SUB_KEY_JOIN_GROUP = "eventSubKeyJoinGroup";
         public static final String EVENT_SUB_KEY_INVITED_GROUP = "eventSubKeyInvitedGroup";
         public static final String EVENT_SUB_KEY_GROUP_INFO_CHANGED = "eventSubKeyGroupInfoChanged";
+        public static final String EVENT_SUB_KEY_CLEAR_MESSAGE = "eventSubKeyGroupClearMessage";
 
         public static final String GROUP_ID = "groupId";
         public static final String GROUP_NAME = "groupName";
@@ -255,8 +272,33 @@ public final class TUIConstants {
 
     }
 
+
+    public static final class TUIBeauty {
+        public static final String SERVICE_NAME = Service.TUI_BEAUTY;
+
+        public static final String PARAM_NAME_CONTEXT        = "context";
+        public static final String PARAM_NAME_LICENSE_KEY    = "licenseKey";
+        public static final String PARAM_NAME_LICENSE_URL    = "licenseUrl";
+        public static final String PARAM_NAME_FRAME_WIDTH    = "frameWidth";
+        public static final String PARAM_NAME_FRAME_HEIGHT   = "frameHeight";
+        public static final String PARAM_NAME_SRC_TEXTURE_ID = "srcTextureId";
+
+        public static final String METHOD_PROCESS_VIDEO_FRAME = "processVideoFrame";
+        public static final String METHOD_INIT_XMAGIC         = "initXmagic";
+    }
+    
+    /**
+     * TUIOfflinePush 相关字段
+     */
+    public static final class TUIOfflinePush {
+        public static final String SERVICE_NAME = Service.TUI_OFFLINEPUSH;
+
+        public static final String METHOD_UNREGISTER_PUSH = "unRegiterPush";
+    }
+
     public static final class Message {
         public static final String CUSTOM_BUSINESS_ID_KEY = "businessID";
+        public static final String CALLING_TYPE_KEY = "call_type";
     }
 
 }

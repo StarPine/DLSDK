@@ -20,14 +20,14 @@ public class UIKitVideoView extends TextureView {
 
     private static final String TAG = UIKitVideoView.class.getSimpleName();
 
-    private static final int STATE_ERROR = -1;
-    private static final int STATE_IDLE = 0;
-    private static final int STATE_PREPARING = 1;
-    private static final int STATE_PREPARED = 2;
-    private static final int STATE_PLAYING = 3;
-    private static final int STATE_PAUSED = 4;
-    private static final int STATE_PLAYBACK_COMPLETED = 5;
-    private static final int STATE_STOPPED = 6;
+    private static int STATE_ERROR = -1;
+    private static int STATE_IDLE = 0;
+    private static int STATE_PREPARING = 1;
+    private static int STATE_PREPARED = 2;
+    private static int STATE_PLAYING = 3;
+    private static int STATE_PAUSED = 4;
+    private static int STATE_PLAYBACK_COMPLETED = 5;
+    private static int STATE_STOPPED = 6;
 
     private int mCurrentState = STATE_IDLE;
 
@@ -41,7 +41,10 @@ public class UIKitVideoView extends TextureView {
     private int mVideoRotationDegree;
 
     private IPlayer.OnPreparedListener mOutOnPreparedListener;
-    private final IPlayer.OnPreparedListener mOnPreparedListener = new IPlayer.OnPreparedListener() {
+    private IPlayer.OnErrorListener mOutOnErrorListener;
+    private IPlayer.OnCompletionListener mOutOnCompletionListener;
+    private IPlayer.OnSeekCompleteListener mOnSeekCompleteListener;
+    private IPlayer.OnPreparedListener mOnPreparedListener = new IPlayer.OnPreparedListener() {
         public void onPrepared(IPlayer mp) {
             mCurrentState = STATE_PREPARED;
             mVideoHeight = mp.getVideoHeight();
@@ -54,7 +57,18 @@ public class UIKitVideoView extends TextureView {
             }
         }
     };
-    private final IPlayer.OnInfoListener mOnInfoListener = new IPlayer.OnInfoListener() {
+    private IPlayer.OnErrorListener mOnErrorListener = new IPlayer.OnErrorListener() {
+        public boolean onError(IPlayer mp, int what, int extra) {
+            Log.w(TAG, "onError: what/extra: " + what + "/" + extra);
+            mCurrentState = STATE_ERROR;
+            stop_l();
+            if (mOutOnErrorListener != null) {
+                mOutOnErrorListener.onError(mp, what, extra);
+            }
+            return true;
+        }
+    };
+    private IPlayer.OnInfoListener mOnInfoListener = new IPlayer.OnInfoListener() {
         public void onInfo(IPlayer mp, int what, int extra) {
             Log.w(TAG, "onInfo: what/extra: " + what + "/" + extra);
             if (what == 10001) { // IJK: MEDIA_INFO_VIDEO_ROTATION_CHANGED
@@ -65,13 +79,31 @@ public class UIKitVideoView extends TextureView {
             }
         }
     };
-    private final IPlayer.OnVideoSizeChangedListener mOnVideoSizeChangedListener = new IPlayer.OnVideoSizeChangedListener() {
+    private IPlayer.OnCompletionListener mOnCompletionListener = new IPlayer.OnCompletionListener() {
+        public void onCompletion(IPlayer mp) {
+            Log.i(TAG, "onCompletion");
+            mCurrentState = STATE_PLAYBACK_COMPLETED;
+            if (mOutOnCompletionListener != null) {
+                mOutOnCompletionListener.onCompletion(mp);
+            }
+        }
+    };
+    private IPlayer.OnVideoSizeChangedListener mOnVideoSizeChangedListener = new IPlayer.OnVideoSizeChangedListener() {
         @Override
         public void onVideoSizeChanged(IPlayer mp, int width, int height) {
             // TUIChatLog.i(TAG, "onVideoSizeChanged width: " + width + " height: " + height);
         }
     };
-    private final SurfaceTextureListener mSurfaceTextureListener = new SurfaceTextureListener() {
+
+    private IPlayer.OnSeekCompleteListener onSeekCompleteListener = new IPlayer.OnSeekCompleteListener() {
+        @Override
+        public void OnSeekComplete(IPlayer mp) {
+            if (mOnSeekCompleteListener != null) {
+                mOnSeekCompleteListener.OnSeekComplete(mp);
+            }
+        }
+    };
+    private SurfaceTextureListener mSurfaceTextureListener = new SurfaceTextureListener() {
 
         @Override
         public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
@@ -94,28 +126,6 @@ public class UIKitVideoView extends TextureView {
         @Override
         public void onSurfaceTextureUpdated(SurfaceTexture surface) {
             // TUIChatLog.i(TAG,"onSurfaceTextureUpdated");
-        }
-    };
-    private IPlayer.OnErrorListener mOutOnErrorListener;
-    private final IPlayer.OnErrorListener mOnErrorListener = new IPlayer.OnErrorListener() {
-        public boolean onError(IPlayer mp, int what, int extra) {
-            Log.w(TAG, "onError: what/extra: " + what + "/" + extra);
-            mCurrentState = STATE_ERROR;
-            stop_l();
-            if (mOutOnErrorListener != null) {
-                mOutOnErrorListener.onError(mp, what, extra);
-            }
-            return true;
-        }
-    };
-    private IPlayer.OnCompletionListener mOutOnCompletionListener;
-    private final IPlayer.OnCompletionListener mOnCompletionListener = new IPlayer.OnCompletionListener() {
-        public void onCompletion(IPlayer mp) {
-            Log.i(TAG, "onCompletion");
-            mCurrentState = STATE_PLAYBACK_COMPLETED;
-            if (mOutOnCompletionListener != null) {
-                mOutOnCompletionListener.onCompletion(mp);
-            }
         }
     };
 
@@ -143,6 +153,10 @@ public class UIKitVideoView extends TextureView {
 
     public void setOnPreparedListener(IPlayer.OnPreparedListener l) {
         mOutOnPreparedListener = l;
+    }
+
+    public void setOnSeekCompleteListener(IPlayer.OnSeekCompleteListener l) {
+        mOnSeekCompleteListener = l;
     }
 
     public void setOnErrorListener(IPlayer.OnErrorListener l) {
@@ -230,9 +244,18 @@ public class UIKitVideoView extends TextureView {
         openVideo();
     }
 
+    public void resetVideo() {
+        openVideo();
+    }
+
     private void openVideo() {
+        if (mUri == null) {
+            Log.e(TAG, "openVideo: mUri is null ");
+            return;
+        }
         Log.i(TAG, "openVideo: mUri: " + mUri.getPath() + " mSurface: " + mSurface);
         if (mSurface == null) {
+            Log.e(TAG, "openVideo: mSurface is null ");
             return;
         }
 
@@ -244,12 +267,13 @@ public class UIKitVideoView extends TextureView {
             mMediaPlayer.setOnErrorListener(mOnErrorListener);
             mMediaPlayer.setOnInfoListener(mOnInfoListener);
             mMediaPlayer.setOnVideoSizeChangedListener(mOnVideoSizeChangedListener);
+            mMediaPlayer.setOnSeekCompleteListener(mOnSeekCompleteListener);
             mMediaPlayer.setSurface(mSurface);
             mMediaPlayer.setDataSource(getContext(), mUri);
             mMediaPlayer.prepareAsync();
             mCurrentState = STATE_PREPARING;
         } catch (Exception ex) {
-            Log.w(TAG, ex.getMessage());
+            Log.w(TAG, "ex = " + ex.getMessage());
             mCurrentState = STATE_ERROR;
         }
 
@@ -294,6 +318,41 @@ public class UIKitVideoView extends TextureView {
         }
         return false;
     }
+
+    public void seekTo(int progress) {
+        if (mMediaPlayer != null) {
+            mMediaPlayer.seekTo(progress);
+        }
+    }
+
+    public boolean isPrepared() {
+        if (mUri == null) {
+            Log.e(TAG, "isPrepared: mUri is null ");
+            return false;
+        }
+        Log.i(TAG, "isPrepared: mUri: " + mUri.getPath() + " mSurface: " + mSurface);
+        if (mSurface == null) {
+            Log.e(TAG, "isPrepared: mSurface is null ");
+            return false;
+        }
+
+        return true;
+    }
+
+    public int getCurrentPosition() {
+        if (mMediaPlayer != null) {
+            return mMediaPlayer.getCurrentPosition();
+        }
+        return 0;
+    }
+
+    public int getDuration() {
+        if (mMediaPlayer != null) {
+            return mMediaPlayer.getDuration();
+        }
+        return 0;
+    }
+
 
     @Override
     public void setBackgroundDrawable(Drawable background) {

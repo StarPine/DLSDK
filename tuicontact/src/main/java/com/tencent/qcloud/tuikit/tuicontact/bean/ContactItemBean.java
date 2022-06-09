@@ -21,9 +21,10 @@ public class ContactItemBean extends BaseIndexPinyinBean {
     private String remark;
     private String nickName;
     private String avatarUrl;
+    private String signature;
     private boolean isGroup;
     private String groupType;
-    private boolean isFriend = true;
+    private boolean isFriend = false;
     private boolean isEnable = true;
 
     public ContactItemBean() {
@@ -104,14 +105,23 @@ public class ContactItemBean extends BaseIndexPinyinBean {
         this.nickName = nickName;
     }
 
+    public String getSignature() {
+        return signature;
+    }
+
+    public void setSignature(String signature) {
+        this.signature = signature;
+    }
+
     public ContactItemBean covertTIMFriend(V2TIMFriendInfo friendInfo) {
         if (friendInfo == null) {
             return this;
         }
         setId(friendInfo.getUserID());
-        setRemark(friendInfo.getFriendRemark());
         setNickName(friendInfo.getUserProfile().getNickName());
         setAvatarUrl(friendInfo.getUserProfile().getFaceUrl());
+        setSignature(friendInfo.getUserProfile().getSelfSignature());
+        setRemark(friendInfo.getFriendRemark());
         return this;
     }
 

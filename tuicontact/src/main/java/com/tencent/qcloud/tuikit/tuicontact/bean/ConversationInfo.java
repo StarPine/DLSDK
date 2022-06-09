@@ -34,23 +34,24 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
      * 会话头像url
      */
     private List<Object> iconUrlList = new ArrayList<>();
-    /**
-     * 会话头像
-     */
-    private String iconPath;
-    /**
-     * 会话界面显示的@提示消息
-     */
-    private String atInfoText;
+
+    public List<Object> getIconUrlList() {
+        return iconUrlList;
+    }
+
+    public void setIconUrlList(List<Object> iconUrlList) {
+        this.iconUrlList = iconUrlList;
+    }
 
     /**
      * 会话标题
      */
     private String title;
+
     /**
-     * 会话界面显示消息免打扰图标
+     * 会话头像
      */
-    private boolean showDisturbIcon;
+    private String iconPath;
     /**
      * 是否为群会话
      */
@@ -63,22 +64,27 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
      * 最后一条消息时间
      */
     private long lastMessageTime;
+
+
+    /**
+     * 会话界面显示的@提示消息
+     */
+    private String atInfoText;
+
+    /**
+     * 会话界面显示消息免打扰图标
+     */
+    private boolean showDisturbIcon;
+
     /**
      * 群类型
      */
     private String groupType;
+
     /**
      * 会话排序键值
      */
     private long orderKey;
-
-    public List<Object> getIconUrlList() {
-        return iconUrlList;
-    }
-
-    public void setIconUrlList(List<Object> iconUrlList) {
-        this.iconUrlList = iconUrlList;
-    }
 
     public ConversationInfo() {
 
@@ -155,12 +161,12 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
         this.type = type;
     }
 
-    public String getAtInfoText() {
-        return atInfoText;
-    }
-
     public void setAtInfoText(String atInfoText) {
         this.atInfoText = atInfoText;
+    }
+
+    public String getAtInfoText() {
+        return atInfoText;
     }
 
     public boolean isShowDisturbIcon() {
@@ -187,12 +193,12 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
         this.iconPath = iconPath;
     }
 
-    public long getOrderKey() {
-        return orderKey;
-    }
-
     public void setOrderKey(long orderKey) {
         this.orderKey = orderKey;
+    }
+
+    public long getOrderKey() {
+        return orderKey;
     }
 
     @Override

@@ -1,19 +1,19 @@
 package com.tencent.qcloud.tuikit.tuiconversation.ui.view;
 
 import android.content.Context;
-import android.util.AttributeSet;
-import android.view.View;
-
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
+import android.util.AttributeSet;
+import android.view.View;
+
 import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
-import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.interfaces.IConversationListAdapter;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.interfaces.IConversationListLayout;
+import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
 
 public class ConversationListLayout extends RecyclerView implements IConversationListLayout {
 
@@ -83,7 +83,6 @@ public class ConversationListLayout extends RecyclerView implements IConversatio
         mAdapter.setItemDateTextSize(size);
     }
 
-
     @Override
     public ConversationListLayout getListLayout() {
         return this;
@@ -100,11 +99,6 @@ public class ConversationListLayout extends RecyclerView implements IConversatio
             super.setAdapter((ConversationListAdapter) adapter);
             mAdapter = (ConversationListAdapter) adapter;
         }
-    }
-
-    @Override
-    public void setOnItemAvatarClickListener(OnItemAvatarClickListener listener) {
-        mAdapter.setOnItemAvatarClickListener(listener);
     }
 
     @Override
@@ -152,25 +146,10 @@ public class ConversationListLayout extends RecyclerView implements IConversatio
         }
     }
 
-    public void scrollToTop() {
-        if (getAdapter() != null) {
-            RecyclerView.LayoutManager layoutManager = getLayoutManager();
-            int itemCount = getAdapter().getItemCount();
-            if (layoutManager instanceof LinearLayoutManager && itemCount > 0) {
-                ((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(0, 0);
-            }
-        }
-    }
-
     boolean isLoadCompleted(){
         if (presenter != null) {
             return presenter.isLoadFinished();
         }
         return false;
-    }
-
-    //彭石林新增。会话列表头像点击
-    public interface OnItemAvatarClickListener{
-        void onItemAvatarClick(View view, int position, ConversationInfo messageInfo);
     }
 }

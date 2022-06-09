@@ -38,11 +38,11 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private static final int EDGE_LEFT = 0;
     private static final int EDGE_RIGHT = 1;
     private static final int EDGE_BOTH = 2;
-    private static final float DEFAULT_MAX_SCALE = 3.0f;
-    private static final float DEFAULT_MID_SCALE = 1.75f;
-    private static final float DEFAULT_MIN_SCALE = 1.0f;
-    private static final int DEFAULT_ZOOM_DURATION = 200;
-    private static final int SINGLE_TOUCH = 1;
+    private static float DEFAULT_MAX_SCALE = 3.0f;
+    private static float DEFAULT_MID_SCALE = 1.75f;
+    private static float DEFAULT_MIN_SCALE = 1.0f;
+    private static int DEFAULT_ZOOM_DURATION = 200;
+    private static int SINGLE_TOUCH = 1;
     // These are set so we don't keep allocating them on the heap
     private final Matrix mBaseMatrix = new Matrix();
     private final Matrix mDrawMatrix = new Matrix();
@@ -56,7 +56,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private float mMaxScale = DEFAULT_MAX_SCALE;
     private boolean mAllowParentInterceptOnEdge = true;
     private boolean mBlockParentIntercept = false;
-    private final ImageView mImageView;
+    private ImageView mImageView;
     // Gesture Detectors
     private GestureDetector mGestureDetector;
     private CustomGestureDetector mScaleDragDetector;
@@ -78,7 +78,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private boolean mZoomEnabled = true;
     private ScaleType mScaleType = ScaleType.FIT_CENTER;
 
-    private final OnGestureListener onGestureListener = new OnGestureListener() {
+    private OnGestureListener onGestureListener = new OnGestureListener() {
         @Override
         public void onDrag(float dx, float dy) {
             if (mScaleDragDetector.isScaling()) {

@@ -11,6 +11,12 @@ import java.util.List;
 
 public class GroupInfo extends ChatInfo {
 
+    public static final String GROUP_TYPE_PUBLIC = V2TIMManager.GROUP_TYPE_PUBLIC;
+    public static final String GROUP_TYPE_WORK = V2TIMManager.GROUP_TYPE_WORK;
+    public static final String GROUP_TYPE_AVCHATROOM = V2TIMManager.GROUP_TYPE_AVCHATROOM;
+    public static final String GROUP_TYPE_MEETING = V2TIMManager.GROUP_TYPE_MEETING;
+    public static final String GROUP_TYPE_COMMUNITY = V2TIMManager.GROUP_TYPE_COMMUNITY;
+
     private String groupType;
     private int memberCount;
     private String groupName;
@@ -198,7 +204,7 @@ public class GroupInfo extends ChatInfo {
         setGroupType(infoResult.getGroupInfo().getGroupType());
         setOwner(infoResult.getGroupInfo().getOwner());
         setJoinType(infoResult.getGroupInfo().getGroupAddOpt());
-        setMessageReceiveOption(infoResult.getGroupInfo().getRecvOpt() == V2TIMMessage.V2TIM_NOT_RECEIVE_MESSAGE);
+        setMessageReceiveOption(infoResult.getGroupInfo().getRecvOpt() == V2TIMMessage.V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE ? true : false);
         return this;
     }
 }

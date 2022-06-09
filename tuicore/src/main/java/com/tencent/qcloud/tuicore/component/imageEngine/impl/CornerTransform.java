@@ -21,7 +21,7 @@ import java.security.MessageDigest;
 
 public class CornerTransform implements Transformation<Bitmap> {
 
-    private final BitmapPool mBitmapPool;
+    private BitmapPool mBitmapPool;
     private float radius;
     private boolean exceptLeftTop, exceptRightTop, exceptLeftBottom, exceptRightBottom;
 

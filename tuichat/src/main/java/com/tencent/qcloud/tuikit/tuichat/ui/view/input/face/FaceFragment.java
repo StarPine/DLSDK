@@ -14,20 +14,20 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-
 import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuicore.util.SoftKeyBoardUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
+import com.tencent.qcloud.tuikit.tuichat.ui.view.input.BaseInputFragment;
 import com.tencent.qcloud.tuikit.tuichat.component.face.Emoji;
 import com.tencent.qcloud.tuikit.tuichat.component.face.FaceGroup;
 import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.input.BaseInputFragment;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 
 public class FaceFragment extends BaseInputFragment implements View.OnClickListener {
@@ -88,19 +88,9 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_face, container, false);
-        ViewGroup.LayoutParams params = null;
-        try {
-            if(params == null){
-                params = new ViewGroup.LayoutParams(-1,SoftKeyBoardUtil.getSoftKeyBoardHeight());
-                view.setLayoutParams(params);
-            }else{
-                params.height = SoftKeyBoardUtil.getSoftKeyBoardHeight();
-                view.setLayoutParams(params);
-            }
-        }catch (Exception e){
-            params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-            view.setLayoutParams(params);
-        }
+        ViewGroup.LayoutParams params = view.getLayoutParams();
+        params.height = SoftKeyBoardUtil.getSoftKeyBoardHeight();
+        view.setLayoutParams(params);
         faceViewPager = view.findViewById(R.id.face_viewPager);
         faceIndicator = view.findViewById(R.id.face_indicator);
         faceFirstSetTv = view.findViewById(R.id.face_first_set);
@@ -116,6 +106,7 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
         faceFirstSetTv.setOnClickListener(this);
         customFaces = FaceManager.getCustomFaceList();
         mCurrentGroupIndex = 0;
+
         int width = ScreenUtil.getPxByDp(70);
         for (int i = 0; i < customFaces.size(); i++) {
             final FaceGroup group = customFaces.get(i);
@@ -315,8 +306,8 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
     }
 
     class FaceGVAdapter extends BaseAdapter {
-        private final List<Emoji> list;
-        private final Context mContext;
+        private List<Emoji> list;
+        private Context mContext;
 
         public FaceGVAdapter(List<Emoji> list, Context mContext) {
             super();
@@ -387,7 +378,7 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
 
     class FaceVPAdapter extends PagerAdapter {
         // 界面列表
-        private final List<View> views;
+        private List<View> views;
 
         public FaceVPAdapter(List<View> views) {
             this.views = views;

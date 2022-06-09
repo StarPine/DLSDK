@@ -58,13 +58,13 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
     private static final int TYPE_FLASH_OFF = 0x023;
     //Camera状态机
     private CameraMachine machine;
-    private final int type_flash = TYPE_FLASH_OFF;
+    private int type_flash = TYPE_FLASH_OFF;
     //回调监听
     private JCameraListener jCameraLisenter;
     private ClickListener leftClickListener;
     private ClickListener rightClickListener;
 
-    private final Context mContext;
+    private Context mContext;
     private VideoView mVideoView;
     private ImageView mPhoto;
     private ImageView mSwitchCamera;
@@ -260,6 +260,11 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
     //生命周期onPause
     public void onPause() {
         TUIChatLog.i(TAG, "JCameraView onPause");
+        machine.stop();
+        CameraInterface.getInstance().unregisterSensorManager(mContext);
+    }
+
+    public void onDestroy() {
         stopVideo();
         resetState(TYPE_PICTURE);
         CameraInterface.getInstance().isPreview(false);

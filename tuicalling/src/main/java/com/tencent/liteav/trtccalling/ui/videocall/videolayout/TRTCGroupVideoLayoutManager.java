@@ -13,8 +13,10 @@ import java.util.Iterator;
  * 通话过程中，用来显示/管理所有用户头像的{@link TRTCGroupVideoLayout}自定义布局
  */
 public class TRTCGroupVideoLayoutManager extends RelativeLayout {
-    public static final int MAX_USER = 9;
     private static final String TAG = "TRTCGroupVideoLayoutMng";
+
+    public static final int MAX_USER = 9;
+
     private String  mSelfUserId;
     private Context mContext;
     private int     mCount     = 0;

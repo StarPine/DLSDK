@@ -12,12 +12,13 @@ public class OfflinePushInfo implements Serializable{
     private String title;
     private String description;
     private byte[] extension;
-    private String soundFilePath;
+    private String iosSoundFilePath;
     private int pushFlag;
     private int badgeMode;
     private int notifyMode;
     private String oppoChannelID;
     private int vivoClassification = 1;
+    private String androidSoundFilePath;
 
     public String getTitle() {
         return title;
@@ -43,12 +44,8 @@ public class OfflinePushInfo implements Serializable{
         this.extension = extension;
     }
 
-    public String getSoundFilePath() {
-        return soundFilePath;
-    }
-
-    public void setSoundFilePath(String soundFilePath) {
-        this.soundFilePath = soundFilePath;
+    public String getIOSSoundFilePath() {
+        return iosSoundFilePath;
     }
 
     public int getPushFlag() {
@@ -91,6 +88,9 @@ public class OfflinePushInfo implements Serializable{
         this.vivoClassification = vivoClassification;
     }
 
+    public String getAndroidSound() {
+        return androidSoundFilePath;
+    }
 
     /**
      * 是否关闭推送（默认开启推送）。
@@ -111,7 +111,11 @@ public class OfflinePushInfo implements Serializable{
      * @return 关闭状态。true：关闭；false：打开
      */
     public boolean isDisablePush() {
-        return getPushFlag() == MessageOfflinePushInfo.OFFLINE_PUSH_FLAG_NO_PUSH;
+        if (getPushFlag() == MessageOfflinePushInfo.OFFLINE_PUSH_FLAG_NO_PUSH) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -123,11 +127,17 @@ public class OfflinePushInfo implements Serializable{
      * @param sound iOS 声音路径
      */
     public void setIOSSound(String sound) {
-        setSoundFilePath(sound);
+        this.iosSoundFilePath = sound;
     }
 
-    public boolean isIgnoreIOSBadge() {
-        return badgeMode == MessageOfflinePushInfo.OFFLINE_APNS_BADGE_MODE_IGNORE;
+    /**
+     * 离线推送声音设置（仅对 Android 生效）。
+     * 指定 Android 工程里 raw 目录中的铃声文件名，不需要后缀名。
+     *
+     * @param sound 铃声文件名
+     */
+    public void setAndroidSound(String sound) {
+        this.androidSoundFilePath = sound;
     }
 
     /**
@@ -142,6 +152,10 @@ public class OfflinePushInfo implements Serializable{
         } else {
             setBadgeMode(MessageOfflinePushInfo.OFFLINE_APNS_BADGE_MODE_DEFAULT);
         }
+    }
+
+    public boolean isIgnoreIOSBadge() {
+        return badgeMode == MessageOfflinePushInfo.OFFLINE_APNS_BADGE_MODE_IGNORE;
     }
 
     /**

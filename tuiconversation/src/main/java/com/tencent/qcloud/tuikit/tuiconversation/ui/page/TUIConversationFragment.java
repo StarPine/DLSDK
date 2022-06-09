@@ -1,10 +1,12 @@
 package com.tencent.qcloud.tuikit.tuiconversation.ui.page;
 
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -14,35 +16,32 @@ import androidx.annotation.Nullable;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuicore.util.ScreenUtil;
+import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.tuiconversation.R;
+import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
+import com.tencent.qcloud.tuicore.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuicore.component.action.PopActionClickListener;
 import com.tencent.qcloud.tuicore.component.action.PopDialogAdapter;
 import com.tencent.qcloud.tuicore.component.action.PopMenuAction;
-import com.tencent.qcloud.tuicore.component.fragments.BaseFragment;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
-import com.tencent.qcloud.tuicore.component.menu.Menu;
-import com.tencent.qcloud.tuicore.util.BackgroundTasks;
-import com.tencent.qcloud.tuicore.util.PopWindowUtil;
-import com.tencent.qcloud.tuicore.util.ToastUtil;
-import com.tencent.qcloud.tuikit.tuiconversation.R;
-import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationConstants;
-import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.view.ConversationLayout;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.view.ConversationListLayout;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class TUIConversationFragment extends BaseFragment {
 
-    private final List<PopMenuAction> mConversationPopActions = new ArrayList<>();
     private View mBaseView;
     private ConversationLayout mConversationLayout;
     private ListView mConversationPopList;
     private PopDialogAdapter mConversationPopAdapter;
     private PopupWindow mConversationPopWindow;
-    private Menu mMenu;
+    private List<PopMenuAction> mConversationPopActions = new ArrayList<>();
 
     private ConversationPresenter presenter;
     @Nullable
@@ -56,8 +55,7 @@ public class TUIConversationFragment extends BaseFragment {
     private void initView() {
         // 从布局文件中获取会话列表面板
         mConversationLayout = mBaseView.findViewById(R.id.conversation_layout);
-        initMenu();
-        
+
         presenter = new ConversationPresenter();
         presenter.setConversationListener();
         mConversationLayout.setPresenter(presenter);
@@ -77,84 +75,22 @@ public class TUIConversationFragment extends BaseFragment {
         mConversationLayout.getConversationList().setOnItemLongClickListener(new ConversationListLayout.OnItemLongClickListener() {
             @Override
             public void OnItemLongClick(View view, int position, ConversationInfo conversationInfo) {
-                startPopShow(view, conversationInfo);
+                showItemPopMenu(view, conversationInfo);
             }
         });
-        initTitleAction();
+
         initPopMenuAction();
+        restoreConversationItemBackground();
     }
 
-    private void initMenu() {
-        mMenu = new Menu(getActivity(), mConversationLayout.getTitleBar());
 
-        PopActionClickListener popActionClickListener = new PopActionClickListener() {
-            @Override
-            public void onActionClick(int position, Object data) {
-                PopMenuAction action = (PopMenuAction) data;
-                if (TextUtils.equals(action.getActionName(), getResources().getString(R.string.start_conversation))) {
-                    TUICore.startActivity("StartC2CChatActivity", null);
-                }
 
-                if (TextUtils.equals(action.getActionName(), getResources().getString(R.string.create_private_group))) {
-                    Bundle bundle = new Bundle();
-                    bundle.putInt(TUIConversationConstants.GroupType.TYPE, TUIConversationConstants.GroupType.PRIVATE);
-                    TUICore.startActivity("StartGroupChatActivity", bundle);
-                }
-                if (TextUtils.equals(action.getActionName(), getResources().getString(R.string.create_group_chat))) {
-                    Bundle bundle = new Bundle();
-                    bundle.putInt(TUIConversationConstants.GroupType.TYPE, TUIConversationConstants.GroupType.PUBLIC);
-                    TUICore.startActivity("StartGroupChatActivity", bundle);
-                }
-                if (TextUtils.equals(action.getActionName(), getResources().getString(R.string.create_chat_room))) {
-                    Bundle bundle = new Bundle();
-                    bundle.putInt(TUIConversationConstants.GroupType.TYPE, TUIConversationConstants.GroupType.CHAT_ROOM);
-                    TUICore.startActivity("StartGroupChatActivity", bundle);
-                }
-                mMenu.hide();
-            }
-        };
-
-        // 设置右上角+号显示PopAction
-        List<PopMenuAction> menuActions = new ArrayList<PopMenuAction>();
-
-        PopMenuAction action = new PopMenuAction();
-
-        action.setActionName(getResources().getString(R.string.start_conversation));
-        action.setActionClickListener(popActionClickListener);
-        action.setIconResId(R.drawable.create_c2c);
-        menuActions.add(action);
-        action = new PopMenuAction();
-        action.setActionName(getResources().getString(R.string.create_private_group));
-        action.setIconResId(R.drawable.group_icon);
-        action.setActionClickListener(popActionClickListener);
-        menuActions.add(action);
-
-        action = new PopMenuAction();
-        action.setActionName(getResources().getString(R.string.create_group_chat));
-        action.setIconResId(R.drawable.group_icon);
-        action.setActionClickListener(popActionClickListener);
-        menuActions.add(action);
-
-        action = new PopMenuAction();
-        action.setActionName(getResources().getString(R.string.create_chat_room));
-        action.setIconResId(R.drawable.group_icon);
-        action.setActionClickListener(popActionClickListener);
-        menuActions.add(action);
-
-        mMenu.setMenuAction(menuActions);
-    }
-
-    private void initTitleAction() {
-        mConversationLayout.getTitleBar().setOnRightClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mMenu.isShowing()) {
-                    mMenu.hide();
-                } else {
-                    mMenu.show();
-                }
-            }
-        });
+    public void restoreConversationItemBackground() {
+        if (mConversationLayout.getConversationList().getAdapter() !=  null &&
+                mConversationLayout.getConversationList().getAdapter().isClick()) {
+            mConversationLayout.getConversationList().getAdapter().setClick(false);
+            mConversationLayout.getConversationList().getAdapter().notifyItemChanged(mConversationLayout.getConversationList().getAdapter().getCurrentPosition());
+        }
     }
 
     private void initPopMenuAction() {
@@ -205,15 +141,13 @@ public class TUIConversationFragment extends BaseFragment {
 
     /**
      * 长按会话item弹框
-     *
+     * @param view 长按 view
      * @param conversationInfo 会话数据对象
-     * @param locationX        长按时X坐标
-     * @param locationY        长按时Y坐标
      */
-    private void showItemPopMenu(final ConversationInfo conversationInfo, float locationX, float locationY) {
+    private void showItemPopMenu(View view, final ConversationInfo conversationInfo) {
         if (mConversationPopActions == null || mConversationPopActions.size() == 0)
             return;
-        View itemPop = LayoutInflater.from(getActivity()).inflate(R.layout.pop_menu_layout, null);
+        View itemPop = LayoutInflater.from(getActivity()).inflate(R.layout.conversation_pop_menu_layout, null);
         mConversationPopList = itemPop.findViewById(R.id.pop_menu_list);
         mConversationPopList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -223,6 +157,7 @@ public class TUIConversationFragment extends BaseFragment {
                     action.getActionClickListener().onActionClick(position, conversationInfo);
                 }
                 mConversationPopWindow.dismiss();
+                restoreConversationItemBackground();
             }
         });
 
@@ -242,17 +177,22 @@ public class TUIConversationFragment extends BaseFragment {
         mConversationPopAdapter = new PopDialogAdapter();
         mConversationPopList.setAdapter(mConversationPopAdapter);
         mConversationPopAdapter.setDataSource(mConversationPopActions);
-        mConversationPopWindow = PopWindowUtil.popupWindow(itemPop, mBaseView, (int) locationX, (int) locationY);
-        BackgroundTasks.getInstance().postDelayed(new Runnable() {
+        mConversationPopWindow = new PopupWindow(itemPop, WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        mConversationPopWindow.setBackgroundDrawable(new ColorDrawable());
+        mConversationPopWindow.setOutsideTouchable(true);
+        mConversationPopWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
-            public void run() {
-                mConversationPopWindow.dismiss();
+            public void onDismiss() {
+                restoreConversationItemBackground();
             }
-        }, 10000); // 10s后无操作自动消失
-    }
-
-    private void startPopShow(View view, ConversationInfo info) {
-        showItemPopMenu(info, view.getX(), view.getY() + view.getHeight() / 2);
+        });
+        int x = view.getWidth() / 2;
+        int y = - view.getHeight() / 3;
+        int popHeight = ScreenUtil.dip2px(45) * 3;
+        if (y + popHeight + view.getY() + view.getHeight() > mConversationLayout.getBottom()) {
+            y = y - popHeight;
+        }
+        mConversationPopWindow.showAsDropDown(view, x, y, Gravity.TOP | Gravity.START);
     }
 
     private void startChatActivity(ConversationInfo conversationInfo) {
@@ -269,6 +209,7 @@ public class TUIConversationFragment extends BaseFragment {
         if (conversationInfo.isGroup()) {
             param.putString(TUIConstants.TUIChat.FACE_URL, conversationInfo.getIconPath());
             param.putString(TUIConstants.TUIChat.GROUP_TYPE, conversationInfo.getGroupType());
+            param.putSerializable(TUIConstants.TUIChat.AT_INFO_LIST, (Serializable) conversationInfo.getGroupAtInfoList());
         }
         if (conversationInfo.isGroup()) {
             TUICore.startActivity(TUIConstants.TUIChat.GROUP_CHAT_ACTIVITY_NAME, param);

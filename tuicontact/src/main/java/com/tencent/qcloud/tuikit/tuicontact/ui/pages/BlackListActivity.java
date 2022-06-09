@@ -2,18 +2,19 @@ package com.tencent.qcloud.tuikit.tuicontact.ui.pages;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.annotation.Nullable;
+
+import android.view.View;
 
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
-import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
 import com.tencent.qcloud.tuikit.tuicontact.ui.view.ContactListView;
+import com.tencent.qcloud.tuikit.tuicontact.R;
 
 public class BlackListActivity extends BaseLightActivity {
 
@@ -31,7 +32,7 @@ public class BlackListActivity extends BaseLightActivity {
 
     private void init() {
         mTitleBar = findViewById(R.id.black_list_titlebar);
-        mTitleBar.setTitle(getResources().getString(R.string.blacklist), ITitleBarLayout.Position.LEFT);
+        mTitleBar.setTitle(getResources().getString(R.string.blacklist), ITitleBarLayout.Position.MIDDLE);
         mTitleBar.setOnLeftClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

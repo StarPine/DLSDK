@@ -1,10 +1,13 @@
 package com.tencent.qcloud.tuikit.tuichat.util;
 
-import android.os.Build;
+import android.util.DisplayMetrics;
+
+import com.tencent.qcloud.tuicore.TUIConfig;
+import com.tencent.qcloud.tuicore.util.TUIBuild;
 
 public class DeviceUtil {
 
-    private static final String[] huaweiRongyao = {
+    private static String[] huaweiAndHonorDevice = {
             "hwH60",    //荣耀6
             "hwPE",     //荣耀6 plus
             "hwH30",    //3c
@@ -14,14 +17,11 @@ public class DeviceUtil {
             "hwChe2",      //x1
     };
 
-    public static String getDeviceModel() {
-        return Build.DEVICE;
-    }
-
-    public static boolean isHuaWeiRongyao() {
-        int length = huaweiRongyao.length;
+    public static boolean isHuaWeiOrHonor() {
+        String device = TUIBuild.getDevice();
+        int length = huaweiAndHonorDevice.length;
         for (int i = 0; i < length; i++) {
-            if (huaweiRongyao[i].equals(getDeviceModel())) {
+            if (huaweiAndHonorDevice[i].equals(device)) {
                 return true;
             }
         }
@@ -30,6 +30,15 @@ public class DeviceUtil {
 
 
     public static boolean isVivoX21() {
-        return "vivo X21".equalsIgnoreCase(Build.MODEL);
+        String model = TUIBuild.getModel();
+        return "vivo X21".equalsIgnoreCase(model);
+    }
+
+    public static int[] getScreenSize() {
+        int size[] = new int[2];
+        DisplayMetrics dm = TUIConfig.getAppContext().getResources().getDisplayMetrics();
+        size[0] = dm.widthPixels;
+        size[1] = dm.heightPixels;
+        return size;
     }
 }

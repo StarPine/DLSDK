@@ -6,6 +6,11 @@ public class TUIConversationConstants {
     public static final int FORWARD_SELECT_MEMBERS_CODE = 102;
     public static final int FORWARD_CREATE_GROUP_CODE = 103;
     public static final String FORWARD_CREATE_NEW_CHAT = "forward_create_new_chat";
+
+    public static String covert2HTMLString(String original) {
+        return "\"<font color=\"#5B6B92\">" + original + "</font>\"";
+    }
+
     /**
      * 1: 仅仅是一个带链接的文本消息
      * 2: iOS支持的视频通话版本，后续已经不兼容
@@ -17,16 +22,13 @@ public class TUIConversationConstants {
     public static final int JSON_VERSION_4       = 4;
     public static int version = JSON_VERSION_4;
 
-    public static String covert2HTMLString(String original) {
-        return "\"<font color=\"#5B6B92\">" + original + "</font>\"";
-    }
-
     public static class GroupType {
         public static final String TYPE = "type";
         public static final String GROUP = "isGroup";
         public static final int PRIVATE = 0;
         public static final int PUBLIC = 1;
         public static final int CHAT_ROOM = 2;
+        public static final int COMMUNITY = 3;
 
     }
 

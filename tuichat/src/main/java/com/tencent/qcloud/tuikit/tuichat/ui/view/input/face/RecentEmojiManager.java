@@ -18,8 +18,8 @@ import java.util.Collection;
 public class RecentEmojiManager {
     public static final String PREFERENCE_NAME = "recentFace";//"preference";
 
-    private final SharedPreferences mPreferences;
-    private final SharedPreferences.Editor mEditor;
+    private SharedPreferences mPreferences;
+    private SharedPreferences.Editor mEditor;
 
     private RecentEmojiManager(Context context) {
         mPreferences = context.getSharedPreferences(RecentEmojiManager.PREFERENCE_NAME, Context.MODE_PRIVATE);

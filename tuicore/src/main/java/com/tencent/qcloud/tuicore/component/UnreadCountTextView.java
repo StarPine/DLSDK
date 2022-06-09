@@ -7,15 +7,16 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.TypedValue;
-import android.widget.TextView;
+
+import androidx.appcompat.widget.AppCompatTextView;
 
 import com.tencent.qcloud.tuicore.R;
 import com.tencent.qcloud.tuicore.util.ScreenUtil;
 
 
-public class UnreadCountTextView extends TextView {
+public class UnreadCountTextView extends AppCompatTextView {
 
-    private final int mNormalSize = ScreenUtil.getPxByDp(18.4f);
+    private int mNormalSize = ScreenUtil.getPxByDp(18.4f);
     private Paint mPaint;
 
     public UnreadCountTextView(Context context) {
@@ -36,16 +37,22 @@ public class UnreadCountTextView extends TextView {
     private void init() {
         mPaint = new Paint();
         mPaint.setColor(getResources().getColor(R.color.read_dot_bg));
+        mPaint.setAntiAlias(true);
         setTextColor(Color.WHITE);
         setTextSize(TypedValue.COMPLEX_UNIT_SP, 13.6f);
     }
 
+    public void setPaintColor(int color) {
+        if (mPaint != null) {
+            mPaint.setColor(color);
+        }
+    }
 
     @Override
     protected void onDraw(Canvas canvas) {
         if (getText().length() == 0) {
             // 没有字符，就在本View中心画一个小圆点
-            int l = (getMeasuredWidth() - ScreenUtil.getPxByDp(10)) / 2;
+            int l = (getMeasuredWidth() - ScreenUtil.getPxByDp(6)) / 2;
             int t = l;
             int r = getMeasuredWidth() - l;
             int b = r;

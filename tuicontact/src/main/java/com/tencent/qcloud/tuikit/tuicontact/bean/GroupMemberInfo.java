@@ -60,20 +60,20 @@ public class GroupMemberInfo implements Serializable {
         this.birthday = birthday;
     }
 
-    public String getNameCard() {
-        return nameCard;
-    }
-
     public void setNameCard(String nameCard) {
         this.nameCard = nameCard;
     }
 
-    public String getNickName() {
-        return this.nickName;
+    public String getNameCard() {
+        return nameCard;
     }
 
     public void setNickName(String nickName) {
         this.nickName = nickName;
+    }
+
+    public String getNickName() {
+        return this.nickName;
     }
 
     public boolean isTopChat() {

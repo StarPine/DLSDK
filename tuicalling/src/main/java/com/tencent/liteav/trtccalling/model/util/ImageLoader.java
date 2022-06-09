@@ -24,7 +24,7 @@ import java.security.MessageDigest;
 import java.util.concurrent.ExecutionException;
 
 public class ImageLoader {
-    private static final int radius = 0; //TRTC默认图片圆角为0dp
+    private static int radius = 0; //TRTC默认图片圆角为0dp
 
     public static void clear(Context context, ImageView imageView) {
         Glide.with(context).clear(imageView);
@@ -110,6 +110,11 @@ public class ImageLoader {
             radius = Resources.getSystem().getDisplayMetrics().density * dp;
         }
 
+        @Override
+        protected Bitmap transform(BitmapPool pool, Bitmap toTransform, int outWidth, int outHeight) {
+            return roundCrop(pool, toTransform);
+        }
+
         private static Bitmap roundCrop(BitmapPool pool, Bitmap source) {
             if (source == null) return null;
 
@@ -125,11 +130,6 @@ public class ImageLoader {
             RectF rectF = new RectF(0f, 0f, source.getWidth(), source.getHeight());
             canvas.drawRoundRect(rectF, radius, radius, paint);
             return result;
-        }
-
-        @Override
-        protected Bitmap transform(BitmapPool pool, Bitmap toTransform, int outWidth, int outHeight) {
-            return roundCrop(pool, toTransform);
         }
 
         @Override

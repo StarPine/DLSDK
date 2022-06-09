@@ -10,11 +10,11 @@ import com.tencent.imsdk.v2.V2TIMGroupApplication;
 import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
-import com.tencent.qcloud.tuikit.tuicontact.bean.ContactGroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
+import com.tencent.qcloud.tuikit.tuicontact.bean.ContactGroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.FriendProfilePresenter;
-import com.tencent.qcloud.tuikit.tuicontact.ui.view.FriendProfileLayout;
 import com.tencent.qcloud.tuikit.tuicontact.util.ContactUtils;
+import com.tencent.qcloud.tuikit.tuicontact.ui.view.FriendProfileLayout;
 
 public class FriendProfileActivity extends BaseLightActivity {
 

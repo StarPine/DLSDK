@@ -15,14 +15,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
         android:paddingLeft="14.85dp"
-        android:paddingRight="14.85dp">
+        android:paddingRight="14.85dp"
+        android:orientation="horizontal">
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/forward_select_list"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
+            android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/forward_margin"/>
 
         <TextView

@@ -7,17 +7,17 @@ import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.CustomHelloMessage;
 import com.tencent.qcloud.tuikit.tuichat.bean.InputMoreActionUnit;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.ChatView;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.input.InputView;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.MessageRecyclerView;
-import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageInfoUtil;
+import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 
 public class ChatLayoutSetting {
 
     private static final String TAG = ChatLayoutSetting.class.getSimpleName();
 
-    private final Context mContext;
+    private Context mContext;
     private String groupId;
 
     public ChatLayoutSetting(Context context) {
@@ -107,8 +107,8 @@ public class ChatLayoutSetting {
 //        });
 //        messageRecyclerView.addPopAction(action);
 //
-//        final MessageRecyclerView.OnItemLongClickListener l = messageRecyclerView.getOnItemClickListener();
-//        messageRecyclerView.setOnItemClickListener(new MessageRecyclerView.OnItemLongClickListener() {
+//        final MessageRecyclerView.OnItemClickListener l = messageRecyclerView.getOnItemClickListener();
+//        messageRecyclerView.setOnItemClickListener(new MessageRecyclerView.OnItemClickListener() {
 //            @Override
 //            public void onMessageLongClick(View view, int position, MessageInfo messageInfo) {
 //                l.onMessageLongClick(view, position, messageInfo);
@@ -165,7 +165,7 @@ public class ChatLayoutSetting {
                 customHelloMessage.version = TUIChatConstants.version;
 
                 String data = gson.toJson(customHelloMessage);
-                MessageInfo info = ChatMessageInfoUtil.buildCustomMessage(data, customHelloMessage.text, customHelloMessage.text.getBytes());
+                TUIMessageBean info = ChatMessageBuilder.buildCustomMessage(data, customHelloMessage.text, customHelloMessage.text.getBytes());
                 layout.sendMessage(info, false);
             }
         });

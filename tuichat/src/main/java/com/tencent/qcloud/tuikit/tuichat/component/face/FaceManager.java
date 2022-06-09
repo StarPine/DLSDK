@@ -4,9 +4,16 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
+import android.text.style.BackgroundColorSpan;
 import android.text.style.ImageSpan;
 import android.util.DisplayMetrics;
 import android.util.LruCache;
@@ -16,6 +23,7 @@ import android.widget.TextView;
 import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
+import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,12 +36,12 @@ import java.util.regex.Pattern;
 public class FaceManager {
 
     private static final int drawableWidth = ScreenUtil.getPxByDp(32);
-    private static final ArrayList<Emoji> emojiList = new ArrayList<>();
-    private static final LruCache<String, Bitmap> drawableCache = new LruCache(1024);
-    private static final Context context = TUIChatService.getAppContext();
-    private static final String[] emojiFilters = context.getResources().getStringArray(R.array.emoji_filter_key);
-    private static final String[] emojiFilters_values = context.getResources().getStringArray(R.array.emoji_filter_value);
-    private static final ArrayList<FaceGroup> customFace = new ArrayList<>();
+    private static ArrayList<Emoji> emojiList = new ArrayList<>();
+    private static LruCache<String, Bitmap> drawableCache = new LruCache(1024);
+    private static Context context = TUIChatService.getAppContext();
+    private static String[] emojiFilters = context.getResources().getStringArray(R.array.emoji_filter_key);
+    private static String[] emojiFilters_values = context.getResources().getStringArray(R.array.emoji_filter_value);
+    private static ArrayList<FaceGroup> customFace = new ArrayList<>();
 
     public static ArrayList<Emoji> getEmojiList() {
         return emojiList;
@@ -191,8 +199,10 @@ public class FaceManager {
         return drawableCache.get(faceChar) != null;
     }
 
-
-    public static void handlerEmojiText(TextView comment, String content, boolean typing) {
+    public static boolean handlerEmojiText(TextView comment, String content, boolean typing) {
+        if (content == null) {
+            return false;
+        }
         SpannableStringBuilder sb = new SpannableStringBuilder(content);
         String regex = "\\[(\\S+?)\\]";
         Pattern p = Pattern.compile(regex);
@@ -203,22 +213,137 @@ public class FaceManager {
             Bitmap bitmap = drawableCache.get(emojiName);
             if (bitmap != null) {
                 imageFound = true;
+
                 sb.setSpan(new ImageSpan(context, bitmap),
                         m.start(), m.end(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
             }
         }
         // 如果没有发现表情图片，并且当前是输入状态，不再重设输入框
         if (!imageFound && typing) {
-            return;
+            return false;
         }
         int selection = comment.getSelectionStart();
         comment.setText(sb);
         if (comment instanceof EditText) {
             ((EditText) comment).setSelection(selection);
         }
+
+        return true;
     }
 
     public static Bitmap getEmoji(String name) {
         return drawableCache.get(name);
     }
+
+    public static String emojiJudge(String text){
+        if (TextUtils.isEmpty(text)){
+            return "";
+        }
+
+        String[] emojiList = FaceManager.getEmojiFilters();
+        if (emojiList ==null || emojiList.length == 0){
+            return text;
+        }
+
+        SpannableStringBuilder sb = new SpannableStringBuilder(text);
+        String regex = "\\[(\\S+?)\\]";
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(text);
+        ArrayList<EmojiData> emojiDataArrayList = new ArrayList<>();
+        //遍历找到匹配字符并存储
+        int lastMentionIndex = -1;
+        while (m.find()) {
+            String emojiName = m.group();
+            int start;
+            if (lastMentionIndex != -1) {
+                start = text.indexOf(emojiName, lastMentionIndex);
+            } else {
+                start = text.indexOf(emojiName);
+            }
+            int end = start + emojiName.length();
+            lastMentionIndex = end;
+
+            int index = findeEmoji(emojiName);
+            String[] emojiListValues = FaceManager.getEmojiFiltersValues();
+            if (index != -1 && emojiListValues != null && emojiListValues.length >= index){
+                emojiName = emojiListValues[index];
+            }
+
+
+            EmojiData emojiData =new EmojiData();
+            emojiData.setStart(start);
+            emojiData.setEnd(end);
+            emojiData.setEmojiText(emojiName);
+
+            emojiDataArrayList.add(emojiData);
+        }
+
+        //倒叙替换
+        if (emojiDataArrayList.isEmpty()){
+            return text;
+        }
+        for (int i = emojiDataArrayList.size() - 1; i >= 0; i--){
+            EmojiData emojiData = emojiDataArrayList.get(i);
+            String emojiName = emojiData.getEmojiText();
+            int start = emojiData.getStart();
+            int end = emojiData.getEnd();
+
+            if (!TextUtils.isEmpty(emojiName) && start != -1 && end != -1) {
+                sb.replace(start, end, emojiName);
+            }
+        }
+        return sb.toString();
+    }
+
+    private static int findeEmoji(String text){
+        int result = -1;
+        if (TextUtils.isEmpty(text)){
+            return result;
+        }
+
+        String[] emojiList = FaceManager.getEmojiFilters();
+        if (emojiList ==null || emojiList.length == 0){
+            return result;
+        }
+
+        for (int i = 0; i < emojiList.length; i++){
+            if (text.equals(emojiList[i])){
+                result = i;
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    private static class EmojiData{
+        private int start;
+        private int end;
+        private String emojiText;
+
+        public int getEnd() {
+            return end;
+        }
+
+        public void setEnd(int end) {
+            this.end = end;
+        }
+
+        public int getStart() {
+            return start;
+        }
+
+        public void setStart(int start) {
+            this.start = start;
+        }
+
+        public String getEmojiText() {
+            return emojiText;
+        }
+
+        public void setEmojiText(String emojiText) {
+            this.emojiText = emojiText;
+        }
+    }
+
 }

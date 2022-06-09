@@ -9,13 +9,14 @@ import com.tencent.qcloud.tuikit.tuichat.component.camera.view.CameraView;
 
 public class CameraMachine implements State {
 
-    private final Context context;
-    private final State previewState;       //浏览状态(空闲)
-    private final CameraView view;
-//    private CameraInterface.CameraOpenOverCallback cameraOpenOverCallback;
+    private Context context;
     private State state;
-    private final State borrowPictureState; //浏览图片
-    private final State borrowVideoState;   //浏览视频
+    private CameraView view;
+//    private CameraInterface.CameraOpenOverCallback cameraOpenOverCallback;
+
+    private State previewState;       //浏览状态(空闲)
+    private State borrowPictureState; //浏览图片
+    private State borrowVideoState;   //浏览视频
 
     public CameraMachine(Context context, CameraView view, CameraInterface.CameraOpenOverCallback
             cameraOpenOverCallback) {

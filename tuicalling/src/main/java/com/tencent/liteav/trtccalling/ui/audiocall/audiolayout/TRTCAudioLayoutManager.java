@@ -2,8 +2,9 @@ package com.tencent.liteav.trtccalling.ui.audiocall.audiolayout;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.RelativeLayout;
+
+import com.tencent.liteav.trtccalling.model.impl.base.TRTCLogger;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -12,8 +13,10 @@ import java.util.Iterator;
  * 通话过程中，用来显示/管理所有用户头像的{@link TRTCAudioLayout}自定义布局
  */
 public class TRTCAudioLayoutManager extends RelativeLayout {
-    public static final int MAX_USER = 9;
     private static final String TAG = "TRTCAudioLayoutManager";
+
+    public static final int MAX_USER = 9;
+
     private String  mSelfUserId;
     private Context mContext;
     private int     mCount     = 0;
@@ -26,18 +29,15 @@ public class TRTCAudioLayoutManager extends RelativeLayout {
     private ArrayList<LayoutParams>     mGrid9ParamList;
     private ArrayList<TRTCLayoutEntity> mLayoutEntityList;
 
-
     public TRTCAudioLayoutManager(Context context) {
         super(context);
         initView(context);
     }
 
-
     public TRTCAudioLayoutManager(Context context, AttributeSet attrs) {
         super(context, attrs);
         initView(context);
     }
-
 
     public TRTCAudioLayoutManager(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
@@ -45,7 +45,7 @@ public class TRTCAudioLayoutManager extends RelativeLayout {
     }
 
     private void initView(Context context) {
-        Log.i(TAG, "initView: ");
+        TRTCLogger.i(TAG, "initView");
         mContext = context;
         // 做成正方形
         mLayoutEntityList = new ArrayList<TRTCLayoutEntity>();

@@ -1,6 +1,7 @@
 package com.tencent.qcloud.tuikit.tuichat.ui.interfaces;
 
 import com.tencent.qcloud.tuicore.component.action.PopMenuAction;
+import com.tencent.qcloud.tuikit.tuichat.component.popmenu.ChatPopMenu;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.MessageAdapter;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.MessageRecyclerView;
 
@@ -24,33 +25,26 @@ public interface IMessageLayout extends IMessageProperties {
      *
      * @return
      */
-    OnItemLongClickListener getOnItemClickListener();
+    OnItemClickListener getOnItemClickListener();
 
     /**
-     * 设置消息列表的事件监听器 {@link OnItemLongClickListener}
+     * 设置消息列表的事件监听器 {@link OnItemClickListener}
      *
      * @param listener
      */
-    void setOnItemClickListener(OnItemLongClickListener listener);
+    void setOnItemClickListener(OnItemClickListener listener);
 
     /**
      * 获取 PopMenu 的 Action 列表
      *
      * @return
      */
-    List<PopMenuAction> getPopActions();
+    List<ChatPopMenu.ChatPopMenuAction> getPopActions();
 
     /**
      * 给 PopMenu 加入一条自定义 action
      *
      * @param action 菜单选项 {@link PopMenuAction}, 可以自定义图片、文字以及点击事件
      */
-    void addPopAction(PopMenuAction action);
-
-    /**
-     * 自定义消息回调 彭石林新增
-     *
-     * @return
-     */
-    void setOnCustomMessageDrawListener(IOnCustomMessageDrawListener iOnCustomMessageDrawListener);
+    void addPopAction(ChatPopMenu.ChatPopMenuAction action);
 }

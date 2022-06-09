@@ -3,9 +3,9 @@ package com.tencent.qcloud.tuikit.tuichat.ui.interfaces;
 import android.view.View;
 import android.widget.EditText;
 
-import com.tencent.qcloud.tuikit.tuichat.bean.InputMoreActionUnit;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.input.BaseInputFragment;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.input.InputView;
+import com.tencent.qcloud.tuikit.tuichat.bean.InputMoreActionUnit;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.MessageRecyclerView;
 
 /**

@@ -44,10 +44,6 @@ public class TRTCVideoLayout extends RelativeLayout {
         return mImageHead;
     }
 
-    public TextView getUserNameTv() {
-        return mTextUserName;
-    }
-
     public void setVideoAvailable(boolean available) {
         if (available) {
             mTCCloudViewTRTC.setVisibility(VISIBLE);
@@ -75,10 +71,10 @@ public class TRTCVideoLayout extends RelativeLayout {
 
     private void initView() {
         LayoutInflater.from(getContext()).inflate(R.layout.trtccalling_videocall_item_user_layout, this, true);
-        mTCCloudViewTRTC = findViewById(R.id.trtc_tc_cloud_view);
-        mProgressAudio = findViewById(R.id.progress_bar_audio);
-        mImageHead = findViewById(R.id.iv_avatar);
-        mTextUserName = findViewById(R.id.tv_user_name);
+        mTCCloudViewTRTC = (TXCloudVideoView) findViewById(R.id.trtc_tc_cloud_view);
+        mProgressAudio = (ProgressBar) findViewById(R.id.progress_bar_audio);
+        mImageHead = (RoundCornerImageView) findViewById(R.id.iv_avatar);
+        mTextUserName = (TextView) findViewById(R.id.tv_user_name);
     }
 
     public boolean isMoveAble() {
@@ -91,5 +87,9 @@ public class TRTCVideoLayout extends RelativeLayout {
 
     public void setUserName(String userName) {
         mTextUserName.setText(userName);
+    }
+
+    public void setUserNameColor(int color) {
+        mTextUserName.setTextColor(color);
     }
 }

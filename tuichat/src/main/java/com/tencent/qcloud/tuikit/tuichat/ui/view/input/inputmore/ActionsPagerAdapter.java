@@ -7,14 +7,15 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-
+import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.InputMoreActionUnit;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 
 public class ActionsPagerAdapter extends PagerAdapter {
@@ -69,7 +70,7 @@ public class ActionsPagerAdapter extends PagerAdapter {
             });
         }
         gridView.setSelector(R.color.transparent);
-        gridView.setHorizontalSpacing(80);
+        gridView.setHorizontalSpacing(60);
         gridView.setVerticalSpacing(60);
         gridView.setGravity(Gravity.CENTER);
         gridView.setTag(Integer.valueOf(position));

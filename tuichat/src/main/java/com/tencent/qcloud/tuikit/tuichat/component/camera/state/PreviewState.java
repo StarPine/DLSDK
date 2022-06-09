@@ -16,7 +16,7 @@ import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 class PreviewState implements State {
     public static final String TAG = "PreviewState";
 
-    private final CameraMachine machine;
+    private CameraMachine machine;
 
     PreviewState(CameraMachine machine) {
         this.machine = machine;

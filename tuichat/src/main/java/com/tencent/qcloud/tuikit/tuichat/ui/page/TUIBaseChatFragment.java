@@ -6,14 +6,12 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
-import com.tencent.coustom.CustomIMTextEntity;
-import com.tencent.coustom.EvaluateItemEntity;
-import com.tencent.coustom.PhotoAlbumItemEntity;
+import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.TUIConfig;
+import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
@@ -22,15 +20,18 @@ import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
-import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemLongClickListener;
+import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemClickListener;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.ChatView;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.input.InputView;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +45,7 @@ public class TUIBaseChatFragment extends BaseFragment {
 
     protected ChatView chatView;
 
-    private List<MessageInfo> mForwardSelectMsgInfos = null;
+    private List<TUIMessageBean> mForwardSelectMsgInfos = null;
     private int mForwardMode;
 
     @Nullable
@@ -85,7 +86,7 @@ public class TUIBaseChatFragment extends BaseFragment {
 
         chatView.setForwardSelectActivityListener(new ChatView.ForwardSelectActivityListener(){
             @Override
-            public void onStartForwardSelectActivity(int mode, List<MessageInfo> msgIds) {
+            public void onStartForwardSelectActivity(int mode, List<TUIMessageBean> msgIds) {
                 mForwardMode = mode;
                 mForwardSelectMsgInfos = msgIds;
                 Bundle bundle = new Bundle();
@@ -95,76 +96,70 @@ public class TUIBaseChatFragment extends BaseFragment {
             }
         });
 
-        chatView.getMessageLayout().setOnItemClickListener(new OnItemLongClickListener() {
+        chatView.getMessageLayout().setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onMessageLongClick(View view, int position, MessageInfo messageInfo) {
+            public void onMessageLongClick(View view, int position, TUIMessageBean message) {
                 //因为adapter中第一条为加载条目，位置需减1
-                chatView.getMessageLayout().showItemPopMenu(position - 1, messageInfo, view);
+                TUIChatLog.d(TAG, "chatfragment onTextSelected selectedText = ");
+                chatView.getMessageLayout().showItemPopMenu(position - 1, message, view);
             }
 
             @Override
-            public void onUserIconClick(View view, int position, MessageInfo messageInfo) {
-                if (null == messageInfo) {
+            public void onUserIconClick(View view, int position, TUIMessageBean message) {
+                if (null == message) {
                     return;
                 }
 
-                ChatInfo info = new ChatInfo();
-                info.setId(messageInfo.getFromUser());
-
                 Bundle bundle = new Bundle();
-                bundle.putString("chatId", info.getId());
+                bundle.putString("chatId", message.getSender());
                 TUICore.startActivity("FriendProfileActivity", bundle);
 
             }
 
             @Override
-            public void onToastVipText(MessageInfo messageInfo) {
+            public void onUserIconLongClick(View view, int position, TUIMessageBean message) {
 
             }
 
             @Override
-            public void onTextReadUnlock(TextView textView, View view, MessageInfo messageInfo) {
-
+            public void onReEditRevokeMessage(View view, int position, TUIMessageBean messageInfo) {
+                if (messageInfo == null) {
+                    return;
+                }
+                int messageType = messageInfo.getMsgType();
+                if (messageType == V2TIMMessage.V2TIM_ELEM_TYPE_TEXT){
+                    chatView.getInputLayout().appendText(messageInfo.getV2TIMMessage().getTextElem().getText());
+                } else {
+                    TUIChatLog.e(TAG, "error type: " + messageType);
+                }
             }
 
             @Override
-            public void onTextTOWebView(MessageInfo messageInfo) {
-
+            public void onRecallClick(View view, int position, TUIMessageBean messageInfo) {
+                if (messageInfo == null) {
+                    return;
+                }
+                CallingMessageBean callingMessageBean = (CallingMessageBean) messageInfo;
+                String callTypeString = "";
+                int callType = callingMessageBean.getCallType();
+                if (callType == CallingMessageBean.ACTION_ID_VIDEO_CALL) {
+                    callTypeString = TUIConstants.TUICalling.TYPE_VIDEO;
+                } else if (callType == CallingMessageBean.ACTION_ID_AUDIO_CALL) {
+                    callTypeString = TUIConstants.TUICalling.TYPE_AUDIO;
+                }
+                Map<String, Object> map = new HashMap<>();
+                map.put(TUIConstants.TUICalling.PARAM_NAME_USERIDS, new String[]{messageInfo.getUserId()});
+                map.put(TUIConstants.TUICalling.PARAM_NAME_TYPE, callTypeString);
+                TUICore.callService(TUIConstants.TUICalling.SERVICE_NAME, TUIConstants.TUICalling.METHOD_NAME_CALL, map);
             }
 
             @Override
-            public void toUserHome() {
-
-            }
-
-            @Override
-            public void openUserImage(PhotoAlbumItemEntity itemEntity) {
-
-            }
-
-            @Override
-            public void onClickEvaluate(int position, MessageInfo messageInfo, EvaluateItemEntity evaluateItemEntity, boolean more) {
-
-            }
-
-            @Override
-            public void onClickCustomText(int position, MessageInfo messageInfo, CustomIMTextEntity customIMTextEntity) {
-
-            }
-
-            @Override
-            public void onClickDialogRechargeShow() {
-
-            }
-
-            @Override
-            public void clickToUserMain() {
-
-            }
-
-            @Override
-            public void onClickCustomText() {
-
+            public void onTextSelected(View view, int position, TUIMessageBean messageInfo) {
+                if (messageInfo instanceof  TextMessageBean) {
+                    TUIChatLog.d(TAG, "chatfragment onTextSelected selectedText = " + ((TextMessageBean) messageInfo).getSelectText());
+                }
+                chatView.getMessageLayout().setSelectedPosition(position);
+                chatView.getMessageLayout().showItemPopMenu(position - 1, messageInfo, view);
             }
         });
 
@@ -174,6 +169,7 @@ public class TUIBaseChatFragment extends BaseFragment {
                 Bundle param = new Bundle();
                 param.putString(TUIChatConstants.GROUP_ID, getChatInfo().getId());
                 TUICore.startActivity(TUIBaseChatFragment.this, "StartGroupMemberSelectActivity", param, 1);
+
             }
         });
     }
@@ -182,9 +178,9 @@ public class TUIBaseChatFragment extends BaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == 3) {
-            String result_id = data.getStringExtra(TUIChatConstants.Selection.USER_ID_SELECT);
-            String result_name = data.getStringExtra(TUIChatConstants.Selection.USER_NAMECARD_SELECT);
-            chatView.getInputLayout().updateInputText(result_name, result_id);
+            ArrayList<String> result_ids = data.getStringArrayListExtra(TUIChatConstants.Selection.USER_ID_SELECT);
+            ArrayList<String> result_names = data.getStringArrayListExtra(TUIChatConstants.Selection.USER_NAMECARD_SELECT);
+            chatView.getInputLayout().updateInputText(result_names, result_ids);
         } else if (requestCode == TUIChatConstants.FORWARD_SELECT_ACTIVTY_CODE && resultCode == TUIChatConstants.FORWARD_SELECT_ACTIVTY_CODE) {
             if (data != null) {
                 if (mForwardSelectMsgInfos == null || mForwardSelectMsgInfos.isEmpty()) {
@@ -228,7 +224,7 @@ public class TUIBaseChatFragment extends BaseFragment {
                     }
 
                     ChatPresenter chatPresenter = getPresenter();
-                    chatPresenter.forwardMessage(mForwardSelectMsgInfos, isGroup, id, title, mForwardMode, selfConversation, false, new IUIKitCallback() {
+                    chatPresenter.forwardMessage(mForwardSelectMsgInfos, isGroup, id, title, mForwardMode, selfConversation, new IUIKitCallback() {
                         @Override
                         public void onSuccess(Object data) {
                             TUIChatLog.v(TAG, "sendMessage onSuccess:");

@@ -7,11 +7,11 @@ import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 
-import com.tencent.qcloud.tuicore.TUICore;
-import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
-import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.presenter.C2CChatPresenter;
+import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
+import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
+import com.tencent.qcloud.tuicore.TUICore;
 
 public class TUIC2CChatFragment extends TUIBaseChatFragment {
     private static final String TAG = TUIC2CChatFragment.class.getSimpleName();
@@ -56,13 +56,13 @@ public class TUIC2CChatFragment extends TUIBaseChatFragment {
         chatView.setChatInfo(chatInfo);
     }
 
+    public void setPresenter(C2CChatPresenter presenter) {
+        this.presenter = presenter;
+    }
+
     @Override
     public C2CChatPresenter getPresenter() {
         return presenter;
-    }
-
-    public void setPresenter(C2CChatPresenter presenter) {
-        this.presenter = presenter;
     }
 
     @Override

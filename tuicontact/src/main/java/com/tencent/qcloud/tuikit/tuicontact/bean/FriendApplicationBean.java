@@ -44,7 +44,9 @@ public class FriendApplicationBean implements Serializable {
     private String nickName;
     private String addWording;
     private int addType;
+    private String faceUrl;
     private V2TIMFriendApplication friendApplication;
+    private boolean isAccept = false;
     public FriendApplicationBean() {}
 
     public String getUserId() {
@@ -79,12 +81,28 @@ public class FriendApplicationBean implements Serializable {
         this.addType = addType;
     }
 
-    public V2TIMFriendApplication getFriendApplication() {
-        return friendApplication;
+    public void setAccept(boolean accept) {
+        isAccept = accept;
+    }
+
+    public boolean isAccept() {
+        return isAccept;
     }
 
     public void setFriendApplication(V2TIMFriendApplication friendApplication) {
         this.friendApplication = friendApplication;
+    }
+
+    public void setFaceUrl(String faceUrl) {
+        this.faceUrl = faceUrl;
+    }
+
+    public String getFaceUrl() {
+        return faceUrl;
+    }
+
+    public V2TIMFriendApplication getFriendApplication() {
+        return friendApplication;
     }
 
     public FriendApplicationBean convertFromTimFriendApplication(V2TIMFriendApplication v2TIMFriendApplication) {
@@ -96,6 +114,7 @@ public class FriendApplicationBean implements Serializable {
         setAddWording(v2TIMFriendApplication.getAddWording());
         setUserId(v2TIMFriendApplication.getUserID());
         setFriendApplication(v2TIMFriendApplication);
+        setFaceUrl(v2TIMFriendApplication.getFaceUrl());
         return this;
     }
 }

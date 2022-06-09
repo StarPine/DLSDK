@@ -7,19 +7,25 @@ import com.tencent.qcloud.tuicore.interfaces.ITUIService;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Service 注册和调用
  */
 class ServiceManager {
     private static final String TAG = ServiceManager.class.getSimpleName();
-    private final HashMap<String, ITUIService> serviceMap = new HashMap<>();
 
-    private ServiceManager() {}
+    private static class ServiceManagerHolder {
+        private static final ServiceManager serviceManager = new ServiceManager();
+    }
 
     public static ServiceManager getInstance() {
         return ServiceManagerHolder.serviceManager;
     }
+
+    private final Map<String, ITUIService> serviceMap = new ConcurrentHashMap<>();
+
+    private ServiceManager() {}
 
     public void registerService(String serviceName, ITUIService service) {
         Log.i(TAG, "registerService : " + serviceName + "  " + service);
@@ -38,9 +44,5 @@ class ServiceManager {
             Log.w(TAG, "can't find service : " + serviceName);
             return null;
         }
-    }
-
-    private static class ServiceManagerHolder {
-        private static final ServiceManager serviceManager = new ServiceManager();
     }
 }

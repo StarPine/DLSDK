@@ -1,14 +1,15 @@
 package com.tencent.qcloud.tuikit.tuiconversation.ui.view;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
@@ -28,28 +29,47 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
     public static final int FOOTER_COUNT = 1;
     public static final int SELECT_COUNT = 1;
     public static final int SELECT_LABEL_COUNT = 1;
-    //消息转发
-    private final HashMap<String, Boolean> mSelectedPositions = new HashMap<>();
-    //彭石林新增
-    public ConversationListLayout.OnItemAvatarClickListener mOnItemAvatarClickListener;
-    protected List<ConversationInfo> mDataSource = new ArrayList<>();
+
     private boolean mHasShowUnreadDot = true;
     private int mItemAvatarRadius = ScreenUtil.getPxByDp(5);
     private int mTopTextSize;
     private int mBottomTextSize;
     private int mDateTextSize;
+    protected List<ConversationInfo> mDataSource = new ArrayList<>();
     private ConversationListLayout.OnItemClickListener mOnItemClickListener;
     private ConversationListLayout.OnItemLongClickListener mOnItemLongClickListener;
+
+    //消息转发
+    private final HashMap<String, Boolean> mSelectedPositions = new HashMap<>();
     private boolean isShowMultiSelectCheckBox = false;
     private boolean isForwardFragment = false;
-    private boolean isShowSearch = false;
 
     private boolean mIsLoading = false;
-    private ConversationListLayout mRecycleView;
+
+    // 长按高亮显示
+    private boolean isClick = false;
+    private int currentPosition = -1;
 
     private View searchView;
     public ConversationListAdapter() {
 
+    }
+
+    public int getCurrentPosition() {
+        return currentPosition;
+    }
+
+    public boolean isClick() {
+        return isClick;
+    }
+
+    public void setClick(boolean click) {
+        isClick = click;
+    }
+
+    public void setCurrentPosition(int currentPosition , boolean isClick) {
+        this.currentPosition = currentPosition;
+        this.isClick = isClick;
     }
 
     public void setShowMultiSelectCheckBox(boolean show) {
@@ -66,10 +86,6 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
 
     public void setSearchView(View searchView) {
         this.searchView = searchView;
-    }
-
-    public void setShowSearch(boolean showSearch) {
-        isShowSearch = showSearch;
     }
 
     //设置给定位置条目的选择状态
@@ -135,10 +151,6 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
         this.mOnItemLongClickListener = listener;
     }
 
-    public void setOnItemAvatarClickListener(ConversationListLayout.OnItemAvatarClickListener listener) {
-        this.mOnItemAvatarClickListener = listener;
-    }
-
     @Override
     public void onDataSourceChanged(List<ConversationInfo> dataSource) {
         this.mDataSource = dataSource;
@@ -147,12 +159,16 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(TUIConversationService.getAppContext());
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         ConversationBaseHolder holder = null;
         // 创建不同的 ViewHolder
         View view;
         // 根据ViewType来创建条目
         if (viewType == ITEM_TYPE_HEADER_SEARCH) {
+            // 如果 searchView 不显示，添加一个隐藏的 view，防止 recyclerview 自动滑到最底部
+            if (searchView == null) {
+                searchView = new View(parent.getContext());
+            }
             return new HeaderViewHolder(searchView);
         }else if (viewType == ConversationInfo.TYPE_CUSTOM) {
             view = inflater.inflate(R.layout.conversation_custom_adapter, parent, false);
@@ -167,8 +183,8 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
             view = inflater.inflate(R.layout.conversation_forward_label_adapter, parent, false);
             return new ForwardLabelHolder(view);
         } else {
-            view = inflater.inflate(R.layout.conversation_adapter, parent, false);
-            holder = new ConversationCommonHolder(parent.getContext(),view);
+            view = inflater.inflate(R.layout.conversation_list_item_layout, parent, false);
+            holder = new ConversationCommonHolder(view);
             ((ConversationCommonHolder) holder).setForwardMode(isForwardFragment);
         }
         holder.setAdapter(this);
@@ -207,6 +223,19 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
             setCheckBoxStatus(position, conversationInfo, baseHolder);
         }
 
+        if (getCurrentPosition() == position && isClick()){
+            baseHolder.itemView.setBackgroundResource(R.color.conversation_item_clicked_color);
+        } else {
+            if (conversationInfo == null) {
+                return;
+            }
+            if (conversationInfo.isTop() && !isForwardFragment) {
+                baseHolder.itemView.setBackgroundColor(baseHolder.rootView.getResources().getColor(R.color.conversation_item_top_color));
+            } else {
+                baseHolder.itemView.setBackgroundColor(Color.WHITE);
+            }
+        }
+
     }
 
     private void setOnClickListener(RecyclerView.ViewHolder holder, int position, ConversationInfo conversationInfo) {
@@ -227,6 +256,8 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
                 @Override
                 public boolean onLongClick(View view) {
                     mOnItemLongClickListener.OnItemLongClick(view, position, conversationInfo);
+                    setCurrentPosition(position, true);
+                    notifyItemChanged(position);
                     return true;
                 }
             });
@@ -285,13 +316,11 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
             return null;
         }
 
-        int dataPosition = position;
+        int dataPosition;
         if (isForwardFragment) {
             dataPosition = position - SELECT_COUNT - SELECT_LABEL_COUNT;
         } else {
-            if (isShowSearch) {
-                dataPosition = position - HEADER_COUNT;
-            }
+            dataPosition = position - HEADER_COUNT;
         }
         if (dataPosition < mDataSource.size() && dataPosition >= 0) {
             return mDataSource.get(dataPosition);
@@ -306,10 +335,7 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
         if (isForwardFragment) {
             return listSize + SELECT_COUNT + SELECT_LABEL_COUNT + FOOTER_COUNT;
         }
-        if (isShowSearch) {
-            return listSize + HEADER_COUNT + FOOTER_COUNT;
-        }
-        return listSize + FOOTER_COUNT;
+        return listSize + HEADER_COUNT + FOOTER_COUNT;
     }
 
     @Override
@@ -321,10 +347,8 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
                 return ConversationInfo.TYPE_RECENT_LABEL;
             }
         } else {
-            if (isShowSearch) {
-                if (position == 0) {
-                    return ITEM_TYPE_HEADER_SEARCH;
-                }
+            if (position == 0) {
+                return ITEM_TYPE_HEADER_SEARCH;
             }
         }
         if (position == getItemCount() - 1) {
@@ -343,9 +367,7 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
         if (isForwardFragment) {
             itemIndex = index + SELECT_LABEL_COUNT + SELECT_COUNT;
         } else {
-            if (isShowSearch) {
-                itemIndex = index + HEADER_COUNT;
-            }
+            itemIndex = index + HEADER_COUNT;
         }
         return itemIndex;
     }
@@ -374,36 +396,36 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
         notifyItemRangeChanged(itemStartIndex, count);
     }
 
-    public int getItemTopTextSize() {
-        return mTopTextSize;
-    }
-
     public void setItemTopTextSize(int size) {
         mTopTextSize = size;
     }
 
-    public int getItemBottomTextSize() {
-        return mBottomTextSize;
+    public int getItemTopTextSize() {
+        return mTopTextSize;
     }
 
     public void setItemBottomTextSize(int size) {
         mBottomTextSize = size;
     }
 
-    public int getItemDateTextSize() {
-        return mDateTextSize;
+    public int getItemBottomTextSize() {
+        return mBottomTextSize;
     }
 
     public void setItemDateTextSize(int size) {
         mDateTextSize = size;
     }
 
-    public int getItemAvatarRadius() {
-        return mItemAvatarRadius;
+    public int getItemDateTextSize() {
+        return mDateTextSize;
     }
 
     public void setItemAvatarRadius(int radius) {
         mItemAvatarRadius = radius;
+    }
+
+    public int getItemAvatarRadius() {
+        return mItemAvatarRadius;
     }
 
     public void disableItemUnreadDot(boolean flag) {
@@ -418,8 +440,6 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
     public void onLoadingStateChanged(boolean isLoading) {
         this.mIsLoading = isLoading;
         notifyItemChanged(getItemCount() - 1);
-        //滚动到顶部
-        mRecycleView.scrollToTop();
     }
 
     @Override
@@ -427,16 +447,32 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
         notifyDataSetChanged();
     }
 
-    @Override
-    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
-        mRecycleView = (ConversationListLayout) recyclerView;
-    }
-
     //header
     static class HeaderViewHolder extends RecyclerView.ViewHolder {
         public HeaderViewHolder(@NonNull View itemView) {
             super(itemView);
+        }
+    }
+
+    //footer
+    class FooterViewHolder extends ConversationBaseHolder {
+        public FooterViewHolder(@NonNull View itemView) {
+            super(itemView);
+        }
+
+        @Override
+        public void layoutViews(ConversationInfo conversationInfo, int position) {
+            RecyclerView.LayoutParams param = (RecyclerView.LayoutParams) rootView.getLayoutParams();
+            if (mIsLoading) {
+                param.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+                param.width = LinearLayout.LayoutParams.MATCH_PARENT;
+                rootView.setVisibility(View.VISIBLE);
+            } else {
+                param.height = 0;
+                param.width = 0;
+                rootView.setVisibility(View.GONE);
+            }
+            rootView.setLayoutParams(param);
         }
     }
 
@@ -471,28 +507,6 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
             } else {
                 titleView.setText(TUIConversationService.getAppContext().getString(R.string.forward_select_from_contact));
             }
-        }
-    }
-
-    //footer
-    class FooterViewHolder extends ConversationBaseHolder {
-        public FooterViewHolder(@NonNull View itemView) {
-            super(itemView);
-        }
-
-        @Override
-        public void layoutViews(ConversationInfo conversationInfo, int position) {
-            RecyclerView.LayoutParams param = (RecyclerView.LayoutParams) rootView.getLayoutParams();
-            if (mIsLoading) {
-                param.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-                param.width = LinearLayout.LayoutParams.MATCH_PARENT;
-                rootView.setVisibility(View.VISIBLE);
-            } else {
-                param.height = 0;
-                param.width = 0;
-                rootView.setVisibility(View.GONE);
-            }
-            rootView.setLayoutParams(param);
         }
     }
 

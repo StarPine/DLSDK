@@ -9,8 +9,9 @@ public class GroupApplyInfo implements Serializable {
     public static final int APPLIED = 1;
     public static final int REFUSED = -1;
     public static final int UNHANDLED = 0;
-    private final V2TIMGroupApplication timGroupApplication;
+
     private int status;
+    private V2TIMGroupApplication timGroupApplication;
 
     public GroupApplyInfo(V2TIMGroupApplication timGroupApplication) {
         this.timGroupApplication = timGroupApplication;

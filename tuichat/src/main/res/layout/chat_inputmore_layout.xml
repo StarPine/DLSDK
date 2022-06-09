@@ -10,10 +10,10 @@
         android:background="@color/input_title_line_color" />
 
     <androidx.viewpager.widget.ViewPager
-        android:layout_marginLeft="29dp"
         android:layout_marginTop="16dp"
-        android:layout_marginRight="29dp"
         android:layout_marginBottom="33dp"
+        android:layout_marginLeft="29dp"
+        android:layout_marginRight="29dp"
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

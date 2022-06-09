@@ -35,11 +35,11 @@ public class ContactGroupApplyInfo implements Serializable {
         this.requestMsg = requestMsg;
     }
 
-    public V2TIMGroupApplication getTimGroupApplication() {
-        return timGroupApplication;
-    }
-
     public void setTimGroupApplication(V2TIMGroupApplication timGroupApplication) {
         this.timGroupApplication = timGroupApplication;
+    }
+
+    public V2TIMGroupApplication getTimGroupApplication() {
+        return timGroupApplication;
     }
 }

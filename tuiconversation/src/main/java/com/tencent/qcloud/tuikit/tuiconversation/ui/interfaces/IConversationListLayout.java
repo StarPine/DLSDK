@@ -86,6 +86,4 @@ public interface IConversationListLayout {
      */
     void setAdapter(IConversationListAdapter adapter);
 
-    void setOnItemAvatarClickListener(ConversationListLayout.OnItemAvatarClickListener listener);
-
 }

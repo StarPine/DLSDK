@@ -1,7 +1,5 @@
 package com.tencent.qcloud.tuikit.tuichat.component.camera.view;
 
-import static android.graphics.Bitmap.createBitmap;
-
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
@@ -41,6 +39,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import static android.graphics.Bitmap.createBitmap;
+
 public class CameraInterface implements Camera.PreviewCallback {
 
     public static final int TYPE_RECORDER = 0x090;
@@ -59,7 +59,7 @@ public class CameraInterface implements Camera.PreviewCallback {
     private boolean isRecorder = false;
     private MediaRecorder mediaRecorder;
     private String videoFileName;
-    private final String saveVideoPath = TUIConfig.getMediaDir();
+    private String saveVideoPath = TUIConfig.getMediaDir();
     private String videoFileAbsPath;
     private Bitmap videoFirstFrame = null;
     private ErrorListener errorLisenter;
@@ -77,7 +77,7 @@ public class CameraInterface implements Camera.PreviewCallback {
     //视频质量
     private int mediaQuality = JCameraView.MEDIA_QUALITY_MIDDLE;
     private SensorManager sm = null;
-    private final SensorEventListener sensorEventListener = new SensorEventListener() {
+    private SensorEventListener sensorEventListener = new SensorEventListener() {
         public void onSensorChanged(SensorEvent event) {
             if (Sensor.TYPE_ACCELEROMETER != event.sensor.getType()) {
                 return;
@@ -473,7 +473,11 @@ public class CameraInterface implements Camera.PreviewCallback {
 
                 bitmap = createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
                 if (callback != null) {
-                    callback.captureResult(bitmap, nowAngle == 90 || nowAngle == 270);
+                    if (nowAngle == 90 || nowAngle == 270) {
+                        callback.captureResult(bitmap, true);
+                    } else {
+                        callback.captureResult(bitmap, false);
+                    }
                 }
             }
         });
@@ -583,7 +587,7 @@ public class CameraInterface implements Camera.PreviewCallback {
         }
 
 
-        if (DeviceUtil.isHuaWeiRongyao()) {
+        if (DeviceUtil.isHuaWeiOrHonor()) {
             mediaRecorder.setVideoEncodingBitRate(4 * 100000);
         } else {
             mediaRecorder.setVideoEncodingBitRate(mediaQuality);

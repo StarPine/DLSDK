@@ -1,5 +1,6 @@
 package com.tencent.qcloud.tuikit.tuicontact.bean;
 
+import com.tencent.imsdk.BaseConstants;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMGroupInfoResult;
 import com.tencent.imsdk.v2.V2TIMManager;
@@ -10,6 +11,11 @@ import java.util.List;
 
 
 public class GroupInfo extends ChatInfo {
+
+    public static final int ERR_SVR_GROUP_ALLREADY_MEMBER = BaseConstants.ERR_SVR_GROUP_ALLREADY_MEMBER;
+    public static final int ERR_SVR_GROUP_PERMISSION_DENY = BaseConstants.ERR_SVR_GROUP_PERMISSION_DENY;
+    public static final int ERR_SVR_GROUP_NOT_FOUND = BaseConstants.ERR_SVR_GROUP_NOT_FOUND; // 群组不存在
+    public static final int ERR_SVR_GROUP_FULL_MEMBER_COUNT = BaseConstants.ERR_SVR_GROUP_FULL_MEMBER_COUNT;
 
     private String groupType;
     private int memberCount;
@@ -198,7 +204,7 @@ public class GroupInfo extends ChatInfo {
         setGroupType(infoResult.getGroupInfo().getGroupType());
         setOwner(infoResult.getGroupInfo().getOwner());
         setJoinType(infoResult.getGroupInfo().getGroupAddOpt());
-        setMessageReceiveOption(infoResult.getGroupInfo().getRecvOpt() == V2TIMMessage.V2TIM_NOT_RECEIVE_MESSAGE);
+        setMessageReceiveOption(infoResult.getGroupInfo().getRecvOpt() == V2TIMMessage.V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE ? true : false);
         return this;
     }
 }

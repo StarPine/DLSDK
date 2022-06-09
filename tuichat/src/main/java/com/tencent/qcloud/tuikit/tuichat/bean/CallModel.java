@@ -5,10 +5,12 @@ import com.google.gson.annotations.SerializedName;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMSignalingInfo;
+import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +18,8 @@ import java.util.Map;
  * 自定义消息的bean实体，用来与json的相互转化
  */
 public class CallModel implements Cloneable, Serializable {
+
+    private static final String TAG = CallModel.class.getSimpleName();
 
     /**
      * 系统错误
@@ -38,13 +42,13 @@ public class CallModel implements Cloneable, Serializable {
      */
     public static final int VIDEO_CALL_ACTION_REJECT          = 3;
     /**
-     * 挂断
-     */
-    public static final int VIDEO_CALL_ACTION_HANGUP          = 5;
-    /**
      * 无人接听
      */
     public static final int VIDEO_CALL_ACTION_SPONSOR_TIMEOUT = 4;
+    /**
+     * 挂断
+     */
+    public static final int VIDEO_CALL_ACTION_HANGUP          = 5;
     /**
      * 电话占线
      */
@@ -53,7 +57,7 @@ public class CallModel implements Cloneable, Serializable {
      * 接听电话
      */
     public static final int VIDEO_CALL_ACTION_ACCEPT          = 7;
-    private static final String TAG = CallModel.class.getSimpleName();
+
     public static String SIGNALING_EXTRA_VALUE_BUSINESS_ID = "av_call";
 
     public static String SIGNALING_EXTRA_KEY_BUSINESS_ID = "businessID";
@@ -180,6 +184,11 @@ public class CallModel implements Cloneable, Serializable {
                 callModel.invitedList = signalingInfo.getInviteeList();
                 callModel.version = ((Double)extraMap.get(CallModel.SIGNALING_EXTRA_KEY_VERSION)).intValue();
             }
+
+            if (extraMap != null) {
+                callModel.callType = ((Double)extraMap.get(TUIConstants.Message.CALLING_TYPE_KEY)).intValue();
+            }
+
         } catch (Exception e) {
             TUIChatLog.e(TAG, "convert2VideoCallData exception:" + e);
         }

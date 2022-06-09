@@ -8,6 +8,7 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
@@ -51,6 +52,11 @@ public class IjkMediaPlayerWrapper implements IPlayer {
     @Override
     public void setOnInfoListener(final OnInfoListener l) {
         invokeListener("OnInfoListener", "setOnInfoListener", l);
+    }
+
+    @Override
+    public void setOnSeekCompleteListener(final OnSeekCompleteListener l) {
+        invokeListener("OnSeekCompleteListener", "setOnSeekCompleteListener", l);
     }
 
     @Override
@@ -108,6 +114,30 @@ public class IjkMediaPlayerWrapper implements IPlayer {
         return (int) invoke("getVideoHeight");
     }
 
+    @Override
+    public void seekTo(int progress) {
+        try {
+            Method methodInstance = mMediaPlayerClass.getMethod("seekTo", long.class);
+            methodInstance.invoke(mMediaPlayerInstance, progress);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public int getCurrentPosition() {
+        return (int)((long) invoke("getCurrentPosition"));
+    }
+
+    @Override
+    public int getDuration() {
+        return (int)((long) invoke("getDuration"));
+    }
+
     private Object invoke(String methodName, Object... args) {
         try {
             Class[] classes = null;
@@ -152,7 +182,7 @@ public class IjkMediaPlayerWrapper implements IPlayer {
 
     private class ListenerHandler implements InvocationHandler {
 
-        private final Object mListener;
+        private Object mListener;
 
         private ListenerHandler(Object l) {
             mListener = l;

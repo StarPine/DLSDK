@@ -10,10 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#FFFFFF"
-        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:paddingBottom="10dp">
+        android:paddingTop="10dp">
 
         <ImageView
             android:id="@+id/conversation_icon"
@@ -41,8 +41,8 @@
             android:layout_alignRight="@+id/conversation_title"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textColor="@color/list_bottom_text_bg"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:textColor="@color/list_bottom_text_bg" />
 
         <TextView
             android:id="@+id/conversation_time"
@@ -50,8 +50,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/conversation_title"
-            android:textColor="@color/list_bottom_text_bg"
-            android:textSize="10sp" />
+            android:textSize="10sp"
+            android:textColor="@color/list_bottom_text_bg" />
 
 
         <com.tencent.qcloud.tuicore.component.UnreadCountTextView

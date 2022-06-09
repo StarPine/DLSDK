@@ -1,6 +1,7 @@
 package com.tencent.qcloud.tuikit.tuicontact;
 
 import android.content.Context;
+import android.os.Bundle;
 
 import com.tencent.imsdk.v2.V2TIMFriendApplication;
 import com.tencent.imsdk.v2.V2TIMFriendInfo;
@@ -9,6 +10,8 @@ import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.qcloud.tuicore.ServiceInitializer;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
+import com.tencent.qcloud.tuicore.interfaces.ITUIService;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.bean.FriendApplicationBean;
 import com.tencent.qcloud.tuikit.tuicontact.interfaces.ContactEventListener;
@@ -24,16 +27,14 @@ public class TUIContactService extends ServiceInitializer implements ITUIContact
     public static final String TAG = TUIContactService.class.getSimpleName();
 
     private static TUIContactService instance;
-    private static Context appContext;
-    private final List<WeakReference<ContactEventListener>> contactEventListenerList = new ArrayList<>();
 
     public static TUIContactService getInstance() {
         return instance;
     }
 
-    public static Context getAppContext() {
-        return appContext;
-    }
+    private static Context appContext;
+
+    private final List<WeakReference<ContactEventListener>> contactEventListenerList = new ArrayList<>();
 
     @Override
     public void init(Context context) {
@@ -48,6 +49,7 @@ public class TUIContactService extends ServiceInitializer implements ITUIContact
     public Object onCall(String method, Map<String, Object> param) {
         return null;
     }
+
 
     private void initService() {
         TUICore.registerService(TUIConstants.TUIContact.SERVICE_NAME, this);
@@ -112,6 +114,7 @@ public class TUIContactService extends ServiceInitializer implements ITUIContact
                 List<ContactItemBean> contactItemBeanList = new ArrayList<>();
                 for(V2TIMFriendInfo v2TIMFriendInfo : users) {
                     ContactItemBean contactItemBean = new ContactItemBean();
+                    contactItemBean.setFriend(true);
                     contactItemBean.covertTIMFriend(v2TIMFriendInfo);
                     contactItemBeanList.add(contactItemBean);
                 }
@@ -160,6 +163,7 @@ public class TUIContactService extends ServiceInitializer implements ITUIContact
                 List<ContactItemBean> contactItemBeanList = new ArrayList<>();
                 for(V2TIMFriendInfo v2TIMFriendInfo : infoList) {
                     ContactItemBean contactItemBean = new ContactItemBean();
+                    contactItemBean.setFriend(true);
                     contactItemBean.covertTIMFriend(v2TIMFriendInfo);
                     contactItemBeanList.add(contactItemBean);
                 }
@@ -198,5 +202,24 @@ public class TUIContactService extends ServiceInitializer implements ITUIContact
             }
         }
         contactEventListenerList.add(reference);
+    }
+
+    public static Context getAppContext() {
+        return appContext;
+    }
+
+    @Override
+    public int getLightThemeResId() {
+        return R.style.TUIContactLightTheme;
+    }
+
+    @Override
+    public int getLivelyThemeResId() {
+        return R.style.TUIContactLivelyTheme;
+    }
+
+    @Override
+    public int getSeriousThemeResId() {
+        return R.style.TUIContactSeriousTheme;
     }
 }

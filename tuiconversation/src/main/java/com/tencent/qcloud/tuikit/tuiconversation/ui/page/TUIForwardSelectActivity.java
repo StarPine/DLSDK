@@ -5,8 +5,8 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 
-import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
+import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuikit.tuiconversation.util.TUIConversationLog;
 
 public class TUIForwardSelectActivity extends BaseLightActivity {
@@ -25,7 +25,7 @@ public class TUIForwardSelectActivity extends BaseLightActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         TUIConversationLog.i(TAG, "onNewIntent");
-        super.onNewIntent(intent);
+        super.onNewIntent(intent);;
     }
 
     @Override

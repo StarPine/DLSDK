@@ -2,6 +2,7 @@ package com.tencent.qcloud.tuikit.tuiconversation.ui.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -12,8 +13,8 @@ import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
-import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.interfaces.IConversationLayout;
+import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.interfaces.IConversationListAdapter;
 
 import java.util.HashMap;
@@ -21,7 +22,6 @@ import java.util.Map;
 
 public class ConversationLayout extends RelativeLayout implements IConversationLayout {
 
-    private TitleBarLayout mTitleBarLayout;
     private ConversationListLayout mConversationList;
     private ConversationPresenter presenter;
     public ConversationLayout(Context context) {
@@ -51,15 +51,10 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
      */
     private void init() {
         inflate(getContext(), R.layout.conversation_layout, this);
-        mTitleBarLayout = findViewById(R.id.conversation_title);
         mConversationList = findViewById(R.id.conversation_list);
     }
 
     public void initDefault() {
-        mTitleBarLayout.setTitle(getResources().getString(R.string.conversation_title), ITitleBarLayout.Position.MIDDLE);
-        mTitleBarLayout.getLeftGroup().setVisibility(View.GONE);
-        mTitleBarLayout.setRightIcon(R.drawable.conversation_more);
-
         final ConversationListAdapter adapter = new ConversationListAdapter();
         initSearchView(adapter);
         mConversationList.setAdapter((IConversationListAdapter) adapter);
@@ -76,14 +71,9 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
         if (searchExtension != null) {
             View searchView = (View) searchExtension.get(TUIConstants.TUIConversation.SEARCH_VIEW);
             if (searchView != null) {
-                adapter.setShowSearch(true);
                 adapter.setSearchView(searchView);
             }
         }
-    }
-    
-    public TitleBarLayout getTitleBar() {
-        return mTitleBarLayout;
     }
 
     @Override
@@ -115,5 +105,10 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
         if (presenter != null) {
             presenter.clearConversationMessage(conversation);
         }
+    }
+
+    @Override
+    public TitleBarLayout getTitleBar() {
+        return null;
     }
 }

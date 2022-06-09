@@ -9,19 +9,26 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * 页面扩展注册和获取
  */
 class ExtensionManager {
     private static final String TAG = ExtensionManager.class.getSimpleName();
-    private final HashMap<String, List<ITUIExtension>>  extensionHashMap = new HashMap<>();
 
-    private ExtensionManager() {}
+    private static class ExtensionManagerHolder {
+        private static final ExtensionManager extensionManager = new ExtensionManager();
+    }
 
     public static ExtensionManager getInstance() {
         return ExtensionManagerHolder.extensionManager;
     }
+
+    private final Map<String, List<ITUIExtension>>  extensionHashMap = new ConcurrentHashMap<>();
+
+    private ExtensionManager() {}
 
     public void registerExtension(String key, ITUIExtension extension) {
         Log.i(TAG, "registerExtension key : " + key + ", extension : " + extension);
@@ -30,7 +37,7 @@ class ExtensionManager {
         }
         List<ITUIExtension> list = extensionHashMap.get(key);
         if (list == null) {
-            list = new ArrayList<>();
+            list = new CopyOnWriteArrayList<>();
             extensionHashMap.put(key, list);
         }
         if (!list.contains(extension)) {
@@ -63,9 +70,5 @@ class ExtensionManager {
             return extension.onGetExtensionInfo(key, param);
         }
         return null;
-    }
-
-    private static class ExtensionManagerHolder {
-        private static final ExtensionManager extensionManager = new ExtensionManager();
     }
 }

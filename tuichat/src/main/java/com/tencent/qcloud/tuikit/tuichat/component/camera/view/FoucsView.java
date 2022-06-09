@@ -11,11 +11,11 @@ import androidx.annotation.Nullable;
 import com.tencent.qcloud.tuicore.util.ScreenUtil;
 
 public class FoucsView extends View {
-    private final int size;
+    private int size;
     private int center_x;
     private int center_y;
     private int length;
-    private final Paint mPaint;
+    private Paint mPaint;
 
     public FoucsView(Context context) {
         this(context, null);

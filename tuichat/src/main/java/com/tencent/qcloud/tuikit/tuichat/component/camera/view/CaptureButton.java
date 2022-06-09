@@ -26,9 +26,9 @@ public class CaptureButton extends View {
     private static final String TAG = CaptureButton.class.getSimpleName();
     private int state;              //当前按钮状态
     private int button_state;       //按钮可执行的功能状态（拍照,录制,两者）
-    private final int progress_color = 0xEE16AE16;            //进度条颜色
-    private final int outside_color = 0xEEDCDCDC;             //外圆背景色
-    private final int inside_color = 0xFFFFFFFF;              //内圆背景色
+    private int progress_color = 0xEE16AE16;            //进度条颜色
+    private int outside_color = 0xEEDCDCDC;             //外圆背景色
+    private int inside_color = 0xFFFFFFFF;              //内圆背景色
 
 
     private float event_Y;  //Touch_Event_Down时候记录的Y值

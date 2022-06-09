@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tuikit.tuicontact.ui.pages;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -9,24 +8,29 @@ import android.view.View;
 import androidx.annotation.Nullable;
 
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
+import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
-import com.tencent.qcloud.tuikit.tuicontact.R;
+import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
 import com.tencent.qcloud.tuikit.tuicontact.ui.view.ContactListView;
+import com.tencent.qcloud.tuikit.tuicontact.R;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class StartGroupMemberSelectActivity extends Activity {
+public class StartGroupMemberSelectActivity extends BaseLightActivity {
 
     private static final String TAG = StartGroupMemberSelectActivity.class.getSimpleName();
-    private final ArrayList<GroupMemberInfo> mMembers = new ArrayList<>();
+
     private TitleBarLayout mTitleBar;
     private ContactListView mContactListView;
+    private ArrayList<GroupMemberInfo> mMembers = new ArrayList<>();
+
     private ContactPresenter presenter;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,30 +40,28 @@ public class StartGroupMemberSelectActivity extends Activity {
         init();
     }
 
-    private String getMembersNameCard(){
+    private ArrayList<String> getMembersNameCard(){
         if (mMembers.size() == 0) {
-            return "";
+            return new ArrayList<>();
         }
 
-        String nameCardString = "";
+        ArrayList<String> nameCards = new ArrayList<>();
         for(int i = 0; i < mMembers.size(); i++){
-            nameCardString += mMembers.get(i).getNameCard();
-            nameCardString += " ";
+            nameCards.add(mMembers.get(i).getNameCard());
         }
-        return nameCardString;
+        return nameCards;
     }
 
-    private String getMembersUserId(){
+    private ArrayList<String> getMembersUserId(){
         if (mMembers.size() == 0) {
-            return "";
+            return new ArrayList<>();
         }
 
-        String userIdString = "";
+        ArrayList<String> userIds = new ArrayList<>();
         for(int i = 0; i < mMembers.size(); i++){
-            userIdString += mMembers.get(i).getAccount();
-            userIdString += " ";
+            userIds.add(mMembers.get(i).getAccount());
         }
-        return userIdString;
+        return userIds;
     }
 
     private void init() {
@@ -68,22 +70,27 @@ public class StartGroupMemberSelectActivity extends Activity {
         String groupId = getIntent().getStringExtra(TUIContactConstants.Group.GROUP_ID);
         boolean isSelectFriends = getIntent().getBooleanExtra(TUIContactConstants.Selection.SELECT_FRIENDS, false);
         boolean isSelectForCall = getIntent().getBooleanExtra(TUIContactConstants.Selection.SELECT_FOR_CALL, false);
+        int limit = getIntent().getIntExtra(TUIContactConstants.Selection.LIMIT, Integer.MAX_VALUE);
 
         mTitleBar = findViewById(R.id.group_create_title_bar);
         mTitleBar.setTitle(getResources().getString(R.string.sure), ITitleBarLayout.Position.RIGHT);
-        mTitleBar.getRightTitle().setTextColor(getResources().getColor(R.color.title_bar_font_color));
         mTitleBar.getRightIcon().setVisibility(View.GONE);
         mTitleBar.setOnRightClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mMembers.size() > limit) {
+                    String overLimitTip = getString(R.string.contact_over_limit_tip, limit);
+                    ToastUtil.toastShortMessage(overLimitTip);
+                    return;
+                }
                 Intent i = new Intent();
                 List<String> friendIdList = new ArrayList<>();
                 for (GroupMemberInfo memberInfo : mMembers) {
                     friendIdList.add(memberInfo.getAccount());
                 }
                 i.putExtra(TUIContactConstants.Selection.LIST, (Serializable) friendIdList);
-                i.putExtra(TUIContactConstants.Selection.USER_NAMECARD_SELECT, getMembersNameCard());
-                i.putExtra(TUIContactConstants.Selection.USER_ID_SELECT, getMembersUserId());
+                i.putStringArrayListExtra(TUIContactConstants.Selection.USER_NAMECARD_SELECT, getMembersNameCard());
+                i.putStringArrayListExtra(TUIContactConstants.Selection.USER_ID_SELECT, getMembersUserId());
                 i.putExtras(getIntent());
                 setResult(3, i);
 
@@ -121,8 +128,8 @@ public class StartGroupMemberSelectActivity extends Activity {
                         mMembers.clear();
 
                         Intent i = new Intent();
-                        i.putExtra(TUIContactConstants.Selection.USER_NAMECARD_SELECT, getString(R.string.at_all));
-                        i.putExtra(TUIContactConstants.Selection.USER_ID_SELECT, TUIContactConstants.Selection.SELECT_ALL);
+                        i.putStringArrayListExtra(TUIContactConstants.Selection.USER_NAMECARD_SELECT, new ArrayList<String>(Arrays.asList(getString(R.string.at_all))));
+                        i.putStringArrayListExtra(TUIContactConstants.Selection.USER_ID_SELECT, new ArrayList<String>(Arrays.asList(TUIContactConstants.Selection.SELECT_ALL)));
                         setResult(3, i);
 
                         finish();

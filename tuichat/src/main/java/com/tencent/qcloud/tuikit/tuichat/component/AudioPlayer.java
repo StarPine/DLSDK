@@ -16,17 +16,17 @@ import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 public class AudioPlayer {
 
     private static final String TAG = AudioPlayer.class.getSimpleName();
-    private static final AudioPlayer sInstance = new AudioPlayer();
-    private static final String CURRENT_RECORD_FILE = TUIConfig.getRecordDir() + "auto_";
-    private static final int MAGIC_NUMBER = 500;
-    private static final int MIN_RECORD_DURATION = 1000;
+    private static AudioPlayer sInstance = new AudioPlayer();
+    private static String CURRENT_RECORD_FILE = TUIConfig.getRecordDir() + "auto_";
+    private static int MAGIC_NUMBER = 500;
+    private static int MIN_RECORD_DURATION = 1000;
     private Callback mRecordCallback;
     private Callback mPlayCallback;
 
     private String mAudioRecordPath;
     private MediaPlayer mPlayer;
     private MediaRecorder mRecorder;
-    private final Handler mHandler;
+    private Handler mHandler;
 
     private AudioPlayer() {
         mHandler = new Handler();
@@ -120,7 +120,10 @@ public class AudioPlayer {
     }
 
     public boolean isPlaying() {
-        return mPlayer != null && mPlayer.isPlaying();
+        if (mPlayer != null && mPlayer.isPlaying()) {
+            return true;
+        }
+        return false;
     }
 
     private void onPlayCompleted(boolean success) {

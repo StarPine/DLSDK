@@ -13,6 +13,23 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="20dp" />
 
+    <LinearLayout
+        android:id="@+id/ll_audio_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:background="@color/trtccalling_color_audiocall_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/top_guide_line">
+
+        <ImageView
+            android:id="@+id/img_audio_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/trtccalling_ic_movetoback" />
+    </LinearLayout>
+
     <com.tencent.liteav.trtccalling.ui.audiocall.audiolayout.TRTCGroupAudioLayoutManager
         android:id="@+id/trtc_layout_manager"
         android:layout_width="wrap_content"
@@ -20,22 +37,22 @@
         android:gravity="center_horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/top_guide_line" />
+        app:layout_constraintTop_toBottomOf="@id/ll_audio_toolbar" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/group_inviting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="visible"
-        app:constraint_referenced_ids="tv_inviting_tag,ll_img_container"/>
+        app:constraint_referenced_ids="tv_inviting_tag,ll_img_container"
+        android:visibility="visible"/>
 
     <TextView
         android:id="@+id/tv_inviting_tag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/trtccalling_waiting_be_accepted"
         android:textColor="@color/trtccalling_color_gray"
         android:textSize="@dimen/trtccalling_text_size_middle"
+        android:text="@string/trtccalling_waiting_be_accepted"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/trtc_layout_manager" />
@@ -57,8 +74,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:textColor="@color/trtccalling_color_main"
-        android:textSize="@dimen/trtccalling_text_size_middle"
         android:textStyle="bold"
+        android:textSize="@dimen/trtccalling_text_size_middle"
         app:layout_constraintBottom_toTopOf="@+id/ll_hangup"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

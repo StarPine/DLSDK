@@ -16,7 +16,7 @@ import com.tencent.qcloud.tuikit.tuicontact.R;
 import java.util.List;
 
 public class ForwardContactSelectorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    private final Context context;
+    private Context context;
     private List<String> list;
     private RecyclerView mRecycleView;
 
@@ -27,7 +27,7 @@ public class ForwardContactSelectorAdapter extends RecyclerView.Adapter<Recycler
     @Override
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
-        mRecycleView = recyclerView;
+        mRecycleView = (RecyclerView) recyclerView;
         //mRecycleView.setItemViewCacheSize(5);
     }
 
@@ -69,6 +69,6 @@ class ContactViewHolder extends RecyclerView.ViewHolder {
     public ImageView userIconView;
     public ContactViewHolder(View itemView) {
         super(itemView);
-        userIconView = itemView.findViewById(R.id.ivAvatar);
+        userIconView = (ImageView) itemView.findViewById(R.id.ivAvatar);
     }
 }

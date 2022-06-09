@@ -1,15 +1,13 @@
 package com.tencent.qcloud.tuikit.tuichat.ui.interfaces;
 
-import android.widget.TextView;
-
-import com.tencent.qcloud.tuicore.component.NoticeLayout;
-import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 import com.tencent.qcloud.tuicore.component.interfaces.ILayout;
-import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
+import com.tencent.qcloud.tuikit.tuichat.component.noticelayout.NoticeLayout;
+import com.tencent.qcloud.tuicore.component.TitleBarLayout;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.ChatView;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.input.InputView;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.MessageRecyclerView;
+import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 
 /**
  * 聊天窗口 {@link ChatView} 提供了消息的展示与发送等功能，界面布局从上到下分为四个部分: <br>
@@ -75,7 +73,5 @@ public interface IChatLayout extends ILayout {
      * @param msg   消息
      * @param retry 是否重试
      */
-    void sendMessage(MessageInfo msg, boolean retry);
-
-    TextView getAtInfoLayout();
+    void sendMessage(TUIMessageBean msg, boolean retry);
 }

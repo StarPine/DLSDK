@@ -3,6 +3,8 @@ package com.tencent.qcloud.tuikit.tuiconversation.bean;
 import androidx.annotation.NonNull;
 
 import com.tencent.imsdk.v2.V2TIMConversation;
+import com.tencent.imsdk.v2.V2TIMGroupAtInfo;
+import com.tencent.imsdk.v2.V2TIMMessage;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -39,54 +41,6 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
     private V2TIMConversation conversation;
 
     private List<Object> iconUrlList = new ArrayList<>();
-    /**
-     * 会话标题
-     */
-    private String title;
-    /**
-     * 会话头像
-     */
-    private String iconPath;
-    /**
-     * 是否为群会话
-     */
-    private boolean isGroup;
-    /**
-     * 是否为置顶会话
-     */
-    private boolean top;
-    /**
-     * 最后一条消息时间
-     */
-    private long lastMessageTime;
-    /**
-     * 最后一条消息，MessageInfo对象
-     */
-    private ConversationMessageInfo lastMessage;
-    /**
-     * 会话界面显示的@提示消息
-     */
-    private String atInfoText;
-    /**
-     * 会话界面显示消息免打扰图标
-     */
-    private boolean showDisturbIcon;
-    /**
-     * 草稿
-     */
-    private DraftInfo draft;
-    /**
-     * 群类型
-     */
-    private String groupType;
-    /**
-     * 会话排序键值
-     */
-    private long orderKey;
-
-    public ConversationInfo() {
-
-    }
 
     public List<Object> getIconUrlList() {
         return iconUrlList;
@@ -109,6 +63,61 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
             return conversation.getShowName();
         }
         return null;
+    }
+    
+    /**
+     * 会话标题
+     */
+    private String title;
+
+    /**
+     * 会话头像
+     */
+    private String iconPath;
+    /**
+     * 是否为群会话
+     */
+    private boolean isGroup;
+    /**
+     * 是否为置顶会话
+     */
+    private boolean top;
+    /**
+     * 最后一条消息时间
+     */
+    private long lastMessageTime;
+    /**
+     * 最后一条消息，MessageInfo对象
+     */
+    private V2TIMMessage lastMessage;
+
+    /**
+     * 会话界面显示的@提示消息
+     */
+    private String atInfoText;
+
+    /**
+     * 会话界面显示消息免打扰图标
+     */
+    private boolean showDisturbIcon;
+
+    /**
+     * 草稿
+     */
+    private DraftInfo draft;
+
+    /**
+     * 群类型
+     */
+    private String groupType;
+
+    /**
+     * 会话排序键值
+     */
+    private long orderKey;
+
+    public ConversationInfo() {
+
     }
 
     public String getConversationId() {
@@ -182,20 +191,20 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
         this.type = type;
     }
 
-    public ConversationMessageInfo getLastMessage() {
+    public V2TIMMessage getLastMessage() {
         return lastMessage;
     }
 
-    public void setLastMessage(ConversationMessageInfo lastMessage) {
+    public void setLastMessage(V2TIMMessage lastMessage) {
         this.lastMessage = lastMessage;
-    }
-
-    public String getAtInfoText() {
-        return atInfoText;
     }
 
     public void setAtInfoText(String atInfoText) {
         this.atInfoText = atInfoText;
+    }
+
+    public String getAtInfoText() {
+        return atInfoText;
     }
 
     public boolean isShowDisturbIcon() {
@@ -206,12 +215,12 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
         this.showDisturbIcon = showDisturbIcon;
     }
 
-    public DraftInfo getDraft() {
-        return this.draft;
-    }
-
     public void setDraft(DraftInfo draft) {
         this.draft = draft;
+    }
+
+    public DraftInfo getDraft() {
+        return this.draft;
     }
 
     public String getGroupType() {
@@ -230,12 +239,20 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
         this.iconPath = iconPath;
     }
 
+    public void setOrderKey(long orderKey) {
+        this.orderKey = orderKey;
+    }
+
     public long getOrderKey() {
         return orderKey;
     }
 
-    public void setOrderKey(long orderKey) {
-        this.orderKey = orderKey;
+    public List<V2TIMGroupAtInfo> getGroupAtInfoList() {
+        if (conversation != null) {
+            return conversation.getGroupAtInfoList();
+        }
+
+        return null;
     }
 
     /**

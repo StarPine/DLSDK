@@ -14,7 +14,7 @@ import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import java.util.List;
 
 public class ForwardConversationSelectorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    private final Context context;
+    private Context context;
     private List<ConversationInfo> list;
     private OnItemClickListener mOnItemClickListener;
 

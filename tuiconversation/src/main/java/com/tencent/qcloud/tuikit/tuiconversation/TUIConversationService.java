@@ -7,12 +7,12 @@ import android.text.TextUtils;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMConversationListener;
 import com.tencent.imsdk.v2.V2TIMManager;
-import com.tencent.qcloud.tuicore.ServiceInitializer;
 import com.tencent.qcloud.tuicore.TUIConstants;
-import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
+import com.tencent.qcloud.tuicore.ServiceInitializer;
+import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuikit.tuiconversation.interfaces.ConversationEventListener;
 import com.tencent.qcloud.tuikit.tuiconversation.util.ConversationUtils;
 import com.tencent.qcloud.tuikit.tuiconversation.util.TUIConversationLog;
@@ -26,16 +26,14 @@ import java.util.Map;
 public class TUIConversationService extends ServiceInitializer  implements ITUIConversationService {
     public static final String TAG = TUIConversationService.class.getSimpleName();
     private static TUIConversationService instance;
-    private static Context appContext;
-    private WeakReference<ConversationEventListener> conversationEventListener;
 
     public static TUIConversationService getInstance() {
         return instance;
     }
 
-    public static Context getAppContext() {
-        return appContext;
-    }
+    private static Context appContext;
+
+    private WeakReference<ConversationEventListener> conversationEventListener;
 
     @Override
     public void init(Context context) {
@@ -61,6 +59,8 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
         TUICore.registerEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_GROUP_RECYCLE, this);
         // 好友备注修改通知
         TUICore.registerEvent(TUIConstants.TUIContact.EVENT_FRIEND_INFO_CHANGED, TUIConstants.TUIContact.EVENT_SUB_KEY_FRIEND_REMARK_CHANGED, this);
+        // 清空群消息通知
+        TUICore.registerEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_CLEAR_MESSAGE, this);
     }
 
     @Override
@@ -138,6 +138,12 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
                         break;
                     }
                 }
+            } else if (TextUtils.equals(subKey, TUIConstants.TUIGroup.EVENT_SUB_KEY_CLEAR_MESSAGE)) {
+                String groupId = (String) getOrDefault(param.get(TUIConstants.TUIGroup.GROUP_ID), "");
+                ConversationEventListener eventListener = getConversationEventListener();
+                if (eventListener != null) {
+                    eventListener.clearConversationMessage(groupId, true);
+                }
             }
         } else if (key.equals(TUIConstants.TUIContact.EVENT_FRIEND_INFO_CHANGED)) {
             if (subKey.equals(TUIConstants.TUIContact.EVENT_SUB_KEY_FRIEND_REMARK_CHANGED)) {
@@ -207,6 +213,10 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
         });
     }
 
+    public void setConversationEventListener(ConversationEventListener conversationManagerKit) {
+        this.conversationEventListener = new WeakReference<>(conversationManagerKit);
+    }
+
     public ConversationEventListener getConversationEventListener() {
         if (conversationEventListener != null) {
             return conversationEventListener.get();
@@ -214,7 +224,7 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
         return null;
     }
 
-    public void setConversationEventListener(ConversationEventListener conversationManagerKit) {
-        this.conversationEventListener = new WeakReference<>(conversationManagerKit);
+    public static Context getAppContext() {
+        return appContext;
     }
 }

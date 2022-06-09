@@ -16,9 +16,9 @@ import java.util.List;
 
 public class ActionsGridViewAdapter extends BaseAdapter {
 
-    private final Context context;
+    private Context context;
 
-    private final List<InputMoreActionUnit> baseActions;
+    private List<InputMoreActionUnit> baseActions;
 
     public ActionsGridViewAdapter(Context context, List<InputMoreActionUnit> baseActions) {
         this.context = context;

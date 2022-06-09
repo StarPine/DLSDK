@@ -11,8 +11,8 @@ import com.tencent.qcloud.tuicore.TUIConstants;
 
 public class SoftKeyBoardUtil {
 
-    private static final SharedPreferences preferences = TUIConfig.getAppContext().getSharedPreferences(TUIConstants.TUIChat.UI_PARAMS, Context.MODE_PRIVATE);
     private static int softKeyBoardHeight;
+    private static SharedPreferences preferences = TUIConfig.getAppContext().getSharedPreferences(TUIConstants.TUIChat.UI_PARAMS, Context.MODE_PRIVATE);
 
     public static int getSoftKeyBoardHeight() {
         if (softKeyBoardHeight != 0)
@@ -26,7 +26,7 @@ public class SoftKeyBoardUtil {
     }
 
     public static int[] getScreenSize() {
-        int[] size = new int[2];
+        int size[] = new int[2];
         DisplayMetrics dm = TUIConfig.getAppContext().getResources().getDisplayMetrics();
         size[0] = dm.widthPixels;
         size[1] = dm.heightPixels;

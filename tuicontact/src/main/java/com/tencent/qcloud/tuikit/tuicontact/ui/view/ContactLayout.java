@@ -1,11 +1,12 @@
 package com.tencent.qcloud.tuikit.tuicontact.ui.view;
 
 import android.content.Context;
+
+import androidx.annotation.Nullable;
+
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
-
-import androidx.annotation.Nullable;
 
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
@@ -18,7 +19,6 @@ public class ContactLayout extends LinearLayout implements IContactLayout {
 
     private static final String TAG = ContactLayout.class.getSimpleName();
 
-    private TitleBarLayout mTitleBar;
     private ContactListView mContactListView;
 
     private ContactPresenter presenter;
@@ -44,12 +44,6 @@ public class ContactLayout extends LinearLayout implements IContactLayout {
 
     private void init() {
         inflate(getContext(), R.layout.contact_layout, this);
-
-        mTitleBar = findViewById(R.id.contact_titlebar);
-        mTitleBar.setTitle(getResources().getString(R.string.contact_title), ITitleBarLayout.Position.MIDDLE);
-        mTitleBar.getLeftGroup().setVisibility(View.GONE);
-        mTitleBar.getRightIcon().setImageResource(R.drawable.conversation_more);
-
         mContactListView = findViewById(R.id.contact_listview);
     }
 
@@ -66,7 +60,7 @@ public class ContactLayout extends LinearLayout implements IContactLayout {
 
     @Override
     public TitleBarLayout getTitleBar() {
-        return mTitleBar;
+        return null;
     }
 
     @Override

@@ -23,7 +23,7 @@ class CustomGestureDetector {
     private boolean mIsDragging;
     private float mLastTouchX;
     private float mLastTouchY;
-    private final OnGestureListener mListener;
+    private OnGestureListener mListener;
 
     CustomGestureDetector(Context context, OnGestureListener listener) {
         final ViewConfiguration configuration = ViewConfiguration

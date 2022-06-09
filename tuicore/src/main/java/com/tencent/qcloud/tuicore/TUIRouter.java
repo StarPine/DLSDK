@@ -28,15 +28,18 @@ class TUIRouter {
     private static final String TAG = TUIRouter.class.getSimpleName();
 
     private static final TUIRouter router = new TUIRouter();
-    private static final Map<String, String> routerMap = new HashMap<>();
-    private static Context context;
-    private static boolean initialized = false;
-
-    private TUIRouter() {
-    }
 
     public static TUIRouter getInstance() {
         return router;
+    }
+
+    private static final Map<String, String> routerMap = new HashMap<>();
+
+    private static Context context;
+
+    private static boolean initialized = false;
+
+    private TUIRouter() {
     }
 
     public synchronized static void init(Context context) {
@@ -50,31 +53,6 @@ class TUIRouter {
         }
         initRouter(context);
         initialized = true;
-    }
-
-    public static void initRouter(Context context) {
-        ActivityInfo[] activityInfos = null;
-        List<String> activityNames = new ArrayList<>();
-        PackageManager packageManager = context.getPackageManager();
-        try {
-            PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), PackageManager.GET_ACTIVITIES);
-            activityInfos = packageInfo.activities;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        if (activityInfos != null) {
-            for (ActivityInfo activityInfo : activityInfos) {
-                activityNames.add(activityInfo.name);
-            }
-        }
-        for (String activityName : activityNames) {
-            String[] splitStr = activityName.split("\\.");
-            routerMap.put(splitStr[splitStr.length - 1], activityName);
-        }
-    }
-
-    public static Context getContext() {
-        return context;
     }
 
     public Navigation setDestination(String path) {
@@ -269,13 +247,13 @@ class TUIRouter {
             return this;
         }
 
-        public Intent getIntent() {
-            return this.intent;
-        }
-
         public Navigation setIntent(Intent intent) {
             this.intent = intent;
             return this;
+        }
+
+        public Intent getIntent() {
+            return this.intent;
         }
 
         // 使用默认的 ApplicationContext 启动 Activity
@@ -353,5 +331,31 @@ class TUIRouter {
                 e.printStackTrace();
             }
         }
+    }
+
+
+    public static void initRouter(Context context) {
+        ActivityInfo[] activityInfos = null;
+        List<String> activityNames = new ArrayList<>();
+        PackageManager packageManager = context.getPackageManager();
+        try {
+            PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), PackageManager.GET_ACTIVITIES);
+            activityInfos = packageInfo.activities;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        if (activityInfos != null) {
+            for (ActivityInfo activityInfo : activityInfos) {
+                activityNames.add(activityInfo.name);
+            }
+        }
+        for (String activityName : activityNames) {
+            String[] splitStr = activityName.split("\\.");
+            routerMap.put(splitStr[splitStr.length - 1], activityName);
+        }
+    }
+
+    public static Context getContext() {
+        return context;
     }
 }

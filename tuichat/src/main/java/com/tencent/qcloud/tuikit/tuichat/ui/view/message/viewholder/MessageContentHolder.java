@@ -1,7 +1,8 @@
 package com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -9,15 +10,24 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.component.gatherimage.UserIconView;
+import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuicore.util.ScreenUtil;
+import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
+import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.GroupMessageReadMembersInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
+import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class MessageContentHolder extends MessageEmptyHolder {
+public abstract class MessageContentHolder extends MessageBaseHolder {
 
     public UserIconView leftUserIcon;
     public UserIconView rightUserIcon;
@@ -29,10 +39,14 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
     public TextView unreadAudioText;
 
     public boolean isForwardMode = false;
+    public boolean isMultiSelectMode = false;
+
+    private List<TUIMessageBean> mDataSource = new ArrayList<>();
+
+    protected ChatPresenter presenter;
 
     public MessageContentHolder(View itemView) {
         super(itemView);
-        rootView = itemView;
 
         leftUserIcon = itemView.findViewById(R.id.left_user_icon_view);
         rightUserIcon = itemView.findViewById(R.id.right_user_icon_view);
@@ -44,8 +58,31 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
         unreadAudioText = itemView.findViewById(R.id.audio_unread);
     }
 
+    public void setPresenter(ChatPresenter chatPresenter) {
+        this.presenter = chatPresenter;
+    }
+
+    public void setDataSource(List<TUIMessageBean> dataSource) {
+        if (dataSource == null || dataSource.isEmpty()) {
+            mDataSource = null;
+        }
+
+        List<TUIMessageBean> mediaSource = new ArrayList<>();
+        for(TUIMessageBean messageBean : dataSource) {
+            int type = messageBean.getMsgType();
+            if (type == V2TIMMessage.V2TIM_ELEM_TYPE_IMAGE || type == V2TIMMessage.V2TIM_ELEM_TYPE_VIDEO) {
+                mediaSource.add(messageBean);
+            }
+        }
+        mDataSource = mediaSource;
+    }
+
+    public List<TUIMessageBean> getDataSource() {
+        return mDataSource;
+    }
+
     @Override
-    public void layoutViews(final MessageInfo msg, final int position) {
+    public void layoutViews(final TUIMessageBean msg, final int position) {
         super.layoutViews(msg, position);
 
         if (isForwardMode) {
@@ -65,15 +102,16 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
             leftUserIcon.setDefaultImageResId(properties.getAvatar());
             rightUserIcon.setDefaultImageResId(properties.getAvatar());
         } else {
-            leftUserIcon.setDefaultImageResId(R.drawable.default_user_icon);
-            rightUserIcon.setDefaultImageResId(R.drawable.default_user_icon);
+            leftUserIcon.setDefaultImageResId(TUIThemeManager.getAttrResId(leftUserIcon.getContext(), R.attr.core_default_user_icon));
+            rightUserIcon.setDefaultImageResId(TUIThemeManager.getAttrResId(rightUserIcon.getContext(), R.attr.core_default_user_icon));
         }
         if (properties.getAvatarRadius() != 0) {
             leftUserIcon.setRadius(properties.getAvatarRadius());
             rightUserIcon.setRadius(properties.getAvatarRadius());
         } else {
-            leftUserIcon.setRadius(5);
-            rightUserIcon.setRadius(5);
+            int radius = ScreenUtil.dip2px(4);
+            leftUserIcon.setRadius(radius);
+            rightUserIcon.setRadius(radius);
         }
         if (properties.getAvatarSize() != null && properties.getAvatarSize().length == 2) {
             ViewGroup.LayoutParams params = leftUserIcon.getLayoutParams();
@@ -114,11 +152,7 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
             usernameText.setTextColor(properties.getNameFontColor());
         }
         if (properties.getNameFontSize() != 0) {
-            try{
-                usernameText.setTextSize((float) properties.getNameFontSize());
-            }catch (Exception e){
-
-            }
+            usernameText.setTextSize(properties.getNameFontSize());
         }
         // 聊天界面设置头像和昵称
         if (!TextUtils.isEmpty(msg.getNameCard())) {
@@ -128,7 +162,7 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
         } else if (!TextUtils.isEmpty(msg.getNickName())) {
             usernameText.setText(msg.getNickName());
         } else {
-            usernameText.setText(msg.getFromUser());
+            usernameText.setText(msg.getSender());
         }
 
         if (!TextUtils.isEmpty(msg.getFaceUrl())) {
@@ -152,8 +186,8 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
             sendingProgress.setVisibility(View.GONE);
         } else {
             if (msg.isSelf()) {
-                if (msg.getStatus() == MessageInfo.MSG_STATUS_SEND_FAIL
-                        || msg.getStatus() == MessageInfo.MSG_STATUS_SEND_SUCCESS
+                if (msg.getStatus() == TUIMessageBean.MSG_STATUS_SEND_FAIL
+                        || msg.getStatus() == TUIMessageBean.MSG_STATUS_SEND_SUCCESS
                         || msg.isPeerRead()) {
                     sendingProgress.setVisibility(View.GONE);
                 } else {
@@ -165,7 +199,7 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
         }
 
         if (isForwardMode) {
-            msgContentFrame.setBackgroundResource(R.drawable.chat_left_live_group_bg);
+            msgContentFrame.setBackgroundResource(TUIThemeManager.getAttrResId(itemView.getContext(), R.attr.chat_bubble_other_bg));
             statusImage.setVisibility(View.GONE);
         } else {
             //// 聊天气泡设置
@@ -173,62 +207,87 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
                 if (properties.getRightBubble() != null && properties.getRightBubble().getConstantState() != null) {
                     msgContentFrame.setBackground(properties.getRightBubble().getConstantState().newDrawable());
                 } else {
-                    msgContentFrame.setBackgroundResource(R.drawable.chat_bubble_myself);
+                    msgContentFrame.setBackgroundResource(TUIThemeManager.getAttrResId(itemView.getContext(), R.attr.chat_bubble_self_bg));
                 }
             } else {
                 if (properties.getLeftBubble() != null && properties.getLeftBubble().getConstantState() != null) {
                     msgContentFrame.setBackground(properties.getLeftBubble().getConstantState().newDrawable());
                     msgContentFrame.setLayoutParams(msgContentFrame.getLayoutParams());
                 } else {
-                    msgContentFrame.setBackgroundResource(R.drawable.chat_other_bg);
+                    msgContentFrame.setBackgroundResource(TUIThemeManager.getAttrResId(itemView.getContext(), R.attr.chat_bubble_other_bg));
                 }
             }
 
             //// 聊天气泡的点击事件处理
-            if (onItemLongClickListener != null) {
+            if (onItemClickListener != null) {
                 msgContentFrame.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        onItemLongClickListener.onMessageLongClick(v, position, msg);
+                        onItemClickListener.onMessageLongClick(v, position, msg);
                         return true;
                     }
                 });
                 leftUserIcon.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        onItemLongClickListener.onUserIconClick(view, position, msg);
+                        onItemClickListener.onUserIconClick(view, position, msg);
+                    }
+                });
+                leftUserIcon.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        onItemClickListener.onUserIconLongClick(view, position, msg);
+                        return true;
                     }
                 });
                 rightUserIcon.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        onItemLongClickListener.onUserIconClick(view, position, msg);
+                        onItemClickListener.onUserIconClick(view, position, msg);
                     }
                 });
             }
 
             //// 发送状态的设置
-            if (msg.getStatus() == MessageInfo.MSG_STATUS_SEND_FAIL) {
+            if (msg.getStatus() == TUIMessageBean.MSG_STATUS_SEND_FAIL) {
                 statusImage.setVisibility(View.VISIBLE);
                 msgContentFrame.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (onItemLongClickListener != null) {
-                            onItemLongClickListener.onMessageLongClick(msgContentFrame, position, msg);
+                        if (onItemClickListener != null) {
+                            onItemClickListener.onMessageLongClick(msgContentFrame, position, msg);
+                        }
+                    }
+                });
+                statusImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (onItemClickListener != null) {
+                            onItemClickListener.onSendFailBtnClick(statusImage, position, msg);
                         }
                     }
                 });
             } else {
-                msgContentFrame.setOnClickListener(null);
+                msgContentFrame.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (onItemClickListener != null) {
+                            onItemClickListener.onMessageClick(msgContentFrame, position, msg);
+                        }
+                    }
+                });
                 statusImage.setVisibility(View.GONE);
             }
         }
+
+        int padding = msgContentFrame.getResources().getDimensionPixelSize(R.dimen.chat_item_padding_bottom);
+        msgContentFrame.setPadding(padding, padding, padding, padding);
 
         if (isForwardMode) {
             msgContentLinear.removeView(msgContentFrame);
             msgContentLinear.addView(msgContentFrame);
         } else {
-            //// 左右边的消息需要调整一下内容的位置
+            // 左右边的消息需要调整一下内容的位置，使已读标签位置显示正确
             if (msg.isSelf()) {
                 msgContentLinear.removeView(msgContentFrame);
                 msgContentLinear.addView(msgContentFrame);
@@ -237,10 +296,15 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
                 msgContentLinear.addView(msgContentFrame, 0);
             }
         }
+
         if (rightGroupLayout != null) {
             rightGroupLayout.setVisibility(View.VISIBLE);
         }
         msgContentLinear.setVisibility(View.VISIBLE);
+
+        // clear isReadText status
+        isReadText.setTextColor(isReadText.getResources().getColor(R.color.text_gray1));
+        isReadText.setOnClickListener(null);
 
         if (isForwardMode) {
             isReadText.setVisibility(View.GONE);
@@ -248,19 +312,42 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
         } else {
             //// 对方已读标识的设置
             if (TUIChatConfigs.getConfigs().getGeneralConfig().isShowRead()) {
-                if (msg.isSelf() && MessageInfo.MSG_STATUS_SEND_SUCCESS == msg.getStatus()) {
+                if (msg.isSelf() && TUIMessageBean.MSG_STATUS_SEND_SUCCESS == msg.getStatus()) {
                     if (msg.isGroup()) {
-                        isReadText.setVisibility(View.GONE);
+                        if (!msg.isNeedReadReceipt()) {
+                            isReadText.setVisibility(View.GONE);
+                        } else {
+                            isReadText.setVisibility(View.VISIBLE);
+                            if (msg.isAllRead()) {
+                                isReadText.setText(R.string.has_all_read);
+                            } else if (msg.isUnread()) {
+                                isReadText.setTextColor(isReadText.getResources().getColor(TUIThemeManager.getAttrResId(isReadText.getContext(), R.attr.chat_read_receipt_text_color)));
+                                isReadText.setText(R.string.unread);
+                                isReadText.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        startShowUnread(msg);
+                                    }
+                                });
+                            } else {
+                                long readCount = msg.getReadCount();
+                                if (readCount > 0) {
+                                    isReadText.setText(isReadText.getResources().getString(R.string.someone_has_read, readCount));
+                                    isReadText.setTextColor(isReadText.getResources().getColor(TUIThemeManager.getAttrResId(isReadText.getContext(), R.attr.chat_read_receipt_text_color)));
+                                    isReadText.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            startShowUnread(msg);
+                                        }
+                                    });
+                                }
+                            }
+                        }
                     } else {
                         isReadText.setVisibility(View.VISIBLE);
-                        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) isReadText.getLayoutParams();
-                        params.gravity = Gravity.CENTER_VERTICAL;
-                        isReadText.setLayoutParams(params);
                         if (msg.isPeerRead()) {
-                            isReadText.setBackgroundResource(R.drawable.custom_read_backdrop);
                             isReadText.setText(R.string.has_read);
                         } else {
-                            isReadText.setBackgroundResource(R.drawable.custom_unread_backdrop);
                             isReadText.setText(R.string.unread);
                         }
                     }
@@ -277,5 +364,14 @@ public abstract class MessageContentHolder extends MessageEmptyHolder {
         layoutVariableViews(msg, position);
     }
 
-    public abstract void layoutVariableViews(final MessageInfo msg, final int position);
+    public abstract void layoutVariableViews(final TUIMessageBean msg, final int position);
+
+    public void onRecycled() {}
+
+    public void startShowUnread(TUIMessageBean messageBean) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(TUIChatConstants.MESSAGE_BEAN, messageBean);
+        TUICore.startActivity("GroupMessageReceiptActivity", bundle);
+    }
+
 }

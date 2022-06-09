@@ -13,7 +13,7 @@ public class CustomFaceGroup {
     private String faceIconName;
     private int pageRowCount;
     private int pageColumnCount;
-    private final ArrayList<CustomFace> array = new ArrayList<>();
+    private ArrayList<CustomFace> array = new ArrayList<>();
 
     /**
      * 增加一个表情

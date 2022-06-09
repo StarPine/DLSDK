@@ -80,12 +80,12 @@ public class InputMoreActionUnit {
         this.onClickListener = onClickListener;
     }
 
-    public View getUnitView() {
-        return unitView;
-    }
-
     public void setUnitView(View unitView) {
         this.unitView = unitView;
+    }
+
+    public View getUnitView() {
+        return unitView;
     }
 
     // 注册者决定是否显示该 Action

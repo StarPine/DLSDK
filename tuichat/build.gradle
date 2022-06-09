@@ -22,11 +22,13 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    //模块化设计方案 sourceSets配置
+
+    // 主题资源文件夹
     sourceSets {
-        if(!rootProject.ext.BuildSdkPlayfun){
-            //替换java文件 合并替换debug、release下的相同代码文件
-            main.java.srcDirs=['src/main/java', 'src/playChat/java']
+        main {
+            res.srcDirs += "src/main/res-light"
+            res.srcDirs += "src/main/res-lively"
+            res.srcDirs += "src/main/res-serious"
         }
     }
 }
@@ -44,5 +46,4 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.7'
 
     api project(':tuicore')
-    implementation project(':mvvmhabit')
 }

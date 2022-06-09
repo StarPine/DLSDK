@@ -4,34 +4,19 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class ConversationBean implements Parcelable {
-    //3、自定义类型中必须含有一个名称为CREATOR的静态成员，该成员对象要求实现Parcelable.Creator接口及其方法
-    public static final Creator<ConversationBean> CREATOR = new Creator<ConversationBean>() {
-        @Override
-        public ConversationBean createFromParcel(Parcel source) {
-            //从Parcel中读取数据
-            //此处read顺序依据write顺序
-            return new ConversationBean(source.readString(), source.readInt(),source.readString());
-        }
-        @Override
-        public ConversationBean[] newArray(int size) {
-
-            return new ConversationBean[size];
-        }
-
-    };
     private String conversationID;
     private int isGroup;
     private String title;
 
     public ConversationBean()
     {}
+
     public ConversationBean(String conversationID, int isGroup, String title)
     {
         this.conversationID = conversationID;
         this.isGroup = isGroup;
         this.title = title;
     }
-
     public String getConversationID()
     {
         return this.conversationID;
@@ -64,7 +49,6 @@ public class ConversationBean implements Parcelable {
 
         return 0;
     }
-
     //2、实现Parcelable接口的public void writeToParcel(Parcel dest, int flags)方法
     //通常进行重写
     @Override
@@ -74,4 +58,19 @@ public class ConversationBean implements Parcelable {
         dest.writeInt(isGroup);
         dest.writeString(title);
     }
+    //3、自定义类型中必须含有一个名称为CREATOR的静态成员，该成员对象要求实现Parcelable.Creator接口及其方法
+    public static final Creator<ConversationBean> CREATOR = new Creator<ConversationBean>() {
+        @Override
+        public ConversationBean createFromParcel(Parcel source) {
+            //从Parcel中读取数据
+            //此处read顺序依据write顺序
+            return new ConversationBean(source.readString(), source.readInt(),source.readString());
+        }
+        @Override
+        public ConversationBean[] newArray(int size) {
+
+            return new ConversationBean[size];
+        }
+
+    };
 }

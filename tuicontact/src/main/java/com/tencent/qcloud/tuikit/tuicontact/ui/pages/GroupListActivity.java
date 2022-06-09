@@ -10,11 +10,11 @@ import androidx.annotation.Nullable;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
-import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
-import com.tencent.qcloud.tuikit.tuicontact.ui.view.ContactListView;
 import com.tencent.qcloud.tuikit.tuicontact.util.ContactUtils;
+import com.tencent.qcloud.tuikit.tuicontact.ui.view.ContactListView;
+import com.tencent.qcloud.tuikit.tuicontact.R;
 
 public class GroupListActivity extends BaseLightActivity {
 
@@ -77,9 +77,9 @@ public class GroupListActivity extends BaseLightActivity {
     public void loadDataSource() {
         presenter = new ContactPresenter();
         presenter.setFriendListListener();
+        mListView.setIsGroupList(true);
         mListView.setPresenter(presenter);
         presenter.setContactListView(mListView);
-
         mListView.loadDataSource(ContactListView.DataSource.GROUP_LIST);
     }
 

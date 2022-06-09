@@ -2,6 +2,7 @@ package com.tencent.qcloud.tuikit.tuichat.bean;
 
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMGroupAtInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 
 import java.io.Serializable;
 import java.util.List;
@@ -22,7 +23,7 @@ public class ChatInfo implements Serializable {
     private String id;
     private String groupType;
     private boolean isTopChat;
-    private MessageInfo locateMessage;
+    private TUIMessageBean locateMessage;
 
     /**
      * 草稿
@@ -124,23 +125,23 @@ public class ChatInfo implements Serializable {
     }
 
     public void setAtInfoList(List<V2TIMGroupAtInfo> atInfoList) {
-        ChatInfo.atInfoList = atInfoList;
+        this.atInfoList = atInfoList;
     }
 
-    public MessageInfo getLocateMessage() {
-        return locateMessage;
-    }
-
-    public void setLocateMessage(MessageInfo locateMessage) {
+    public void setLocateMessage(TUIMessageBean locateMessage) {
         this.locateMessage = locateMessage;
     }
 
-    public DraftInfo getDraft() {
-        return this.draft;
+    public TUIMessageBean getLocateMessage() {
+        return locateMessage;
     }
 
     public void setDraft(DraftInfo draft) {
         this.draft = draft;
+    }
+
+    public DraftInfo getDraft() {
+        return this.draft;
     }
 
 }

@@ -3,6 +3,7 @@ package com.tencent.qcloud.tuikit.tuichat.component.video.proxy;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
@@ -10,7 +11,7 @@ import java.io.IOException;
 
 public class SystemMediaPlayerWrapper implements IPlayer {
 
-    private final MediaPlayer mMediaPlayer;
+    private MediaPlayer mMediaPlayer;
 
     public SystemMediaPlayerWrapper() {
         mMediaPlayer = new MediaPlayer();
@@ -42,6 +43,16 @@ public class SystemMediaPlayerWrapper implements IPlayer {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 l.onCompletion(SystemMediaPlayerWrapper.this);
+            }
+        });
+    }
+
+    @Override
+    public void setOnSeekCompleteListener(final OnSeekCompleteListener l) {
+        mMediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
+            @Override
+            public void onSeekComplete(MediaPlayer mediaPlayer) {
+                l.OnSeekComplete(SystemMediaPlayerWrapper.this);
             }
         });
     }
@@ -120,6 +131,25 @@ public class SystemMediaPlayerWrapper implements IPlayer {
     @Override
     public int getVideoHeight() {
         return mMediaPlayer.getVideoHeight();
+    }
+
+    @Override
+    public void seekTo(int progress) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            mMediaPlayer.seekTo(progress, MediaPlayer.SEEK_CLOSEST);
+        } else {
+            mMediaPlayer.seekTo(progress);
+        }
+    }
+
+    @Override
+    public int getCurrentPosition() {
+        return mMediaPlayer.getCurrentPosition();
+    }
+
+    @Override
+    public int getDuration() {
+        return mMediaPlayer.getDuration();
     }
 
 }

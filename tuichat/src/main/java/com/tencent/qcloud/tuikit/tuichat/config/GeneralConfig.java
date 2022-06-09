@@ -10,11 +10,12 @@ public class GeneralConfig {
     private String appCacheDir;
     private int audioRecordMaxTime = DEFAULT_AUDIO_RECORD_MAX_TIME;
     private int videoRecordMaxTime = DEFAULT_VIDEO_RECORD_MAX_TIME;
-    private boolean showRead = true;
+    private boolean showRead = false;
     private String userNickname = "";
     private boolean excludedFromUnreadCount;
     private boolean excludedFromLastMessage;
-    private String userFaceUrl = "";
+
+    private boolean isAndroidPrivateRing;
 
     public String getUserNickname() {
         return userNickname;
@@ -31,6 +32,8 @@ public class GeneralConfig {
     public void setUserFaceUrl(String userFaceUrl) {
         this.userFaceUrl = userFaceUrl;
     }
+
+    private String userFaceUrl = "";
 
     /**
      * 获取TUIKit缓存路径
@@ -124,5 +127,13 @@ public class GeneralConfig {
 
     public void setExcludedFromLastMessage(boolean excludedFromLastMessage) {
         this.excludedFromLastMessage = excludedFromLastMessage;
+    }
+
+    public boolean isAndroidPrivateRing() {
+        return isAndroidPrivateRing;
+    }
+
+    public void setAndroidPrivateRing(boolean ring) {
+        this.isAndroidPrivateRing = ring;
     }
 }

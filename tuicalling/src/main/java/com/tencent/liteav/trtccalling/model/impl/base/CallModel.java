@@ -11,6 +11,20 @@ import java.util.List;
  */
 public class CallModel implements Cloneable, Serializable {
 
+    private static final String TAG = CallModel.class.getSimpleName();
+
+    public static String KEY_VERSION     = "version";
+    public static String KEY_PLATFORM    = "platform";
+    public static String KEY_BUSINESS_ID = "businessID";
+    public static String KEY_DATA        = "data";
+    public static String KEY_ROOM_ID     = "room_id";
+    public static String KEY_CMD         = "cmd";
+    public static String KEY_USERIDS     = "userIDs";
+    public static String KEY_MESSAGE     = "message";
+    public static String KEY_CALLACTION  = "call_action";
+    public static String KEY_CALLID      = "callid";
+    public static String KEY_USER        = "user";
+
     public static final int    VALUE_VERSION             = 4;
     public static final String VALUE_BUSINESS_ID         = "av_call";           //calling场景
     public static final String VALUE_PLATFORM            = "Android";           //当前平台
@@ -19,6 +33,8 @@ public class CallModel implements Cloneable, Serializable {
     public static final String VALUE_CMD_HAND_UP         = "hangup";            //挂断
     public static final String VALUE_CMD_SWITCH_TO_AUDIO = "switchToAudio";     //切换为语音通话
     public static final String VALUE_MSG_LINE_BUSY       = "lineBusy";          //忙线
+    public static final String VALUE_MSG_SYNC_INFO       = "sync_info";          //C2C多人通话,主叫向其他人同步信息
+
     /**
      * 系统错误
      */
@@ -55,27 +71,22 @@ public class CallModel implements Cloneable, Serializable {
      * 接听电话
      */
     public static final int VIDEO_CALL_ACTION_ACCEPT          = 7;
+
     /**
      * 切换语音通话
      */
     public static final int VIDEO_CALL_SWITCH_TO_AUDIO_CALL = 8;
+
     /**
      * 接受切换为语音通话
      */
     public static final int VIDEO_CALL_ACTION_ACCEPT_SWITCH_TO_AUDIO = 9;
+
     /**
      * 拒绝切换为语音通话
      */
     public static final int VIDEO_CALL_ACTION_REJECT_SWITCH_TO_AUDIO = 10;
-    private static final String TAG = CallModel.class.getSimpleName();
-    public static String KEY_VERSION     = "version";
-    public static String KEY_PLATFORM    = "platform";
-    public static String KEY_BUSINESS_ID = "businessID";
-    public static String KEY_DATA        = "data";
-    public static String KEY_ROOM_ID     = "room_id";
-    public static String KEY_CMD         = "cmd";
-    public static String KEY_USERIDS     = "userIDs";
-    public static String KEY_MESSAGE     = "message";
+
     //兼容老版本字段，待废弃字段
     public static String SIGNALING_EXTRA_KEY_CALL_TYPE         = "call_type";
     public static String SIGNALING_EXTRA_KEY_ROOM_ID           = "room_id";

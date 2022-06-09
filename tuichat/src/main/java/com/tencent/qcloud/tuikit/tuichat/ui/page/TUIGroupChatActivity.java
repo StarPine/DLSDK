@@ -11,7 +11,7 @@ import com.tencent.qcloud.tuikit.tuichat.presenter.GroupChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
-public class TUIGroupChatActivity extends TUIBaseChatActivity{
+public class TUIGroupChatActivity extends TUIBaseChatActivity {
     private static final String TAG = TUIC2CChatActivity.class.getSimpleName();
 
     private TUIGroupChatFragment chatFragment;
@@ -32,6 +32,7 @@ public class TUIGroupChatActivity extends TUIBaseChatActivity{
         bundle.putSerializable(TUIChatConstants.CHAT_INFO, groupInfo);
         chatFragment.setArguments(bundle);
         presenter = new GroupChatPresenter();
+        presenter.initListener();
         chatFragment.setPresenter(presenter);
         getSupportFragmentManager().beginTransaction().replace(R.id.empty_view, chatFragment).commitAllowingStateLoss();
     }

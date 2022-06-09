@@ -20,12 +20,12 @@ import java.util.ArrayList;
 
 public class EmojiIndicatorView extends LinearLayout {
 
-    private final Context mContext;
+    private Context mContext;
     private ArrayList<ImageView> mImageViews;
-    private final Bitmap bmpSelect;
-    private final Bitmap bmpNomal;
-    private final int mHeight = 16;
-    private final int mMaxHeight;
+    private Bitmap bmpSelect;
+    private Bitmap bmpNomal;
+    private int mHeight = 16;
+    private int mMaxHeight;
     private AnimatorSet mPlayToAnimatorSet;
     private AnimatorSet mPlayByInAnimatorSet;
     private AnimatorSet mPlayByOutAnimatorSet;

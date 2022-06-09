@@ -9,11 +9,11 @@ public class BackgroundTasks {
     private static final BackgroundTasks instance = new BackgroundTasks();
     private final Handler handler = new Handler(Looper.getMainLooper());
 
-    private BackgroundTasks() {}
-
     public static BackgroundTasks getInstance() {
         return instance;
     }
+
+    private BackgroundTasks() {}
 
     public void runOnUiThread(Runnable runnable) {
         handler.post(runnable);

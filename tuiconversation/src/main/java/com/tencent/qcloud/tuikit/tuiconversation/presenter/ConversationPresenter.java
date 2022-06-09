@@ -1,5 +1,6 @@
 package com.tencent.qcloud.tuikit.tuiconversation.presenter;
 
+import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.tencent.qcloud.tuicore.TUIConstants;
@@ -9,8 +10,8 @@ import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationService;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.interfaces.ConversationEventListener;
 import com.tencent.qcloud.tuikit.tuiconversation.model.ConversationProvider;
-import com.tencent.qcloud.tuikit.tuiconversation.ui.interfaces.IConversationListAdapter;
 import com.tencent.qcloud.tuikit.tuiconversation.util.ConversationUtils;
+import com.tencent.qcloud.tuikit.tuiconversation.ui.interfaces.IConversationListAdapter;
 import com.tencent.qcloud.tuikit.tuiconversation.util.TUIConversationLog;
 import com.tencent.qcloud.tuikit.tuiconversation.util.TUIConversationUtils;
 
@@ -24,11 +25,16 @@ public class ConversationPresenter {
     private static final String TAG = ConversationPresenter.class.getSimpleName();
 
     private final static int GET_CONVERSATION_COUNT = 100;
-    private final ConversationProvider provider;
-    private final List<ConversationInfo> loadedConversationInfoList = new ArrayList<>();
+
     ConversationEventListener conversationEventListener;
+
+    private final ConversationProvider provider;
+
     private IConversationListAdapter adapter;
-    private int totalUnreadCount;
+
+    private final List<ConversationInfo> loadedConversationInfoList = new ArrayList<>();
+
+    private long totalUnreadCount;
 
     public ConversationPresenter() {
         provider = new ConversationProvider();
@@ -39,6 +45,11 @@ public class ConversationPresenter {
             @Override
             public void deleteConversation(String chatId, boolean isGroup) {
                 ConversationPresenter.this.deleteConversation(chatId, isGroup);
+            }
+
+            @Override
+            public void clearConversationMessage(String chatId, boolean isGroup) {
+                ConversationPresenter.this.clearConversationMessage(chatId, isGroup);
             }
 
             @Override
@@ -57,7 +68,7 @@ public class ConversationPresenter {
             }
 
             @Override
-            public int getUnreadTotal() {
+            public long getUnreadTotal() {
                 return totalUnreadCount;
             }
 
@@ -278,7 +289,7 @@ public class ConversationPresenter {
      *
      * @param unreadTotal
      */
-    public void updateUnreadTotal(int unreadTotal) {
+    public void updateUnreadTotal(long unreadTotal) {
         TUIConversationLog.i(TAG, "updateUnreadTotal:" + unreadTotal);
         totalUnreadCount = unreadTotal;
         HashMap<String, Object> param = new HashMap<>();
@@ -400,6 +411,20 @@ public class ConversationPresenter {
         }
 
         provider.clearHistoryMessage(conversation.getId(), conversation.isGroup(), new IUIKitCallback<Void>() {
+            @Override
+            public void onSuccess(Void data) {
+
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+
+            }
+        });
+    }
+
+    public void clearConversationMessage(String chatId, boolean isGroup) {
+        provider.clearHistoryMessage(chatId, isGroup, new IUIKitCallback<Void>() {
             @Override
             public void onSuccess(Void data) {
 

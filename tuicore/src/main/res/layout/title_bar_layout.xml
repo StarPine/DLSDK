@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:id="@+id/page_title_layout"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:id="@+id/page_title_layout">
 
     <LinearLayout
         android:id="@+id/page_title_left_group"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:gravity="center_vertical"
         android:minWidth="80dp"
         android:orientation="horizontal"
@@ -16,17 +16,29 @@
 
         <ImageView
             android:id="@+id/page_title_left_icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:clickable="false"
+            android:background="?attr/core_title_bar_back_icon" />
+
+        <com.tencent.qcloud.tuicore.component.UnreadCountTextView
+            android:id="@+id/new_message_total_unread"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:clickable="false"
-            android:src="@drawable/title_bar_back" />
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:layout_marginEnd="5dp"
+            android:minWidth="18.4dp"
+            android:minHeight="18.4dp"
+            android:textColor="#ffffff"
+            android:textSize="13.4sp"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/page_title_left_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black_font_color"
+            android:textColor="?attr/core_title_bar_text_bg"
             android:gravity="center"
             android:textSize="14sp"/>
 
@@ -36,12 +48,12 @@
     <TextView
         android:id="@+id/page_title"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_weight="1"
+        android:singleLine="true"
+        android:textAlignment="center"
+        android:textColor="?attr/core_title_bar_text_bg"
         android:textSize="16.3sp"
-        android:gravity="center"
-        android:textColor="@color/black_font_color"
         android:textStyle="bold" />
 
     <LinearLayout
@@ -58,9 +70,8 @@
             android:id="@+id/page_title_right_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:gravity="right"
-            android:textColor="@color/black_font_color"
+            android:textColor="?attr/core_title_bar_text_bg"
             android:textSize="14sp"/>
 
         <ImageView
@@ -68,8 +79,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:clickable="false"
-            android:src="@drawable/ic_personal_member" />
+            android:clickable="false" />
     </LinearLayout>
 
 </RelativeLayout>

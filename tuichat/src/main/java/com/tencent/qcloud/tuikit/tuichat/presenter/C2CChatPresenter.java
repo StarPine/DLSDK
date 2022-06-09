@@ -2,39 +2,35 @@ package com.tencent.qcloud.tuikit.tuichat.presenter;
 
 import android.text.TextUtils;
 
-import com.google.gson.Gson;
-import com.tencent.coustom.CustomIMTextEntity;
-import com.tencent.coustom.IMGsonUtils;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
-import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageReceiptInfo;
+import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
+import com.tencent.qcloud.tuikit.tuichat.bean.C2CMessageReceiptInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.C2CChatEventListener;
+import com.tencent.qcloud.tuikit.tuichat.ui.view.message.MessageRecyclerView;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
+import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
 import java.util.List;
-import java.util.Map;
 
 public class C2CChatPresenter extends ChatPresenter {
     private static final String TAG = C2CChatPresenter.class.getSimpleName();
-    //临时改动
-    //彭石林临时添加
-    CustomImMessageLoadListener customImMessageLoad;
+
     private ChatInfo chatInfo;
+
     private C2CChatEventListener chatEventListener;
 
     public C2CChatPresenter() {
         super();
         TUIChatLog.i(TAG, "C2CChatPresenter Init");
-        initListener();
     }
 
     public void initListener() {
         chatEventListener = new C2CChatEventListener() {
             @Override
-            public void onReadReport(List<MessageReceiptInfo> receiptList) {
+            public void onReadReport(List<C2CMessageReceiptInfo> receiptList) {
                 C2CChatPresenter.this.onReadReport(receiptList);
             }
 
@@ -49,7 +45,7 @@ public class C2CChatPresenter extends ChatPresenter {
             }
 
             @Override
-            public void onRecvNewMessage(MessageInfo message) {
+            public void onRecvNewMessage(TUIMessageBean message) {
                 if (chatInfo == null || !TextUtils.equals(message.getUserId(), chatInfo.getId())) {
                     TUIChatLog.i(TAG, "receive a new message , not belong to current chat.");
                 } else {
@@ -66,16 +62,16 @@ public class C2CChatPresenter extends ChatPresenter {
             }
         };
         TUIChatService.getInstance().setChatEventListener(chatEventListener);
+        initMessageSender();
     }
 
     /**
      * 拉取消息
-     *
-     * @param type            向前，向后或者前后同时拉取
+     * @param type 向前，向后或者前后同时拉取
      * @param lastMessageInfo 拉取消息的起始点
      */
     @Override
-    public synchronized void loadMessage(int type, MessageInfo lastMessageInfo) {
+    public void loadMessage(int type, TUIMessageBean lastMessageInfo, IUIKitCallback<List<TUIMessageBean>> callback) {
         if (chatInfo == null || isLoading) {
             return;
         }
@@ -84,68 +80,38 @@ public class C2CChatPresenter extends ChatPresenter {
         String chatId = chatInfo.getId();
         // 向前拉取更旧的消息
         if (type == TUIChatConstants.GET_MESSAGE_FORWARD) {
-            provider.loadC2CMessage(chatId, MSG_PAGE_COUNT, lastMessageInfo, new IUIKitCallback<List<MessageInfo>>() {
+            provider.loadC2CMessage(chatId, MSG_PAGE_COUNT, lastMessageInfo, new IUIKitCallback<List<TUIMessageBean>>() {
 
                 @Override
-                public void onSuccess(List<MessageInfo> data) {
+                public void onSuccess(List<TUIMessageBean> data) {
                     TUIChatLog.i(TAG, "load c2c message success " + data.size());
                     if (lastMessageInfo == null) {
                         isHaveMoreNewMessage = false;
                     }
-                    int itemCount = data.size();
-                    for (int i = 0; i < itemCount; i++) {
-                        MessageInfo lastMsg = data.get(i);
-                        if (lastMsg != null && lastMsg.getExtra() != null) {
-                            if (isJSON2(lastMsg.getExtra().toString())) {//判断后台自定义消息体
-                                Map<String, Object> map_data = new Gson().fromJson(lastMsg.getExtra().toString(), Map.class);
-                                if (map_data != null && map_data.get("type") != null) {
-                                    if (map_data.get("type").equals("message_photo")) {//相册类型置顶
-                                        if (i != itemCount - 1) {
-                                            data.add(itemCount - 1, data.remove(i));
-                                            continue;
-                                        }
-                                    }
-                                    if (map_data.get("type").equals("chat_earnings")) {
-                                        CustomIMTextEntity customIMTextEntity = IMGsonUtils.fromJson(String.valueOf(map_data.get("data")), CustomIMTextEntity.class);
-                                        if (customIMTextEntity != null) {
-                                            String msgID = customIMTextEntity.getMsgID();
-                                            if (msgID != null) {
-                                                for (int j = 0; j < itemCount; j++) {
-                                                    MessageInfo backMsg = data.get(j);
-                                                    if (backMsg.getId().lastIndexOf(msgID) != -1) {//收益提示追加到指定文案后
-                                                        data.add(i, data.remove(j));
-                                                        break;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    TUIChatUtils.callbackOnSuccess(callback, data);
                     onMessageLoadCompleted(data, type);
                 }
 
                 @Override
                 public void onError(String module, int errCode, String errMsg) {
                     TUIChatLog.e(TAG, "load c2c message failed " + errCode + "  " + errMsg);
+                    TUIChatUtils.callbackOnError(callback, errCode, errMsg);
                 }
             });
         } else { // 向后拉更新的消息 或者 前后同时拉消息
-            loadHistoryMessageList(chatId, false, type, MSG_PAGE_COUNT, lastMessageInfo);
+            loadHistoryMessageList(chatId, false, type, MSG_PAGE_COUNT, lastMessageInfo, callback);
         }
     }
 
     // 加载消息成功之后会调用此方法
     @Override
-    protected void onMessageLoadCompleted(List<MessageInfo> data, int getType) {
+    protected void onMessageLoadCompleted(List<TUIMessageBean> data, int getType) {
         c2cReadReport(chatInfo.getId());
         processLoadedMessage(data, getType);
-        //彭石林新增
-        if(customImMessageLoad!=null){
-            customImMessageLoad.layoutLoadMessage(this);
-        }
+    }
+
+    public void setChatInfo(ChatInfo chatInfo) {
+        this.chatInfo = chatInfo;
     }
 
     @Override
@@ -153,13 +119,43 @@ public class C2CChatPresenter extends ChatPresenter {
         return chatInfo;
     }
 
-    public void setChatInfo(ChatInfo chatInfo) {
-        this.chatInfo = chatInfo;
-    }
-
     public void onFriendNameChanged(String newName) {
         if (chatNotifyHandler != null) {
             chatNotifyHandler.onFriendNameChanged(newName);
+        }
+    }
+
+    public void onReadReport(List<C2CMessageReceiptInfo> receiptList) {
+        TUIChatLog.i(TAG, "onReadReport:" + receiptList.size());
+        if (!safetyCall()) {
+            TUIChatLog.w(TAG, "onReadReport unSafetyCall");
+            return;
+        }
+        if (receiptList.size() == 0) {
+            return;
+        }
+        C2CMessageReceiptInfo max = receiptList.get(0);
+        for (C2CMessageReceiptInfo msg : receiptList) {
+            if (!TextUtils.equals(msg.getUserID(), getChatInfo().getId())) {
+                continue;
+            }
+            if (max.getTimestamp() < msg.getTimestamp()) {
+                max = msg;
+            }
+        }
+        for (int i = 0; i < loadedMessageInfoList.size(); i++) {
+            TUIMessageBean messageInfo = loadedMessageInfoList.get(i);
+            if (!TextUtils.equals(messageInfo.getUserId(), max.getUserID())) {
+                continue;
+            }
+            if (messageInfo.getMessageTime() > max.getTimestamp()) {
+                messageInfo.setPeerRead(false);
+            } else if (messageInfo.isPeerRead()) {
+                // do nothing
+            } else {
+                messageInfo.setPeerRead(true);
+                updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, i);
+            }
         }
     }
 
@@ -181,12 +177,5 @@ public class C2CChatPresenter extends ChatPresenter {
 
             }
         });
-    }
-
-    public void setCustomChatInputFragmentListener(CustomImMessageLoadListener listener){
-        this.customImMessageLoad = listener;
-    }
-    public interface CustomImMessageLoadListener{
-        void layoutLoadMessage(ChatPresenter provider);
     }
 }

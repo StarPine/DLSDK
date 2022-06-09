@@ -8,7 +8,6 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.tencent.qcloud.tuicore.component.gatherimage.SynthesizedImageView;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
 import com.tencent.qcloud.tuicore.util.ImageUtil;
@@ -16,7 +15,9 @@ import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuicore.util.ThreadHelper;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
+import com.tencent.qcloud.tuicore.component.gatherimage.SynthesizedImageView;
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationIconPresenter;
+import com.tencent.qcloud.tuikit.tuiconversation.util.ConversationUtils;
 
 import java.util.ArrayList;
 import java.util.List;

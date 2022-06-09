@@ -21,10 +21,10 @@ import com.tencent.qcloud.tuicore.util.ScreenUtil;
 @SuppressLint("AppCompatCustomView")
 public class ShadeImageView extends ImageView {
 
-    private static final SparseArray<Bitmap> sRoundBitmapArray = new SparseArray();
-    private final Paint mShadePaint = new Paint();
+    private static SparseArray<Bitmap> sRoundBitmapArray = new SparseArray();
+    private Paint mShadePaint = new Paint();
     private Bitmap mRoundBitmap;
-    private int radius = ScreenUtil.getPxByDp(5);
+    private int radius = ScreenUtil.getPxByDp(4);
 
     public ShadeImageView(Context context) {
         super(context);

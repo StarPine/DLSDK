@@ -10,13 +10,12 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
-import com.tencent.qcloud.tuicore.component.LineControllerView;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;
+import com.tencent.qcloud.tuicore.component.activities.SelectionActivity;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
-import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ConversationInfo;
@@ -25,6 +24,8 @@ import com.tencent.qcloud.tuikit.tuicontact.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
 import com.tencent.qcloud.tuikit.tuicontact.ui.view.ContactListView;
 import com.tencent.qcloud.tuikit.tuicontact.ui.view.ForwardContactSelectorAdapter;
+import com.tencent.qcloud.tuikit.tuicontact.R;
+import com.tencent.qcloud.tuicore.component.LineControllerView;
 import com.tencent.qcloud.tuikit.tuicontact.util.ContactUtils;
 
 import java.util.ArrayList;
@@ -34,22 +35,26 @@ import java.util.List;
 public class ForwardSelectGroupActivity extends BaseLightActivity {
 
     private static final String TAG = ForwardSelectGroupActivity.class.getSimpleName();
-    private final ArrayList<GroupMemberInfo> mMembers = new ArrayList<>();
-    private final ArrayList<String> mJoinTypes = new ArrayList<>();
-    private final ArrayList<String> mGroupTypeValue = new ArrayList<>();
-    private final List<String> mSelectConversationIcons = new ArrayList<>();
-    private final List<ConversationInfo> mContactDataSource = new ArrayList<>();
+
     private TitleBarLayout mTitleBar;
     private ContactListView mContactListView;
     private LineControllerView mJoinType;
+    private ArrayList<GroupMemberInfo> mMembers = new ArrayList<>();
     private int mGroupType = -1;
     private int mJoinTypeIndex = 2;
+    private ArrayList<String> mJoinTypes = new ArrayList<>();
+    private ArrayList<String> mGroupTypeValue = new ArrayList<>();
     private boolean mCreating;
     private boolean isCreateNewChat = true;
+
     private RecyclerView mForwardSelectlistView;
     private ForwardContactSelectorAdapter mAdapter;
+    private List<String> mSelectConversationIcons = new ArrayList<>();
     private RelativeLayout mForwardSelectlistViewLayout;
     private TextView mSureView;
+
+    private List<ConversationInfo> mContactDataSource = new ArrayList<>();
+
     private ContactPresenter presenter;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -202,9 +207,9 @@ public class ForwardSelectGroupActivity extends BaseLightActivity {
 
     private void showJoinTypePickerView() {
         Bundle bundle = new Bundle();
-        bundle.putString(TUIContactConstants.Selection.TITLE, getResources().getString(R.string.group_join_type));
-        bundle.putStringArrayList(TUIContactConstants.Selection.LIST, mJoinTypes);
-        bundle.putInt(TUIContactConstants.Selection.DEFAULT_SELECT_ITEM_INDEX, mJoinTypeIndex);
+        bundle.putString(SelectionActivity.Selection.TITLE, getResources().getString(R.string.group_join_type));
+        bundle.putStringArrayList(SelectionActivity.Selection.LIST, mJoinTypes);
+        bundle.putInt(SelectionActivity.Selection.DEFAULT_SELECT_ITEM_INDEX, mJoinTypeIndex);
         SelectionActivity.startListSelection(this, bundle, new SelectionActivity.OnResultReturnListener() {
             @Override
             public void onReturn(Object text) {

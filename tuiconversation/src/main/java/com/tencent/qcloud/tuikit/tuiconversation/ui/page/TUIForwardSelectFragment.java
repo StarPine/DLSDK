@@ -16,15 +16,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
-import com.tencent.qcloud.tuicore.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
-import com.tencent.qcloud.tuikit.tuiconversation.R;
-import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationConstants;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
-import com.tencent.qcloud.tuikit.tuiconversation.ui.view.ConversationListLayout;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.view.ForwardConversationSelectorAdapter;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.view.ForwardSelectLayout;
+import com.tencent.qcloud.tuikit.tuiconversation.ui.view.ConversationListLayout;
+import com.tencent.qcloud.tuikit.tuiconversation.R;
+import com.tencent.qcloud.tuicore.component.fragments.BaseFragment;
+import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationConstants;
 import com.tencent.qcloud.tuikit.tuiconversation.util.TUIConversationLog;
 
 import java.util.ArrayList;
@@ -35,18 +35,21 @@ import java.util.Map;
 
 public class TUIForwardSelectFragment extends BaseFragment {
 
-    private static final String TAG = TUIForwardSelectFragment.class.getSimpleName();
-    private final List<ConversationInfo> mContactDataSource = new ArrayList<>();
-    private final List<ConversationInfo> mAllSelectedConversations = new ArrayList<>();
     private View mBaseView;
     private TitleBarLayout mTitleBarLayout;
     private ForwardSelectLayout mForwardLayout;
+
     private RecyclerView mForwardSelectlistView;
     private ForwardConversationSelectorAdapter mAdapter;
     private List<ConversationInfo> mDataSource = new ArrayList<>();
+    private List<ConversationInfo> mContactDataSource = new ArrayList<>();
+    private List<ConversationInfo> mAllSelectedConversations = new ArrayList<>();
     private RelativeLayout mForwardSelectlistViewLayout;
     private TextView mSureView;
+
     private ConversationPresenter presenter;
+
+    private static final String TAG = TUIForwardSelectFragment.class.getSimpleName();
 
     @Nullable
     @Override

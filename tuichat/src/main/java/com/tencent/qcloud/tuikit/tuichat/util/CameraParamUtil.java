@@ -13,7 +13,7 @@ public class CameraParamUtil {
 
     private static final String TAG = CameraParamUtil.class.getSimpleName();
     private static CameraParamUtil cameraParamUtil = null;
-    private final CameraSizeComparator sizeComparator = new CameraSizeComparator();
+    private CameraSizeComparator sizeComparator = new CameraSizeComparator();
 
     private CameraParamUtil() {
 

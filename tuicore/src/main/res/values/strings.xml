@@ -1,25 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="open_file_tips">Select the app to open this file</string>
-	<string name="date_year_short">YYYY</string>
-	<string name="date_month_short">MM</string>
-	<string name="date_day_short">DD</string>
-	<string name="date_hour_short">HH</string>
-	<string name="date_minute_short">MM</string>
-	<string name="date_second_short">SS</string>
-	<string name="date_yesterday">Yesterday</string>
-	<string name="sure">OK</string>
-	<string name="cancel">Cancel</string>
-	<string name="group_apply_click_handle">Tap to Process</string>
-	<string name="text_read_unlock">Unlock the message>></string>
-	<string name="text_message">You\'ve got a message.</string>
-	<string name="im_evaluation_text1">What is your impression of him/her?</string>
-	<string name="im_evaluation_text2">More...</string>
-	<string name="default_message_content">sent a message</string>
-	<string name="default_message_content2">got a system message</string>
-	<string name="default_message_content3">sent a message</string>
-	<string name="custom_gift_right_title">got a gift</string>
-	<string name="custom_gift_left_title">gift</string>
-	<string name="text_message2">Reply to get income.</string>
+    <string name="open_file_tips">Select an app to open the file</string>
+
+    <string name="date_yesterday">Yesterday</string>
+    <string name="date_year_short">YYYY</string>
+    <string name="date_month_short">MM</string>
+    <string name="date_day_short">DD</string>
+    <string name="date_hour_short">HH</string>
+    <string name="date_minute_short">MM</string>
+    <string name="date_second_short">SS</string>
+
+    <string name="cancel">Cancel</string>
+    <string name="sure">Confirm</string>
+    <string name="core_permission_dialog_title">Authorization Request</string>
+    <string name="core_permission_dialog_positive_setting_text">Settings</string>
 
 </resources>
