@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="date_yesterday">Вчера</string>
+	<string name="date_tommorow">Завтра</string>
+	<string name="date_year">ГГГГ</string>
+	<string name="date_month">ММ</string>
+	<string name="date_day">ДД</string>
+	<string name="date_hour">ЧЧ</string>
+	<string name="date_minute">ММ</string>
+	<string name="date_second">СС</string>
+
+	<string name="date_year_short">ГГГГ</string>
+	<string name="date_month_short">ММ</string>
+	<string name="date_day_short">ДД</string>
+	<string name="date_hour_short">чч</string>
+	<string name="date_minute_short">ММ</string>
+	<string name="date_second_short">СС</string>
+
+	<string name="load_msg_error">Не удалось загрузить сообщение</string>
+
+	<string name="conversation_title">Облачный обмен мгновенными сообщениями Tencent</string>
+
+	<string name="chat_top">Липкий сверху</string>
+	<string name="chat_delete">Удалить чат</string>
+	<string name="quit_chat_top">Снять сверху</string>
+	<string name="clear_conversation_message">Четкие сообщения</string>
+
+	<string name="forward_select_new_chat">Создать новый чат</string>
+	<string name="forward_select_from_contact">Выберите из списка контактов</string>
+	<string name="titlebar_cancle">Отменить</string>
+	<string name="titlebar_close">Закрывать</string>
+	<string name="forward_alert_title">Вы уверены, что перешлете сообщение?</string>
+
+	<string name="forward_list_label">Недавние Разговоры</string>
+
+	<string name="forward_extra">[Запись чата]</string>
+	<string name="revoke_tips_you">Вы вспомнили сообщение.</string>
+	<string name="revoke_tips">вспомнил сообщение.</string>
+	<string name="revoke_tips_other">Другой пользователь отозвал сообщение.</string>
+
+	<string name="cancel">Отменить</string>
+	<string name="sure">ОК</string>
+
+	<string name="ui_at_all">[@Все]</string>
+	<string name="ui_at_me">[Вас упомянули]</string>
+	<string name="ui_at_all_me">[@Все] [Вас упомянули]</string>
+	<string name="drafts">[Черновики]</string>
+	<string name="custom_msg">[Пользовательские сообщения]</string>
+	<string name="custom_emoji">[Пользовательский смайлик]</string>
+	<string name="picture_extra">[Изображение]</string>
+	<string name="video_extra">[Видео]</string>
+	<string name="audio_extra">[Голос]</string>
+	<string name="file_extra">[Файл]</string>
+
+	<string name="add_friend">Добавить в контакты</string>
+	<string name="add_group">Добавить Групповой Чат</string>
+	<string name="start_conversation">Новый Чат</string>
+	<string name="create_group_chat">Создать Групповой Чат</string>
+	<string name="create_chat_room">Создать Комнату Чата</string>
+	<string name="create_private_group">Создать Дискуссионную группу</string>
+	<string name="hint_add_user_id">Введите идентификатор</string>
+	<string name="hint_add_wording">Введите проверочное сообщение</string>
+	<string name="contact_add">Добавь</string>
+	<string name="user_id">Идентификатор</string>
+	<string name="add_wording">Проверочное сообщение</string>
+
+	<string name="create_group">Создать группу</string>
+	<string name="etc">и т.д.</string>
+	<string name="join_group">Присоединиться к группе</string>
+	<string name="invite_joined_group">приглашают в группу.</string>
+	<string name="quit_group">Покинуть группу</string>
+	<string name="kick_group_tip">удаляется из группы.</string>
+	<string name="be_group_manager">установлен как администратор.</string>
+	<string name="cancle_group_manager">статус администратора прекращен.</string>
+	<string name="modify_group_name_is">Измените название группы на</string>
+	<string name="modify_notice">Измените уведомление группы, чтобы</string>
+	<string name="modify_shut_up_all">закрыть всех участников группы</string>
+	<string name="modify_cancel_shut_up_all">отменить, чтобы закрыть всех участников группы</string>
+	<string name="move_owner">Передача права собственности на группу для</string>
+	<string name="modify_group_avatar">изменения фотографии профиля группы.</string>
+	<string name="banned">заблокирован от публикации</string>
+	<string name="cancle_banned">разблокирован и может публиковать сейчас</string>
+
+	<string name="titlebar_mutiselect">Множественный выбор</string>
+	<string name="group_apply_click_handle">Нажмите, чтобы обработать</string>
+
+	<string name="search">Поиск</string>
+
+	<string name="live">прямая трансляция</string>
+
+	<string name="start_group_call">Начать Групповой вызов</string>
+	<string name="start_call">Начать вызов</string>
+	<string name="cancle_group_call">Отменить групповой вызов</string>
+	<string name="cancle_call">Отменить вызов</string>
+	<string name="other_line_busy">Линия занята</string>
+	<string name="reject_group_calls">Отклонить Групповой вызов</string>
+	<string name="no_response_call">Нет ответа</string>
+	<string name="accept_call">Ответил</string>
+	<string name="stop_group_call">Завершение группового вызова</string>
+	<string name="stop_call_tip">Звонок закончился. Продолжительность:</string>
+	<string name="line_busy">Линия занята</string>
+	<string name="reject_call">отклонить</string>
+	<string name="invalid_command">недопустимую команду</string>
+	<string name="reject_calls">Отклонить вызов</string>
+</resources>

@@ -39,6 +39,10 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
     private ConversationListLayout.OnItemClickListener mOnItemClickListener;
     private ConversationListLayout.OnItemLongClickListener mOnItemLongClickListener;
 
+    //彭石林新增
+    public ConversationListLayout.OnItemAvatarClickListener mOnItemAvatarClickListener;
+    private ConversationListLayout mRecycleView;
+
     //消息转发
     private final HashMap<String, Boolean> mSelectedPositions = new HashMap<>();
     private boolean isShowMultiSelectCheckBox = false;
@@ -151,6 +155,10 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
         this.mOnItemLongClickListener = listener;
     }
 
+    public void setOnItemAvatarClickListener(ConversationListLayout.OnItemAvatarClickListener listener) {
+        this.mOnItemAvatarClickListener = listener;
+    }
+
     @Override
     public void onDataSourceChanged(List<ConversationInfo> dataSource) {
         this.mDataSource = dataSource;
@@ -184,7 +192,7 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
             return new ForwardLabelHolder(view);
         } else {
             view = inflater.inflate(R.layout.conversation_list_item_layout, parent, false);
-            holder = new ConversationCommonHolder(view);
+            holder = new ConversationCommonHolder(parent.getContext(),view);
             ((ConversationCommonHolder) holder).setForwardMode(isForwardFragment);
         }
         holder.setAdapter(this);
@@ -440,6 +448,14 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
     public void onLoadingStateChanged(boolean isLoading) {
         this.mIsLoading = isLoading;
         notifyItemChanged(getItemCount() - 1);
+        //滚动到顶部
+        mRecycleView.scrollToTop();
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        mRecycleView = (ConversationListLayout) recyclerView;
     }
 
     @Override

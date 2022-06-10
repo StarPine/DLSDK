@@ -107,6 +107,11 @@ public class ConversationListLayout extends RecyclerView implements IConversatio
     }
 
     @Override
+    public void setOnItemAvatarClickListener(OnItemAvatarClickListener listener) {
+        mAdapter.setOnItemAvatarClickListener(listener);
+    }
+
+    @Override
     public void setOnItemLongClickListener(OnItemLongClickListener listener) {
         mAdapter.setOnItemLongClickListener(listener);
     }
@@ -146,10 +151,25 @@ public class ConversationListLayout extends RecyclerView implements IConversatio
         }
     }
 
+    public void scrollToTop() {
+        if (getAdapter() != null) {
+            RecyclerView.LayoutManager layoutManager = getLayoutManager();
+            int itemCount = getAdapter().getItemCount();
+            if (layoutManager instanceof LinearLayoutManager && itemCount > 0) {
+                ((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(0, 0);
+            }
+        }
+    }
+
     boolean isLoadCompleted(){
         if (presenter != null) {
             return presenter.isLoadFinished();
         }
         return false;
+    }
+
+    //彭石林新增。会话列表头像点击
+    public interface OnItemAvatarClickListener{
+        void onItemAvatarClick(View view, int position, ConversationInfo messageInfo);
     }
 }

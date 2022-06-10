@@ -1,5 +1,6 @@
 package com.tencent.qcloud.tuikit.tuiconversation.ui.view;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
@@ -42,9 +43,17 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
     public ImageView messageSending;
     public ImageView messagefailed;
     private boolean isForwardMode = false;
+    public static boolean sexMale = false;
 
-    public ConversationCommonHolder(View itemView) {
+    //彭石林修改
+    protected final ImageView certification;
+    protected final ImageView iv_vip;
+    protected final ImageView iv_game_icon;
+    protected Context context;
+
+    public ConversationCommonHolder(Context context,View itemView) {
         super(itemView);
+        this.context = context;
         leftItemLayout = rootView.findViewById(R.id.item_left);
         conversationIconView = rootView.findViewById(R.id.conversation_icon);
         titleText = rootView.findViewById(R.id.conversation_title);
@@ -57,6 +66,9 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
         messageStatusLayout = rootView.findViewById(R.id.message_status_layout);
         messagefailed = itemView.findViewById(R.id.message_status_failed);
         messageSending = itemView.findViewById(R.id.message_status_sending);
+        certification = rootView.findViewById(R.id.certification);
+        iv_vip = rootView.findViewById(R.id.iv_vip);
+        iv_game_icon = rootView.findViewById(R.id.iv_game_icon);
     }
 
     public void setForwardMode(boolean forwardMode) {
