@@ -24,4 +24,10 @@
     <color name="core_popup_card_line_bg">#E4E5E9</color>
 
     <color name="text_select_color">#FFAFE1F4</color>
+
+    <color name="gift_right_color">#FFFFFF</color>
+    <color name="gift_left_color">#FF333333</color>
+
+    <color name="gift_right_txt_color">#FFE0E0E0</color>
+    <color name="gift_left_txt_color">#FF9897B3</color>
 </resources>
