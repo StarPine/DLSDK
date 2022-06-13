@@ -66,6 +66,6 @@
         android:visibility="gone"
         android:gravity="center_vertical"
         tools:text="@string/custom_message_txt2_test2"
-        tools:visibility="visible"
+        tools:visibility="gone"
         />
 </LinearLayout>

@@ -10,6 +10,7 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -55,11 +56,9 @@ public class MessageTextHolder extends MessageContentHolder {
     private TextView msgBodyText;
     private TextView chat_tips_tv,chat_system_tip_tv;
     private FrameLayout msg_content_fl_custom;
-    private final View rootView;
 
     public MessageTextHolder(View itemView) {
         super(itemView);
-        this.rootView = itemView;
         msgBodyText = itemView.findViewById(R.id.msg_body_tv);
         chat_tips_tv = itemView.findViewById(R.id.chat_tips_tv);
         msg_content_fl_custom = itemView.findViewById(R.id.msg_content_fl_custom);
@@ -98,6 +97,7 @@ public class MessageTextHolder extends MessageContentHolder {
         msgBodyText.setVisibility(View.VISIBLE);
         chat_system_tip_tv.setVisibility(View.GONE);
         rootView.findViewById(R.id.content_tip).setVisibility(View.GONE);
+        msg_content_fl_custom.removeAllViews();
         if (msg.getExtra() != null) {
             String text = String.valueOf(msg.getExtra());
             if (TUIChatUtils.isJSON2(text) && text.indexOf("type") != -1) {//做自定义通知判断
@@ -348,7 +348,7 @@ public class MessageTextHolder extends MessageContentHolder {
                                 }
                             }
                         }
-                        if (!MessageRecyclerView.isFlagTipMoney()) {
+                        if (!MessageRecyclerView.isFlagTipMoney() || msg.isSelf()) {
                             GiftView.findViewById(R.id.custom_gift_hint_text).setVisibility(View.GONE);
                         } else {
                             GiftView.findViewById(R.id.custom_gift_hint_text).setVisibility(View.VISIBLE);

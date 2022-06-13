@@ -1,5 +1,6 @@
 package com.tencent.liteav.trtccalling;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -22,6 +23,7 @@ import com.tencent.liteav.trtccalling.ui.base.BaseTUICallView;
 import com.tencent.liteav.trtccalling.ui.base.Status;
 import com.tencent.liteav.trtccalling.ui.videocall.TUICallVideoView;
 import com.tencent.liteav.trtccalling.ui.videocall.TUIGroupCallVideoView;
+import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
 import com.tencent.trtc.TRTCCloudDef;
 
 import java.util.ArrayList;
@@ -34,6 +36,10 @@ import java.util.Map;
  */
 public final class TUICallingImpl implements TUICalling, TRTCCallingDelegate {
     private static final String TAG = "TUICallingImpl";
+    //语音通话页面
+    public final String AUDIO_ACTIVITY_VIEW_NAME = "com.dl.playfun.kl.view.DialingAudioActivity";
+    //视频通话页面
+    public final String VIDEO_ACTIVITY_VIEW_NAME = "com.dl.playfun.kl.view.CallingVideoActivity";
 
     private static final int MAX_USERS = 8; //最大通话数为9(需包含自己)
 
@@ -109,23 +115,20 @@ public final class TUICallingImpl implements TUICalling, TRTCCallingDelegate {
     }
 
     public void call(final String[] userIDs, final Type type, int roomId, String data) {
+        //阻断游戏中唤醒
+        if( ConfigManagerUtil.getInstance().isPlayGameFlag()){
+            return;
+        }
         mMainHandler.post(new Runnable() {
             @Override
             public void run() {
-//                    Intent intent = Type.AUDIO == type ? new Intent(mContext, TRTCAudioCallActivity.class) : new Intent(mContext, TRTCVideoCallActivity.class);
-                Intent intent;
+                Intent intent = new Intent(Intent.ACTION_VIEW);;
                 if (Type.AUDIO == type) {
-                    intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse("play_chat://pet.master.tw/call/audio"));
+                    intent.setComponent(new ComponentName(mContext.getApplicationContext(), AUDIO_ACTIVITY_VIEW_NAME));
                 } else {
-                    intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse("play_chat://pet.master.tw/call/video"));
+                    intent.setComponent(new ComponentName(mContext.getApplicationContext(), VIDEO_ACTIVITY_VIEW_NAME));
                 }
                 intent.putExtra(TUICallingConstants.PARAM_NAME_ROLE, Role.CALL);
-//                if (Role.CALLED == role) {
-//                    intent.putExtra(TUICallingConstants.PARAM_NAME_SPONSORID, sponsorID);
-//                    intent.putExtra(TUICallingConstants.PARAM_NAME_ISFROMGROUP, isFromGroup);
-//                }
                 intent.putExtra("userProfile", data);
                 intent.putExtra(TUICallingConstants.PARAM_NAME_USERIDS, userIDs);
                 intent.putExtra(TUICallingConstants.PARAM_NAME_GROUPID, "");
@@ -144,6 +147,10 @@ public final class TUICallingImpl implements TUICalling, TRTCCallingDelegate {
     }
 
     void internalCall(final String[] userIDs, final String sponsorID, final String groupID, final boolean isFromGroup, final Type type, final Role role) {
+        //阻断游戏中唤醒
+        if( ConfigManagerUtil.getInstance().isPlayGameFlag()){
+            return;
+        }
         //当前悬浮窗显示,说明在通话流程中,不能再发起通话
         if (Status.mIsShowFloatWindow) {
             ToastUtils.showShort(mContext.getString(R.string.trtccalling_is_calling));
@@ -187,11 +194,15 @@ public final class TUICallingImpl implements TUICalling, TRTCCallingDelegate {
                 mTUICallingListener.onCallStart(userIDs, type, role, mCallView);
             }
         } else {
-            Runnable task = new Runnable() {
+            mMainHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    Intent intent = new Intent(mContext, BaseCallActivity.class);
-                    intent.putExtra(TUICallingConstants.PARAM_NAME_TYPE, type);
+                    Intent intent = new Intent(Intent.ACTION_VIEW);;
+                    if (Type.AUDIO == type) {
+                        intent.setComponent(new ComponentName(mContext.getApplicationContext(), AUDIO_ACTIVITY_VIEW_NAME));
+                    } else {
+                        intent.setComponent(new ComponentName(mContext.getApplicationContext(), VIDEO_ACTIVITY_VIEW_NAME));
+                    }
                     intent.putExtra(TUICallingConstants.PARAM_NAME_ROLE, role);
                     if (Role.CALLED == role) {
                         intent.putExtra(TUICallingConstants.PARAM_NAME_SPONSORID, sponsorID);
@@ -199,12 +210,10 @@ public final class TUICallingImpl implements TUICalling, TRTCCallingDelegate {
                     }
                     intent.putExtra(TUICallingConstants.PARAM_NAME_USERIDS, userIDs);
                     intent.putExtra(TUICallingConstants.PARAM_NAME_GROUPID, groupID);
-                    intent.putExtra(TUICallingConstants.PARAM_NAME_FLOATWINDOW, mEnableFloatWindow);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mContext.startActivity(intent);
                 }
-            };
-            mMainHandler.post(task);
+            });
             if (null != mTUICallingListener) {
                 mTUICallingListener.onCallStart(userIDs, type, role, null);
             }

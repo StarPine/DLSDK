@@ -1415,7 +1415,8 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     private synchronized void startSVGAnimotion() {
         MessageGiftNewEvent giftEntity = viewModel.animGiftList.get(0);
         String formUserId = giftEntity.getFormUserId();
-        if (!formUserId.equals(mChatInfo.getId()) && !formUserId.equals(getUserIdIM())){
+        LogUtils.i("startSVGAnimotion: "+formUserId);
+        if (formUserId == null || (!formUserId.equals(mChatInfo.getId()) && !formUserId.equals(getUserIdIM()))){
             finishSVGA();
             return;
         }

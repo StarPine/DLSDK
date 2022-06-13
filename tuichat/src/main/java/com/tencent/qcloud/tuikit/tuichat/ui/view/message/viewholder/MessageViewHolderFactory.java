@@ -40,7 +40,7 @@ public class MessageViewHolderFactory {
         }
 
         if (holder == null) {
-            holder = new TextMessageHolder(view);
+            holder = new MessageTextHolder(view);
         }
         ((MessageBaseHolder) holder).setAdapter(adapter);
 

@@ -45,6 +45,7 @@ import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.MergeMessage
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.ImageMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.LocationMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.MessageBaseHolder;
+import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.MessageTextHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.ReplyMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.SoundMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.TextMessageHolder;
@@ -147,7 +148,8 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
         addDefaultMessageType(MergeMessageBean.class, MergeMessageHolder.class);
         addDefaultMessageType(SoundMessageBean.class, SoundMessageHolder.class);
         addDefaultMessageType(TextAtMessageBean.class, TextMessageHolder.class);
-        addDefaultMessageType(TextMessageBean.class, TextMessageHolder.class);
+//        addDefaultMessageType(TextMessageBean.class, TextMessageHolder.class);
+        addDefaultMessageType(TUIMessageBean.class, MessageTextHolder.class);
         addDefaultMessageType(TipsMessageBean.class, TipsMessageHolder.class);
         addDefaultMessageType(VideoMessageBean.class, VideoMessageHolder.class);
         addDefaultMessageType(ReplyMessageBean.class, ReplyMessageHolder.class);
