@@ -135,19 +135,8 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
     public BindingCommand evaluateOnClickCommand = new BindingCommand(() -> {
         loadCanEvaluate();
     });
-    public BindingCommand checkChatAccountOnClickCommand = new BindingCommand(() -> {
-        if (detailEntity.get() == null) {
-            return;
-        }
-        if (detailEntity.get().getIsUnlockAccount() != 1) {
-//            isChat(userId.get(), 4);
-            if (detailEntity.get().getIsWeixinShow() == 1) {
-                uc.clickUnlockChatAccount.postValue(ConfigManager.getInstance().getUnLockAccountMoney());
-            }
-        }
-    });
     /**
-     * 点击社交账号
+     * 点击拨打视频语音
      */
     public BindingCommand socialAccountOnClickCommand = new BindingCommand(() -> {
         if (detailEntity.get() == null) {
@@ -187,9 +176,6 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
     private Disposable mPhotoStateChangeSubscription;
     private Disposable UserUpdateVipEventSub;
     private boolean isLinkMic = false;
-    public BindingCommand directChatOnClickCommand = new BindingCommand(() -> {
-        isChat(userId.get(), 1);
-    });
     //进入私聊页面
     public BindingCommand chatOnClickCommand = new BindingCommand(() -> {
         AppContext.instance().logEvent(AppsFlyerEvent.Send_message);
@@ -333,7 +319,6 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
                         detailEntity.set(response.getData());
                         isShowCanTrack();
 //                        onLineDrawables();
-                        uc.lineEvent.postValue(response.getData());
                         if (response.getData().isBrowse()) {
                             if (response.getData().getMoreNumber() != null && response.getData().getMoreNumber().intValue() > 2) {
 
@@ -730,8 +715,6 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
                             chatPaySuccess();
                         } else if (operateType == 2) {
                             payLockAlbumSuccess(userId);
-                        } else if (operateType == 3) {
-                            payUnlockChatAccountSuccess(userId);
                         }
                     }
 
@@ -810,20 +793,6 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
     public void payLockAlbumSuccess(Integer userId) {
         if (userId.intValue() == this.userId.get().intValue()) {
             detailEntity.get().setAlbumType(1);
-        }
-    }
-
-    /**
-     * 支付解鎖社交賬號成功
-     *
-     * @param userId
-     */
-    public void payUnlockChatAccountSuccess(Integer userId) {
-        if (userId.intValue() == this.userId.get().intValue()) {
-            if (detailEntity.get() == null) {
-                return;
-            }
-            detailEntity.get().setIsUnlockAccount(1);
         }
     }
 
@@ -958,13 +927,9 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
         public SingleLiveEvent<Integer> clickPayChat = new SingleLiveEvent<>();
         public SingleLiveEvent<Integer> clickVipChat = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> clickConnMic = new SingleLiveEvent<>();
-        public SingleLiveEvent<String> clickUnlockChatAccount = new SingleLiveEvent<>();
         public SingleLiveEvent<Integer> todayCheckNumber = new SingleLiveEvent<>();
-        public SingleLiveEvent<Void> clickCheckChatAccount = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> isAlertVipMonetyunlock = new SingleLiveEvent<>();
         public SingleLiveEvent VipSuccessFlag = new SingleLiveEvent();
-
-        public SingleLiveEvent<UserDetailEntity> lineEvent = new SingleLiveEvent<UserDetailEntity>();
 
         public SingleLiveEvent<List<EvaluateItemEntity>> evaluateItemEntityList = new SingleLiveEvent<List<EvaluateItemEntity>>();
         //下拉刷新完成

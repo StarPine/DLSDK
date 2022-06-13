@@ -15,7 +15,6 @@
             <option value="$PROJECT_DIR$/AliyunSVideoBase" />
             <option value="$PROJECT_DIR$/AliyunVideoCommon" />
             <option value="$PROJECT_DIR$/QueenBeauty" />
-            <option value="$PROJECT_DIR$/_demo" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/customDrawable" />
             <option value="$PROJECT_DIR$/faceunity" />
@@ -28,7 +27,6 @@
             <option value="$PROJECT_DIR$/tuicore" />
           </set>
         </option>
-        <option name="resolveModulePerSourceSet" value="false" />
       </GradleProjectSettings>
     </option>
   </component>

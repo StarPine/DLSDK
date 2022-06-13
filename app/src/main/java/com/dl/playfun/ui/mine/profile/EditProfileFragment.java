@@ -153,14 +153,6 @@ public class EditProfileFragment extends BaseToolbarFragment<FragmentEditProfile
                         .show();
             }
         });
-        //社群账号解锁价格
-        viewModel.uc.clickUnlock.observe(this, new Observer() {
-            @Override
-            public void onChanged(@Nullable Object o) {
-                shouChooseUnlock();
-                clearNicknameFocus();
-            }
-        });
     }
 
     private void chooseAvatar() {
@@ -371,72 +363,6 @@ public class EditProfileFragment extends BaseToolbarFragment<FragmentEditProfile
                 .setCancelColor(getResources().getColor(R.color.purple))//取消按钮文字颜色
                 .setTextColorCenter(getResources().getColor(R.color.purple))//设置选中项的颜色
                 .setTextColorOut(getResources().getColor(R.color.gray_light))//设置没有被选中项的颜色
-                .setItemVisibleCount(5)//设置最大可见数目
-                .setLineSpacingMultiplier(2.8f)
-                .setSelectOptions(posion)  //设置默认选中项
-                .isDialog(true)//f是否显示为对话框样式
-                .build();
-
-        Dialog mDialog = pvOptions.getDialog();
-        if (mDialog != null) {
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    Gravity.BOTTOM);
-
-            params.leftMargin = 0;
-            params.rightMargin = 0;
-            params.width = getResources().getDisplayMetrics().widthPixels;
-            pvOptions.getDialogContainerLayout().setLayoutParams(params);
-
-            Window dialogWindow = mDialog.getWindow();
-            if (dialogWindow != null) {
-                dialogWindow.setWindowAnimations(com.bigkoo.pickerview.R.style.picker_view_slide_anim);//修改动画样式
-                dialogWindow.setGravity(Gravity.BOTTOM);//改成Bottom,底部显示
-            }
-        }
-
-        pvOptions.setPicker(options1Items);//一级选择器
-        pvOptions.show();
-    }
-
-    //选择社群账号价格
-    private void shouChooseUnlock() {// 弹出选择器
-        if (viewModel.sociaAccountEntity.get() == null) {
-            return;
-        }
-        final List<String> options1Items = new ArrayList<>();
-//        options1Items.add("88新台幣");
-//        options1Items.add("888新台幣");
-//        options1Items.add(String.format("%.2f",888.0));
-        int posion = 0;
-        for (int i = 0; i < viewModel.sociaAccountEntity.get().getPriceInfos().size(); i++) {
-            options1Items.add(String.format("%.2f",viewModel.sociaAccountEntity.get().getPriceInfos().get(i).getPrice()));
-            if (viewModel.sociaAccountEntity.get().getSelectedLevel() == viewModel.price.get(i).getLevel()) {
-                posion = i;
-            }
-        }
-
-        DlOptionsPickerView pvOptions = new DlOptionsPickerBuilder(this.getContext(), new OnOptionsSelectListener() {
-            @Override
-            public void onOptionsSelect(int options1, int options2, int options3, View v) {
-//                viewModel.sociaAccountEntity.get().setSelectedLevel(viewModel.price.get(options1).getLevel());
-                viewModel.updateSocialLevel(viewModel.price.get(options1).getLevel());
-            }
-        })
-                .setCancelText(getString(R.string.playfun_cancel))//取消按钮文字
-                .setSubmitText(getString(R.string.playfun_confirm))//确认按钮文字
-                .setContentTextSize(14)//滚轮文字大小
-                .setSubCalSize(14)
-                .setTitleSize(14)//标题文字大小
-                .setTitleText(getString(R.string.playfun_unlock_price))//标题文字
-                .setOutSideCancelable(true)//点击屏幕，点在控件外部范围时，是否取消显示
-                .setTitleColor(getResources().getColor(R.color.gray_dark))//标题文字颜色
-                .setSubmitColor(getResources().getColor(R.color.purple))//确定按钮文字颜色
-                .setCancelColor(getResources().getColor(R.color.purple))//取消按钮文字颜色
-                .setTextColorCenter(getResources().getColor(R.color.purple))//设置选中项的颜色
-                .setTextColorOut(getResources().getColor(R.color.gray_light))//设置没有被选中项的颜色
-                .setBottomTipText(String.format(getString(R.string.playfun_handling_fee),viewModel.sociaAccountEntity.get().getPercent()))
                 .setItemVisibleCount(5)//设置最大可见数目
                 .setLineSpacingMultiplier(2.8f)
                 .setSelectOptions(posion)  //设置默认选中项

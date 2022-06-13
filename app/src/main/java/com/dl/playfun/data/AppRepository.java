@@ -86,7 +86,6 @@ import com.dl.playfun.entity.TokenEntity;
 import com.dl.playfun.entity.TopicalListEntity;
 import com.dl.playfun.entity.TraceEntity;
 import com.dl.playfun.entity.UnReadMessageNumEntity;
-import com.dl.playfun.entity.UnlockSocialAccountConfigEntity;
 import com.dl.playfun.entity.UserCoinItemEntity;
 import com.dl.playfun.entity.UserConnMicStatusEntity;
 import com.dl.playfun.entity.UserDataEntity;
@@ -217,16 +216,6 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     @Override
     public Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(Integer callingType, String fromUserId, String toUserId) {
         return mHttpDataSource.callingInviteInfo(callingType, fromUserId, toUserId);
-    }
-
-    @Override
-    public Observable<BaseDataResponse<UnlockSocialAccountConfigEntity>> getUnlockSocialAccountConfig() {
-        return mHttpDataSource.getUnlockSocialAccountConfig();
-    }
-
-    @Override
-    public Observable<BaseResponse> updateSocialLevel(Integer socialLevel) {
-        return mHttpDataSource.updateSocialLevel(socialLevel);
     }
 
     @Override

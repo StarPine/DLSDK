@@ -5,30 +5,23 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
 
-import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
+import com.dl.playfun.R;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.ConfigItemEntity;
 import com.dl.playfun.entity.OccupationConfigItemEntity;
-import com.dl.playfun.entity.UnlockSocialAccountConfigEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.AvatarChangeEvent;
 import com.dl.playfun.event.ProfileChangeEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.utils.ApiUitl;
-import com.dl.playfun.utils.DateUtil;
 import com.dl.playfun.utils.FileUploadUtils;
-import com.dl.playfun.utils.LogUtils;
-import com.dl.playfun.utils.Utils;
 import com.dl.playfun.viewmodel.BaseViewModel;
-import com.dl.playfun.R;
 
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -48,30 +41,17 @@ import me.goldze.mvvmhabit.utils.ToastUtils;
  */
 public class EditProfileViewModel extends BaseViewModel<AppRepository> {
     public ObservableField<UserDataEntity> userDataEntity = new ObservableField<>();
-    public ObservableField<UnlockSocialAccountConfigEntity> sociaAccountEntity = new ObservableField<>();
-    public ObservableField<Boolean> lineChoose = new ObservableField<>(true);
-    public ObservableField<Boolean> insgramChoose = new ObservableField<>(false);
     public ObservableField<String> gender = new ObservableField<>("");
-    public ObservableField<String> facebookText = new ObservableField<>("");
-    public ObservableField<String> instagramText = new ObservableField<>("");
     //    身高
     public List<ConfigItemEntity> height = new ArrayList<>();
     //    体重
     public List<ConfigItemEntity> weight = new ArrayList<>();
-    //    社群账号价格
-    public List<UnlockSocialAccountConfigEntity.PriceInfosBean> price = new ArrayList<>();
     //    职业
     public List<OccupationConfigItemEntity> occupation = new ArrayList<>();
 
     UIChangeObservable uc = new UIChangeObservable();
     public BindingCommand uploadAvatarOnClickCommand = new BindingCommand(() -> {
         uc.clickAvatar.call();
-    });
-
-    //设置社群价格
-    public BindingCommand setUnlockPrice = new BindingCommand(() -> {
-        loadSocialAccountConfig();
-
     });
     //    选择生日
     public BindingCommand chooseBirthday = new BindingCommand(new BindingAction() {
@@ -124,45 +104,6 @@ public class EditProfileViewModel extends BaseViewModel<AppRepository> {
         loadProfile();
     }
 
-    private void loadSocialAccountConfig() {
-        model.getUnlockSocialAccountConfig()
-                .doOnSubscribe(this)
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseDataResponse<UnlockSocialAccountConfigEntity>>() {
-                    @Override
-                    public void onSuccess(BaseDataResponse<UnlockSocialAccountConfigEntity> baseResponse) {
-                        dismissHUD();
-                        UnlockSocialAccountConfigEntity data = baseResponse.getData();
-                        sociaAccountEntity.set(data);
-                        price.addAll(data.getPriceInfos());
-                        uc.clickUnlock.call();
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        dismissHUD();
-                    }
-                });
-    }
-
-    public void updateSocialLevel(int level) {
-        model.updateSocialLevel(level)
-                .doOnSubscribe(this)
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .doOnSubscribe(EditProfileViewModel.this)
-                .subscribe(new BaseObserver<BaseResponse>() {
-                    @Override
-                    public void onSuccess(BaseResponse baseResponse) {
-                    }
-
-                });
-    }
-
-
-
     //获取个人资料
     private void loadProfile() {
         //RaJava模拟登录
@@ -179,11 +120,6 @@ public class EditProfileViewModel extends BaseViewModel<AppRepository> {
                         userDataEntity.set(data);
                         if(userDataEntity.get().getSex() != null){
                             gender.set(StringUtils.getString((userDataEntity.get().getSex() == 0 ? R.string.playfun_fragment_edit_profile_male : R.string.playfun_fragment_edit_profile_female)));
-                        }
-                        if (!StringUtils.isEmpty(userDataEntity.get().getWeixin())) {
-                            lineChoose.set(true);
-                        } else if (!StringUtils.isEmpty(userDataEntity.get().getInsgram())) {
-                            insgramChoose.set(true);
                         }
                     }
                 });
@@ -259,13 +195,6 @@ public class EditProfileViewModel extends BaseViewModel<AppRepository> {
             ToastUtils.showShort(R.string.playfun_occupation_must);
             return;
         }
-        //女性用户进入
-        if (userEntity.getSex() == 0) {
-            if (ApiUitl.isContainChinese(userEntity.getWeixin())) {
-                ToastUtils.showShort(R.string.playfun_line_error_hanzi);
-                return;
-            }
-        }
 
         model.updateUserData(
                 userEntity.getNickname(),
@@ -276,7 +205,7 @@ public class EditProfileViewModel extends BaseViewModel<AppRepository> {
                 userEntity.getHopeObjectIds(),
                 userEntity.getWeixin(),
                 userEntity.getInsgram(),
-                lineChoose.get()?1:2,
+                null,
                 userEntity.isWeixinShow() ? 1 : 0,
                 userEntity.getHeight(),
                 userEntity.getWeight(),
@@ -312,9 +241,6 @@ public class EditProfileViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<Void> clickAvatar = new SingleLiveEvent<>();
         public SingleLiveEvent clickBirthday = new SingleLiveEvent<>();
         public SingleLiveEvent clickOccupation = new SingleLiveEvent<>();
-        public SingleLiveEvent clickProgram = new SingleLiveEvent<>();
-        public SingleLiveEvent clickHope = new SingleLiveEvent<>();
-        public SingleLiveEvent clickUnlock = new SingleLiveEvent<>();
         public SingleLiveEvent clickHeight = new SingleLiveEvent<>();
         public SingleLiveEvent clickWeight = new SingleLiveEvent<>();
         public SingleLiveEvent clickUploadingHead = new SingleLiveEvent<>();
