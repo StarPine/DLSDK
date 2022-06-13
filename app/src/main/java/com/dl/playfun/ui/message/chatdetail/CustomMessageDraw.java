@@ -1,7 +1,5 @@
 package com.dl.playfun.ui.message.chatdetail;
 
-import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
-
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,8 +18,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.ImageViewTarget;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.manager.ConfigManager;
-import com.dl.playfun.transformations.MvBlurTransformation;
-import com.dl.playfun.utils.ChatUtils;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.widget.roundedimageview.RoundedImageView;
 import com.google.gson.Gson;
@@ -29,7 +25,7 @@ import com.dl.playfun.R;
 import com.tencent.imsdk.v2.V2TIMCustomElem;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuikit.tuichat.bean.CallModel;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.ICustomMessageViewGroup;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.IOnCustomMessageDrawListener;
 
@@ -55,13 +51,13 @@ public class CustomMessageDraw implements IOnCustomMessageDrawListener {
      * @param info   消息的具体信息
      */
     @Override
-    public void onDraw(ICustomMessageViewGroup parent, MessageInfo info,int position) {
+    public void onDraw(ICustomMessageViewGroup parent, TUIMessageBean info, int position) {
         try {
             // 获取到自定义消息的 JSON 数据
-            if (info.getTimMessage().getElemType() != V2TIMMessage.V2TIM_ELEM_TYPE_CUSTOM) {
+            if (info.getV2TIMMessage().getElemType() != V2TIMMessage.V2TIM_ELEM_TYPE_CUSTOM) {
                 return;
             }
-            V2TIMMessage timMessage = info.getTimMessage();
+            V2TIMMessage timMessage = info.getV2TIMMessage();
             CallModel callModel = CallModel.convert2VideoCallData(timMessage);
             if (callModel == null) {
                 V2TIMCustomElem elem = timMessage.getCustomElem();

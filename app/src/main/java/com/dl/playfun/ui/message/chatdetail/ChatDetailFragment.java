@@ -88,14 +88,14 @@ import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 import com.tencent.qcloud.tuikit.tuichat.presenter.C2CChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
-import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemLongClickListener;
+import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemClickListener;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.input.InputView;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.MessageRecyclerView;
-import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageInfoUtil;
+import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
 import org.jetbrains.annotations.NotNull;
@@ -456,9 +456,9 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             }
         });
         //文件上传成功后发送IM消息
-        viewModel.uc.signUploadSendMessage.observe(this, new Observer<MessageInfo>() {
+        viewModel.uc.signUploadSendMessage.observe(this, new Observer<TUIMessageBean>() {
             @Override
-            public void onChanged(MessageInfo messageInfo) {
+            public void onChanged(TUIMessageBean messageInfo) {
                 if (messageInfo != null) {
                     binding.chatLayout.sendMessage(messageInfo, false);
                 }
@@ -545,15 +545,15 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         // 设置通知提醒文字
         //noticeLayout.getContentExtra().setText("参看有奖");
 
-        messageLayout.setOnItemClickListener(new OnItemLongClickListener() {
+        messageLayout.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onMessageLongClick(View view, int position, MessageInfo messageInfo) {
+            public void onMessageLongClick(View view, int position, TUIMessageBean messageInfo) {
                 //因为adapter中第一条为加载条目，位置需减1
                 messageLayout.showItemPopMenu(position - 1, messageInfo, view);
             }
 
             @Override
-            public void onUserIconClick(View view, int position, MessageInfo messageInfo) {
+            public void onUserIconClick(View view, int position, TUIMessageBean messageInfo) {
                 if (null == messageInfo) {
                     return;
                 }
@@ -573,7 +573,22 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             }
 
             @Override
-            public void onToastVipText(MessageInfo messageInfo) {
+            public void onUserIconLongClick(View view, int position, TUIMessageBean messageInfo) {
+
+            }
+
+            @Override
+            public void onReEditRevokeMessage(View view, int position, TUIMessageBean messageInfo) {
+
+            }
+
+            @Override
+            public void onRecallClick(View view, int position, TUIMessageBean messageInfo) {
+
+            }
+
+            @Override
+            public void onToastVipText(TUIMessageBean messageInfo) {
                 String text = String.valueOf(messageInfo.getExtra());
                 if (Utils.isJSON2(text)) {
                     Map<String, Object> map_data = new Gson().fromJson(text, Map.class);
@@ -599,12 +614,12 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             }
 
             @Override
-            public void onTextReadUnlock(TextView textView, View view, MessageInfo messageInfo) {
+            public void onTextReadUnlock(TextView textView, View view, TUIMessageBean messageInfo) {
                 AppContext.instance().logEvent(AppsFlyerEvent.IM_Unlock);
             }
 
             @Override
-            public void onTextTOWebView(MessageInfo messageInfo) {
+            public void onTextTOWebView(TUIMessageBean messageInfo) {
                 try {
                     String extra = messageInfo.getExtra().toString();
                     if (extra != null && extra.indexOf("href") != -1 && extra.indexOf("</a>") != -1) {
@@ -644,7 +659,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
 
             //评价
             @Override
-            public void onClickEvaluate(int position, MessageInfo messageInfo, com.tencent.coustom.EvaluateItemEntity evaluateItemEntity, boolean more) {
+            public void onClickEvaluate(int position, TUIMessageBean messageInfo, com.tencent.coustom.EvaluateItemEntity evaluateItemEntity, boolean more) {
                 AppContext.instance().logEvent(AppsFlyerEvent.Pchat_Evaluation);
                 try {
                     if (more) {//更多
@@ -666,7 +681,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             }
 
             @Override
-            public void onClickCustomText(int position, MessageInfo messageInfo, CustomIMTextEntity customIMTextEntity) {
+            public void onClickCustomText(int position, TUIMessageBean messageInfo, CustomIMTextEntity customIMTextEntity) {
                 if (customIMTextEntity != null) {
                     if (customIMTextEntity.getEvent() == 1) {//上传照片
                         AppContext.instance().logEvent(AppsFlyerEvent.im_tips_photo);
@@ -784,7 +799,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                 //存储追踪成功改变样式
                 viewModel.putKeyValue(key, msgId);
                 MessageRecyclerView.setAddLikeMsgId(msgId);
-                List<MessageInfo> listDataSource = messageLayout.getAdapter().getDataSource();
+                List<TUIMessageBean> listDataSource = messageLayout.getAdapter().getDataSource();
                 for (int i = 0; i < listDataSource.size(); i++) {
                     if (listDataSource.get(i).getId().equals(msgId)) {
                         messageLayout.getAdapter().notifyItemChanged(i);
@@ -799,7 +814,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             custom_local_data.put("type", "message_tag");
             custom_local_data.put("text", toSendMessageText);
             String str = GsonUtils.toJson(custom_local_data);
-            inputLayout.getMessageHandler().sendMessage(ChatMessageInfoUtil.buildTextMessage(str));
+            inputLayout.getMessageHandler().sendMessage(ChatMessageBuilder.buildTextMessage(str));
         }
     }
 
@@ -846,7 +861,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                 }
 
                 String thumbPath = ImageUtils.getVideoThumbnail(path, MediaStore.Images.Thumbnails.MINI_KIND, 0, 0);
-                MessageInfo info = ChatMessageInfoUtil.buildVideoMessage(thumbPath, path, localMedia.getWidth(), localMedia.getHeight(), localMedia.getDuration());
+                TUIMessageBean info = ChatMessageBuilder.buildVideoMessage(thumbPath, path, localMedia.getWidth(), localMedia.getHeight(), localMedia.getDuration());
                 binding.chatLayout.sendMessage(info, false);
             }
 
@@ -915,14 +930,14 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             String desc = data.getString(SendCoinRedPackageFragment.ARG_DESC);
             int number = data.getInt(SendCoinRedPackageFragment.ARG_NUMBER, 0);
             CustomMessageData customMessageData = CustomMessageData.genCoinRedPackageMessage(id, number, desc);
-            MessageInfo info = ChatMessageInfoUtil.buildCustomMessage(GsonUtils.toJson(customMessageData), null, null);
+            TUIMessageBean info = ChatMessageBuilder.buildCustomMessage(GsonUtils.toJson(customMessageData), null, null);
             binding.chatLayout.sendMessage(info, false);
         } else if (requestCode == 1003) {
 
         } else if (requestCode == 2001) {
             String imageSrcKey = data.getString(PhotoReviewFragment.ARG_IMAGE_SRC_KEY);
             CustomMessageData customMessageData = CustomMessageData.genBurnMessage(imageSrcKey);
-            MessageInfo info = ChatMessageInfoUtil.buildCustomMessage(GsonUtils.toJson(customMessageData), null, null);
+            TUIMessageBean info = ChatMessageBuilder.buildCustomMessage(GsonUtils.toJson(customMessageData), null, null);
             binding.chatLayout.sendMessage(info, false);
         }
     }
@@ -952,7 +967,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
      * @param messageInfo
      */
     @Override
-    public void sendOnClickAudioMessage(InputView.MessageHandler messageHandler, MessageInfo messageInfo) {
+    public void sendOnClickAudioMessage(InputView.MessageHandler messageHandler, TUIMessageBean messageInfo) {
         if (viewModel.priceConfigEntityField == null) {
             return;
         }
@@ -1197,7 +1212,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     }
 
     @Override
-    public void sendOnClickCallbackOk(InputView.MessageHandler messageHandler, MessageInfo messageInfo) {
+    public void sendOnClickCallbackOk(InputView.MessageHandler messageHandler, TUIMessageBean messageInfo) {
         if (messageHandler != null) {
             UserDataEntity userDataEntity = viewModel.getLocalUserDataEntity();
             if (userDataEntity == null) {
@@ -1235,7 +1250,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
      */
     public void sendLocalMessage(String value) {
         //发送本地消息，并且自定它
-        ChatMessageInfoUtil.C2CMessageToLocal(value, mChatInfo.getId(), new V2TIMValueCallback() {
+        ChatMessageBuilder.C2CMessageToLocal(value, mChatInfo.getId(), new V2TIMValueCallback() {
             @Override
             public void onError(int code, String desc) {
             }
@@ -1254,7 +1269,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                     @Override
                     public void onSuccess(Object o) {
                         ArrayList<V2TIMMessage> messages = (ArrayList) o;
-                        MessageInfo msgInfos = ChatMessageInfoUtil.convertTIMMessage2MessageInfo(messages.get(0));
+                        TUIMessageBean msgInfos = ChatMessageBuilder.buildMessage(messages.get(0));
                         ChatPresenter chatPresenter = binding.chatLayout.getChatPresenter();
                         boolean bl = chatPresenter.addMessageList(msgInfos, false);
                     }
@@ -1275,7 +1290,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             if (ObjectUtils.isEmpty(localMessageIMEntity)) {//没有历史消息
 //            Log.e("聊天规则配置插入相册","没有历史消息");
                 //发送本地消息，并且自定它
-                ChatMessageInfoUtil.C2CMessageToLocal(str, mChatInfo.getId(), new V2TIMValueCallback() {
+                ChatMessageBuilder.C2CMessageToLocal(str, mChatInfo.getId(), new V2TIMValueCallback() {
                     @Override
                     public void onError(int code, String desc) {
                     }
@@ -1294,7 +1309,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                             @Override
                             public void onSuccess(Object o) {
                                 ArrayList<V2TIMMessage> messages = (ArrayList) o;
-                                MessageInfo msgInfos = ChatMessageInfoUtil.convertTIMMessage2MessageInfo(messages.get(0));
+                                TUIMessageBean msgInfos = ChatMessageBuilder.buildMessage(messages.get(0));
                                 if (type.equals("message_photo")) {
                                     binding.chatLayout.getChatPresenter().addMessageInfo(msgInfos);
                                 } else {
@@ -1312,7 +1327,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                 LocalDataSourceImpl.getInstance().removeLocalMessage(EventId);
                 removeLocalMessage(localMessageIMEntity, EventId, false);
                 String LocalMsgId = localMessageIMEntity.getMsgId();
-                List<MessageInfo> listMessage = messageRecyclerView.getAdapter().getDataSource();
+                List<TUIMessageBean> listMessage = messageRecyclerView.getAdapter().getDataSource();
                 boolean flag = false;
                 String msgIds = null;
                 Integer toUserId = getTaUserIdIM();
@@ -1321,14 +1336,14 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                     msgIds = LocalMsgId.replace(toUserId + "-", "");
                 }
                 for (int i = 0; i < listMessage.size(); i++) {
-                    if (flag && (listMessage.get(i).getId().indexOf(msgIds) != -1 || listMessage.get(i).getTimMessage().getMsgID().indexOf(msgIds) != -1)) {
+                    if (flag && (listMessage.get(i).getId().indexOf(msgIds) != -1 || listMessage.get(i).getV2TIMMessage().getMsgID().indexOf(msgIds) != -1)) {
                         messageRecyclerView.getAdapter().getItem(i).setExtra(objData);
                         messageRecyclerView.getAdapter().getItem(i).notify();
                         //iChatProvider.getAdapter().getItem(i).notify();
                     }
                 }
                 //发送本地消息，并且自定它
-                ChatMessageInfoUtil.C2CMessageToLocal(str, mChatInfo.getId(), new V2TIMValueCallback() {
+                ChatMessageBuilder.C2CMessageToLocal(str, mChatInfo.getId(), new V2TIMValueCallback() {
                     @Override
                     public void onError(int code, String desc) {
                     }

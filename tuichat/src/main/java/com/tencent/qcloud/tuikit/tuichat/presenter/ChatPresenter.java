@@ -103,6 +103,10 @@ public abstract class ChatPresenter {
         provider = new ChatProvider();
     }
 
+    public void setCustomizeMessageListener(CustomizeMessageListener customizeMessageListener){
+        this.customizeMessageListener = customizeMessageListener;
+    }
+
     protected void initMessageSender() {
         baseMessageSender = new IBaseMessageSender() {
 
@@ -494,7 +498,7 @@ public abstract class ChatPresenter {
     }
 
     //彭石林 修改。同步锁。一次只接受处理一条消息
-    public synchronized void addMessageInfo(MessageInfo messageInfo) {
+    public synchronized void addMessageInfo(TUIMessageBean messageInfo) {
         if (messageInfo == null) {
             return;
         }
@@ -512,7 +516,7 @@ public abstract class ChatPresenter {
                         String msgID = customIMTextEntity.getMsgID();
                         if (msgID != null) {
                             for (int i = 0; i < itemCount; i++) {
-                                MessageInfo backMsg = loadedMessageInfoList.get(i);
+                                TUIMessageBean backMsg = loadedMessageInfoList.get(i);
                                 if (backMsg.getId().lastIndexOf(msgID) != -1) {
                                     loadedMessageInfoList.add(i + 1, messageInfo);
                                     break;
@@ -542,7 +546,7 @@ public abstract class ChatPresenter {
     }
 
     //彭石林新增
-    public boolean addMessageList(MessageInfo messageInfo, boolean front) {
+    public boolean addMessageList(TUIMessageBean messageInfo, boolean front) {
         if (messageInfo == null) {
             return false;
         }
@@ -593,7 +597,7 @@ public abstract class ChatPresenter {
             msgIds = msgId.replace(toUserId+"-","");
         }
         for (int i = 0; i < loadedMessageInfoList.size(); i++) {
-            if(flag && (loadedMessageInfoList.get(i).getId().indexOf(msgIds)!=-1 || loadedMessageInfoList.get(i).getTimMessage().getMsgID().indexOf(msgIds)!=-1)){
+            if(flag && (loadedMessageInfoList.get(i).getId().indexOf(msgIds)!=-1 || loadedMessageInfoList.get(i).getV2TIMMessage().getMsgID().indexOf(msgIds)!=-1)){
                 loadedMessageInfoList.remove(i);
                 updateAdapter(MessageRecyclerView.DATA_CHANGE_TYPE_DELETE, i);
                 return;
@@ -950,7 +954,7 @@ public abstract class ChatPresenter {
         }
     }
 
-    protected boolean checkExist(MessageInfo msg) {
+    protected boolean checkExist(TUIMessageBean msg) {
         if (msg != null) {
             String extra = (String) msg.getExtra();
             if (extra != null && extra.contains("message_blacklist")){
@@ -976,7 +980,7 @@ public abstract class ChatPresenter {
                 msg.remove();//删除当前消息
                 return true;
             }
-            V2TIMSignalingInfo signalingInfo = V2TIMManager.getSignalingManager().getSignalingInfo(msg.getTimMessage());
+            V2TIMSignalingInfo signalingInfo = V2TIMManager.getSignalingManager().getSignalingInfo(msg.getV2TIMMessage());
             if (signalingInfo != null){
                 int actionType = signalingInfo.getActionType();
                 Map extraMap = new Gson().fromJson(signalingInfo.getData(), Map.class);

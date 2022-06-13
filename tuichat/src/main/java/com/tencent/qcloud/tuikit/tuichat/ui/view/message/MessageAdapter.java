@@ -17,9 +17,11 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.ICommonMessageAdapter;
+import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.IOnCustomMessageDrawListener;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemClickListener;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.FileMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.MessageContentHolder;
+import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.MessageCustomHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.MessageHeaderHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.IMessageAdapter;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.MessageBaseHolder;
@@ -51,6 +53,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
     private boolean isForwardMode = false;
 
     private ChatPresenter presenter;
+    private IOnCustomMessageDrawListener mOnCustomMessageDrawListener;
 
     public void setPresenter(ChatPresenter chatPresenter) {
         this.presenter = chatPresenter;
@@ -58,6 +61,10 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
 
     public void setForwardMode(boolean forwardMode) {
         isForwardMode = forwardMode;
+    }
+
+    public void setOnCustomMessageDrawListener(IOnCustomMessageDrawListener listener) {
+        mOnCustomMessageDrawListener = listener;
     }
 
     //获得选中条目的结果，msgId
@@ -166,12 +173,12 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
             setCheckBoxStatus(position, msgId, baseHolder);
             baseHolder.layoutViews(msg, position);
             // 对于自定义消息，需要在正常布局之后，交给外部调用者重新加载渲染
-            if (getItemViewType(position) == MessageInfo.MSG_TYPE_CUSTOM) {
-                MessageCustomHolder customHolder = (MessageCustomHolder) holder;
-                if (mOnCustomMessageDrawListener != null) {
-                    mOnCustomMessageDrawListener.onDraw(customHolder, msg,position);
-                }
-            }
+//            if (getItemViewType(position) == TUIMessageBean.MSG_TYPE_CUSTOM) {
+//                MessageCustomHolder customHolder = (MessageCustomHolder) holder;
+//                if (mOnCustomMessageDrawListener != null) {
+//                    mOnCustomMessageDrawListener.onDraw(customHolder, msg,position);
+//                }
+//            }
         }
     }
 
@@ -238,17 +245,17 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
                 }
 
                 @Override
-                public void onToastVipText(MessageInfo messageInfo) {
+                public void onToastVipText(TUIMessageBean messageInfo) {
 
                 }
 
                 @Override
-                public void onTextReadUnlock(TextView textView, View view, MessageInfo messageInfo) {
+                public void onTextReadUnlock(TextView textView, View view, TUIMessageBean messageInfo) {
 
                 }
 
                 @Override
-                public void onTextTOWebView(MessageInfo messageInfo) {
+                public void onTextTOWebView(TUIMessageBean messageInfo) {
 
                 }
 
@@ -263,12 +270,12 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
                 }
 
                 @Override
-                public void onClickEvaluate(int position, MessageInfo messageInfo, EvaluateItemEntity evaluateItemEntity, boolean more) {
+                public void onClickEvaluate(int position, TUIMessageBean messageInfo, EvaluateItemEntity evaluateItemEntity, boolean more) {
 
                 }
 
                 @Override
-                public void onClickCustomText(int position, MessageInfo messageInfo, CustomIMTextEntity customIMTextEntity) {
+                public void onClickCustomText(int position, TUIMessageBean messageInfo, CustomIMTextEntity customIMTextEntity) {
 
                 }
 
@@ -505,7 +512,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
     }
 
     //彭石林新增
-    public List<MessageInfo> getDataSource(){
+    public List<TUIMessageBean> getDataSource(){
         return mDataSource;
     }
 }

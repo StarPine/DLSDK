@@ -3,20 +3,14 @@ package com.dl.playfun.utils;
 import android.content.Context;
 
 import com.blankj.utilcode.util.StringUtils;
-import com.blankj.utilcode.util.TimeUtils;
 import com.dl.playfun.app.AppConfig;
-import com.dl.playfun.app.AppContext;
 import com.dl.playfun.R;
 import com.dl.playfun.entity.ConfigItemEntity;
 import com.dl.playfun.entity.OccupationConfigItemEntity;
 import com.google.gson.Gson;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 public class StringUtil {
@@ -229,7 +223,7 @@ public class StringUtil {
 
     }
 
-    public static boolean initIMInfo(MessageInfo info) {
+    public static boolean initIMInfo(TUIMessageBean info) {
         if (info != null) {
             String text = String.valueOf(info.getExtra());
             if (isJSON2(text) && text.indexOf("type") != -1) {

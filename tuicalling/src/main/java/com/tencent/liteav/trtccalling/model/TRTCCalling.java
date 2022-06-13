@@ -71,19 +71,19 @@ import java.util.Set;
  * 视频/语音通话的具体实现
  * 本功能使用腾讯云实时音视频 / 腾讯云即时通信IM 组合实现
  */
-public abstract class TRTCCalling {
-    private static final String TAG            = "TRTCCalling";
+public class TRTCCalling {
+    private static final String TAG = "TRTCCalling";
     /**
      * 超时时间，单位秒
      */
-    public static final  int    TIME_OUT_COUNT = 30;
+    public static final int TIME_OUT_COUNT = 30;
 
     /**
      * room id 的取值范围
      */
-    private static final int     ROOM_ID_MIN = 1;
-    private static final int     ROOM_ID_MAX = Integer.MAX_VALUE;
-    private final        Context mContext;
+    private static final int ROOM_ID_MIN = 1;
+    private static final int ROOM_ID_MAX = Integer.MAX_VALUE;
+    private final Context mContext;
 
     /**
      * 底层SDK调用实例
@@ -93,36 +93,36 @@ public abstract class TRTCCalling {
     /**
      * 是否首次邀请
      */
-    private boolean isOnCalling          = false;
-    private String  mCurCallID           = "";
-    private String  mSwitchToAudioCallID = "";
-    private int     mCurRoomID           = 0;
+    private boolean isOnCalling = false;
+    private String mCurCallID = "";
+    private String mSwitchToAudioCallID = "";
+    private int mCurRoomID = 0;
 
     /**
      * C2C多人通话添加: 记录每个userId对应的CallId
      */
-    private Map<String, String> mUserCallIDMap        = new HashMap<>();
+    private Map<String, String> mUserCallIDMap = new HashMap<>();
     /**
      * C2C多人通话添加: 记录已经接通在TRTC房间内的远端用户
      */
-    private List<String>        mRemoteUserInTRTCRoom = new ArrayList<>();
+    private List<String> mRemoteUserInTRTCRoom = new ArrayList<>();
 
     /**
      * 当前是否在TRTC房间中
      */
-    private boolean      mIsInRoom             = false;
-    private long         mEnterRoomTime        = 0;
+    private boolean mIsInRoom = false;
+    private long mEnterRoomTime = 0;
     /**
      * 当前邀请列表
      * C2C通话时会记录自己邀请的用户
      * IM群组通话时会同步群组内邀请的用户
      * 当用户接听、拒绝、忙线、超时会从列表中移除该用户
      */
-    private List<String> mCurInvitedList       = new ArrayList<>();
+    private List<String> mCurInvitedList = new ArrayList<>();
     /**
      * 当前语音通话中的远端用户
      */
-    private Set<String>  mCurRoomRemoteUserSet = new HashSet<>();
+    private Set<String> mCurRoomRemoteUserSet = new HashSet<>();
 
     /**
      * C2C通话的邀请人
@@ -133,45 +133,45 @@ public abstract class TRTCCalling {
     /**
      * 当前通话的类型
      */
-    private int                         mCurCallType   = TYPE_UNKNOWN;
+    private int mCurCallType = TYPE_UNKNOWN;
     /**
      * 当前群组通话的群组ID
      */
-    private String                      mCurGroupId    = "";
+    private String mCurGroupId = "";
     /**
      * 最近使用的通话信令，用于快速处理
      */
-    private CallModel                   mLastCallModel = new CallModel();
+    private CallModel mLastCallModel = new CallModel();
     /**
      * 上层传入回调
      */
     private TRTCInternalListenerManager mTRTCInternalListenerManager;
-    private String                      mNickName;
-    private String                      mFaceUrl;
+    private String mNickName;
+    private String mFaceUrl;
 
     private boolean mIsUseFrontCamera;
 
     private MediaPlayHelper mMediaPlayHelper;        // 音效
 
-    private SensorManager       mSensorManager;
+    private SensorManager mSensorManager;
     private SensorEventListener mSensorEventListener;
 
-    private boolean mIsBeingCalled   = true;   // 默认是被叫
-    private boolean mEnableMuteMode  = false;  // 是否开启静音模式
-    private String  mCallingBellPath = "";     // 被叫铃音路径
+    private boolean mIsBeingCalled = true;   // 默认是被叫
+    private boolean mEnableMuteMode = false;  // 是否开启静音模式
+    private String mCallingBellPath = "";     // 被叫铃音路径
 
     private static final String PROFILE_TUICALLING = "per_profile_tuicalling";
-    private static final String PROFILE_CALL_BELL  = "per_call_bell";
+    private static final String PROFILE_CALL_BELL = "per_call_bell";
 
-    public static final int TYPE_UNKNOWN    = 0;
+    public static final int TYPE_UNKNOWN = 0;
     public static final int TYPE_AUDIO_CALL = 1;
     public static final int TYPE_VIDEO_CALL = 2;
 
     //通话邀请缓存,便于查询通话是否有效
-    private final Map<String, CallModel> mInviteMap   = new HashMap<>();
-    private final Handler                mMainHandler = new Handler(Looper.getMainLooper());
+    private final Map<String, CallModel> mInviteMap = new HashMap<>();
+    private final Handler mMainHandler = new Handler(Looper.getMainLooper());
 
-    private static final int CHECK_INVITE_PERIOD   = 10; //邀请信令的检测周期（毫秒）
+    private static final int CHECK_INVITE_PERIOD = 10; //邀请信令的检测周期（毫秒）
     private static final int CHECK_INVITE_DURATION = 100; //邀请信令的检测总时长（毫秒）
 
     //多端登录增加字段:用于标记当前是否是自己发给自己的请求(多端触发),以及自己是否处理了该请求.
@@ -217,9 +217,15 @@ public abstract class TRTCCalling {
 
     /**
      * 添加render监听
+     *
      * @param listener
      */
-    public abstract void setLocalVideoRenderListener(TRTCCloudListener.TRTCVideoFrameListener listener);
+    public void setLocalVideoRenderListener(TRTCCloudListener.TRTCVideoFrameListener listener) {
+        if (mTRTCCloud != null) {
+            mTRTCCloud.setLocalVideoProcessListener(TRTCCloudDef.TRTC_VIDEO_PIXEL_FORMAT_Texture_2D, TRTCCloudDef.TRTC_VIDEO_BUFFER_TYPE_TEXTURE, listener);
+            mTRTCCloud.setLocalVideoProcessListener(TRTCCloudDef.TRTC_VIDEO_PIXEL_FORMAT_NV21, TRTCCloudDef.TRTC_VIDEO_BUFFER_TYPE_BYTE_ARRAY, listener);
+        }
+    }
 
     /**
      * 消息监听器,收到 C2C 自定义（信令）消息
@@ -1180,7 +1186,13 @@ public abstract class TRTCCalling {
      * @param userIdList 被邀请方
      * @param type       1-语音通话，2-视频通话
      */
-    public abstract void call(int roomId, List<String> userIdList, int type);
+    public void call(int roomId, final List<String> userIdList, int type) {
+        TRTCLogger.i(TAG, "start single call " + Arrays.toString(userIdList.toArray()) + ", type " + type);
+        if (userIdList.isEmpty()) {
+            return;
+        }
+        internalCall(roomId, userIdList, type, "");
+    }
 
     public void groupCall(final List<String> userIdList, int type, String groupId) {
         if (isCollectionEmpty(userIdList)) {
@@ -1199,8 +1211,12 @@ public abstract class TRTCCalling {
      * @param type       1-语音通话，2-视频通话
      * @param groupId    IM群组ID
      */
-    public abstract void groupCall(int roomId, List<String> userIdList, int type, String groupId);
-
+    public void groupCall(int roomId, final List<String> userIdList, int type, String groupId) {
+        if (isCollectionEmpty(userIdList)) {
+            return;
+        }
+        internalCall(roomId, userIdList, type, groupId);
+    }
     /**
      * 统一的拨打逻辑
      *
@@ -1209,6 +1225,18 @@ public abstract class TRTCCalling {
      * @param groupId    群组通话的group id，如果是C2C需要传 ""
      */
     private void internalCall(final List<String> userIdList, int type, String groupId) {
+        internalCall(0, userIdList, type, groupId);
+    }
+
+    /**
+     * 统一的拨打逻辑
+     *
+     * @param roomId     房间号， kl改的
+     * @param userIdList 需要邀请的用户列表
+     * @param type       邀请类型
+     * @param groupId    群组通话的group id，如果是C2C需要传 ""
+     */
+    private void internalCall(int roomId, final List<String> userIdList, int type, String groupId) {
         if (!isOnCalling) {
             // 首次拨打电话，生成id，并进入trtc房间
             mCurRoomID = generateRoomID();
@@ -2194,28 +2222,68 @@ public abstract class TRTCCalling {
         void onSuccess();
     }
 
+
     /**
+     * @return void
      * @Desc TODO(是否开启自动增益补偿功能, 可以自动调麦克风的收音量到一定的音量水平)
      * @author 彭石林
-     * @parame [openAGC]
-     * @return void
+     * @parame [enable]
      * @Date 2022/2/14
      */
-    public abstract void enableAGC(boolean openAGC);
+    public void enableAGC(boolean enable) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("api", "enableAudioAGC");
+            JSONObject params = new JSONObject();
+            params.put("enable", enable ? 1 : 0);
+            params.put("level", "100");//支持的取值有: 0、30、60、100，0 表示关闭 AGC
+            jsonObject.put("params", params);
+            mTRTCCloud.callExperimentalAPI(jsonObject.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
-     * @Desc TODO(回声消除器，可以消除各种延迟的回声)
-     * @author 彭石林
-     * @parame [openAEC]
      * @return void
+     * @Desc TODO(回声消除器 ， 可以消除各种延迟的回声)
+     * @author 彭石林
+     * @parame [enable]
      * @Date 2022/2/14
      */
-    public abstract void enableAEC(boolean openAEC);
+    public void enableAEC(boolean enable) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("api", "enableAudioAEC");
+            JSONObject params = new JSONObject();
+            params.put("enable", enable ? 1 : 0);
+            params.put("level", "100");//支持的取值有: 0、30、60、100，0 表示关闭 AEC
+            jsonObject.put("params", params);
+            mTRTCCloud.callExperimentalAPI(jsonObject.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
-     * @Desc TODO(背景噪音抑制功能，可探测出背景固定频率的杂音并消除背景噪音)
-     * @author 彭石林
-     * @parame [openANS]
      * @return void
+     * @Desc TODO(背景噪音抑制功能 ， 可探测出背景固定频率的杂音并消除背景噪音)
+     * @author 彭石林
+     * @parame [enable]
      * @Date 2022/2/14
      */
-    public abstract void enableANS(boolean openANS);
+    public void enableANS(boolean enable) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("api", "enableAudioANS");
+            JSONObject params = new JSONObject();
+            params.put("enable", enable ? 1 : 0);
+            params.put("level", "100");//支持的取值有: 0、30、60、100，0 表示关闭 ANS
+            jsonObject.put("params", params);
+            mTRTCCloud.callExperimentalAPI(jsonObject.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
 }

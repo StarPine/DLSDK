@@ -140,8 +140,8 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //日志打印
     implementation 'com.github.ihsanbal:LoggingInterceptor:3.0.0'
-    implementation "com.tencent.liteav:LiteAVSDK_TRTC:9.2.10641"
-    implementation 'com.tencent.imsdk:imsdk-plus:5.7.1435'
+    implementation "com.tencent.liteav:LiteAVSDK_TRTC:10.1.0.11109"
+    implementation 'com.tencent.imsdk:imsdk-plus:6.2.2363'
     implementation platform('com.google.firebase:firebase-bom:28.0.1')
     annotationProcessor rootProject.ext.dependencies["lifecycle-compiler"]
     dependenciesID.each {k,v -> implementation v}

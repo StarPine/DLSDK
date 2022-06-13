@@ -254,6 +254,11 @@ public class FloatCallView extends BaseTUICallView {
         }
     }
 
+    @Override
+    public void onTryToReconnect() {
+
+    }
+
     //视频切语音后,更新悬浮窗的显示
     private void updateSwitchToAudioView() {
         mLocalTxCloudView.setVisibility(GONE);

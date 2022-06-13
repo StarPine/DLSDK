@@ -11,6 +11,13 @@
         android:layout_height="1px"
         android:background="@color/input_title_line_color" />
 
+    <com.tencent.qcloud.tuikit.tuichat.ui.view.input.ReplyPreviewBar
+        android:id="@+id/reply_preview_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:visibility="gone"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -1,7 +1,6 @@
 package com.dl.playfun.ui.main;
 
 import android.app.Application;
-import android.os.Handler;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -11,7 +10,6 @@ import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
-import com.dl.playfun.app.Injection;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
@@ -30,18 +28,16 @@ import com.dl.playfun.event.RewardRedDotEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocationManager;
 import com.dl.playfun.utils.FastCallFunUtil;
-import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.google.gson.Gson;
 import com.tencent.coustom.GiftEntity;
 import com.tencent.coustom.IMGsonUtils;
 import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
-import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
-import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageInfoUtil;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -305,7 +301,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         V2TIMManager.getMessageManager().addAdvancedMsgListener(new V2TIMAdvancedMsgListener() {
             @Override
             public void onRecvNewMessage(V2TIMMessage msg) {
-                MessageInfo info = ChatMessageInfoUtil.createMessageInfo(msg);
+                TUIMessageBean info = ChatMessageBuilder.buildMessage(msg);
                 if (info != null) {
                     String text = String.valueOf(info.getExtra());
                     if (StringUtil.isJSON2(text) && text.contains("type")) {//做自定义通知判断

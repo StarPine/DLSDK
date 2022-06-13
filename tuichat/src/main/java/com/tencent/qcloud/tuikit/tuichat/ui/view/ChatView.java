@@ -78,6 +78,8 @@ import com.tencent.qcloud.tuicore.TUICore;
 
 import java.util.List;
 
+import me.goldze.mvvmhabit.bus.RxBus;
+
 
 public class ChatView extends LinearLayout  implements IChatLayout {
     private static final String TAG = ChatView.class.getSimpleName();
@@ -1194,5 +1196,9 @@ public class ChatView extends LinearLayout  implements IChatLayout {
         intent.setData(contentUrl);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         getContext().startActivity(intent);
+    }
+
+    public ChatPresenter getChatPresenter(){
+        return presenter;
     }
 }

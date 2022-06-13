@@ -2,12 +2,14 @@ package com.tencent.qcloud.tuikit.tuichat.bean.message;
 
 import android.text.TextUtils;
 
+import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TUIReplyQuoteBean;
+import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 import java.io.Serializable;
 
@@ -55,6 +57,7 @@ public abstract class TUIMessageBean implements Serializable {
       */
      public static final int MSG_STATUS_DOWNLOADED = 6;
 
+     private final String TAG = "TUIMessageBean";
      private V2TIMMessage v2TIMMessage;
      private long msgTime;
      private String extra;
@@ -65,6 +68,10 @@ public abstract class TUIMessageBean implements Serializable {
 
      private long readCount = 0;
      private long unreadCount = 1;
+
+     //todo
+     private long uniqueId = 0;
+     private String fromUser;
 
      public void setReadCount(long readCount) {
           this.readCount = readCount;
@@ -320,5 +327,64 @@ public abstract class TUIMessageBean implements Serializable {
 
      public Class<? extends TUIReplyQuoteBean> getReplyQuoteBeanClass() {
           return null;
+     }
+
+     public boolean remove() {
+          if (v2TIMMessage == null) {
+               return false;
+          }
+          V2TIMManager.getMessageManager().deleteMessageFromLocalStorage(v2TIMMessage, new V2TIMCallback() {
+               @Override
+               public void onError(int code, String desc) {
+                    TUIChatLog.e(TAG, "deleteMessageFromLocalStorage error code = " + code + ", desc = " + desc);
+               }
+
+               @Override
+               public void onSuccess() {
+               }
+          });
+          return true;
+     }
+
+     public byte[] getCustomElemData() {
+          if (v2TIMMessage != null) {
+               return v2TIMMessage.getCustomElem().getData();
+          } else {
+               return new byte[0];
+          }
+     }
+
+     public boolean checkEquals(String msgID) {
+          if (TextUtils.isEmpty(msgID)) {
+               return false;
+          }
+          return v2TIMMessage.getMsgID().equals(msgID);
+     }
+
+     public long getUniqueId() {
+          return uniqueId;
+     }
+
+     public void setUniqueId(long uniqueId) {
+          this.uniqueId = uniqueId;
+     }
+
+
+     /**
+      * 获取消息发送方 ID
+      *
+      * @return
+      */
+     public String getFromUser() {
+          return fromUser;
+     }
+
+     /**
+      * 设置消息发送方 ID
+      *
+      * @param fromUser
+      */
+     public void setFromUser(String fromUser) {
+          this.fromUser = fromUser;
      }
 }

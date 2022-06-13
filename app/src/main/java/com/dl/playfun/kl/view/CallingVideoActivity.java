@@ -71,8 +71,8 @@ import com.opensource.svgaplayer.SVGASoundManager;
 import com.opensource.svgaplayer.SVGAVideoEntity;
 import com.tencent.coustom.GiftEntity;
 import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.liteav.trtccalling.TUICalling;
 import com.tencent.liteav.trtccalling.model.TRTCCalling;
-import com.tencent.liteav.trtccalling.model.TUICalling;
 import com.tencent.liteav.trtccalling.model.util.TUICallingConstants;
 
 import org.jetbrains.annotations.NotNull;

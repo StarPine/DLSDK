@@ -31,6 +31,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.popmenu.ChatPopMenu;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
+import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.IOnCustomMessageDrawListener;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemClickListener;
 import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.IMessageLayout;
@@ -529,17 +530,17 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
             }
 
             @Override
-            public void onToastVipText(MessageInfo messageInfo) {
+            public void onToastVipText(TUIMessageBean messageInfo) {
 
             }
 
             @Override
-            public void onTextReadUnlock(TextView textView, View view, MessageInfo messageInfo) {
+            public void onTextReadUnlock(TextView textView, View view, TUIMessageBean messageInfo) {
 
             }
 
             @Override
-            public void onTextTOWebView(MessageInfo messageInfo) {
+            public void onTextTOWebView(TUIMessageBean messageInfo) {
 
             }
 
@@ -554,12 +555,12 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
             }
 
             @Override
-            public void onClickEvaluate(int position, MessageInfo messageInfo, EvaluateItemEntity evaluateItemEntity, boolean more) {
+            public void onClickEvaluate(int position, TUIMessageBean messageInfo, EvaluateItemEntity evaluateItemEntity, boolean more) {
 
             }
 
             @Override
-            public void onClickCustomText(int position, MessageInfo messageInfo, CustomIMTextEntity customIMTextEntity) {
+            public void onClickCustomText(int position, TUIMessageBean messageInfo, CustomIMTextEntity customIMTextEntity) {
 
             }
 
@@ -789,6 +790,11 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
         setAdapterListener();
     }
 
+    //彭石林新增
+    public MessageAdapter getAdapter(){
+        return mAdapter;
+    }
+
     @Override
     public void setAdapter(MessageAdapter adapter) {
         super.setAdapter(adapter);
@@ -803,6 +809,11 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
     @Override
     public void addPopAction(ChatPopMenu.ChatPopMenuAction action) {
         mMorePopActions.add(action);
+    }
+
+    @Override
+    public void setOnCustomMessageDrawListener(IOnCustomMessageDrawListener iOnCustomMessageDrawListener) {
+
     }
 
     public void loadMessageFinish() {

@@ -20,6 +20,7 @@ public class ConfigManagerUtil {
     private final String cryptKey = "playfun@2022";
     private static final String KEY_GAME_CONFIG = "key_game_config";
     private static final String KEY_PLAY_GAME_FLAG = "key_play_game_flag";
+    private static final String KEY_IS_CHAT_PUSH = "key_is_chat_push";
     private final MMKV kv = MMKV.mmkvWithID("cache", MMKV.SINGLE_PROCESS_MODE, cryptKey);
     private Gson gson;
 
@@ -83,4 +84,10 @@ public class ConfigManagerUtil {
     public static boolean isEmpty(final Collection obj) {
         return obj == null || obj.isEmpty();
     }
+
+    public Boolean readChatPushStatus() {
+        int isChatPush = kv.decodeInt(KEY_IS_CHAT_PUSH);
+        return isChatPush == 1;
+    }
+
 }

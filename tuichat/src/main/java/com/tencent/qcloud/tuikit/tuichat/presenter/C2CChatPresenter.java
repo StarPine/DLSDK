@@ -96,7 +96,7 @@ public class C2CChatPresenter extends ChatPresenter {
                     }
                     int itemCount = data.size();
                     for (int i = 0; i < itemCount; i++) {
-                        MessageInfo lastMsg = data.get(i);
+                        TUIMessageBean lastMsg = data.get(i);
                         if (lastMsg != null && lastMsg.getExtra() != null) {
                             if (isJSON2(lastMsg.getExtra().toString())) {//判断后台自定义消息体
                                 Map<String, Object> map_data = new Gson().fromJson(lastMsg.getExtra().toString(), Map.class);
@@ -113,7 +113,7 @@ public class C2CChatPresenter extends ChatPresenter {
                                             String msgID = customIMTextEntity.getMsgID();
                                             if (msgID != null) {
                                                 for (int j = 0; j < itemCount; j++) {
-                                                    MessageInfo backMsg = data.get(j);
+                                                    TUIMessageBean backMsg = data.get(j);
                                                     if (backMsg.getId().lastIndexOf(msgID) != -1) {//收益提示追加到指定文案后
                                                         data.add(i, data.remove(j));
                                                         break;

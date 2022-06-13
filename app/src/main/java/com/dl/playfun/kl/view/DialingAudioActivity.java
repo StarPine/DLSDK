@@ -25,7 +25,7 @@ import com.dl.playfun.R;
 import com.dl.playfun.databinding.ActivityCallWaiting2Binding;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.tencent.imsdk.v2.V2TIMManager;
-import com.tencent.liteav.trtccalling.model.TUICalling;
+import com.tencent.liteav.trtccalling.TUICalling;
 import com.tencent.liteav.trtccalling.model.util.TUICallingConstants;
 
 import me.goldze.mvvmhabit.base.BaseActivity;

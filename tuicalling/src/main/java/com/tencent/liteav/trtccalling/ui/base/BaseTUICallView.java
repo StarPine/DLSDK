@@ -20,6 +20,7 @@ import com.tencent.liteav.trtccalling.model.TRTCCallingDelegate;
 import com.tencent.liteav.trtccalling.model.impl.UserModel;
 import com.tencent.liteav.trtccalling.model.impl.base.CallingInfoManager;
 import com.tencent.liteav.trtccalling.model.impl.base.TRTCLogger;
+import com.tencent.liteav.trtccalling.model.util.EventHandler;
 import com.tencent.liteav.trtccalling.ui.floatwindow.FloatWindowService;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
@@ -48,6 +49,7 @@ public abstract class BaseTUICallView extends FrameLayout implements TRTCCalling
     protected String          mGroupID;
     protected boolean         mIsFromGroup;
     protected Handler         mMainHandler = new Handler(Looper.getMainLooper());
+    protected final Handler mEventHandler = EventHandler.sharedInstance();
 
     private long mSelfLowQualityTime;
     private long mOtherPartyLowQualityTime;

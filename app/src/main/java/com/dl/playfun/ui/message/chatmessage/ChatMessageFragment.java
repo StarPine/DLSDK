@@ -129,7 +129,6 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
         presenter.setConversationListener();
         binding.conversationLayout.setPresenter(presenter);
         binding.conversationLayout.initDefault();
-        binding.conversationLayout.getTitleBar().setVisibility(View.GONE);
         ConversationListLayout listLayout = binding.conversationLayout.getConversationList();
         // 设置adapter item中top文字大小
         listLayout.setItemTopTextSize(16);

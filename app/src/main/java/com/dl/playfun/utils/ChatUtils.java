@@ -13,11 +13,8 @@ import com.dl.playfun.R;
 import com.dl.playfun.ui.message.chatdetail.ChatDetailFragment;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.tencent.imsdk.v2.V2TIMConversation;
-import com.tencent.imsdk.v2.V2TIMFriendOperationResult;
-import com.tencent.imsdk.v2.V2TIMManager;
-import com.tencent.imsdk.v2.V2TIMValueCallback;
-import com.tencent.liteav.trtccalling.model.TUICalling;
-import com.tencent.liteav.trtccalling.model.impl.TUICallingManager;
+import com.tencent.liteav.trtccalling.TUICalling;
+import com.tencent.liteav.trtccalling.TUICallingImpl;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
@@ -178,7 +175,7 @@ public class ChatUtils {
 
     public static void audioCall(String userId, String name) {
         String[] userList ={userId};
-        TUICallingManager.sharedInstance().call(userList,TUICalling.Type.AUDIO);
+        TUICallingImpl.sharedInstance(AppContext.instance()).call(userList, TUICalling.Type.AUDIO);
     }
 
 }

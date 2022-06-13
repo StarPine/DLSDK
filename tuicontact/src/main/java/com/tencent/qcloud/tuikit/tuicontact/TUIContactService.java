@@ -208,18 +208,18 @@ public class TUIContactService extends ServiceInitializer implements ITUIContact
         return appContext;
     }
 
-    @Override
-    public int getLightThemeResId() {
-        return R.style.TUIContactLightTheme;
-    }
-
-    @Override
-    public int getLivelyThemeResId() {
-        return R.style.TUIContactLivelyTheme;
-    }
-
-    @Override
-    public int getSeriousThemeResId() {
-        return R.style.TUIContactSeriousTheme;
-    }
+//    @Override
+//    public int getLightThemeResId() {
+//        return R.style.TUIContactLightTheme;
+//    }
+//
+//    @Override
+//    public int getLivelyThemeResId() {
+//        return R.style.TUIContactLivelyTheme;
+//    }
+//
+//    @Override
+//    public int getSeriousThemeResId() {
+//        return R.style.TUIContactSeriousTheme;
+//    }
 }

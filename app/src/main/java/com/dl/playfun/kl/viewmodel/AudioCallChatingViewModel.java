@@ -27,7 +27,6 @@ import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
-import com.dl.playfun.app.EaringlSwitchUtil;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
@@ -42,8 +41,6 @@ import com.dl.playfun.event.AudioCallingCancelEvent;
 import com.dl.playfun.kl.Utils;
 import com.dl.playfun.kl.view.Ifinish;
 import com.dl.playfun.manager.ConfigManager;
-import com.dl.playfun.ui.dialog.GiftBagDialog;
-import com.dl.playfun.utils.ChatUtils;
 import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
@@ -56,14 +53,13 @@ import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMMessageReceipt;
 import com.tencent.liteav.trtccalling.model.TRTCCalling;
 import com.tencent.liteav.trtccalling.model.TRTCCallingDelegate;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.MyImageSpan;
-import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageInfoUtil;
+import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 import com.tencent.trtc.TRTCCloudDef;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -514,7 +510,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
             @Override
             public void onRecvNewMessage(V2TIMMessage msg) {//新消息提醒
                 if (msg != null && leftUserInfoField.get() != null) {
-                    MessageInfo info = ChatMessageInfoUtil.createMessageInfo(msg);
+                    TUIMessageBean info = ChatMessageBuilder.buildMessage(msg);
                     if (info != null) {
                         if (info.getFromUser().equals(leftUserInfoField.get().getImId())) {
                             String text = String.valueOf(info.getExtra());

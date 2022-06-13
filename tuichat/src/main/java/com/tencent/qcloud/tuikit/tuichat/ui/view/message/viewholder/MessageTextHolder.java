@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
@@ -11,7 +10,6 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
-import android.text.style.ImageSpan;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -40,7 +38,7 @@ import com.tencent.coustom.PhotoAlbumItemEntity;
 import com.tencent.coustom.PhotoAlbumItemRecyclerAdapter;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.MyImageSpan;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.MessageRecyclerView;
@@ -57,9 +55,15 @@ public class MessageTextHolder extends MessageContentHolder {
     private TextView msgBodyText;
     private TextView chat_tips_tv,chat_system_tip_tv;
     private FrameLayout msg_content_fl_custom;
+    private final View rootView;
 
     public MessageTextHolder(View itemView) {
         super(itemView);
+        this.rootView = itemView;
+        msgBodyText = itemView.findViewById(R.id.msg_body_tv);
+        chat_tips_tv = itemView.findViewById(R.id.chat_tips_tv);
+        msg_content_fl_custom = itemView.findViewById(R.id.msg_content_fl_custom);
+        chat_system_tip_tv = itemView.findViewById(R.id.chat_system_tip_tv);
     }
 
     /**
@@ -88,17 +92,9 @@ public class MessageTextHolder extends MessageContentHolder {
         return R.layout.message_adapter_content_text;
     }
 
-    @Override
-    public void initVariableViews() {
-        msgBodyText = rootView.findViewById(R.id.msg_body_tv);
-        chat_tips_tv = rootView.findViewById(R.id.chat_tips_tv);
-        msg_content_fl_custom = rootView.findViewById(R.id.msg_content_fl_custom);
-        chat_system_tip_tv = rootView.findViewById(R.id.chat_system_tip_tv);
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
-    public void layoutVariableViews(MessageInfo msg, int position) {
+    public void layoutVariableViews(TUIMessageBean msg, int position) {
         msgBodyText.setVisibility(View.VISIBLE);
         chat_system_tip_tv.setVisibility(View.GONE);
         rootView.findViewById(R.id.content_tip).setVisibility(View.GONE);
@@ -126,7 +122,7 @@ public class MessageTextHolder extends MessageContentHolder {
                     chat_tips_tv.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            onItemLongClickListener.onToastVipText(msg);
+                            onItemClickListener.onToastVipText(msg);
                         }
                     });
                 } else if (map_data != null && map_data.get("type") != null && map_data.get("type").equals("message_tag")) {//推送用户标签
@@ -215,27 +211,27 @@ public class MessageTextHolder extends MessageContentHolder {
                                 @Override
                                 public void onClick(View v, int pos, PhotoAlbumItemEntity itemEntity) {
                                     //onItemClickListener.openUserImage(itemEntity);
-                                    onItemLongClickListener.clickToUserMain();
+                                    onItemClickListener.clickToUserMain();
                                 }
                             });
                             rootView.findViewById(R.id.photo_album_right_acc).setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     //onItemClickListener.toUserHome();
-                                    onItemLongClickListener.clickToUserMain();
+                                    onItemClickListener.clickToUserMain();
                                 }
                             });
                             rootView.findViewById(R.id.photo_album_layout_item).setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    onItemLongClickListener.clickToUserMain();
+                                    onItemClickListener.clickToUserMain();
                                 }
                             });
                             rootView.findViewById(R.id.photo_album_layout).setOnClickListener(new View.OnClickListener() {
 
                                 @Override
                                 public void onClick(View v) {
-                                    onItemLongClickListener.clickToUserMain();
+                                    onItemClickListener.clickToUserMain();
                                 }
                             });
                         }
@@ -268,25 +264,25 @@ public class MessageTextHolder extends MessageContentHolder {
                             evaluation_tag1.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    onItemLongClickListener.onClickEvaluate(position,msg,evaluateItemEntity1,false);
+                                    onItemClickListener.onClickEvaluate(position,msg,evaluateItemEntity1,false);
                                 }
                             });
                             evaluation_tag2.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    onItemLongClickListener.onClickEvaluate(position,msg,evaluateItemEntity2,false);
+                                    onItemClickListener.onClickEvaluate(position,msg,evaluateItemEntity2,false);
                                 }
                             });
                             evaluation_tag3.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    onItemLongClickListener.onClickEvaluate(position,msg,evaluateItemEntity3,false);
+                                    onItemClickListener.onClickEvaluate(position,msg,evaluateItemEntity3,false);
                                 }
                             });
                             evaluation_tag4.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    onItemLongClickListener.onClickEvaluate(position, msg, null, true);
+                                    onItemClickListener.onClickEvaluate(position, msg, null, true);
                                 }
                             });
                         }
@@ -345,7 +341,7 @@ public class MessageTextHolder extends MessageContentHolder {
                                         custom_gift_hint_text.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                onItemLongClickListener.onClickCustomText();
+                                                onItemClickListener.onClickCustomText();
                                             }
                                         });
                                     }
@@ -423,7 +419,7 @@ public class MessageTextHolder extends MessageContentHolder {
                                         if (totalSeconds > 0 && callingType> 0){
                                             rootView.findViewById(R.id.custom_sufficient_view_tip).setVisibility(View.VISIBLE);
                                             rootView.findViewById(R.id.custom_sufficient_view_tip).setOnClickListener(v -> {
-                                                onItemLongClickListener.onClickDialogRechargeShow();
+                                                onItemClickListener.onClickDialogRechargeShow();
                                             });
                                         }else {
                                             rootView.findViewById(R.id.user_content).setVisibility(View.GONE);
@@ -434,7 +430,7 @@ public class MessageTextHolder extends MessageContentHolder {
                                         male_hint_layout.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                onItemLongClickListener.onClickDialogRechargeShow();
+                                                onItemClickListener.onClickDialogRechargeShow();
                                             }
                                         });
                                         customHintText.setVisibility(View.GONE);
@@ -465,7 +461,7 @@ public class MessageTextHolder extends MessageContentHolder {
                                             customHintText.setOnClickListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {
-                                                    onItemLongClickListener.onClickCustomText();
+                                                    onItemClickListener.onClickCustomText();
                                                 }
                                             });
                                         }
@@ -518,7 +514,7 @@ public class MessageTextHolder extends MessageContentHolder {
                                 customHintText.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        onItemLongClickListener.onClickCustomText(position, msg, customIMTextEntity);
+                                        onItemClickListener.onClickCustomText(position, msg, customIMTextEntity);
                                     }
                                 });
                             }
@@ -607,7 +603,7 @@ public class MessageTextHolder extends MessageContentHolder {
                     male_hint_error_layout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            onItemLongClickListener.onClickDialogRechargeShow();
+                            onItemClickListener.onClickDialogRechargeShow();
                         }
                     });
                 } else if (map_data != null && map_data.get("type") != null && map_data.get("type").equals("chat_earnings")) {//收益提示
@@ -674,7 +670,7 @@ public class MessageTextHolder extends MessageContentHolder {
                     customHintText.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            onItemLongClickListener.onClickCustomText(position, msg, customIMTextEntity);
+                            onItemClickListener.onClickCustomText(position, msg, customIMTextEntity);
                         }
                     });
                 } else {
@@ -701,7 +697,7 @@ public class MessageTextHolder extends MessageContentHolder {
                 rootView.findViewById(R.id.full_toast).setVisibility(View.GONE);
                 String extra = msg.getExtra().toString();
                 //信令消息
-                if (msg.getTimMessage() != null && msg.getTimMessage().getCustomElem() != null && msg.getCustomElemData() != null) {
+                if (msg.getV2TIMMessage() != null && msg.getV2TIMMessage().getCustomElem() != null && msg.getCustomElemData() != null) {
                     Map<String, Object> signallingData = IMGsonUtils.fromJson(new String(msg.getCustomElemData()), Map.class);
                     String customElem = new String(msg.getCustomElemData());
                     //音视频通话
@@ -755,7 +751,7 @@ public class MessageTextHolder extends MessageContentHolder {
                     msgBodyText.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            onItemLongClickListener.onTextTOWebView(msg);
+                            onItemClickListener.onTextTOWebView(msg);
                         }
                     });
                 } else {
@@ -777,7 +773,7 @@ public class MessageTextHolder extends MessageContentHolder {
         }
     }
 
-    public void setBackColor(MessageInfo msg) {
+    public void setBackColor(TUIMessageBean msg) {
         if (properties.getChatContextFontSize() != 0) {
             msgBodyText.setTextSize(properties.getChatContextFontSize());
         }

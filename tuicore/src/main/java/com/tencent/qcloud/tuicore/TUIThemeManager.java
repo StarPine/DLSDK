@@ -249,13 +249,13 @@ public class TUIThemeManager {
         }
         Resources.Theme theme = context.getTheme();
         if (theme == null) {
-            if (currentTheme == THEME_LIVELY) {
-                context.setTheme(R.style.TUIBaseLivelyTheme);
-            } else if (currentTheme == THEME_SERIOUS) {
-                context.setTheme(R.style.TUIBaseSeriousTheme);
-            } else {
+//            if (currentTheme == THEME_LIVELY) {
+//                context.setTheme(R.style.TUIBaseLivelyTheme);
+//            } else if (currentTheme == THEME_SERIOUS) {
+//                context.setTheme(R.style.TUIBaseSeriousTheme);
+//            } else {
                 context.setTheme(R.style.TUIBaseLightTheme);
-            }
+//            }
             theme = context.getTheme();
         }
         mergeTheme(theme);

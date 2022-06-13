@@ -36,13 +36,19 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
     public RelativeLayout mContentLayout;
 
     private ValueAnimator highLightAnimator;
+
+
+    protected View rootView;//todo
+
     public MessageBaseHolder(View itemView) {
         super(itemView);
+
+        rootView = itemView;//todo
         chatTimeText = itemView.findViewById(R.id.chat_time_tv);
         msgContentFrame = itemView.findViewById(R.id.msg_content_fl);
-        mMutiSelectCheckBox = itemView.findViewById(R.id.select_checkbox);
-        rightGroupLayout = itemView.findViewById(R.id.right_group_layout);
-        mContentLayout = itemView.findViewById(R.id.messsage_content_layout);
+//        mMutiSelectCheckBox = itemView.findViewById(R.id.select_checkbox);
+//        rightGroupLayout = itemView.findViewById(R.id.right_group_layout);
+//        mContentLayout = itemView.findViewById(R.id.messsage_content_layout);
         initVariableLayout();
     }
 

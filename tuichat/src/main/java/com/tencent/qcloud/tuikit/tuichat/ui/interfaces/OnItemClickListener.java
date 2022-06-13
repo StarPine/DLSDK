@@ -28,19 +28,19 @@ public interface OnItemClickListener {
     default void onTextSelected(View view, int position, TUIMessageBean messageInfo) {};
 
     //彭石林新增
-    void onToastVipText(MessageInfo messageInfo);
+    void onToastVipText(TUIMessageBean messageInfo);
 
-    void onTextReadUnlock(TextView textView, View view, MessageInfo messageInfo);
+    void onTextReadUnlock(TextView textView, View view, TUIMessageBean messageInfo);
 
-    void onTextTOWebView(MessageInfo messageInfo);
+    void onTextTOWebView(TUIMessageBean messageInfo);
 
     void toUserHome();
 
     void openUserImage(PhotoAlbumItemEntity itemEntity);
 
-    void onClickEvaluate(int position, MessageInfo messageInfo, EvaluateItemEntity evaluateItemEntity, boolean more);
+    void onClickEvaluate(int position, TUIMessageBean messageInfo, EvaluateItemEntity evaluateItemEntity, boolean more);
 
-    void onClickCustomText(int position, MessageInfo messageInfo, CustomIMTextEntity customIMTextEntity);
+    void onClickCustomText(int position, TUIMessageBean messageInfo, CustomIMTextEntity customIMTextEntity);
 
     void onClickDialogRechargeShow();
 

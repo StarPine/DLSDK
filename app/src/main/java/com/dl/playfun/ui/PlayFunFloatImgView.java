@@ -9,7 +9,6 @@ import androidx.annotation.Nullable;
 
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
-import com.tencent.liteav.trtccalling.model.impl.TUICallingManager;
 import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
 
 /**

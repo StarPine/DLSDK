@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="conversation_avatar_width">49.35dp</dimen>
+    <dimen name="conversation_avatar_height">49.35dp</dimen>
 
 
     <dimen name="page_margin">10dp</dimen>

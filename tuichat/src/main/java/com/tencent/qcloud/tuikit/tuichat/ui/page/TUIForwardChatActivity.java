@@ -95,17 +95,17 @@ public class TUIForwardChatActivity extends BaseLightActivity {
             }
 
             @Override
-            public void onToastVipText(MessageInfo messageInfo) {
+            public void onToastVipText(TUIMessageBean messageInfo) {
 
             }
 
             @Override
-            public void onTextReadUnlock(TextView textView, View view, MessageInfo messageInfo) {
+            public void onTextReadUnlock(TextView textView, View view, TUIMessageBean messageInfo) {
 
             }
 
             @Override
-            public void onTextTOWebView(MessageInfo messageInfo) {
+            public void onTextTOWebView(TUIMessageBean messageInfo) {
 
             }
 
@@ -120,12 +120,12 @@ public class TUIForwardChatActivity extends BaseLightActivity {
             }
 
             @Override
-            public void onClickEvaluate(int position, MessageInfo messageInfo, EvaluateItemEntity evaluateItemEntity, boolean more) {
+            public void onClickEvaluate(int position, TUIMessageBean messageInfo, EvaluateItemEntity evaluateItemEntity, boolean more) {
 
             }
 
             @Override
-            public void onClickCustomText(int position, MessageInfo messageInfo, CustomIMTextEntity customIMTextEntity) {
+            public void onClickCustomText(int position, TUIMessageBean messageInfo, CustomIMTextEntity customIMTextEntity) {
 
             }
 

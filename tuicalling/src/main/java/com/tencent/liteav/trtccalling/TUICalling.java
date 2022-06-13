@@ -47,6 +47,8 @@ public interface TUICalling {
      */
     void call(String[] userIDs, Type type);
 
+    void call(String[] userIDs, Type video, int roomId, String data);
+
     /**
      * 设置监听器
      *

@@ -2,6 +2,7 @@ package com.tencent.liteav.trtccalling;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -105,6 +106,37 @@ public final class TUICallingImpl implements TUICalling, TRTCCallingDelegate {
     @Override
     public void call(final String[] userIDs, final Type type) {
         internalCall(userIDs, "", "", false, type, Role.CALL);
+    }
+
+    public void call(final String[] userIDs, final Type type, int roomId, String data) {
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+//                    Intent intent = Type.AUDIO == type ? new Intent(mContext, TRTCAudioCallActivity.class) : new Intent(mContext, TRTCVideoCallActivity.class);
+                Intent intent;
+                if (Type.AUDIO == type) {
+                    intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse("play_chat://pet.master.tw/call/audio"));
+                } else {
+                    intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse("play_chat://pet.master.tw/call/video"));
+                }
+                intent.putExtra(TUICallingConstants.PARAM_NAME_ROLE, Role.CALL);
+//                if (Role.CALLED == role) {
+//                    intent.putExtra(TUICallingConstants.PARAM_NAME_SPONSORID, sponsorID);
+//                    intent.putExtra(TUICallingConstants.PARAM_NAME_ISFROMGROUP, isFromGroup);
+//                }
+                intent.putExtra("userProfile", data);
+                intent.putExtra(TUICallingConstants.PARAM_NAME_USERIDS, userIDs);
+                intent.putExtra(TUICallingConstants.PARAM_NAME_GROUPID, "");
+                intent.putExtra("roomId", roomId);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                mContext.startActivity(intent);
+            }
+        });
+        if (null != mTUICallingListener) {
+            mTUICallingListener.onCallStart(userIDs, type, Role.CALL, null);
+        }
     }
 
     public void internalCall(final String[] userIDs, String groupID, final Type type, final Role role) {
@@ -378,6 +410,11 @@ public final class TUICallingImpl implements TUICalling, TRTCCallingDelegate {
     @Override
     public void onSwitchToAudio(boolean success, String message) {
         Log.d(TAG, "onSwitchToAudio enter");
+    }
+
+    @Override
+    public void onTryToReconnect() {
+
     }
 
     public interface CallingManagerListener {

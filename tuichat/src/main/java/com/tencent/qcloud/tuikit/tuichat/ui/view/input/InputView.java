@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -28,6 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
@@ -118,14 +120,13 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
     /**
      * 更多按钮
      */
-    protected ImageView mMoreInputButton;
     protected Object mMoreInputEvent;
     protected boolean mMoreInputDisable;
 
     /**
      * 消息发送按钮
      */
-    protected Button mSendTextButton;
+    protected ImageView mSendTextButton;
 
     /**
      * 语音长按按钮
@@ -236,10 +237,9 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
         mSendAudioButton = findViewById(R.id.chat_voice_input);
         mAudioInputSwitchButton = findViewById(R.id.voice_input_switch);
         mEmojiInputButton = findViewById(R.id.face_btn);
-        mMoreInputButton = findViewById(R.id.more_btn);
         mSendTextButton = findViewById(R.id.send_btn);
         mTextInput = findViewById(R.id.chat_message_input);
-        replyLayout = findViewById(R.id.reply_preview_bar);
+//        replyLayout = findViewById(R.id.reply_preview_bar);
         replyTv = findViewById(R.id.reply_text);
         replyCloseBtn = findViewById(R.id.reply_close_btn);
         // 子类实现所有的事件处理
@@ -255,10 +255,8 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
         layoutParams.height = iconSize;
         mAudioInputSwitchButton.setLayoutParams(layoutParams);
 
-        layoutParams = mMoreInputButton.getLayoutParams();
         layoutParams.width = iconSize;
         layoutParams.height = iconSize;
-        mMoreInputButton.setLayoutParams(layoutParams);
 
         //彭石林新增
         sendBtnDisplay = findViewById(R.id.send_btn_display);
@@ -300,7 +298,6 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
 
         mAudioInputSwitchButton.setOnClickListener(this);
         mEmojiInputButton.setOnClickListener(this);
-        mMoreInputButton.setOnClickListener(this);
         mSendTextButton.setOnClickListener(this);
         mTextInput.addTextChangedListener(this);
         mTextInput.setOnTouchListener(new OnTouchListener() {
@@ -769,6 +766,10 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
         this.mChatInputHandler = handler;
     }
 
+    public MessageHandler getMessageHandler(){
+        return this.mMessageHandler;
+    }
+
     public void setMessageHandler(MessageHandler handler) {
         this.mMessageHandler = handler;
     }
@@ -782,7 +783,6 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
         TUIChatLog.i(TAG, "onClick id:" + view.getId()
                 + "|voice_input_switch:" + R.id.voice_input_switch
                 + "|face_btn:" + R.id.face_btn
-                + "|more_btn:" + R.id.more_btn
                 + "|send_btn:" + R.id.send_btn
                 + "|mCurrentState:" + mCurrentState
                 + "|mSendEnable:" + mSendEnable
@@ -820,37 +820,11 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
                 mInputMoreView.setVisibility(View.GONE);
                 mEmojiInputButton.setImageResource(R.drawable.action_face_selector);
                 mTextInput.setVisibility(VISIBLE);
-                showSoftInput();
+//                showSoftInput();
             } else {
                 mCurrentState = STATE_FACE_INPUT;
                 mEmojiInputButton.setImageResource(R.drawable.chat_input_keyboard);
                 showFaceViewGroup();
-            }
-        } else if (view.getId() == R.id.more_btn) {//若点击右边的“+”号按钮
-            hideSoftInput();
-            if (mMoreInputEvent instanceof View.OnClickListener) {
-                ((View.OnClickListener) mMoreInputEvent).onClick(view);
-            } else if (mMoreInputEvent instanceof BaseInputFragment) {
-                showCustomInputMoreFragment();
-            } else {
-                if (mCurrentState == STATE_ACTION_INPUT) {
-                    mCurrentState = STATE_NONE_INPUT;
-                    //以下是zanhanding添加的代码，用于fix有时需要两次点击加号按钮才能呼出富文本选择布局的问题
-                    //判断富文本选择布局是否已经被呼出，并反转相应的状态
-                    if (mInputMoreView.getVisibility() == View.VISIBLE) {
-                        mInputMoreView.setVisibility(View.GONE);
-                    } else {
-                        mInputMoreView.setVisibility(View.VISIBLE);
-                    }
-                    //以上是zanhanding添加的代码，用于fix有时需要两次点击加号按钮才能呼出富文本选择布局的问题
-                } else {
-                    showInputMoreLayout();//显示“更多”消息发送布局
-                    mCurrentState = STATE_ACTION_INPUT;
-                    mAudioInputSwitchButton.setImageResource(R.drawable.action_audio_selector);
-                    mEmojiInputButton.setImageResource(R.drawable.action_face_selector);
-                    mSendAudioButton.setVisibility(GONE);
-                    mTextInput.setVisibility(VISIBLE);
-                }
             }
         } else if (view.getId() == R.id.send_btn) {
             if (mSendEnable) {
@@ -860,7 +834,7 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
                             List<String> atUserList = new ArrayList<>(mTextInput.getMentionIdList());
                             mMessageHandler.sendMessage(ChatMessageBuilder.buildAtReplyMessage(mTextInput.getText().toString().trim(), atUserList, replyPreviewBean));
                         } else {
-                            sendOnClickCallbacks.sendOnClickCallbackOk(mMessageHandler,ChatMessageInfoUtil.buildTextMessage(mTextInput.getText().toString().trim()));
+                            sendOnClickCallbacks.sendOnClickCallbackOk(mMessageHandler,ChatMessageBuilder.buildTextMessage(mTextInput.getText().toString().trim()));
                             //mMessageHandler.sendMessage(ChatMessageInfoUtil.buildTextMessage(mTextInput.getText().toString().trim()));
                         }
                         exitReply();
@@ -883,6 +857,7 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void showSoftInput() {
         TUIChatLog.i(TAG, "showSoftInput");
         hideInputMoreLayout();
@@ -924,6 +899,7 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
         mTextInput.setVisibility(VISIBLE);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     private boolean isSoftInputShown() {
         View decorView = ((Activity) getContext()).getWindow().getDecorView();
         int screenHeight = decorView.getHeight();
@@ -933,6 +909,7 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
     }
 
     // 兼容有导航键的情况
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     private int getNavigateBarHeight() {
         DisplayMetrics metrics = new DisplayMetrics();
         WindowManager windowManager  = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
@@ -1076,7 +1053,7 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
 
         if (mMessageHandler != null && success) {
             //发送拦截。
-            sendOnClickCallbacks.sendOnClickAudioMessage(mMessageHandler,ChatMessageInfoUtil.buildAudioMessage(AudioPlayer.getInstance().getPath(), duration));
+            sendOnClickCallbacks.sendOnClickAudioMessage(mMessageHandler,ChatMessageBuilder.buildAudioMessage(AudioPlayer.getInstance().getPath(), duration));
             //mMessageHandler.sendMessage(ChatMessageInfoUtil.buildAudioMessage(AudioPlayer.getInstance().getPath(), duration));
         }
     }
@@ -1423,11 +1400,9 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
     public void disableMoreInput(boolean disable) {
         mMoreInputDisable = disable;
         if (disable) {
-            //mMoreInputButton.setVisibility(GONE);
             sendBtnDisplay.setVisibility(GONE);
             mSendTextButton.setVisibility(VISIBLE);
         } else {
-            //mMoreInputButton.setVisibility(VISIBLE);
             sendBtnDisplay.setVisibility(VISIBLE);
             mSendTextButton.setVisibility(GONE);
         }
@@ -1477,7 +1452,7 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
         if (mMoreInputDisable) {
             return;
         }
-        mMoreInputButton.setVisibility(visibility);
+        sendBtnDisplay.setVisibility(visibility);
     }
 
     protected void showSendTextButton(int visibility) {
@@ -1502,7 +1477,7 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
         String text = previewBean.getMessageSender() + " : " + msgTypeStr + " " + replyMessageAbstract;
         text = FaceManager.emojiJudge(text);
         replyTv.setText(text);
-        replyLayout.setVisibility(View.VISIBLE);
+//        replyLayout.setVisibility(View.VISIBLE);
         if (mMessageHandler != null) {
             mMessageHandler.scrollToEnd();
         }
@@ -1515,7 +1490,7 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
     public void exitReply() {
         isReplyModel = false;
         replyPreviewBean = null;
-        replyLayout.setVisibility(View.GONE);
+//        replyLayout.setVisibility(View.GONE);
     }
 
     protected void showEmojiInputButton(int visibility) {
@@ -1556,8 +1531,8 @@ public class InputView extends LinearLayout implements IInputLayout, View.OnClic
     }
 
     public interface SendOnClickCallback{
-        void sendOnClickCallbackOk(MessageHandler messageHandler,MessageInfo messageInfo);
-        void sendOnClickAudioMessage(MessageHandler messageHandler,MessageInfo messageInfo);
+        void sendOnClickCallbackOk(MessageHandler messageHandler,TUIMessageBean messageInfo);
+        void sendOnClickAudioMessage(MessageHandler messageHandler,TUIMessageBean messageInfo);
         void onClickPhoneVideo();
         void onClickGift();
 

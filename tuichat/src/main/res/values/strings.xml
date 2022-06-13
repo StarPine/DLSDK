@@ -165,5 +165,39 @@
 
 	<string name="custom_message_txt8">餘額不足，請儲值</string>
 	<string name="custom_message_call_message_deatail_time_msg">結束通話，通話時長:  %02d:%02d</string>
-
+	<string name="modify_introduction">Change the group introduction to</string>
+	<string name="save_tips">Saved successfully.</string>
+	<string name="saving_tips">Saving</string>
+	<string name="reply_button">Reply</string>
+	<string name="resend_tips">Are you sure you want to resend?</string>
+	<string name="locate_origin_msg_failed_tip">Unable to locate the original message.</string>
+	<string name="has_all_read">All read</string>
+	<string name="someone_has_read">%d read</string>
+	<string name="back_to_lastmessage">Go to Latest Message</string>
+	<string name="back_to_newmessage"> New Message(s)</string>
+	<string name="back_to_atmessage_all">\@All</string>
+	<string name="back_to_atmessage_me">Someone @ me</string>
+	<string name="chat_delete_msg_tip">Delete now</string>
+	<string name="copy_success_tip">Copy Success</string>
+	<string name="chat_message_read_receipt">Message Read Receipt</string>
+	<string name="chat_i_know">I got it</string>
+	<string name="chat_no_more_reminders">No more reminders</string>
+	<string name="chat_im_flagship">Flagship Edition</string>
+	<string name="chat_buying_guidelines">purchase guidelines</string>
+	<string name="chat_im_flagship_edition_update_tip">%s features are IM Flagship Edition features, which can be used after purchasing the Flagship Edition. If you are currently using the Pro Edition, you need to do a refund on the Pro Edition first, and then purchase the Flagship Edition. see the purchase guidelines for details.</string>
+	<string name="chat_permission_mic_reason_title">%s applies for access to the microphone</string>
+	<string name="chat_permission_mic_reason">In order for you to send voice messages, make video and audio and video calls, please allow us to access the microphone.</string>
+	<string name="chat_permission_camera_reason_title">%s applies for camera permission</string>
+	<string name="chat_permission_camera_reason">In order for you to take photos or videos to send to friends, and to make video calls, please allow us to access the webcam.</string>
+	<string name="chat_permission_storage_reason_title">%s applies for storage permission</string>
+	<string name="chat_permission_storage_reason">In order for you to view and select pictures and videos in your albums, send files from your device to friends, and save content to your device, please allow us to access photos, media content and files on your device.</string>
+	<string name="chat_permission_mic_dialog_alert">Allow microphone access in Settings->Apps->%s to use voice messages, video cameras, and audio and video calls as normal</string>
+	<string name="chat_permission_camera_dialog_alert">Allow camera access in Settings->Apps->%s to use the photo, video and video calling functions as normal</string>
+	<string name="chat_permission_storage_dialog_alert">Allow storage access in Settings->Apps->%s to use the file selection, sending and saving content functions normally</string>
+	<string name="chat_message_detail">Message details</string>
+	<string name="someone_unread">%d unread</string>
+	<string name="someone_have_read">%d have read</string>
+	<string name="location_extra">[Location]</string>
+	<string name="forward_chat_record">Chat Record</string>
+	<string name="reedit_msg">Re-edit</string>
 </resources>

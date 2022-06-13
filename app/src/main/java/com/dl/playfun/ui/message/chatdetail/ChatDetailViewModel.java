@@ -41,18 +41,16 @@ import com.dl.playfun.event.AddBlackListEvent;
 import com.dl.playfun.event.CallChatingHangupEvent;
 import com.dl.playfun.event.MessageGiftNewEvent;
 import com.dl.playfun.manager.ConfigManager;
-import com.dl.playfun.ui.dialog.GiftBagDialog;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.utils.FileUploadUtils;
-import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.utils.Utils;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.google.gson.Gson;
 import com.luck.picture.lib.entity.LocalMedia;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.event.InsufficientBalanceEvent;
-import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageInfoUtil;
+import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -632,7 +630,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                             CustomMessageData customMessageData = CustomMessageData.genCustomMessage(fileKey, CustomMessageData.TYPE_CUSTOM_IMAGE);
                             customMessageData.setImgWidth(localMedia.getWidth());
                             customMessageData.setImgHeight(localMedia.getHeight());
-                            MessageInfo info = ChatMessageInfoUtil.buildCustomMessage(GsonUtils.toJson(customMessageData), null, null);
+                            TUIMessageBean info = ChatMessageBuilder.buildCustomMessage(GsonUtils.toJson(customMessageData), null, null);
                             uc.signUploadSendMessage.postValue(info);
                         }
 
@@ -807,7 +805,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
         //播放礼物效果
         public SingleLiveEvent<Void> signGiftAnimEvent = new SingleLiveEvent<>();
         //上传文件成功。发送消息
-        public SingleLiveEvent<MessageInfo> signUploadSendMessage = new SingleLiveEvent<>();
+        public SingleLiveEvent<TUIMessageBean> signUploadSendMessage = new SingleLiveEvent<>();
         //钻石不足。唤起充值
         public SingleLiveEvent<Void> sendDialogViewEvent = new SingleLiveEvent<>();
 

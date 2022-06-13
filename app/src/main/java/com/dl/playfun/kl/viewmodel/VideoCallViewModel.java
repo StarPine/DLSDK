@@ -24,7 +24,6 @@ import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
-import com.dl.playfun.app.EaringlSwitchUtil;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
@@ -41,7 +40,6 @@ import com.dl.playfun.entity.UserProfileInfo;
 import com.dl.playfun.event.CallVideoUserEnterEvent;
 import com.dl.playfun.kl.view.JMTUICallVideoView;
 import com.dl.playfun.manager.ConfigManager;
-import com.dl.playfun.utils.ChatUtils;
 import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
@@ -52,15 +50,13 @@ import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMMessageReceipt;
-import com.tencent.liteav.trtccalling.model.TRTCCalling;
-import com.tencent.liteav.trtccalling.model.TUICalling;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
+import com.tencent.liteav.trtccalling.TUICalling;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.MyImageSpan;
-import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageInfoUtil;
+import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -729,7 +725,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
             @Override
             public void onRecvNewMessage(V2TIMMessage msg) {//新消息提醒
                 if (msg != null && callingVideoInviteInfoField.get() != null) {
-                    MessageInfo info = ChatMessageInfoUtil.createMessageInfo(msg);
+                    TUIMessageBean info = ChatMessageBuilder.buildMessage(msg);
                     if (info != null) {
                         if (info.getFromUser().equals(callingVideoInviteInfoField.get().getImId())) {
                             Log.e("确定是聊天对象发送的消息", "==================");
