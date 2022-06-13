@@ -197,29 +197,6 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
                 }
             }
         });
-        viewModel.uc.lineEvent.observe(this, new Observer<UserDetailEntity>() {
-            @Override
-            public void onChanged(UserDetailEntity detailEntity) {
-                if (StringUtil.isEmpty(detailEntity.getWeixin()) && StringUtil.isEmpty(detailEntity.getInsgram())) {
-                    binding.accountLine.setText(StringUtils.getString(R.string.playfun_no_input));
-                    return;
-                }
-                if (detailEntity.getIsUnlockAccount() != 1) {
-                    binding.accountLine.setText(StringUtils.getString(R.string.playfun_click_check_social_account));
-                    return;
-                }
-
-                if (detailEntity.getIsWeixinShow() == 1 || detailEntity.getIsUnlockAccount() == 1) {
-                    if (!StringUtils.isEmpty(detailEntity.getWeixin())) {
-                        binding.accountLine.setText(detailEntity.getWeixin());
-                    } else {
-                        binding.accountLine.setText(StringUtils.getString(R.string.playfun_no_input));
-                    }
-                } else {
-                    binding.accountLine.setText(StringUtils.getString(R.string.playfun_click_check_social_account));
-                }
-            }
-        });
         viewModel.uc.clickMore.observe(this, new Observer() {
             @Override
             public void onChanged(@Nullable Object o) {
@@ -390,9 +367,7 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
         });
         viewModel.uc.clickVipChat.observe(this, integer -> vipCheckChat(integer, ConfigManager.getInstance().getImMoney()));
         viewModel.uc.clickConnMic.observe(this, aVoid -> System.out.println("连麦"));
-        viewModel.uc.clickUnlockChatAccount.observe(this, coinPrice -> payUnlockChatAccount(coinPrice));
         viewModel.uc.todayCheckNumber.observe(this, integer -> DialogHelper.showCheckUserNumberDialog(UserDetailFragment.this, integer));
-        viewModel.uc.clickCheckChatAccount.observe(this, aVoid -> checkChatAccount());
 
         viewModel.uc.isAlertVipMonetyunlock.observe(this, new Observer<Void>() {
             @Override
@@ -838,89 +813,6 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
                     .chooseType(MVDialog.TypeEnum.CENTER)
                     .show();
         }
-    }
-
-    private void payUnlockChatAccount(String coinPrice) {
-        AppContext.instance().logEvent(AppsFlyerEvent.Social_Account);
-        if (!ConfigManager.getInstance().isVip()) {
-            MVDialog.getInstance(UserDetailFragment.this.getContext())
-                    .setTitle(getString(R.string.playfun_only_vip_can_unlock))
-                    .setConfirmText(getString(R.string.playfun_become_vip))
-                    .setConfirmOnlick(new MVDialog.ConfirmOnclick() {
-                        @Override
-                        public void confirm(MVDialog dialog) {
-                            dialog.dismiss();
-                            AppContext.instance().logEvent(AppsFlyerEvent.Become_A_VIP);
-                            viewModel.start(VipSubscribeFragment.class.getCanonicalName());
-                        }
-                    })
-                    .chooseType(MVDialog.TypeEnum.CENTER)
-                    .show();
-        } else {
-            MVDialog.getInstance(UserDetailFragment.this.getContext())
-                    .setTitle(getString(R.string.playfun_unlock_account_title_dialog))
-                    .setConfirmText(String.format(getString(R.string.playfun_pay_unlock), viewModel.detailEntity.get().getUnlockAccountMoney()))
-                    .setConfirmOnlick(new MVDialog.ConfirmOnclick() {
-                        @Override
-                        public void confirm(MVDialog dialog) {
-                            dialog.dismiss();
-                            new CoinPaySheet.Builder(mActivity).setPayParams(11, userId, getString(R.string.playfun_unlock_social_account), false, new CoinPaySheet.CoinPayDialogListener() {
-                                @Override
-                                public void onPaySuccess(CoinPaySheet sheet, String orderNo, Integer payPrice) {
-                                    sheet.dismiss();
-                                    AppContext.instance().logEvent(AppsFlyerEvent.Unlock);
-                                    ToastUtils.showShort(R.string.playfun_pay_success);
-                                    viewModel.payUnlockChatAccountSuccess(userId);
-                                    viewModel.uc.clickCheckChatAccount.call();
-                                    if (!StringUtils.isEmpty(viewModel.detailEntity.get().getWeixin())) {
-                                        binding.accountLine.setText(viewModel.detailEntity.get().getWeixin());
-                                    }
-                                }
-
-                                @Override
-                                public void onRechargeSuccess(CoinExchargeItegralPayDialog rechargeSheetView) {
-
-                                }
-                            }).build().show();
-                        }
-                    })
-                    .chooseType(MVDialog.TypeEnum.CENTER)
-                    .show();
-        }
-
-    }
-
-    private void checkChatAccount() {
-        if (viewModel.detailEntity.get() == null) {
-            return;
-        }
-        String account = null;
-        if (viewModel.detailEntity.get().getIsUnlockAccount() == 1 && viewModel.detailEntity.get().getIsWeixinShow() == 1) {
-            if (viewModel.detailEntity.get().getWeixin() != null && viewModel.detailEntity.get().getWeixin().length() > 0) {
-                account = " " + viewModel.detailEntity.get().getWeixin();
-            }
-        }
-        MVDialog.getInstance(mActivity)
-                //.setTitleSize(16)
-                .setTitle(getString(R.string.playfun_she_social_account))
-                .setContent(account)
-                .setConfirmText(getString(R.string.playfun_cancel))
-                .setConfirmTwoText(getString(R.string.playfun_copy))
-                .setConfirmTwoOnclick(dialog -> {
-                    dialog.dismiss();
-                    if (viewModel.detailEntity.get().getWeixin() != null && viewModel.detailEntity.get().getWeixin().length() > 0) {
-                        copyStr(viewModel.detailEntity.get().getWeixin());
-                    }
-                    ToastUtils.showShort(R.string.playfun_copy_clipboard);
-                })
-                .setNotClose(true)
-                .chooseType(MVDialog.TypeEnum.CENTER)
-                .show();
-    }
-    protected void copyStr(String text) {
-        ClipboardManager clipboard = (ClipboardManager) mActivity.getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData clip = ClipData.newPlainText("PlayFun", text);
-        clipboard.setPrimaryClip(clip);
     }
 
     //支付框样式选择

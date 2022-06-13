@@ -840,45 +840,6 @@
                                                         tools:text="桃園市/台中市" />
                                                 </LinearLayout>
 
-                                                <RelativeLayout
-                                                    android:layout_width="match_parent"
-                                                    android:layout_height="wrap_content"
-                                                    android:paddingEnd="14dp"
-                                                    android:minHeight="30dp"
-                                                    android:visibility="@{viewModel.detailEntity.sex == 0 ? View.VISIBLE:View.GONE}">
-                                                    <ImageView
-                                                        android:id="@+id/account_line_img"
-                                                        android:layout_centerInParent="true"
-                                                        android:layout_alignParentStart="true"
-                                                        android:layout_width="18dp"
-                                                        android:layout_height="18dp"
-                                                        android:src="@drawable/ic_user_detail_social_account" />
-
-                                                    <TextView
-                                                        android:id="@+id/account_line"
-                                                        style="@style/LabelContent"
-                                                        android:layout_width="wrap_content"
-                                                        android:layout_height="wrap_content"
-                                                        android:layout_centerInParent="true"
-                                                        android:layout_marginStart="48dp"
-                                                        android:layout_toEndOf="@+id/account_line_img"
-                                                        android:text='@string/playfun_click_check_social_account'
-                                                        android:visibility="@{StringUtils.isEmpty(viewModel.detailEntity.weixin)?View.GONE:View.VISIBLE}"
-                                                        binding:onClickCommand="@{viewModel.checkChatAccountOnClickCommand}" />
-
-                                                    <TextView
-                                                        android:layout_width="wrap_content"
-                                                        android:layout_height="wrap_content"
-                                                        android:layout_alignParentEnd="true"
-                                                        android:layout_centerInParent="true"
-                                                        android:layout_marginEnd="13dp"
-                                                        android:text="@string/playfun_user_detail_chat_she"
-                                                        android:textColor="@color/purple"
-                                                        android:textSize="@dimen/text_size_middle"
-                                                        android:visibility="gone"
-                                                        binding:onClickCommand="@{viewModel.directChatOnClickCommand}" />
-                                                </RelativeLayout>
-
                                                 <LinearLayout
                                                     android:layout_width="match_parent"
                                                     android:layout_height="wrap_content"

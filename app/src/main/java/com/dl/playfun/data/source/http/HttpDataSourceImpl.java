@@ -78,7 +78,6 @@ import com.dl.playfun.entity.TokenEntity;
 import com.dl.playfun.entity.TopicalListEntity;
 import com.dl.playfun.entity.TraceEntity;
 import com.dl.playfun.entity.UnReadMessageNumEntity;
-import com.dl.playfun.entity.UnlockSocialAccountConfigEntity;
 import com.dl.playfun.entity.UserCoinItemEntity;
 import com.dl.playfun.entity.UserConnMicStatusEntity;
 import com.dl.playfun.entity.UserDataEntity;
@@ -202,18 +201,6 @@ public class HttpDataSourceImpl implements HttpDataSource {
     @Override
     public Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(Integer callingType, String fromUserId, String toUserId) {
         return apiService.callingInviteInfo(callingType, fromUserId, toUserId);
-    }
-
-    @Override
-    public Observable<BaseDataResponse<UnlockSocialAccountConfigEntity>> getUnlockSocialAccountConfig() {
-        return apiService.getUnlockSocialAccountConfig();
-    }
-
-    @Override
-    public Observable<BaseResponse> updateSocialLevel(Integer socialLevel) {
-        HashMap<String, Integer> map = new HashMap<>();
-        map.put("socialLevel", socialLevel);
-        return apiService.updateSocialLevel(ApiUitl.getBody(GsonUtils.toJson(map)));
     }
 
     @Override

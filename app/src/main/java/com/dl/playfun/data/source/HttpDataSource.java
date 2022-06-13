@@ -75,7 +75,6 @@ import com.dl.playfun.entity.TokenEntity;
 import com.dl.playfun.entity.TopicalListEntity;
 import com.dl.playfun.entity.TraceEntity;
 import com.dl.playfun.entity.UnReadMessageNumEntity;
-import com.dl.playfun.entity.UnlockSocialAccountConfigEntity;
 import com.dl.playfun.entity.UserCoinItemEntity;
 import com.dl.playfun.entity.UserConnMicStatusEntity;
 import com.dl.playfun.entity.UserDataEntity;
@@ -317,18 +316,6 @@ public interface HttpDataSource {
      * @Date 2021/12/13
      */
     Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(Integer callingType, String fromUserId, String toUserId);
-
-    /**
-     * 获取解锁社交账号配置
-     */
-    Observable<BaseDataResponse<UnlockSocialAccountConfigEntity>> getUnlockSocialAccountConfig();
-
-    /**
-     * 更新解锁社交账号档次
-     */
-    Observable<BaseResponse> updateSocialLevel(Integer socialLevel);
-
-
 
     /**
      * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
