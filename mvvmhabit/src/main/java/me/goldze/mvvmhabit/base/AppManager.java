@@ -110,6 +110,18 @@ public class AppManager {
     }
 
     /**
+     * 结束所有非指定类名的Activity
+     */
+    public void finishAllActivity(Class<?> cls) {
+        for (Activity activity : activityStack) {
+            if (!activity.getClass().equals(cls)) {
+                finishActivity(activity);
+                break;
+            }
+        }
+    }
+
+    /**
      * 结束所有Activity
      */
     public void finishAllActivity() {

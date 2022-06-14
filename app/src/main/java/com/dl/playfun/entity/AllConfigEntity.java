@@ -28,6 +28,17 @@ public class AllConfigEntity {
 
     @SerializedName("is_tips")
     private Integer isTips;
+    //动态配置http请求域名
+    @SerializedName("api_url")
+    private String apiUrl;
+
+    public String getApiUrl() {
+        return apiUrl;
+    }
+
+    public void setApiUrl(String apiUrl) {
+        this.apiUrl = apiUrl;
+    }
 
     //任务中心相关配置
     private SystemConfigTaskEntity task;
