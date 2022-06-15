@@ -627,12 +627,9 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                 .doOnSubscribe(this)
                 .doOnSubscribe(disposable -> showHUD())
                 .subscribeOn(Schedulers.io())
-                .map(new Function<String, String>() {
-                    @Override
-                    public String apply(String s) throws Exception {
-                        String fileName = AppConfig.OSS_CUSTOM_FILE_NAME_CHAT +"/"+ Utils.formatYYMMSS.format(new Date());
-                        return FileUploadUtils.ossUploadFileCustom(FileUploadUtils.FILE_TYPE_IMAGE,filePath,fileName, null);
-                    }
+                .map((Function<String, String>) s -> {
+                    String fileName = AppConfig.OSS_CUSTOM_FILE_NAME_CHAT +"/"+ Utils.formatYYMMSS.format(new Date());
+                    return FileUploadUtils.ossUploadFileCustom(FileUploadUtils.FILE_TYPE_IMAGE,filePath,fileName, null);
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new DisposableObserver<String>() {

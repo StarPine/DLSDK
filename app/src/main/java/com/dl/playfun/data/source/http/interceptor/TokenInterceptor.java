@@ -56,6 +56,11 @@ public class TokenInterceptor implements Interceptor {
                 builder.build();
             }
         }
+        String apiServerUrl = localDataSource.readKeyValue(AppConfig.KEY_API_SERVER_URL);
+        if(apiServerUrl!=null){
+            builder.url(apiServerUrl+path);
+            builder.build();
+        }
 //        Response response = chain.proceed(builder.build());
 //        // 输出返回结果
 //        try {
