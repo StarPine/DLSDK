@@ -92,7 +92,6 @@
                         android:src="@drawable/icon_notepad"
                         android:layout_marginRight="10dp"
                         binding:onClickCommand="@{viewModel.noteOnClickCommand}"
-                        android:visibility="gone"
                         />
 
                     <ImageView

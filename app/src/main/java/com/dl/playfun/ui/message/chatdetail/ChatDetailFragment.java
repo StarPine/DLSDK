@@ -45,11 +45,13 @@ import com.dl.playfun.entity.TagEntity;
 import com.dl.playfun.entity.TaskRewardReceiveEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.MessageGiftNewEvent;
+import com.dl.playfun.kl.view.VideoPresetActivity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
 import com.dl.playfun.ui.certification.certificationmale.CertificationMaleFragment;
 import com.dl.playfun.ui.dialog.GiftBagDialog;
+import com.dl.playfun.ui.message.chatdetail.notepad.NotepadActivity;
 import com.dl.playfun.ui.message.coinredpackagedetail.CoinRedPackageDetailFragment;
 import com.dl.playfun.ui.message.photoreview.PhotoReviewFragment;
 import com.dl.playfun.ui.message.sendcoinredpackage.SendCoinRedPackageFragment;
@@ -205,6 +207,10 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         super.initViewObservable();
         viewModel.uc.sendDialogViewEvent.observe(this, event -> {
             paySelectionboxChoose(false);
+        });
+        viewModel.uc.starNotepad.observe(this, event -> {
+            Intent intent = new Intent(mActivity, NotepadActivity.class);
+            mActivity.startActivity(intent);
         });
         //播放SVGA动画
         viewModel.uc.signGiftAnimEvent.observe(this, animEvent -> {

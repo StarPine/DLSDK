@@ -3,7 +3,9 @@ package com.dl.playfun.ui.message.chatdetail;
 import android.app.Application;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -40,18 +42,24 @@ import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.AddBlackListEvent;
 import com.dl.playfun.event.CallChatingHangupEvent;
 import com.dl.playfun.event.MessageGiftNewEvent;
+import com.dl.playfun.kl.view.VideoPresetActivity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.utils.FileUploadUtils;
+import com.dl.playfun.utils.LogUtils;
+import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.utils.Utils;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.google.gson.Gson;
 import com.luck.picture.lib.entity.LocalMedia;
+import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
+import com.tencent.qcloud.tuikit.tuichat.bean.CustomHelloMessage;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.event.InsufficientBalanceEvent;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -69,6 +77,7 @@ import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.RxUtils;
+import me.goldze.mvvmhabit.utils.StringUtils;
 import me.goldze.mvvmhabit.utils.ToastUtils;
 
 /**
@@ -110,10 +119,14 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
             uc.clickMore.call();
         }
     });
+
+    /**
+     * 笔记点击
+     */
     public BindingCommand noteOnClickCommand = new BindingCommand(new BindingAction() {
         @Override
         public void call() {
-
+            uc.starNotepad.call();
         }
     });
 
@@ -808,6 +821,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<TUIMessageBean> signUploadSendMessage = new SingleLiveEvent<>();
         //钻石不足。唤起充值
         public SingleLiveEvent<Void> sendDialogViewEvent = new SingleLiveEvent<>();
+        public SingleLiveEvent<Void> starNotepad = new SingleLiveEvent<>();
 
     }
 
