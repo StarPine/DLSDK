@@ -14,7 +14,6 @@ buildscript {
         maven { url 'https://maven.aliyun.com/repository/public' }
         maven { url 'https://maven.aliyun.com/repository/jcenter' }
         maven { url "https://jitpack.io" }
-        maven { url 'https://dl.bintray.com/umsdk/release' }
         maven { url "https://maven.aliyun.com/repository/public" }
         maven { url "https://mirrors.tencent.com/nexus/repository/maven-public/" }
         maven { url "https://plugins.gradle.org/m2/" }
@@ -45,13 +44,6 @@ allprojects {
         google()
         jcenter()
         mavenCentral()
-
-        maven {
-            url "https://maven.springframework.org/release"
-        }
-        maven {
-            url "https://maven.restlet.com"
-        }
         maven { url "https://plugins.gradle.org/m2/" }
         maven { url "https://maven.google.com" }//添加这个就可以
         maven { url 'https://maven.aliyun.com/repository/google' }
@@ -59,7 +51,6 @@ allprojects {
         maven { url 'https://maven.aliyun.com/repository/public' }
         maven { url 'https://maven.aliyun.com/repository/jcenter' }
         maven { url 'https://jitpack.io' }
-        maven { url 'https://dl.bintray.com/umsdk/release' }
 
         maven { url "https://maven.aliyun.com/nexus/content/repositories/releases" }
         maven { url 'https://repo1.maven.org/maven2/' }
