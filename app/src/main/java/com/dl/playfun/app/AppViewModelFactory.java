@@ -28,6 +28,7 @@ import com.dl.playfun.ui.message.MessageMainViewModel;
 import com.dl.playfun.ui.message.applymessage.ApplyMessageViewModel;
 import com.dl.playfun.ui.message.broadcastmessage.BroadcastMessageViewModel;
 import com.dl.playfun.ui.message.chatdetail.ChatDetailViewModel;
+import com.dl.playfun.ui.message.chatdetail.notepad.NotepadViewModel;
 import com.dl.playfun.ui.message.chatmessage.ChatMessageViewModel;
 import com.dl.playfun.ui.message.coinredpackagedetail.CoinRedPackageDetailViewModel;
 import com.dl.playfun.ui.message.commentmessage.CommentMessageViewModel;
@@ -269,6 +270,8 @@ public class AppViewModelFactory extends ViewModelProvider.NewInstanceFactory {
             return (T) new PerfectProfileViewModel(mApplication, mRepository);
         } else if (modelClass.isAssignableFrom(CommunityAccountModel.class)){
             return (T) new CommunityAccountModel(mApplication, mRepository);
+        }else if (modelClass.isAssignableFrom(NotepadViewModel.class)){
+            return (T) new NotepadViewModel(mApplication, mRepository);
         }
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
     }

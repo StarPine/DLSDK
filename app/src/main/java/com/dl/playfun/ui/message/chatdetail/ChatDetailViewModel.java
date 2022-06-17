@@ -37,13 +37,16 @@ import com.dl.playfun.entity.PriceConfigEntity;
 import com.dl.playfun.entity.StatusEntity;
 import com.dl.playfun.entity.TagEntity;
 import com.dl.playfun.entity.TaskRewardReceiveEntity;
+import com.dl.playfun.entity.TraceEntity;
 import com.dl.playfun.entity.UserConnMicStatusEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.AddBlackListEvent;
 import com.dl.playfun.event.CallChatingHangupEvent;
+import com.dl.playfun.event.LikeChangeEvent;
 import com.dl.playfun.event.MessageGiftNewEvent;
 import com.dl.playfun.kl.view.VideoPresetActivity;
 import com.dl.playfun.manager.ConfigManager;
+import com.dl.playfun.ui.mine.likelist.LikeListViewModel;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.utils.FileUploadUtils;
 import com.dl.playfun.utils.LogUtils;
@@ -87,7 +90,10 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
     public static final String TAG = "ChatDetailViewModel";
     public ObservableField<Boolean> isTagShow = new ObservableField<>(false);
     public ObservableField<Boolean> inBlacklist = new ObservableField<>(false);
+    public ObservableField<Boolean> isTrack = new ObservableField<>(false);//todo 还没根据后端进行初始化
     public ObservableField<Boolean> dialogShow = new ObservableField<>(false);
+    public ObservableField<String> menuTrack = new ObservableField<>();
+    public ObservableField<String> menuBlockade = new ObservableField<>("封鎖");
     public ObservableField<TagEntity> tagEntitys = new ObservableField<>();
     public ObservableField<List<String>> sensitiveWords = new ObservableField<>();
     //聊天对方IM 用户ID
@@ -604,7 +610,8 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                     @Override
                     public void onSuccess(BaseResponse response) {
                         dismissHUD();
-                        uc.addLikeSuccess.postValue(msgId);
+                        isTrack.set(true);
+//                        uc.addLikeSuccess.postValue(msgId);
                     }
 
                     @Override
@@ -619,6 +626,37 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                     }
                 });
     }
+
+    /**
+     * 取消追蹤
+     * @param toUserId 对方的userID
+     */
+    public void delLike(Integer toUserId) {
+        model.deleteCollect(toUserId)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(this)
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseResponse>() {
+                    @Override
+                    public void onSuccess(BaseResponse response) {
+                        dismissHUD();
+                        isTrack.set(false);
+                    }
+
+                    @Override
+                    public void onError(RequestException e) {
+                        super.onError(e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        super.onComplete();
+                        dismissHUD();
+                    }
+                });
+    }
+
     //上传文件到阿里云
     public void uploadFileOSS(final LocalMedia localMedia){
         final String filePath = localMedia.getCompressPath();

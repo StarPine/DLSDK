@@ -90,7 +90,7 @@
                         android:layout_centerVertical="true"
                         android:layout_toLeftOf="@+id/iv_setting"
                         android:src="@drawable/icon_notepad"
-                        android:layout_marginRight="10dp"
+                        android:layout_marginRight="20dp"
                         binding:onClickCommand="@{viewModel.noteOnClickCommand}"
                         />
 

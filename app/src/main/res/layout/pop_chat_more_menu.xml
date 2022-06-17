@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.dl.playfun.ui.message.chatdetail.ChatDetailViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_chat_more_menu"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_menu_track"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/icon_track"
+            android:drawablePadding="15dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:paddingTop="20dp"
+            android:paddingRight="30dp"
+            android:paddingBottom="20dp"
+            android:textColor="@color/toolbar_title_color"
+            android:textSize="@dimen/text_size_big"
+            tools:text="@string/playfun_mine_my_likes" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/gray2" />
+
+        <TextView
+            android:id="@+id/tv_menu_blockade"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/icon_blockade"
+            android:drawablePadding="15dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:paddingTop="20dp"
+            android:paddingRight="30dp"
+            android:paddingBottom="20dp"
+            android:textColor="@color/toolbar_title_color"
+            android:textSize="@dimen/text_size_big"
+            tools:text="@string/playfun_add_block" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/gray2" />
+
+        <TextView
+            android:id="@+id/tv_menu_report"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/icon_report"
+            android:drawablePadding="15dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:paddingTop="20dp"
+            android:paddingRight="30dp"
+            android:paddingBottom="20dp"
+            android:text="@string/playfun_report"
+            android:textColor="@color/toolbar_title_color"
+            android:textSize="@dimen/text_size_big" />
+
+    </LinearLayout>
+</layout>

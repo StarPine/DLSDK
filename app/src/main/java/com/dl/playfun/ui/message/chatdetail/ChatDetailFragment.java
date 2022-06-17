@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +46,6 @@ import com.dl.playfun.entity.TagEntity;
 import com.dl.playfun.entity.TaskRewardReceiveEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.MessageGiftNewEvent;
-import com.dl.playfun.kl.view.VideoPresetActivity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
@@ -69,7 +69,6 @@ import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.PictureSelectorUtil;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.utils.Utils;
-import com.dl.playfun.widget.bottomsheet.BottomSheet;
 import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
 import com.dl.playfun.widget.dialog.MMAlertDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
@@ -393,41 +392,18 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                 if (mChatInfo == null || userId < 1) {
                     return;
                 }
-                String[] items = new String[]{getString(R.string.playfun_pull_black_shield_both_sides), getString(R.string.playfun_report_user_title)};
                 if (viewModel.inBlacklist.get()) {
-                    items[0] = getString(R.string.playfun_remove_black_shield_both_sides);
+                    viewModel.menuBlockade.set(getString(R.string.playfun_remove_black_shield_both_sides));
+                } else {
+                    viewModel.menuBlockade.set(getString(R.string.playfun_pull_black_shield_both_sides));
+                }
+                if (viewModel.isTrack.get()) {
+                    viewModel.menuTrack.set(getString(R.string.playfun_cancel_zuizong));
+                } else {
+                    viewModel.menuTrack.set(getString(R.string.playfun_mine_my_likes));
                 }
 
-                new BottomSheet.Builder(mActivity).setDatas(items).setOnItemSelectedListener(new BottomSheet.ItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(BottomSheet bottomSheet, int position) {
-                        bottomSheet.dismiss();
-                        if (position == 0) {
-                            if (viewModel.inBlacklist.get()) {
-                                viewModel.delBlackList(userId);
-                            } else {
-                                MVDialog.getInstance(mActivity)
-                                        .setContent(getString(R.string.playfun_dialog_add_blacklist_content))
-                                        .setConfirmText(getString(R.string.playfun_dialog_add_black_list_btn))
-                                        .setConfirmOnlick(dialog -> {
-                                            viewModel.addBlackList(userId);
-                                        })
-                                        .chooseType(MVDialog.TypeEnum.CENTERWARNED)
-                                        .show();
-                            }
-                        } else if (position == 1) {
-                            Bundle bundle = ReportUserFragment.getStartBundle("home", userId);
-                            ReportUserFragment reportUserFragment = new ReportUserFragment();
-                            reportUserFragment.setArguments(bundle);
-                            start(reportUserFragment);
-                        }
-                    }
-                }).setCancelButton(getString(R.string.playfun_cancel), new BottomSheet.CancelClickListener() {
-                    @Override
-                    public void onCancelClick(BottomSheet bottomSheet) {
-                        bottomSheet.dismiss();
-                    }
-                }).build().show();
+                showMoreMenu(userId);
             }
         });
         //首次收入弹窗显示
@@ -470,6 +446,54 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                 }
             }
         });
+    }
+
+    private void showMoreMenu(int userId) {
+
+        View view = getLayoutInflater().inflate(R.layout.pop_chat_more_menu, null);
+        PopupWindow mPop = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        TextView menuTrack = view.findViewById(R.id.tv_menu_track);
+        menuTrack.setText(viewModel.menuTrack.get());
+        menuTrack.setOnClickListener(v -> {
+            if (viewModel.isTrack.get()) {
+                viewModel.delLike(userId);
+            } else {
+                viewModel.addLike(userId,"");
+            }
+            mPop.dismiss();
+        });
+        TextView menuBlockade = view.findViewById(R.id.tv_menu_blockade);
+        menuBlockade.setText(viewModel.menuBlockade.get());
+        menuBlockade.setOnClickListener(v -> {
+
+            if (viewModel.inBlacklist.get()) {
+                viewModel.delBlackList(userId);
+            } else {
+                MVDialog.getInstance(mActivity)
+                        .setContent(getString(R.string.playfun_dialog_add_blacklist_content))
+                        .setConfirmText(getString(R.string.playfun_dialog_add_black_list_btn))
+                        .setConfirmOnlick(dialog -> {
+                            viewModel.addBlackList(userId);
+                        })
+                        .chooseType(MVDialog.TypeEnum.CENTERWARNED)
+                        .show();
+            }
+            mPop.dismiss();
+        });
+        view.findViewById(R.id.tv_menu_report).setOnClickListener(v -> {
+            Bundle bundle = ReportUserFragment.getStartBundle("home", userId);
+            ReportUserFragment reportUserFragment = new ReportUserFragment();
+            reportUserFragment.setArguments(bundle);
+            start(reportUserFragment);
+            mPop.dismiss();
+        });
+
+        mPop.setOutsideTouchable(false);
+        mPop.setFocusable(true);
+        mPop.setElevation(30);
+        int width = view.getMeasuredWidth();
+        int moreWidth = binding.ivSetting.getWidth();
+        mPop.showAsDropDown(binding.ivSetting,-300,0);
     }
 
     private void initChatView() {
