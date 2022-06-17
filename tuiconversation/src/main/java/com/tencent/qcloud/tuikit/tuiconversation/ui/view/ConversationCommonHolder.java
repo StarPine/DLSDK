@@ -195,6 +195,16 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
         }
 
         conversationIconView.setConversation(conversation);
+        conversationIconView.setTag(conversation);
+        conversationIconView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mAdapter.mOnItemAvatarClickListener != null) {
+                    ConversationInfo conversation = (ConversationInfo) view.getTag();
+                    mAdapter.mOnItemAvatarClickListener.onItemAvatarClick(view,position, conversation);
+                }
+            }
+        });
 
         if (conversation.isShowDisturbIcon() && !isForwardMode) {
             disturbView.setVisibility(View.VISIBLE);
