@@ -1034,7 +1034,7 @@ public class TRTCCalling {
 
     private void startCall() {
         isOnCalling = true;
-        registerSensorEventListener();
+//        registerSensorEventListener();
     }
 
     /**
