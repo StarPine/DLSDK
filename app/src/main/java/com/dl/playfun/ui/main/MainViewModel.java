@@ -339,7 +339,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                                                 GiftEntity giftEntity = IMGsonUtils.fromJson(data, GiftEntity.class);
                                                 //是特效礼物才发送订阅通知事件
                                                 if (!StringUtils.isEmpty(giftEntity.getSvgaPath())) {
-                                                    RxBus.getDefault().post(new MessageGiftNewEvent(giftEntity,msg.getMsgID(),info.getFromUser()));
+                                                    RxBus.getDefault().post(new MessageGiftNewEvent(giftEntity,msg.getMsgID(),info.getV2TIMMessage().getSender()));
                                                 }
                                             }
                                         }

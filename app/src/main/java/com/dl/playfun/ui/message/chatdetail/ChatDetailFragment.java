@@ -584,10 +584,11 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
 
             @Override
             public void onUserIconClick(View view, int position, TUIMessageBean messageInfo) {
+
                 if (null == messageInfo) {
                     return;
                 }
-                String id = messageInfo.getFromUser();
+                String id = messageInfo.getV2TIMMessage().getSender();
                 if(id==null){
                     return;
                 }

@@ -71,7 +71,6 @@ public abstract class TUIMessageBean implements Serializable {
 
      //todo
      private long uniqueId = 0;
-     private String fromUser;
 
      public void setReadCount(long readCount) {
           this.readCount = readCount;
@@ -369,22 +368,20 @@ public abstract class TUIMessageBean implements Serializable {
           this.uniqueId = uniqueId;
      }
 
-
-     /**
-      * 获取消息发送方 ID
-      *
-      * @return
-      */
-     public String getFromUser() {
-          return fromUser;
-     }
-
-     /**
-      * 设置消息发送方 ID
-      *
-      * @param fromUser
-      */
-     public void setFromUser(String fromUser) {
-          this.fromUser = fromUser;
+     @Override
+     public String toString() {
+          return "TUIMessageBean{" +
+                  "TAG='" + TAG + '\'' +
+                  ", v2TIMMessage=" + v2TIMMessage +
+                  ", msgTime=" + msgTime +
+                  ", extra='" + extra + '\'' +
+                  ", id='" + id + '\'' +
+                  ", isGroup=" + isGroup +
+                  ", status=" + status +
+                  ", downloadStatus=" + downloadStatus +
+                  ", readCount=" + readCount +
+                  ", unreadCount=" + unreadCount +
+                  ", uniqueId=" + uniqueId +
+                  '}';
      }
 }

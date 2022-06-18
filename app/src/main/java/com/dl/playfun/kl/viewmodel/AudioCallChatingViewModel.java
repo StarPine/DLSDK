@@ -512,7 +512,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                 if (msg != null && leftUserInfoField.get() != null) {
                     TUIMessageBean info = ChatMessageBuilder.buildMessage(msg);
                     if (info != null) {
-                        if (info.getFromUser().equals(leftUserInfoField.get().getImId())) {
+                        if (info.getV2TIMMessage().getSender().equals(leftUserInfoField.get().getImId())) {
                             String text = String.valueOf(info.getExtra());
                             if (isJSON2(text) && text.indexOf("type") != -1) {//做自定义通知判断
                                 Map<String, Object> map_data = new Gson().fromJson(text, Map.class);

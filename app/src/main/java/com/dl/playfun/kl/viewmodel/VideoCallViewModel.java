@@ -727,7 +727,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
                 if (msg != null && callingVideoInviteInfoField.get() != null) {
                     TUIMessageBean info = ChatMessageBuilder.buildMessage(msg);
                     if (info != null) {
-                        if (info.getFromUser().equals(callingVideoInviteInfoField.get().getImId())) {
+                        if (info.getV2TIMMessage().getSender().equals(callingVideoInviteInfoField.get().getImId())) {
                             Log.e("确定是聊天对象发送的消息", "==================");
                             String text = String.valueOf(info.getExtra());
                             Log.e("聊天消息体未", text);
