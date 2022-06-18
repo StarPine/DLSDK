@@ -361,6 +361,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
                     isReadText.setVisibility(View.GONE);
                 }
             }
+            if (!msg.isSelf())isReadText.setVisibility(View.GONE);
 
             //// 音频已读
             unreadAudioText.setVisibility(View.GONE);
