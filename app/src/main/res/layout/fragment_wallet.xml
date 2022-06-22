@@ -103,7 +103,6 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:visibility="@{viewModel.isMaleHideFlag?View.GONE:View.VISIBLE}"
                 android:layout_width="match_parent"
                 android:layout_height="124dp">
 
