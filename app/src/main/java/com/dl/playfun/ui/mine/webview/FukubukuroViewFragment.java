@@ -31,11 +31,13 @@ import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
+import com.dl.playfun.entity.CoinExchangePriceInfo;
 import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
 import com.dl.playfun.ui.certification.certificationmale.CertificationMaleFragment;
+import com.dl.playfun.ui.mine.wallet.coin.CoinFragment;
 import com.dl.playfun.ui.mine.wallet.girl.TwDollarMoneyFragment;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.AutoSizeUtils;
@@ -43,6 +45,8 @@ import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.widget.action.StatusAction;
 import com.dl.playfun.widget.action.StatusLayout;
 import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralDialog;
+import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
+import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.google.gson.Gson;
 import com.dl.playfun.BR;
@@ -484,6 +488,35 @@ public class FukubukuroViewFragment extends BaseFragment<WebviewFukubukuroFragme
 
         @JavascriptInterface
         public void exchangeDiamond() {//兑换钻石
+            mActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    CoinRechargeSheetView coinRechargeSheetView = new CoinRechargeSheetView(mActivity);
+                    coinRechargeSheetView.show();
+                    coinRechargeSheetView.setCoinRechargeSheetViewListener(new CoinRechargeSheetView.CoinRechargeSheetViewListener() {
+                        @Override
+                        public void onPaySuccess(CoinRechargeSheetView sheetView, GoodsEntity sel_goodsEntity) {
+                            sheetView.dismiss();
+                            MVDialog.getInstance(FukubukuroViewFragment.this.getContext())
+                                    .setTitle(getStringByResId(R.string.playfun_recharge_coin_success))
+                                    .setConfirmText(getStringByResId(R.string.confirm))
+                                    .setConfirmOnlick(dialog -> {
+                                        dialog.dismiss();
+//                                viewModel.loadDatas(1);
+                                    })
+                                    .chooseType(MVDialog.TypeEnum.CENTER)
+                                    .show();
+                        }
+
+                        @Override
+                        public void onPayFailed(CoinRechargeSheetView sheetView, String msg) {
+                            sheetView.dismiss();
+                            ToastUtils.showShort(msg);
+                            AppContext.instance().logEvent(AppsFlyerEvent.Failed_to_top_up);
+                        }
+                    });
+                }
+            });
 
         }
 
