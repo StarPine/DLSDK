@@ -39,6 +39,7 @@
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/shape_login_bg.xml" value="0.17" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/shape_radius_6.xml" value="0.17" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/status_empty_ic.xml" value="0.2025" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/actitvity_email_manger_dialog.xml" value="0.22916666666666666" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/activity_call_audio_chating.xml" value="0.14" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/activity_call_video.xml" value="0.24114583333333334" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/activity_call_waiting2.xml" value="0.2" />
@@ -50,11 +51,18 @@
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/alert_task_gold1.xml" value="0.33" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/chat_custom_image_message.xml" value="0.24270833333333333" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/coustom_time_picker.xml" value="0.22916666666666666" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_account_email_bound.xml" value="0.22916666666666666" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_account_email_bound_pwd.xml" value="0.22916666666666666" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_account_email_hint.xml" value="0.22916666666666666" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_account_email_pwd_alter.xml" value="0.22916666666666666" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_account_email_pwd_alter2.xml" value="0.22916666666666666" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_certification_girl_tw_money.xml" value="0.22" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_check_img_video.xml" value="0.17604166666666668" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_choose_sex_warn.xml" value="0.5" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_city_choose.xml" value="0.28802083333333334" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_email_login.xml" value="0.5" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_email_login_activity.xml" value="0.33" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_email_pwd_login.xml" value="0.33" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_exchange_integral.xml" value="0.22916666666666666" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_gift_bag.xml" value="0.1466565349544073" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/dialog_home_accost_list.xml" value="0.2536136662286465" />
@@ -124,6 +132,7 @@
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/item_sign_message.xml" value="0.33" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/item_sign_up.xml" value="0.25" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/item_trend.xml" value="0.25677083333333334" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/item_vip_subscribe.xml" value="0.27395833333333336" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/pickerview_options_dl.xml" value="0.17604166666666668" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/pop_drop_down_filter.xml" value="0.23489583333333333" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/trace_item_park.xml" value="0.3385416666666667" />
