@@ -4,13 +4,16 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.dl.playfun.entity.GoodsEntity;
+import com.blankj.utilcode.util.ColorUtils;
 import com.dl.playfun.R;
+import com.dl.playfun.entity.GoodsEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,13 +55,34 @@ public class CoinRechargeAdapter extends RecyclerView.Adapter<CoinRechargeAdapte
     @Override
     public void onBindViewHolder(@NonNull RecyclerHolder holder, int position) {
         GoodsEntity goodsEntity = dataList.get(position);
-        holder.tvName.setText(goodsEntity.getGoodsName());
-        holder.tvPrice.setText(goodsEntity.getPayPrice());
-        holder.tvOldPrice.setText(goodsEntity.getPayPrice());
-        if(goodsEntity.getIsFirst()!=null && goodsEntity.getIsFirst().intValue()==1){
-            holder.firstHint.setText(goodsEntity.getFirstText());
-            holder.firstHint.setVisibility(View.VISIBLE);
+        holder.good_text.setText(goodsEntity.getGoodsName());
+        holder.good_name.setText(goodsEntity.getPayPrice());
+        holder.good_lable.setText(goodsEntity.getGoodsLabel());
+        //是否推荐
+        if (goodsEntity.getIsRecommend() != null && goodsEntity.getIsRecommend().intValue() == 1) {
+            holder.layout1.setBackgroundResource(R.drawable.coin_recharge_img_custom_backop);
+            holder.first_layout.setBackgroundResource(R.drawable.coin_recharge_img_custom_title);
+            holder.good_text.setTextColor(ColorUtils.getColor(R.color.white));
+            holder.img1.setBackgroundResource(R.drawable.coin_recharge_img_item_1);
+            holder.is_first.setVisibility(View.VISIBLE);
+            holder.btn_sub.setBackgroundResource(R.drawable.coin_recharge_img_btn2);
+            holder.good_name.setTextColor(ColorUtils.getColor(R.color.purple_text));
+        } else {
+            holder.layout1.setBackgroundResource(R.drawable.coin_recharge_img_custom);
+            holder.first_layout.setBackgroundResource(R.drawable.coin_recharge_img_custom_title2);
+            holder.good_text.setTextColor(ColorUtils.getColor(R.color.black));
+            holder.img1.setBackgroundResource(R.drawable.coin_recharge_img_item_2);
+            holder.is_first.setVisibility(View.GONE);
+            holder.btn_sub.setBackgroundResource(R.drawable.coin_recharge_img_btn);
+            holder.good_name.setTextColor(ColorUtils.getColor(R.color.white));
         }
+        if (goodsEntity.getIsFirst() != null && goodsEntity.getIsFirst().intValue() == 1) { //是否首冲
+            holder.good_lable.setText(goodsEntity.getFirstText());
+            holder.first_layout.setVisibility(View.VISIBLE);
+        } else {
+            holder.first_layout.setVisibility(View.GONE);
+        }
+
         holder.itemView.setTag(position);
         holder.itemView.setOnClickListener(v -> {
             if (coinRechargeAdapterListener != null) {
@@ -78,17 +102,25 @@ public class CoinRechargeAdapter extends RecyclerView.Adapter<CoinRechargeAdapte
     }
 
     class RecyclerHolder extends RecyclerView.ViewHolder {
-        TextView tvName = null;
-        TextView tvOldPrice = null;
-        TextView tvPrice = null;
-        TextView firstHint = null;
+        LinearLayout layout1;
+        LinearLayout first_layout;
+        TextView good_lable;
+        TextView good_text;
+        ImageView img1;
+        LinearLayout btn_sub;
+        ImageView is_first;
+        TextView good_name;
 
         private RecyclerHolder(View itemView) {
             super(itemView);
-            tvName = itemView.findViewById(R.id.tv_name);
-            tvOldPrice = itemView.findViewById(R.id.tv_old_price);
-            tvPrice = itemView.findViewById(R.id.tv_price);
-            firstHint = itemView.findViewById(R.id.first_hint);
+            layout1 = itemView.findViewById(R.id.layout1);
+            first_layout = itemView.findViewById(R.id.first_layout);
+            good_lable = itemView.findViewById(R.id.good_lable);
+            good_text = itemView.findViewById(R.id.good_text);
+            img1 = itemView.findViewById(R.id.img1);
+            btn_sub = itemView.findViewById(R.id.btn_sub);
+            is_first = itemView.findViewById(R.id.is_first);
+            good_name = itemView.findViewById(R.id.good_name);
         }
     }
 }

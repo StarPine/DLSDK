@@ -1,88 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/pop_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/transparent"
-    android:maxHeight="320dp"
-    android:padding="16dp">
+    android:maxHeight="500dp">
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="320dp"
-        app:cardCornerRadius="15dp"
-        app:cardElevation="0dp">
+    <RelativeLayout
+        android:layout_height="500dp"
+        android:layout_width="match_parent">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="48dp"
+                android:background="@drawable/coin_recharge_sheet_img_title">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="42dp"
-                    android:background="#F1EEFC">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="14.67dp"
-                        android:text="@string/playfun_dialong_coin_rechaege_top_up"
-                        android:textColor="@color/purple"
-                        android:textSize="15.37sp"
-                        android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="14.67dp"
+                    android:text="@string/playfun_dialong_coin_rechaege_top_up"
+                    android:textColor="@color/white"
+                    android:textSize="15.37sp"
+                    android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="5dp"
+                        android:layout_marginRight="10dp"
                         android:layout_toLeftOf="@+id/tv_balance"
                         android:text="@string/playfun_coin_balance"
-                        android:textColor="@color/gray_light"
+                        android:textColor="@color/white"
                         android:textSize="12.57sp" />
 
-                    <TextView
-                        android:id="@+id/tv_balance"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="5dp"
-                        android:layout_toLeftOf="@+id/iv_divider"
-                        android:text="@string/playfun_x_coin"
-                        android:textColor="@color/purple"
-                        android:textSize="12.57sp" />
+                <TextView
+                    android:id="@+id/tv_balance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="19dp"
+                    android:layout_toLeftOf="@+id/iv_refresh"
+                    android:text="@string/playfun_x_coin"
+                    android:textColor="@color/white"
+                    android:textSize="12.57sp" />
 
-                    <ImageView
-                        android:id="@+id/iv_divider"
-                        android:layout_width="1dp"
-                        android:layout_height="14dp"
-                        android:layout_centerVertical="true"
-                        android:layout_toLeftOf="@+id/iv_refresh"
-                        android:src="@color/divider" />
-
-                    <ImageView
-                        android:id="@+id/iv_refresh"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="5dp"
-                        android:padding="5dp"
-                        android:src="@drawable/ic_refresh" />
+                <ImageView
+                    android:id="@+id/iv_refresh"
+                    android:layout_width="21dp"
+                    android:layout_height="17dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="14dp"
+                    android:src="@drawable/ic_refresh_white" />
                 </RelativeLayout>
-
+            <FrameLayout
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginStart="7dp"
+                    android:layout_marginEnd="7dp"
                     android:paddingBottom="10dp"
-                    android:scrollbars="vertical" />
+                    android:scrollbars="vertical"
+                    tools:itemCount="6"
+                    tools:layoutManager="GridLayoutManager"
+                    tools:listitem="@layout/item_coin_recharge"
+                    tools:spanCount="2" />
+            </FrameLayout>
+
             </LinearLayout>
 
             <RelativeLayout
@@ -94,6 +90,7 @@
                 android:visibility="gone">
 
                 <ProgressBar
+                    android:id="@+id/progressBar"
                     style="?android:attr/progressBarStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -101,6 +98,4 @@
             </RelativeLayout>
 
         </RelativeLayout>
-    </androidx.cardview.widget.CardView>
-
 </RelativeLayout>

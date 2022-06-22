@@ -23,12 +23,19 @@ public class GoodsEntity {
     @SerializedName("pay_price")
     private String payPrice;
     @SerializedName("actual_value")
-    private  Integer actualValue;
+    private Integer actualValue;
 
     @SerializedName("is_first")
     private Integer isFirst;
     @SerializedName("first_text")
     private String firstText;
+
+    @SerializedName("is_recommend")
+    private Integer isRecommend; //是否推荐
+
+    //商品文案
+    @SerializedName("goods_label")
+    private String goodsLabel;
 
     public Integer getIsFirst() {
         return isFirst;
@@ -112,4 +119,19 @@ public class GoodsEntity {
         this.payPrice = payPrice;
     }
 
+    public Integer getIsRecommend() {
+        return isRecommend;
+    }
+
+    public void setIsRecommend(Integer isRecommend) {
+        this.isRecommend = isRecommend;
+    }
+
+    public String getGoodsLabel() {
+        return goodsLabel;
+    }
+
+    public void setGoodsLabel(String goodsLabel) {
+        this.goodsLabel = goodsLabel;
+    }
 }
