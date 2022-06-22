@@ -12,10 +12,10 @@ import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.entity.GameCoinWalletEntity;
 import com.dl.playfun.manager.ConfigManager;
-import com.dl.playfun.viewmodel.BaseViewModel;
 import com.dl.playfun.ui.mine.wallet.coin.CoinFragment;
 import com.dl.playfun.ui.mine.wallet.girl.TwDollarMoneyFragment;
 import com.dl.playfun.ui.mine.webview.FukubukuroViewFragment;
+import com.dl.playfun.viewmodel.BaseViewModel;
 
 import me.goldze.mvvmhabit.binding.command.BindingAction;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
@@ -65,16 +65,12 @@ public class WalletViewModel extends BaseViewModel<AppRepository> {
 
     public BindingCommand withdrawonClickCommand = new BindingCommand(() -> {
         //没有进行真人认证
-        if (model.readUserData().getCertification() != null && model.readUserData().getCertification().intValue() == 1) {
-            try {
-                Bundle bundle = new Bundle();
-                bundle.putString("link", AppConfig.WEB_BASE_URL + "reflect");
-                start(FukubukuroViewFragment.class.getCanonicalName(), bundle);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {//提示去认证
-            certification.call();
+        try {
+            Bundle bundle = new Bundle();
+            bundle.putString("link", AppConfig.WEB_BASE_URL + "reflect");
+            start(FukubukuroViewFragment.class.getCanonicalName(), bundle);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     });
 

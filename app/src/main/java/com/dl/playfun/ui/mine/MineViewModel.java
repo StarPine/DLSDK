@@ -48,6 +48,7 @@ import com.dl.playfun.ui.mine.trace.TraceFragment;
 import com.dl.playfun.ui.mine.trace.man.TraceManFragment;
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
 import com.dl.playfun.ui.mine.wallet.WalletFragment;
+import com.dl.playfun.ui.mine.wallet.coin.CoinFragment;
 import com.dl.playfun.utils.ChatUtils;
 import com.dl.playfun.utils.ExceptionReportUtils;
 import com.dl.playfun.utils.FileUploadUtils;
@@ -97,20 +98,9 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
             start(EditProfileFragment.class.getCanonicalName()));
     //钱包按钮的点击事件
     public BindingCommand walletOnClickCommand = new BindingCommand(() -> {
-//        if (sex.get() != null && sex.get().intValue() == 1) {
-//            AppContext.instance().logEvent(AppsFlyerEvent.Wallet);
-//            start(CoinFragment.class.getCanonicalName());
-//        } else {
-//            start(WalletFragment.class.getCanonicalName());
-//        }
-        Integer walletClickFlag = model.readSwitches(EaringlSwitchUtil.KEY_WALLET_ENTRANCE);
-        if(walletClickFlag==null || walletClickFlag==0){
-            return;
-        }
-        start(WalletFragment.class.getCanonicalName());
+            start(WalletFragment.class.getCanonicalName());
 
-    }
-    );
+    });
     //我喜欢的按钮的点击事件
     public BindingCommand fondOnClickCommand = new BindingCommand(() -> {
         AppContext.instance().logEvent(AppsFlyerEvent.Following);

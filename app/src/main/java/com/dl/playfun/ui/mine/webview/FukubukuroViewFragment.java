@@ -32,12 +32,18 @@ import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.entity.GoodsEntity;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseFragment;
+import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
+import com.dl.playfun.ui.certification.certificationmale.CertificationMaleFragment;
+import com.dl.playfun.ui.mine.wallet.girl.TwDollarMoneyFragment;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.AutoSizeUtils;
+import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.widget.action.StatusAction;
 import com.dl.playfun.widget.action.StatusLayout;
 import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralDialog;
+import com.dl.playfun.widget.dialog.MVDialog;
 import com.google.gson.Gson;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
@@ -449,5 +455,38 @@ public class FukubukuroViewFragment extends BaseFragment<WebviewFukubukuroFragme
         public String getVersionTask() {
             return "1.2.0 ";
         }
+
+        @JavascriptInterface
+        public void humanAuthentication() {//真人认证
+            LogUtils.i("humanAuthentication: ");
+            MVDialog.getInstance(FukubukuroViewFragment.this.getContext())
+                    .setTitele(getString(R.string.playfun_fragment_certification_tip))
+                    .setContent(getString(R.string.playfun_fragment_certification_content))
+                    .setConfirmText(getString(R.string.playfun_task_fragment_task_new11))
+                    .chooseType(MVDialog.TypeEnum.CENTER)
+                    .setConfirmOnlick(new MVDialog.ConfirmOnclick() {
+                        @Override
+                        public void confirm(MVDialog dialog) {
+                            if (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == AppConfig.MALE) {
+                                viewModel.start(CertificationMaleFragment.class.getCanonicalName());
+                                return;
+                            } else if (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == AppConfig.FEMALE) {
+                                viewModel.start(CertificationFemaleFragment.class.getCanonicalName());
+                                return;
+                            }
+                            com.blankj.utilcode.util.ToastUtils.showShort(R.string.playfun_sex_unknown);
+                            dialog.dismiss();
+                        }
+                    })
+                    .chooseType(MVDialog.TypeEnum.CENTER)
+                    .show();
+        }
+
+        @JavascriptInterface
+        public void exchangeDiamond() {//兑换钻石
+
+        }
+
+
     }
 }
