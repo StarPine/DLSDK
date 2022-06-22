@@ -49,6 +49,7 @@ import com.dl.playfun.ui.mine.trace.man.TraceManFragment;
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
 import com.dl.playfun.ui.mine.wallet.WalletFragment;
 import com.dl.playfun.ui.mine.wallet.coin.CoinFragment;
+import com.dl.playfun.ui.mine.webview.FukubukuroViewFragment;
 import com.dl.playfun.utils.ChatUtils;
 import com.dl.playfun.utils.ExceptionReportUtils;
 import com.dl.playfun.utils.FileUploadUtils;
@@ -148,6 +149,18 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
         }
         ToastUtils.showShort(R.string.playfun_sex_unknown);
     });
+
+    //商店点击入口
+    public BindingCommand shopOnClickCommand = new BindingCommand(() -> {
+        try {
+            Bundle bundle = new Bundle();
+            bundle.putString("link", AppConfig.WEB_BASE_URL + "shop");
+            start(FukubukuroViewFragment.class.getCanonicalName(), bundle);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    });
+
     //任务中心按钮的点击事件
     public BindingCommand TaskCenterOnClickCommand = new BindingCommand(() -> {
         if (model.readUserData().getSex() != null) {

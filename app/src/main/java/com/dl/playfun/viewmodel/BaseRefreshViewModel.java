@@ -1,10 +1,13 @@
 package com.dl.playfun.viewmodel;
 
 import android.app.Application;
+import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
+import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.observable.RefreshLoadMoreUIChangeObservable;
+import com.dl.playfun.ui.mine.webview.FukubukuroViewFragment;
 
 import me.goldze.mvvmhabit.base.BaseModel;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
@@ -22,6 +25,17 @@ public abstract class BaseRefreshViewModel<M extends BaseModel> extends BaseView
         loadDatas(currentPage);
     });
     public BindingCommand onLoadMoreCommand = new BindingCommand(() -> nextPage());
+
+    //商店入口
+    public BindingCommand shopOnClickCommand = new BindingCommand(() -> {
+        try {
+            Bundle bundle = new Bundle();
+            bundle.putString("link", AppConfig.WEB_BASE_URL + "shop");
+            start(FukubukuroViewFragment.class.getCanonicalName(), bundle);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    });
 
     public BaseRefreshViewModel(@NonNull Application application, M model) {
         super(application, model);

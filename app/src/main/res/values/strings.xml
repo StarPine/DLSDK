@@ -980,6 +980,7 @@
     <string name="save">保存</string>
     <string name="notepad_word_count_format">%s/200</string>
     <string name="notepad_word_count">0/200</string>
+    <string name="playfun_mine_shop">商店</string>
 
 
 </resources>
