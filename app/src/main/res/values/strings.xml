@@ -981,6 +981,7 @@
     <string name="notepad_word_count_format">%s/200</string>
     <string name="notepad_word_count">0/200</string>
     <string name="playfun_mine_shop">商店</string>
+    <string name="playfun_coin_electronic_wallet">電子錢包</string>
 
 
 </resources>
