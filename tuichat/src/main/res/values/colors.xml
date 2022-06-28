@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="chat_background_color">#FFFFFF</color>
+    <color name="chat_background_color">#F4F4F4</color>
 
     <color name="chat_bubble_other_color">#ECECEC</color>
     <color name="chat_bubble_self_color">#DCEAFD</color>
