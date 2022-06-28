@@ -14,6 +14,7 @@ import com.faceunity.nama.FURenderer;
 import com.faceunity.nama.data.FaceUnityDataFactory;
 import com.faceunity.nama.ui.FaceUnityView;
 import com.tencent.liteav.trtccalling.model.TRTCCalling;
+import com.tencent.liteav.trtccalling.ui.base.VideoLayoutFactory;
 import com.tencent.liteav.trtccalling.ui.videocall.videolayout.TRTCVideoLayout;
 import com.tencent.liteav.trtccalling.ui.videocall.videolayout.TRTCVideoLayoutManager;
 
@@ -78,6 +79,7 @@ public class VideoPresetActivity extends AppCompatActivity {
         mTRTCCalling.createCustomRenderer(this, true, isFuEffect);
 
         //2.再打开摄像头
+        mLayoutManagerTrtc.initVideoFactory(new VideoLayoutFactory(this));
         TRTCVideoLayout videoLayout = mLayoutManagerTrtc.allocCloudVideoView(userId);
         mTRTCCalling.openCamera(true, videoLayout.getVideoView());
     }

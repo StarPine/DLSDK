@@ -75,9 +75,6 @@ public class JMTUICallVideoView extends BaseTUICallView {
     //断网总时间
     int disconnectTime = 0;
 
-    private VideoLayoutFactory mVideoFactory;
-
-
     public JMTUICallVideoView(Context context, TUICalling.Role role, String[] userIDs, String sponsorID, String groupID, boolean isFromGroup) {
         super(context, role, TUICalling.Type.VIDEO, userIDs, sponsorID, groupID, isFromGroup);
     }
@@ -86,14 +83,16 @@ public class JMTUICallVideoView extends BaseTUICallView {
 
         this(context, role, userIDs, sponsorID, groupID, isFromGroup);
         this.roomId = roomId;
-        mVideoFactory = new VideoLayoutFactory(context);
 
     }
 
     @Override
     protected void initView() {
+
         LayoutInflater.from(mContext).inflate(R.layout.jm_trtccalling_videocall_activity_call_main, this);
         mLayoutManagerTrtc = findViewById(R.id.trtc_layout_manager);
+        mLayoutManagerTrtc.initVideoFactory(new VideoLayoutFactory(mContext));
+
         mInvitingGroup = findViewById(R.id.group_inviting);
         mImgContainerLl = findViewById(R.id.ll_img_container);
         mTimeTv = findViewById(R.id.tv_time);
@@ -215,7 +214,7 @@ public class JMTUICallVideoView extends BaseTUICallView {
         PermissionUtils.permission(PermissionConstants.CAMERA, PermissionConstants.MICROPHONE).callback(new PermissionUtils.FullCallback() {
             @Override
             public void onGranted(List<String> permissionsGranted) {
-                TRTCVideoLayout layout = mVideoFactory.findUserLayout(mSelfModel.userId);
+                TRTCVideoLayout layout = mLayoutManagerTrtc.findCloudView(mSelfModel.userId);
                 if (null != layout) {
                     mTRTCCalling.openCamera(true, layout.getVideoView());
                 }
@@ -267,7 +266,7 @@ public class JMTUICallVideoView extends BaseTUICallView {
                         if (isDestroyed()) {
                             return;
                         }
-                        TRTCVideoLayout layout = mVideoFactory.findUserLayout(model.userId);
+                        TRTCVideoLayout layout = mLayoutManagerTrtc.findCloudView(model.userId);
                         if (layout != null) {
                             layout.setUserName(model.userName);
                             ImageLoader.loadImage(mContext, layout.getHeadImg(), model.userAvatar, R.drawable.trtccalling_ic_avatar);
@@ -383,7 +382,7 @@ public class JMTUICallVideoView extends BaseTUICallView {
     @Override
     public void onUserVideoAvailable(final String userId, final boolean isVideoAvailable) {
         //有用户的视频开启了
-        TRTCVideoLayout layout = mVideoFactory.findUserLayout(userId);
+        TRTCVideoLayout layout = mLayoutManagerTrtc.findCloudView(userId);
         if (layout != null) {
             layout.setVideoAvailable(isVideoAvailable);
             if (isVideoAvailable) {
@@ -405,7 +404,7 @@ public class JMTUICallVideoView extends BaseTUICallView {
     public void onUserVoiceVolume(Map<String, Integer> volumeMap) {
         for (Map.Entry<String, Integer> entry : volumeMap.entrySet()) {
             String userId = entry.getKey();
-            TRTCVideoLayout layout = mVideoFactory.findUserLayout(userId);
+            TRTCVideoLayout layout = mLayoutManagerTrtc.findCloudView(userId);
             if (layout != null) {
                 layout.setAudioVolumeProgress(entry.getValue());
             }
@@ -614,7 +613,7 @@ public class JMTUICallVideoView extends BaseTUICallView {
             return;
         }
         // kl 添加以下代码，一对一视频聊天的
-        TRTCVideoLayout myLayout = mVideoFactory.findUserLayout(mSelfModel.userId);
+        TRTCVideoLayout myLayout = mLayoutManagerTrtc.findCloudView(mSelfModel.userId);
         RelativeLayout.LayoutParams oriParams = (RelativeLayout.LayoutParams) myLayout.getLayoutParams();
 //        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) myLayout.getLayoutParams();
         int height = dp2px(131);

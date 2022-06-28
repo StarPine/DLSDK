@@ -228,6 +228,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
 
         mContainerView = findViewById(R.id.container);
         mJMView = findViewById(R.id.jm_view);
+        LogUtils.i("callingInviteInfo: "+callingInviteInfo);
         if (callingInviteInfo != null) {
             mCallView = new JMTUICallVideoView(this, role, userIds, callUserId, null, false, callingInviteInfo.getRoomId()) {
                 @Override

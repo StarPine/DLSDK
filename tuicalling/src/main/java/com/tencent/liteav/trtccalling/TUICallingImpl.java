@@ -21,6 +21,7 @@ import com.tencent.liteav.trtccalling.ui.audiocall.TUIGroupCallAudioView;
 import com.tencent.liteav.trtccalling.ui.base.BaseCallActivity;
 import com.tencent.liteav.trtccalling.ui.base.BaseTUICallView;
 import com.tencent.liteav.trtccalling.ui.base.Status;
+import com.tencent.liteav.trtccalling.ui.base.VideoLayoutFactory;
 import com.tencent.liteav.trtccalling.ui.videocall.TUICallVideoView;
 import com.tencent.liteav.trtccalling.ui.videocall.TUIGroupCallVideoView;
 import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
@@ -185,7 +186,7 @@ public final class TUICallingImpl implements TUICalling, TRTCCallingDelegate {
                 if (isGroupCall(groupID, userIDs, role, isFromGroup)) {
                     mCallView = new TUIGroupCallVideoView(mContext, role, type, userIDs, sponsorID, groupID, isFromGroup);
                 } else {
-                    mCallView = new TUICallVideoView(mContext, role, type, userIDs, sponsorID, groupID, isFromGroup, null);
+                    mCallView = new TUICallVideoView(mContext, role, type, userIDs, sponsorID, groupID, isFromGroup, new VideoLayoutFactory(mContext));
                 }
             }
             //用户自加载CallView时,不支持悬浮窗功能

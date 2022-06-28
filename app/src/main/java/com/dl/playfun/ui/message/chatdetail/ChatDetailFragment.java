@@ -507,8 +507,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         binding.chatLayout.setChatInfo(mChatInfo);
         inputLayout = binding.chatLayout.getInputLayout();
 //        inputLayout.enableAudioCall();
-        Integer ViewMessagesNumber = ConfigManager.getInstance().getViewMessagesNumber();
-        Integer SendMessagesNumber = ConfigManager.getInstance().getSendMessagesNumber();
         CustomChatInputFragment customChatInputFragment = new CustomChatInputFragment();
         inputLayout.replaceMoreInput(customChatInputFragment);
         //设置客服聊天隐藏
@@ -523,16 +521,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         //存储追踪成功改变样式
         MessageRecyclerView.setAddLikeMsgId(viewModel.readKeyValue(key));
         MessageRecyclerView.setFlagTipMoney(ConfigManager.getInstance().getTipMoneyShowFlag());
-        if (SendMessagesNumber != null) {
-            messageLayout.setSend_num(SendMessagesNumber);
-        } else {
-            messageLayout.setSend_num(1);
-        }
-        if (SendMessagesNumber != null) {
-            messageLayout.setRead_sum(ViewMessagesNumber);
-        } else {
-            messageLayout.setRead_sum(1);
-        }
         if (mChatInfo.getId() != null && mChatInfo.getId().equals(AppConfig.CHAT_SERVICE_USER_ID)) {
             messageLayout.setIsVip(true);
             messageLayout.setSend_num(-1);
