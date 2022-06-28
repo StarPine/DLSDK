@@ -40,17 +40,17 @@ public class CallingMessageHolder extends TextMessageHolder{
             mLeftView.setVisibility(View.GONE);
             mRightView.setVisibility(View.VISIBLE);
             if (callingMessageBean.getCallType() == CallingMessageBean.ACTION_ID_AUDIO_CALL) {
-                mRightView.setImageResource(R.drawable.ic_audio_call);
+                mRightView.setImageResource(R.drawable.custom_audio_right_img_2);
             } else if (callingMessageBean.getCallType() == CallingMessageBean.ACTION_ID_VIDEO_CALL) {
-                mRightView.setImageResource(R.drawable.ic_self_video_call);
+                mRightView.setImageResource(R.drawable.custom_video_right_img_1);
             }
         } else {
             mRightView.setVisibility(View.GONE);
             mLeftView.setVisibility(View.VISIBLE);
             if (callingMessageBean.getCallType() == CallingMessageBean.ACTION_ID_AUDIO_CALL) {
-                mLeftView.setImageResource(R.drawable.ic_audio_call);
+                mLeftView.setImageResource(R.drawable.custom_audio_left_img_2);
             } else if (callingMessageBean.getCallType() == CallingMessageBean.ACTION_ID_VIDEO_CALL) {
-                mLeftView.setImageResource(R.drawable.ic_other_video_call);
+                mLeftView.setImageResource(R.drawable.custom_video_left_img_1);
             }
         }
 

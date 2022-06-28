@@ -170,7 +170,7 @@ public final class TUICallingImpl implements TUICalling, TRTCCallingDelegate {
         }
         Log.d(TAG, String.format("internalCall, userIDs=%s, sponsorID=%s, groupID=%s, type=%s, role=%s", Arrays.toString(userIDs), sponsorID, groupID, type, role));
         mStartTime = System.currentTimeMillis();
-        mUserIDs = null == userIDs ? new String[0] : userIDs;
+        mUserIDs = userIDs;
         mGroupID = groupID;
         mIsFromGroup = isFromGroup;
         mType = type;
@@ -224,6 +224,9 @@ public final class TUICallingImpl implements TUICalling, TRTCCallingDelegate {
     private boolean isGroupCall(String groupID, String[] userIDs, TUICalling.Role role, boolean isFromGroup) {
         if (!TextUtils.isEmpty(groupID)) {
             return true;
+        }
+        if (userIDs == null){
+            return false;
         }
         if (TUICalling.Role.CALL == role) {
             return userIDs.length >= 2;
