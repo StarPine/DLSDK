@@ -12,10 +12,14 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.PowerManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ServiceUtils;
+import com.faceunity.core.enumeration.CameraFacingEnum;
 import com.faceunity.nama.FURenderer;
+import com.faceunity.nama.profile.CSVUtils;
+import com.faceunity.nama.profile.Constant;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
@@ -57,12 +61,16 @@ import com.tencent.trtc.TRTCCloudListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -179,6 +187,9 @@ public class TRTCCalling {
 
     private static TRTCCalling sInstance;
 
+    private boolean mIsFuEffect;
+    private FURenderer mFURenderer;
+
     /**
      * 用于获取单例
      *
@@ -212,7 +223,12 @@ public class TRTCCalling {
      * @return
      */
     public FURenderer createCustomRenderer(Activity activity, boolean isFrontCamera, boolean mIsEffect) {
-        return null;
+        mIsFuEffect = mIsEffect;
+        if (mIsFuEffect) {
+            mFURenderer = FURenderer.getInstance();
+        }
+
+        return mFURenderer;
     }
 
     /**
@@ -1034,7 +1050,7 @@ public class TRTCCalling {
 
     private void startCall() {
         isOnCalling = true;
-//        registerSensorEventListener();
+        registerSensorEventListener();
     }
 
     /**
@@ -1422,6 +1438,32 @@ public class TRTCCalling {
             return;
         }
         mIsUseFrontCamera = isFrontCamera;
+        if (mIsFuEffect) {
+            mTRTCCloud.setLocalVideoProcessListener(TRTCCloudDef.TRTC_VIDEO_PIXEL_FORMAT_Texture_2D,
+                    TRTCCloudDef.TRTC_VIDEO_BUFFER_TYPE_TEXTURE, new TRTCCloudListener.TRTCVideoFrameListener() {
+                        @Override
+                        public void onGLContextCreated() {
+                            mFURenderer.prepareRenderer(null);
+                        }
+
+                        @Override
+                        public int onProcessVideoFrame(TRTCCloudDef.TRTCVideoFrame src, TRTCCloudDef.TRTCVideoFrame dest) {
+                            mFURenderer.setCameraFacing(mIsUseFrontCamera? CameraFacingEnum.CAMERA_FRONT:CameraFacingEnum.CAMERA_BACK);
+                            long start =  System.nanoTime();
+                            dest.texture.textureId = mFURenderer.onDrawFrameSingleInput(src.texture.textureId, src.width, src.height);
+                            if (mCSVUtils != null) {
+                                long renderTime = System.nanoTime() - start;
+                                mCSVUtils.writeCsv(null, renderTime);
+                            }
+                            return 0;
+                        }
+
+                        @Override
+                        public void onGLContextDestory() {
+                            mFURenderer.release();
+                        }
+                    });
+        }
         mTRTCCloud.startLocalPreview(isFrontCamera, txCloudVideoView);
     }
 
@@ -1446,6 +1488,9 @@ public class TRTCCalling {
         }
         mIsUseFrontCamera = isFrontCamera;
         mTRTCCloud.switchCamera();
+        if (mIsFuEffect) {
+            mFURenderer.setCameraFacing(mIsUseFrontCamera ? CameraFacingEnum.CAMERA_FRONT : CameraFacingEnum.CAMERA_BACK);
+        }
     }
 
     public void setMicMute(boolean isMute) {
@@ -2066,28 +2111,39 @@ public class TRTCCalling {
         mSensorEventListener = new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent event) {
-                switch (event.sensor.getType()) {
-                    case Sensor.TYPE_PROXIMITY:
-                        // 靠近手机
-                        if (event.values[0] == 0.0) {
-                            if (wakeLock.isHeld()) {
-                                // 检查WakeLock是否被占用
-                                return;
-                            } else {
-                                // 申请设备电源锁
-                                wakeLock.acquire();
-                            }
-                        } else {
-                            if (!wakeLock.isHeld()) {
-                                return;
-                            } else {
-                                wakeLock.setReferenceCounted(false);
-                                // 释放设备电源锁
-                                wakeLock.release();
-                            }
-                            break;
-                        }
+                if (mIsFuEffect && event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+                    float x = event.values[0];
+                    float y = event.values[1];
+                    float z = event.values[2];
+                    if (Math.abs(x) > 3 || Math.abs(y) > 3) {
+                        if (Math.abs(x) > Math.abs(y))
+                            mFURenderer.setDeviceOrientation(x > 0 ? 0 : 180);
+                        else
+                            mFURenderer.setDeviceOrientation(y > 0 ? 90 : 270);
+                    }
                 }
+//                switch (event.sensor.getType()) {
+//                    case Sensor.TYPE_PROXIMITY:
+//                        // 靠近手机
+//                        if (event.values[0] == 0.0) {
+//                            if (wakeLock.isHeld()) {
+//                                // 检查WakeLock是否被占用
+//                                return;
+//                            } else {
+//                                // 申请设备电源锁
+//                                wakeLock.acquire();
+//                            }
+//                        } else {
+//                            if (!wakeLock.isHeld()) {
+//                                return;
+//                            } else {
+//                                wakeLock.setReferenceCounted(false);
+//                                // 释放设备电源锁
+//                                wakeLock.release();
+//                            }
+//                            break;
+//                        }
+//                }
             }
 
             @Override
@@ -2285,5 +2341,29 @@ public class TRTCCalling {
             e.printStackTrace();
         }
 
+    }
+
+    private CSVUtils mCSVUtils;
+    //性能测试部分
+    private void initCsvUtil(Context context) {
+        mCSVUtils = new CSVUtils(context);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault());
+        String dateStrDir = format.format(new Date(System.currentTimeMillis()));
+        dateStrDir = dateStrDir.replaceAll("-", "").replaceAll("_", "");
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS", Locale.getDefault());
+        String dateStrFile = df.format(new Date());
+        String filePath = Constant.filePath + dateStrDir + File.separator + "excel-" + dateStrFile + ".csv";
+        Log.d(TAG, "initLog: CSV file path:" + filePath);
+        StringBuilder headerInfo = new StringBuilder();
+        headerInfo.append("version：").append(FURenderer.getInstance().getVersion()).append(CSVUtils.COMMA)
+                .append("机型：").append(android.os.Build.MANUFACTURER).append(android.os.Build.MODEL).append(CSVUtils.COMMA)
+                .append("处理方式：双输入纹理输出").append(CSVUtils.COMMA)
+                .append("编码方式：硬件编码").append(CSVUtils.COMMA);
+//                .append("编码分辨率：").append(ENCODE_FRAME_WIDTH).append("x").append(ENCODE_FRAME_HEIGHT).append(CSVUtils.COMMA)
+//                .append("编码帧率：").append(ENCODE_FRAME_FPS).append(CSVUtils.COMMA)
+//                .append("编码码率：").append(ENCODE_FRAME_BITRATE).append(CSVUtils.COMMA)
+//                .append("预览分辨率：").append(CAPTURE_WIDTH).append("x").append(CAPTURE_HEIGHT).append(CSVUtils.COMMA)
+//                .append("预览帧率：").append(CAPTURE_FRAME_RATE).append(CSVUtils.COMMA);
+        mCSVUtils.initHeader(filePath, headerInfo);
     }
 }
