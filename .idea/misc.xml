@@ -200,6 +200,7 @@
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/gradle-build/app/intermediates/exploded-aar/PlayFun_Google/tuicontact/unspecified/playFunDebugDebug/res/drawable/switch_thumb.xml" value="0.16" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/gradle-build/app/intermediates/exploded-aar/PlayFun_Google/tuicore/unspecified/playFunDebugDebug/res/drawable/switch_thumb.xml" value="0.1155" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/gradle-build/app/intermediates/exploded-aar/PlayFun_Google/tuicore/unspecified/playFunDebugDebug/res/drawable/switch_thumb_blue.xml" value="0.1" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/tuicore/src/main/res-lively/drawable/core_title_bar_bg_lively.xml" value="0.2505" />
       </map>
     </option>
   </component>
