@@ -224,7 +224,7 @@ public class ChatMessageBuilder {
         v2TIMMessage.setNeedReadReceipt(TUIChatConfigs.getConfigs().getGeneralConfig().isShowRead());
 
         TUIMessageBean message = ChatMessageParser.parseMessage(v2TIMMessage);
-        if (message != null && message.getExtra() == null) {
+        if (message.getExtra() == null) {
             message.setExtra(TUIChatService.getAppContext().getString(R.string.custom_msg));
         }
         return message;
