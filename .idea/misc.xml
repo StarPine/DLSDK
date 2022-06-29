@@ -19,6 +19,38 @@
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/TUIKit/TUIChat/tuichat/src/main/res/layout/message_adapter_item_content.xml" value="0.26197916666666665" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/TUIKit/TUIContact/tuicontact/src/main/res/layout/contact_add_activity.xml" value="0.25" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/TUIKit/TUIConversation/tuiconversation/src/main/res/layout/conversation_adapter.xml" value="0.22871376811594202" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/PlayChat/res/drawable/checkbox_button_login.xml" value="0.2335" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/PlayChat/res/drawable/ic_task_add.xml" value="0.2355" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/PlayChat/res/drawable/level_equity_btn_sub.xml" value="0.2195" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/PlayChat/res/drawable/pseekbar_spot.xml" value="0.2195" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/PlayChat/res/drawable/pseekbar_thumb.xml" value="0.2195" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/PlayChat/res/drawable/task_btn_push_back.xml" value="0.2355" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/PlayChat/res/drawable/task_exchange_dialog_item_ed.xml" value="0.2355" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/PlayChat/res/drawable/task_jifen_duih.xml" value="0.2355" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/PlayChat/res/layout/alert_address.xml" value="0.22916666666666666" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/PlayChat/res/layout/dialog_exchange_integral.xml" value="0.22916666666666666" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/PlayChat/res/layout/fragment_address_edit.xml" value="0.22916666666666666" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/PlayChat/res/layout/fragment_address_item.xml" value="0.22916666666666666" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/PlayChat/res/layout/fragment_address_list.xml" value="0.22916666666666666" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/PlayChat/res/layout/fragment_fukubukuro.xml" value="0.22916666666666666" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/PlayChat/res/layout/fragment_level_equity.xml" value="0.21041666666666667" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/PlayChat/res/layout/fragment_login.xml" value="0.22708333333333333" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/PlayChat/res/layout/fragment_register.xml" value="0.22708333333333333" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/PlayChat/res/layout/fragment_splash.xml" value="0.2265625" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/PlayChat/res/layout/fragment_task_main.xml" value="0.22916666666666666" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/PlayChat/res/layout/fragment_task_record_list.xml" value="0.22916666666666666" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/PlayChat/res/layout/item_level_equity_banner.xml" value="0.21041666666666667" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/PlayChat/res/layout/item_level_equity_detail.xml" value="0.21041666666666667" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/PlayChat/res/layout/item_level_equity_title.xml" value="0.21041666666666667" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/PlayChat/res/layout/item_task_record.xml" value="0.22916666666666666" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/PlayChat/res/layout/task_center_bonus_goods_fragment.xml" value="0.31145833333333334" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/PlayChat/res/layout/task_center_fragment.xml" value="0.2341485507246377" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/PlayChat/res/layout/task_center_gold_detail_fragment.xml" value="0.22916666666666666" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/PlayChat/res/layout/task_center_gold_item_fragment.xml" value="0.22916666666666666" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/PlayChat/res/layout/task_center_item_fragment.xml" value="0.22916666666666666" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/PlayChat/res/layout/task_exchange_dialog_item.xml" value="0.22916666666666666" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/PlayChat/res/layout/task_exchange_record_fragment.xml" value="0.22916666666666666" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/PlayChat/res/layout/task_item_ad.xml" value="0.22916666666666666" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/accost_refresh_backdrop.xml" value="0.1515" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/add_pic_bg.xml" value="0.1515" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/drawable/border_purple_background_white.xml" value="0.199" />
@@ -139,6 +171,7 @@
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/trace_item_park.xml" value="0.3385416666666667" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/trace_item_park_list.xml" value="0.24114583333333334" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/trace_item_park_man.xml" value="0.22" />
+        <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/update_app_dialog.xml" value="0.17135416666666667" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/view_coin_exchange_sheet.xml" value="0.23645833333333333" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/view_coin_exrcharge_integral_sheet.xml" value="0.25" />
         <entry key="..\:/AndroidStudio-Project/PlayFun_Google/app/src/main/res/layout/view_coin_pay_sheet.xml" value="0.19635416666666666" />

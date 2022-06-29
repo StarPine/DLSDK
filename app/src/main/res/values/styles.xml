@@ -420,4 +420,19 @@
     </declare-styleable>
     <style name="PasswordEditText" parent="android:Widget">
     </style>
+
+    <declare-styleable name="PCustomSeekBar">
+        <attr name="thumbSrc" format="reference" />
+        <attr name="imgThumbWidth" format="dimension" />
+        <attr name="imgThumbHeight" format="dimension" />
+        <attr name="imgSpotSrc" format="reference" />
+        <attr name="imgSpotWidth" format="dimension" />
+        <attr name="imgSpotHeight" format="dimension" />
+        <attr name="imgSpotOnSrc" format="reference" />
+        <attr name="imgSpotOnWidth" format="dimension" />
+        <attr name="imgSpotOnHeight" format="dimension" />
+        <attr name="imgSpotOffSrc" format="reference" />
+    </declare-styleable>
+
+    <style name="PCustomSeekBar" parent="android:Widget"></style>
 </resources>

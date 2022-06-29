@@ -89,5 +89,21 @@
     <color name="accost_down_time_change">#FF333333</color>
     <color name="purple_text">#BE63FF</color>
     <color name="plafun_purple_text">#9F77F7</color>
+    <color name="play_chat_purple_1">#BE63FF</color>
+    <color name="play_chat_gray_2">#F4F4F4</color>
+    <color name="play_chat_gray_3">#9897B3</color>
     <color name="common_button_disable_color">#BBBBBB</color>
+
+    <color name="pseekbar_process">#FF1579</color>
+    <color name="pseekbar_process_off">#9896B4</color>
+    <color name="pseekbar_process_off2">#F1F2F9</color>
+
+    <color name="task_money_cnt_yellow">#ffdd4a</color>
+    <color name="task_tag">#ff6859eb</color>
+    <color name="huise">#FF787995</color>
+    <color name="black31">#FF2F2F4D</color>
+    <color name="task_sign_day_text">#FFB06BA9</color>
+    <color name="red_yin1">#F8EEFF</color>
+    <color name="white_yin1">#908fa6</color>
+
 </resources>

@@ -126,16 +126,20 @@ android {
         PlayChat {
             dimension "distribute"
             if(!rootProject.ext.BuildSdkPlayfun && !rootProject.ext.BuildPlayChatRelease){
-                applicationId "com.ld.play.chat"
+                applicationId "com.test.demo.chat"
                 manifestPlaceholders = [package_name: applicationId]
                 //测试包配置
                 signingConfig signingConfigs.playFunDebug
                 // 腾讯IM App KEY
                 buildConfigField "int", "IM_APP_KEY", "1400625290"//"1400510510"
+                //客服id聊天
+                buildConfigField "String", "CHAT_SERVICE_USER_ID_SEND", "\"administrator\""
                 //buildConfigField "int", "IM_APP_KEY", "1400369342"
                 // 腾讯IM FCM离线推送ID
                 //buildConfigField "int", "GOOGLE_FCM_PUSH_BUZID", "13127"17321
                 buildConfigField "int", "GOOGLE_FCM_PUSH_BUZID", "18414"
+                //客服id聊天
+                buildConfigField "String", "CHAT_SERVICE_USER_ID_SEND", "\"administrator\""
                 // 服务端接口HOST
                 buildConfigField "String", "API_BASE_URL", "\"https://t-api.joy-mask.com/\""
                 // 图片HOST
@@ -298,21 +302,26 @@ android {
     sourceSets {
         //条件判断-是打apk包
         if(!rootProject.ext.BuildSdkPlayfun){
-            if(!rootProject.ext.BuildPlayChatRelease){
-                //java文件指定为 playChat模块下
-                main.java.srcDirs=['src/playChat/java']
-                //清单文件指定为 playChat模块下
-                main.manifest.srcFile 'src/playChat/AndroidManifest.xml'
-            }else{
-                //替换java文件 合并替换debug、release下的相同代码文件
-                main.java.srcDirs=['src/playChat/java', 'src/PlayChatRelease/java']
-                main.manifest.srcFile 'src/PlayChatRelease/AndroidManifest.xml'
-            }
+            main.res.srcDirs = ['src/main/res','src/PlayChat/res']
+            main.assets.srcDirs = ['src/main/assets','src/PlayChat/assets']
+            //java文件指定为 playChat模块下
+            main.java.srcDirs = ['src/main/java','src/PlayChat/java']
+            //清单文件指定为 playChat模块下
+            main.manifest.srcFile 'src/PlayChat/AndroidManifest.xml'
+            //main.jniLibs.srcDirs = ['src/main/jniLibs','src/PlayChat/jniLibs']
+//            if(!rootProject.ext.BuildPlayChatRelease){
+//                //java文件指定为 playChat模块下
+//                main.java.srcDirs=['src/playChat/java']
+//                //清单文件指定为 playChat模块下
+//                main.manifest.srcFile 'src/PlayChat/AndroidManifest.xml'
+//            }else{
+//                //替换java文件 合并替换debug、release下的相同代码文件
+//                main.java.srcDirs=['src/playChat/java', 'src/PlayChatRelease/java']
+//                main.manifest.srcFile 'src/PlayChatRelease/AndroidManifest.xml'
+//            }
             //其它资源文件
 //            resources.srcDirs = ['src/playChat/res']
-            main.res.srcDirs = ['src/playChat/res']
-            main.assets.srcDirs = ['src/playChat/assets']
-            main.jniLibs.srcDirs = ['src/playChat/jniLibs']
+
         }
     }
     //条件判断-是打apk包
@@ -383,17 +392,29 @@ if(rootProject.ext.BuildSdkPlayfun){
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    embed (name:'picture_library-v2.6.0', ext:'aar')
-    embed (name:'ucrop-v2.6.0', ext:'aar')
-    embed (name:'refresh-footer-classics-2.0.3', ext:'aar')
-    embed (name:'refresh-drawable-paint-2.0.3', ext:'aar')
-    projectID.each {k,v -> embed project (":${k}")}
     //日志打印
     implementation('com.github.ihsanbal:LoggingInterceptor:3.0.0') {
         exclude group: 'org.json', module: 'json'
     }
     implementation platform('com.google.firebase:firebase-bom:28.0.1')
-    if(!rootProject.ext.BuildSdkPlayfun){
+    if(rootProject.ext.BuildSdkPlayfun){
+        embed (name:'picture_library-v2.6.0', ext:'aar')
+        embed (name:'ucrop-v2.6.0', ext:'aar')
+        embed (name:'refresh-footer-classics-2.0.3', ext:'aar')
+        embed (name:'refresh-drawable-paint-2.0.3', ext:'aar')
+
+        projectID.each {k,v -> embed project (":${k}")}
+
+        debugImplementation 'com.facebook.stetho:stetho:1.5.1'
+        debugImplementation 'com.facebook.stetho:stetho-okhttp3:1.5.1'
+        debugImplementation 'com.facebook.stetho:stetho-urlconnection:1.5.1'
+    }else{
+        implementation (name:'picture_library-v2.6.0', ext:'aar')
+        implementation (name:'ucrop-v2.6.0', ext:'aar')
+        implementation (name:'refresh-footer-classics-2.0.3', ext:'aar')
+        implementation (name:'refresh-drawable-paint-2.0.3', ext:'aar')
+
+        projectID.each {k,v -> implementation project (":${k}")}
         debugImplementation 'com.facebook.stetho:stetho:1.5.1'
         debugImplementation 'com.facebook.stetho:stetho-okhttp3:1.5.1'
         debugImplementation 'com.facebook.stetho:stetho-urlconnection:1.5.1'

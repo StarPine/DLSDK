@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:binding="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.dl.playfun.ui.task.record.TaskExchangeRecordViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <View
+            android:id="@+id/status_bar_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/status_bar_color" />
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay"
+            app:elevation="0dp">
+
+
+            <com.dl.playfun.widget.BasicToolbar
+                android:id="@+id/basic_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                app:toolbar_title="@string/task_exchange_record_fragment_title">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/transparent"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerInParent="true"
+                        android:layout_marginEnd="14dp"
+                        android:text="@string/task_exchange_record_fragment_title_help"
+                        android:textColor="#ff353b50"
+                        android:textSize="12sp"
+                        binding:onClickCommand="@{viewModel.helpOnClickCommand}" />
+                </RelativeLayout>
+            </com.dl.playfun.widget.BasicToolbar>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tab_bar_height"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/white" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.dl.playfun.ui.task.record.list.ShareImageView
+                android:id="@+id/iv_help_admin"
+                android:layout_width="83dp"
+                android:layout_height="92dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="360dp"
+                android:background="@drawable/consulting_service"
+                android:elevation="50dp"
+                android:scaleType="center"
+                binding:onClickCommand="@{viewModel.toUseAdminMessage}" />
+
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/view_pagers"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white" />
+        </RelativeLayout>
+    </LinearLayout>
+</layout>

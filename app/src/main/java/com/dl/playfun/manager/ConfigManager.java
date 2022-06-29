@@ -11,6 +11,7 @@ import com.dl.playfun.entity.GameConfigEntity;
 import com.dl.playfun.entity.SystemConfigContentEntity;
 import com.dl.playfun.entity.SystemConfigEntity;
 import com.dl.playfun.entity.SystemConfigTaskEntity;
+import com.dl.playfun.entity.UserDataEntity;
 
 import java.util.List;
 
@@ -68,6 +69,22 @@ public class ConfigManager {
         }
         return entity;
     }
+
+    /**
+     * @return java.lang.String
+     * @Desc TODO(获取个人资料id)
+     * @author 彭石林
+     * @parame []
+     * @Date 2022/6/7
+     */
+    public String getUserId() {
+        UserDataEntity userDataEntity = getAppRepository().readUserData();
+        if (userDataEntity == null) {
+            return null;
+        }
+        return String.valueOf(userDataEntity.getId());
+    }
+
     /**
     * @Desc TODO(获取操作API库)
     * @author 彭石林
