@@ -52,30 +52,6 @@ public class MeSettingViewModel extends BaseViewModel<AppRepository> {
         AppContext.instance().logEvent(AppsFlyerEvent.System_Settings);
         start(SettingFragment.class.getCanonicalName());
     });
-    //当前版本按钮的点击事件
-    public BindingCommand versionOnClickCommand = new BindingCommand(() -> {
-        model.detectionVersion("Android").compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .doOnSubscribe(this)
-                .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseDataResponse<VersionEntity>>() {
-                    @Override
-                    public void onSuccess(BaseDataResponse<VersionEntity> versionEntityBaseDataResponse) {
-                        dismissHUD();
-                        VersionEntity versionEntity = versionEntityBaseDataResponse.getData();
-                        if (versionEntity != null) {
-                            uc.versionEntitySingl.postValue(versionEntity);
-                        }
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        dismissHUD();
-                    }
-                });
-    }
-    );
     public MeSettingViewModel(@NonNull @NotNull Application application, AppRepository model) {
         super(application, model);
     }
@@ -88,7 +64,6 @@ public class MeSettingViewModel extends BaseViewModel<AppRepository> {
     }
 
     public class UIChangeObservable {
-        public SingleLiveEvent<VersionEntity> versionEntitySingl = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> starFacebeautyActivity = new SingleLiveEvent<>();
     }
 }

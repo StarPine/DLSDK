@@ -66,25 +66,5 @@ public class MeSettingFragment extends BaseToolbarFragment<FragmentMeSettingBind
                 mActivity.startActivity(intent);
             }
         });
-        viewModel.uc.versionEntitySingl.observe(this, new Observer<VersionEntity>() {
-            @Override
-            public void onChanged(VersionEntity versionEntity) {
-                BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (versionEntity.getVersion_code().intValue() <= AppConfig.VERSION_CODE.intValue()) {
-                            ToastUtils.showShort(R.string.playfun_version_latest);
-                        } else {
-                            boolean isUpdate = versionEntity.getIs_update().intValue() == 1;
-                            UpdateDialogView.getInstance(mActivity)
-                                    .getUpdateDialogView(versionEntity.getVersion_name(),
-                                            versionEntity.getContent(),
-                                            versionEntity.getUrl(),
-                                            isUpdate, "playchat", versionEntity.getLinkUrl()).show();
-                        }
-                    }
-                });
-            }
-        });
     }
 }

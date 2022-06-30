@@ -74,6 +74,18 @@ public class UserInfoEntity extends BaseObservable {
     @SerializedName("is_password")
     private Integer isPassword;
 
+    //是否开启等级权益 0否 1是
+    @SerializedName("is_level")
+    private Integer isLevel;
+
+    public Integer getIsLevel() {
+        return isLevel;
+    }
+
+    public void setIsLevel(Integer isLevel) {
+        this.isLevel = isLevel;
+    }
+
     public String getEmail() {
         return email;
     }

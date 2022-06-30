@@ -37,10 +37,10 @@ android {
             v2SigningEnabled true
         }
         playChatDebug{
-            storeFile file('../../keystore/PlayChat.jks')
-            storePassword 'playchat'
-            keyAlias 'playchat'
-            keyPassword 'playchat'
+            storeFile file('../../keystore/Pshilin.keystore')
+            storePassword 'pengshilin'
+            keyAlias 'Pshilin.keystore'
+            keyPassword 'pengshilin'
             v1SigningEnabled true
             v2SigningEnabled true
         }
@@ -128,9 +128,6 @@ android {
         }
         //指向  productFlavors对应
         PlayFun{
-//            manifest.srcFile 'src/' + 'PlayFun' + '/BctcManifest.xml'
-//            assets.srcDirs = ['src/' + 'PlayFun' + '/assets']
-//            java.srcDirs = ['src/' + 'PlayFun' + '/java']
             assets.srcDirs = ['src/main/assets']
             res.srcDirs = ['src/main/res','src/PlayFun/res']
             //java文件指定为 PlayFun 模块下
@@ -146,23 +143,6 @@ android {
             //清单文件指定为 playChat模块下
             main.manifest.srcFile 'src/PlayChat/AndroidManifest.xml'
         }
-        //条件判断-是打apk包
-//        if(!rootProject.ext.BuildSdkPlayfun){
-//            main.res.srcDirs = ['src/main/res','src/PlayChat/res']
-//            main.assets.srcDirs = ['src/main/assets','src/PlayChat/assets']
-//            //java文件指定为 playChat模块下
-//            main.java.srcDirs = ['src/main/java','src/PlayChat/java']
-//            //清单文件指定为 playChat模块下
-//            main.manifest.srcFile 'src/PlayChat/AndroidManifest.xml'
-//        }else{
-//            main.assets.srcDirs = ['src/main/assets']
-//            main.res.srcDirs = ['src/main/res','src/PlayFun/res']
-//            //java文件指定为 PlayFun 模块下
-//            main.java.srcDirs = ['src/main/java','src/PlayFun/java']
-//            //清单文件指定为 PlayFun 模块下
-//            main.manifest.srcFile 'src/main/AndroidManifest.xml'
-//
-//        }
     }
     flavorDimensions "playfun"
     //定义的配置 最终会在Build Variants里面呈现出来
@@ -174,7 +154,7 @@ android {
                 applicationId "com.test.demo.chat"
                 manifestPlaceholders = [package_name: applicationId]
                 //测试包配置
-                signingConfig signingConfigs.playFunDebug
+                signingConfig signingConfigs.playChatDebug
                 // 腾讯IM App KEY
                 buildConfigField "int", "IM_APP_KEY", "1400625290"//"1400510510"
                 //客服id聊天

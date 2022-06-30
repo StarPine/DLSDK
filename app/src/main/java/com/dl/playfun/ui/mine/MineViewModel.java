@@ -39,6 +39,7 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
 import com.dl.playfun.ui.mine.audio.TapeAudioFragment;
 import com.dl.playfun.ui.mine.broadcast.BroadcastFragment;
+import com.dl.playfun.ui.mine.level.LevelEquityFragment;
 import com.dl.playfun.ui.mine.likelist.LikeListFragment;
 import com.dl.playfun.ui.mine.myphotoalbum.MyPhotoAlbumFragment;
 import com.dl.playfun.ui.mine.myphotoalbum.MyPhotoAlbumItemViewModel;
@@ -100,7 +101,11 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
     //钱包按钮的点击事件
     public BindingCommand walletOnClickCommand = new BindingCommand(() -> {
             start(WalletFragment.class.getCanonicalName());
+    });
 
+    //点击等级权益
+    public BindingCommand levelEquityOnClickCommand = new BindingCommand(() -> {
+        start(LevelEquityFragment.class.getCanonicalName());
     });
     //我喜欢的按钮的点击事件
     public BindingCommand fondOnClickCommand = new BindingCommand(() -> {
@@ -635,6 +640,16 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
         }else{
             return View.GONE;
         }
+    }
+
+    //是否现实等级权益入口
+    public Integer getLevelViewShow(Integer isLevel) {
+        if (userInfoEntity.get() != null) {
+            if (!ObjectUtils.isEmpty(userInfoEntity.get()) && !ObjectUtils.isEmpty(isLevel) && isLevel.intValue() == 1) {
+                return View.VISIBLE;
+            }
+        }
+        return View.GONE;
     }
 
     public class UIChangeObservable {
