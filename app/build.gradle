@@ -150,6 +150,7 @@ android {
         // PlayChat台湾版配置 BuildPlayChatRelease (false = Debug 或 true = 正式包)
         PlayChat {
             dimension "playfun"
+            resConfigs "zh","en","zh-rCN","zh-rHK","zh-rMO","zh-rSG","zh-rTW"
             if(!rootProject.ext.BuildSdkPlayfun && !rootProject.ext.BuildPlayChatRelease){
                 applicationId "com.test.demo.chat"
                 manifestPlaceholders = [package_name: applicationId]
