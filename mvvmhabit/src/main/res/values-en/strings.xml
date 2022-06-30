@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">mvvmhabit</string>
     <string name="customactivityoncrash_error_activity_error_occurred_explanation">An unexpected error occurred. \n Sorry for the inconvenience.</string>
     <string name="customactivityoncrash_error_activity_restart_app">reboot</string>
     <string name="customactivityoncrash_error_activity_close_app">Close the program</string>

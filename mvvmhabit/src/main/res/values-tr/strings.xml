@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">mvvmhabit</string>
     <string name="customactivityoncrash_error_activity_error_occurred_explanation">Beklenmeyen bir hata oluştu. \nSorundan ötürü özür dileriz.</string>
     <string name="customactivityoncrash_error_activity_restart_app">Tekrar başlat</string>
     <string name="customactivityoncrash_error_activity_close_app">Programı kapat</string>

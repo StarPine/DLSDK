@@ -40,6 +40,7 @@ import com.dl.playfun.ui.message.MessageMainFragment;
 import com.dl.playfun.ui.mine.MineFragment;
 import com.dl.playfun.ui.radio.radiohome.RadioFragment;
 import com.dl.playfun.ui.ranklisk.ranklist.RankListFragment;
+import com.dl.playfun.ui.task.main.TaskMainFragment;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralPayDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
@@ -445,7 +446,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         if (firstFragment == null) {
             mFragments[FIRST] = new HomeMainFragment();
             mFragments[SECOND] = new RadioFragment();
-            mFragments[THIRD] = new RankListFragment();
+            mFragments[THIRD] = new TaskMainFragment();
             mFragments[FOURTH] = new MessageMainFragment();
             mFragments[FIFTH] = new MineFragment();
         } else {
@@ -454,7 +455,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
             // 这里我们需要拿到mFragments的引用
             mFragments[FIRST] = firstFragment;
             mFragments[SECOND] = findChildFragment(HomeMainFragment.class);
-            mFragments[THIRD] = findChildFragment(RankListFragment.class);
+            mFragments[THIRD] = findChildFragment(TaskMainFragment.class);
             mFragments[FOURTH] = findChildFragment(MessageMainFragment.class);
             mFragments[FIFTH] = findChildFragment(MineFragment.class);
         }
@@ -478,9 +479,10 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         binding.navigationRank.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ConfigManagerUtil.getInstance().putPlayGameFlag(true);
-                //直接返回上一级
-                mActivity.finish();
+                setSelectedItemId(binding.navigationRank);
+//                ConfigManagerUtil.getInstance().putPlayGameFlag(true);
+//                //直接返回上一级
+//                mActivity.finish();
             }
         });
         binding.navigationMessage.setOnClickListener(new View.OnClickListener() {
@@ -540,12 +542,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
             binding.navigationRadioText.setTextColor(getResources().getColor(R.color.navigation_checked));
         } else if (id == R.id.navigation_rank) {
             mainViewPager.setCurrentItem(2, false);
-            int ImgSrcPath = TbarCenterImgConfig.getInstance().getImgSrcPath();
-            if(ImgSrcPath!=-1){
-                binding.navigationRankImg.setImageResource(ImgSrcPath);
-            }else{
-                binding.navigationRankImg.setImageResource(R.drawable.toolbar_icon_task_checked);
-            }
+            binding.navigationRankImg.setImageResource(R.drawable.toolbar_icon_task_checked);
             binding.navigationRankText.setTextColor(getResources().getColor(R.color.navigation_checked));
         } else if (id == R.id.navigation_message) {
             mainViewPager.setCurrentItem(3, false);

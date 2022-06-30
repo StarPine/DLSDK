@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">mvvmhabit</string>
     <string name="customactivityoncrash_error_activity_error_occurred_explanation">發生意外錯誤。\n抱歉，給您帶來不便。</string>
     <string name="customactivityoncrash_error_activity_restart_app">重新啟動</string>
     <string name="customactivityoncrash_error_activity_close_app">關閉程序</string>

@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">mvvmhabit</string>
     <string name="customactivityoncrash_error_activity_error_occurred_explanation">Произошла непредвиденная ошибка.\ Прошу прощения за причиненные неудобства.</string>
     <string name="customactivityoncrash_error_activity_restart_app">Перезапустить приложение</string>
     <string name="customactivityoncrash_error_activity_close_app">Закрыть приложение</string>
