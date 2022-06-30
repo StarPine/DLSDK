@@ -364,8 +364,6 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<Integer> allMessageCountChange = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> lockDialog = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> clickLogout = new SingleLiveEvent<>();
-        public SingleLiveEvent<List<BannerItemEntity>> showAdDialog = new SingleLiveEvent<>();
-        public SingleLiveEvent<LikeRecommendEntity> showRecommendUserDialog = new SingleLiveEvent<>();
         public ObservableField<Boolean> gender = new ObservableField<>(false);
         public SingleLiveEvent<MainTabEvent> mainTab = new SingleLiveEvent<>();
         //更新版本

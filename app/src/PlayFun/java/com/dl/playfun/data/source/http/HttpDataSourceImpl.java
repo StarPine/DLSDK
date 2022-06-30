@@ -52,6 +52,8 @@ import com.dl.playfun.entity.GooglePoiBean;
 import com.dl.playfun.entity.IMTransUserEntity;
 import com.dl.playfun.entity.ImSigEntity;
 import com.dl.playfun.entity.IsChatEntity;
+import com.dl.playfun.entity.LevelApiEntity;
+import com.dl.playfun.entity.LevelPageInfoEntity;
 import com.dl.playfun.entity.MessageGroupEntity;
 import com.dl.playfun.entity.MessageRuleEntity;
 import com.dl.playfun.entity.NewsEntity;
@@ -121,6 +123,16 @@ public class HttpDataSourceImpl implements HttpDataSource {
 
     public static void destroyInstance() {
         INSTANCE = null;
+    }
+
+    @Override
+    public Observable<BaseDataResponse<LevelApiEntity>> adjustLevelPrice(RequestBody requestBody) {
+        return apiService.adjustLevelPrice(requestBody);
+    }
+
+    @Override
+    public Observable<BaseDataResponse<LevelPageInfoEntity>> getUserLevelPageInfo() {
+        return apiService.getUserLevelPageInfo();
     }
 
     @Override

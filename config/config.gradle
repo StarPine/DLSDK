@@ -11,7 +11,7 @@ ext {
     externalOKHTTP = 'com.squareup.okhttp3:okhttp:3.4.0'
     externalGlide = 'com.github.bumptech.glide:glide:4.8.0'
     //是否切成PLayFUn打包aar
-    BuildSdkPlayfun = false;
+    BuildSdkPlayfun = true;
     //是否 PlayChat打包(false = Debug 或 true = 正式包)成 app
     BuildPlayChatRelease = false;
 

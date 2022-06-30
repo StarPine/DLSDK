@@ -46,6 +46,8 @@ import com.dl.playfun.entity.GoogleNearPoiBean;
 import com.dl.playfun.entity.GooglePoiBean;
 import com.dl.playfun.entity.IMTransUserEntity;
 import com.dl.playfun.entity.IsChatEntity;
+import com.dl.playfun.entity.LevelApiEntity;
+import com.dl.playfun.entity.LevelPageInfoEntity;
 import com.dl.playfun.entity.LocalGooglePayCache;
 import com.dl.playfun.entity.MessageGroupEntity;
 import com.dl.playfun.entity.MessageRuleEntity;
@@ -121,6 +123,16 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     @VisibleForTesting
     public static void destroyInstance() {
         INSTANCE = null;
+    }
+
+    @Override
+    public Observable<BaseDataResponse<LevelApiEntity>> adjustLevelPrice(RequestBody requestBody) {
+        return mHttpDataSource.adjustLevelPrice(requestBody);
+    }
+
+    @Override
+    public Observable<BaseDataResponse<LevelPageInfoEntity>> getUserLevelPageInfo() {
+        return mHttpDataSource.getUserLevelPageInfo();
     }
 
     @Override

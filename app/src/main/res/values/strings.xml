@@ -983,5 +983,20 @@
     <string name="playfun_mine_shop">商店</string>
     <string name="playfun_coin_electronic_wallet">電子錢包</string>
 
+    <string name="fragment_level_title">等級權益</string>
+    <string name="fragment_level_text3">* 最終解釋權為平台所有</string>
+    <string name="fragment_level_text4">等級</string>
+    <string name="fragment_level_text5">權益</string>
+    <string name="fragment_level_text6">%s 魅力值</string>
+    <string name="fragment_level_text7">鑽石/條</string>
+    <string name="fragment_level_text8">水晶獎勵</string>
+
+    <string name="fragment_level_text_chat">每條訊息價格%1$s～%2$s鑽石</string>
+    <string name="fragment_level_text_chat1">訊息%s鑽石/條</string>
+    <string name="fragment_level_text_audio">每分鐘語音價格%1$s～%2$s鑽石</string>
+    <string name="fragment_level_text_audio1">語音%s鑽石/分鐘</string>
+    <string name="fragment_level_text_video">每分鐘視訊價格%1$s～%2$s鑽石</string>
+    <string name="fragment_level_text_video2">視訊%s鑽石/分鐘</string>
+
 
 </resources>

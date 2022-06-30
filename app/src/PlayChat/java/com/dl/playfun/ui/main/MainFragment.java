@@ -1,6 +1,5 @@
 package com.dl.playfun.ui.main;
 
-import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +38,6 @@ import com.dl.playfun.ui.home.HomeMainFragment;
 import com.dl.playfun.ui.message.MessageMainFragment;
 import com.dl.playfun.ui.mine.MineFragment;
 import com.dl.playfun.ui.radio.radiohome.RadioFragment;
-import com.dl.playfun.ui.ranklisk.ranklist.RankListFragment;
 import com.dl.playfun.ui.task.main.TaskMainFragment;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralPayDialog;
@@ -48,7 +46,6 @@ import com.dl.playfun.widget.dialog.version.view.UpdateDialogView;
 import com.dl.playfun.widget.pageview.FragmentAdapter;
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
-import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.view.ConversationCommonHolder;
 
 import java.util.List;
@@ -179,26 +176,6 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                 if (isShow.equals("1")){
                     viewModel.pushGreet(1);
                 }
-            }
-        });
-        //公告展示
-        viewModel.uc.versionAlertSl.observe(this, new Observer<Void>() {
-            @Override
-            public void onChanged(Void unused) {
-//                WebViewDialog.getInstance(getContext())
-//                        .setWebUrl(AppConfig.WEB_BASE_URL + "notice/notice.html")
-//                        .setConfirmOnlick(new WebViewDialog.ConfirmOnclick() {
-//                            @Override
-//                            public void webToVipRechargeVC(Dialog dialog) {
-//                                dialog.dismiss();
-//                                viewModel.start(VipSubscribeFragment.class.getCanonicalName());
-//                            }
-//
-//                            @Override
-//                            public void cancel() {
-//                                viewModel.uc.newUserRegis.postValue(false);
-//                            }
-//                        }).noticeDialog().show();
             }
         });
         //气泡提示

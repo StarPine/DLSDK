@@ -38,6 +38,8 @@ import com.dl.playfun.entity.GoogleNearPoiBean;
 import com.dl.playfun.entity.GooglePoiBean;
 import com.dl.playfun.entity.IMTransUserEntity;
 import com.dl.playfun.entity.IsChatEntity;
+import com.dl.playfun.entity.LevelApiEntity;
+import com.dl.playfun.entity.LevelPageInfoEntity;
 import com.dl.playfun.entity.MessageGroupEntity;
 import com.dl.playfun.entity.MessageRuleEntity;
 import com.dl.playfun.entity.NewsEntity;
@@ -95,6 +97,29 @@ import retrofit2.http.Query;
  */
 
 public interface ApiService {
+
+
+    /**
+     * @return io.reactivex.Observable<com.dl.play.chat.data.source.http.response.BaseDataResponse < com.dl.play.chat.entity.LevelApiEntity>>
+     * @Desc TODO(主播调价)
+     * @author 彭石林
+     * @parame [requestBody]
+     * @Date 2022/6/22
+     */
+    @POST("calling/userLevel/adjustPrice")
+    @Headers("Content-Type: application/json")
+    Observable<BaseDataResponse<LevelApiEntity>> adjustLevelPrice(@Body RequestBody requestBody);
+
+    /**
+     * @return io.reactivex.Observable<com.dl.play.chat.data.source.http.response.BaseDataResponse < com.dl.play.chat.entity.UserLevelPageInfoEntity>>
+     * @Desc TODO(用户等级功能页面)
+     * @author 彭石林
+     * @parame []
+     * @Date 2022/6/21
+     */
+    @GET("/calling/userLevel/getUserLevelPageInfo")
+    Observable<BaseDataResponse<LevelPageInfoEntity>> getUserLevelPageInfo();
+
     /**
     * @Desc TODO(根据邮箱发送验证码)
     * @author 彭石林

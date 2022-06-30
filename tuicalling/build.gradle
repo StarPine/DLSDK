@@ -22,12 +22,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    //模块化设计方案 sourceSets配置
-    sourceSets {
-        if(!rootProject.ext.BuildSdkPlayfun){
-            //替换java文件 合并替换debug、release下的相同代码文件
-            main.java.srcDirs=['src/main/java', 'src/playChat/java']
-        }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+        //源代码和资源没有更改，那么就不需要对该模块进行 Lint 分析任务
+        checkDependencies true
     }
 }
 
