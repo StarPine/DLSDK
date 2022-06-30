@@ -14,6 +14,7 @@ import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuikit.tuichat.bean.C2CMessageReceiptInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomLinkMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FaceMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
@@ -38,6 +39,7 @@ import com.tencent.qcloud.tuikit.tuichat.interfaces.IBaseMessageSender;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.NetworkConnectionListener;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.TotalUnreadCountListener;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.CallingMessageHolder;
+import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.CustomImageMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.CustomLinkMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.FaceMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.FileMessageHolder;
@@ -107,6 +109,7 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
     // 初始化自定义消息类型
     private void initMessageType() {
         addCustomMessageType("text_link", CustomLinkMessageBean.class, CustomLinkMessageHolder.class);
+        addCustomMessageType("custom_image", CustomImageMessageBean.class, CustomImageMessageHolder.class);
     }
 
     /**

@@ -47,4 +47,7 @@ public interface OnItemClickListener {
     void clickToUserMain();
 
     void onClickCustomText();
+
+    //DL Add lsf -- 图片点击
+    default void onImageClick(TUIMessageBean messageInfo){}
 }

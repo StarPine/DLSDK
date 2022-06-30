@@ -500,6 +500,14 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
             }
 
             @Override
+            public void onImageClick(TUIMessageBean messageInfo) {
+                //DL add lsf
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onImageClick(messageInfo);
+                }
+            }
+
+            @Override
             public void onSendFailBtnClick(View view, int position, TUIMessageBean messageInfo) {
                 new TUIKitDialog(getContext())
                         .builder()

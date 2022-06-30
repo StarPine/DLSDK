@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/transparent">
 
-    <com.dl.playfun.widget.image.ZoomImageView
+    <com.tencent.qcloud.tuikit.tuichat.component.photoview.view.PhotoView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
