@@ -58,6 +58,7 @@ import com.google.gson.Gson;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.CustomHelloMessage;
+import com.tencent.qcloud.tuikit.tuichat.bean.CustomImageMessage;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.event.InsufficientBalanceEvent;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
@@ -675,10 +676,17 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                     public void onNext(String fileKey) {
                         dismissHUD();
                         if(fileKey!=null){
-                            CustomMessageData customMessageData = CustomMessageData.genCustomMessage(fileKey, CustomMessageData.TYPE_CUSTOM_IMAGE);
-                            customMessageData.setImgWidth(localMedia.getWidth());
-                            customMessageData.setImgHeight(localMedia.getHeight());
-                            TUIMessageBean info = ChatMessageBuilder.buildCustomMessage(GsonUtils.toJson(customMessageData), null, null);
+                            //用IM框架默认的图片类型
+//                            TUIMessageBean info = ChatMessageBuilder.buildImageMessage(Uri.fromFile(new File(filePath)));
+                            //用自定义图片类型
+                            String fullImageUrl = StringUtil.getFullImageUrl(fileKey);
+                            CustomImageMessage customImageMessage = new CustomImageMessage();
+                            customImageMessage.version = TUIChatConstants.version;
+                            customImageMessage.setImgPath(fullImageUrl);
+                            customImageMessage.setImgWidth(localMedia.getWidth());
+                            customImageMessage.setImgHeight(localMedia.getHeight());
+                            String data = GsonUtils.toJson(customImageMessage);
+                            TUIMessageBean info = ChatMessageBuilder.buildCustomMessage(data, null, null);
                             uc.signUploadSendMessage.postValue(info);
                         }
 

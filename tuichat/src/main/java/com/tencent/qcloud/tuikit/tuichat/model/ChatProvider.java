@@ -214,7 +214,6 @@ public class ChatProvider {
         }
 
         boolean isChatPush = ConfigManagerUtil.getInstance().readChatPushStatus();
-        Log.i("starpine","isChatPush: "+isChatPush);
         if (!isChatPush){//不推送离线消息
             v2TIMOfflinePushInfo.disablePush(true);
         }

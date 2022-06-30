@@ -279,7 +279,8 @@ public class MessageDetailDialog {
         if (imagePath != null) {
 //            GlideEngine.createGlideEngine().loadImage(context, StringUtil.getFullImageUrl(drawable), imageView);
             Glide.with(context)
-                    .load(StringUtil.getFullImageUrl(imagePath))
+//                    .load(StringUtil.getFullImageUrl(imagePath))
+                    .load(imagePath)
                     .fitCenter()//防止部分账号图片被拉伸
 //                    .error(R.drawable.radio_dating_img_default) //异常时候显示的图片
 //                    .placeholder(R.drawable.radio_dating_img_default) //加载成功前显示的图片

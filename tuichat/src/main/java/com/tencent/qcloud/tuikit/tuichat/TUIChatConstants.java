@@ -15,6 +15,7 @@ public class TUIChatConstants {
     public static final String CAMERA_TYPE = "camera_type";
 
     public static final String BUSINESS_ID_CUSTOM_HELLO = "text_link";
+    public static final String BUSINESS_ID_CUSTOM_IMAGE = "custom_image";
 
     public static final String FORWARD_SELECT_CONVERSATION_KEY = "forward_select_conversation_key";
     public static final int FORWARD_SELECT_ACTIVTY_CODE = 101;

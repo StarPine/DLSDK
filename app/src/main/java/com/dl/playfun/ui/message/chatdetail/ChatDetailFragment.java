@@ -89,6 +89,7 @@ import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 import com.tencent.qcloud.tuikit.tuichat.presenter.C2CChatPresenter;
@@ -747,6 +748,14 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                     viewModel.start(CertificationMaleFragment.class.getCanonicalName());
                 } else {
                     viewModel.start(CertificationFemaleFragment.class.getCanonicalName());
+                }
+            }
+
+            @Override
+            public void onImageClick(TUIMessageBean messageInfo) {
+                CustomImageMessageBean customImageMessageBean = (CustomImageMessageBean) messageInfo;
+                if (customImageMessageBean != null && customImageMessageBean.getDataPath() != null) {
+                    MessageDetailDialog.getImageDialog(mActivity, customImageMessageBean.getDataPath()).show();
                 }
             }
         });
