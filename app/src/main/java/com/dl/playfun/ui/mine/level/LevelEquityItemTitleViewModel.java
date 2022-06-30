@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 
-
 import com.dl.playfun.entity.LevelSelectInfoEntity;
 
 import me.goldze.mvvmhabit.base.MultiItemViewModel;

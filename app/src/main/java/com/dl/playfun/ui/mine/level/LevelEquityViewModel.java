@@ -18,8 +18,8 @@ import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.entity.LevelApiEntity;
 import com.dl.playfun.entity.LevelCoinOptionInfo;
 import com.dl.playfun.entity.LevelCoinSelectInfo;
-import com.dl.playfun.entity.LevelSelectInfoEntity;
 import com.dl.playfun.entity.LevelPageInfoEntity;
+import com.dl.playfun.entity.LevelSelectInfoEntity;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.viewmodel.BaseViewModel;
 
@@ -43,15 +43,15 @@ public class LevelEquityViewModel extends BaseViewModel<AppRepository> {
 
     public UIChangeObservable uc = new UIChangeObservable();
 
-    public BindingRecyclerViewAdapter<com.dl.playfun.ui.mine.level.LevelEquityItemTitleViewModel> adapterTitle = new BindingRecyclerViewAdapter<>();
-    public ObservableList<com.dl.playfun.ui.mine.level.LevelEquityItemTitleViewModel> observableListTitle = new ObservableArrayList<>();
-    public ObservableList<com.dl.playfun.ui.mine.level.LevelEquityItemTitleViewModel> observableListBanner = new ObservableArrayList<>();
-    public ItemBinding<com.dl.playfun.ui.mine.level.LevelEquityItemTitleViewModel> itemBindingTitle = ItemBinding.of(BR.viewModel, R.layout.item_level_equity_title);
-    public ItemBinding<com.dl.playfun.ui.mine.level.LevelEquityItemTitleViewModel> itemBindingBanner = ItemBinding.of(BR.viewModel, R.layout.item_level_equity_banner);
+    public BindingRecyclerViewAdapter<LevelEquityItemTitleViewModel> adapterTitle = new BindingRecyclerViewAdapter<>();
+    public ObservableList<LevelEquityItemTitleViewModel> observableListTitle = new ObservableArrayList<>();
+    public ObservableList<LevelEquityItemTitleViewModel> observableListBanner = new ObservableArrayList<>();
+    public ItemBinding<LevelEquityItemTitleViewModel> itemBindingTitle = ItemBinding.of(BR.viewModel, R.layout.item_level_equity_title);
+    public ItemBinding<LevelEquityItemTitleViewModel> itemBindingBanner = ItemBinding.of(BR.viewModel, R.layout.item_level_equity_banner);
 
-    public BindingRecyclerViewAdapter<com.dl.playfun.ui.mine.level.LevelEquityItemViewModel> adapter = new BindingRecyclerViewAdapter<>();
-    public ObservableList<com.dl.playfun.ui.mine.level.LevelEquityItemViewModel> observableList = new ObservableArrayList<>();
-    public ItemBinding<com.dl.playfun.ui.mine.level.LevelEquityItemViewModel> itemBinding = ItemBinding.of(BR.viewModel, R.layout.item_level_equity_detail);
+    public BindingRecyclerViewAdapter<LevelEquityItemViewModel> adapter = new BindingRecyclerViewAdapter<>();
+    public ObservableList<LevelEquityItemViewModel> observableList = new ObservableArrayList<>();
+    public ItemBinding<LevelEquityItemViewModel> itemBinding = ItemBinding.of(BR.viewModel, R.layout.item_level_equity_detail);
 
     public ObservableField<String> currentTextHint = new ObservableField<>();
     public ObservableField<String> hintTv = new ObservableField<>();
@@ -190,16 +190,16 @@ public class LevelEquityViewModel extends BaseViewModel<AppRepository> {
                                 break;
                             }
                         }
-                        List<com.dl.playfun.ui.mine.level.LevelEquityItemTitleViewModel> levelEquityItemTitleViewModelList = new ArrayList<>();
+                        List<LevelEquityItemTitleViewModel> levelEquityItemTitleViewModelList = new ArrayList<>();
                         for (int i = 0; i < levelInfoList.size(); i++) {
                             boolean check = levelSelectInfoEntity.getUserLevel() == levelSelectInfoEntity.getLevelTipsList().get(i).getLevel();
                             if (check) {
                                 lastTitleClickIdx = i;
                                 imgUrlLevel.set(levelInfoList.get(i).getLevelImage());
                             }
-                            com.dl.playfun.ui.mine.level.LevelEquityItemTitleViewModel levelEquityItemTitleViewModel = new com.dl.playfun.ui.mine.level.LevelEquityItemTitleViewModel(LevelEquityViewModel.this, check, levelInfoList.get(i));
+                            LevelEquityItemTitleViewModel levelEquityItemTitleViewModel = new LevelEquityItemTitleViewModel(LevelEquityViewModel.this, check, levelInfoList.get(i));
                             levelEquityItemTitleViewModelList.add(levelEquityItemTitleViewModel);
-                            com.dl.playfun.ui.mine.level.LevelEquityItemViewModel levelEquityItemViewModel = new com.dl.playfun.ui.mine.level.LevelEquityItemViewModel(LevelEquityViewModel.this, check, levelInfoList.get(i));
+                            LevelEquityItemViewModel levelEquityItemViewModel = new LevelEquityItemViewModel(LevelEquityViewModel.this, check, levelInfoList.get(i));
                             observableList.add(levelEquityItemViewModel);
                         }
                         observableListTitle.addAll(levelEquityItemTitleViewModelList);

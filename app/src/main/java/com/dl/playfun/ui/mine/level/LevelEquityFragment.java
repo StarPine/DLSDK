@@ -74,7 +74,7 @@ public class LevelEquityFragment extends BaseFragment<FragmentLevelEquityBinding
         super.initData();
         binding.appbarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {
             @Override
-            public void onStateChanged(AppBarLayout appBarLayout, AppBarStateChangeListener.State state) {
+            public void onStateChanged(AppBarLayout appBarLayout, State state) {
                 if (state == State.EXPANDED) {
                     Log.e("进入展开", "=================");
                     //展开状态

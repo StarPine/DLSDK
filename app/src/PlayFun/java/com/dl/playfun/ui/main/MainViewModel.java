@@ -60,16 +60,11 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
 
     public ObservableField<String> lockPassword = new ObservableField<>("");
     public ObservableField<Boolean> isHaveRewards = new ObservableField<>(false);
-    public List<BannerItemEntity> bannerEntity;
     public List<String> publicScreenBannerGiftEntity = new ArrayList<>();
-    public LikeRecommendEntity likeRecommendEntity;
     public boolean isNewUser = false;
     public boolean playing = false;
     UIChangeObservable uc = new UIChangeObservable();
-    //退出登录
-    public BindingCommand logoutOnClickCommand = new BindingCommand(() -> uc.clickLogout.call());
-    private String bizId;
-    private Disposable mSubscription, taskMainTabEventReceive, mainTabEventReceive, rewardRedDotEventReceive, BubbleTopShowEventSubscription,newUserEventSubscription;
+    private Disposable mSubscription, rewardRedDotEventReceive, BubbleTopShowEventSubscription;
 
     public MainViewModel(@NonNull Application application, AppRepository appRepository) {
         super(application, appRepository);
@@ -122,8 +117,6 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         });
 
         //将订阅者加入管理站
-        RxSubscriptions.add(taskMainTabEventReceive);
-        RxSubscriptions.add(mainTabEventReceive);
         RxSubscriptions.add(rewardRedDotEventReceive);
         RxSubscriptions.add(BubbleTopShowEventSubscription);
     }
@@ -132,8 +125,6 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
     public void removeRxBus() {
         super.removeRxBus();
         RxSubscriptions.remove(mSubscription);
-        RxSubscriptions.remove(taskMainTabEventReceive);
-        RxSubscriptions.remove(mainTabEventReceive);
         RxSubscriptions.remove(rewardRedDotEventReceive);
         RxSubscriptions.remove(BubbleTopShowEventSubscription);
     }
@@ -143,23 +134,6 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         //startWithPopTo(LoginFragment.class.getCanonicalName(), MainFragment.class.getCanonicalName(), true);
     }
 
-    //显示公告
-    public void showAnnouncemnet() {
-        try {
-            boolean versionAlert = model.readVersion();
-            if (ConfigManager.getInstance().isMale()) {//只有男生才弹公告
-                if (!versionAlert) {
-                    model.saveVersion(AppConfig.VERSION_NAME);
-                    uc.versionAlertSl.call();
-                    return;
-                }
-            }
-        }catch (Exception e){
-
-        }
-
-        uc.newUserRegis.postValue(false);
-    }
 
     public void loadSendLocation(Double lat, Double lng, String county_name, String province_name) {
         if (lat == null || lng == null) {
@@ -372,10 +346,6 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<LikeRecommendEntity> showRecommendUserDialog = new SingleLiveEvent<>();
         public ObservableField<Boolean> gender = new ObservableField<>(false);
         public SingleLiveEvent<MainTabEvent> mainTab = new SingleLiveEvent<>();
-        //更新版本
-        public SingleLiveEvent<VersionEntity> versionEntitySingl = new SingleLiveEvent<>();
-        //每个新版本只会弹出一次
-        public SingleLiveEvent<Void> versionAlertSl = new SingleLiveEvent<>();
         //打开批量搭讪
         public SingleLiveEvent<String> clickAccountDialog = new SingleLiveEvent<>();
         //未付费弹窗

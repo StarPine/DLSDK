@@ -8,10 +8,8 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,15 +19,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.core.content.FileProvider;
-
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.R;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.widget.dialog.MVDialog;
-import com.dl.playfun.widget.dialog.version.DownloadUtil;
 
-import java.io.File;
 import java.util.List;
 
 /*
@@ -161,65 +155,18 @@ public class UpdateDialogView {
                             context.startActivity(intent);
                         }
 
-                    }else{
+                    } else {
                         Intent intent = new Intent(Intent.ACTION_VIEW);
                         intent.setData(Uri.parse(appStoreLink.trim()));
                         context.startActivity(intent);
                     }
                     return;
                 }
-                ll_close.setVisibility(View.GONE);
-                btn_ok.setVisibility(View.GONE);
-                npb.setVisibility(View.VISIBLE);
-                npb.setMax(100);
-                npb.setProgress(0);
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        DownloadUtil.get().download(apkUrl, paths, apkName + ".apk", new DownloadUtil.OnDownloadListener() {
-                            /**
-                             * 下载成功之后的文件回调接口
-                             */
-                            @Override
-                            public void onDownloadSuccess(File fileApk) {
-                                hide();
-                                Intent intent = new Intent(Intent.ACTION_VIEW);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                //兼容高低手机系统版本效验。低版本直接跳往安装，高版本获取权限效验
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                                    Uri uri = FileProvider.getUriForFile(context, "com.dl.play.chat.widget.dialog.version.UpdateFileProvider", fileApk);
-                                    intent.setDataAndType(uri, "application/vnd.android.package-archive");
-                                } else {
-                                    intent.setDataAndType(Uri.fromFile(fileApk), "application/vnd.android.package-archive");
-                                }
-                                try {
-                                    context.startActivity(intent);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-
-                            /**
-                             * 下载进度回调
-                             */
-                            @Override
-                            public void onDownloading(int progress) {
-                                progressNpb = progress;
-                                handler.sendEmptyMessage(0);
-                            }
-
-                            /**
-                             * 下载异常信息回调
-                             */
-                            @Override
-                            public void onDownloadFailed(Exception e) {
-                                Log.e("下载失败：", e.getMessage());
-                                hide();
-                            }
-                        });
-                    }
-                }).start();
+                if (!StringUtils.isEmpty(apkUrl)) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(apkUrl.trim()));
+                    context.startActivity(intent);
+                }
             }
         });
 
@@ -266,11 +213,7 @@ public class UpdateDialogView {
         try {
             ApplicationInfo info = context.getPackageManager().getApplicationInfo(
                     packageName, PackageManager.GET_UNINSTALLED_PACKAGES);
-            if(info!=null){
-                return true;
-            }else{
-                return false;
-            }
+            return info != null;
 
         } catch (PackageManager.NameNotFoundException e) {
             return false;

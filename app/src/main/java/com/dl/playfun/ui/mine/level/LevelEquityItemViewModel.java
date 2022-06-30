@@ -7,8 +7,8 @@ import androidx.databinding.ObservableField;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.R;
-import com.dl.playfun.entity.LevelSelectInfoEntity;
 import com.dl.playfun.entity.LevelPageInfoEntity;
+import com.dl.playfun.entity.LevelSelectInfoEntity;
 
 import me.goldze.mvvmhabit.base.MultiItemViewModel;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;

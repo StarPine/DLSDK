@@ -450,7 +450,6 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
 
     private void initView() {
 
-
         BaseFragment firstFragment = findChildFragment(HomeMainFragment.class);
         if (firstFragment == null) {
             mFragments[FIRST] = new HomeMainFragment();
@@ -571,25 +570,6 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
             }
             binding.navigationMineText.setTextColor(getResources().getColor(R.color.navigation_checked));
         }
-    }
-
-
-    private void showRecharge() {
-        CoinExchargeItegralPayDialog coinExchargeItegralPayDialog = new CoinExchargeItegralPayDialog(getContext(),mActivity);
-        coinExchargeItegralPayDialog.show();
-        coinExchargeItegralPayDialog.setCoinRechargeSheetViewListener(new CoinExchargeItegralPayDialog.CoinRechargeSheetViewListener() {
-            @Override
-            public void onPaySuccess(CoinExchargeItegralPayDialog sheetView, GameCoinBuy sel_goodsEntity) {
-                sheetView.endGooglePlayConnect();
-                sheetView.dismiss();
-            }
-
-            @Override
-            public void onPayFailed(CoinExchargeItegralPayDialog sheetView, String msg) {
-                sheetView.dismiss();
-                ToastUtils.showShort(msg);
-            }
-        });
     }
 
     //初始化按钮状态

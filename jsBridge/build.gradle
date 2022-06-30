@@ -18,9 +18,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    lintOptions { // 消除lint警告
-        abortOnError false
+    lintOptions {
         checkReleaseBuilds false
+        abortOnError false
+        //源代码和资源没有更改，那么就不需要对该模块进行 Lint 分析任务
+        checkDependencies true
     }
 }
 

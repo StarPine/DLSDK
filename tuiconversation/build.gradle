@@ -30,6 +30,12 @@ android {
             main.java.srcDirs=['src/main/java', 'src/playChat/java']
         }
     }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+        //源代码和资源没有更改，那么就不需要对该模块进行 Lint 分析任务
+        checkDependencies true
+    }
 }
 
 afterEvaluate{
