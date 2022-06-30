@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.databinding.ObservableArrayList;
 import androidx.databinding.ObservableList;
 
+import com.dl.playfun.BR;
+import com.dl.playfun.R;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseListEmptyObserver;
@@ -15,12 +17,9 @@ import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.TraceEntity;
 import com.dl.playfun.event.LikeChangeEvent;
 import com.dl.playfun.event.TraceEvent;
-import com.dl.playfun.manager.PermissionManager;
 import com.dl.playfun.ui.mine.trace.TraceItemViewModel;
 import com.dl.playfun.ui.mine.trace.TraceViewModel;
 import com.dl.playfun.viewmodel.BaseViewModel;
-import com.dl.playfun.BR;
-import com.dl.playfun.R;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -28,7 +27,6 @@ import me.goldze.mvvmhabit.binding.command.BindingCommand;
 import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.RxUtils;
-import me.goldze.mvvmhabit.utils.ToastUtils;
 import me.tatarka.bindingcollectionadapter2.BindingRecyclerViewAdapter;
 import me.tatarka.bindingcollectionadapter2.ItemBinding;
 
@@ -181,16 +179,6 @@ public class TraceListViewModel extends BaseViewModel<AppRepository> {
 
     public void addLike(int position) {
         TraceEntity traceEntity = observableList.get(position).itemEntity.get();
-        if (!PermissionManager.getInstance().canCollectUser(traceEntity.getSex())) {
-            if (traceEntity.getSex() == 1) {
-                ToastUtils.showShort(R.string.playfun_men_cannot_collect_men);
-                traceEntity.setFollow(false);
-            } else {
-                ToastUtils.showShort(R.string.playfun_lady_cannot_collect_lady);
-                traceEntity.setFollow(false);
-            }
-            return;
-        }
         model.addCollect(traceEntity.getId())
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())

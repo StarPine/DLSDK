@@ -1,5 +1,8 @@
 package com.dl.playfun.ui.mine.broadcast.mytrends;
 
+import static com.dl.playfun.ui.mine.broadcast.mytrends.HeadItemViewModel.Type_New;
+import static com.dl.playfun.ui.radio.radiohome.RadioViewModel.RadioRecycleType_New;
+
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
@@ -9,8 +12,9 @@ import androidx.databinding.ObservableArrayList;
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableList;
 
+import com.dl.playfun.BR;
+import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
-import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.entity.BaseUserBeanEntity;
 import com.dl.playfun.entity.BroadcastBeanEntity;
 import com.dl.playfun.entity.BroadcastEntity;
@@ -19,18 +23,15 @@ import com.dl.playfun.entity.GiveUserBeanEntity;
 import com.dl.playfun.entity.NewsEntity;
 import com.dl.playfun.event.ZoomInPictureEvent;
 import com.dl.playfun.manager.ConfigManager;
-import com.dl.playfun.manager.PermissionManager;
 import com.dl.playfun.ui.mine.broadcast.myall.MyAllBroadcastViewModel;
-import com.dl.playfun.utils.ExceptionReportUtils;
-import com.dl.playfun.utils.ListUtils;
-import com.dl.playfun.viewmodel.BaseViewModel;
-import com.dl.playfun.BR;
-import com.dl.playfun.R;
 import com.dl.playfun.ui.mine.broadcast.mytrends.trenddetail.TrendDetailFragment;
 import com.dl.playfun.ui.mine.broadcast.mytrends.trenddetail.TrendDetailViewModel;
 import com.dl.playfun.ui.radio.radiohome.RadioViewModel;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.ui.userdetail.userdynamic.UserDynamicViewModel;
+import com.dl.playfun.utils.ExceptionReportUtils;
+import com.dl.playfun.utils.ListUtils;
+import com.dl.playfun.viewmodel.BaseViewModel;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 
 import java.util.ArrayList;
@@ -45,9 +46,6 @@ import me.goldze.mvvmhabit.binding.command.BindingConsumer;
 import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.utils.ToastUtils;
 import me.tatarka.bindingcollectionadapter2.ItemBinding;
-
-import static com.dl.playfun.ui.mine.broadcast.mytrends.HeadItemViewModel.Type_New;
-import static com.dl.playfun.ui.radio.radiohome.RadioViewModel.RadioRecycleType_New;
 
 /**
  * @author wulei
@@ -150,10 +148,6 @@ public class TrendItemViewModel extends MultiItemViewModel<BaseViewModel> {
     //点赞点击事件
     public BindingCommand likeClick = new BindingCommand(() -> {
         try {
-            if (!PermissionManager.getInstance().VerifyJumpUserDetailView(newsEntityObservableField.get().getUser().getSex())) {
-                ToastUtils.showShort(R.string.playfun_userdetail_same_sex);
-                return;
-            }
             if (viewModel instanceof MyTrendsViewModel) {
                 int position = ((MyTrendsViewModel) viewModel).observableList.indexOf(TrendItemViewModel.this);
                 ((MyTrendsViewModel) viewModel).uc.clickLike.setValue(position);
@@ -183,10 +177,6 @@ public class TrendItemViewModel extends MultiItemViewModel<BaseViewModel> {
     //评论点击事件
     public BindingCommand commentClick = new BindingCommand(() -> {
         try {
-            if (!PermissionManager.getInstance().VerifyJumpUserDetailView(newsEntityObservableField.get().getUser().getSex())) {
-                ToastUtils.showShort(R.string.playfun_userdetail_same_sex);
-                return;
-            }
             if (newsEntityObservableField.get().getBroadcast().getIsComment() == 1) {
                 ToastUtils.showShort(R.string.playfun_comment_close);
                 return;
@@ -241,10 +231,6 @@ public class TrendItemViewModel extends MultiItemViewModel<BaseViewModel> {
     });
     public BindingCommand avatarClick = new BindingCommand(() -> {
         try {
-            if (!PermissionManager.getInstance().VerifyJumpUserDetailView(newsEntityObservableField.get().getUser().getSex())) {
-                ToastUtils.showShort(R.string.playfun_userdetail_same_sex);
-                return;
-            }
             Bundle bundle = UserDetailFragment.getStartBundle(newsEntityObservableField.get().getUser().getId());
             viewModel.start(UserDetailFragment.class.getCanonicalName(), bundle);
             GSYVideoManager.releaseAllVideos();

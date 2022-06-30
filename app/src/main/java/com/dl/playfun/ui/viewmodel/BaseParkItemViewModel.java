@@ -6,23 +6,19 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
 
-import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
+import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.entity.ParkItemEntity;
 import com.dl.playfun.manager.ConfigManager;
-import com.dl.playfun.manager.PermissionManager;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.utils.ChatUtils;
 import com.dl.playfun.utils.ExceptionReportUtils;
 import com.dl.playfun.utils.TimeUtils;
-import com.dl.playfun.R;
-import com.tencent.qcloud.tuicore.util.ToastUtil;
 
 import me.goldze.mvvmhabit.base.MultiItemViewModel;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
-import me.goldze.mvvmhabit.utils.ToastUtils;
 
 /**
  * @author wulei
@@ -42,13 +38,9 @@ public class BaseParkItemViewModel extends MultiItemViewModel<BaseParkViewModel>
 //            ExceptionReportUtils.report(e);
 //        }
         try {
-            if (PermissionManager.getInstance().VerifyJumpUserDetailView(itemEntity.get().getSex())) {
                 AppContext.instance().logEvent(AppsFlyerEvent.Nearby_Follow);
                 Bundle bundle = UserDetailFragment.getStartBundle(itemEntity.get().getId());
                 viewModel.start(UserDetailFragment.class.getCanonicalName(), bundle);
-            } else {
-                ToastUtils.showShort(R.string.playfun_userdetail_same_sex);
-            }
         } catch (Exception e) {
             ExceptionReportUtils.report(e);
         }
@@ -56,10 +48,6 @@ public class BaseParkItemViewModel extends MultiItemViewModel<BaseParkViewModel>
     //搭讪 or  聊天
     public BindingCommand accostOnClickCommand = new BindingCommand(() -> {
         try {
-            if (!PermissionManager.getInstance().VerifyJumpUserDetailView(itemEntity.get().getSex())) {
-                ToastUtils.showShort(R.string.playfun_accost_same_sex);
-                return;
-            }
             //拿到position
             if (itemEntity.get().getIsAccost() == 1) {
                 ChatUtils.chatUser(itemEntity.get().getImUserId(), itemEntity.get().getId(), itemEntity.get().getNickname(), viewModel);

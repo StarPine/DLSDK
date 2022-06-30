@@ -5,16 +5,13 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
 
-import com.dl.playfun.R;
-import com.dl.playfun.manager.PermissionManager;
 import com.dl.playfun.ui.mine.broadcast.mytrends.givelist.GiveListFragment;
+import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.utils.ExceptionReportUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
-import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 
 import me.goldze.mvvmhabit.base.MultiItemViewModel;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
-import me.goldze.mvvmhabit.utils.ToastUtils;
 
 
 /**
@@ -32,23 +29,12 @@ public class HeadItemViewModel extends MultiItemViewModel<BaseViewModel> {
     public ObservableField<Integer> id = new ObservableField<>();
     //条目的点击事件
     public BindingCommand itemClick = new BindingCommand(() -> {
-//        try {
-//            Bundle bundle = UserDetailFragment.getStartBundle(userId.get());
-//            viewModel.start(UserDetailFragment.class.getCanonicalName(), bundle);
-//        } catch (Exception e) {
-//            ExceptionReportUtils.report(e);
-//        }
         try {
-            if (PermissionManager.getInstance().VerifyJumpUserDetailView(sex.get())) {
-                Bundle bundle = UserDetailFragment.getStartBundle(userId.get());
-                viewModel.start(UserDetailFragment.class.getCanonicalName(), bundle);
-            } else {
-                ToastUtils.showShort(R.string.playfun_userdetail_same_sex);
-            }
+            Bundle bundle = UserDetailFragment.getStartBundle(userId.get());
+            viewModel.start(UserDetailFragment.class.getCanonicalName(), bundle);
         } catch (Exception e) {
             ExceptionReportUtils.report(e);
         }
-
     });
     //查看点赞列表
     public BindingCommand morePhotoOnClickCommand = new BindingCommand(() -> {

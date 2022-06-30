@@ -1,6 +1,5 @@
 package com.dl.playfun.ui.mine.trace;
 
-import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -8,22 +7,16 @@ import androidx.databinding.ObservableField;
 
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
-import com.dl.playfun.app.AppContext;
-import com.dl.playfun.app.EaringlSwitchUtil;
+import com.dl.playfun.R;
 import com.dl.playfun.entity.TraceEntity;
 import com.dl.playfun.manager.ConfigManager;
-import com.dl.playfun.manager.PermissionManager;
-import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
-import com.dl.playfun.utils.ExceptionReportUtils;
-import com.dl.playfun.utils.LogUtils;
-import com.dl.playfun.R;
 import com.dl.playfun.ui.mine.trace.list.TraceListViewModel;
+import com.dl.playfun.utils.ExceptionReportUtils;
 
 import org.jetbrains.annotations.NotNull;
 
 import me.goldze.mvvmhabit.base.MultiItemViewModel;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
-import me.goldze.mvvmhabit.utils.ToastUtils;
 
 /**
  * Author: 彭石林
@@ -58,11 +51,7 @@ public class TraceItemViewModel extends MultiItemViewModel<TraceListViewModel> {
             return;
         }
         try {
-            if (PermissionManager.getInstance().VerifyJumpUserDetailView(itemEntity.get().getSex())) {
-                viewModel.traceViewModel.toUserDetails(itemEntity.get().getId());
-            } else {
-                ToastUtils.showShort(R.string.playfun_userdetail_same_sex);
-            }
+            viewModel.traceViewModel.toUserDetails(itemEntity.get().getId());
         } catch (Exception e) {
             ExceptionReportUtils.report(e);
         }

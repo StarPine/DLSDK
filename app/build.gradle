@@ -141,7 +141,7 @@ android {
             //java文件指定为 playChat模块下
             java.srcDirs = ['src/main/java','src/PlayChat/java']
             //清单文件指定为 playChat模块下
-            main.manifest.srcFile 'src/PlayChat/AndroidManifest.xml'
+            manifest.srcFile 'src/PlayChat/AndroidManifest.xml'
         }
     }
     flavorDimensions "playfun"
@@ -166,11 +166,12 @@ android {
                 //客服id聊天
                 buildConfigField "String", "CHAT_SERVICE_USER_ID_SEND", "\"administrator\""
                 // 服务端接口HOST
-                buildConfigField "String", "API_BASE_URL", "\"https://t-api.joy-mask.com/\""
+                // 服务端接口HOST
+                buildConfigField "String", "API_BASE_URL", "\"https://t-api.petmaster.world/\""
                 // 图片HOST
                 buildConfigField "String", "IMAGE_BASE_URL", "\"https://img.joy-mask.com/\""
                 //H5网页地址
-                buildConfigField "String", "WEB_BASE_URL", "\"http://t-m.joy-mask.com/\""
+                buildConfigField "String", "WEB_BASE_URL", "\"http://web-playfun.joy-mask.com/\""
                 // Ali OSS BucketName
                 buildConfigField "String", "BUCKET_NAME", "\"joymask\""
                 //app名字

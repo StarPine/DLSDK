@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.databinding.ObservableArrayList;
 import androidx.databinding.ObservableList;
 
+import com.dl.playfun.BR;
+import com.dl.playfun.R;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
@@ -15,11 +17,10 @@ import com.dl.playfun.event.LikeChangeEvent;
 import com.dl.playfun.event.TaskListEvent;
 import com.dl.playfun.event.TaskTypeStatusEvent;
 import com.dl.playfun.event.UserRemarkChangeEvent;
-import com.dl.playfun.manager.PermissionManager;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.viewmodel.BaseRefreshViewModel;
-import com.dl.playfun.BR;
-import com.dl.playfun.R;
+
+import java.util.Objects;
 
 import io.reactivex.disposables.Disposable;
 import me.goldze.mvvmhabit.bus.RxBus;
@@ -54,8 +55,8 @@ public abstract class BaseParkViewModel<T extends AppRepository> extends BaseRef
         mSubscription2 = RxBus.getDefault().toObservable(UserRemarkChangeEvent.class)
                 .subscribe(event -> {
                     for (BaseParkItemViewModel viewModel : observableList) {
-                        if (viewModel.itemEntity.get().getId() == event.getUserId()) {
-                            viewModel.itemEntity.get().setNickname(event.getRemarkName());
+                        if (Objects.requireNonNull(viewModel.itemEntity.get()).getId() == event.getUserId()) {
+                            Objects.requireNonNull(viewModel.itemEntity.get()).setNickname(event.getRemarkName());
                             break;
                         }
                     }
@@ -64,8 +65,8 @@ public abstract class BaseParkViewModel<T extends AppRepository> extends BaseRef
                 .subscribe(event -> {
                     if (event.getFrom() == null || event.getFrom() != this) {
                         for (BaseParkItemViewModel viewModel : observableList) {
-                            if (viewModel.itemEntity.get().getId() == event.getUserId()) {
-                                viewModel.itemEntity.get().setCollect(event.isLike());
+                            if (Objects.requireNonNull(viewModel.itemEntity.get()).getId() == event.getUserId()) {
+                                Objects.requireNonNull(viewModel.itemEntity.get()).setCollect(event.isLike());
                                 break;
                             }
                         }
@@ -94,16 +95,6 @@ public abstract class BaseParkViewModel<T extends AppRepository> extends BaseRef
 
     public void addLike(int position) {
         ParkItemEntity parkItemEntity = observableList.get(position).itemEntity.get();
-        if (!PermissionManager.getInstance().canCollectUser(parkItemEntity.getSex())) {
-            if (parkItemEntity.getSex() == 1) {
-                ToastUtils.showShort(R.string.playfun_men_cannot_collect_men);
-                parkItemEntity.setCollect(false);
-            } else {
-                ToastUtils.showShort(R.string.playfun_lady_cannot_collect_lady);
-                parkItemEntity.setCollect(false);
-            }
-            return;
-        }
         model.addCollect(parkItemEntity.getId())
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())

@@ -158,6 +158,13 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".kl.view.VideoPresetActivity"
+            android:launchMode="singleTop"
+            android:requestLegacyExternalStorage="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan|adjustResize|stateHidden" />
     </application>
 
 </manifest>
