@@ -45,10 +45,8 @@ import com.dl.playfun.kl.viewmodel.AudioCallChatingViewModel;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocaleManager;
 import com.dl.playfun.ui.dialog.GiftBagDialog;
-import com.dl.playfun.ui.message.chatdetail.ChatDetailFragment;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
-import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
@@ -64,7 +62,6 @@ import com.tencent.coustom.GiftEntity;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;

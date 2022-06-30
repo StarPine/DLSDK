@@ -29,6 +29,7 @@ import com.dl.playfun.ui.mine.webdetail.WebDetailFragment;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.viewmodel.BaseViewModel;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.Map;
@@ -281,6 +282,12 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
                         // MobclickAgent.onProfileSignIn(String.valueOf(userDataEntity.getId()));
                         AppsFlyerLib.getInstance().setCustomerUserId(String.valueOf(userDataEntity.getId()));
                         AppContext.instance().mFirebaseAnalytics.setUserId(String.valueOf(userDataEntity.getId()));
+                        try {
+                            //添加崩溃人员id
+                            FirebaseCrashlytics.getInstance().setUserId(String.valueOf(userDataEntity.getId()));
+                        }catch (Exception e){
+
+                        }
                         model.saveUserData(userDataEntity);
                         if (userDataEntity.getCertification() == 1) {
                             model.saveNeedVerifyFace(true);

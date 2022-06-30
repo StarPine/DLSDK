@@ -82,7 +82,7 @@ ext {
             "firebase-analytics"           : 'com.google.firebase:firebase-analytics:18.0.0',
             "firebase-messaging"           : 'com.google.firebase:firebase-messaging:21.0.0',
             "firebase-iid"                 : 'com.google.firebase:firebase-iid:21.0.0',
-//            "firebase-bom"                 : 'com.google.firebase:firebase-bom:28.0.1',
+            "firebase-bom"                 : 'com.google.firebase:firebase-bom:28.0.1',
             "firebase-auth"                : 'com.google.firebase:firebase-auth',
             "firebase-crashlytics"         : 'com.google.firebase:firebase-crashlytics',
 
@@ -114,8 +114,6 @@ ext {
             "devbrackets"                  : 'com.devbrackets.android:exomedia:4.3.0',
             "banner"                       : 'com.youth.banner:banner:1.4.10', //最新版本
             "installreferrer"              : 'com.android.installreferrer:installreferrer:2.2',
-            //今日头条适配
-            //"AndroidAutoSize"              : 'com.github.JessYanCoding:AndroidAutoSize:v1.2.1',
             //高斯模糊图片类
             "glide-transformations"        : 'jp.wasabeef:glide-transformations:4.3.0',
             // 动画解析库：https://github.com/airbnb/lottie-android

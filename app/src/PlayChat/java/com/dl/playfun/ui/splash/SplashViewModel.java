@@ -17,6 +17,7 @@ import com.dl.playfun.ui.login.LoginFragment;
 import com.dl.playfun.ui.main.MainFragment;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.viewmodel.BaseViewModel;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.util.concurrent.TimeUnit;
 
@@ -71,6 +72,13 @@ public class SplashViewModel extends BaseViewModel<AppRepository> {
                         UserDataEntity userDataEntity = response.getData();
                         model.saveUserData(userDataEntity);
                         AppsFlyerLib.getInstance().setCustomerUserId(String.valueOf(userDataEntity.getId()));
+                        AppContext.instance().mFirebaseAnalytics.setUserId(String.valueOf(userDataEntity.getId()));
+                        try {
+                            //添加崩溃人员id
+                            FirebaseCrashlytics.getInstance().setUserId(String.valueOf(userDataEntity.getId()));
+                        }catch (Exception e){
+
+                        }
                         AppContext.instance().logEvent(AppsFlyerEvent.Silent_login);
                         startWithPop(MainFragment.class.getCanonicalName());
                     }

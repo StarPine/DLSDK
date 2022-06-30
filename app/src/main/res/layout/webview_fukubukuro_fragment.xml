@@ -5,7 +5,7 @@
 
         <variable
             name="viewModel"
-            type="com.dl.playfun.ui.mine.webview.FukubuViewModel" />
+            type="com.dl.playfun.ui.task.webview.FukubuViewModel" />
     </data>
 
     <LinearLayout
