@@ -59,19 +59,10 @@ android {
         minSdkVersion 21
         targetSdkVersion 30
 
-        multiDexEnabled true
-
         // Maps SDK for Android 地图服务API_KEY https://developers.google.com/maps/documentation/android-sdk/get-api-key
         manifestPlaceholders = [mapsApiKey: "AIzaSyB0KW8QXuw7RNRAEeF2sUaFSWoqO0kUf_o"]
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "String", "BUILD_TIME", "\"${releaseTime()}\""
-        if(!rootProject.ext.BuildSdkPlayfun){
-            if(rootProject.ext.BuildPlayChatRelease){
-                signingConfig signingConfigs.playChatRelease
-            }else{
-                signingConfig signingConfigs.playChatDebug
-            }
-        }
 
         // vectorDrawables.useSupportLibrary = true
         javaCompileOptions {
@@ -115,40 +106,48 @@ android {
         checkReleaseBuilds false
         abortOnError false
         //源代码和资源没有更改，那么就不需要对该模块进行 Lint 分析任务
-        checkDependencies true
     }
 
     dataBinding { enabled = true }
-    //模块化设计方案 sourceSets配置
-    sourceSets {
-        main {
-            java.srcDirs = ['src/main/java']
-            res.srcDirs = ['src/main/res']
-            assets.srcDirs = ['src/main/assets']
-        }
-        //指向  productFlavors对应
-        PlayFun{
-            assets.srcDirs = ['src/main/assets']
-            res.srcDirs = ['src/main/res','src/PlayFun/res']
-            //java文件指定为 PlayFun 模块下
-            java.srcDirs = ['src/main/java','src/PlayFun/java']
-            //清单文件指定为 PlayFun 模块下
-            manifest.srcFile 'src/PlayFun/AndroidManifest.xml'
-        }
-        PlayChat{
-            res.srcDirs = ['src/main/res','src/PlayChat/res']
-            assets.srcDirs = ['src/main/assets','src/PlayChat/assets']
-            //java文件指定为 playChat模块下
-            java.srcDirs = ['src/main/java','src/PlayChat/java']
-            //清单文件指定为 playChat模块下
-            manifest.srcFile 'src/PlayChat/AndroidManifest.xml'
-        }
-    }
+
     flavorDimensions "playfun"
     //定义的配置 最终会在Build Variants里面呈现出来
     productFlavors {
+        // 台湾版配置-Test   playFunDebug
+        PlayFunAAR {
+            signingConfig signingConfigs.playFunDebug
+            dimension "playfun"
+            // 腾讯IM App KEY
+            buildConfigField "int", "IM_APP_KEY", "1400625290"//"1400510510"
+            // 腾讯IM FCM离线推送ID
+            //buildConfigField "int", "GOOGLE_FCM_PUSH_BUZID", "13127"17321
+            buildConfigField "int", "GOOGLE_FCM_PUSH_BUZID", "18414"
+            // 服务端接口HOST
+            buildConfigField "String", "API_BASE_URL", "\"https://t-api.petmaster.world/\""
+//            buildConfigField "String", "API_BASE_URL", "\"https://t-api.play-chat.net/\""
+            // 图片HOST
+            buildConfigField "String", "IMAGE_BASE_URL", "\"https://img.joy-mask.com/\""
+            //H5网页地址
+            buildConfigField "String", "WEB_BASE_URL", "\"http://web-playfun.joy-mask.com/\""
+            // Ali OSS BucketName
+            buildConfigField "String", "BUCKET_NAME", "\"joymask\""
+            //客服id聊天
+            buildConfigField "String", "CHAT_SERVICE_USER_ID_SEND", "\"administrator\""
+            //app名字
+            resValue "string","app_name","PlayFun-beta"
+            //Facebook APPID
+            resValue "string","facebook_app_id","5173832349346696"
+            //Flyerid
+            resValue "string","app_flyer","J4YbG6jNVHaFWuAeixmCuC"
+            //facebook 登录key
+            resValue "string","fb_login_protocol_scheme","fb5173832349346696"
+            // 版本号
+            versionCode 10
+            // 版本名
+            versionName "1.0.1-beta"
+        }
         // PlayChat台湾版配置 BuildPlayChatRelease (false = Debug 或 true = 正式包)
-        PlayChat {
+        PlayChatAPK {
             dimension "playfun"
             resConfigs "zh","en","zh-rCN","zh-rHK","zh-rMO","zh-rSG","zh-rTW"
             if(!rootProject.ext.BuildSdkPlayfun && !rootProject.ext.BuildPlayChatRelease){
@@ -226,38 +225,30 @@ android {
                 versionName "1.0.4"
             }
         }
-        // 台湾版配置-Test   playFunDebug
-        PlayFun {
-            signingConfig signingConfigs.playFunDebug
-            dimension "playfun"
-            // 腾讯IM App KEY
-            buildConfigField "int", "IM_APP_KEY", "1400625290"//"1400510510"
-            // 腾讯IM FCM离线推送ID
-            //buildConfigField "int", "GOOGLE_FCM_PUSH_BUZID", "13127"17321
-            buildConfigField "int", "GOOGLE_FCM_PUSH_BUZID", "18414"
-            // 服务端接口HOST
-            buildConfigField "String", "API_BASE_URL", "\"https://t-api.petmaster.world/\""
-//            buildConfigField "String", "API_BASE_URL", "\"https://t-api.play-chat.net/\""
-            // 图片HOST
-            buildConfigField "String", "IMAGE_BASE_URL", "\"https://img.joy-mask.com/\""
-            //H5网页地址
-            buildConfigField "String", "WEB_BASE_URL", "\"http://web-playfun.joy-mask.com/\""
-            // Ali OSS BucketName
-            buildConfigField "String", "BUCKET_NAME", "\"joymask\""
-            //客服id聊天
-            buildConfigField "String", "CHAT_SERVICE_USER_ID_SEND", "\"administrator\""
-            //app名字
-            resValue "string","app_name","PlayFun-beta"
-            //Facebook APPID
-            resValue "string","facebook_app_id","5173832349346696"
-            //Flyerid
-            resValue "string","app_flyer","J4YbG6jNVHaFWuAeixmCuC"
-            //facebook 登录key
-            resValue "string","fb_login_protocol_scheme","fb5173832349346696"
-            // 版本号
-            versionCode 10
-            // 版本名
-            versionName "1.0.1-beta"
+    }
+
+    //模块化设计方案 sourceSets配置
+    sourceSets {
+        main {
+            java.srcDirs = ['src/main/java']
+            res.srcDirs = ['src/main/res']
+            assets.srcDirs = ['src/main/assets']
+        }
+        //指向  productFlavors对应
+        PlayFunAAR{
+            //java文件指定为 PlayFun 模块下
+            java.srcDirs = ['src/main/java','src/PlayFunAAR/java']
+            res.srcDirs = ['src/main/res','src/PlayFunAAR/res']
+            //清单文件指定为 PlayFun 模块下
+            manifest.srcFile 'src/PlayFunAAR/AndroidManifest.xml'
+        }
+        PlayChatAPK{
+            res.srcDirs = ['src/main/res','src/PlayChatAAB/res']
+            assets.srcDirs = ['src/main/assets','src/PlayChatAAB/assets']
+            //java文件指定为 playChat模块下
+            java.srcDirs = ['src/main/java','src/PlayChatAAB/java']
+            //清单文件指定为 playChat模块下
+            manifest.srcFile 'src/PlayChatAAB/AndroidManifest.xml'
         }
     }
 
