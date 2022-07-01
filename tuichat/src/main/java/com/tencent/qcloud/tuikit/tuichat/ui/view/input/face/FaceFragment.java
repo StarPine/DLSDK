@@ -14,9 +14,10 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuicore.util.SoftKeyBoardUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
+import com.tencent.qcloud.tuikit.tuichat.component.face.EmojiIndicatorView;
+import com.tencent.qcloud.tuikit.tuichat.component.face.RecentEmojiManager;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.input.BaseInputFragment;
 import com.tencent.qcloud.tuikit.tuichat.component.face.Emoji;
 import com.tencent.qcloud.tuikit.tuichat.component.face.FaceGroup;
@@ -42,11 +43,12 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
     ArrayList<Emoji> recentlyEmojiList;
     ArrayList<FaceGroup> customFaces;
     private int mCurrentGroupIndex = 0;
-    private int columns = 7;
-    private int rows = 3;
-    private int vMargin = 0;
+    private int emojiColumns = 8;
+    private int emojiRows = 3;
     private OnEmojiClickListener listener;
     private RecentEmojiManager recentManager;
+
+    private boolean showCustomFace = true;
 
     public static FaceFragment Instance() {
         FaceFragment instance = new FaceFragment();
@@ -57,6 +59,10 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
 
     public void setListener(OnEmojiClickListener listener) {
         this.listener = listener;
+    }
+
+    public void setShowCustomFace(boolean showCustomFace) {
+        this.showCustomFace = showCustomFace;
     }
 
     @Override
@@ -88,10 +94,12 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_face, container, false);
+
+        //DL add
         ViewGroup.LayoutParams params = null;
         try {
             if(params == null){
-                params = new ViewGroup.LayoutParams(-1,SoftKeyBoardUtil.getSoftKeyBoardHeight());
+                params = new ViewGroup.LayoutParams(-1, SoftKeyBoardUtil.getSoftKeyBoardHeight());
                 view.setLayoutParams(params);
             }else{
                 params.height = SoftKeyBoardUtil.getSoftKeyBoardHeight();
@@ -110,14 +118,16 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
     }
 
     private void initViews() {
-        initViewPager(emojiList, 7, 3);
+        initViewPager(emojiList, emojiColumns, emojiRows);
         mCurrentSelected = faceFirstSetTv;
         faceFirstSetTv.setSelected(true);
         faceFirstSetTv.setOnClickListener(this);
         customFaces = FaceManager.getCustomFaceList();
         mCurrentGroupIndex = 0;
 
-        int width = ScreenUtil.getPxByDp(70);
+        if (!showCustomFace) {
+            return;
+        }
         for (int i = 0; i < customFaces.size(); i++) {
             final FaceGroup group = customFaces.get(i);
             FaceGroupIcon faceBtn = new FaceGroupIcon(getActivity());
@@ -134,29 +144,18 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
                         mCurrentSelected = (FaceGroupIcon) v;
                         mCurrentSelected.setSelected(true);
                     }
-
                 }
             });
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, LinearLayout.LayoutParams.MATCH_PARENT);
-            faceGroup.addView(faceBtn, params);
-
+            faceGroup.addView(faceBtn);
         }
-
-
     }
 
     private void initViewPager(ArrayList<Emoji> list, int columns, int rows) {
-        this.columns = columns;
-        this.rows = rows;
-        if (list.size() > 0) {
-            vMargin = (SoftKeyBoardUtil.getSoftKeyBoardHeight() - (ScreenUtil.getPxByDp(40 + 20) + list.get(0).getHeight() * rows)) / 4;
-        }
-
-        intiIndicator(list);
+        intiIndicator(list, columns, rows);
         ViewPagerItems.clear();
-        int pageCont = getPagerCount(list);
+        int pageCont = getPagerCount(list, columns, rows);
         for (int i = 0; i < pageCont; i++) {
-            ViewPagerItems.add(getViewPagerItem(i, list));
+            ViewPagerItems.add(getViewPagerItem(i, list, columns, rows));
         }
         FaceVPAdapter mVpAdapter = new FaceVPAdapter(ViewPagerItems);
         faceViewPager.setAdapter(mVpAdapter);
@@ -181,23 +180,19 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
         });
     }
 
-    private void intiIndicator(ArrayList<Emoji> list) {
-        faceIndicator.init(getPagerCount(list));
+    private void intiIndicator(ArrayList<Emoji> list, int columns, int rows) {
+        faceIndicator.init(getPagerCount(list, columns, rows));
     }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.face_first_set) {
-           /* if (faceIndicator.getVisibility() == View.GONE) {
-                faceIndicator.setVisibility(View.VISIBLE);
-            }*/
             if (mCurrentSelected != v) {
                 mCurrentGroupIndex = 0;
                 mCurrentSelected.setSelected(false);
                 mCurrentSelected = (FaceGroupIcon) v;
-                initViewPager(emojiList, 7, 3);
+                initViewPager(emojiList, emojiColumns, emojiRows);
                 mCurrentSelected.setSelected(true);
-
             }
 
         }
@@ -208,7 +203,7 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
      *
      * @return
      */
-    private int getPagerCount(ArrayList<Emoji> list) {
+    private int getPagerCount(ArrayList<Emoji> list, int columns, int rows) {
         int count = list.size();
         int dit = 1;
         if (mCurrentGroupIndex > 0)
@@ -217,10 +212,11 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
                 : count / (columns * rows - dit) + 1;
     }
 
-    private View getViewPagerItem(int position, ArrayList<Emoji> list) {
+    private View getViewPagerItem(int position, ArrayList<Emoji> list, int columns, int rows) {
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View layout = inflater.inflate(R.layout.layout_face_grid, null);//表情布局
         GridView gridview = layout.findViewById(R.id.chart_face_gv);
+        gridview.setNumColumns(columns);
         /**
          * 注：因为每一页末尾都有一个删除图标，所以每一页的实际表情columns *　rows　－　1; 空出最后一个位置给删除图标
          * */
@@ -268,33 +264,11 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
                         listener.onEmojiClick(subList.get(position));
                     }
                 }
-
-
-                //insertToRecentList(subList.get(position));
             }
         });
 
         return gridview;
     }
-
-    private void insertToRecentList(Emoji emoji) {
-        if (emoji != null) {
-            if (recentlyEmojiList.contains(emoji)) {
-                //如果已经有该表情，就把该表情放到第一个位置
-                int index = recentlyEmojiList.indexOf(emoji);
-                Emoji emoji0 = recentlyEmojiList.get(0);
-                recentlyEmojiList.set(index, emoji0);
-                recentlyEmojiList.set(0, emoji);
-                return;
-            }
-            if (recentlyEmojiList.size() == (rows * columns - 1)) {
-                //去掉最后一个
-                recentlyEmojiList.remove(rows * columns - 2);
-            }
-            recentlyEmojiList.add(0, emoji);
-        }
-    }
-
 
     @Override
     public void onDestroyView() {
@@ -353,22 +327,10 @@ public class FaceFragment extends BaseInputFragment implements View.OnClickListe
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.item_face, null);
                 holder.iv = convertView.findViewById(R.id.face_image);
                 FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) holder.iv.getLayoutParams();
-                if (emoji != null) {
+                if (emoji != null && emoji.getHeight() != 0 && emoji.getWidth() != 0) {
                     params.width = emoji.getWidth();
                     params.height = emoji.getHeight();
                 }
-                if (position / columns == 0) {
-                    params.setMargins(0, vMargin, 0, 0);
-                } else if (rows == 2) {
-                    params.setMargins(0, vMargin, 0, 0);
-                } else {
-                    if (position / columns < rows - 1) {
-                        params.setMargins(0, vMargin, 0, vMargin);
-                    } else {
-                        params.setMargins(0, 0, 0, vMargin);
-                    }
-                }
-
                 holder.iv.setLayoutParams(params);
                 convertView.setTag(holder);
             } else {

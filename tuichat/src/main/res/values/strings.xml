@@ -200,4 +200,18 @@
 	<string name="location_extra">[Location]</string>
 	<string name="forward_chat_record">Chat Record</string>
 	<string name="reedit_msg">Re-edit</string>
+
+	<string name="quote_button">Quote</string>
+	<string name="send_failed_file_not_exists">Send failed, file not exists</string>
+	<string name="chat_calling_switch_to_audio">Switch to voice call</string>
+	<string name="chat_calling_switch_to_audio_accept">Confirm video to voice</string>
+	<string name="chat_calling_unknown_invitation">Unknown invitation</string>
+	<string name="save_success">Saved successfully</string>
+	<string name="save_failed">Saved failed</string>
+	<string name="chat_permission_storage_reason">In order for you to save photos and videos to your device, please allow us to write photos and videos to your device.</string>
+	<string name="chat_permission_storage_dialog_alert">Allow storage access in Settings->Apps->%s to use the function of saving photos and videos normally</string>
+	<string name="chat_reply_num">%d replied</string>
+	<string name="chat_reply_detail">Reply detail</string>
+
+	<string name="chat_not_read">Unread</string>
 </resources>

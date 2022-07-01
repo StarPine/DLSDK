@@ -126,10 +126,10 @@ public abstract class TUIBaseChatActivity extends BaseLightActivity {
         TUIMessageBean messageInfo = ChatMessageBuilder.buildMessage(v2TIMMessage);
         chatInfo.setLocateMessage(messageInfo);
         chatInfo.setAtInfoList((List<V2TIMGroupAtInfo>) intent.getSerializableExtra(TUIConstants.TUIChat.AT_INFO_LIST));
+        chatInfo.setFaceUrl(intent.getStringExtra(TUIConstants.TUIChat.FACE_URL));
 
         if (chatType == ChatInfo.TYPE_GROUP) {
             GroupInfo groupInfo = (GroupInfo) chatInfo;
-            groupInfo.setFaceUrl(intent.getStringExtra(TUIConstants.TUIChat.FACE_URL));
             groupInfo.setGroupName(intent.getStringExtra(TUIConstants.TUIChat.GROUP_NAME));
             groupInfo.setGroupType(intent.getStringExtra(TUIConstants.TUIChat.GROUP_TYPE));
             groupInfo.setJoinType(intent.getIntExtra(TUIConstants.TUIChat.JOIN_TYPE, 0));
