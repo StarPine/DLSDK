@@ -1,5 +1,6 @@
 package com.dl.playfun.ui.radio.issuanceprogram;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,8 +8,12 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -38,6 +43,7 @@ import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.widget.coinpaysheet.CoinPaySheet;
 import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralPayDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
+import com.luck.picture.lib.permissions.PermissionChecker;
 
 import me.goldze.mvvmhabit.utils.ToastUtils;
 
@@ -126,30 +132,42 @@ public class IssuanceProgramFragment extends BaseToolbarFragment<FragmentIssuanc
         lng = getArguments().getDouble(ARG_ADDRESS_LNG);
     }
 
+    ActivityResultLauncher<String> toPermissionIntent = registerForActivityResult(new ActivityResultContracts.RequestPermission(), result -> {
+        if (result) {
+            AliyunSnapVideoParam mCropParam = new AliyunSnapVideoParam.Builder()
+                    .setFrameRate(30)
+                    .setGop(250)
+                    .setFilterList(null)
+                    .setCropMode(VideoDisplayMode.SCALE)
+                    .setVideoQuality(VideoQuality.HD)
+                    .setVideoCodec(VideoCodecs.H264_HARDWARE)
+                    .setResolutionMode(0)
+                    .setRatioMode(1)
+                    .setCropMode(VideoDisplayMode.SCALE)
+                    .setNeedRecord(false)
+                    .setMinVideoDuration(3000)
+                    .setMaxVideoDuration(60 * 1000 * 1000)
+                    .setMinCropDuration(3000)
+                    .setSortMode(AliyunSnapVideoParam.SORT_MODE_MERGE)
+                    .build();
+            AppConfig.isCorpAliyun = true;
+            CropMediaActivity.startCropForResult(_mActivity, 2002, mCropParam);
+        } else {
+            Toast.makeText(_mActivity, R.string.picture_jurisdiction, Toast.LENGTH_SHORT).show();
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(_mActivity, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                // 只要有一个权限没有被授予, 则直接返回 false
+                PermissionChecker.launchAppDetailsSettings(getContext());
+            }
+        }
+    });
+
     @Override
     public void initViewObservable() {
         loadDatingDetail();
         viewModel.uc.startVideoActivity.observe(this, new Observer() {
             @Override
             public void onChanged(Object o) {
-                AliyunSnapVideoParam mCropParam = new AliyunSnapVideoParam.Builder()
-                        .setFrameRate(30)
-                        .setGop(250)
-                        .setFilterList(null)
-                        .setCropMode(VideoDisplayMode.SCALE)
-                        .setVideoQuality(VideoQuality.HD)
-                        .setVideoCodec(VideoCodecs.H264_HARDWARE)
-                        .setResolutionMode(0)
-                        .setRatioMode(1)
-                        .setCropMode(VideoDisplayMode.SCALE)
-                        .setNeedRecord(false)
-                        .setMinVideoDuration(3000)
-                        .setMaxVideoDuration(60 * 1000 * 1000)
-                        .setMinCropDuration(3000)
-                        .setSortMode(AliyunSnapVideoParam.SORT_MODE_MERGE)
-                        .build();
-                AppConfig.isCorpAliyun = true;
-                CropMediaActivity.startCropForResult(_mActivity, 2002, mCropParam);
+                toPermissionIntent.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
             }
         });
         viewModel.uc.checkDatingText.observe(this, new Observer<String>() {

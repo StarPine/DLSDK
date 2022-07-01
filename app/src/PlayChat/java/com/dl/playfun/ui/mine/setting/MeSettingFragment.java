@@ -1,11 +1,16 @@
 package com.dl.playfun.ui.mine.setting;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -18,6 +23,7 @@ import com.dl.playfun.entity.VersionEntity;
 import com.dl.playfun.kl.view.VideoPresetActivity;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.widget.dialog.version.view.UpdateDialogView;
+import com.luck.picture.lib.permissions.PermissionChecker;
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
 
 import me.goldze.mvvmhabit.utils.ToastUtils;
@@ -55,6 +61,19 @@ public class MeSettingFragment extends BaseToolbarFragment<FragmentMeSettingBind
         super.initData();
     }
 
+    ActivityResultLauncher<String> toPermissionIntent = registerForActivityResult(new ActivityResultContracts.RequestPermission(), result -> {
+        if (result) {
+            Intent intent = new Intent(mActivity, VideoPresetActivity.class);
+            mActivity.startActivity(intent);
+        } else {
+            Toast.makeText(_mActivity, R.string.picture_camera, Toast.LENGTH_SHORT).show();
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(_mActivity, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                // 只要有一个权限没有被授予, 则直接返回 false
+                PermissionChecker.launchAppDetailsSettings(getContext());
+            }
+        }
+    });
+
     @Override
     public void initViewObservable() {
         super.initViewObservable();
@@ -62,8 +81,7 @@ public class MeSettingFragment extends BaseToolbarFragment<FragmentMeSettingBind
         viewModel.uc.starFacebeautyActivity.observe(this, new Observer<Void>() {
             @Override
             public void onChanged(Void aBoolean) {
-                Intent intent = new Intent(mActivity, VideoPresetActivity.class);
-                mActivity.startActivity(intent);
+                toPermissionIntent.launch(Manifest.permission.CAMERA);
             }
         });
         viewModel.uc.versionEntitySingl.observe(this, new Observer<VersionEntity>() {

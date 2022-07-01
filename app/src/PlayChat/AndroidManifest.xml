@@ -21,9 +21,8 @@
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <!--删除相关请求安装权限&#45;&#45;迎合谷歌政策-->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" tools:node="remove" />
 
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
     <!--在播放时有特殊设置的需要声明一个相应的WAKE_LOCK权限-->
@@ -54,12 +53,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
-        <meta-data
-            android:name="design_width_in_dp"
-            android:value="360" />
-        <meta-data
-            android:name="design_height_in_dp"
-            android:value="640" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -159,12 +152,45 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".kl.view.VideoPresetActivity"
+            android:name="com.dl.playfun.kl.view.DialingAudioActivity"
             android:launchMode="singleTop"
             android:requestLegacyExternalStorage="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan|adjustResize|stateHidden" />
+            android:windowSoftInputMode="adjustPan|adjustResize|stateHidden"><!--" adjustResize|stateHidden"-->
+        </activity>
+
+        <activity
+            android:name="com.dl.playfun.kl.view.CallingVideoActivity"
+            android:launchMode="singleTop"
+            android:requestLegacyExternalStorage="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan|adjustResize|stateHidden"><!--" adjustResize|stateHidden"-->
+        </activity>
+
+        <activity
+            android:name="com.dl.playfun.kl.view.AudioCallChatingActivity"
+            android:launchMode="singleTop"
+            android:requestLegacyExternalStorage="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan|adjustResize|stateHidden" /><!--" adjustResize|stateHidden"-->
+        <activity
+            android:name="com.dl.playfun.kl.view.VideoPresetActivity"
+            android:launchMode="singleTop"
+            android:requestLegacyExternalStorage="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan|adjustResize|stateHidden" /><!--" adjustResize|stateHidden"-->
+        <activity
+            android:name=".ui.message.chatdetail.notepad.NotepadActivity"
+            android:launchMode="singleTop"
+            android:requestLegacyExternalStorage="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan|adjustResize|stateHidden" /><!--" adjustResize|stateHidden"-->
+
     </application>
 
 </manifest>
