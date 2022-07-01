@@ -124,22 +124,12 @@ public class CameraActivity extends Activity {
     private void startSendPhoto() {
         TUIChatLog.i(TAG, "startSendPhoto");
 
-        PermissionHelper.requestPermission(PermissionHelper.PERMISSION_STORAGE, new PermissionHelper.PermissionCallback() {
-            @Override
-            public void onGranted() {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("*/*");
-                String[] mimeTypes = {"image/*", "video/*"};
-                intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
-                startActivityForResult(intent, REQUEST_CODE_PHOTO_AND_VIDEO);
-            }
-
-            @Override
-            public void onDenied() {
-                TUIChatLog.i(TAG, "startSendPhoto checkPermission failed");
-            }
-        });
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/*");
+        String[] mimeTypes = {"image/*", "video/*"};
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+        startActivityForResult(intent, REQUEST_CODE_PHOTO_AND_VIDEO);
     }
 
     @Override

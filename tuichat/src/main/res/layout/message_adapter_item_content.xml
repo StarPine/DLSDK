@@ -17,7 +17,7 @@
         android:visibility="visible">
 
         <TextView
-            android:id="@+id/chat_time_tv"
+            android:id="@+id/message_top_time_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -31,7 +31,7 @@
             android:id="@+id/left_user_icon_view"
             android:layout_width="41dp"
             android:layout_height="41dp"
-            android:layout_below="@+id/chat_time_tv"
+            android:layout_below="@+id/message_top_time_tv"
             android:layout_alignParentLeft="true"
             android:layout_marginRight="6.23dp"
             android:visibility="gone"
@@ -42,7 +42,7 @@
             android:id="@+id/right_user_icon_view"
             android:layout_width="41dp"
             android:layout_height="41dp"
-            android:layout_below="@+id/chat_time_tv"
+            android:layout_below="@+id/message_top_time_tv"
             android:layout_alignParentRight="true"
             android:layout_marginLeft="6.23dp"
             android:visibility="gone"
@@ -53,7 +53,7 @@
             android:id="@+id/user_name_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/chat_time_tv"
+            android:layout_below="@+id/message_top_time_tv"
             android:layout_marginLeft="6.67dp"
             android:layout_marginBottom="3.68dp"
             android:layout_toLeftOf="@+id/right_user_icon_view"
@@ -109,6 +109,23 @@
                 android:textSize="11sp" />
         </LinearLayout>
 
+        //todo im新版
+        <TextView
+            android:id="@+id/msg_detail_time_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@id/user_name_tv"
+            android:layout_marginRight="3.36dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="#B0B0B0"
+            android:textSize="11.52sp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:text="18:00" />
+
         <LinearLayout
             android:id="@+id/msg_content_ll"
             android:layout_width="wrap_content"
@@ -150,11 +167,41 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/message_send_fail"
                 android:visibility="gone" />
-
-            <FrameLayout
-                android:id="@+id/msg_content_fl"
+            <LinearLayout
+                android:id="@+id/msg_area_and_reply"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.tencent.qcloud.tuikit.tuichat.ui.view.message.MaxWidthLinearLayout
+                    android:id="@+id/msg_area"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:maxWidth="@dimen/chat_message_content_max_width">
+
+                    <!-- message content area -->
+                    <com.tencent.qcloud.tuikit.tuichat.ui.view.message.MaxWidthFrameLayout
+                        android:id="@+id/msg_content_fl"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:maxWidth="@dimen/chat_message_content_max_width" />
+
+                    <!-- emoji react area -->
+                    <com.tencent.qcloud.tuikit.tuichat.ui.view.message.reply.ChatFlowReactView
+                        android:id="@+id/reacts_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dp"/>
+
+                </com.tencent.qcloud.tuikit.tuichat.ui.view.message.MaxWidthLinearLayout>
+
+            </LinearLayout>
+
+<!--            <FrameLayout-->
+<!--                android:id="@+id/msg_content_fl"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content" />-->
 
             <FrameLayout
                 android:id="@+id/msg_content_fl_custom"

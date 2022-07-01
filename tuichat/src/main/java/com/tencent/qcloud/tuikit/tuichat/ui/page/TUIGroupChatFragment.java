@@ -12,6 +12,7 @@ import com.tencent.coustom.CustomIMTextEntity;
 import com.tencent.coustom.EvaluateItemEntity;
 import com.tencent.coustom.PhotoAlbumItemEntity;
 import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
@@ -71,7 +72,7 @@ public class TUIGroupChatFragment extends TUIBaseChatFragment {
                 info.setId(messageBean.getSender());
 
                 Bundle bundle = new Bundle();
-                bundle.putString("chatId", info.getId());
+                bundle.putString(TUIConstants.TUIChat.CHAT_ID, info.getId());
                 TUICore.startActivity("FriendProfileActivity", bundle);
 
             }

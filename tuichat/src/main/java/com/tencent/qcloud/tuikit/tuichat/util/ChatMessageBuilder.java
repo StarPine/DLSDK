@@ -4,18 +4,21 @@ import android.net.Uri;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuicore.util.FileUtil;
 import com.tencent.qcloud.tuicore.util.ImageUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
+import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.ReplyPreviewBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FaceMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.QuoteMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.SoundMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
@@ -25,12 +28,14 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 
 import java.io.File;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ChatMessageBuilder {
+    public static final String TAG = ChatMessageBuilder.class.getSimpleName();
 
     /**
      * @Desc TODO(往本地插入一条C2C本地消息)
@@ -89,6 +94,9 @@ public class ChatMessageBuilder {
      */
     public static TUIMessageBean buildImageMessage(final Uri uri) {
         String path = ImageUtil.getImagePathAfterRotate(uri);
+        if (TextUtils.isEmpty(path)) {
+            return null;
+        }
         V2TIMMessage v2TIMMessage = V2TIMManager.getMessageManager().createImageMessage(path);
         v2TIMMessage.setNeedReadReceipt(TUIChatConfigs.getConfigs().getGeneralConfig().isShowRead());
 
@@ -115,6 +123,9 @@ public class ChatMessageBuilder {
      * @return
      */
     public static TUIMessageBean buildVideoMessage(String imgPath, String videoPath, int width, int height, long duration) {
+        if (TextUtils.isEmpty(imgPath) || TextUtils.isEmpty(videoPath)) {
+            return null;
+        }
         V2TIMMessage v2TIMMessage = V2TIMManager.getMessageManager().createVideoMessage(videoPath, "mp4", Math.round(duration * 1.0f / 1000), imgPath);
         v2TIMMessage.setNeedReadReceipt(TUIChatConfigs.getConfigs().getGeneralConfig().isShowRead());
 
@@ -157,6 +168,9 @@ public class ChatMessageBuilder {
      */
     public static TUIMessageBean buildFileMessage(Uri fileUri) {
         String filePath = FileUtil.getPathFromUri(fileUri);
+        if (TextUtils.isEmpty(filePath)) {
+            return null;
+        }
         File file = new File(filePath);
         if (file.exists()) {
             V2TIMMessage v2TIMMessage = V2TIMManager.getMessageManager().createFileMessage(filePath, file.getName());
@@ -261,10 +275,15 @@ public class ChatMessageBuilder {
     private static TUIMessageBean buildReplyMessage(V2TIMMessage v2TIMMessage, ReplyPreviewBean previewBean) {
         Map<String, ReplyPreviewBean> cloudData = new HashMap<>();
         Gson gson = new Gson();
-        cloudData.put("messageReply", previewBean);
+        cloudData.put(TUIChatConstants.MESSAGE_REPLY_KEY, previewBean);
         v2TIMMessage.setCloudCustomData(gson.toJson(cloudData));
 
-        ReplyMessageBean replyMessageBean = new ReplyMessageBean(previewBean);
+        QuoteMessageBean replyMessageBean;
+        if (TextUtils.isEmpty(previewBean.getMessageRootID())) {
+            replyMessageBean = new QuoteMessageBean(previewBean);
+        } else {
+            replyMessageBean = new ReplyMessageBean(previewBean);
+        }
         replyMessageBean.setCommonAttribute(v2TIMMessage);
         replyMessageBean.onProcessMessage(v2TIMMessage);
         return replyMessageBean;
@@ -276,7 +295,14 @@ public class ChatMessageBuilder {
         if (TextUtils.isEmpty(sender)) {
             sender = messageBean.getSender();
         }
+
         ReplyPreviewBean previewBean = new ReplyPreviewBean();
+        if (messageBean instanceof ReplyMessageBean) {
+            String msgRootId = ((ReplyMessageBean) messageBean).getMsgRootId();
+            previewBean.setMessageRootID(msgRootId);
+        } else {
+            previewBean.setMessageRootID(messageBean.getId());
+        }
         previewBean.setOriginalMessageBean(messageBean);
         previewBean.setMessageID(messageBean.getId());
         previewBean.setMessageAbstract(messageAbstract);
@@ -286,6 +312,26 @@ public class ChatMessageBuilder {
         previewBean.setMessageType(messageBean.getMsgType());
 
         return previewBean;
+    }
+
+    public static void mergeCloudCustomData(TUIMessageBean messageBean, String key, Object data) {
+        String cloudCustomData = messageBean.getV2TIMMessage().getCloudCustomData();
+        Gson gson = new Gson();
+        HashMap hashMap = null;
+        if (TextUtils.isEmpty(cloudCustomData)) {
+            hashMap = new HashMap();
+        } else {
+            try {
+                hashMap = gson.fromJson(cloudCustomData, HashMap.class);
+            } catch (JsonSyntaxException e) {
+                TUIChatLog.e(TAG, " mergeCloudCustomData error " + e.getMessage());
+            }
+        }
+        if (hashMap != null) {
+            hashMap.put(key, data);
+            cloudCustomData = gson.toJson(hashMap);
+        }
+        messageBean.getV2TIMMessage().setCloudCustomData(cloudCustomData);
     }
 
 }

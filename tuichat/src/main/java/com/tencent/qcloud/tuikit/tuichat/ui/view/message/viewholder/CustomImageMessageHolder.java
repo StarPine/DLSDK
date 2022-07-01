@@ -39,10 +39,9 @@ public class CustomImageMessageHolder extends MessageContentHolder{
 
     @Override
     public void layoutVariableViews(TUIMessageBean msg, int position) {
-        msgContentFrame.setBackground(null);
+        msgArea.setBackground(null);
         customImage.setLayoutParams(getImageParams(customImage.getLayoutParams(), (CustomImageMessageBean) msg));
         String imagePath = ((CustomImageMessageBean) msg).getDataPath();
-//        Glide.with(rootView.getContext()).load(imagePath).into(customImage);
         GlideEngine.loadCornerImageWithoutPlaceHolder(customImage, imagePath, null, DEFAULT_RADIUS);
 
         customImage.setOnClickListener(new View.OnClickListener() {

@@ -193,4 +193,17 @@
     <string name="opponent_in_game">在遊戲中</string>
     <string name="call_ended">通話結束</string>
 
+    <string name="quote_button">引用</string>
+    <string name="send_failed_file_not_exists">发送失败，文件不存在</string>
+    <string name="chat_calling_switch_to_audio">视频转语音</string>
+    <string name="chat_calling_switch_to_audio_accept">确认视频转语音</string>
+    <string name="chat_calling_unknown_invitation">未知邀请</string>
+    <string name="save_success">保存成功</string>
+    <string name="save_failed">保存失败</string>
+    <string name="chat_permission_storage_reason">为方便您保存照片和视频到设备，请允许我们写入照片和视频到设备。</string>
+    <string name="chat_permission_storage_dialog_alert">在设置-应用-%s-权限中开启存储权限，以正常使用保存照片和视频功能</string>
+    <string name="chat_reply_num">%d条回复</string>
+    <string name="chat_reply_detail">回复详情</string>
+
+    <string name="chat_not_read">尚未阅读</string>
 </resources>

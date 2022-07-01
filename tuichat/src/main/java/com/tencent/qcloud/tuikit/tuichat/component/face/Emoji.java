@@ -12,8 +12,8 @@ public class Emoji implements Serializable {
     private String desc;
     private String filter;
     private Bitmap icon;
-    private int width = deaultSize;
-    private int height = deaultSize;
+    private int width;
+    private int height;
 
     public String getDesc() {
         return desc;
