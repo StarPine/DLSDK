@@ -232,7 +232,9 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
         }
 
         if (getCurrentPosition() == position && isClick()){
-            baseHolder.itemView.setBackgroundResource(R.color.conversation_item_clicked_color);
+            if (baseHolder != null) {
+                baseHolder.itemView.setBackgroundResource(R.color.conversation_item_clicked_color);
+            }
         } else {
             if (conversationInfo == null) {
                 return;

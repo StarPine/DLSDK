@@ -400,12 +400,12 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             }
         });
 
-        replyCloseBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                exitReply();
-            }
-        });
+//        replyCloseBtn.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                exitReply();
+//            }
+//        });
     }
 
     public void addInputText(String name, String id){

@@ -169,7 +169,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
             usernameText.setTextColor(properties.getNameFontColor());
         }
         if (properties.getNameFontSize() != 0) {
-            usernameText.setTextSize(properties.getNameFontSize());
+            try {
                 usernameText.setTextSize((float) properties.getNameFontSize());
             }catch (Exception e){
 
@@ -355,10 +355,10 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
             chatTimeText.setVisibility(View.GONE);
         }
 
-        setReplyContent(msg);
+//        setReplyContent(msg);
         setReactContent(msg);
 
-        setMessageAreaPadding();
+//        setMessageAreaPadding();
 
         //// 由子类设置指定消息类型的views
         layoutVariableViews(msg, position);
@@ -383,32 +383,33 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
         msgContentFrame.setLayoutParams(layoutParams);
     }
 
-    private void setReplyContent(TUIMessageBean messageBean) {
-        MessageRepliesBean messageRepliesBean = messageBean.getMessageRepliesBean();
-        if (messageRepliesBean != null && messageRepliesBean.getRepliesSize() > 0) {
-            TextView replyNumText = msgReplyDetailLayout.findViewById(R.id.reply_num);
-            replyNumText.setText(replyNumText.getResources().getString(R.string.chat_reply_num, messageRepliesBean.getRepliesSize()));
-            msgReplyDetailLayout.setVisibility(View.VISIBLE);
-            msgReplyDetailLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (onItemClickListener != null) {
-                        onItemClickListener.onReplyDetailClick(messageBean);
-                    }
-                }
-            });
-        } else {
-            msgReplyDetailLayout.setVisibility(View.GONE);
-            msgReplyDetailLayout.setOnClickListener(null);
-        }
-        if (!isReplyDetailMode) {
-            messageDetailsTimeTv.setVisibility(View.GONE);
-        } else {
-            messageDetailsTimeTv.setText(DateTimeUtil.getTimeFormatText(new Date(messageBean.getMessageTime() * 1000)));
-            messageDetailsTimeTv.setVisibility(View.VISIBLE);
-            msgReplyDetailLayout.setVisibility(View.GONE);
-        }
-    }
+    //TODO 临时隐藏 DL
+//    private void setReplyContent(TUIMessageBean messageBean) {
+//        MessageRepliesBean messageRepliesBean = messageBean.getMessageRepliesBean();
+//        if (messageRepliesBean != null && messageRepliesBean.getRepliesSize() > 0) {
+//            TextView replyNumText = msgReplyDetailLayout.findViewById(R.id.reply_num);
+//            replyNumText.setText(replyNumText.getResources().getString(R.string.chat_reply_num, messageRepliesBean.getRepliesSize()));
+//            msgReplyDetailLayout.setVisibility(View.VISIBLE);
+//            msgReplyDetailLayout.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    if (onItemClickListener != null) {
+//                        onItemClickListener.onReplyDetailClick(messageBean);
+//                    }
+//                }
+//            });
+//        } else {
+//            msgReplyDetailLayout.setVisibility(View.GONE);
+//            msgReplyDetailLayout.setOnClickListener(null);
+//        }
+//        if (!isReplyDetailMode) {
+//            messageDetailsTimeTv.setVisibility(View.GONE);
+//        } else {
+//            messageDetailsTimeTv.setText(DateTimeUtil.getTimeFormatText(new Date(messageBean.getMessageTime() * 1000)));
+//            messageDetailsTimeTv.setVisibility(View.VISIBLE);
+//            msgReplyDetailLayout.setVisibility(View.GONE);
+//        }
+//    }
 
     private void setReactContent(TUIMessageBean messageBean) {
         MessageReactBean messageReactBean = messageBean.getMessageReactBean();

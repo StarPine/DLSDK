@@ -36,7 +36,6 @@ import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.tuichat.component.popmenu.ChatPopMenu;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
-import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.IOnCustomMessageDrawListener;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemClickListener;
 import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.IMessageLayout;
@@ -882,6 +881,11 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
         setAdapterListener();
     }
 
+    //DL add 彭石林新增
+    public MessageAdapter getAdapter(){
+        return mAdapter;
+    }
+
     @Override
     public void setAdapter(MessageAdapter adapter) {
         super.setAdapter(adapter);
@@ -898,10 +902,6 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
         mMorePopActions.add(action);
     }
 
-    @Override
-    public void setOnCustomMessageDrawListener(IOnCustomMessageDrawListener iOnCustomMessageDrawListener) {
-
-    }
 
     public void loadMessageFinish() {
         if (mHandler != null) {

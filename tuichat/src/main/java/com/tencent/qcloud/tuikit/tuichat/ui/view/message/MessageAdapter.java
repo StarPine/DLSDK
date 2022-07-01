@@ -113,10 +113,6 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         }
     }
 
-    //DL add 彭石林新增
-    public MessageAdapter getAdapter(){
-        return mAdapter;
-    }
 
     public OnItemClickListener getOnItemClickListener() {
         return this.mOnItemClickListener;
