@@ -12,13 +12,13 @@ import com.dl.playfun.viewmodel.BaseViewModel;
  * Time: 2021/11/9 1:25
  * Description: This is FukubukuroViewModel
  */
-public class FukubuViewModel extends BaseViewModel<AppRepository> {
+public class WebViewViewModel extends BaseViewModel<AppRepository> {
 
     public String getToken() {
         return model.readLoginInfo().getToken();
     }
 
-    public FukubuViewModel(@NonNull Application application, AppRepository model) {
+    public WebViewViewModel(@NonNull Application application, AppRepository model) {
         super(application, model);
     }
 

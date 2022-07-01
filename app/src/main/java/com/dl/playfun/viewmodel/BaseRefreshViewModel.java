@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.observable.RefreshLoadMoreUIChangeObservable;
-import com.dl.playfun.ui.mine.webview.FukubukuroViewFragment;
+import com.dl.playfun.ui.mine.webview.WebViewFragment;
 
 import me.goldze.mvvmhabit.base.BaseModel;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
@@ -31,7 +31,7 @@ public abstract class BaseRefreshViewModel<M extends BaseModel> extends BaseView
         try {
             Bundle bundle = new Bundle();
             bundle.putString("link", AppConfig.WEB_BASE_URL + "shop");
-            start(FukubukuroViewFragment.class.getCanonicalName(), bundle);
+            start(WebViewFragment.class.getCanonicalName(), bundle);
         } catch (Exception e) {
             e.printStackTrace();
         }

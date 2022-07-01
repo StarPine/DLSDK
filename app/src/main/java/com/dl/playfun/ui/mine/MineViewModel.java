@@ -12,7 +12,6 @@ import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
-import com.dl.playfun.app.EaringlSwitchUtil;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
@@ -21,7 +20,6 @@ import com.dl.playfun.entity.AlbumPhotoEntity;
 import com.dl.playfun.entity.BannerItemEntity;
 import com.dl.playfun.entity.BrowseNumberEntity;
 import com.dl.playfun.entity.EvaluateEntity;
-import com.dl.playfun.entity.MessageTagEntity;
 import com.dl.playfun.entity.SystemConfigTaskEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.entity.UserInfoEntity;
@@ -49,8 +47,7 @@ import com.dl.playfun.ui.mine.trace.TraceFragment;
 import com.dl.playfun.ui.mine.trace.man.TraceManFragment;
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
 import com.dl.playfun.ui.mine.wallet.WalletFragment;
-import com.dl.playfun.ui.mine.wallet.coin.CoinFragment;
-import com.dl.playfun.ui.mine.webview.FukubukuroViewFragment;
+import com.dl.playfun.ui.mine.webview.WebViewFragment;
 import com.dl.playfun.utils.ChatUtils;
 import com.dl.playfun.utils.ExceptionReportUtils;
 import com.dl.playfun.utils.FileUploadUtils;
@@ -160,7 +157,7 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
         try {
             Bundle bundle = new Bundle();
             bundle.putString("link", AppConfig.WEB_BASE_URL + "shop");
-            start(FukubukuroViewFragment.class.getCanonicalName(), bundle);
+            start(WebViewFragment.class.getCanonicalName(), bundle);
         } catch (Exception e) {
             e.printStackTrace();
         }

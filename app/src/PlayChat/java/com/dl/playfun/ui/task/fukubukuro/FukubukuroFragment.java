@@ -42,7 +42,7 @@ import com.dl.playfun.event.TaskMainTabEvent;
 import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.ui.task.golddetail.GoldDetailFragment;
 import com.dl.playfun.ui.task.record.TaskExchangeRecordFragment;
-import com.dl.playfun.ui.task.webview.FukubukuroViewFragment;
+import com.dl.playfun.ui.task.webview.FukuokaViewFragment;
 import com.dl.playfun.ui.webview.BrowserView;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.ToastCenterUtils;
@@ -419,7 +419,7 @@ public class FukubukuroFragment extends BaseFragment<FragmentFukubukuroBinding, 
         public void openWebView(String url){
             Bundle bundle = new Bundle();
             bundle.putString("link", url);
-            viewModel.start(FukubukuroViewFragment.class.getCanonicalName(), bundle);
+            viewModel.start(FukuokaViewFragment.class.getCanonicalName(), bundle);
         }
 
         @JavascriptInterface

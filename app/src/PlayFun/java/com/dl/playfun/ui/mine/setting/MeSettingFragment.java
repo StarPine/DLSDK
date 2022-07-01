@@ -21,7 +21,6 @@ import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.databinding.FragmentMeSettingBinding;
-import com.dl.playfun.widget.dialog.version.view.UpdateDialogView;
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
 
 import me.goldze.mvvmhabit.utils.ToastUtils;

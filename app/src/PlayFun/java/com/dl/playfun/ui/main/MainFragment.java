@@ -42,7 +42,6 @@ import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralPayDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
-import com.dl.playfun.widget.dialog.version.view.UpdateDialogView;
 import com.dl.playfun.widget.pageview.FragmentAdapter;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;

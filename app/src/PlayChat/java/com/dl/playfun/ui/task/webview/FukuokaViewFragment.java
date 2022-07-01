@@ -1,4 +1,4 @@
-package com.dl.playfun.ui.mine.webview;
+package com.dl.playfun.ui.task.webview;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -11,10 +11,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
@@ -22,37 +21,34 @@ import android.webkit.WebView;
 import android.widget.ProgressBar;
 
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.blankj.utilcode.util.ObjectUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.FutureTarget;
+import com.dl.playfun.BR;
+import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
-import com.dl.playfun.entity.CoinExchangePriceInfo;
+import com.dl.playfun.databinding.WebviewFukubukuroFragmentBinding;
+import com.dl.playfun.entity.ExchangeIntegraEntity;
+import com.dl.playfun.entity.ExchangeIntegraOuterEntity;
 import com.dl.playfun.entity.GoodsEntity;
-import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseFragment;
-import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
-import com.dl.playfun.ui.certification.certificationmale.CertificationMaleFragment;
-import com.dl.playfun.ui.mine.wallet.coin.CoinFragment;
-import com.dl.playfun.ui.mine.wallet.girl.TwDollarMoneyFragment;
+import com.dl.playfun.ui.task.golddetail.GoldDetailFragment;
+import com.dl.playfun.ui.task.record.TaskExchangeRecordFragment;
+import com.dl.playfun.ui.webview.BrowserView;
 import com.dl.playfun.utils.ApiUitl;
-import com.dl.playfun.utils.AutoSizeUtils;
-import com.dl.playfun.utils.LogUtils;
+import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.widget.action.StatusAction;
 import com.dl.playfun.widget.action.StatusLayout;
 import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralDialog;
-import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
-import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
-import com.dl.playfun.widget.dialog.MVDialog;
+import com.dl.playfun.widget.dialog.TaskFukubukuroDialog;
 import com.google.gson.Gson;
-import com.dl.playfun.BR;
-import com.dl.playfun.R;
-import com.dl.playfun.databinding.WebviewFukubukuroFragmentBinding;
-import com.dl.playfun.ui.webview.BrowserView;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
 import java.io.ByteArrayInputStream;
@@ -65,7 +61,7 @@ import me.goldze.mvvmhabit.utils.ToastUtils;
  * Time: 2021/11/9 1:24
  * Description: This is FukubukuroViewFragment
  */
-public class FukubukuroViewFragment extends BaseFragment<WebviewFukubukuroFragmentBinding, FukubuViewModel> implements StatusAction {
+public class FukuokaViewFragment extends BaseFragment<WebviewFukubukuroFragmentBinding, FukubuViewModel> implements StatusAction {
 
     BrowserView webView;
     String webUrl;
@@ -80,7 +76,6 @@ public class FukubukuroViewFragment extends BaseFragment<WebviewFukubukuroFragme
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        AutoSizeUtils.applyAdapt(this.getResources());
         return R.layout.webview_fukubukuro_fragment;
     }
 
@@ -170,26 +165,8 @@ public class FukubukuroViewFragment extends BaseFragment<WebviewFukubukuroFragme
         webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         //正在加载网页动画
         showLoading();
-        setCookie(mActivity,webUrl);
         //设置打开的页面地址
         webView.loadUrl(webUrl);
-    }
-
-    public static void setCookie(Context context, String url) {
-        try {
-            CookieSyncManager.createInstance(context);
-            CookieManager cookieManager = CookieManager.getInstance();
-            cookieManager.setAcceptCookie(true);
-            cookieManager.removeSessionCookie();//移除
-            cookieManager.removeAllCookie();
-            StringBuilder sbCookie = new StringBuilder();
-            sbCookie.append("local=" + context.getString(R.string.playfun_local_language));
-            String cookieValue = sbCookie.toString();
-            cookieManager.setCookie(url, cookieValue);
-            CookieSyncManager.getInstance().sync();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     //重新加载页面
@@ -225,6 +202,28 @@ public class FukubukuroViewFragment extends BaseFragment<WebviewFukubukuroFragme
     @Override
     public void initViewObservable() {
         super.initViewObservable();
+        viewModel.DialogExchangeIntegral.observe(this, new Observer<ExchangeIntegraOuterEntity>() {
+            @Override
+            public void onChanged(ExchangeIntegraOuterEntity listData) {
+                TaskFukubukuroDialog.exchangeIntegralDialog(FukuokaViewFragment.this.getContext(),
+                        true, String.valueOf(listData.getTotalBonus()),String.valueOf(listData.getTotalCoin()),0,
+                        listData.getData(),
+                        new TaskFukubukuroDialog.ExchangeIntegraleClick() {
+                            @Override
+                            public void clickSelectItem(Dialog dialog, ExchangeIntegraEntity itemEntity) {
+                                if(!ObjectUtils.isEmpty(itemEntity)){
+                                    if(listData.getTotalCoin().intValue()>=itemEntity.getCoinValue().intValue()){
+                                        dialog.dismiss();
+                                        viewModel.ExchangeIntegraBuy(itemEntity.getId());
+                                    }else{
+                                        ToastCenterUtils.showToast(R.string.dialog_exchange_integral_total_text1);
+                                        DialogCoinExchangeIntegralShow(dialog);
+                                    }
+                                }
+                            }
+                        }).show();
+            }
+        });
     }
 
     public void pickFile() {
@@ -277,13 +276,13 @@ public class FukubukuroViewFragment extends BaseFragment<WebviewFukubukuroFragme
     }
 
     public void DialogCoinExchangeIntegralShow(Dialog dialog){
-        CoinExchargeItegralDialog coinExchargeItegralSheetView = new CoinExchargeItegralDialog(FukubukuroViewFragment.this.getContext(),mActivity);
+        CoinExchargeItegralDialog coinExchargeItegralSheetView = new CoinExchargeItegralDialog(FukuokaViewFragment.this.getContext(),mActivity);
         coinExchargeItegralSheetView.setCoinRechargeSheetViewListener(new CoinExchargeItegralDialog.CoinExchargeIntegralAdapterListener() {
             @Override
             public void onPaySuccess(CoinExchargeItegralDialog sheetView, GoodsEntity sel_goodsEntity) {
                 coinExchargeItegralSheetView.dismiss();
                 dialog.dismiss();
-                ToastUtils.showShort(R.string.playfun_dialog_exchange_integral_success);
+                ToastUtils.showShort(R.string.dialog_exchange_integral_success);
             }
             @Override
             public void onPayFailed(CoinExchargeItegralDialog sheetView, String msg) {
@@ -391,7 +390,7 @@ public class FukubukuroViewFragment extends BaseFragment<WebviewFukubukuroFragme
         }
 
         @Override
-        public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
+        public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams) {
             mUploadMessageArray = filePathCallback;
             pickFile();
             return true;
@@ -421,11 +420,6 @@ public class FukubukuroViewFragment extends BaseFragment<WebviewFukubukuroFragme
         }
 
         @JavascriptInterface
-        public String getLocal() {
-            return "zh-TW";
-        }
-
-        @JavascriptInterface
         public void back() {
             //ApiUitl.taskTop = true;
             //RxBus.getDefault().post(new TaskMainTabEvent(false));
@@ -451,75 +445,31 @@ public class FukubukuroViewFragment extends BaseFragment<WebviewFukubukuroFragme
         }
 
         @JavascriptInterface
+        public void ToExchangeRecord(int idx) {
+            Bundle bundle = new Bundle();
+            bundle.putInt("sel_idx", idx);
+            viewModel.start(TaskExchangeRecordFragment.class.getCanonicalName(), bundle);
+        }
+
+        @JavascriptInterface
         public String getToken() {
             return viewModel.getToken();
+        }
+
+
+        @JavascriptInterface
+        public void ToGoldDetail() {
+            viewModel.start(GoldDetailFragment.class.getCanonicalName());
+        }
+
+        @JavascriptInterface
+        public void loadCoinExchangeSheet(){
+            viewModel.getExchangeIntegraListData();
         }
 
         @JavascriptInterface
         public String getVersionTask() {
             return "1.2.0 ";
         }
-
-        @JavascriptInterface
-        public void humanAuthentication() {//真人认证
-            LogUtils.i("humanAuthentication: ");
-            MVDialog.getInstance(FukubukuroViewFragment.this.getContext())
-                    .setTitele(getString(R.string.playfun_fragment_certification_tip))
-                    .setContent(getString(R.string.playfun_fragment_certification_content))
-                    .setConfirmText(getString(R.string.playfun_task_fragment_task_new11))
-                    .chooseType(MVDialog.TypeEnum.CENTER)
-                    .setConfirmOnlick(new MVDialog.ConfirmOnclick() {
-                        @Override
-                        public void confirm(MVDialog dialog) {
-                            if (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == AppConfig.MALE) {
-                                viewModel.start(CertificationMaleFragment.class.getCanonicalName());
-                                return;
-                            } else if (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == AppConfig.FEMALE) {
-                                viewModel.start(CertificationFemaleFragment.class.getCanonicalName());
-                                return;
-                            }
-                            com.blankj.utilcode.util.ToastUtils.showShort(R.string.playfun_sex_unknown);
-                            dialog.dismiss();
-                        }
-                    })
-                    .chooseType(MVDialog.TypeEnum.CENTER)
-                    .show();
-        }
-
-        @JavascriptInterface
-        public void exchangeDiamond() {//兑换钻石
-            mActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    CoinRechargeSheetView coinRechargeSheetView = new CoinRechargeSheetView(mActivity);
-                    coinRechargeSheetView.show();
-                    coinRechargeSheetView.setCoinRechargeSheetViewListener(new CoinRechargeSheetView.CoinRechargeSheetViewListener() {
-                        @Override
-                        public void onPaySuccess(CoinRechargeSheetView sheetView, GoodsEntity sel_goodsEntity) {
-                            sheetView.dismiss();
-                            MVDialog.getInstance(FukubukuroViewFragment.this.getContext())
-                                    .setTitle(getStringByResId(R.string.playfun_recharge_coin_success))
-                                    .setConfirmText(getStringByResId(R.string.confirm))
-                                    .setConfirmOnlick(dialog -> {
-                                        dialog.dismiss();
-//                                viewModel.loadDatas(1);
-                                    })
-                                    .chooseType(MVDialog.TypeEnum.CENTER)
-                                    .show();
-                        }
-
-                        @Override
-                        public void onPayFailed(CoinRechargeSheetView sheetView, String msg) {
-                            sheetView.dismiss();
-                            ToastUtils.showShort(msg);
-                            AppContext.instance().logEvent(AppsFlyerEvent.Failed_to_top_up);
-                        }
-                    });
-                }
-            });
-
-        }
-
-
     }
 }

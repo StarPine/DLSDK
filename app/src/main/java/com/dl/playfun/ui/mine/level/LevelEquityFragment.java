@@ -83,10 +83,8 @@ public class LevelEquityFragment extends BaseFragment<FragmentLevelEquityBinding
                     Log.e("进入折叠状态", "=================");
                     //折叠状态
                     binding.toolBarTitleView.setVisibility(View.VISIBLE);
-                } else {
-                    //中间状态
-//                    Toast.makeText(getActivity(),"中间状态",Toast.LENGTH_SHORT).show();
                 }
+
             }
         });
         //文字调整进度条宽度测量
@@ -240,8 +238,7 @@ public class LevelEquityFragment extends BaseFragment<FragmentLevelEquityBinding
             @Override
             public View findSnapView(RecyclerView.LayoutManager layoutManager) {
                 // TODO 找到对应的View
-                View view = super.findSnapView(layoutManager);
-                return view;
+                return super.findSnapView(layoutManager);
             }
         };
         pagingScrollHelper.attachToRecyclerView(binding.rcvBanner);

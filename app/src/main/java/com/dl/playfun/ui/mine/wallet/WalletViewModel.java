@@ -14,7 +14,7 @@ import com.dl.playfun.entity.GameCoinWalletEntity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.mine.wallet.coin.CoinFragment;
 import com.dl.playfun.ui.mine.wallet.girl.TwDollarMoneyFragment;
-import com.dl.playfun.ui.mine.webview.FukubukuroViewFragment;
+import com.dl.playfun.ui.mine.webview.WebViewFragment;
 import com.dl.playfun.viewmodel.BaseViewModel;
 
 import me.goldze.mvvmhabit.binding.command.BindingAction;
@@ -68,7 +68,7 @@ public class WalletViewModel extends BaseViewModel<AppRepository> {
         try {
             Bundle bundle = new Bundle();
             bundle.putString("link", AppConfig.WEB_BASE_URL + "reflect");
-            start(FukubukuroViewFragment.class.getCanonicalName(), bundle);
+            start(WebViewFragment.class.getCanonicalName(), bundle);
         } catch (Exception e) {
             e.printStackTrace();
         }

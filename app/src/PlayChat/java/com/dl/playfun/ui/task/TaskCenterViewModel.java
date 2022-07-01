@@ -38,10 +38,7 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.mine.invitewebdetail.InviteWebDetailFragment;
 import com.dl.playfun.ui.task.bonus.TaskBonusItemViewModel;
 import com.dl.playfun.ui.task.record.TaskExchangeRecordFragment;
-import com.dl.playfun.ui.task.webview.FukubukuroViewFragment;
-import com.dl.playfun.ui.task.bonus.TaskBonusItemViewModel;
-import com.dl.playfun.ui.task.record.TaskExchangeRecordFragment;
-import com.dl.playfun.ui.task.webview.FukubukuroViewFragment;
+import com.dl.playfun.ui.task.webview.FukuokaViewFragment;
 import com.dl.playfun.viewmodel.BaseViewModel;
 
 import org.jetbrains.annotations.NotNull;
@@ -130,7 +127,7 @@ public class TaskCenterViewModel extends BaseViewModel<AppRepository> {
             TaskAdEntity taskAdEntity = adItemEntityObservableField.get().get(index);
             Bundle bundle = new Bundle();
             bundle.putString("link", taskAdEntity.getLink());
-            start(FukubukuroViewFragment.class.getCanonicalName(), bundle);
+            start(FukuokaViewFragment.class.getCanonicalName(), bundle);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -149,7 +146,7 @@ public class TaskCenterViewModel extends BaseViewModel<AppRepository> {
             //Bundle bundle = WebDetailFragment.getStartBundle(AppConfig.TASK_TITLE_HELP);
             Bundle bundle = new Bundle();
             bundle.putString("link", "https://m.joy-mask.com/Rule_renwu2");
-            start(FukubukuroViewFragment.class.getCanonicalName(), bundle);
+            start(FukuokaViewFragment.class.getCanonicalName(), bundle);
         }
     });
     //跳转兑换记录页面

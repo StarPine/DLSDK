@@ -14,7 +14,7 @@ import com.dl.playfun.event.MessageCountChangeTagEvent;
 import com.dl.playfun.event.SystemMessageCountChangeEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.message.pushsetting.PushSettingFragment;
-import com.dl.playfun.ui.mine.webview.FukubukuroViewFragment;
+import com.dl.playfun.ui.mine.webview.WebViewFragment;
 import com.dl.playfun.viewmodel.BaseViewModel;
 
 import io.reactivex.disposables.Disposable;
@@ -49,7 +49,7 @@ public class MessageMainViewModel extends BaseViewModel<AppRepository> {
             } else {
                 bundle.putString("link", AppConfig.WEB_BASE_URL + "introduction_woman");
             }
-            start(FukubukuroViewFragment.class.getCanonicalName(), bundle);
+            start(WebViewFragment.class.getCanonicalName(), bundle);
         } catch (Exception e) {
             e.printStackTrace();
         }
