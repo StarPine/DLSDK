@@ -189,26 +189,6 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                 }
             }
         });
-        //公告展示
-        viewModel.uc.versionAlertSl.observe(this, new Observer<Void>() {
-            @Override
-            public void onChanged(Void unused) {
-//                WebViewDialog.getInstance(getContext())
-//                        .setWebUrl(AppConfig.WEB_BASE_URL + "notice/notice.html")
-//                        .setConfirmOnlick(new WebViewDialog.ConfirmOnclick() {
-//                            @Override
-//                            public void webToVipRechargeVC(Dialog dialog) {
-//                                dialog.dismiss();
-//                                viewModel.start(VipSubscribeFragment.class.getCanonicalName());
-//                            }
-//
-//                            @Override
-//                            public void cancel() {
-//                                viewModel.uc.newUserRegis.postValue(false);
-//                            }
-//                        }).noticeDialog().show();
-            }
-        });
         //气泡提示
         viewModel.uc.bubbleTopShow.observe(this, new Observer<Boolean>() {
             @Override
@@ -240,32 +220,6 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                             break;
                     }
                 }
-            }
-        });
-        //版本更新提示
-        viewModel.uc.versionEntitySingl.observe(this, new Observer<VersionEntity>() {
-            @Override
-            public void onChanged(VersionEntity versionEntity) {
-                BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (versionEntity.getVersion_code().intValue() <= AppConfig.VERSION_CODE.intValue()) {
-                            //ToastUtils.showShort(R.string.version_latest);
-                            viewModel.showAnnouncemnet();
-                        } else {
-                            boolean isUpdate = versionEntity.getIs_update().intValue() == 1;
-                            UpdateDialogView.getInstance(mActivity)
-                                    .getUpdateDialogView(versionEntity.getVersion_name(), versionEntity.getContent(), versionEntity.getUrl(), isUpdate, "playchat", versionEntity.getLinkUrl())
-                                    .setConfirmOnlick(new UpdateDialogView.CancelOnclick() {
-                                        @Override
-                                        public void cancel() {
-                                            viewModel.showAnnouncemnet();
-                                        }
-                                    })
-                                    .show();
-                        }
-                    }
-                });
             }
         });
         viewModel.uc.showFaceRecognitionDialog.observe(this, new Observer<Void>() {

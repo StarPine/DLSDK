@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -21,6 +22,7 @@ import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.databinding.FragmentMeSettingBinding;
+import com.luck.picture.lib.permissions.PermissionChecker;
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
 
 import me.goldze.mvvmhabit.utils.ToastUtils;
