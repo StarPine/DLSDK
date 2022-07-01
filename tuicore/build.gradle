@@ -51,7 +51,7 @@ dependencies {
 //    if (projects.contains("imsdk-plus")) {
 //        api project(':imsdk-plus')
 //    } else {
-        api 'com.tencent.imsdk:imsdk-plus:6.2.2363'
+        api 'com.tencent.imsdk:imsdk-plus:6.3.2619'
 //    }
 
     api 'jp.wasabeef:blurry:3.0.0'

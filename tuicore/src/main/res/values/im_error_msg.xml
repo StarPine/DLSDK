@@ -283,4 +283,6 @@
     <string name="TUIKitErrorRequestNoNetOnReq">No network connection when sending request. Try again once network connection is restored.</string>
     <string name="TUIKitErrorRequestNoNetOnRsp">No network connection when sending response. Try again once network connection is restored.</string>
     <string name="TUIKitErrorRequestOnverLoaded">Request queue is full.</string>
+    <string name="TUIKitErrorEnableUserStatusOnConsole">您未开启用户状态功能，请先登录控制台开启</string>
+
 </resources>
