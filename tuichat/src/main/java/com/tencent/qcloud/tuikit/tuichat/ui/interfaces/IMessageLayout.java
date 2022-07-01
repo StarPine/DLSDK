@@ -48,10 +48,4 @@ public interface IMessageLayout extends IMessageProperties {
      */
     void addPopAction(ChatPopMenu.ChatPopMenuAction action);
 
-    /**
-     * 自定义消息回调 彭石林新增
-     *
-     * @return
-     */
-    void setOnCustomMessageDrawListener(IOnCustomMessageDrawListener iOnCustomMessageDrawListener);
 }

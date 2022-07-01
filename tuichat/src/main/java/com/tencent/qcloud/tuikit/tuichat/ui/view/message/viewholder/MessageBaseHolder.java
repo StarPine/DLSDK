@@ -47,10 +47,10 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
         rootView = itemView;//DL add
         chatTimeText = itemView.findViewById(R.id.message_top_time_tv);
         msgContentFrame = itemView.findViewById(R.id.msg_content_fl);
-        msgReplyDetailLayout = itemView.findViewById(R.id.msg_reply_detail_fl);
-        reactView = itemView.findViewById(R.id.reacts_view);
-        msgArea = itemView.findViewById(R.id.msg_area);
-        msgAreaAndReply = itemView.findViewById(R.id.msg_area_and_reply);
+//        msgReplyDetailLayout = itemView.findViewById(R.id.msg_reply_detail_fl);
+//        reactView = itemView.findViewById(R.id.reacts_view);
+//        msgArea = itemView.findViewById(R.id.msg_area);
+//        msgAreaAndReply = itemView.findViewById(R.id.msg_area_and_reply);
 //        mMutiSelectCheckBox = itemView.findViewById(R.id.select_checkbox);
 //        rightGroupLayout = itemView.findViewById(R.id.right_group_layout);
 //        mContentLayout = itemView.findViewById(R.id.messsage_content_layout);

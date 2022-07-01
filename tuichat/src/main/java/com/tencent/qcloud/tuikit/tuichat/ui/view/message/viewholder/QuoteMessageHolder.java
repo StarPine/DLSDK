@@ -68,7 +68,7 @@ public class QuoteMessageHolder extends TextMessageHolder {
 
     public QuoteMessageHolder(View itemView) {
         super(itemView);
-        quoteContentFrameLayout = itemView.findViewById(R.id.quote_content_fl);
+//        quoteContentFrameLayout = itemView.findViewById(R.id.quote_content_fl);
         quoteContentFrameLayout.setVisibility(View.VISIBLE);
         LayoutInflater.from(itemView.getContext()).inflate(R.layout.quote_message_content_layout, quoteContentFrameLayout);
         senderNameTv = quoteContentFrameLayout.findViewById(R.id.sender_name_tv);

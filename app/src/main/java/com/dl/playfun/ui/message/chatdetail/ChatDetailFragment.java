@@ -760,50 +760,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             }
         });
 
-        messageLayout.setOnCustomMessageDrawListener(new CustomMessageDraw(new CustomMessageDraw.CustomMessageListener() {
-            @Override
-            public void onLocationMessageClick(CustomMessageData customMessageData) {
-                Bundle bundle = LocationMapsFragment.getStartBundle(customMessageData.getText(), customMessageData.getAddress(), customMessageData.getLat(), customMessageData.getLng());
-                LocationMapsFragment locationMapsFragment = new LocationMapsFragment();
-                locationMapsFragment.setArguments(bundle);
-                start(locationMapsFragment);
-            }
-
-            @Override
-            public void onCoinRedPackageMessageClick(CustomMessageData customMessageData) {
-                Bundle bundle = CoinRedPackageDetailFragment.getStartBundle(customMessageData.getId(), customMessageData.getMsgId(), customMessageData.getSenderUserID().equals(ConfigManager.getInstance().getAppRepository().readUserData().getId()));
-                CoinRedPackageDetailFragment coinRedPackageDetailFragment = new CoinRedPackageDetailFragment();
-                coinRedPackageDetailFragment.setArguments(bundle);
-                start(coinRedPackageDetailFragment);
-            }
-
-            @Override
-            public void onBurnMessageClick(CustomMessageData customMessageData) {
-                AlbumPhotoEntity albumPhotoEntity = new AlbumPhotoEntity();
-                albumPhotoEntity.setId(0);
-                albumPhotoEntity.setMsgId(customMessageData.getMsgId());
-                albumPhotoEntity.setSrc(customMessageData.getImgPath());
-                if (ConfigManager.getInstance().getAppRepository().readCahtCustomMessageStatus(customMessageData.getMsgId()) == 1) {
-                    albumPhotoEntity.setBurnStatus(1);
-                } else {
-                    albumPhotoEntity.setBurnStatus(0);
-                }
-                albumPhotoEntity.setIsBurn(1);
-                albumPhotoEntity.setType(1);
-                Bundle bundle = PhotoBrowseFragment.getStartChatBundle(albumPhotoEntity);
-                PhotoBrowseFragment photoBrowseFragment = new PhotoBrowseFragment();
-                photoBrowseFragment.setArguments(bundle);
-                start(photoBrowseFragment);
-            }
-
-            @Override
-            public void onImageClick(CustomMessageData customMessageData) {
-                if (customMessageData != null && customMessageData.getImgPath() != null) {
-                    MessageDetailDialog.getImageDialog(mActivity, customMessageData.getImgPath()).show();
-                }
-            }
-        }));
-
         viewModel.uc.loadMessage.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {

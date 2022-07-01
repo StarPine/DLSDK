@@ -578,7 +578,7 @@ public abstract class ChatPresenter {
         return userIdSet;
     }
 
-    protected void addMessageInfo(TUIMessageBean messageInfo) {
+    public void addMessageInfo(TUIMessageBean messageInfo) {
         if (messageInfo == null) {
             return;
         }
