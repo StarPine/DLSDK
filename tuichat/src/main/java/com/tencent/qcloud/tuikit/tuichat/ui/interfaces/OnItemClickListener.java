@@ -6,48 +6,54 @@ import android.widget.TextView;
 import com.tencent.coustom.CustomIMTextEntity;
 import com.tencent.coustom.EvaluateItemEntity;
 import com.tencent.coustom.PhotoAlbumItemEntity;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.QuoteMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 
-public interface OnItemClickListener {
-    void onMessageLongClick(View view, int position, TUIMessageBean messageInfo);
+public abstract class OnItemClickListener {
+    public void onMessageLongClick(View view, int position, TUIMessageBean messageInfo) {};
 
-    default void onMessageClick(View view, int position, TUIMessageBean messageInfo) {};
+    public void onMessageClick(View view, int position, TUIMessageBean messageInfo) {};
 
-    void onUserIconClick(View view, int position, TUIMessageBean messageInfo);
+    public void onUserIconClick(View view, int position, TUIMessageBean messageInfo) {};
 
-    void onUserIconLongClick(View view, int position, TUIMessageBean messageInfo);
+    public void onUserIconLongClick(View view, int position, TUIMessageBean messageInfo) {};
 
-    void onReEditRevokeMessage(View view, int position, TUIMessageBean messageInfo);
+    public void onReEditRevokeMessage(View view, int position, TUIMessageBean messageInfo) {};
 
-    void onRecallClick(View view, int position, TUIMessageBean messageInfo);
+    public void onRecallClick(View view, int position, TUIMessageBean messageInfo) {};
 
-    default void onReplyMessageClick(View view, int position, String originMsgId) {}
+    public  void onReplyMessageClick(View view, int position, QuoteMessageBean messageBean) {}
 
-    default void onSendFailBtnClick(View view, int position, TUIMessageBean messageInfo) {};
+    public  void onReplyDetailClick(TUIMessageBean messageBean) {}
 
-    default void onTextSelected(View view, int position, TUIMessageBean messageInfo) {};
+    public  void onReactOnClick(String emojiId, TUIMessageBean messageBean) {}
+
+    public  void onSendFailBtnClick(View view, int position, TUIMessageBean messageInfo) {};
+
+    public  void onTextSelected(View view, int position, TUIMessageBean messageInfo) {};
+
 
     //彭石林新增
-    void onToastVipText(TUIMessageBean messageInfo);
+    public abstract void onToastVipText(TUIMessageBean messageInfo);
 
-    void onTextReadUnlock(TextView textView, View view, TUIMessageBean messageInfo);
+    public abstract void onTextReadUnlock(TextView textView, View view, TUIMessageBean messageInfo);
 
-    void onTextTOWebView(TUIMessageBean messageInfo);
+    public abstract void onTextTOWebView(TUIMessageBean messageInfo);
 
-    void toUserHome();
+    public abstract void toUserHome();
 
-    void openUserImage(PhotoAlbumItemEntity itemEntity);
+    public abstract void openUserImage(PhotoAlbumItemEntity itemEntity);
 
-    void onClickEvaluate(int position, TUIMessageBean messageInfo, EvaluateItemEntity evaluateItemEntity, boolean more);
+    public abstract void onClickEvaluate(int position, TUIMessageBean messageInfo, EvaluateItemEntity evaluateItemEntity, boolean more);
 
-    void onClickCustomText(int position, TUIMessageBean messageInfo, CustomIMTextEntity customIMTextEntity);
+    public abstract void onClickCustomText(int position, TUIMessageBean messageInfo, CustomIMTextEntity customIMTextEntity) ;
 
-    void onClickDialogRechargeShow();
+    public abstract void onClickDialogRechargeShow();
 
-    void clickToUserMain();
+    public abstract void clickToUserMain();
 
-    void onClickCustomText();
+    public abstract void onClickCustomText();
 
     //DL Add lsf -- 图片点击
-    default void onImageClick(TUIMessageBean messageInfo){}
+    public void onImageClick(TUIMessageBean messageInfo){}
 }

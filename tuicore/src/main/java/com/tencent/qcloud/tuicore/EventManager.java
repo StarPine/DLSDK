@@ -72,11 +72,10 @@ class EventManager {
             if (value == null) {
                 continue;
             }
-            Iterator<ITUINotification> notificationIterator = value.iterator();
-            while (notificationIterator.hasNext()) {
-                ITUINotification item = notificationIterator.next();
+            for (ITUINotification item : value) {
                 if (item == notification) {
-                    notificationIterator.remove();
+                    value.remove(item);
+                    break;
                 }
             }
 

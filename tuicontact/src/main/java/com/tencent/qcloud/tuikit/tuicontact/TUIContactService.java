@@ -32,14 +32,12 @@ public class TUIContactService extends ServiceInitializer implements ITUIContact
         return instance;
     }
 
-    private static Context appContext;
 
     private final List<WeakReference<ContactEventListener>> contactEventListenerList = new ArrayList<>();
 
     @Override
     public void init(Context context) {
         instance = this;
-        appContext = context;
         initService();
         initEvent();
         initIMListener();
@@ -204,22 +202,19 @@ public class TUIContactService extends ServiceInitializer implements ITUIContact
         contactEventListenerList.add(reference);
     }
 
-    public static Context getAppContext() {
-        return appContext;
+
+    @Override
+    public int getLightThemeResId() {
+        return R.style.TUIContactLightTheme;
     }
 
-//    @Override
-//    public int getLightThemeResId() {
-//        return R.style.TUIContactLightTheme;
-//    }
-//
-//    @Override
-//    public int getLivelyThemeResId() {
-//        return R.style.TUIContactLivelyTheme;
-//    }
-//
-//    @Override
-//    public int getSeriousThemeResId() {
-//        return R.style.TUIContactSeriousTheme;
-//    }
+    @Override
+    public int getLivelyThemeResId() {
+        return R.style.TUIContactLivelyTheme;
+    }
+
+    @Override
+    public int getSeriousThemeResId() {
+        return R.style.TUIContactSeriousTheme;
+    }
 }

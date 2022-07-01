@@ -13,7 +13,7 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp" />
 
-    <com.tencent.qcloud.tuikit.tuichat.ui.view.input.face.EmojiIndicatorView
+    <com.tencent.qcloud.tuikit.tuichat.component.face.EmojiIndicatorView
         android:id="@+id/face_indicator"
         android:layout_width="match_parent"
         android:layout_height="20dp"

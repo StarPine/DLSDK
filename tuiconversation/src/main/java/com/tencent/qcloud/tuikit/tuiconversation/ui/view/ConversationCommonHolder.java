@@ -129,7 +129,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             } else {
                 unreadText.setVisibility(View.GONE);
             }
-        }else if (conversation.getUnRead() > 0) {
+        } else if (conversation.getUnRead() > 0) {
             unreadText.setVisibility(View.VISIBLE);
             if (conversation.getUnRead() > 99) {
                 unreadText.setText("99+");
@@ -201,7 +201,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             public void onClick(View view) {
                 if (mAdapter.mOnItemAvatarClickListener != null) {
                     ConversationInfo conversation = (ConversationInfo) view.getTag();
-                    mAdapter.mOnItemAvatarClickListener.onItemAvatarClick(view,position, conversation);
+                    mAdapter.mOnItemAvatarClickListener.onItemAvatarClick(view, position, conversation);
                 }
             }
         });
@@ -220,43 +220,6 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             messageStatusLayout.setVisibility(View.GONE);
             messagefailed.setVisibility(View.GONE);
             messageSending.setVisibility(View.GONE);
-        }
-
-        //// 由子类设置指定消息类型的views
-        layoutVariableViews(conversation, position);
-    }
-
-    public void layoutVariableViews(ConversationInfo conversationInfo, int position) {
-
-    }
-
-    private static class EmojiData{
-        private int start;
-        private int end;
-        private String emojiText;
-
-        public int getEnd() {
-            return end;
-        }
-
-        public void setEnd(int end) {
-            this.end = end;
-        }
-
-        public int getStart() {
-            return start;
-        }
-
-        public void setStart(int start) {
-            this.start = start;
-        }
-
-        public String getEmojiText() {
-            return emojiText;
-        }
-
-        public void setEmojiText(String emojiText) {
-            this.emojiText = emojiText;
         }
     }
 }
