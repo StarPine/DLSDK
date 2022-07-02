@@ -1,6 +1,7 @@
 package com.dl.playfun.data.source;
 
 import com.dl.playfun.api.AppGameConfig;
+import com.dl.playfun.entity.ApiConfigManagerEntity;
 import com.dl.playfun.entity.ConfigItemEntity;
 import com.dl.playfun.entity.EvaluateObjEntity;
 import com.dl.playfun.entity.GameConfigEntity;
@@ -19,6 +20,12 @@ import java.util.Map;
  * @date 2019/3/26
  */
 public interface LocalDataSource {
+    //保存api配置
+    void saveApiConfigManager(ApiConfigManagerEntity apiConfigManager);
+    //读取api配置
+    ApiConfigManagerEntity readApiConfigManagerEntity();
+
+
     //保存游戏配置
     void saveGameConfigSetting(AppGameConfig appGameConfig);
     //读取游戏配置

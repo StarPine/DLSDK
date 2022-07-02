@@ -110,6 +110,4 @@ public class AppConfig {
     public static final String GAME_SOURCES_APP_ID = "game_sources_app_id";
     //游戏配置类
     public static final String GAME_SOURCES_APP_CONFIG = "game_sources_app_config";
-    //请求http
-    public static final String KEY_API_SERVER_URL = "key_api_server_url";
 }

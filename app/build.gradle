@@ -151,13 +151,13 @@ android {
         PlayChatAPK {
             dimension "playfun"
             resConfigs "zh","en","zh-rCN","zh-rHK","zh-rMO","zh-rSG","zh-rTW"
+            // 服务端接口HOST
+            buildConfigField "String", "DEFAULT_API_URL", "\"http://config.play-chat.net/\""
             if(!rootProject.ext.BuildSdkPlayfun && !rootProject.ext.BuildPlayChatRelease){
                 applicationId "com.test.demo.chat"
                 manifestPlaceholders = [package_name: applicationId]
                 //测试包配置
                 signingConfig signingConfigs.playChatDebug
-                // 腾讯IM App KEY
-                buildConfigField "int", "IM_APP_KEY", "1400625290"//"1400510510"
                 //客服id聊天
                 buildConfigField "String", "CHAT_SERVICE_USER_ID_SEND", "\"administrator\""
                 //buildConfigField "int", "IM_APP_KEY", "1400369342"
@@ -166,9 +166,6 @@ android {
                 buildConfigField "int", "GOOGLE_FCM_PUSH_BUZID", "18414"
                 //客服id聊天
                 buildConfigField "String", "CHAT_SERVICE_USER_ID_SEND", "\"administrator\""
-                // 服务端接口HOST
-                // 服务端接口HOST
-                buildConfigField "String", "API_BASE_URL", "\"https://t-api.petmaster.world/\""
                 // 图片HOST
                 buildConfigField "String", "IMAGE_BASE_URL", "\"https://img.joy-mask.com/\""
                 //H5网页地址
@@ -195,15 +192,10 @@ android {
                 manifestPlaceholders = [package_name: applicationId]
                 //正式包配置
                 signingConfig signingConfigs.playChatRelease
-                // 腾讯IM App KEY 1400504347
-                buildConfigField "int", "IM_APP_KEY", "1400413943"
-                //buildConfigField "int", "IM_APP_KEY", "1400504347"
                 // 腾讯IM FCM离线推送ID
                 buildConfigField "int", "GOOGLE_FCM_PUSH_BUZID", "17321"
                 // Bugly App Id
                 buildConfigField "String", "BUGLY_APP_ID", "\"f208faedec\""
-                // 服务端接口HOST
-                buildConfigField "String", "API_BASE_URL", "\"https://api.play-chat.net/\""
                 // 图片HOST
                 buildConfigField "String", "IMAGE_BASE_URL", "\"https://img.play-chat.net/\""
                 //H5网页地址

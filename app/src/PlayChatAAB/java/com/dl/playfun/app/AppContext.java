@@ -1,6 +1,5 @@
 package com.dl.playfun.app;
 
-import static com.dl.playfun.app.AppConfig.IM_APP_KEY;
 
 import android.app.Activity;
 import android.app.Application;
@@ -33,6 +32,7 @@ import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.LoginExpiredEvent;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.ThirdPushTokenMgr;
 import com.dl.playfun.tim.TUIUtils;
 import com.dl.playfun.ui.MainContainerActivity;
@@ -205,18 +205,15 @@ public class AppContext extends Application {
                 //.errorActivity(YourCustomErrorActivity.class) //崩溃后的错误activity
                 //.eventListener(new YourCustomEventListener()) //崩溃后的错误监听
                 .apply();
-
-        initIM();
-        //initUmeng();
-        initActivityLifecycleCallbacks();
-
-        // 初始化实人认证SDK。
-        //RPVerify.init(this);
     }
 
-    private void initIM() {
+    public void initIM() {
+        AppRepository repository = ConfigManager.getInstance().getAppRepository();
+        if(repository==null || repository.readApiConfigManagerEntity()==null){
+            return;
+        }
 
-        TUIUtils.init(this, IM_APP_KEY, new V2TIMSDKConfig(), new V2TIMSDKListener() {
+        TUIUtils.init(this,repository.readApiConfigManagerEntity().getImAppId() , new V2TIMSDKConfig(), new V2TIMSDKListener() {
             @Override
             public void onConnecting() {
                 super.onConnecting();
@@ -459,7 +456,7 @@ public class AppContext extends Application {
     }
 
 
-    private void initActivityLifecycleCallbacks() {
+    public void initActivityLifecycleCallbacks() {
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
 
             private final V2TIMConversationListener unreadListener = new V2TIMConversationListener() {

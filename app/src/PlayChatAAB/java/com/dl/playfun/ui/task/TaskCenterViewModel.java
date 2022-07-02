@@ -551,7 +551,7 @@ public class TaskCenterViewModel extends BaseViewModel<AppRepository> {
             ToastUtils.showShort(R.string.task_fragment_error);
             return;
         }
-        Bundle bundle = InviteWebDetailFragment.getStartBundle(AppConfig.API_BASE_URL + model.readUserData().getInviteUrl(), userInvite.get());
+        Bundle bundle = InviteWebDetailFragment.getStartBundle(model.readApiConfigManagerEntity().getPlayFunApiUrl() + model.readUserData().getInviteUrl(), userInvite.get());
         start(InviteWebDetailFragment.class.getCanonicalName(), bundle);
     }
 

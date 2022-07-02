@@ -5,6 +5,7 @@ import com.blankj.utilcode.util.ObjectUtils;
 import com.dl.playfun.api.AppGameConfig;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.data.source.LocalDataSource;
+import com.dl.playfun.entity.ApiConfigManagerEntity;
 import com.dl.playfun.entity.ConfigItemEntity;
 import com.dl.playfun.entity.EvaluateObjEntity;
 import com.dl.playfun.entity.GameConfigEntity;
@@ -59,6 +60,7 @@ public class LocalDataSourceImpl implements LocalDataSource {
     private static final String KEY_CHAT_MESSAGE_ISSOUND = "chat_message_isSound";
     private static final String KEY_CHAT_MESSAGE_ISSHAKE = "chat_message_isShake";
     private static final String KEY_DEFAULT_HOME_PAGE_NAME = "default_home_page_name";
+    private static final String KEY_API_CONFIG_MANAGER = "api_config_manager";
     private static final String KEY_IS_FIRST = "is_first";
     private volatile static LocalDataSourceImpl INSTANCE = null;
     private final String cryptKey = "playfun@2022";
@@ -125,6 +127,24 @@ public class LocalDataSourceImpl implements LocalDataSource {
 
     public static void destroyInstance() {
         INSTANCE = null;
+    }
+
+    @Override
+    public void saveApiConfigManager(ApiConfigManagerEntity apiConfigManager) {
+        if(ObjectUtils.isEmpty(apiConfigManager)){
+            return;
+        }
+        String json = GsonUtils.toJson(apiConfigManager);
+        kv.encode(KEY_API_CONFIG_MANAGER, json);
+    }
+
+    @Override
+    public ApiConfigManagerEntity readApiConfigManagerEntity() {
+        String json = kv.decodeString(KEY_API_CONFIG_MANAGER);
+        if (StringUtil.isEmpty(json)) {
+            return null;
+        }
+        return GsonUtils.fromJson(json, ApiConfigManagerEntity.class);
     }
 
     @Override

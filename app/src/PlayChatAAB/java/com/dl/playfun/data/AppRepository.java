@@ -13,6 +13,7 @@ import com.dl.playfun.entity.AccostEntity;
 import com.dl.playfun.entity.AddressEntity;
 import com.dl.playfun.entity.AlbumPhotoEntity;
 import com.dl.playfun.entity.AllConfigEntity;
+import com.dl.playfun.entity.ApiConfigManagerEntity;
 import com.dl.playfun.entity.ApplyMessageEntity;
 import com.dl.playfun.entity.BaseUserBeanEntity;
 import com.dl.playfun.entity.BlackEntity;
@@ -429,6 +430,16 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     @Override
     public Observable<BaseDataResponse<GooglePoiBean>> textSearchPlace(RequestBody requestBody) {
         return mHttpDataSource.textSearchPlace(requestBody);
+    }
+
+    @Override
+    public void saveApiConfigManager(ApiConfigManagerEntity apiConfigManager) {
+        mLocalDataSource.saveApiConfigManager(apiConfigManager);
+    }
+
+    @Override
+    public ApiConfigManagerEntity readApiConfigManagerEntity() {
+        return mLocalDataSource.readApiConfigManagerEntity();
     }
 
     @Override
@@ -1346,6 +1357,11 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     @Override
     public Observable<BaseDataResponse<List<GameCoinBuy>>> buyGameCoins() {
         return mHttpDataSource.buyGameCoins();
+    }
+
+    @Override
+    public Observable<BaseDataResponse<ApiConfigManagerEntity>> initApiConfig() {
+        return mHttpDataSource.initApiConfig();
     }
 
     @Override

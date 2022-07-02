@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="splash_init_tv">啟動失敗，請點擊重試</string>
+    <string name="splash_init_tv2">點擊重試</string>
     <string name="register_title">手機號碼登入</string>
     <string name="register_bom_title">其它登入方式</string>
     <string name="register_bom_title2">其它登入</string>

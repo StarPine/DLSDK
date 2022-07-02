@@ -10,6 +10,7 @@ import com.dl.playfun.entity.AccostEntity;
 import com.dl.playfun.entity.AddressEntity;
 import com.dl.playfun.entity.AlbumPhotoEntity;
 import com.dl.playfun.entity.AllConfigEntity;
+import com.dl.playfun.entity.ApiConfigManagerEntity;
 import com.dl.playfun.entity.ApplyMessageEntity;
 import com.dl.playfun.entity.BaseUserBeanEntity;
 import com.dl.playfun.entity.BlackEntity;
@@ -1067,6 +1068,11 @@ public class HttpDataSourceImpl implements HttpDataSource {
     @Override
     public Observable<BaseDataResponse<List<GameCoinBuy>>> buyGameCoins() {
         return apiService.buyGameCoins("recharge");
+    }
+
+    @Override
+    public Observable<BaseDataResponse<ApiConfigManagerEntity>> initApiConfig() {
+        return apiService.initApiConfig();
     }
 
     @Override

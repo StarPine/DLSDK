@@ -5,6 +5,7 @@ import com.alibaba.sdk.android.oss.ClientConfiguration;
 import com.alibaba.sdk.android.oss.OSSClient;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
+import com.dl.playfun.data.AppRepository;
 
 public class OSSWrapper {
 
@@ -12,7 +13,8 @@ public class OSSWrapper {
     private OSSClient mClient = null;
 
     private OSSWrapper() {
-        OSSAuthCredentialsProvider authCredentialsProvider = new OSSAuthCredentialsProvider(AppConfig.STS_SERVER_URL);
+        AppRepository appRepository = ConfigManager.getInstance().getAppRepository();
+        OSSAuthCredentialsProvider authCredentialsProvider = new OSSAuthCredentialsProvider(appRepository.readApiConfigManagerEntity().getPlayFunApiUrl()+AppConfig.STS_SERVER_URL);
 
         ClientConfiguration conf = new ClientConfiguration();
         conf.setConnectionTimeout(15 * 1000); // 连接超时，默认15秒。

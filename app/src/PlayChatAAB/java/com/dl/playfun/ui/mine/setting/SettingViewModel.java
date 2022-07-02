@@ -20,6 +20,8 @@ import com.dl.playfun.entity.UserInfoEntity;
 import com.dl.playfun.event.IsAuthBindingEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.GlideCacheManager;
+import com.dl.playfun.ui.login.LoginFragment;
+import com.dl.playfun.ui.main.MainFragment;
 import com.dl.playfun.ui.message.pushsetting.PushSettingFragment;
 import com.dl.playfun.ui.mine.account.CommunityAccountFragment;
 import com.dl.playfun.ui.mine.changepassword.ChangePasswordFragment;
@@ -161,6 +163,7 @@ public class SettingViewModel extends BaseViewModel<AppRepository> {
         // MobclickAgent.onProfileSignOff();
         AppConfig.userClickOut = true;
         model.logout();
+        startWithPopTo(LoginFragment.class.getCanonicalName(), MainFragment.class.getCanonicalName(), true);
     }
 
     public void loadUserInfo() {

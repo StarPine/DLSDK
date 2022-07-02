@@ -67,7 +67,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="5dp"
                         android:text="@string/playfun_setting_allow_link_mic"
-                        tools:text="ddd"
                         />
 
                     <Switch
@@ -240,7 +239,6 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:visibility="gone"
                     style="@style/ProfileItem"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/profile_item_height"
