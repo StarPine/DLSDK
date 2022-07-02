@@ -48,8 +48,8 @@ android {
 
         }
     }
-    compileSdkVersion 30
-    buildToolsVersion "30.0.3"
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
 
     defaultConfig {
         // 版本号 - 注意，这里的版本号无效，请到productFlavors中设置
@@ -79,8 +79,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility  rootProject.ext.android.sourceCompatibility
+        targetCompatibility  rootProject.ext.android.targetCompatibility
     }
 
     buildTypes {
