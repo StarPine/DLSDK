@@ -76,16 +76,16 @@ android {
             signingConfig signingConfigs.release
         }
     }
-    flavorDimensions "distribute"
+    flavorDimensions "playfun"
     //定义的配置 最终会在Build Variants里面呈现出来
     productFlavors {
         // PlayChat台湾版配置 BuildPlayChatRelease (false = Debug 或 true = 正式包)
-        PlayChat {
-            dimension "distribute"
+        PlayFunAAR {
+            dimension "playfun"
         }
         // 台湾版配置-Test   playFunDebug
-        playFunDebug {
-            dimension "distribute"
+        PlayChatAPK {
+            dimension "playfun"
         }
 
     }
@@ -147,7 +147,7 @@ dependencies {
     dependenciesID.each {k,v -> implementation v}
     rxDependencies.each {k,v -> implementation v}
 
-//    implementation(name: 'playfun-lib-1.5.6.1', ext: 'aar')
+//    implementation(name: 'playfun-lib-1.5.7', ext: 'aar')
     implementation project(':app')
 
 }

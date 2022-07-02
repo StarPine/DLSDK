@@ -117,6 +117,7 @@ android {
         PlayFunAAR {
             signingConfig signingConfigs.playFunDebug
             dimension "playfun"
+            manifestPlaceholders = [package_name: "com.mvsee.test"]
             // 腾讯IM App KEY
             buildConfigField "int", "IM_APP_KEY", "1400625290"//"1400510510"
             // 腾讯IM FCM离线推送ID

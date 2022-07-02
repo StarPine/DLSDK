@@ -87,7 +87,7 @@
         <!-- 内容提供器 -用来安装APK -->
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.dl.playfun.widget.dialog.version.UpdateFileProvider"
+            android:authorities="${package_name}.widget.dialog.version.UpdateFileProvider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
