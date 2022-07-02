@@ -3,13 +3,10 @@ package com.tencent.qcloud.tuikit.tuiconversation.ui.view;
 import android.content.Context;
 import android.graphics.Color;
 import android.text.Html;
-import android.text.SpannableStringBuilder;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -20,7 +17,9 @@ import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.component.UnreadCountTextView;
 import com.tencent.qcloud.tuicore.util.DateTimeUtil;
+import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
+import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationService;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.DraftInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.util.TUIConversationLog;
@@ -51,7 +50,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
     protected final ImageView iv_game_icon;
     protected Context context;
 
-    public ConversationCommonHolder(Context context,View itemView) {
+    public ConversationCommonHolder(Context context, View itemView) {
         super(itemView);
         this.context = context;
         leftItemLayout = rootView.findViewById(R.id.item_left);
@@ -105,8 +104,18 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             timelineText.setText(DateTimeUtil.getTimeFormatText(new Date(draftInfo.getDraftTime() * 1000)));
         } else {
             HashMap<String, Object> param = new HashMap<>();
-            param.put(TUIConstants.TUIChat.V2TIMMESSAGE, conversation.getLastMessage());
+            V2TIMMessage lastMessage = conversation.getLastMessage();
+            param.put(TUIConstants.TUIChat.V2TIMMESSAGE, lastMessage);
             String lastMsgDisplayString = (String) TUICore.callService(TUIConstants.TUIChat.SERVICE_NAME, TUIConstants.TUIChat.METHOD_GET_DISPLAY_STRING, param);
+
+            if (lastMsgDisplayString != null && TUIChatUtils.isJSON2(lastMsgDisplayString) && lastMsgDisplayString.contains("type")) {
+                if (lastMessage.isSelf()) {
+                    lastMsgDisplayString = TUIConversationService.getAppContext().getString(R.string.default_message_content3);
+                } else {
+                    lastMsgDisplayString = TUIConversationService.getAppContext().getString(R.string.default_message_content);
+                }
+//                lastMsgDisplayString = TUIChatUtils.json2ConversationMsg(lastMsgDisplayString);
+            }
             // 如果最后一条消息是自定义消息, 获取要显示的字符
             if (lastMsgDisplayString != null) {
                 messageText.setText(Html.fromHtml(lastMsgDisplayString));

@@ -122,6 +122,7 @@ public class SoundMessageHolder extends MessageContentHolder {
                 });
             }
         });
+        setMessageAreaPadding();
     }
 
     private void getSound(final SoundMessageBean messageBean) {

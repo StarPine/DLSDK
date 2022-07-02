@@ -7,6 +7,7 @@ import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ImageUtil;
+import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 
 import java.io.File;
@@ -63,6 +64,7 @@ public class TUIChatUtils {
 
     /**
      * 获取 MessageInfo 中原图的路径
+     *
      * @param msg
      * @return
      */
@@ -81,7 +83,7 @@ public class TUIChatUtils {
         String localImgPath = ChatMessageParser.getLocalImagePath(msg);
         if (localImgPath == null) {
             String originUUID = null;
-            for(V2TIMImageElem.V2TIMImage image : v2TIMImageElem.getImageList()) {
+            for (V2TIMImageElem.V2TIMImage image : v2TIMImageElem.getImageList()) {
                 if (image.getType() == V2TIMImageElem.V2TIM_IMAGE_TYPE_ORIGIN) {
                     originUUID = image.getUUID();
                     break;
@@ -98,11 +100,12 @@ public class TUIChatUtils {
 
     /**
      * 匹配包含0开头的十位数字
+     *
      * @param str
      * @return
      */
-    public static boolean isLineNumber(String str){
-        if (str == null || str.length() < 10)return false;
+    public static boolean isLineNumber(String str) {
+        if (str == null || str.length() < 10) return false;
         String all = str.replaceAll("\\s+", "").toLowerCase();
         String s = all.replaceAll("isLine", "");
         String replace = s.replaceAll("0[0-9]{9}", "isLine");
@@ -112,15 +115,16 @@ public class TUIChatUtils {
     /**
      * 判断是否包含相关字段，默认小写匹配
      */
-    public static boolean isContains(String message, List<String> str){
-        if (str == null || str.size() == 0 || message == null || message.length() == 0)return false;
+    public static boolean isContains(String message, List<String> str) {
+        if (str == null || str.size() == 0 || message == null || message.length() == 0)
+            return false;
         String all = message.replaceAll("\\s+", "").toLowerCase();
         for (String words : str) {
-            if (words.equals("")){
+            if (words.equals("")) {
                 continue;
             }
             boolean contains = all.contains(words.toLowerCase());
-            if (contains)return true;
+            if (contains) return true;
         }
         return false;
     }
@@ -135,6 +139,27 @@ public class TUIChatUtils {
         }
         return result;
 
+    }
+
+    public static String json2ConversationMsg(String json) {
+        String msg = "";
+        Map<String, Object> map_data = new Gson().fromJson(json, Map.class);
+        if (map_data != null && map_data.containsKey("type")) {
+            String type = (String) map_data.get("type");
+            switch (type) {
+                case TUIChatConstants.CoustomMassageType.MESSAGE_GIFT:
+                    msg = "[礼物]";
+                    break;
+                case TUIChatConstants.CoustomMassageType.MESSAGE_TAG:
+                    msg = "[搭讪]";
+                    break;
+                case TUIChatConstants.CoustomMassageType.MESSAGE_COUNTDOWN:
+                    msg = "[余额不足]}";
+                    break;
+
+            }
+        }
+        return msg;
     }
 
 }

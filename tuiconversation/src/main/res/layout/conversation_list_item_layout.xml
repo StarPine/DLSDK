@@ -29,18 +29,7 @@
             android:layout_width="@dimen/conversation_list_avatar_width"
             android:layout_height="@dimen/conversation_list_avatar_height" />
 
-        <com.tencent.qcloud.tuicore.component.UnreadCountTextView
-            android:id="@+id/conversation_unread"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginStart="-10dp"
-            android:layout_marginTop="-10dp"
-            android:gravity="center"
-            android:includeFontPadding="false"
-            android:textColor="#fff"
-            android:textSize="8sp" />
+
 
     </RelativeLayout>
 
@@ -138,6 +127,19 @@
             android:textColor="@color/list_bottom_text_bg"
             android:textSize="13.44sp" />
 
+        <com.tencent.qcloud.tuicore.component.UnreadCountTextView
+            android:id="@+id/conversation_unread"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/view_line"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="18.11dp"
+            android:layout_marginBottom="@dimen/conversation_list_text_margin_bottom"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:textColor="#fff"
+            android:textSize="8sp" />
 
         <ImageView
             android:id="@+id/not_disturb"

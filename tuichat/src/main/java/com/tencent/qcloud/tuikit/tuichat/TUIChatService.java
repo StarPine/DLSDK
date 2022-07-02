@@ -152,8 +152,8 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
         addDefaultMessageType(MergeMessageBean.class, MergeMessageHolder.class);
         addDefaultMessageType(SoundMessageBean.class, SoundMessageHolder.class);
         addDefaultMessageType(TextAtMessageBean.class, TextMessageHolder.class);
-        addDefaultMessageType(TextMessageBean.class, TextMessageHolder.class);
-        addDefaultMessageType(TUIMessageBean.class, MessageTextHolder.class); //DL add lsf
+//        addDefaultMessageType(TextMessageBean.class, TextMessageHolder.class);
+        addDefaultMessageType(TextMessageBean.class, MessageTextHolder.class); //DL add lsf
         addDefaultMessageType(TipsMessageBean.class, TipsMessageHolder.class);
         addDefaultMessageType(VideoMessageBean.class, VideoMessageHolder.class);
         addDefaultMessageType(ReplyMessageBean.class, ReplyMessageHolder.class);
