@@ -92,6 +92,8 @@ public class SplashViewModel extends BaseViewModel<AppRepository> {
                                     } else {
                                         initData();
                                     }
+                                }else{
+                                    initSettingConfig();
                                 }
                             } else {
                                 hintRetryShow.set(true);
