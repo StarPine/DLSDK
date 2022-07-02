@@ -79,4 +79,21 @@ public class TUIChatConstants {
         public static final String USER_NAMECARD_SELECT = "user_namecard_select";
     }
 
+    //自定义消息类型
+    public static class CoustomMassageType {
+        public static final String TOAST_LOCAL = "toast_local";
+        public static final String MESSAGE_TAG = "message_tag";//搭讪文字
+        public static final String MESSAGE_COUNTDOWN = "message_countdown";//余额不足
+        public static final String MESSAGE_PHOTO = "message_photo";//相册
+        public static final String MESSAGE_EVALUATE = "message_evaluate";//评价
+        public static final String MESSAGE_GIFT = "message_gift";//礼物消息
+        public static final String MESSAGE_TRACKING = "message_tracking";
+        public static final String MESSAGE_CUSTOM = "message_custom";
+        public static final String SEND_VIOLATION_MESSAGE = "send_violation_message";//本地发送违规消息
+        public static final String MESSAGE_CALLINGBUSY = "message_callingbusy";//忙线
+        public static final String SEND_MALE_ERROR = "send_male_error";//发送异常
+        public static final String CHAT_EARNINGS = "chat_earnings";//收益提示
+
+    }
+
 }
