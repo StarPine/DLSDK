@@ -1,5 +1,6 @@
 package com.dl.playfun.data.source.http.service;
 
+import com.dl.playfun.data.RetrofitHeadersConfig;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseListDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
@@ -7,6 +8,7 @@ import com.dl.playfun.entity.AccostEntity;
 import com.dl.playfun.entity.AddressEntity;
 import com.dl.playfun.entity.AlbumPhotoEntity;
 import com.dl.playfun.entity.AllConfigEntity;
+import com.dl.playfun.entity.ApiConfigManagerEntity;
 import com.dl.playfun.entity.ApplyMessageEntity;
 import com.dl.playfun.entity.BaseUserBeanEntity;
 import com.dl.playfun.entity.BlackEntity;
@@ -107,6 +109,16 @@ import retrofit2.http.Query;
  */
 
 public interface ApiService {
+    /**
+    * @Desc TODO(初始化api接口)
+    * @author 彭石林
+    * @parame []
+    * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse<com.dl.playfun.entity.ApiConfigManagerEntity>>
+    * @Date 2022/7/2
+    */
+    @Headers(RetrofitHeadersConfig.DEFAULT_API_INIT_URL)
+    @GET("api/hla")
+    Observable<BaseDataResponse<ApiConfigManagerEntity>> initApiConfig();
 
     /*=====================================================任务中心相关接口=================================================*/
     /**
@@ -323,6 +335,7 @@ public interface ApiService {
      * @param device_code 设备序列号
      * @return
      */
+    @Headers(RetrofitHeadersConfig.NO_TOKEN_CHECK)
     @FormUrlEncoded
     @POST("api/auth/login")
     Observable<BaseDataResponse<Map<String, String>>> authLoginPost(
@@ -1161,6 +1174,7 @@ public interface ApiService {
      * @param code     验证码
      * @return
      */
+    @Headers(RetrofitHeadersConfig.NO_TOKEN_CHECK)
     @FormUrlEncoded
     @POST("api/register")
     Observable<BaseDataResponse<TokenEntity>> registerPost(
@@ -1188,6 +1202,7 @@ public interface ApiService {
      * @param password 密码
      * @return
      */
+    @Headers(RetrofitHeadersConfig.NO_TOKEN_CHECK)
     @FormUrlEncoded
     @POST("api/login")
     Observable<BaseDataResponse<TokenEntity>> loginPost(

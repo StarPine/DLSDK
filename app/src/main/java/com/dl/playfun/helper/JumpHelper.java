@@ -39,7 +39,7 @@ public class JumpHelper {
                 }
             }
             if ("invitation".equals(host)) {
-                viewModel.start(InviteWebDetailFragment.class.getCanonicalName(), InviteWebDetailFragment.getStartBundle(AppConfig.API_BASE_URL + ConfigManager.getInstance().getAppRepository().readUserData().getInviteUrl()));
+                viewModel.start(InviteWebDetailFragment.class.getCanonicalName(), InviteWebDetailFragment.getStartBundle(ConfigManager.getInstance().getAppRepository().readApiConfigManagerEntity().getPlayFunApiUrl() + ConfigManager.getInstance().getAppRepository().readUserData().getInviteUrl()));
             } else if ("vip".equals(host)) {
                 viewModel.start(VipSubscribeFragment.class.getCanonicalName());
             } else if ("certification".equals(host)) {

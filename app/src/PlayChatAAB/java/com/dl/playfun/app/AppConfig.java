@@ -17,10 +17,6 @@ public class AppConfig {
     //上报
     public static final String VERSION_NAME_PUSH = "1.3.6";
     /**
-     * 腾讯IM Appkey
-     */
-    public static final int IM_APP_KEY = BuildConfig.IM_APP_KEY;
-    /**
      * 女
      */
     public static final int FEMALE = 0;
@@ -44,10 +40,11 @@ public class AppConfig {
      * 联系客服id
      */
     public static final String CHAT_SERVICE_USER_ID_SEND = BuildConfig.CHAT_SERVICE_USER_ID_SEND;
+
     /**
-     * 服务端接口HOST
+     * 服务端默认接口HOST
      */
-    public static final String API_BASE_URL = BuildConfig.API_BASE_URL;
+    public static final String DEFAULT_API_URL = BuildConfig.DEFAULT_API_URL;
 
     /**
      * H5 WEB 端HOST
@@ -58,7 +55,7 @@ public class AppConfig {
     // 访问的endpoint地址
     public static final String OSS_ENDPOINT = "https://oss-ap-southeast-1.aliyuncs.com";
 //    // 或者根据工程sts_local_server目录中本地鉴权服务脚本代码启动本地STS 鉴权服务器。详情参见sts_local_server 中的脚本内容。
-    public static final String STS_SERVER_URL = API_BASE_URL + "api/aliyun/sts";//STS 地址
+    public static final String STS_SERVER_URL =  "api/aliyun/sts";//STS 地址
     public static final String BUCKET_NAME = BuildConfig.BUCKET_NAME;
     /**
      * 服务条款url
@@ -113,6 +110,4 @@ public class AppConfig {
     public static final String GAME_SOURCES_APP_ID = "game_sources_app_id";
     //游戏配置类
     public static final String GAME_SOURCES_APP_CONFIG = "game_sources_app_config";
-    //请求http
-    public static final String KEY_API_SERVER_URL = "key_api_server_url";
 }

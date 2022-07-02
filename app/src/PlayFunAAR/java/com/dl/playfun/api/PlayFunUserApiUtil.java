@@ -99,7 +99,6 @@ public class PlayFunUserApiUtil {
                             appRepository.saveDefaultHomePageConfig(response.getData().getDefaultHomePage());
                             appRepository.saveGameConfig(response.getData().getGame());
                             appRepository.putSwitches(EaringlSwitchUtil.KEY_TIPS, response.getData().getIsTips());
-                            appRepository.putKeyValue(AppConfig.KEY_API_SERVER_URL,response.getData().getApiUrl());
                             initSettingConfigListener.onSuccess();
                         } catch (Exception e) {
                             ExceptionReportUtils.report(e);

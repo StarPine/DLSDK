@@ -7,6 +7,7 @@ import com.dl.playfun.entity.AccostEntity;
 import com.dl.playfun.entity.AddressEntity;
 import com.dl.playfun.entity.AlbumPhotoEntity;
 import com.dl.playfun.entity.AllConfigEntity;
+import com.dl.playfun.entity.ApiConfigManagerEntity;
 import com.dl.playfun.entity.ApplyMessageEntity;
 import com.dl.playfun.entity.BaseUserBeanEntity;
 import com.dl.playfun.entity.BlackEntity;
@@ -97,6 +98,15 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface HttpDataSource {
+
+    /**
+     * @Desc TODO(初始化api接口)
+     * @author 彭石林
+     * @parame []
+     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse<com.dl.playfun.entity.ApiConfigManagerEntity>>
+     * @Date 2022/7/2
+     */
+    Observable<BaseDataResponse<ApiConfigManagerEntity>> initApiConfig();
 
     /*=====================================================任务中心相关接口=================================================*/
     /**

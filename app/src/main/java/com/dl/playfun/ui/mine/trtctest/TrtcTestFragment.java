@@ -63,7 +63,7 @@ public class TrtcTestFragment extends BaseToolbarFragment<FragmentTrtcTestBindin
 
                     }
                 });
-                TRTCCloud.sharedInstance(mActivity).startSpeedTest(AppConfig.IM_APP_KEY, tokenEntity.getUserID(), tokenEntity.getUserSig());
+                //TRTCCloud.sharedInstance(mActivity).startSpeedTest(AppConfig.IM_APP_KEY, tokenEntity.getUserID(), tokenEntity.getUserSig());
             }
         });
     }
