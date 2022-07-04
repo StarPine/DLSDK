@@ -128,6 +128,7 @@ public interface ApiService {
      * @parame [id]
      * @Date 2021/9/23
      */
+    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
     @POST("api/v2/bonus/buy")
     @FormUrlEncoded
     Observable<BaseResponse> ExchangeIntegraBuy(@Field("id") Integer id);
@@ -138,6 +139,7 @@ public interface ApiService {
      * @parame []
      * @Date 2021/9/23
      */
+    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
     @GET("api/v2/bonus/list")
     Observable<BaseDataResponse<ExchangeIntegraOuterEntity>> getExchangeIntegraListData();
     /**
@@ -147,6 +149,7 @@ public interface ApiService {
      * @parame []
      * @Date 2021/9/4
      */
+    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
     @GET("api/v2/task/ad")
     Observable<BaseListDataResponse<TaskAdEntity>> taskAdList();
 
@@ -157,6 +160,7 @@ public interface ApiService {
      * @parame [permanent_city_ids, address_id]
      * @Date 2021/8/14
      */
+    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
     @FormUrlEncoded
     @POST("api/v2/exchange/supply")
     Observable<BaseResponse> subSupply(@Field("exchange_ids[]") List<Integer> exchange_ids, @Field("address_id") Integer address_id);
@@ -168,6 +172,7 @@ public interface ApiService {
      * @parame [id]
      * @Date 2021/8/16
      */
+    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
     @DELETE("/api/v2/address/{id}")
     Observable<BaseResponse> removeAddress(@Path("id") Integer id);
 
@@ -178,6 +183,7 @@ public interface ApiService {
      * @parame [id]
      * @Date 2021/8/13
      */
+    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
     @GET("api/v2/address/view")
     Observable<BaseDataResponse<AddressEntity>> getAddress(@Query("id") Integer id);
 
@@ -188,6 +194,7 @@ public interface ApiService {
      * @parame []
      * @Date 2021/8/13
      */
+    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
     @GET("api/v2/address")
     Observable<BaseListDataResponse<AddressEntity>> getAddressList(@Query("page") Integer page);
 
@@ -198,6 +205,7 @@ public interface ApiService {
      * @parame [contacts, city, are, address, phone, is_default]
      * @Date 2021/8/13
      */
+    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
     @POST("api/v2/address")
     Observable<BaseResponse> createAddress(
             @Query("contacts") String contacts,
@@ -214,6 +222,7 @@ public interface ApiService {
      * @parame [contacts, city, are, address, phone, is_default]
      * @Date 2021/8/13
      */
+    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
     @PUT("api/v2/address")
     Observable<BaseResponse> updateAddress(
             @Query("id") Integer id,
@@ -231,6 +240,7 @@ public interface ApiService {
      * @parame [page]
      * @Date 2021/8/10
      */
+    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
     @GET("api/v2/exchange")
     Observable<BaseListDataResponse<ExchangeEntity>> qryExchange(@Query("page") Integer page, @Query("status") Integer status);
 
@@ -241,6 +251,7 @@ public interface ApiService {
      * @parame [goodsId]
      * @Date 2021/8/10
      */
+    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
     @POST("api/v2/exchange")
     Observable<BaseResponse> exchange(@Query("goods_id") String goodsId);
 
@@ -251,6 +262,7 @@ public interface ApiService {
      * @parame [page]
      * @Date 2021/8/10
      */
+    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
     @GET("api/v2/bonusGoods")
     Observable<BaseListDataResponse<BonusGoodsEntity>> getBonusGoods(@Query("page") Integer page);
 
@@ -261,6 +273,7 @@ public interface ApiService {
      * @parame []
      * @Date 2021/8/9
      */
+    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
     @GET("api/v2/bonus")
     Observable<BaseListDataResponse<GoldDetailEntity>> getGoldList(@Query("page") Integer page);
 
@@ -271,6 +284,7 @@ public interface ApiService {
      * @parame []
      * @Date 2021/8/9
      */
+    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
     @POST("api/v2/bonus")
     Observable<BaseResponse> ToaskSubBonus(@Query("type") String key);
 
@@ -279,6 +293,7 @@ public interface ApiService {
      * @Desc TODO(领取任务)
      * @author liaosf
      */
+    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
     @POST("api/v4/task/receive")
     Observable<BaseDataResponse<TaskRewardReceiveEntity>> TaskRewardReceive(@Query("slug") String key);
 
@@ -289,6 +304,7 @@ public interface ApiService {
      * @parame []
      * @Date 2021/8/10
      */
+    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
     @GET("api/v4/task/list")
     Observable<BaseDataResponse<List<TaskConfigItemEntity>>> getTaskListConfig();
 
@@ -299,6 +315,7 @@ public interface ApiService {
      * @parame []
      * @Date 2021/8/7
      */
+    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
     @GET("api/v4/task")
     Observable<BaseDataResponse<TaskConfigEntity>> getTaskConfig();
 
@@ -309,6 +326,7 @@ public interface ApiService {
      * @parame []
      * @Date 2021/8/6
      */
+    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
     @POST("api/v4/signIn")
     Observable<BaseDataResponse<EjectSignInEntity>> reportEjectSignIn();
 
@@ -319,6 +337,7 @@ public interface ApiService {
      * @parame []
      * @Date 2021/8/6
      */
+    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
     @GET("api/v2/signIn/eject")
     Observable<BaseDataResponse<EjectEntity>> getEjectconfig();
 
