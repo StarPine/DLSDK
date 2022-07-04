@@ -35,37 +35,63 @@ public class TokenInterceptor implements Interceptor {
         Request.Builder builder = chain.request()
                 .newBuilder();
         Request request = builder.build();
-        String path = chain.request().url().url().getPath();
-        boolean upUrlFlag = false;
+        int upUrlFlag = -1;
+        ApiConfigManagerEntity apiServerUrl = localDataSource.readApiConfigManagerEntity();
         if(request!=null){
             Headers headers = request.headers();
             if(headers!=null){
                 //不需要登录token效验
-                if(ObjectUtils.isNotEmpty(headers.get(RetrofitHeadersConfig.DEFAULT_API_INIT_URL_KEY))){
+                if(!ObjectUtils.isEmpty(headers.get(RetrofitHeadersConfig.DEFAULT_API_INIT_URL_KEY))&& upUrlFlag == -1){
                     //初始化API
-                    upUrlFlag = true;
+                    upUrlFlag = 0;
                     builder.removeHeader(RetrofitHeadersConfig.DEFAULT_API_INIT_URL_KEY);
                     builder.removeHeader("Authorization");
                     //builder.url(apiServerUrl+path);
-                }else if(ObjectUtils.isEmpty(headers.get(RetrofitHeadersConfig.NO_TOKEN_CHECK_KEY))){
+                }
+                if(!ObjectUtils.isEmpty(headers.get(RetrofitHeadersConfig.NO_TOKEN_CHECK_KEY)) && upUrlFlag == -1){
+                    //登录接口api 不加token
+                    upUrlFlag = 3;
+                }
+                if(!ObjectUtils.isEmpty(headers.get(RetrofitHeadersConfig.TASK_CENTER_URL_KEY))){
+                    upUrlFlag = 2;
+                }
+                if(headers.get(RetrofitHeadersConfig.DEFAULT_API_INIT_URL_KEY)==null && headers.get(RetrofitHeadersConfig.NO_TOKEN_CHECK_KEY)==null && headers.get(RetrofitHeadersConfig.TASK_CENTER_URL_KEY)==null){
+                    upUrlFlag = 1;
+                }
+                if(upUrlFlag == 1 || upUrlFlag == 2){
                     if (localDataSource != null && localDataSource.readLoginInfo() != null && !StringUtils.isEmpty(localDataSource.readLoginInfo().getToken())) {
                         String token = localDataSource.readLoginInfo().getToken();
-
                         builder.removeHeader(RetrofitHeadersConfig.NO_TOKEN_CHECK_KEY);
                         builder.addHeader("Authorization", "Bearer " + token);
                     }
                 }
             }
         }
-        ApiConfigManagerEntity apiServerUrl = localDataSource.readApiConfigManagerEntity();
-        if(apiServerUrl!=null && !upUrlFlag){
+        if(apiServerUrl!=null){
             try {
-                URI customUrl = new URI(apiServerUrl.getPlayFunApiUrl());
-                HttpUrl newUrl = request.url().newBuilder()
-                        .host(customUrl.getHost())
-                        .scheme(customUrl.getScheme())
-                        .build();
-                        builder.url(newUrl);
+                URI customUrl = null;
+                switch (upUrlFlag){
+                    case -1:
+                    case 1:
+                    case 3:
+                        //
+                        customUrl = new URI(apiServerUrl.getPlayFunApiUrl());
+                        break;
+                    case 0:
+                        //不做任何处理
+                        break;
+                    case 2:
+                        //任务中心+福袋页面
+                        customUrl = new URI(apiServerUrl.getPlayChatApiUrl());
+                        break;
+                }
+                if(customUrl!=null){
+                    HttpUrl newUrl = request.url().newBuilder()
+                            .host(customUrl.getHost())
+                            .scheme(customUrl.getScheme())
+                            .build();
+                    builder.url(newUrl);
+                }
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }
