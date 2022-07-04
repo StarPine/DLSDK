@@ -31,6 +31,7 @@ public class C2CChatPresenter extends ChatPresenter {
     public C2CChatPresenter() {
         super();
         TUIChatLog.i(TAG, "C2CChatPresenter Init");
+        initListener();
     }
 
     public void initListener() {
