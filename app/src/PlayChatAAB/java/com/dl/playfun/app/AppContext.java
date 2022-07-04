@@ -159,7 +159,7 @@ public class AppContext extends Application {
         super.onCreate();
         //注册美颜渲染
         FURenderer.getInstance().setup(this);
-
+        AliYunMqttClient.getInstance().initClient(this);
         try {
             File cacheDir = new File(this.getApplicationContext().getExternalCacheDir().getPath(), "https");
             HttpResponseCache.install(cacheDir, 1024 * 1024 * 128);

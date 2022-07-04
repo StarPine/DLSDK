@@ -48,6 +48,7 @@ import com.dl.playfun.kl.view.VideoPresetActivity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.mine.likelist.LikeListViewModel;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
+import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.FileUploadUtils;
 import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.StringUtil;
@@ -66,6 +67,7 @@ import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -473,7 +475,12 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
     }
 
     public void sendUserGift(Dialog dialog, GiftBagEntity.giftEntity giftEntity, Integer to_user_id, Integer amount) {
-        model.sendUserGift(giftEntity.getId(), to_user_id, amount, 1)
+        HashMap<String, Integer> map = new HashMap<>();
+        map.put("gift_id", giftEntity.getId());
+        map.put("to_user_id", to_user_id);
+        map.put("type", 1);
+        map.put("amount", amount);
+        model.sendUserGift(ApiUitl.getBody(GsonUtils.toJson(map)))
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())

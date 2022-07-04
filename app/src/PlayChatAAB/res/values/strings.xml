@@ -10,6 +10,9 @@
     <string name="terms_of_service">服務條款</string>
     <string name="privacy_policy">隱私政策</string>
     <string name="register_title_detail">未註冊手機號驗證後將自動登入</string>
+
+    <string name="register_error_hint">請選擇區號</string>
+
     <string name="mobile_hint">請輸入手機號碼</string>
     <string name="code_hint">請輸入收到的驗證碼</string>
     <string name="again_send">重新發送</string>

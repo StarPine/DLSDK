@@ -1,7 +1,9 @@
 package com.dl.playfun.ui.login;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,6 +72,8 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
 
     @Override
     public LoginViewModel initViewModel() {
+        TelephonyManager telephonyMngr = (TelephonyManager) mActivity.getSystemService(Context.TELEPHONY_SERVICE);
+        Log.e("当前国家区号",telephonyMngr.getSimCountryIso().toUpperCase()+"====="+telephonyMngr.toString());
         AppContext.instance().logEvent(AppsFlyerEvent.Login_screen);
         //faceBook登录管理
         loginManager = LoginManager.getInstance();

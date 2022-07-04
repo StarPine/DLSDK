@@ -93,6 +93,7 @@ import java.util.Map;
 
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
+import retrofit2.http.Body;
 
 /**
  * @author goldze
@@ -202,8 +203,8 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
-    public Observable<BaseResponse> sendUserGift(Integer gift_id, Integer to_user_id, Integer amount,Integer type) {
-        return apiService.sendUserGift(gift_id, to_user_id, amount,type);
+    public Observable<BaseResponse> sendUserGift(RequestBody requestBody) {
+        return apiService.sendUserGift(requestBody);
     }
 
     @Override

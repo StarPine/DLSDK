@@ -404,9 +404,9 @@ public interface ApiService {
      * @parame [gift_id, to_user_id, amount]
      * @Date 2021/12/9
      */
-    @FormUrlEncoded
-    @POST("api/gift/send")
-    Observable<BaseResponse> sendUserGift(@Field("gift_id") Integer gift_id, @Field("to_user_id") Integer to_user_id, @Field("amount") Integer amount, @Field("type") Integer type);
+    @Headers("Content-Type: application/json")
+    @POST("/calling/gift/sendGift")
+    Observable<BaseResponse> sendUserGift(@Body RequestBody requestBody);
 
     /**
      * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse < com.dl.playfun.entity.GiftBagEntity>>

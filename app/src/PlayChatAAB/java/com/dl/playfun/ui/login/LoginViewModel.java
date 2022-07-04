@@ -46,7 +46,7 @@ import me.goldze.mvvmhabit.utils.ToastUtils;
 public class LoginViewModel extends BaseViewModel<AppRepository>  {
 
     public ObservableField<String> mobile = new ObservableField<>();
-    public ObservableField<String> password = new ObservableField<>();
+    public ObservableField<String> areaCode = new ObservableField<>();
     public ObservableField<String> code = new ObservableField<>();
     public ObservableField<Boolean> agree = new ObservableField<>(true);
     /**
@@ -84,46 +84,13 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
     }
 
     /**
-     * l
-     * 网络模拟一个登陆操作
-     **/
-    private void mobileLogin() {
-        if (TextUtils.isEmpty(mobile.get())) {
-            ToastUtils.showShort(StringUtils.getString(R.string.mobile_hint));
-            return;
-        }
-        if (TextUtils.isEmpty(password.get())) {
-            ToastUtils.showShort(R.string.playfun_mine_setting_account_pwd_hint1);
-            return;
-        } else if (password.get().length() < 8) {
-            ToastUtils.showShort(R.string.playfun_please_input_password_min_len);
-            return;
-        }
-
-        model.login(mobile.get(), password.get())
-                .doOnSubscribe(this)
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseDataResponse<TokenEntity>>() {
-                    @Override
-                    public void onSuccess(BaseDataResponse<TokenEntity> response) {
-                        dismissHUD();
-                        model.saveLoginInfo(response.getData());
-                        loadProfile();
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        dismissHUD();
-                    }
-                });
-    }
-
-    /**
      * 手机号码直接登录
      */
     private void v2Login() {
+//        if(TextUtils.isEmpty(areaCode.get())){
+//            ToastUtils.showShort(R.string.register_error_hint);
+//            return;
+//        }
         if (TextUtils.isEmpty(mobile.get())) {
             ToastUtils.showShort(StringUtils.getString(R.string.mobile_hint));
             return;
@@ -166,47 +133,6 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
             return;
         }
         start(RegisterFragment.class.getCanonicalName());
-    }
-
-    private void userRegister() {
-        if (TextUtils.isEmpty(mobile.get())) {
-            ToastUtils.showShort(StringUtils.getString(R.string.mobile_hint));
-            return;
-        }
-        if (TextUtils.isEmpty(code.get())) {
-            ToastUtils.showShort(R.string.playfun_please_input_code);
-            return;
-        }
-        if (TextUtils.isEmpty(password.get())) {
-            ToastUtils.showShort(R.string.playfun_mine_setting_account_pwd_hint1);
-            return;
-        } else if (password.get().length() < 8) {
-            ToastUtils.showShort(R.string.playfun_please_input_password_min_len);
-            return;
-        }
-        if (!agree.get()) {
-            ToastUtils.showShort(R.string.playfun_warn_agree_terms);
-            return;
-        }
-        model.register(mobile.get(), password.get(), code.get())
-                .doOnSubscribe(this)
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseDataResponse<TokenEntity>>() {
-                    @Override
-                    public void onSuccess(BaseDataResponse<TokenEntity> response) {
-                        dismissHUD();
-                        model.saveLoginInfo(response.getData());
-                        model.saveUserData(new UserDataEntity());
-                        start(PerfectProfileFragment.class.getCanonicalName());
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        dismissHUD();
-                    }
-                });
     }
 
 
@@ -309,6 +235,10 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
     }
 
     private void reqVerifyCode() {
+//        if(TextUtils.isEmpty(areaCode.get())){
+//            ToastUtils.showShort(R.string.register_error_hint);
+//            return;
+//        }
         if (TextUtils.isEmpty(mobile.get())) {
             ToastUtils.showShort(R.string.mobile_hint);
             return;

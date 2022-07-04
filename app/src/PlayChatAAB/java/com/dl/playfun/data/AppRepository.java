@@ -217,8 +217,8 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
-    public Observable<BaseResponse> sendUserGift(Integer gift_id, Integer to_user_id, Integer amount,Integer type) {
-        return mHttpDataSource.sendUserGift(gift_id, to_user_id, amount,type);
+    public Observable<BaseResponse> sendUserGift(RequestBody requestBody) {
+        return mHttpDataSource.sendUserGift(requestBody);
     }
 
     @Override
