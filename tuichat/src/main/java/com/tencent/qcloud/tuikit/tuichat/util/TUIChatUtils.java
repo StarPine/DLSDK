@@ -19,6 +19,8 @@ import static com.tencent.qcloud.tuicore.TUIConstants.TUIConversation.CONVERSATI
 
 public class TUIChatUtils {
 
+    public static final String IMAGE_BASE_URL = "https://img.joy-mask.com/";
+
     public static <T> void callbackOnError(IUIKitCallback<T> callBack, String module, int errCode, String desc) {
         if (callBack != null) {
             callBack.onError(module, errCode, ErrorMessageConverter.convertIMError(errCode, desc));
@@ -131,6 +133,9 @@ public class TUIChatUtils {
 
     public static boolean isJSON2(String str) {
         boolean result = false;
+        if (str.isEmpty()){
+            return result;
+        }
         try {
             new Gson().fromJson(str, Map.class);
             result = true;
@@ -141,25 +146,38 @@ public class TUIChatUtils {
 
     }
 
-    public static String json2ConversationMsg(String json) {
-        String msg = "";
+    public static String json2Massage(String json, String key) {
+        String msgType = null;
         Map<String, Object> map_data = new Gson().fromJson(json, Map.class);
-        if (map_data != null && map_data.containsKey("type")) {
-            String type = (String) map_data.get("type");
-            switch (type) {
-                case TUIChatConstants.CoustomMassageType.MESSAGE_GIFT:
-                    msg = "[礼物]";
-                    break;
-                case TUIChatConstants.CoustomMassageType.MESSAGE_TAG:
-                    msg = "[搭讪]";
-                    break;
-                case TUIChatConstants.CoustomMassageType.MESSAGE_COUNTDOWN:
-                    msg = "[余额不足]}";
-                    break;
-
-            }
+        if (map_data != null && map_data.containsKey(key)) {
+             msgType = (String) map_data.get(key);
         }
-        return msg;
+        return msgType;
+    }
+
+    public static String massageType2Extra(String type) {
+        String extra = "";
+        switch (type) {
+            case TUIChatConstants.CoustomMassageType.MESSAGE_GIFT:
+                extra = "[礼物]";
+                break;
+            case TUIChatConstants.CoustomMassageType.MESSAGE_TAG:
+                extra = "[搭讪]";
+                break;
+            case TUIChatConstants.CoustomMassageType.MESSAGE_COUNTDOWN:
+                extra = "[余额不足]}";
+                break;
+
+        }
+        return extra;
+    }
+
+    public static String getFullImageUrl(String imgPath) {
+        if (imgPath == null) {
+            return "";
+        } else {
+            return IMAGE_BASE_URL + imgPath;
+        }
     }
 
 }

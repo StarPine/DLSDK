@@ -12,6 +12,7 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 public class CustomImageMessage {
     public int version = TUIChatConstants.JSON_VERSION_UNKNOWN;
     public String businessID = TUIChatConstants.BUSINESS_ID_CUSTOM_IMAGE;//自定义消息id必须定义
+    int type = 2001;
     private String imgPath ; //图片地址
     private int imgWidth;
     private int imgHeight;

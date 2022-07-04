@@ -679,10 +679,9 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                             //用IM框架默认的图片类型
 //                            TUIMessageBean info = ChatMessageBuilder.buildImageMessage(Uri.fromFile(new File(filePath)));
                             //用自定义图片类型
-                            String fullImageUrl = StringUtil.getFullImageUrl(fileKey);
                             CustomImageMessage customImageMessage = new CustomImageMessage();
                             customImageMessage.version = TUIChatConstants.version;
-                            customImageMessage.setImgPath(fullImageUrl);
+                            customImageMessage.setImgPath(fileKey);
                             customImageMessage.setImgWidth(localMedia.getWidth());
                             customImageMessage.setImgHeight(localMedia.getHeight());
                             String data = GsonUtils.toJson(customImageMessage);

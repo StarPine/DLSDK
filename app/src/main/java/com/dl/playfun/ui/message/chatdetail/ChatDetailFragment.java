@@ -35,7 +35,6 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.data.source.local.LocalDataSourceImpl;
 import com.dl.playfun.databinding.FragmentChatDetailBinding;
-import com.dl.playfun.entity.AlbumPhotoEntity;
 import com.dl.playfun.entity.CoinExchangePriceInfo;
 import com.dl.playfun.entity.EvaluateItemEntity;
 import com.dl.playfun.entity.GiftBagEntity;
@@ -52,14 +51,11 @@ import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFr
 import com.dl.playfun.ui.certification.certificationmale.CertificationMaleFragment;
 import com.dl.playfun.ui.dialog.GiftBagDialog;
 import com.dl.playfun.ui.message.chatdetail.notepad.NotepadActivity;
-import com.dl.playfun.ui.message.coinredpackagedetail.CoinRedPackageDetailFragment;
 import com.dl.playfun.ui.message.photoreview.PhotoReviewFragment;
 import com.dl.playfun.ui.message.sendcoinredpackage.SendCoinRedPackageFragment;
 import com.dl.playfun.ui.mine.myphotoalbum.MyPhotoAlbumFragment;
 import com.dl.playfun.ui.mine.wallet.girl.TwDollarMoneyFragment;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
-import com.dl.playfun.ui.userdetail.locationmaps.LocationMapsFragment;
-import com.dl.playfun.ui.userdetail.photobrowse.PhotoBrowseFragment;
 import com.dl.playfun.ui.userdetail.report.ReportUserFragment;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.AutoSizeUtils;
@@ -754,8 +750,8 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             @Override
             public void onImageClick(TUIMessageBean messageInfo) {
                 CustomImageMessageBean customImageMessageBean = (CustomImageMessageBean) messageInfo;
-                if (customImageMessageBean != null && customImageMessageBean.getDataPath() != null) {
-                    MessageDetailDialog.getImageDialog(mActivity, customImageMessageBean.getDataPath()).show();
+                if (customImageMessageBean != null && customImageMessageBean.getImgPath() != null) {
+                    MessageDetailDialog.getImageDialog(mActivity, customImageMessageBean.getImgPath()).show();
                 }
             }
         });

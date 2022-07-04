@@ -6,18 +6,15 @@ import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.CustomImageMessage;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.CustomLinkReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.ImageReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TUIReplyQuoteBean;
-
-import java.util.HashMap;
 
 /**
  * 自定义图片消息
  */
 public class CustomImageMessageBean extends TUIMessageBean {
 
-    private String dataPath;
+    private String imgPath;
     private int imgWidth;
     private int imgHeight;
 
@@ -36,11 +33,11 @@ public class CustomImageMessageBean extends TUIMessageBean {
 
     @Override
     public void onProcessMessage(V2TIMMessage v2TIMMessage) {
-        dataPath = "";
+        imgPath = "";
         String data = new String(v2TIMMessage.getCustomElem().getData());
         try {
             CustomImageMessage customImageMessage = new Gson().fromJson(data, CustomImageMessage.class);
-            dataPath = customImageMessage.getImgPath();
+            imgPath = customImageMessage.getImgPath();
             imgWidth = customImageMessage.getImgWidth();
             imgHeight = customImageMessage.getImgHeight();
 
@@ -50,8 +47,8 @@ public class CustomImageMessageBean extends TUIMessageBean {
         setExtra(TUIChatService.getAppContext().getString(R.string.picture_extra));
     }
 
-    public String getDataPath() {
-        return dataPath;
+    public String getImgPath() {
+        return imgPath;
     }
 
     @Override

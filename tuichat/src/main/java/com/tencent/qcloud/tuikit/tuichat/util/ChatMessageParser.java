@@ -248,11 +248,19 @@ public class ChatMessageParser {
         }
         String businessId = null;
         Object businessIdObj = null;
+
         if (customJsonMap != null) {
             businessIdObj = customJsonMap.get(TUIConstants.Message.CUSTOM_BUSINESS_ID_KEY);
         }
         if (businessIdObj instanceof String) {
             businessId = (String) businessIdObj;
+        }
+        double type = 0d;
+        if (customJsonMap != null) {
+            type = (Double) customJsonMap.get("type");
+        }
+        if (type == 2001){
+            businessId = TUIChatConstants.BUSINESS_ID_CUSTOM_IMAGE;
         }
         return businessId;
     }
