@@ -154,5 +154,7 @@
     <string name="server_exception">伺服器异常</string>
     <string name="radio_daily_atendance_day_text">签到成功，积分+10</string>
 
+    <string name="playchat_choose_area_title">地區</string>
+
 
 </resources>

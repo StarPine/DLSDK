@@ -171,11 +171,6 @@ public class RegisterFragment extends BaseToolbarFragment<FragmentRegisterBindin
         try {
             GoogleSignInAccount signInAccount = googleData.getResult(ApiException.class);
             if (signInAccount != null) {
-                String str = signInAccount.getEmail() + "\n"
-                        + signInAccount.getId() + "\n" +
-                        signInAccount.getAccount().name + "\n" +
-                        signInAccount.getDisplayName() + "\n" +
-                        signInAccount.getGivenName() + "\n";
                 viewModel.authLogin(signInAccount.getId(), "google", null, null, null, null);
                 AppContext.instance().logEvent(AppsFlyerEvent.LOG_IN_WITH_GOOGLE);
             } else {

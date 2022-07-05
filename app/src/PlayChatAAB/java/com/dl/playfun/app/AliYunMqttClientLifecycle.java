@@ -1,7 +1,16 @@
 package com.dl.playfun.app;
 
+import android.app.Application;
 import android.content.Context;
 import android.util.Log;
+
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.OnLifecycleEvent;
+
+import com.android.billingclient.api.Purchase;
+import com.blankj.utilcode.util.GsonUtils;
+import com.dl.playfun.entity.MqBroadcastGiftEntity;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -11,40 +20,41 @@ import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.eclipse.paho.client.mqttv3.internal.wire.MqttWireMessage;
 
 import java.math.BigInteger;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+
+import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
+import me.goldze.mvvmhabit.utils.ToastUtils;
 
 /**
  * Author: 彭石林
  * Time: 2022/7/4 17:51
  * Description: This is AliYunMqttClient
  */
-public class AliYunMqttClient {
+public class AliYunMqttClientLifecycle implements LifecycleObserver {
     public final String TAG = "MQTT";
     private MqttAndroidClient mqttAndroidClient;
     public int MQTT_ConnectionTimeout = 10;             // 设置超时时间，单位：秒
     public int KeepAliveIntervalTime = 20;              // 设置心跳包发送间隔，单位：秒
     public boolean CleanSession = true;                 // 设置是否清除缓存
-
-    /* 设备三元组信息 */
-    final private String PRODUCTKEY = "a11xsrWmW14";
-    final private String DEVICENAME = "paho_android";
-    final private String DEVICESECRET = "tLMT9QWD36U2SArglGqcHCDK9rK9nOrA";
+    //使用实列
+    /*   在 act or fragment中注入声明周期管理
+     *   AliYunMqttClientLifecycle aliYunMqttClientLifecycle = ((MyContext) getApplication()).getBillingClientLifecycle();
+     *   getLifecycle().addObserver(aliYunMqttClientLifecycle);
+    */
+    //礼物广播回传
+    public SingleLiveEvent<Objects> broadcastGiftEvent = new SingleLiveEvent<>();
 
     /* 自动Topic, 用于上报消息 */
-    final private String PUB_TOPIC = "/" + PRODUCTKEY + "/" + DEVICENAME + "/user/update";
+    final private String PUB_TOPIC = "test/broadcast";
     /* 自动Topic, 用于接受消息 */
-    final private String SUB_TOPIC = "/" + PRODUCTKEY + "/" + DEVICENAME + "/user/get";
-
-    /* 阿里云Mqtt服务器域名 */
-    final String host = "tcp://" + PRODUCTKEY + ".iot-as-mqtt.cn-shanghai.aliyuncs.com:443";
-    private String clientId;
-    private String userName;
-    private String passWord;
+    final private String SUB_TOPIC = "test/broadcast";
 
 //    mqtt公网接入点：mqtt-cn-i7m2rnxmn06.mqtt.aliyuncs.com
 //    实例ID：mqtt-cn-i7m2rnxmn06
@@ -55,30 +65,65 @@ public class AliYunMqttClient {
 //    测试环境送礼广播Topic：test/broadcast/sendGift
 //    生产环境送礼广播Topic：prod/broadcast/sendGift
 
-    private static AliYunMqttClient  INSTANCE = null;
+    private static volatile AliYunMqttClientLifecycle INSTANCE = null;
 
-    public static AliYunMqttClient getInstance(){
+    private Application appContext;
+
+    private AliYunMqttClientLifecycle(Application app) {
+        this.appContext = app;
+    }
+
+    public static AliYunMqttClientLifecycle getInstance(Application context){
         if(INSTANCE==null){
-            synchronized (AliYunMqttClient.class){
+            synchronized (AliYunMqttClientLifecycle.class){
                 if(INSTANCE == null){
-                    INSTANCE =  new AliYunMqttClient();
+                    INSTANCE =  new AliYunMqttClientLifecycle(context);
                 }
             }
         }
         return INSTANCE;
     }
 
-    public void initClient(Context context) {
+    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
+    public void create() {
+
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    public void destroy() {
+        Log.d(TAG, "ON_DESTROY");
+        clientClose();
+    }
+
+    public void clientClose(){
+        if(mqttAndroidClient!=null){
+            if(mqttAndroidClient.isConnected()){
+                try {
+                    mqttAndroidClient.unsubscribe(SUB_TOPIC);
+                } catch (MqttException e) {
+                    e.printStackTrace();
+                }
+                mqttAndroidClient.close();
+                mqttAndroidClient.unregisterResources();
+                mqttAndroidClient = null;
+            }
+        }
+    }
+
+    public void initClient() {
 
         /* 创建MqttConnectOptions对象并配置username和password */
         MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
+        //断开后，是否自动连接
+        mqttConnectOptions.setAutomaticReconnect(true);
         mqttConnectOptions.setConnectionTimeout(MQTT_ConnectionTimeout);
         mqttConnectOptions.setKeepAliveInterval(KeepAliveIntervalTime);
         mqttConnectOptions.setUserName("Signature|LTAI4G25QqrdXwYKMi9aGLYK|mqtt-cn-i7m2rnxmn06");
-        mqttConnectOptions.setPassword("+YwOxWTZHIz+uUsY9KMzUMzvh30=".toCharArray());
+        mqttConnectOptions.setPassword("8BNVWyPxuS9OmPFePLrXylMjQC4=".toCharArray());
         mqttConnectOptions.setCleanSession(true);
+        mqttConnectOptions.setMqttVersion(3);
         /* 创建MqttAndroidClient对象, 并设置回调接口 */
-        mqttAndroidClient = new MqttAndroidClient(context, "ssl://mqtt-cn-i7m2rnxmn06.mqtt.aliyuncs.com:8883", "GID_TEST@@@2541");
+        mqttAndroidClient = new MqttAndroidClient(appContext, "tcp://mqtt-cn-i7m2rnxmn06.mqtt.aliyuncs.com:1883", "GID_TEST@@@2541");
         mqttAndroidClient.setCallback(new MqttCallback() {
             @Override
             public void connectionLost(Throwable cause) {
@@ -86,8 +131,30 @@ public class AliYunMqttClient {
             }
 
             @Override
-            public void messageArrived(String topic, MqttMessage message) throws Exception {
+            public void messageArrived(String topic, MqttMessage message) {
                 Log.i(TAG, "topic: " + topic + ", msg: " + new String(message.getPayload()));
+                try {
+                    if(message!=null && message.getPayload()!=null ){
+                        String msgBody = new String(message.getPayload());
+                        Map<String,Object> mqttMessageEntity = GsonUtils.fromJson(msgBody,Map.class);
+                        if(mqttMessageEntity!=null && mqttMessageEntity.get("messageType")!=null){
+                            String messageType = (String) mqttMessageEntity.get("messageType");
+                            MqttEventEnum eventEnum = MqttEventEnum.valueOf(messageType);
+                            switch(eventEnum){
+                                case sendGift://送礼广播
+                                    MqBroadcastGiftEntity mqBroadcastGiftEntity = GsonUtils.fromJson(GsonUtils.toJson(mqttMessageEntity.get("content")), MqBroadcastGiftEntity.class);
+                                    //broadcastGiftEvent.setValue();
+                                    break;
+                                default:
+                                    Log.e(TAG,"当前类型转换不对1："+messageType+"=========="+MqttEventEnum.valueOf(messageType));
+                                    break;
+                            }
+                        }
+                    }
+                }catch (Exception e){
+                    Log.e(TAG,"当前捕获异常信息："+e.getMessage());
+                }
+
             }
 
             @Override
@@ -129,12 +196,13 @@ public class AliYunMqttClient {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
                     Log.i(TAG, "subscribed succeed");
-                    MqttWireMessage mqttWireMessage = asyncActionToken.getResponse();
+                    //MqttWireMessage mqttWireMessage = asyncActionToken.getResponse();
                 }
 
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                     Log.i(TAG, "subscribed failed");
+                    Log.e(TAG,"订阅异常原因:"+exception.getMessage());
                 }
             });
 
@@ -149,7 +217,7 @@ public class AliYunMqttClient {
      */
     public void publishMessage(String payload) {
         try {
-            if (mqttAndroidClient.isConnected() == false) {
+            if (!mqttAndroidClient.isConnected()) {
                 mqttAndroidClient.connect();
             }
 
@@ -173,55 +241,4 @@ public class AliYunMqttClient {
         }
     }
 
-    /**
-     * MQTT建连选项类，输入设备三元组productKey, deviceName和deviceSecret, 生成Mqtt建连参数clientId，username和password.
-     */
-    class AiotMqttOption {
-        private String username = "";
-        private String password = "";
-        private String clientId = "";
-
-        public String getUsername() { return this.username;}
-        public String getPassword() { return this.password;}
-        public String getClientId() { return this.clientId;}
-
-        /**
-         * 获取Mqtt建连选项对象
-         * @param productKey 产品秘钥
-         * @param deviceName 设备名称
-         * @param deviceSecret 设备机密
-         * @return AiotMqttOption对象或者NULL
-         */
-        public AiotMqttOption getMqttOption(String productKey, String deviceName, String deviceSecret) {
-            if (productKey == null || deviceName == null || deviceSecret == null) {
-                return null;
-            }
-
-            try {
-                String timestamp = Long.toString(System.currentTimeMillis());
-
-                // clientId
-                this.clientId = productKey + "." + deviceName + "|timestamp=" + timestamp +
-                        ",_v=paho-android-1.0.0,securemode=2,signmethod=hmacsha256|";
-
-                // userName
-                this.username = deviceName + "&" + productKey;
-
-                // password
-                String macSrc = "clientId" + productKey + "." + deviceName + "deviceName" +
-                        deviceName + "productKey" + productKey + "timestamp" + timestamp;
-                String algorithm = "HmacSHA256";
-                Mac mac = Mac.getInstance(algorithm);
-                SecretKeySpec secretKeySpec = new SecretKeySpec(deviceSecret.getBytes(), algorithm);
-                mac.init(secretKeySpec);
-                byte[] macRes = mac.doFinal(macSrc.getBytes());
-                password = String.format("%064x", new BigInteger(1, macRes));
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-
-            return this;
-        }
-    }
 }

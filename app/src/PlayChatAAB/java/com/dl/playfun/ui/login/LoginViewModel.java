@@ -22,6 +22,7 @@ import com.dl.playfun.entity.TokenEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.ThirdPushTokenMgr;
+import com.dl.playfun.ui.login.choose.ChooseAreaFragment;
 import com.dl.playfun.ui.login.register.RegisterFragment;
 import com.dl.playfun.ui.main.MainFragment;
 import com.dl.playfun.ui.mine.profile.PerfectProfileFragment;
@@ -49,6 +50,10 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
     public ObservableField<String> areaCode = new ObservableField<>();
     public ObservableField<String> code = new ObservableField<>();
     public ObservableField<Boolean> agree = new ObservableField<>(true);
+    //选择地区
+    public BindingCommand ChooseAreaView = new BindingCommand(()->{
+        start(ChooseAreaFragment.class.getCanonicalName());
+    });
     /**
      * 注册按钮的点击事件
      */

@@ -159,7 +159,6 @@ public class AppContext extends Application {
         super.onCreate();
         //注册美颜渲染
         FURenderer.getInstance().setup(this);
-        AliYunMqttClient.getInstance().initClient(this);
         try {
             File cacheDir = new File(this.getApplicationContext().getExternalCacheDir().getPath(), "https");
             HttpResponseCache.install(cacheDir, 1024 * 1024 * 128);
@@ -594,6 +593,17 @@ public class AppContext extends Application {
                     }
 
                 });
+    }
+
+    /**
+    * @Desc TODO(获取阿里云mqtt实列)
+    * @author 彭石林
+    * @parame []
+    * @return com.dl.playfun.app.AliYunMqttClientLifecycle
+    * @Date 2022/7/5
+    */
+    public AliYunMqttClientLifecycle getBillingClientLifecycle() {
+        return AliYunMqttClientLifecycle.getInstance(this);
     }
 
 

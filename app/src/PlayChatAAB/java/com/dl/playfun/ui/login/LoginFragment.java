@@ -1,5 +1,6 @@
 package com.dl.playfun.ui.login;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,12 +9,22 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.aliyun.svideo.crop.CropMediaActivity;
+import com.aliyun.svideosdk.common.struct.common.AliyunSnapVideoParam;
+import com.aliyun.svideosdk.common.struct.common.VideoDisplayMode;
+import com.aliyun.svideosdk.common.struct.common.VideoQuality;
+import com.aliyun.svideosdk.common.struct.encoder.VideoCodecs;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
+import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
@@ -35,6 +46,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.luck.picture.lib.permissions.PermissionChecker;
 
 import org.json.JSONObject;
 
@@ -48,7 +60,6 @@ import me.goldze.mvvmhabit.utils.ToastUtils;
  */
 public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewModel>  {
 
-    public Integer Google_Code = 101;
     CallbackManager callbackManager;
     GoogleSignInOptions gso;
     GoogleSignInClient googleSignInClient;
@@ -72,8 +83,6 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
 
     @Override
     public LoginViewModel initViewModel() {
-        TelephonyManager telephonyMngr = (TelephonyManager) mActivity.getSystemService(Context.TELEPHONY_SERVICE);
-        Log.e("当前国家区号",telephonyMngr.getSimCountryIso().toUpperCase()+"====="+telephonyMngr.toString());
         AppContext.instance().logEvent(AppsFlyerEvent.Login_screen);
         //faceBook登录管理
         loginManager = LoginManager.getInstance();
@@ -116,8 +125,6 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
                     @Override
                     public void onSuccess(LoginResult loginResult) {
                         // App code
-                        String userId = loginResult.getAccessToken().getUserId();
-                        String accessToken = loginResult.getAccessToken().getToken();
                         GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                             @Override
                             public void onCompleted(@Nullable JSONObject jsonObject, @Nullable GraphResponse graphResponse) {
@@ -159,7 +166,7 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
                     return;
                 }
                 Intent intent = googleSignInClient.getSignInIntent();
-                startActivityForResult(intent, Google_Code);
+                toGoogleLoginIntent.launch(intent);
             }
         });
 
@@ -170,11 +177,6 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
         super.onActivityResult(requestCode, resultCode, data);
         if (callbackManager != null) {
             callbackManager.onActivityResult(requestCode, resultCode, data);
-        }
-
-        if (requestCode == Google_Code) {
-            Task<GoogleSignInAccount> signedInAccountFromIntent = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleResult(signedInAccountFromIntent);
         }
     }
 
@@ -259,6 +261,14 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
         }
 
     }
+
+    ActivityResultLauncher<Intent> toGoogleLoginIntent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+
+        if (result.getData() != null) {
+            Task<GoogleSignInAccount> signedInAccountFromIntent = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
+            handleResult(signedInAccountFromIntent);
+        }
+    });
 
     @Override
     public void onDestroy() {
