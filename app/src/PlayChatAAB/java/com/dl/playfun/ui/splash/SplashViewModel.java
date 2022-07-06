@@ -120,7 +120,6 @@ public class SplashViewModel extends BaseViewModel<AppRepository> {
         AppContext appContext = ((AppContext)getApplication());
         appContext.initIM();
         appContext.initActivityLifecycleCallbacks();
-        appContext.getBillingClientLifecycle().initClient();
     }
 
     /**

@@ -49,7 +49,7 @@ public class AliYunMqttClientLifecycle implements LifecycleObserver {
      *   getLifecycle().addObserver(aliYunMqttClientLifecycle);
     */
     //礼物广播回传
-    public SingleLiveEvent<Objects> broadcastGiftEvent = new SingleLiveEvent<>();
+    public SingleLiveEvent<MqBroadcastGiftEntity> broadcastGiftEvent = new SingleLiveEvent<>();
 
     /* 自动Topic, 用于上报消息 */
     final private String PUB_TOPIC = "test/broadcast";
@@ -86,7 +86,7 @@ public class AliYunMqttClientLifecycle implements LifecycleObserver {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     public void create() {
-
+        initClient();
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
@@ -111,7 +111,11 @@ public class AliYunMqttClientLifecycle implements LifecycleObserver {
     }
 
     public void initClient() {
-
+        if(mqttAndroidClient!=null){
+            if(mqttAndroidClient.isConnected()){
+                return;
+            }
+        }
         /* 创建MqttConnectOptions对象并配置username和password */
         MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
         //断开后，是否自动连接
@@ -134,20 +138,19 @@ public class AliYunMqttClientLifecycle implements LifecycleObserver {
             public void messageArrived(String topic, MqttMessage message) {
                 Log.i(TAG, "topic: " + topic + ", msg: " + new String(message.getPayload()));
                 try {
-                    if(message!=null && message.getPayload()!=null ){
+                    if(message.getPayload() != null){
                         String msgBody = new String(message.getPayload());
                         Map<String,Object> mqttMessageEntity = GsonUtils.fromJson(msgBody,Map.class);
                         if(mqttMessageEntity!=null && mqttMessageEntity.get("messageType")!=null){
                             String messageType = (String) mqttMessageEntity.get("messageType");
                             MqttEventEnum eventEnum = MqttEventEnum.valueOf(messageType);
-                            switch(eventEnum){
-                                case sendGift://送礼广播
-                                    MqBroadcastGiftEntity mqBroadcastGiftEntity = GsonUtils.fromJson(GsonUtils.toJson(mqttMessageEntity.get("content")), MqBroadcastGiftEntity.class);
-                                    //broadcastGiftEvent.setValue();
-                                    break;
-                                default:
-                                    Log.e(TAG,"当前类型转换不对1："+messageType+"=========="+MqttEventEnum.valueOf(messageType));
-                                    break;
+                            if (eventEnum == MqttEventEnum.sendGift) {//送礼广播
+                                MqBroadcastGiftEntity mqBroadcastGiftEntity = GsonUtils.fromJson(GsonUtils.toJson(mqttMessageEntity.get("content")), MqBroadcastGiftEntity.class);
+                                if (mqBroadcastGiftEntity != null) {
+                                    broadcastGiftEvent.setValue(mqBroadcastGiftEntity);
+                                }
+                            } else {
+                                Log.e(TAG, "当前类型转换不对1：" + messageType + "==========" + MqttEventEnum.valueOf(messageType));
                             }
                         }
                     }

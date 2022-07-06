@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,8 +18,11 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.aliyun.svideo.common.utils.ScreenUtils;
 import com.blankj.utilcode.util.StringUtils;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
+import com.dl.playfun.app.AliYunMqttClientLifecycle;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
@@ -26,6 +30,8 @@ import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.config.TbarCenterImgConfig;
 import com.dl.playfun.databinding.FragmentMainBinding;
 import com.dl.playfun.entity.GameCoinBuy;
+import com.dl.playfun.entity.MqBroadcastGiftEntity;
+import com.dl.playfun.entity.MqBroadcastGiftUserEntity;
 import com.dl.playfun.entity.VersionEntity;
 import com.dl.playfun.event.MainTabEvent;
 import com.dl.playfun.event.TaskListEvent;
@@ -39,7 +45,9 @@ import com.dl.playfun.ui.message.MessageMainFragment;
 import com.dl.playfun.ui.mine.MineFragment;
 import com.dl.playfun.ui.radio.radiohome.RadioFragment;
 import com.dl.playfun.ui.task.main.TaskMainFragment;
+import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.utils.ImmersionBarUtils;
+import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralPayDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.dl.playfun.widget.dialog.version.view.UpdateDialogView;
@@ -73,6 +81,8 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
 
     private static final long WAIT_TIME = 3000L;
     private long TOUCH_TIME = 0;
+
+    private AliYunMqttClientLifecycle aliYunMqttClientLifecycle;
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -113,14 +123,77 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
     public void initViewObservable() {
         super.initViewObservable();
         AppContext.instance().logEvent(AppsFlyerEvent.main_open);
-
+        aliYunMqttClientLifecycle.broadcastGiftEvent.observe(this, new Observer<MqBroadcastGiftEntity>() {
+            @Override
+            public void onChanged(MqBroadcastGiftEntity mqBroadcastGiftEntity) {
+                viewModel.publicScreenBannerGiftEntity.add(mqBroadcastGiftEntity);
+                viewModel.playBannerGift();
+            }
+        });
         //未付费弹窗
         viewModel.uc.notPaidDialog.observe(this,s -> {
 
         });
         //主页公屏礼物
-        viewModel.uc.giftBanner.observe(this,s -> {
+        viewModel.uc.giftBanner.observe(this,mqttMessageEntity -> {
+            MqBroadcastGiftUserEntity leftUser = mqttMessageEntity.getFromUser();
+            MqBroadcastGiftUserEntity rightUser = mqttMessageEntity.getToUser();
             View streamerView = View.inflate(MainFragment.this.getContext(), R.layout.fragment_main_gift_banner, null);
+            ImageView leftUserImg = streamerView.findViewById(R.id.left_user_img);
+            TextView leftUserName = streamerView.findViewById(R.id.left_user_name);
+            leftUserName.setText(leftUser.getNickname());
+            ImageView leftUserIcon = streamerView.findViewById(R.id.left_user_icon);
+            broadcastGiftImg(leftUser,leftUserIcon);
+
+            Glide.with(getContext())
+                    .asBitmap()
+                    .load(StringUtil.getFullImageUrl(leftUser.getAvatar()))
+                    .error(R.drawable.radio_program_list_content)
+                    .placeholder(R.drawable.radio_program_list_content)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(leftUserImg);
+            leftUserImg.setOnClickListener(v -> {
+                Bundle bundle = UserDetailFragment.getStartBundle(leftUser.getId());
+                viewModel.start(UserDetailFragment.class.getCanonicalName(), bundle);
+            });
+            ImageView rightUserImg = streamerView.findViewById(R.id.right_user_img);
+            TextView rightUserName = streamerView.findViewById(R.id.right_user_name);
+            ImageView rightUserIcon = streamerView.findViewById(R.id.right_user_icon);
+            rightUserName.setText(rightUser.getNickname());
+            Glide.with(getContext())
+                    .asBitmap()
+                    .load(StringUtil.getFullImageUrl(rightUser.getAvatar()))
+                    .error(R.drawable.radio_program_list_content)
+                    .placeholder(R.drawable.radio_program_list_content)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(rightUserImg);
+            rightUserImg.setOnClickListener(v -> {
+                Bundle bundle = UserDetailFragment.getStartBundle(rightUser.getId());
+                viewModel.start(UserDetailFragment.class.getCanonicalName(), bundle);
+            });
+            broadcastGiftImg(rightUser,rightUserIcon);
+
+            TextView giftTitle = streamerView.findViewById(R.id.gift_title);
+            giftTitle.setText(mqttMessageEntity.getGiftName());
+            ImageView giftNumImg = streamerView.findViewById(R.id.gift_count);
+            int account = mqttMessageEntity.getAmount();
+            if (account == 1) {
+                giftNumImg.setImageResource(R.drawable.img_gift_num1);
+            } else if (account == 10) {
+                giftNumImg.setImageResource(R.drawable.img_gift_num10);
+            } else if (account == 38) {
+                giftNumImg.setImageResource(R.drawable.img_gift_num38);
+            } else if (account == 66) {
+                giftNumImg.setImageResource(R.drawable.img_gift_num66);
+            } else if (account == 188) {
+                giftNumImg.setImageResource(R.drawable.img_gift_num188);
+            } else if (account == 520) {
+                giftNumImg.setImageResource(R.drawable.img_gift_num520);
+            } else if (account == 1314) {
+                giftNumImg.setImageResource(R.drawable.img_gift_num1314);
+            } else if (account == 3344) {
+                giftNumImg.setImageResource(R.drawable.img_gift_num3344);
+            }
             Animation animation = AnimationUtils
                     .loadAnimation(MainFragment.this.getContext(), R.anim.anim_main_gift_banner_right_to_left);
             animation.setAnimationListener(new Animation.AnimationListener() {
@@ -243,23 +316,6 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                 showFaceRecognitionDialog();
             }
         });
-        viewModel.uc.clickLogout.observe(this, aVoid -> MVDialog.getInstance(MainFragment.this.getContext())
-                .setContent(getString(R.string.playfun_conflirm_log_out))
-                .setConfirmOnlick(dialog -> {
-                    TUIUtils.logout(new V2TIMCallback() {
-                        @Override
-                        public void onSuccess() {
-                            viewModel.logout();
-                        }
-
-                        @Override
-                        public void onError(int i, String s) {
-                            viewModel.logout();
-                        }
-                    });
-                })
-                .chooseType(MVDialog.TypeEnum.CENTERWARNED)
-                .show());
         viewModel.uc.lockDialog.observe(this, aVoid -> {
             LockDialog dialog = new LockDialog();
             dialog.setPassword(viewModel.lockPassword.get());
@@ -330,6 +386,28 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         });
     }
 
+    private void broadcastGiftImg(MqBroadcastGiftUserEntity giftUserEntity,ImageView userImg){
+        if(giftUserEntity.getSex()!=null && giftUserEntity.getSex()==1){
+            if(giftUserEntity.getCertification()!=null && giftUserEntity.getCertification()==1){
+                userImg.setImageResource(R.drawable.ic_real_man);
+                userImg.setVisibility(View.VISIBLE);
+            }
+            if(giftUserEntity.getIsVip()!=null && giftUserEntity.getIsVip()==1){
+                userImg.setImageResource(R.drawable.ic_vip);
+                userImg.setVisibility(View.VISIBLE);
+            }
+        }else{
+            if(giftUserEntity.getCertification()!=null && giftUserEntity.getCertification()==1){
+                userImg.setImageResource(R.drawable.ic_real_man);
+                userImg.setVisibility(View.VISIBLE);
+            }
+            if(giftUserEntity.getIsVip()!=null && giftUserEntity.getIsVip()==1){
+                userImg.setImageResource(R.drawable.ic_goddess);
+                userImg.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
     @Override
     public void initData() {
         super.initData();
@@ -337,8 +415,16 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         if(ImgSrcPath!=-1){
             binding.navigationRankImg.setImageResource(ImgSrcPath);
         }
+        aliYunMqttClientLifecycle = ((AppContext)mActivity.getApplication()).getBillingClientLifecycle();
+        getLifecycle().addObserver(aliYunMqttClientLifecycle);
         initView();
-        ConversationCommonHolder.sexMale = ConfigManager.getInstance().isMale();
+        try{
+            ConversationCommonHolder.sexMale = ConfigManager.getInstance().isMale();
+        }catch (Exception exception){
+
+        }
+
+
     }
 
     /**
