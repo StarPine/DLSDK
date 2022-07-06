@@ -6,6 +6,7 @@ buildscript {
         google()
         jcenter()
         mavenCentral()
+        maven { url "https://repo.eclipse.org/content/repositories/paho-releases/" }
         maven { url 'http://maven.faceunity.com/repository/maven-public/' }
         maven { url "https://maven.google.com" }//添加这个就可以
         maven { url "https://maven.aliyun.com/nexus/content/repositories/releases" }
@@ -39,7 +40,7 @@ allprojects {
         google()
         jcenter()
         mavenCentral()
-
+        maven { url "https://repo.eclipse.org/content/repositories/paho-releases/" }
         maven {
             url "https://maven.springframework.org/release"
         }

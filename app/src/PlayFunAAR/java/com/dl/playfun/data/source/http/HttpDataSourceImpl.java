@@ -201,7 +201,7 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
-    public Observable<BaseResponse> sendUserGift(Integer gift_id, Integer to_user_id, Integer amount,Integer type) {
+    public Observable<BaseResponse> sendUserGift(RequestBody requestBody) {
         return apiService.sendUserGift(gift_id, to_user_id, amount,type);
     }
 

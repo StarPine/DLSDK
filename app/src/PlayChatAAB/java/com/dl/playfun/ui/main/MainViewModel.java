@@ -19,6 +19,7 @@ import com.dl.playfun.entity.BannerItemEntity;
 import com.dl.playfun.entity.BubbleEntity;
 import com.dl.playfun.entity.CoinWalletEntity;
 import com.dl.playfun.entity.LikeRecommendEntity;
+import com.dl.playfun.entity.MqBroadcastGiftEntity;
 import com.dl.playfun.entity.VersionEntity;
 import com.dl.playfun.event.BubbleTopShowEvent;
 import com.dl.playfun.event.MainTabEvent;
@@ -60,15 +61,9 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
 
     public ObservableField<String> lockPassword = new ObservableField<>("");
     public ObservableField<Boolean> isHaveRewards = new ObservableField<>(false);
-    public List<BannerItemEntity> bannerEntity;
-    public List<String> publicScreenBannerGiftEntity = new ArrayList<>();
-    public LikeRecommendEntity likeRecommendEntity;
-    public boolean isNewUser = false;
+    public List<MqBroadcastGiftEntity> publicScreenBannerGiftEntity = new ArrayList<>();
     public boolean playing = false;
     UIChangeObservable uc = new UIChangeObservable();
-    //退出登录
-    public BindingCommand logoutOnClickCommand = new BindingCommand(() -> uc.clickLogout.call());
-    private String bizId;
     private Disposable mSubscription, taskMainTabEventReceive, mainTabEventReceive, rewardRedDotEventReceive, BubbleTopShowEventSubscription,newUserEventSubscription;
 
     public MainViewModel(@NonNull Application application, AppRepository appRepository) {
@@ -307,8 +302,6 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                                         break;
                                     case "message_gift"://接收礼物
                                         if (map_data.get("is_accost") == null) {//不是搭讪礼物
-                                            publicScreenBannerGiftEntity.add("1");
-                                            playBannerGift();
                                             if (!AppContext.isCalling){
                                                 GiftEntity giftEntity = IMGsonUtils.fromJson(data, GiftEntity.class);
                                                 //是特效礼物才发送订阅通知事件
@@ -329,7 +322,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
 
     public void playBannerGift(){
         if (publicScreenBannerGiftEntity.size() > 0 && !playing){
-            uc.giftBanner.call();
+            uc.giftBanner.setValue(publicScreenBannerGiftEntity.get(0));
         }
     }
 
@@ -363,7 +356,6 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<String> startFace = new SingleLiveEvent<>();
         public SingleLiveEvent<Integer> allMessageCountChange = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> lockDialog = new SingleLiveEvent<>();
-        public SingleLiveEvent<Void> clickLogout = new SingleLiveEvent<>();
         public ObservableField<Boolean> gender = new ObservableField<>(false);
         public SingleLiveEvent<MainTabEvent> mainTab = new SingleLiveEvent<>();
         //更新版本
@@ -374,7 +366,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<String> clickAccountDialog = new SingleLiveEvent<>();
         //未付费弹窗
         public SingleLiveEvent<String> notPaidDialog = new SingleLiveEvent<>();
-        public SingleLiveEvent<String> giftBanner = new SingleLiveEvent<>();
+        public SingleLiveEvent<MqBroadcastGiftEntity> giftBanner = new SingleLiveEvent<>();
     }
 
 }

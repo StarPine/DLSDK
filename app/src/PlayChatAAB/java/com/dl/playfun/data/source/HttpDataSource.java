@@ -563,7 +563,7 @@ public interface HttpDataSource {
      * @parame [gift_id, to_user_id, amount]
      * @Date 2021/12/9
      */
-    Observable<BaseResponse> sendUserGift(Integer gift_id, Integer to_user_id, Integer amount,Integer type);
+    Observable<BaseResponse> sendUserGift(RequestBody requestBody);
 
     /**
      * @Desc TODO(礼物背包接口)

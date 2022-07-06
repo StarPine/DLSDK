@@ -184,16 +184,6 @@ public class MineFragment extends BaseRefreshFragment<FragmentMineBinding, MineV
         super.initViewObservable();
         AppContext.instance().logEvent(AppsFlyerEvent.Me);
         inputMethodManager = (InputMethodManager) this.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-//        viewModel.uc.entryLabelLableEvent.observe(this, new Observer<Void>() {
-//            @Override
-//            public void onChanged(Void unused) {
-//                JumpingBeans.with(binding.taskRightTitle)
-//                        .makeTextJump(0, binding.taskRightTitle.getText().length())
-//                        .setIsWave(true)
-//                        .setLoopDuration(1300)
-//                        .build();
-//            }
-//        });
         viewModel.uc.removeAudioAlert.observe(this, new Observer<Void>() {
             @Override
             public void onChanged(Void unused) {

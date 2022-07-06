@@ -340,5 +340,8 @@ dependencies {
         debugImplementation 'com.facebook.stetho:stetho-okhttp3:1.5.1'
         debugImplementation 'com.facebook.stetho:stetho-urlconnection:1.5.1'
     }
+    //mqtt
+    implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.1.0'
+    implementation 'org.eclipse.paho:org.eclipse.paho.android.service:1.1.1'
     dependenciesID.each {k,v -> implementation v}
 }

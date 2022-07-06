@@ -163,13 +163,6 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
         }
     });
 
-    //任务中心按钮的点击事件
-    public BindingCommand TaskCenterOnClickCommand = new BindingCommand(() -> {
-        if (model.readUserData().getSex() != null) {
-            //start(TaskCenterFragment.class.getCanonicalName());
-            RxBus.getDefault().post(new TaskMainTabEvent(false,true));
-        }
-    });
     //会员按钮的点击事件
     public BindingCommand memberOnClickCommand = new BindingCommand(() -> {
         AppContext.instance().logEvent(AppsFlyerEvent.VIP_Center);
@@ -204,9 +197,6 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
     //设置按钮的点击事件
     public BindingCommand settingOnClickCommand = new BindingCommand(() -> {
         start(MeSettingFragment.class.getCanonicalName());
-    });
-    //分享按钮的点击事件
-    public BindingCommand shareOnClickCommand = new BindingCommand(() -> {
     });
     //联系客服按钮的点击事件
     public BindingCommand serviceOnClickCommand = new BindingCommand(() -> {
@@ -655,8 +645,6 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
         public SingleLiveEvent<Void> clickAvatar = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> clickSetRedPackagePhoto = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> clickRecoverBurn = new SingleLiveEvent<>();
-        //更新版本
-        public SingleLiveEvent<VersionEntity> versionEntitySingl = new SingleLiveEvent<>();
         public SingleLiveEvent<BrowseNumberEntity> loadBrowseNumber = new SingleLiveEvent<>();
         //动画效果
         public SingleLiveEvent<Void> entryLabelLableEvent = new SingleLiveEvent<>();

@@ -33,7 +33,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="5dp"
                     android:padding="10dp"
                     android:src="@drawable/ic_toolbar_back"
                     binding:onClickCommand="@{viewModel.mobileLoginBackOnClickCommand}" />
@@ -63,14 +63,45 @@
                 android:textColor="@color/toolbar_title_color"
                 android:textSize="@dimen/text_size_toolbar_title" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginRight="25dp"
+            android:orientation="horizontal">
+            <RelativeLayout
+                binding:onClickCommand="@{viewModel.ChooseAreaView}"
+                binding:drawable_color="@{@color/chat_bubble_other_color}"
+                binding:drawable_cornersRadius="@{10}"
+                android:layout_width="80dp"
+                android:layout_height="match_parent">
+                <TextView
+                    android:textColor="@color/black"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginStart="10dp"
+                    tools:text="+886"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:includeFontPadding="false"
+                    />
+                <ImageView
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="10dp"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_arrow_down"
+                    />
+            </RelativeLayout>
             <EditText
                 style="@style/EditText"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginTop="60dp"
-                android:layout_marginRight="25dp"
-                android:background="@drawable/edit_grey_background"
+                android:layout_marginLeft="5dp"
+                binding:drawable_color="@{@color/chat_bubble_other_color}"
+                binding:drawable_cornersRadius="@{10}"
                 android:hint="@string/mobile_hint"
                 android:inputType="phone"
                 android:maxLength="11"
@@ -78,14 +109,15 @@
                 android:text="@={viewModel.mobile}"
                 android:textColorHint="#9394A0"
                 android:textSize="@dimen/text_size_middle2" />
-
+        </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginRight="25dp"
-                android:background="@drawable/edit_grey_background"
+                binding:drawable_color="@{@color/chat_bubble_other_color}"
+                binding:drawable_cornersRadius="@{10}"
                 android:orientation="horizontal">
 
                 <EditText
@@ -117,19 +149,14 @@
                     binding:onClickCommand="@{viewModel.sendRegisterSmsOnClickCommand}"
                     tools:text="Send" />
             </LinearLayout>
-
-            <Button
-                android:id="@+id/btn_login"
-                style="@style/ButtonPrimary"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginRight="25dp"
+            <View
+                binding:onClickCommand="@{viewModel.registerUserOnClickCommand}"
+                android:layout_marginTop="50dp"
                 android:layout_marginBottom="20dp"
-                android:text="@string/playfun_next_step"
-                android:textSize="@dimen/text_size_middle2"
-                binding:onClickCommand="@{viewModel.registerUserOnClickCommand}" />
+                android:layout_gravity="center"
+                android:layout_width="110dp"
+                android:layout_height="60dp"
+                android:background="@drawable/btn_perfect_profile_sub"/>
 
 
             <LinearLayout

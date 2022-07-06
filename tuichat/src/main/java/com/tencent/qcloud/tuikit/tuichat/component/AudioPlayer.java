@@ -5,6 +5,7 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
@@ -83,6 +84,7 @@ public class AudioPlayer {
     }
 
     public void startPlay(String filePath, Callback callback) {
+        Log.e("当前录音文件内容","==="+String.valueOf(filePath));
         mAudioRecordPath = filePath;
         mPlayCallback = callback;
         try {

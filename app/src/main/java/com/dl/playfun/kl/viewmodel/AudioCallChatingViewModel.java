@@ -20,6 +20,7 @@ import androidx.databinding.ObservableInt;
 import androidx.databinding.ObservableList;
 
 import com.blankj.utilcode.util.ColorUtils;
+import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.ToastUtils;
@@ -41,6 +42,7 @@ import com.dl.playfun.event.AudioCallingCancelEvent;
 import com.dl.playfun.kl.Utils;
 import com.dl.playfun.kl.view.Ifinish;
 import com.dl.playfun.manager.ConfigManager;
+import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
@@ -275,7 +277,12 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
 
     //发送礼物
     public void sendUserGift(Dialog dialog, GiftBagEntity.giftEntity giftEntity, Integer to_user_id, Integer amount) {
-        model.sendUserGift(giftEntity.getId(), to_user_id, amount, 2)
+        HashMap<String, Integer> map = new HashMap<>();
+        map.put("gift_id", giftEntity.getId());
+        map.put("to_user_id", to_user_id);
+        map.put("type", 2);
+        map.put("amount", amount);
+        model.sendUserGift(ApiUitl.getBody(GsonUtils.toJson(map)))
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())

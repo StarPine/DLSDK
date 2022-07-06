@@ -73,7 +73,8 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-
+        <!--mqtt新增服务-->
+        <service android:name="org.eclipse.paho.android.service.MqttService" />
         <!--  appsflyer引流统计  android:exported="true" true上报 false不上报  -->
         <receiver
             android:name="com.appsflyer.SingleInstallBroadcastReceiver"

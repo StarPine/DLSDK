@@ -65,7 +65,6 @@ import me.tatarka.bindingcollectionadapter2.OnItemBind;
 public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
     //vip充值成功回调
     public boolean EventVipSuccess = false;
-    public static Integer SignWinningDay = -1;
     public static final String RadioRecycleType_New = "new";
     public static final String RadioRecycleType_trace = "emptyTrace";
     public ObservableField<UserDataEntity> userDataEntity = new ObservableField<>(new UserDataEntity());
@@ -81,7 +80,6 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
     public boolean CollectFlag = false;
     public Integer certification = null;
     public boolean collectReLoad = false;
-    public ObservableField<List<AdItemEntity>> adItemEntityObservableField = new ObservableField<>(new ArrayList<>());
 
     public BindingRecyclerViewAdapter<MultiItemViewModel> adapter = new BindingRecyclerViewAdapter<>();
     public ObservableList<MultiItemViewModel> radioItems = new ObservableArrayList<>();
@@ -212,24 +210,6 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
     public void toTaskCenter() {
         RxBus.getDefault().post(new TaskMainTabEvent(false, true));
         //start(TaskCenterFragment.class.getCanonicalName());
-    }
-
-    private void recommendMsg(String userId, String num, long timeOut) {
-        AppContext.runOnUIThread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Map<String, String> maps = new HashMap<>();
-                    maps.put("userId", userId);
-                    maps.put("date", Utils.formatday.format(new Date()));
-                    maps.put("num", num);
-                    model.saveMessageTagUser(maps);
-                    AppContext.sUiThreadHandler.removeCallbacks(this);
-                } catch (Exception e) {
-                    AppContext.sUiThreadHandler.removeCallbacks(this);
-                }
-            }
-        }, timeOut);
     }
 
     @Override

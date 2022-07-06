@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.dl.playfun.ui.login.choose.ItemChooseAreaViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="56dp">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/img_icon"
+            android:layout_centerInParent="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="15dp"
+            tools:src="@drawable/default_avatar"
+            android:layout_width="37dp"
+            android:layout_height="25dp"/>
+
+        <TextView
+            android:layout_centerInParent="true"
+            android:layout_toEndOf="@+id/img_icon"
+            android:layout_marginStart="10dp"
+            android:includeFontPadding="false"
+            android:layout_gravity="end|center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="+886"
+            android:textColor="#ff2f2f4d"
+            android:textSize="16sp"
+            />
+        <TextView
+            android:layout_centerInParent="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="15dp"
+            tools:text="+886"
+            android:includeFontPadding="false"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+</layout>
