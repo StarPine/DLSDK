@@ -73,7 +73,7 @@ public class C2CChatPresenter extends ChatPresenter {
                 if (chatInfo == null || !TextUtils.equals(messageBean.getUserId(), chatInfo.getId())) {
                     return;
                 }
-                C2CChatPresenter.this.onRecvMessageModified(messageBean);
+//                C2CChatPresenter.this.onRecvMessageModified(messageBean);
             }
 
             @Override
