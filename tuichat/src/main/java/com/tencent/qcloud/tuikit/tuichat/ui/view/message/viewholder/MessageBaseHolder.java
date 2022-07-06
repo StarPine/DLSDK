@@ -5,6 +5,9 @@ import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
@@ -16,10 +19,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.qcloud.tuicore.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
+import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageProperties;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.ICommonMessageAdapter;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemClickListener;
+import com.tencent.qcloud.tuikit.tuichat.ui.view.MyImageSpan;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.reply.ChatFlowReactView;
 
 import java.util.Date;
@@ -31,8 +36,8 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
     public MessageProperties properties = MessageProperties.getInstance();
     protected OnItemClickListener onItemClickListener;
 
-    public TextView chatTimeText;
-    public FrameLayout msgContentFrame;
+    public TextView chatTimeText, profitTip;
+    public FrameLayout msgContentFrame,msgContentFrame2,customJsonMsgContentFrame;
     public LinearLayout msgReplyDetailLayout;
     public LinearLayout msgArea;
     public LinearLayout msgAreaAndReply;
@@ -46,13 +51,16 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
         super(itemView);
         rootView = itemView;//DL add
         chatTimeText = itemView.findViewById(R.id.message_top_time_tv);
+        profitTip = itemView.findViewById(R.id.tv_chat_item_profit_tip);
         msgContentFrame = itemView.findViewById(R.id.msg_content_fl);
+        msgContentFrame2 = itemView.findViewById(R.id.msg_content_fl2);
+        customJsonMsgContentFrame = itemView.findViewById(R.id.custom_json_msg_content_fl);
 //        msgReplyDetailLayout = itemView.findViewById(R.id.msg_reply_detail_fl);
         reactView = itemView.findViewById(R.id.reacts_view);
         msgArea = itemView.findViewById(R.id.msg_area);
         msgAreaAndReply = itemView.findViewById(R.id.msg_area_and_reply);
 //        mMutiSelectCheckBox = itemView.findViewById(R.id.select_checkbox);
-//        rightGroupLayout = itemView.findViewById(R.id.right_group_layout);
+        rightGroupLayout = itemView.findViewById(R.id.right_group_layout);
 //        mContentLayout = itemView.findViewById(R.id.messsage_content_layout);
         initVariableLayout();
     }
@@ -84,6 +92,11 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
     }
 
     public void layoutViews(final TUIMessageBean msg, final int position) {
+        msgContentFrame.setVisibility(View.VISIBLE);
+        msgContentFrame2.removeAllViews();
+        customJsonMsgContentFrame.removeAllViews();
+        //显示收益消息
+        showProfitView(msg);
 
         //// 时间线设置
         if (properties.getChatTimeBubble() != null) {
@@ -109,6 +122,19 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
         } else {
             chatTimeText.setVisibility(View.VISIBLE);
             chatTimeText.setText(DateTimeUtil.getTimeFormatText(new Date(msg.getMessageTime() * 1000)));
+        }
+    }
+
+    private void showProfitView(TUIMessageBean msg) {
+        String cloudCustomData = msg.getV2TIMMessage().getCloudCustomData();
+        if (!TextUtils.isEmpty(cloudCustomData)){
+            String format = String.format(TUIChatService.getAppContext().getString(R.string.profit),cloudCustomData);
+            SpannableString iconSpannable = new SpannableString(format);
+            iconSpannable.setSpan(new MyImageSpan(TUIChatService.getAppContext(),R.drawable.icon_crystal),0,1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            profitTip.setText(iconSpannable);
+            profitTip.setVisibility(View.VISIBLE);
+        }else {
+            profitTip.setVisibility(View.GONE);
         }
     }
 

@@ -73,7 +73,7 @@ public class C2CChatPresenter extends ChatPresenter {
                 if (chatInfo == null || !TextUtils.equals(messageBean.getUserId(), chatInfo.getId())) {
                     return;
                 }
-//                C2CChatPresenter.this.onRecvMessageModified(messageBean);
+                C2CChatPresenter.this.onRecvMessageModified(messageBean);
             }
 
             @Override
@@ -124,19 +124,7 @@ public class C2CChatPresenter extends ChatPresenter {
                                         }
                                     }
                                     if (map_data.get("type").equals("chat_earnings")) {
-                                        CustomIMTextEntity customIMTextEntity = IMGsonUtils.fromJson(String.valueOf(map_data.get("data")), CustomIMTextEntity.class);
-                                        if (customIMTextEntity != null) {
-                                            String msgID = customIMTextEntity.getMsgID();
-                                            if (msgID != null) {
-                                                for (int j = 0; j < itemCount; j++) {
-                                                    TUIMessageBean backMsg = data.get(j);
-                                                    if (backMsg.getId().lastIndexOf(msgID) != -1) {//收益提示追加到指定文案后
-                                                        data.add(i, data.remove(j));
-                                                        break;
-                                                    }
-                                                }
-                                            }
-                                        }
+                                        continue;
                                     }
                                 }
                             }

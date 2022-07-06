@@ -590,20 +590,7 @@ public abstract class ChatPresenter {
             Map<String, Object> map_data = new Gson().fromJson(messageInfo.getExtra().toString(), Map.class);
             if (map_data != null && map_data.get("type") != null) {
                 if (map_data.get("type").equals("chat_earnings")) {
-                    CustomIMTextEntity customIMTextEntity = IMGsonUtils.fromJson(String.valueOf(map_data.get("data")), CustomIMTextEntity.class);
-                    if (customIMTextEntity != null) {
-                        int itemCount = loadedMessageInfoList.size();
-                        String msgID = customIMTextEntity.getMsgID();
-                        if (msgID != null) {
-                            for (int i = 0; i < itemCount; i++) {
-                                TUIMessageBean backMsg = loadedMessageInfoList.get(i);
-                                if (backMsg.getId().lastIndexOf(msgID) != -1) {
-                                    loadedMessageInfoList.add(i + 1, messageInfo);
-                                    break;
-                                }
-                            }
-                        }
-                    }
+                    return;
                 } else if (map_data.get("type").equals("message_photo")) {
                     loadedMessageInfoList.add(0, messageInfo);
                     ismessage_photo = true;
