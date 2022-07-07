@@ -36,7 +36,6 @@ import com.dl.playfun.entity.VersionEntity;
 import com.dl.playfun.event.MainTabEvent;
 import com.dl.playfun.event.TaskListEvent;
 import com.dl.playfun.manager.ConfigManager;
-import com.dl.playfun.tim.TUIUtils;
 import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.ui.dialog.HomeAccostDialog;
 import com.dl.playfun.ui.dialog.LockDialog;
@@ -52,7 +51,6 @@ import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralPayDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.dl.playfun.widget.dialog.version.view.UpdateDialogView;
 import com.dl.playfun.widget.pageview.FragmentAdapter;
-import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.view.ConversationCommonHolder;
 
@@ -139,61 +137,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
             MqBroadcastGiftUserEntity leftUser = mqttMessageEntity.getFromUser();
             MqBroadcastGiftUserEntity rightUser = mqttMessageEntity.getToUser();
             View streamerView = View.inflate(MainFragment.this.getContext(), R.layout.fragment_main_gift_banner, null);
-            ImageView leftUserImg = streamerView.findViewById(R.id.left_user_img);
-            TextView leftUserName = streamerView.findViewById(R.id.left_user_name);
-            leftUserName.setText(leftUser.getNickname());
-            ImageView leftUserIcon = streamerView.findViewById(R.id.left_user_icon);
-            broadcastGiftImg(leftUser,leftUserIcon);
-
-            Glide.with(getContext())
-                    .asBitmap()
-                    .load(StringUtil.getFullImageUrl(leftUser.getAvatar()))
-                    .error(R.drawable.radio_program_list_content)
-                    .placeholder(R.drawable.radio_program_list_content)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(leftUserImg);
-            leftUserImg.setOnClickListener(v -> {
-                Bundle bundle = UserDetailFragment.getStartBundle(leftUser.getId());
-                viewModel.start(UserDetailFragment.class.getCanonicalName(), bundle);
-            });
-            ImageView rightUserImg = streamerView.findViewById(R.id.right_user_img);
-            TextView rightUserName = streamerView.findViewById(R.id.right_user_name);
-            ImageView rightUserIcon = streamerView.findViewById(R.id.right_user_icon);
-            rightUserName.setText(rightUser.getNickname());
-            Glide.with(getContext())
-                    .asBitmap()
-                    .load(StringUtil.getFullImageUrl(rightUser.getAvatar()))
-                    .error(R.drawable.radio_program_list_content)
-                    .placeholder(R.drawable.radio_program_list_content)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(rightUserImg);
-            rightUserImg.setOnClickListener(v -> {
-                Bundle bundle = UserDetailFragment.getStartBundle(rightUser.getId());
-                viewModel.start(UserDetailFragment.class.getCanonicalName(), bundle);
-            });
-            broadcastGiftImg(rightUser,rightUserIcon);
-
-            TextView giftTitle = streamerView.findViewById(R.id.gift_title);
-            giftTitle.setText(mqttMessageEntity.getGiftName());
-            ImageView giftNumImg = streamerView.findViewById(R.id.gift_count);
-            int account = mqttMessageEntity.getAmount();
-            if (account == 1) {
-                giftNumImg.setImageResource(R.drawable.img_gift_num1);
-            } else if (account == 10) {
-                giftNumImg.setImageResource(R.drawable.img_gift_num10);
-            } else if (account == 38) {
-                giftNumImg.setImageResource(R.drawable.img_gift_num38);
-            } else if (account == 66) {
-                giftNumImg.setImageResource(R.drawable.img_gift_num66);
-            } else if (account == 188) {
-                giftNumImg.setImageResource(R.drawable.img_gift_num188);
-            } else if (account == 520) {
-                giftNumImg.setImageResource(R.drawable.img_gift_num520);
-            } else if (account == 1314) {
-                giftNumImg.setImageResource(R.drawable.img_gift_num1314);
-            } else if (account == 3344) {
-                giftNumImg.setImageResource(R.drawable.img_gift_num3344);
-            }
+            setGiftViewBanner(mqttMessageEntity, leftUser, rightUser, streamerView);
             Animation animation = AnimationUtils
                     .loadAnimation(MainFragment.this.getContext(), R.anim.anim_main_gift_banner_right_to_left);
             animation.setAnimationListener(new Animation.AnimationListener() {
@@ -205,8 +149,8 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     postRemoveView(binding.container, streamerView);
-                    if (viewModel.publicScreenBannerGiftEntity.size()>0)
-                    viewModel.publicScreenBannerGiftEntity.remove(0);
+                    if (viewModel.publicScreenBannerGiftEntity.size() > 0)
+                        viewModel.publicScreenBannerGiftEntity.remove(0);
                     viewModel.playing = false;
                     viewModel.playBannerGift();
                 }
@@ -384,6 +328,68 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                 }
             }
         });
+    }
+
+    private void setGiftViewBanner(MqBroadcastGiftEntity mqttMessageEntity, MqBroadcastGiftUserEntity leftUser, MqBroadcastGiftUserEntity rightUser, View streamerView) {
+        ImageView leftUserImg = streamerView.findViewById(R.id.left_user_img);
+        TextView leftUserName = streamerView.findViewById(R.id.left_user_name);
+        leftUserName.setText(leftUser.getNickname());
+        ImageView leftUserIcon = streamerView.findViewById(R.id.left_user_icon);
+        broadcastGiftImg(leftUser,leftUserIcon);
+
+        Glide.with(getContext())
+                .asBitmap()
+                .load(StringUtil.getFullImageUrl(leftUser.getAvatar()))
+                .error(R.drawable.radio_program_list_content)
+                .placeholder(R.drawable.radio_program_list_content)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(leftUserImg);
+        leftUserImg.setOnClickListener(v -> {
+            Bundle bundle = UserDetailFragment.getStartBundle(leftUser.getId());
+            viewModel.start(UserDetailFragment.class.getCanonicalName(), bundle);
+        });
+        ImageView rightUserImg = streamerView.findViewById(R.id.right_user_img);
+        TextView rightUserName = streamerView.findViewById(R.id.right_user_name);
+        ImageView rightUserIcon = streamerView.findViewById(R.id.right_user_icon);
+        rightUserName.setText(rightUser.getNickname());
+        Glide.with(getContext())
+                .asBitmap()
+                .load(StringUtil.getFullImageUrl(rightUser.getAvatar()))
+                .error(R.drawable.radio_program_list_content)
+                .placeholder(R.drawable.radio_program_list_content)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(rightUserImg);
+        rightUserImg.setOnClickListener(v -> {
+            Bundle bundle = UserDetailFragment.getStartBundle(rightUser.getId());
+            viewModel.start(UserDetailFragment.class.getCanonicalName(), bundle);
+        });
+        broadcastGiftImg(rightUser,rightUserIcon);
+
+        TextView giftTitle = streamerView.findViewById(R.id.gift_title);
+        giftTitle.setText(mqttMessageEntity.getGiftName());
+        ImageView giftNumImg = streamerView.findViewById(R.id.gift_count);
+        int account = mqttMessageEntity.getAmount();
+        setGiftNumImg(giftNumImg, account);
+    }
+
+    private void setGiftNumImg(ImageView giftNumImg, int account) {
+        if (account == 1) {
+            giftNumImg.setImageResource(R.drawable.img_gift_num1);
+        } else if (account == 10) {
+            giftNumImg.setImageResource(R.drawable.img_gift_num10);
+        } else if (account == 38) {
+            giftNumImg.setImageResource(R.drawable.img_gift_num38);
+        } else if (account == 66) {
+            giftNumImg.setImageResource(R.drawable.img_gift_num66);
+        } else if (account == 188) {
+            giftNumImg.setImageResource(R.drawable.img_gift_num188);
+        } else if (account == 520) {
+            giftNumImg.setImageResource(R.drawable.img_gift_num520);
+        } else if (account == 1314) {
+            giftNumImg.setImageResource(R.drawable.img_gift_num1314);
+        } else if (account == 3344) {
+            giftNumImg.setImageResource(R.drawable.img_gift_num3344);
+        }
     }
 
     private void broadcastGiftImg(MqBroadcastGiftUserEntity giftUserEntity,ImageView userImg){
