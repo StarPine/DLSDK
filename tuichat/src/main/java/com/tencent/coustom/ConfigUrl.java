@@ -9,9 +9,9 @@ package com.tencent.coustom;
  */
 public class ConfigUrl {
     // 图片HOST
-    private static final String IMAGE_BASE_URL =  "https://img.play-chat.net/";
+//    private static final String IMAGE_BASE_URL =  "https://img.play-chat.net/";
 
-    //private static final String IMAGE_BASE_URL = "https://img.joy-mask.com/";
+    private static final String IMAGE_BASE_URL = "https://img.joy-mask.com/";
     public static String getFullImageUrl(String imgPath) {
         if (imgPath == null) {
             return "";

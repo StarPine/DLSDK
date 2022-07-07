@@ -123,9 +123,6 @@ public class C2CChatPresenter extends ChatPresenter {
                                             continue;
                                         }
                                     }
-                                    if (map_data.get("type").equals("chat_earnings")) {
-                                        continue;
-                                    }
                                 }
                             }
                         }

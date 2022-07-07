@@ -589,9 +589,7 @@ public abstract class ChatPresenter {
         if (isJSON2(messageInfo.getExtra().toString())) {//判断C2c本地添加记录自定义。通常用来做弹窗
             Map<String, Object> map_data = new Gson().fromJson(messageInfo.getExtra().toString(), Map.class);
             if (map_data != null && map_data.get("type") != null) {
-                if (map_data.get("type").equals("chat_earnings")) {
-                    return;
-                } else if (map_data.get("type").equals("message_photo")) {
+                if (map_data.get("type").equals("message_photo")) {
                     loadedMessageInfoList.add(0, messageInfo);
                     ismessage_photo = true;
                 } else {
