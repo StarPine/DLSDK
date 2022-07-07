@@ -257,7 +257,8 @@ public class ChatMessageParser {
         }
         double type = 0d;
         if (customJsonMap != null) {
-            type = (Double) customJsonMap.get("type");
+            Double dataType = (Double) customJsonMap.get("type");
+            if (dataType != null)type = dataType;
         }
         if (type == 2001){
             businessId = TUIChatConstants.BUSINESS_ID_CUSTOM_IMAGE;
