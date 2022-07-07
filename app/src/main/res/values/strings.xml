@@ -839,7 +839,7 @@
     <string name="playfun_call_message_deatail_girl_txt2">you</string>
     <string name="playfun_call_message_deatail_girl_txt3">you</string>
     <string name="playfun_call_message_deatail_girl_txt4">Followed</string>
-    <string name="playfun_call_message_deatail_girl_txt5">your income +%s</string>
+    <string name="playfun_call_message_deatail_girl_txt5">C+%s</string>
     <string name="playfun_call_message_deatail_girl_txt6">If you like, follow to keep in touch</string>
     <string name="playfun_call_message_deatail_girl_txt7">Follow and hang up</string>
     <string name="playfun_call_message_deatail_girl_txt8">Continue chatting</string>

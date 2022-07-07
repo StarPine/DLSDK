@@ -178,7 +178,7 @@
     <string name="custom_message_txt1">收入+%s，真人認證後收入翻倍 去認證>></string>
     <string name="custom_message_txt1_key">去認證>></string>
     <string name="custom_message_txt2_test2">C+%s，真人認證後收入翻倍 去認證>></string>
-    <string name="custom_message_txt2">妳的收入+%s</string>
+    <string name="custom_message_txt2">C+%s</string>
     <string name="custom_message_txt3">對方餘額不足，請提示他儲值</string>
     <string name="custom_message_txt4">追蹤了</string>
     <string name="custom_message_txt5">妳</string>
