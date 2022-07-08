@@ -666,6 +666,20 @@ public interface ApiService {
     );
 
     /**
+     * @return io.reactivex.Observable<com.dl.play.chat.entity.CallingInviteInfo>
+     * @Desc TODO(IM聊天页面 拔打中 / 接收中)
+     * @author 彭石林
+     * @parame [appId, callingType, fromUserId, toUserId, currentUserId]
+     * @Date 2021/12/13
+     */
+    @GET("/calling/getCallingInvitedInfo")
+    Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(
+            @Query("callingType") Integer callingType,
+            @Query("fromUserId") Integer fromUserId,
+            @Query("toUserId") Integer toUserId,
+            @Query("currentUserId") Integer currentUserId);
+
+    /**
      * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
      * @Desc TODO(发送礼物)
      * @author 彭石林

@@ -557,6 +557,15 @@ public interface HttpDataSource {
     Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(Integer callingType, String fromUserId, String toUserId);
 
     /**
+     * @return io.reactivex.Observable<com.dl.play.chat.entity.CallingInviteInfo>
+     * @Desc TODO(IM聊天页面 拔打中 / 接收中)
+     * @author 彭石林
+     * @parame [appId, callingType, fromUserId, toUserId, currentUserId]
+     * @Date 2021/12/13
+     */
+    Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(Integer callingType, Integer fromUserId, Integer toUserId, Integer currentUserId);
+
+    /**
      * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
      * @Desc TODO(发送礼物)
      * @author 彭石林
