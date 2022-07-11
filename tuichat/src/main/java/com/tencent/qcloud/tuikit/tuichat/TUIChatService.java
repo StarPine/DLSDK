@@ -42,13 +42,13 @@ import com.tencent.qcloud.tuikit.tuichat.interfaces.TotalUnreadCountListener;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.CallingMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.CustomImageMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.CustomLinkMessageHolder;
+import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.CustomTextMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.FaceMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.FileMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.MergeMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.ImageMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.LocationMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.MessageBaseHolder;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.MessageTextHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.QuoteMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.ReplyMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.SoundMessageHolder;
@@ -153,7 +153,7 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
         addDefaultMessageType(SoundMessageBean.class, SoundMessageHolder.class);
         addDefaultMessageType(TextAtMessageBean.class, TextMessageHolder.class);
 //        addDefaultMessageType(TextMessageBean.class, TextMessageHolder.class);
-        addDefaultMessageType(TextMessageBean.class, MessageTextHolder.class); //DL add lsf
+        addDefaultMessageType(TextMessageBean.class, CustomTextMessageHolder.class); //DL add lsf
         addDefaultMessageType(TipsMessageBean.class, TipsMessageHolder.class);
         addDefaultMessageType(VideoMessageBean.class, VideoMessageHolder.class);
         addDefaultMessageType(ReplyMessageBean.class, ReplyMessageHolder.class);

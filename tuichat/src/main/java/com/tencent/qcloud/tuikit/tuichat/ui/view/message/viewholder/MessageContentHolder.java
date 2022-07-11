@@ -69,6 +69,17 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
         messageDetailsTimeTv = itemView.findViewById(R.id.msg_detail_time_tv);
     }
 
+    protected void hideWithAvatarView(){
+        leftUserIcon.setVisibility(View.GONE);
+        rightUserIcon.setVisibility(View.GONE);
+        msgContentLinear.setVisibility(View.GONE);
+    }
+
+    protected void hideTimeView(){
+        hideWithAvatarView();
+        chatTimeText.setVisibility(View.GONE);
+    }
+
     public void setPresenter(ChatPresenter chatPresenter) {
         this.presenter = chatPresenter;
     }
@@ -343,8 +354,6 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
                     isReadText.setVisibility(View.GONE);
                 }
             }
-            //DL add
-        if (!msg.isSelf())isReadText.setVisibility(View.GONE);
 
             //// 音频已读
             unreadAudioText.setVisibility(View.GONE);
@@ -367,7 +376,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
     protected void setMessageAreaPadding() {
         // after setting background, the padding will be reset
         int paddingHorizontal = itemView.getResources().getDimensionPixelSize(R.dimen.chat_message_area_padding_left_right);
-        int paddingVertical = itemView.getResources().getDimensionPixelSize(R.dimen.chat_message_area_padding_top_bottom);;
+        int paddingVertical = itemView.getResources().getDimensionPixelSize(R.dimen.chat_message_area_padding_top_bottom);
         msgArea.setPadding(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical);
     }
 

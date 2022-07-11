@@ -61,8 +61,11 @@ public class TextMessageHolder extends MessageContentHolder {
 
         msgContentFrame.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onLongClick(View v) {
-                //mSelectableTextHelper.selectAll();
+            public boolean onLongClick(View view) {
+//                mSelectableTextHelper.selectAll();
+                if (onItemClickListener != null) {
+                    onItemClickListener.onMessageLongClick(view, position, msg);
+                }
                 return true;
             }
         });
@@ -77,7 +80,7 @@ public class TextMessageHolder extends MessageContentHolder {
         if (isForwardMode || isReplyDetailMode) {
             return;
         }
-        setSelectableTextHelper(msg, msgBodyText, position, isEmoji);
+//        setSelectableTextHelper(msg, msgBodyText, position, isEmoji);
     }
 
 }

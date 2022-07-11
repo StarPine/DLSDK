@@ -355,6 +355,8 @@ public abstract class TUIMessageBean implements Serializable {
           return null;
      }
 
+
+     //DL add
      public boolean remove() {
           if (v2TIMMessage == null) {
                return false;

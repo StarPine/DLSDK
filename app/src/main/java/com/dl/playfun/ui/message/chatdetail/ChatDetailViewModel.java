@@ -513,7 +513,6 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
 
     //拨打语音、视频
     public void getCallingInvitedInfo(int callingType, String IMUserId, String toIMUserId) {
-        Log.e("拨打语音、视频",IMUserId+"======"+toIMUserId);
         model.callingInviteInfo(callingType, IMUserId, toIMUserId)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
@@ -528,6 +527,9 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                         }
                         CallingInviteInfo callingInviteInfo = callingInviteInfoBaseDataResponse.getData();
                         if (callingInviteInfo != null) {
+                            LogUtils.i("onSuccess: "+callingInviteInfo.toString());
+                            LogUtils.i("callingType: "+callingType);
+                            LogUtils.i("toIMUserId: "+toIMUserId);
                             com.dl.playfun.kl.Utils.tryStartCallSomeone(callingType, toIMUserId, callingInviteInfo.getRoomId(), new Gson().toJson(callingInviteInfo));
                         }
                     }

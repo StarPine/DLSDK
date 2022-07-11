@@ -96,19 +96,19 @@ public class MessageTextHolder extends MessageContentHolder {
     public void layoutVariableViews(TUIMessageBean msg, int position) {
         msgBodyText.setVisibility(View.VISIBLE);
         chat_system_tip_tv.setVisibility(View.GONE);
-        rootView.findViewById(R.id.content_tip).setVisibility(View.GONE);
+        itemView.findViewById(R.id.content_tip).setVisibility(View.GONE);
         msg_content_fl_custom.removeAllViews();
         if (msg.getExtra() != null) {
             String text = String.valueOf(msg.getExtra());
             if (TUIChatUtils.isJSON2(text) && text.indexOf("type") != -1) {//做自定义通知判断
                 Map<String, Object> map_data = new Gson().fromJson(String.valueOf(msg.getExtra()), Map.class);
                 if (map_data != null && map_data.get("type") != null && map_data.get("type").equals("toast_local")) {
-                    rootView.findViewById(R.id.custom_error_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.photo_album_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.im_evaluation_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.user_content).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.full_toast).setVisibility(View.VISIBLE);
+                    itemView.findViewById(R.id.custom_error_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.photo_album_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.im_evaluation_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.user_content).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.full_toast).setVisibility(View.VISIBLE);
                     chat_tips_tv.setTextSize(properties.getChatContextFontSize());
                     if (map_data.get("status") != null && map_data.get("status").equals("3") || map_data.get("status").equals("2")) {//发送真人认证提示 :已经发送过
                         String value = map_data.get("text").toString();
@@ -126,45 +126,45 @@ public class MessageTextHolder extends MessageContentHolder {
                         }
                     });
                 } else if (map_data != null && map_data.get("type") != null && map_data.get("type").equals("message_tag")) {//推送用户标签
-                    rootView.findViewById(R.id.custom_error_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.photo_album_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.im_evaluation_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.full_toast).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.custom_error_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.photo_album_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.im_evaluation_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.full_toast).setVisibility(View.GONE);
                     msg_content_fl_custom.setVisibility(View.GONE);
-                    rootView.findViewById(R.id.user_content).setVisibility(View.VISIBLE);
+                    itemView.findViewById(R.id.user_content).setVisibility(View.VISIBLE);
                     msgContentFrame.setVisibility(View.VISIBLE);
                     FaceManager.handlerEmojiText(msgBodyText, String.valueOf(map_data.get("text")), false);
                     setBackColor(msg);
                 } else if (map_data != null && map_data.get("type") != null && map_data.get("type").equals("message_countdown")) {//男方余额不足
                     msg_content_fl_custom.setVisibility(View.GONE);
                     msgContentFrame.setVisibility(View.GONE);
-                    rootView.findViewById(R.id.custom_error_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.im_evaluation_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.photo_album_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.user_content).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.full_toast).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.custom_error_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.im_evaluation_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.photo_album_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.user_content).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.full_toast).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
                 } else if (map_data != null && map_data.get("type") != null && map_data.get("type").equals("message_photo")) {//弹窗相册
-                    rootView.findViewById(R.id.custom_error_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.full_toast).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.user_content).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.im_evaluation_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.custom_error_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.full_toast).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.user_content).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.im_evaluation_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
                     msg_content_fl_custom.setVisibility(View.GONE);
                     msgContentFrame.setVisibility(View.GONE);
-                    rootView.findViewById(R.id.photo_album_layout).setVisibility(View.VISIBLE);
+                    itemView.findViewById(R.id.photo_album_layout).setVisibility(View.VISIBLE);
                     if (map_data.get("data") != null) {
                         PhotoAlbumEntity photoAlbumEntity = IMGsonUtils.fromJson(String.valueOf(map_data.get("data")), PhotoAlbumEntity.class);//new Gson().fromJson(String.valueOf(map_data.get("data")), PhotoAlbumEntity.class);
                         if (photoAlbumEntity != null) {
                             int sex = photoAlbumEntity.getSex();
                             int isVip = photoAlbumEntity.getIsVip();
                             int certification = photoAlbumEntity.getCertification();
-                            TextView conversation_title = rootView.findViewById(R.id.conversation_title);
+                            TextView conversation_title = itemView.findViewById(R.id.conversation_title);
                             conversation_title.setText(photoAlbumEntity.getNickname());
                             //加载头像
-                            ImageView photo_album_img = rootView.findViewById(R.id.photo_album_img);
+                            ImageView photo_album_img = itemView.findViewById(R.id.photo_album_img);
                             Glide.with(TUIChatService.getAppContext()).load(ConfigUrl.getFullImageUrl(photoAlbumEntity.getAvatar()))
                                     .error(R.drawable.photo_album_img_default)
                                     .placeholder(R.drawable.photo_album_img_default)
@@ -172,37 +172,37 @@ public class MessageTextHolder extends MessageContentHolder {
                                     .into(photo_album_img);
                             if(sex==1){
                                 if(isVip==1){
-                                    ImageView ic_vip = rootView.findViewById(R.id.iv_vip);
+                                    ImageView ic_vip = itemView.findViewById(R.id.iv_vip);
                                     ic_vip.setImageResource(R.drawable.ic_vip);
-                                    rootView.findViewById(R.id.iv_vip).setVisibility(View.VISIBLE);
+                                    itemView.findViewById(R.id.iv_vip).setVisibility(View.VISIBLE);
                                 }else{
-                                    rootView.findViewById(R.id.iv_vip).setVisibility(View.GONE);
+                                    itemView.findViewById(R.id.iv_vip).setVisibility(View.GONE);
                                 }
                                 if(certification==1){
-                                    rootView.findViewById(R.id.certification).setVisibility(View.VISIBLE);
+                                    itemView.findViewById(R.id.iv_certification).setVisibility(View.VISIBLE);
                                 }else{
 
                                 }
                             } else {//女性用户
                                 if (isVip == 1) {
-                                    ImageView ic_vip = rootView.findViewById(R.id.iv_vip);
+                                    ImageView ic_vip = itemView.findViewById(R.id.iv_vip);
                                     ic_vip.setImageResource(R.drawable.ic_goddess);
-                                    rootView.findViewById(R.id.iv_vip).setVisibility(View.VISIBLE);
+                                    itemView.findViewById(R.id.iv_vip).setVisibility(View.VISIBLE);
                                 }else{
-                                    rootView.findViewById(R.id.iv_vip).setVisibility(View.GONE);
+                                    itemView.findViewById(R.id.iv_vip).setVisibility(View.GONE);
                                 }
                                 if(certification==1){
                                     if(isVip==1){
-                                        rootView.findViewById(R.id.certification).setVisibility(View.GONE);
+                                        itemView.findViewById(R.id.iv_certification).setVisibility(View.GONE);
                                     }else{
-                                        rootView.findViewById(R.id.certification).setVisibility(View.VISIBLE);
+                                        itemView.findViewById(R.id.iv_certification).setVisibility(View.VISIBLE);
                                     }
                                 }else{
-                                    rootView.findViewById(R.id.certification).setVisibility(View.GONE);
+                                    itemView.findViewById(R.id.iv_certification).setVisibility(View.GONE);
                                 }
                             }
-                            RecyclerView recyclerView = rootView.findViewById(R.id.photo_album_rcv);
-                            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(rootView.getContext());
+                            RecyclerView recyclerView = itemView.findViewById(R.id.photo_album_rcv);
+                            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(itemView.getContext());
                             linearLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
                             recyclerView.setLayoutManager(linearLayoutManager);
                             PhotoAlbumItemRecyclerAdapter adapter = new PhotoAlbumItemRecyclerAdapter(photoAlbumEntity.getImg());
@@ -214,20 +214,20 @@ public class MessageTextHolder extends MessageContentHolder {
                                     onItemClickListener.clickToUserMain();
                                 }
                             });
-                            rootView.findViewById(R.id.photo_album_right_acc).setOnClickListener(new View.OnClickListener() {
+                            itemView.findViewById(R.id.photo_album_right_acc).setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     //onItemClickListener.toUserHome();
                                     onItemClickListener.clickToUserMain();
                                 }
                             });
-                            rootView.findViewById(R.id.photo_album_layout_item).setOnClickListener(new View.OnClickListener() {
+                            itemView.findViewById(R.id.photo_album_layout_item).setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     onItemClickListener.clickToUserMain();
                                 }
                             });
-                            rootView.findViewById(R.id.photo_album_layout).setOnClickListener(new View.OnClickListener() {
+                            itemView.findViewById(R.id.photo_album_layout).setOnClickListener(new View.OnClickListener() {
 
                                 @Override
                                 public void onClick(View v) {
@@ -237,27 +237,27 @@ public class MessageTextHolder extends MessageContentHolder {
                         }
                     }
                 }else if(map_data != null && map_data.get("type") != null && map_data.get("type").equals("message_evaluate")){//评价
-                    rootView.findViewById(R.id.full_toast).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.user_content).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.photo_album_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.custom_error_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.full_toast).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.user_content).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.photo_album_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.custom_error_layout).setVisibility(View.GONE);
                     if(!MessageRecyclerView.sex){
-                        rootView.findViewById(R.id.im_evaluation_layout_sex).setBackgroundResource(R.drawable.im_evaluation_layout_male);
+                        itemView.findViewById(R.id.im_evaluation_layout_sex).setBackgroundResource(R.drawable.im_evaluation_layout_male);
                     }else{
-                        rootView.findViewById(R.id.im_evaluation_layout_sex).setBackgroundResource(R.drawable.im_evaluation_layout_gril);
+                        itemView.findViewById(R.id.im_evaluation_layout_sex).setBackgroundResource(R.drawable.im_evaluation_layout_gril);
                     }
-                    rootView.findViewById(R.id.im_evaluation_layout).setVisibility(View.VISIBLE);
+                    itemView.findViewById(R.id.im_evaluation_layout).setVisibility(View.VISIBLE);
                     if(map_data.get("data")!=null){
                         List<EvaluateItemEntity> photoAlbumList = getObjectList(String.valueOf(map_data.get("data")), EvaluateItemEntity.class);
                         if(photoAlbumList!=null){
                             EvaluateItemEntity evaluateItemEntity1 = photoAlbumList.get(0);
                             EvaluateItemEntity evaluateItemEntity2 = photoAlbumList.get(1);
                             EvaluateItemEntity evaluateItemEntity3 = photoAlbumList.get(2);
-                            TextView evaluation_tag1 = rootView.findViewById(R.id.evaluation_tag1);
-                            TextView evaluation_tag2 = rootView.findViewById(R.id.evaluation_tag2);
-                            TextView evaluation_tag3 = rootView.findViewById(R.id.evaluation_tag3);
-                            TextView evaluation_tag4 = rootView.findViewById(R.id.evaluation_tag4);
+                            TextView evaluation_tag1 = itemView.findViewById(R.id.evaluation_tag1);
+                            TextView evaluation_tag2 = itemView.findViewById(R.id.evaluation_tag2);
+                            TextView evaluation_tag3 = itemView.findViewById(R.id.evaluation_tag3);
+                            TextView evaluation_tag4 = itemView.findViewById(R.id.evaluation_tag4);
                             evaluation_tag1.setText(evaluateItemEntity1.getName());
                             evaluation_tag2.setText(evaluateItemEntity2.getName());
                             evaluation_tag3.setText(evaluateItemEntity3.getName());
@@ -288,17 +288,17 @@ public class MessageTextHolder extends MessageContentHolder {
                         }
                     }
                 } else if (map_data != null && map_data.get("type") != null && map_data.get("type").equals("message_gift")) {//礼物
-                    rootView.findViewById(R.id.im_evaluation_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.photo_album_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.user_content).setVisibility(View.VISIBLE);
-                    rootView.findViewById(R.id.full_toast).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.custom_error_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.im_evaluation_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.photo_album_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.user_content).setVisibility(View.VISIBLE);
+                    itemView.findViewById(R.id.full_toast).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.custom_error_layout).setVisibility(View.GONE);
                     msgContentFrame.setVisibility(View.GONE);
                     msg_content_fl_custom.setVisibility(View.VISIBLE);
-                    rootView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
                     GiftEntity giftEntity = IMGsonUtils.fromJson(String.valueOf(map_data.get("data")), GiftEntity.class);
                     if (giftEntity != null) {
-                        View GiftView = View.inflate(rootView.getContext(), R.layout.custom_gift_view, null);
+                        View GiftView = View.inflate(itemView.getContext(), R.layout.custom_gift_view, null);
                         RelativeLayout custom_gift_layout = GiftView.findViewById(R.id.custom_gift_layout);
                         custom_gift_layout.setBackground(null);
                         ImageView gift_img = GiftView.findViewById(R.id.gift_img);
@@ -306,21 +306,21 @@ public class MessageTextHolder extends MessageContentHolder {
                         TextView gift_title = GiftView.findViewById(R.id.gift_title);
 
                         if (msg.isSelf()) {
-                            gift_title.setText(rootView.getContext().getString(R.string.custom_gift_left_title));
-                            gift_title.setTextColor(rootView.getResources().getColor(R.color.gift_right_color));
-                            gift_text.setTextColor(rootView.getResources().getColor(R.color.gift_right_txt_color));
-                            custom_gift_layout.setBackground(rootView.getContext().getDrawable(R.drawable.custom_right_gift_backdrop));
+                            gift_title.setText(itemView.getContext().getString(R.string.custom_gift_left_title));
+                            gift_title.setTextColor(itemView.getResources().getColor(R.color.gift_right_color));
+                            gift_text.setTextColor(itemView.getResources().getColor(R.color.gift_right_txt_color));
+                            custom_gift_layout.setBackground(itemView.getContext().getDrawable(R.drawable.custom_right_gift_backdrop));
                             GiftView.findViewById(R.id.custom_gift_hint_text).setVisibility(View.GONE);
                         } else {
-                            gift_title.setText(rootView.getContext().getString(R.string.custom_gift_right_title));
-                            gift_title.setTextColor(rootView.getResources().getColor(R.color.gift_left_color));
-                            gift_text.setTextColor(rootView.getResources().getColor(R.color.gift_left_txt_color));
-                            custom_gift_layout.setBackground(rootView.getContext().getDrawable(R.drawable.custom_left_gift_backdrop));
+                            gift_title.setText(itemView.getContext().getString(R.string.custom_gift_right_title));
+                            gift_title.setTextColor(itemView.getResources().getColor(R.color.gift_left_color));
+                            gift_text.setTextColor(itemView.getResources().getColor(R.color.gift_left_txt_color));
+                            custom_gift_layout.setBackground(itemView.getContext().getDrawable(R.drawable.custom_left_gift_backdrop));
                             TextView custom_gift_hint_text = GiftView.findViewById(R.id.custom_gift_hint_text);
                             custom_gift_hint_text.setVisibility(View.VISIBLE);
                             if (MessageRecyclerView.sex) {
                                 if (giftEntity.getProfitDiamond() != null) {
-                                    String custom_message_txt7 = rootView.getContext().getString(R.string.custom_message_txt7);
+                                    String custom_message_txt7 = itemView.getContext().getString(R.string.custom_message_txt7);
                                     String custom_message_txt7_val = (giftEntity.getProfitDiamond() * giftEntity.getAmount())+"";
                                     custom_gift_hint_text.setText(String.format(custom_message_txt7, custom_message_txt7_val));
                                 }
@@ -328,15 +328,15 @@ public class MessageTextHolder extends MessageContentHolder {
                                 if (giftEntity.getProfitTwd() != null) {
                                     double total = giftEntity.getProfitTwd() * giftEntity.getAmount();
                                     if (MessageRecyclerView.isCertification()) {
-                                        String custom_message_txt2 = rootView.getContext().getString(R.string.profit);
+                                        String custom_message_txt2 = itemView.getContext().getString(R.string.profit);
                                         String format = String.format(custom_message_txt2, String.format("%.2f", total));
                                         SpannableString iconSpannable = new SpannableString(format);
-                                        iconSpannable.setSpan(new MyImageSpan(rootView.getContext(),R.drawable.icon_crystal),0,1,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                        iconSpannable.setSpan(new MyImageSpan(itemView.getContext(),R.drawable.icon_crystal),0,1,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                                         custom_gift_hint_text.setText(iconSpannable);
                                     } else {
-                                        String custom_message_txt2 = rootView.getContext().getString(R.string.custom_message_txt2_test2);
-                                        SpannableString iconSpannable = matcherSearchText("#A72DFE", String.format(custom_message_txt2, String.format("%.2f", total)), rootView.getContext().getString(R.string.custom_message_txt1_key));
-                                        iconSpannable.setSpan(new MyImageSpan(rootView.getContext(),R.drawable.icon_crystal),0,1,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                        String custom_message_txt2 = itemView.getContext().getString(R.string.custom_message_txt2_test2);
+                                        SpannableString iconSpannable = matcherSearchText("#A72DFE", String.format(custom_message_txt2, String.format("%.2f", total)), itemView.getContext().getString(R.string.custom_message_txt1_key));
+                                        iconSpannable.setSpan(new MyImageSpan(itemView.getContext(),R.drawable.icon_crystal),0,1,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                                         custom_gift_hint_text.setText(iconSpannable);
                                         custom_gift_hint_text.setOnClickListener(new View.OnClickListener() {
                                             @Override
@@ -365,40 +365,40 @@ public class MessageTextHolder extends MessageContentHolder {
                 } else if (map_data != null && map_data.get("type") != null && (map_data.get("type").equals("message_custom") || map_data.get("type").equals("message_tracking"))) {//自定义消息体
                     msg_content_fl_custom.setVisibility(View.GONE);
                     msgContentFrame.setVisibility(View.GONE);
-                    rootView.findViewById(R.id.custom_error_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.im_evaluation_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.photo_album_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.user_content).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.full_toast).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.custom_layout).setVisibility(View.VISIBLE);
+                    itemView.findViewById(R.id.custom_error_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.im_evaluation_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.photo_album_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.user_content).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.full_toast).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.custom_layout).setVisibility(View.VISIBLE);
 
-                    TextView customHintText = rootView.findViewById(R.id.custom_hint_text);
+                    TextView customHintText = itemView.findViewById(R.id.custom_hint_text);
                     CustomIMTextEntity customIMTextEntity = IMGsonUtils.fromJson(String.valueOf(map_data.get("data")), CustomIMTextEntity.class);
                     LinearLayout.LayoutParams customHintTextLayoutParams2 = (LinearLayout.LayoutParams) customHintText.getLayoutParams();
                     if (map_data.get("type").equals("message_tracking")) {
-                        rootView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
-                        rootView.findViewById(R.id.custom_sufficient_view).setVisibility(View.GONE);
+                        itemView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
+                        itemView.findViewById(R.id.custom_sufficient_view).setVisibility(View.GONE);
                     } else {
                         if (customIMTextEntity != null) {
                             //callingtype：1语音，2视频
                             int totalSeconds = customIMTextEntity.getTotalSeconds();
                             int callingType = customIMTextEntity.getCallingType();
                             if (totalSeconds > 0 && callingType> 0){
-                                customHintText = rootView.findViewById(R.id.content_tip);
+                                customHintText = itemView.findViewById(R.id.content_tip);
                                 msgContentFrame.setVisibility(View.VISIBLE);
-                                rootView.findViewById(R.id.user_content).setVisibility(View.VISIBLE);
+                                itemView.findViewById(R.id.user_content).setVisibility(View.VISIBLE);
                                 if (msg.isSelf()) {
                                     if (properties.getRightChatContentFontColor() != 0) {
                                         msgBodyText.setTextColor(properties.getRightChatContentFontColor());
                                     }
-                                    rootView.findViewById(R.id.left_call_img).setVisibility(View.GONE);
-                                    rootView.findViewById(R.id.right_call_img).setVisibility(View.VISIBLE);
-                                    rootView.findViewById(R.id.right_call_img).setBackgroundResource(callingType == 1 ? R.drawable.custom_audio_right_img_1 : R.drawable.custom_video_right_img_1);
+                                    itemView.findViewById(R.id.left_call_img).setVisibility(View.GONE);
+                                    itemView.findViewById(R.id.right_call_img).setVisibility(View.VISIBLE);
+                                    itemView.findViewById(R.id.right_call_img).setBackgroundResource(callingType == 1 ? R.drawable.custom_audio_right_img_1 : R.drawable.custom_video_right_img_1);
                                 }else {
-                                    rootView.findViewById(R.id.right_call_img).setVisibility(View.GONE);
-                                    rootView.findViewById(R.id.left_call_img).setVisibility(View.VISIBLE);
-                                    rootView.findViewById(R.id.left_call_img).setBackgroundResource(callingType == 1 ? R.drawable.custom_audio_left_img_1 : R.drawable.custom_video_left_img_1);
+                                    itemView.findViewById(R.id.right_call_img).setVisibility(View.GONE);
+                                    itemView.findViewById(R.id.left_call_img).setVisibility(View.VISIBLE);
+                                    itemView.findViewById(R.id.left_call_img).setBackgroundResource(callingType == 1 ? R.drawable.custom_audio_left_img_1 : R.drawable.custom_video_left_img_1);
                                     if (properties.getLeftChatContentFontColor() != 0) {
                                         msgBodyText.setTextColor(properties.getLeftChatContentFontColor());
                                     }
@@ -406,26 +406,26 @@ public class MessageTextHolder extends MessageContentHolder {
                                 if (properties.getChatContextFontSize() != 0) {
                                     msgBodyText.setTextSize(properties.getChatContextFontSize());
                                 }
-                                msgBodyText.setText(rootView.getContext().getString(R.string.custom_message_call_message_deatail_time_msg,totalSeconds/60,totalSeconds%60));
+                                msgBodyText.setText(itemView.getContext().getString(R.string.custom_message_call_message_deatail_time_msg,totalSeconds/60,totalSeconds%60));
                             }else {
-                                rootView.findViewById(R.id.custom_sufficient_view_tip).setVisibility(View.GONE);
+                                itemView.findViewById(R.id.custom_sufficient_view_tip).setVisibility(View.GONE);
                                 msgContentFrame.setVisibility(View.GONE);
-                                rootView.findViewById(R.id.user_content).setVisibility(View.GONE);
+                                itemView.findViewById(R.id.user_content).setVisibility(View.GONE);
                             }
                             if (customIMTextEntity.getContent() == null) {
                                 if (MessageRecyclerView.sex) {
                                     //余额不足-需要充值
                                     if (customIMTextEntity.getIsRemindPay() != null && customIMTextEntity.getIsRemindPay().intValue() > 0) {
                                         if (totalSeconds > 0 && callingType> 0){
-                                            rootView.findViewById(R.id.custom_sufficient_view_tip).setVisibility(View.VISIBLE);
-                                            rootView.findViewById(R.id.custom_sufficient_view_tip).setOnClickListener(v -> {
+                                            itemView.findViewById(R.id.custom_sufficient_view_tip).setVisibility(View.VISIBLE);
+                                            itemView.findViewById(R.id.custom_sufficient_view_tip).setOnClickListener(v -> {
                                                 onItemClickListener.onClickDialogRechargeShow();
                                             });
                                         }else {
-                                            rootView.findViewById(R.id.user_content).setVisibility(View.GONE);
+                                            itemView.findViewById(R.id.user_content).setVisibility(View.GONE);
                                         }
-                                        FrameLayout custom_sufficient_view = rootView.findViewById(R.id.custom_sufficient_view);
-                                        View custom_not_sufficient_view = View.inflate(rootView.getContext(), R.layout.custom_not_sufficient_view, null);
+                                        FrameLayout custom_sufficient_view = itemView.findViewById(R.id.custom_sufficient_view);
+                                        View custom_not_sufficient_view = View.inflate(itemView.getContext(), R.layout.custom_not_sufficient_view, null);
                                         LinearLayout male_hint_layout = custom_not_sufficient_view.findViewById(R.id.male_hint_layout);
                                         male_hint_layout.setOnClickListener(new View.OnClickListener() {
                                             @Override
@@ -438,25 +438,25 @@ public class MessageTextHolder extends MessageContentHolder {
                                         custom_sufficient_view.setVisibility(View.VISIBLE);
                                     } else {
                                         customHintText.setVisibility(View.VISIBLE);
-                                        rootView.findViewById(R.id.custom_sufficient_view).setVisibility(View.GONE);
-                                        rootView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
+                                        itemView.findViewById(R.id.custom_sufficient_view).setVisibility(View.GONE);
+                                        itemView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
                                     }
 
                                 } else {
-                                    rootView.findViewById(R.id.custom_sufficient_view).setVisibility(View.GONE);
+                                    itemView.findViewById(R.id.custom_sufficient_view).setVisibility(View.GONE);
                                     if (Double.valueOf(customIMTextEntity.getPrice()).doubleValue() > 0) {
                                         if (MessageRecyclerView.isCertification()) {
-                                            String custom_message_txt2 = rootView.getContext().getString(R.string.profit);
+                                            String custom_message_txt2 = itemView.getContext().getString(R.string.profit);
                                             String format = String.format(custom_message_txt2, customIMTextEntity.getPrice());
                                             SpannableString iconSpannable = new SpannableString(format);
-                                            iconSpannable.setSpan(new MyImageSpan(rootView.getContext(),R.drawable.icon_crystal),0,1,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                            iconSpannable.setSpan(new MyImageSpan(itemView.getContext(),R.drawable.icon_crystal),0,1,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                                             customHintText.setText(iconSpannable);
                                         } else {
                                             customHintTextLayoutParams2.gravity = Gravity.CENTER;
-                                            customHintTextLayoutParams2.rightMargin = dip2px(rootView.getContext(), 0);
-                                            String custom_message_txt2 = rootView.getContext().getString(R.string.custom_message_txt2_test2);
-                                            SpannableString iconSpannable = matcherSearchText("#A72DFE", String.format(custom_message_txt2, String.format("%.2f", customIMTextEntity.getPrice())), rootView.getContext().getString(R.string.custom_message_txt1_key));
-                                            iconSpannable.setSpan(new MyImageSpan(rootView.getContext(),R.drawable.icon_crystal),0,1,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                            customHintTextLayoutParams2.rightMargin = dip2px(itemView.getContext(), 0);
+                                            String custom_message_txt2 = itemView.getContext().getString(R.string.custom_message_txt2_test2);
+                                            SpannableString iconSpannable = matcherSearchText("#A72DFE", String.format(custom_message_txt2, String.format("%.2f", customIMTextEntity.getPrice())), itemView.getContext().getString(R.string.custom_message_txt1_key));
+                                            iconSpannable.setSpan(new MyImageSpan(itemView.getContext(),R.drawable.icon_crystal),0,1,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                                             customHintText.setText(iconSpannable);
                                             customHintText.setOnClickListener(new View.OnClickListener() {
                                                 @Override
@@ -467,10 +467,10 @@ public class MessageTextHolder extends MessageContentHolder {
                                         }
                                     } else {
                                         if (customIMTextEntity.getIsRemindPay() != null && customIMTextEntity.getIsRemindPay().intValue() > 0) {
-                                            String custom_message_txt3 = rootView.getContext().getString(R.string.custom_message_txt3);
+                                            String custom_message_txt3 = itemView.getContext().getString(R.string.custom_message_txt3);
                                             customHintText.setText(custom_message_txt3);
                                         } else {
-                                            rootView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
+                                            itemView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
                                         }
                                     }
                                     customHintText.setVisibility(View.VISIBLE);
@@ -501,10 +501,10 @@ public class MessageTextHolder extends MessageContentHolder {
                                     LinearLayout.LayoutParams customHintTextLayoutParams = (LinearLayout.LayoutParams) customHintText.getLayoutParams();
                                     if (customIMTextEntity.getGravity().equals("left")) {
                                         customHintTextLayoutParams.gravity = Gravity.START;
-                                        customHintTextLayoutParams.leftMargin = dip2px(rootView.getContext(), customIMTextEntity.getMargin());
+                                        customHintTextLayoutParams.leftMargin = dip2px(itemView.getContext(), customIMTextEntity.getMargin());
                                     } else if (customIMTextEntity.getGravity().equals("right")) {
                                         customHintTextLayoutParams.gravity = Gravity.END;
-                                        customHintTextLayoutParams.rightMargin = dip2px(rootView.getContext(), customIMTextEntity.getMargin());
+                                        customHintTextLayoutParams.rightMargin = dip2px(itemView.getContext(), customIMTextEntity.getMargin());
                                     } else {
                                         customHintTextLayoutParams.gravity = Gravity.CENTER;
                                     }
@@ -519,51 +519,51 @@ public class MessageTextHolder extends MessageContentHolder {
                                 });
                             }
                             if (totalSeconds > 0 && callingType> 0){
-                                rootView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
+                                itemView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
                             }else {
                                 if (!MessageRecyclerView.isFlagTipMoney()) {
-                                    rootView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
+                                    itemView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
                                 }else {
-                                    rootView.findViewById(R.id.custom_layout).setVisibility(View.VISIBLE);
+                                    itemView.findViewById(R.id.custom_layout).setVisibility(View.VISIBLE);
                                 }
                             }
                         }
                     }
 
                 } else if (map_data != null && map_data.get("type") != null && map_data.get("type").equals("send_violation_message")) {//发送违规消息
-                    rootView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.custom_error_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.im_evaluation_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.photo_album_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.user_content).setVisibility(View.VISIBLE);
-                    rootView.findViewById(R.id.full_toast).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.message_sending_pb).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.message_status_iv).setVisibility(View.VISIBLE);
+                    itemView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.custom_error_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.im_evaluation_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.photo_album_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.user_content).setVisibility(View.VISIBLE);
+                    itemView.findViewById(R.id.full_toast).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.message_sending_pb).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.message_status_iv).setVisibility(View.VISIBLE);
                     msgContentFrame.setVisibility(View.VISIBLE);
                     msgBodyText.setVisibility(View.VISIBLE);
                     msgBodyText.setText(map_data.get("text").toString());
-                    String s = rootView.getContext().getString(R.string.custom_send_violation_message_tip);
+                    String s = itemView.getContext().getString(R.string.custom_send_violation_message_tip);
                     chat_system_tip_tv.setVisibility(View.VISIBLE);
                     chat_system_tip_tv.setText(s);
                     chat_system_tip_tv.setTextSize(11);
-                    msgBodyText.setTextColor(rootView.getResources().getColor(R.color.white));
+                    msgBodyText.setTextColor(itemView.getResources().getColor(R.color.white));
                     msgBodyText.setTextSize(14);
 
                 } else if (map_data != null && map_data.get("type") != null && map_data.get("type").equals("message_callingbusy")) {//忙線推送
-                    View custom_gift_layout_max = rootView.findViewById(R.id.custom_gift_layout_max);
+                    View custom_gift_layout_max = itemView.findViewById(R.id.custom_gift_layout_max);
                     if (custom_gift_layout_max != null) {
                         custom_gift_layout_max.setVisibility(View.GONE);
                     }
-                    rootView.findViewById(R.id.custom_error_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.custom_error_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
                     msg_content_fl_custom.setVisibility(View.GONE);
                     msgContentFrame.setVisibility(View.VISIBLE);
-                    rootView.findViewById(R.id.im_evaluation_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.photo_album_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.user_content).setVisibility(View.VISIBLE);
-                    rootView.findViewById(R.id.full_toast).setVisibility(View.GONE);
-                    String s = rootView.getContext().getString(R.string.custom_message_book_next_call);
-                    TextView viewById = (TextView) rootView.findViewById(R.id.chat_system_tip_tv);
+                    itemView.findViewById(R.id.im_evaluation_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.photo_album_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.user_content).setVisibility(View.VISIBLE);
+                    itemView.findViewById(R.id.full_toast).setVisibility(View.GONE);
+                    String s = itemView.getContext().getString(R.string.custom_message_book_next_call);
+                    TextView viewById = (TextView) itemView.findViewById(R.id.chat_system_tip_tv);
                     viewById.setVisibility(View.VISIBLE);
                     viewById.setText(s);
                     String data = (String) map_data.get("data");
@@ -573,32 +573,32 @@ public class MessageTextHolder extends MessageContentHolder {
                         msgBodyText.setTextSize(properties.getChatContextFontSize());
                     }
                     if (msg.isSelf()) {
-                        rootView.findViewById(R.id.right_call_img).setBackgroundResource(callType == 1 ?
+                        itemView.findViewById(R.id.right_call_img).setBackgroundResource(callType == 1 ?
                                 R.drawable.custom_audio_right_img_2 : R.drawable.custom_video_right_img_1);
-                        rootView.findViewById(R.id.right_call_img).setVisibility(View.VISIBLE);
-                        msgBodyText.setText(rootView.getContext().getString(R.string.custom_message_other_busy));
+                        itemView.findViewById(R.id.right_call_img).setVisibility(View.VISIBLE);
+                        msgBodyText.setText(itemView.getContext().getString(R.string.custom_message_other_busy));
                         if (properties.getRightChatContentFontColor() != 0) {
                             msgBodyText.setTextColor(properties.getRightChatContentFontColor());
                         }
                     } else {
-                        rootView.findViewById(R.id.left_call_img).setBackgroundResource(callType == 1 ?
+                        itemView.findViewById(R.id.left_call_img).setBackgroundResource(callType == 1 ?
                                 R.drawable.custom_audio_left_img_2 : R.drawable.custom_video_left_img_1);
-                        rootView.findViewById(R.id.left_call_img).setVisibility(View.VISIBLE);
-                        msgBodyText.setText(rootView.getContext().getString(R.string.custom_message_busy_missed));
+                        itemView.findViewById(R.id.left_call_img).setVisibility(View.VISIBLE);
+                        msgBodyText.setText(itemView.getContext().getString(R.string.custom_message_busy_missed));
                         if (properties.getLeftChatContentFontColor() != 0) {
                             msgBodyText.setTextColor(properties.getLeftChatContentFontColor());
                         }
                     }
                 } else if (map_data != null && map_data.get("type") != null && map_data.get("type").equals("send_male_error")){//自定义消息体
 
-                    rootView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.custom_error_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.im_evaluation_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.photo_album_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.user_content).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.full_toast).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.custom_error_layout).setVisibility(View.VISIBLE);
-                    LinearLayout male_hint_error_layout = rootView.findViewById(R.id.male_hint_error_layout);
+                    itemView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.custom_error_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.im_evaluation_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.photo_album_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.user_content).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.full_toast).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.custom_error_layout).setVisibility(View.VISIBLE);
+                    LinearLayout male_hint_error_layout = itemView.findViewById(R.id.male_hint_error_layout);
                     //点击唤醒充值
                     male_hint_error_layout.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -609,59 +609,59 @@ public class MessageTextHolder extends MessageContentHolder {
                 } else if (map_data != null && map_data.get("type") != null && map_data.get("type").equals("chat_earnings")) {//收益提示
                     msg_content_fl_custom.setVisibility(View.GONE);
                     msgContentFrame.setVisibility(View.GONE);
-                    rootView.findViewById(R.id.custom_error_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.im_evaluation_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.photo_album_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.user_content).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.full_toast).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.custom_layout).setVisibility(View.VISIBLE);
+                    itemView.findViewById(R.id.custom_error_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.im_evaluation_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.photo_album_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.user_content).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.full_toast).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.custom_layout).setVisibility(View.VISIBLE);
                     if (!MessageRecyclerView.isFlagTipMoney()) {
-                        rootView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
+                        itemView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
                     } else {
-                        rootView.findViewById(R.id.custom_layout).setVisibility(View.VISIBLE);
+                        itemView.findViewById(R.id.custom_layout).setVisibility(View.VISIBLE);
                     }
-                    TextView customHintText = rootView.findViewById(R.id.custom_hint_text);
+                    TextView customHintText = itemView.findViewById(R.id.custom_hint_text);
                     CustomIMTextEntity customIMTextEntity = IMGsonUtils.fromJson(String.valueOf(map_data.get("data")), CustomIMTextEntity.class);
                     String custom_message_txt2 = "";
                     LinearLayout.LayoutParams customHintTextLayoutParams = (LinearLayout.LayoutParams) customHintText.getLayoutParams();
                     if (customIMTextEntity.getIsRefundMoney() != null) {
                         if (MessageRecyclerView.sex) {
-                            custom_message_txt2 = rootView.getContext().getString(R.string.custom_message_txt_male);
+                            custom_message_txt2 = itemView.getContext().getString(R.string.custom_message_txt_male);
                             if (!msg.isSelf()) {
                                 customHintTextLayoutParams.gravity = Gravity.END;
-                                customHintTextLayoutParams.rightMargin = dip2px(rootView.getContext(), 62);
+                                customHintTextLayoutParams.rightMargin = dip2px(itemView.getContext(), 62);
                             } else {
                                 customHintTextLayoutParams.gravity = Gravity.START;
-                                customHintTextLayoutParams.leftMargin = dip2px(rootView.getContext(), 62);
+                                customHintTextLayoutParams.leftMargin = dip2px(itemView.getContext(), 62);
                             }
                             customHintText.setText(custom_message_txt2);
                         } else {
-                            custom_message_txt2 = rootView.getContext().getString(R.string.custom_message_txt_girl);
+                            custom_message_txt2 = itemView.getContext().getString(R.string.custom_message_txt_girl);
                             if (!msg.isSelf()) {
                                 customHintTextLayoutParams.gravity = Gravity.END;
-                                customHintTextLayoutParams.rightMargin = dip2px(rootView.getContext(), 62);
+                                customHintTextLayoutParams.rightMargin = dip2px(itemView.getContext(), 62);
                             } else {
                                 customHintTextLayoutParams.gravity = Gravity.START;
-                                customHintTextLayoutParams.leftMargin = dip2px(rootView.getContext(), 62);
+                                customHintTextLayoutParams.leftMargin = dip2px(itemView.getContext(), 62);
                             }
                             customHintText.setText(custom_message_txt2);
                         }
                     } else {
                         if (MessageRecyclerView.isCertification()) {
-                            custom_message_txt2 = rootView.getContext().getString(R.string.profit);
+                            custom_message_txt2 = itemView.getContext().getString(R.string.profit);
                             customHintTextLayoutParams.gravity = Gravity.END;
-                            customHintTextLayoutParams.rightMargin = dip2px(rootView.getContext(), 62);
+                            customHintTextLayoutParams.rightMargin = dip2px(itemView.getContext(), 62);
                             String format = String.format(custom_message_txt2, customIMTextEntity.getTextProfit());
                             SpannableString iconSpannable = new SpannableString(format);
-                            iconSpannable.setSpan(new MyImageSpan(rootView.getContext(),R.drawable.icon_crystal),0,1,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            iconSpannable.setSpan(new MyImageSpan(itemView.getContext(),R.drawable.icon_crystal),0,1,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                             customHintText.setText(iconSpannable);
                         } else {
                             customIMTextEntity.setEvent(11);
                             customHintTextLayoutParams.gravity = Gravity.CENTER;
-                            customHintTextLayoutParams.rightMargin = dip2px(rootView.getContext(), 0);
-                            custom_message_txt2 = rootView.getContext().getString(R.string.custom_message_txt1);
-                            SpannableString iconSpannable = matcherSearchText("#A72DFE", String.format(custom_message_txt2, String.format("%.2f", customIMTextEntity.getTextProfit())), rootView.getContext().getString(R.string.custom_message_txt1_key));
-                            iconSpannable.setSpan(new MyImageSpan(rootView.getContext(),R.drawable.icon_crystal),0,1,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            customHintTextLayoutParams.rightMargin = dip2px(itemView.getContext(), 0);
+                            custom_message_txt2 = itemView.getContext().getString(R.string.custom_message_txt1);
+                            SpannableString iconSpannable = matcherSearchText("#A72DFE", String.format(custom_message_txt2, String.format("%.2f", customIMTextEntity.getTextProfit())), itemView.getContext().getString(R.string.custom_message_txt1_key));
+                            iconSpannable.setSpan(new MyImageSpan(itemView.getContext(),R.drawable.icon_crystal),0,1,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                             customHintText.setText(iconSpannable);
                         }
                     }
@@ -674,27 +674,27 @@ public class MessageTextHolder extends MessageContentHolder {
                         }
                     });
                 } else {
-                    rootView.findViewById(R.id.custom_error_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.im_evaluation_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.photo_album_layout).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.user_content).setVisibility(View.VISIBLE);
-                    rootView.findViewById(R.id.full_toast).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.custom_error_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.im_evaluation_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.photo_album_layout).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.user_content).setVisibility(View.VISIBLE);
+                    itemView.findViewById(R.id.full_toast).setVisibility(View.GONE);
                     FaceManager.handlerEmojiText(msgBodyText, msg.getExtra().toString(), false);
                 }
             } else {//正常接收消息
-                View custom_gift_layout_max = rootView.findViewById(R.id.custom_gift_layout_max);
+                View custom_gift_layout_max = itemView.findViewById(R.id.custom_gift_layout_max);
                 if (custom_gift_layout_max != null) {
                     custom_gift_layout_max.setVisibility(View.GONE);
                 }
-                rootView.findViewById(R.id.custom_error_layout).setVisibility(View.GONE);
-                rootView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
+                itemView.findViewById(R.id.custom_error_layout).setVisibility(View.GONE);
+                itemView.findViewById(R.id.custom_layout).setVisibility(View.GONE);
                 msg_content_fl_custom.setVisibility(View.GONE);
                 msgContentFrame.setVisibility(View.VISIBLE);
-                rootView.findViewById(R.id.im_evaluation_layout).setVisibility(View.GONE);
-                rootView.findViewById(R.id.photo_album_layout).setVisibility(View.GONE);
-                rootView.findViewById(R.id.user_content).setVisibility(View.VISIBLE);
-                rootView.findViewById(R.id.full_toast).setVisibility(View.GONE);
+                itemView.findViewById(R.id.im_evaluation_layout).setVisibility(View.GONE);
+                itemView.findViewById(R.id.photo_album_layout).setVisibility(View.GONE);
+                itemView.findViewById(R.id.user_content).setVisibility(View.VISIBLE);
+                itemView.findViewById(R.id.full_toast).setVisibility(View.GONE);
                 String extra = msg.getExtra().toString();
                 //信令消息
                 if (msg.getV2TIMMessage() != null && msg.getV2TIMMessage().getCustomElem() != null && msg.getCustomElemData() != null) {
@@ -708,42 +708,42 @@ public class MessageTextHolder extends MessageContentHolder {
                                 int actionType = Double.valueOf(String.valueOf(signallingData.get("actionType"))).intValue();
                                 int callType = Double.valueOf(String.valueOf(callData.get("call_type"))).intValue();
                                 if (msg.isSelf()) {
-                                    rootView.findViewById(R.id.left_call_img).setVisibility(View.GONE);
+                                    itemView.findViewById(R.id.left_call_img).setVisibility(View.GONE);
                                     if (actionType == 1) {//发起通话
-                                        rootView.findViewById(R.id.right_call_img).setBackgroundResource(callType == 1 ? R.drawable.custom_audio_right_img_1 : R.drawable.custom_video_right_img_1);
-                                        rootView.findViewById(R.id.right_call_img).setVisibility(View.VISIBLE);
+                                        itemView.findViewById(R.id.right_call_img).setBackgroundResource(callType == 1 ? R.drawable.custom_audio_right_img_1 : R.drawable.custom_video_right_img_1);
+                                        itemView.findViewById(R.id.right_call_img).setVisibility(View.VISIBLE);
                                     } else if (actionType == 2) {//取消通话
-                                        rootView.findViewById(R.id.right_call_img).setBackgroundResource(callType == 1 ? R.drawable.custom_audio_right_img_2 : R.drawable.custom_video_right_img_1);
-                                        rootView.findViewById(R.id.right_call_img).setVisibility(View.VISIBLE);
+                                        itemView.findViewById(R.id.right_call_img).setBackgroundResource(callType == 1 ? R.drawable.custom_audio_right_img_2 : R.drawable.custom_video_right_img_1);
+                                        itemView.findViewById(R.id.right_call_img).setVisibility(View.VISIBLE);
                                     } else if (actionType == 4) {//接听电话
-                                        rootView.findViewById(R.id.right_call_img).setBackgroundResource(callType == 1 ? R.drawable.custom_audio_right_img_2 : R.drawable.custom_video_right_img_1);
-                                        rootView.findViewById(R.id.right_call_img).setVisibility(View.VISIBLE);
+                                        itemView.findViewById(R.id.right_call_img).setBackgroundResource(callType == 1 ? R.drawable.custom_audio_right_img_2 : R.drawable.custom_video_right_img_1);
+                                        itemView.findViewById(R.id.right_call_img).setVisibility(View.VISIBLE);
                                     } else if (actionType == 7) {//接听电话
-                                        rootView.findViewById(R.id.right_call_img).setBackgroundResource(callType == 1 ? R.drawable.custom_audio_right_img_2 : R.drawable.custom_video_right_img_1);
-                                        rootView.findViewById(R.id.right_call_img).setVisibility(View.VISIBLE);
+                                        itemView.findViewById(R.id.right_call_img).setBackgroundResource(callType == 1 ? R.drawable.custom_audio_right_img_2 : R.drawable.custom_video_right_img_1);
+                                        itemView.findViewById(R.id.right_call_img).setVisibility(View.VISIBLE);
                                     }
                                 } else {
-                                    rootView.findViewById(R.id.right_call_img).setVisibility(View.GONE);
+                                    itemView.findViewById(R.id.right_call_img).setVisibility(View.GONE);
                                     if (actionType == 1) {//发起通话
-                                        rootView.findViewById(R.id.left_call_img).setBackgroundResource(callType == 1 ? R.drawable.custom_audio_left_img_1 : R.drawable.custom_video_left_img_1);
-                                        rootView.findViewById(R.id.left_call_img).setVisibility(View.VISIBLE);
+                                        itemView.findViewById(R.id.left_call_img).setBackgroundResource(callType == 1 ? R.drawable.custom_audio_left_img_1 : R.drawable.custom_video_left_img_1);
+                                        itemView.findViewById(R.id.left_call_img).setVisibility(View.VISIBLE);
                                     } else if (actionType == 2) {//取消通话
-                                        rootView.findViewById(R.id.left_call_img).setBackgroundResource(callType == 1 ? R.drawable.custom_audio_left_img_2 : R.drawable.custom_video_left_img_1);
-                                        rootView.findViewById(R.id.left_call_img).setVisibility(View.VISIBLE);
+                                        itemView.findViewById(R.id.left_call_img).setBackgroundResource(callType == 1 ? R.drawable.custom_audio_left_img_2 : R.drawable.custom_video_left_img_1);
+                                        itemView.findViewById(R.id.left_call_img).setVisibility(View.VISIBLE);
                                     } else if (actionType == 4) {//接听电话
-                                        rootView.findViewById(R.id.left_call_img).setBackgroundResource(callType == 1 ? R.drawable.custom_audio_left_img_2 : R.drawable.custom_video_left_img_1);
-                                        rootView.findViewById(R.id.left_call_img).setVisibility(View.VISIBLE);
+                                        itemView.findViewById(R.id.left_call_img).setBackgroundResource(callType == 1 ? R.drawable.custom_audio_left_img_2 : R.drawable.custom_video_left_img_1);
+                                        itemView.findViewById(R.id.left_call_img).setVisibility(View.VISIBLE);
                                     } else if (actionType == 7) {//接听电话
-                                        rootView.findViewById(R.id.left_call_img).setBackgroundResource(callType == 1 ? R.drawable.custom_audio_left_img_2 : R.drawable.custom_video_left_img_1);
-                                        rootView.findViewById(R.id.left_call_img).setVisibility(View.VISIBLE);
+                                        itemView.findViewById(R.id.left_call_img).setBackgroundResource(callType == 1 ? R.drawable.custom_audio_left_img_2 : R.drawable.custom_video_left_img_1);
+                                        itemView.findViewById(R.id.left_call_img).setVisibility(View.VISIBLE);
                                     }
                                 }
                             }
                         }
                     }
                 } else {
-                    rootView.findViewById(R.id.right_call_img).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.left_call_img).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.right_call_img).setVisibility(View.GONE);
+                    itemView.findViewById(R.id.left_call_img).setVisibility(View.GONE);
                 }
                 if (extra != null && extra.indexOf("href") != -1 && extra.indexOf("</a>") != -1) {
                     CharSequence charSequence = Html.fromHtml(extra);
@@ -791,7 +791,7 @@ public class MessageTextHolder extends MessageContentHolder {
     /**
      * 正则匹配 返回值是一个SpannableString 即经过变色处理的数据
      */
-    private SpannableString matcherSearchText(String color, String text, String keyword) {
+    public SpannableString matcherSearchText(String color, String text, String keyword) {
         if (text == null || TextUtils.isEmpty(text)) {
             return SpannableString.valueOf("");
         }

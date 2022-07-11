@@ -1,6 +1,7 @@
 package com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -33,7 +34,7 @@ public class CustomImageMessageHolder extends MessageContentHolder{
 
     public CustomImageMessageHolder(View itemView) {
         super(itemView);
-        customImage = rootView.findViewById(R.id.iv_custom_image);
+        customImage = itemView.findViewById(R.id.iv_custom_image);
     }
 
     @Override

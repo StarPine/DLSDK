@@ -3,11 +3,15 @@ package com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder;
 import android.animation.Animator;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
+import android.content.Context;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
@@ -25,9 +29,12 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.ICommonMessageAdapter;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemClickListener;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.MyImageSpan;
+import com.tencent.qcloud.tuikit.tuichat.ui.view.message.MessageRecyclerView;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.reply.ChatFlowReactView;
 
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
     public static final int MSG_TYPE_HEADER_VIEW = -99;
@@ -37,7 +44,7 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
     protected OnItemClickListener onItemClickListener;
 
     public TextView chatTimeText, profitTip;
-    public FrameLayout msgContentFrame,msgContentFrame2,customJsonMsgContentFrame;
+    public FrameLayout msgContentFrame,msgContentReservFrame,customJsonMsgContentFrame;
     public LinearLayout msgReplyDetailLayout;
     public LinearLayout msgArea;
     public LinearLayout msgAreaAndReply;
@@ -45,24 +52,26 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
     public CheckBox mMutiSelectCheckBox;
     public RelativeLayout rightGroupLayout;
     public RelativeLayout mContentLayout;
-    protected View rootView;//todo DL add
     private ValueAnimator highLightAnimator;
+    public final Context appContext;
+
     public MessageBaseHolder(View itemView) {
         super(itemView);
-        rootView = itemView;//DL add
+        appContext = TUIChatService.getAppContext();
         chatTimeText = itemView.findViewById(R.id.message_top_time_tv);
         profitTip = itemView.findViewById(R.id.tv_chat_item_profit_tip);
         msgContentFrame = itemView.findViewById(R.id.msg_content_fl);
-        msgContentFrame2 = itemView.findViewById(R.id.msg_content_fl2);
+        msgContentReservFrame = itemView.findViewById(R.id.msg_content_reserv_fl);
         customJsonMsgContentFrame = itemView.findViewById(R.id.custom_json_msg_content_fl);
-//        msgReplyDetailLayout = itemView.findViewById(R.id.msg_reply_detail_fl);
         reactView = itemView.findViewById(R.id.reacts_view);
         msgArea = itemView.findViewById(R.id.msg_area);
         msgAreaAndReply = itemView.findViewById(R.id.msg_area_and_reply);
-//        mMutiSelectCheckBox = itemView.findViewById(R.id.select_checkbox);
         rightGroupLayout = itemView.findViewById(R.id.right_group_layout);
+//        msgReplyDetailLayout = itemView.findViewById(R.id.msg_reply_detail_fl);
+//        mMutiSelectCheckBox = itemView.findViewById(R.id.select_checkbox);
 //        mContentLayout = itemView.findViewById(R.id.messsage_content_layout);
         initVariableLayout();
+
     }
 
     public abstract int getVariableLayout();
@@ -92,9 +101,12 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
     }
 
     public void layoutViews(final TUIMessageBean msg, final int position) {
+        setContentLayoutVisibility(true);
+        //清除旧视图，避免数据加载错乱
         msgContentFrame.setVisibility(View.VISIBLE);
-        msgContentFrame2.removeAllViews();
+        msgContentReservFrame.removeAllViews();
         customJsonMsgContentFrame.removeAllViews();
+        Log.i("starpine","========="+msg.getV2TIMMessage());
         //显示收益消息
         showProfitView(msg);
 
@@ -126,16 +138,45 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
     }
 
     private void showProfitView(TUIMessageBean msg) {
+
         String cloudCustomData = msg.getV2TIMMessage().getCloudCustomData();
-        if (!TextUtils.isEmpty(cloudCustomData)){
-            String format = String.format(TUIChatService.getAppContext().getString(R.string.profit),cloudCustomData);
-            SpannableString iconSpannable = new SpannableString(format);
-            iconSpannable.setSpan(new MyImageSpan(TUIChatService.getAppContext(),R.drawable.icon_crystal),0,1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        if (!TextUtils.isEmpty(cloudCustomData)) {
+            String profitContent = appContext.getString(R.string.profit);
+            if (!MessageRecyclerView.isCertification()) {
+                profitContent = appContext.getString(R.string.custom_message_txt2_test2);
+                profitTip.setOnClickListener(v -> onItemClickListener.onClickCustomText());
+            }
+            String format = String.format(profitContent, cloudCustomData);
+            SpannableString iconSpannable = matcherSearchText("#A72DFE", format, appContext.getString(R.string.custom_message_txt1_key));
+            iconSpannable.setSpan(new MyImageSpan(TUIChatService.getAppContext(), R.drawable.icon_crystal), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             profitTip.setText(iconSpannable);
             profitTip.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             profitTip.setVisibility(View.GONE);
         }
+    }
+
+
+    /**
+     * 正则匹配 返回值是一个SpannableString 即经过变色处理的数据
+     */
+    public SpannableString matcherSearchText(String color, String text, String keyword) {
+        if (text == null || TextUtils.isEmpty(text)) {
+            return SpannableString.valueOf("");
+        }
+        SpannableString spannableString = new SpannableString(text);
+        //条件 keyword
+        Pattern pattern = Pattern.compile(Pattern.quote(keyword), Pattern.CASE_INSENSITIVE);
+        //匹配
+        Matcher matcher = pattern.matcher(spannableString);
+        while (matcher.find()) {
+            int start = matcher.start();
+            int end = matcher.end();
+            //ForegroundColorSpan 需要new 不然也只能是部分变色
+            spannableString.setSpan(new ForegroundColorSpan(Color.parseColor(color)), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        //返回变色处理的结果
+        return spannableString;
     }
 
     public void stopHighLight() {
@@ -202,6 +243,24 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
         if (drawable != null) {
             drawable.setColorFilter(null);
         }
+    }
+
+    /**
+     * 隐藏recycleview单个item
+     * @param isVisible
+     */
+    public void setContentLayoutVisibility(boolean isVisible){
+        RecyclerView.LayoutParams param = (RecyclerView.LayoutParams)itemView.getLayoutParams();
+        if (isVisible){
+            param.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+            param.width = LinearLayout.LayoutParams.MATCH_PARENT;
+            itemView.setVisibility(View.VISIBLE);
+        }else{
+            itemView.setVisibility(View.GONE);
+            param.height = 0;
+            param.width = 0;
+        }
+        itemView.setLayoutParams(param);
     }
 
 }

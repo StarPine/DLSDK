@@ -620,17 +620,23 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
 
             @Override
             public void onClickDialogRechargeShow() {
-
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onClickDialogRechargeShow();
+                }
             }
 
             @Override
             public void clickToUserMain() {
-
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.clickToUserMain();
+                }
             }
 
             @Override
             public void onClickCustomText() {
-
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onClickCustomText();
+                }
             }
         });
     }
