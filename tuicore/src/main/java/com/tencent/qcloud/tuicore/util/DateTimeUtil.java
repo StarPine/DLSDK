@@ -65,10 +65,12 @@ public class DateTimeUtil {
         calendar.set(Calendar.MILLISECOND, 0);
         long yearStartTimeInMillis = calendar.getTimeInMillis();
         long outTimeMillis = date.getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+        timeText = sdf.format(outTimeMillis);
         if (outTimeMillis < yearStartTimeInMillis) {
-            timeText = String.format(locale, "%tD", date);
+//            timeText = String.format(locale, "%tD", date);
         } else if (outTimeMillis < weekStartTimeInMillis) {
-            timeText = String.format(locale, "%1$tm/%1$td", date);
+//            timeText = String.format(locale, "%1$tm/%1$td", date);
         } else if (outTimeMillis < dayStartTimeInMillis) {
             timeText = String.format(locale, "%tA", date);
         } else {
