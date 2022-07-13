@@ -530,7 +530,7 @@
 
                                 <ImageView
                                     android:id="@+id/iv_real_man"
-                                    android:layout_width="13dp"
+                                    android:layout_width="31dp"
                                     android:layout_height="13dp"
                                     android:layout_marginRight="8dp"
                                     android:src="@drawable/ic_real_man"
@@ -538,7 +538,7 @@
 
                                 <ImageView
                                     android:id="@+id/iv_goddess"
-                                    android:layout_width="13dp"
+                                    android:layout_width="31dp"
                                     android:layout_height="13dp"
                                     android:layout_marginRight="8dp"
                                     android:src="@drawable/ic_goddess"

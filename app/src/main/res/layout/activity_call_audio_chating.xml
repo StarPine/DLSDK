@@ -153,7 +153,7 @@
 
                 <ImageView
                     android:id="@+id/iv_vip"
-                    android:layout_width="14dp"
+                    android:layout_width="31dp"
                     android:layout_height="13dp"
                     android:layout_gravity="center"
                     android:layout_marginStart="5dp"
@@ -197,7 +197,7 @@
                     />
                 <ImageView
                     android:layout_marginStart="5dp"
-                    android:layout_width="14dp"
+                    android:layout_width="31dp"
                     android:layout_height="13dp"
                     android:src="@{viewModel.getVipGodsImg(viewModel.rightUserInfoField)}"
                     android:visibility="@{viewModel.getVipGodsImg(viewModel.rightUserInfoField)== null?View.GONE:View.VISIBLE}"
