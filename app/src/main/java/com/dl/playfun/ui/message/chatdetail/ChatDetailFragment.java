@@ -128,6 +128,8 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     private GiftBagDialog giftBagDialog;
     //对方用户id
     private Integer toUserDataId = null;
+    private C2CChatPresenter presenter;
+    private TUIMessageBean photoBean = null;
 
     @Nullable
     @Override
@@ -186,7 +188,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             viewModel.loadUserInfo(getTaUserIdIM());
             viewModel.loadTagUser(String.valueOf(getTaUserIdIM()));
         }
-        //initChatView();
         initChatView();
         int userId = getTaUserIdIM(); //获取当前聊天对象的ID
         if (userId != 0) {
@@ -195,6 +196,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             //聊天价格配置
             viewModel.getPriceConfig(userId);
             viewModel.verifyGoddessTips(userId);
+            viewModel.getPhotoAlbum(getTaUserIdIM());
         }
     }
 
@@ -237,27 +239,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                 //遍历聊天规则
                 for (MessageRuleEntity messageRuleEntity : messageRuleEntities) {
                     //相册
-                    if (messageRuleEntity.getType().intValue() == 1) {
-                        if (messageRuleEntity.getRuleType() == 1) {//按时间
-                            Integer ruleValue = messageRuleEntity.getRuleValue();
-                            if (ruleValue != null && ruleValue.intValue() > 0) {
-                                String eventId = mChatInfo.getId() + "_photoAlbum";
-                                LocalMessageIMEntity localMessageIMEntity = LocalDataSourceImpl.getInstance().readLocalMessageIM(eventId);
-                                if (localMessageIMEntity == null) {
-                                    viewModel.getPhotoAlbum(getTaUserIdIM());
-                                } else {
-                                    long sendTime = localMessageIMEntity.getSendTime();
-                                    long localTime = System.currentTimeMillis();
-                                    if ((localTime / 1000) - (sendTime / 1000) > ruleValue.intValue()) {//满足发送时间
-                                        //LocalDataSourceImpl.getInstance().removeLocalMessage(eventId);
-                                        //removeLocalMessage(localMessageIMEntity,eventId);
-                                        //插入相册
-                                        viewModel.getPhotoAlbum(getTaUserIdIM());
-                                    }
-                                }
-                            }
-                        }
-                    }
+//                    askPhotoData(messageRuleEntity);
                 }
             }
         });
@@ -325,15 +307,23 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         viewModel.uc.putPhotoAlbumEntity.observe(this, new Observer<PhotoAlbumEntity>() {
             @Override
             public void onChanged(PhotoAlbumEntity photoAlbumEntity) {
-                String eventId = mChatInfo.getId() + "_photoAlbum";
                 try {
-                    addLocalMessage("message_photo", eventId, GsonUtils.toJson(photoAlbumEntity));
+//                    String eventId = mChatInfo.getId() + "_photoAlbum";
+//                    addLocalMessage("message_photo", eventId, GsonUtils.toJson(photoAlbumEntity));
+                    if (photoAlbumEntity != null){
+                        String objData = GsonUtils.toJson(photoAlbumEntity);
+                        Map<String, Object> custom_local_data = new HashMap<>();
+                        custom_local_data.put("type", "message_photo");
+                        custom_local_data.put("data", objData);
+                        photoBean = ChatMessageBuilder.buildTextMessage(GsonUtils.toJson(custom_local_data));
+                        presenter.setPhotoBean(photoBean);
+                    }
+
                 } catch (Exception e) {
 
+                }finally {
+                    binding.chatLayout.setChatInfo(mChatInfo);
                 }
-
-                //LocalDataSourceImpl.getInstance().removeLocalMessage(eventId);
-                //removeLocalMessage(localMessageIMEntity,eventId);
             }
         });
         viewModel.uc.clickConnMic.observe(this, new Observer<Void>() {
@@ -445,6 +435,30 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         });
     }
 
+    private void askPhotoData(MessageRuleEntity messageRuleEntity) {
+        if (messageRuleEntity.getType().intValue() == 1) {
+            if (messageRuleEntity.getRuleType() == 1) {//按时间
+                Integer ruleValue = messageRuleEntity.getRuleValue();
+                if (ruleValue != null && ruleValue.intValue() > 0) {
+                    String eventId = mChatInfo.getId() + "_photoAlbum";
+                    LocalMessageIMEntity localMessageIMEntity = LocalDataSourceImpl.getInstance().readLocalMessageIM(eventId);
+                    if (localMessageIMEntity == null) {
+                        viewModel.getPhotoAlbum(getTaUserIdIM());
+                    } else {
+                        long sendTime = localMessageIMEntity.getSendTime();
+                        long localTime = System.currentTimeMillis();
+                        if ((localTime / 1000) - (sendTime / 1000) > ruleValue.intValue()) {//满足发送时间
+                            //LocalDataSourceImpl.getInstance().removeLocalMessage(eventId);
+                            //removeLocalMessage(localMessageIMEntity,eventId);
+                            //插入相册
+                            viewModel.getPhotoAlbum(getTaUserIdIM());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private void showMoreMenu(int userId) {
 
         View view = getLayoutInflater().inflate(R.layout.pop_chat_more_menu, null);
@@ -498,10 +512,9 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         //初始化
         setTitleBarTitle(mChatInfo.getChatName());
         binding.chatLayout.initDefault();
-        C2CChatPresenter presenter = new C2CChatPresenter();
+        presenter = new C2CChatPresenter();
         presenter.setChatInfo(mChatInfo);
         binding.chatLayout.setPresenter(presenter);
-        binding.chatLayout.setChatInfo(mChatInfo);
         inputLayout = binding.chatLayout.getInputLayout();
 //        inputLayout.enableAudioCall();
         CustomChatInputFragment customChatInputFragment = new CustomChatInputFragment();

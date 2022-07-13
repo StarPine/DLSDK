@@ -124,7 +124,8 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
         if (position > 1) {
             TUIMessageBean last = mAdapter.getItem(position - 1);
             if (last != null) {
-                if (msg.getMessageTime() - last.getMessageTime() >= 5 * 60) {
+                long valueTime = msg.getMessageTime() - last.getMessageTime();
+                if (valueTime >= 5 * 60 || valueTime < 0) {
                     chatTimeText.setVisibility(View.VISIBLE);
                     chatTimeText.setText(DateTimeUtil.getTimeFormatText(new Date(msg.getMessageTime() * 1000)));
                 } else {

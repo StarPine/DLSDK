@@ -395,4 +395,11 @@ public abstract class TUIMessageBean implements Serializable {
      public void setUniqueId(long uniqueId) {
           this.uniqueId = uniqueId;
      }
+
+     @Override
+     public String toString() {
+          return "TUIMessageBean{" +
+                  "extra='" + extra + '\'' +
+                  '}';
+     }
 }

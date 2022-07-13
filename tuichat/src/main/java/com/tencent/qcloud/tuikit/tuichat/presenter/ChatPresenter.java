@@ -1107,7 +1107,6 @@ public abstract class ChatPresenter {
             String msgId = msg.getId();
             for (int i = loadedMessageInfoList.size() - 1; i >= 0; i--) {
                 if (loadedMessageInfoList.get(i).getId().equals(msgId)
-                        && loadedMessageInfoList.get(i).getUniqueId() == msg.getUniqueId()
                         && TextUtils.equals(loadedMessageInfoList.get(i).getExtra().toString(), msg.getExtra().toString())) {
                     return true;
                 }

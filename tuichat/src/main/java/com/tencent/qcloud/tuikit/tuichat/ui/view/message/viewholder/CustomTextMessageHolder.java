@@ -34,11 +34,12 @@ import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 import java.util.Map;
 
 /**
+ * 修改备注：自定义json文本信息类型
  * @Name： PlayFun_Google
  * @Description：
  * @Author： liaosf
  * @Date： 2022/7/4 11:13
- * 修改备注：自定义json文本信息类型
+ *
  */
 public class CustomTextMessageHolder extends TextMessageHolder {
     private ImageView mLeftView, mRightView;
@@ -56,8 +57,8 @@ public class CustomTextMessageHolder extends TextMessageHolder {
 
     @Override
     public void layoutVariableViews(TUIMessageBean msg, int position) {
-        mLeftView.setVisibility(View.GONE);
-        mRightView.setVisibility(View.GONE);
+
+        initView();
         String extra = msg.getExtra();
         Log.i("starpine","custiom"+msg.getV2TIMMessage());
         if (TUIChatUtils.isJSON2(extra)) {//自定义json文本消息
@@ -65,7 +66,7 @@ public class CustomTextMessageHolder extends TextMessageHolder {
 
             switch (type) {
                 case TUIChatConstants.CoustomMassageType.MESSAGE_GIFT:
-                    setGiftMessageView(msg, extra);
+                    setGiftMessageItemView(msg, extra);
                     break;
                 case TUIChatConstants.CoustomMassageType.MESSAGE_TAG:
                     FaceManager.handlerEmojiText(msgBodyText, TUIChatUtils.json2Massage(extra, "text"), false);
@@ -74,13 +75,13 @@ public class CustomTextMessageHolder extends TextMessageHolder {
                 case TUIChatConstants.CoustomMassageType.MESSAGE_CUSTOM:
                 case TUIChatConstants.CoustomMassageType.CHAT_EARNINGS:
                 case TUIChatConstants.CoustomMassageType.MESSAGE_TRACKING:
-                    setCustomTypeView(extra);
+                    setCustomTypeItemView(extra);
                     break;
                 case TUIChatConstants.CoustomMassageType.MESSAGE_PHOTO:
-                    setPhotoView(extra);
+                    setPhotoItemView(extra,position,msg);
                     break;
                 case TUIChatConstants.CoustomMassageType.MESSAGE_CALLINGBUSY:
-                    setCallingBusyView(msg,extra);
+                    setCallingBusyItemView(msg,extra);
                     break;
                 default:
                     setContentLayoutVisibility(false);
@@ -92,7 +93,12 @@ public class CustomTextMessageHolder extends TextMessageHolder {
         }
     }
 
-    private void setCallingBusyView(TUIMessageBean msg, String extra) {
+    private void initView() {
+        mLeftView.setVisibility(View.GONE);
+        mRightView.setVisibility(View.GONE);
+    }
+
+    private void setCallingBusyItemView(TUIMessageBean msg, String extra) {
         String busyContent = appContext.getString(R.string.custom_message_book_next_call);
         profitTip.setText(busyContent);
         profitTip.setVisibility(View.VISIBLE);
@@ -120,14 +126,14 @@ public class CustomTextMessageHolder extends TextMessageHolder {
         }
     }
 
-    private void setPhotoView(String extra) {
+    private void setPhotoItemView(String extra, int position, TUIMessageBean msg) {
         hideTimeView();
         View photoView = View.inflate(appContext, R.layout.message_adapter_content_photo, null);
+
         ImageView ic_vip = photoView.findViewById(R.id.iv_vip);
         ImageView ic_certification = photoView.findViewById(R.id.iv_certification);
         TextView conversation_title = photoView.findViewById(R.id.conversation_title);
         ImageView photo_album_img = photoView.findViewById(R.id.photo_album_img);
-
         PhotoAlbumEntity photoAlbumEntity = IMGsonUtils.fromJson(TUIChatUtils.json2Massage(extra, "data"), PhotoAlbumEntity.class);
         if (photoAlbumEntity != null) {
             int sex = photoAlbumEntity.getSex();
@@ -167,14 +173,6 @@ public class CustomTextMessageHolder extends TextMessageHolder {
                 if (onItemClickListener != null)
                     onItemClickListener.clickToUserMain();
             });
-            photoView.findViewById(R.id.photo_album_right_acc).setOnClickListener(v -> {
-                if (onItemClickListener != null)
-                    onItemClickListener.clickToUserMain();
-            });
-            photoView.findViewById(R.id.photo_album_layout_item).setOnClickListener(v -> {
-                if (onItemClickListener != null)
-                    onItemClickListener.clickToUserMain();
-            });
             photoView.findViewById(R.id.photo_album_layout).setOnClickListener(v -> {
                 if (onItemClickListener != null)
                     onItemClickListener.clickToUserMain();
@@ -183,15 +181,17 @@ public class CustomTextMessageHolder extends TextMessageHolder {
         customJsonMsgContentFrame.addView(photoView);
     }
 
-    private void setCustomTypeView(String extra) {
+    private void setCustomTypeItemView(String extra) {
         hideWithAvatarView();
         View tipView = View.inflate(appContext, R.layout.message_adapter_content_tip, null);
         TextView custom_tip_text = tipView.findViewById(R.id.custom_tip_text);
         CustomIMTextEntity customIMTextEntity = IMGsonUtils.fromJson(TUIChatUtils.json2Massage(extra, "data"), CustomIMTextEntity.class);
         if (customIMTextEntity != null) {
-            //过滤消息--隐藏
-            if (customIMTextEntity.getIsRefundMoney() == 1){
+
+            //过滤收益消息--隐藏
+            if (customIMTextEntity.getIsRefundMoney() != null && customIMTextEntity.getIsRefundMoney() == 1){
                 setContentLayoutVisibility(false);
+//                custom_tip_text.setText("HHGHDGsh");
             }
 
             //系统提示
@@ -225,7 +225,7 @@ public class CustomTextMessageHolder extends TextMessageHolder {
      *  @param msg
      * @param extra
      */
-    private void setGiftMessageView(TUIMessageBean msg, String extra) {
+    private void setGiftMessageItemView(TUIMessageBean msg, String extra) {
         msgArea.setBackground(null);
         GiftEntity giftEntity = IMGsonUtils.fromJson(String.valueOf
                 (TUIChatUtils.json2Massage(extra, "data")), GiftEntity.class);

@@ -121,6 +121,9 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
     //礼物消息防抖
     private String lastClickFunName;
     private long lastClickTime;
+
+    private PhotoAlbumEntity photoAlbumEntity;
+
     public BindingCommand moreOnClickCommand = new BindingCommand(new BindingAction() {
         @Override
         public void call() {
@@ -350,11 +353,12 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                     @Override
                     public void onSuccess(BaseDataResponse<PhotoAlbumEntity> photoAlbumEntityBaseDataResponse) {
                         if(photoAlbumEntityBaseDataResponse.getData()!=null && photoAlbumEntityBaseDataResponse.getData().getImg()!=null && photoAlbumEntityBaseDataResponse.getData().getImg().size()>0){
-                            uc.putPhotoAlbumEntity.setValue(photoAlbumEntityBaseDataResponse.getData());
+                            photoAlbumEntity = photoAlbumEntityBaseDataResponse.getData();
                         }
                     }
                     @Override
                     public void onComplete() {
+                        uc.putPhotoAlbumEntity.setValue(photoAlbumEntity);
 
                     }
                 });

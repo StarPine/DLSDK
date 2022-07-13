@@ -3,8 +3,6 @@ package com.tencent.qcloud.tuikit.tuichat.presenter;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
-import com.tencent.coustom.CustomIMTextEntity;
-import com.tencent.coustom.IMGsonUtils;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
@@ -25,6 +23,7 @@ public class C2CChatPresenter extends ChatPresenter {
     //彭石林临时添加
     CustomImMessageLoadListener customImMessageLoad;
     private ChatInfo chatInfo;
+    private TUIMessageBean photoBean = null;
 
     private C2CChatEventListener chatEventListener;
 
@@ -87,6 +86,10 @@ public class C2CChatPresenter extends ChatPresenter {
         initMessageSender();
     }
 
+    public void setPhotoBean(TUIMessageBean photoBean){
+        this.photoBean = photoBean;
+    }
+
     /**
      * 拉取消息
      * @param type 向前，向后或者前后同时拉取
@@ -111,21 +114,15 @@ public class C2CChatPresenter extends ChatPresenter {
                         isHaveMoreNewMessage = false;
                     }
                     int itemCount = data.size();
-                    for (int i = 0; i < itemCount; i++) {
-                        TUIMessageBean lastMsg = data.get(i);
-                        if (lastMsg != null && lastMsg.getExtra() != null) {
-                            if (isJSON2(lastMsg.getExtra().toString())) {//判断后台自定义消息体
-                                Map<String, Object> map_data = new Gson().fromJson(lastMsg.getExtra().toString(), Map.class);
-                                if (map_data != null && map_data.get("type") != null) {
-                                    if (map_data.get("type").equals("message_photo")) {//相册类型置顶
-                                        if (i != itemCount - 1) {
-                                            data.add(itemCount - 1, data.remove(i));
-                                            continue;
-                                        }
-                                    }
-                                }
-                            }
-                        }
+
+                    //过滤旧的相册数据
+                    if (data.toString().contains("message_photo")){
+                        removePhotoMessage(data, itemCount,"message_photo");
+                    }
+
+                    //新增新版相册数据
+                    if (itemCount < 20 && photoBean != null){
+                        data.add(itemCount,photoBean);
                     }
                     TUIChatUtils.callbackOnSuccess(callback, data);
                     onMessageLoadCompleted(data, type);
@@ -139,6 +136,24 @@ public class C2CChatPresenter extends ChatPresenter {
             });
         } else { // 向后拉更新的消息 或者 前后同时拉消息
             loadHistoryMessageList(chatId, false, type, MSG_PAGE_COUNT, lastMessageInfo, callback);
+        }
+    }
+
+    private void removePhotoMessage(List<TUIMessageBean> data, int itemCount, String message_photo) {
+        for (int i = 0; i < itemCount; i++) {
+            TUIMessageBean lastMsg = data.get(i);
+            if (lastMsg != null && lastMsg.getExtra() != null) {
+                if (isJSON2(lastMsg.getExtra().toString())) {//判断后台自定义消息体
+                    Map<String, Object> map_data = new Gson().fromJson(lastMsg.getExtra().toString(), Map.class);
+                    if (map_data != null && map_data.get("type") != null) {
+                        if (map_data.get("type").equals(message_photo)) {//相册类型置顶
+                            data.remove(i);
+                            lastMsg.remove();
+                            return;
+                        }
+                    }
+                }
+            }
         }
     }
 

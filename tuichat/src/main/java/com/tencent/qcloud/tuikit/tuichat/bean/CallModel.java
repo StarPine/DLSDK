@@ -227,7 +227,7 @@ public class CallModel implements Cloneable, Serializable {
                     callModel.action = VIDEO_CALL_ACTION_SWITCH_TO_AUDIO;
                 } else if (TextUtils.equals(cmd, "hangup")) {
                     callModel.action = CallModel.VIDEO_CALL_ACTION_HANGUP;
-                    callModel.duration = ((Double) contentDataMap.get("cmdInfo")).intValue();
+                    callModel.duration = Integer.parseInt(((String) contentDataMap.get("cmdInfo")));
                 } else if (TextUtils.equals(cmd, "videoCall") || TextUtils.equals(cmd, "audioCall")) {
                     callModel.action = CallModel.VIDEO_CALL_ACTION_DIALING;
                     callModel.callId = signalingInfo.getInviteID();
