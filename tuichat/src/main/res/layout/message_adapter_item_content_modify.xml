@@ -310,7 +310,7 @@
 
             <ImageView
                 android:id="@+id/iv_vip"
-                android:layout_width="14dp"
+                android:layout_width="31dp"
                 android:layout_height="13dp"
                 android:layout_alignTop="@+id/iv_certification"
                 android:layout_marginStart="7dp"

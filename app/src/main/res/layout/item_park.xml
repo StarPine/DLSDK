@@ -109,7 +109,7 @@
 
             <ImageView
                 android:id="@+id/iv_real_man"
-                android:layout_width="14dp"
+                android:layout_width="31dp"
                 android:layout_height="13dp"
                 android:layout_alignBottom="@+id/tv_name"
                 android:layout_centerVertical="true"
@@ -120,7 +120,7 @@
 
             <ImageView
                 android:id="@+id/iv_goddess"
-                android:layout_width="14dp"
+                android:layout_width="31dp"
                 android:layout_height="13dp"
                 android:layout_alignBottom="@+id/tv_name"
                 android:layout_centerVertical="true"
