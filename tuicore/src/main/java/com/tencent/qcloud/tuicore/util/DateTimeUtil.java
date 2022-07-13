@@ -72,7 +72,7 @@ public class DateTimeUtil {
         } else if (outTimeMillis < weekStartTimeInMillis) {
 //            timeText = String.format(locale, "%1$tm/%1$td", date);
         } else if (outTimeMillis < dayStartTimeInMillis) {
-            timeText = String.format(locale, "%tA", date);
+            timeText = String.format(locale, "%1$tA %1$tR", date);
         } else {
             timeText = String.format(locale, "%tR", date);
         }
