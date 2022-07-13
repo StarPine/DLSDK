@@ -3,6 +3,7 @@ package com.tencent.qcloud.tuikit.tuiconversation.ui.view;
 import android.content.Context;
 import android.graphics.Color;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -10,22 +11,30 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.imsdk.v2.V2TIMUserFullInfo;
+import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.component.UnreadCountTextView;
+import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
 import com.tencent.qcloud.tuicore.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationService;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.DraftInfo;
+import com.tencent.qcloud.tuikit.tuiconversation.util.StringUtil;
 import com.tencent.qcloud.tuikit.tuiconversation.util.TUIConversationLog;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 public class ConversationCommonHolder extends ConversationBaseHolder {
 
@@ -230,5 +239,59 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             messagefailed.setVisibility(View.GONE);
             messageSending.setVisibility(View.GONE);
         }
+
+
+        //彭石林修改
+        //待获取用户资料的用户列表
+        List<String> users = new ArrayList<String>();
+
+        users.add(conversation.getId());
+        //获取用户资料
+        V2TIMManager.getInstance().getUsersInfo(users, new V2TIMValueCallback<List<V2TIMUserFullInfo>>() {
+            @Override
+            public void onSuccess(List<V2TIMUserFullInfo> v2TIMUserFullInfos) {
+                for (V2TIMUserFullInfo res : v2TIMUserFullInfos) {
+
+                    int level = res.getLevel();
+                    String gameUrl = "";
+                    if (!ConfigManagerUtil.getInstance().getGameUrl(res.getRole() + "").isEmpty()) {
+                        gameUrl = StringUtil.IMAGE_BASE_URL + ConfigManagerUtil.getInstance().getGameUrl(res.getRole() + "");
+                        Glide.with(context).load(gameUrl).into(iv_game_icon);
+                        iv_game_icon.setVisibility(View.VISIBLE);
+                    }else{
+                        iv_game_icon.setVisibility(View.GONE);
+                    }
+
+//                     certification;
+                    // iv_vip;
+                    if (level == 1) { //vip
+                        iv_vip.setImageResource(R.drawable.ic_vip);
+                        iv_vip.setVisibility(View.VISIBLE);
+                        certification.setVisibility(View.GONE);
+                    } else if (level == 2) { //真人
+                        certification.setImageResource(R.drawable.ic_real_man);
+                        iv_vip.setVisibility(View.GONE);
+                        certification.setVisibility(View.VISIBLE);
+                    } else if (level == 3 || level == 5) {
+                        iv_vip.setImageResource(R.drawable.ic_goddess);
+                        certification.setVisibility(View.GONE);
+                        iv_vip.setVisibility(View.VISIBLE);
+                    } else if (level == 4) {//真人加VIP只显示VIP
+                        iv_vip.setImageResource(R.drawable.ic_vip);
+                        iv_vip.setVisibility(View.VISIBLE);
+                    } else {
+                        iv_vip.setVisibility(View.GONE);
+                        certification.setVisibility(View.GONE);
+                    }
+                }
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                //错误码 code 和错误描述 desc，可用于定位请求失败原因
+                //错误码 code 列表请参见错误码表
+                Log.e("获取用户信息失败", "getUsersProfile failed: " + code + " desc");
+            }
+        });
     }
 }
