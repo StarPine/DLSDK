@@ -372,6 +372,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             TraceDialog.getInstance(ChatDetailFragment.this.getContext()).getCrystalExchange().show();
         });
 
+        //更多按钮
         viewModel.uc.clickMore.observe(this, new Observer() {
             @Override
             public void onChanged(Object o) {
@@ -501,10 +502,10 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
 
         mPop.setOutsideTouchable(false);
         mPop.setFocusable(true);
-        mPop.setElevation(30);
-        int width = view.getMeasuredWidth();
-        int moreWidth = binding.ivSetting.getWidth();
-        mPop.showAsDropDown(binding.ivSetting,-300,0);
+        mPop.setElevation(50);
+        mPop.getContentView().measure(0, 0);
+        int popWidth = mPop.getContentView().getMeasuredWidth();
+        mPop.showAsDropDown(binding.ivSetting,-popWidth + binding.ivSetting.getWidth(),0);
     }
 
     private void initChatView() {
