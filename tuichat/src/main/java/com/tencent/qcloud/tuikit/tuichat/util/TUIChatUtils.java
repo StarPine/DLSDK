@@ -148,10 +148,15 @@ public class TUIChatUtils {
 
     public static String json2Massage(String json, String key) {
         String msgType = null;
-        Map<String, Object> map_data = new Gson().fromJson(json, Map.class);
-        if (map_data != null && map_data.containsKey(key)) {
-             msgType = (String) map_data.get(key);
+        try {
+            Map<String, Object> map_data = new Gson().fromJson(json, Map.class);
+            if (map_data != null && map_data.containsKey(key)) {
+                msgType = (String) map_data.get(key);
+            }
+        }catch (Exception e){
+
         }
+
         return msgType;
     }
 

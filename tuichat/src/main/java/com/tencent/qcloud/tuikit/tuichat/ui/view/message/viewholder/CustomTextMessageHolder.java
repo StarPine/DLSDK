@@ -43,6 +43,7 @@ import java.util.Map;
  */
 public class CustomTextMessageHolder extends TextMessageHolder {
     private ImageView mLeftView, mRightView;
+    boolean isCharger = true;
 
     public CustomTextMessageHolder(View itemView) {
         super(itemView);
@@ -63,19 +64,22 @@ public class CustomTextMessageHolder extends TextMessageHolder {
         Log.i("starpine","custiom"+msg.getV2TIMMessage());
         if (TUIChatUtils.isJSON2(extra)) {//自定义json文本消息
             String type = TUIChatUtils.json2Massage(extra, "type");
-
+            if (type == null){
+                setContentLayoutVisibility(false);
+                return;
+            }
             switch (type) {
                 case TUIChatConstants.CoustomMassageType.MESSAGE_GIFT:
                     setGiftMessageItemView(msg, extra);
                     break;
+                case TUIChatConstants.CoustomMassageType.CHAT_EARNINGS:
+                case TUIChatConstants.CoustomMassageType.MESSAGE_CUSTOM:
+                case TUIChatConstants.CoustomMassageType.MESSAGE_TRACKING:
+                    setCustomTypeItemView(extra,type);
+                    break;
                 case TUIChatConstants.CoustomMassageType.MESSAGE_TAG:
                     FaceManager.handlerEmojiText(msgBodyText, TUIChatUtils.json2Massage(extra, "text"), false);
                     setBackColor(msg);
-                    break;
-                case TUIChatConstants.CoustomMassageType.MESSAGE_CUSTOM:
-                case TUIChatConstants.CoustomMassageType.CHAT_EARNINGS:
-                case TUIChatConstants.CoustomMassageType.MESSAGE_TRACKING:
-                    setCustomTypeItemView(extra);
                     break;
                 case TUIChatConstants.CoustomMassageType.MESSAGE_PHOTO:
                     setPhotoItemView(extra,position,msg);
@@ -181,28 +185,30 @@ public class CustomTextMessageHolder extends TextMessageHolder {
         customJsonMsgContentFrame.addView(photoView);
     }
 
-    private void setCustomTypeItemView(String extra) {
+    private void setCustomTypeItemView(String extra, String type) {
         hideWithAvatarView();
         View tipView = View.inflate(appContext, R.layout.message_adapter_content_tip, null);
         TextView custom_tip_text = tipView.findViewById(R.id.custom_tip_text);
         CustomIMTextEntity customIMTextEntity = IMGsonUtils.fromJson(TUIChatUtils.json2Massage(extra, "data"), CustomIMTextEntity.class);
         if (customIMTextEntity != null) {
 
-            //过滤收益消息--隐藏
-            if (customIMTextEntity.getIsRefundMoney() != null && customIMTextEntity.getIsRefundMoney() == 1){
-                setContentLayoutVisibility(false);
-//                custom_tip_text.setText("HHGHDGsh");
-            }
-
             //系统提示
             if (!TextUtils.isEmpty(customIMTextEntity.getContent())) {
                 custom_tip_text.setText(Html.fromHtml(customIMTextEntity.getContent()));
             }
 
-            //收益退回提示
-            if (customIMTextEntity.getIsRefundMoney() != null) {
-                if (!MessageRecyclerView.sex) {//女生
-                    custom_tip_text.setText(appContext.getString(R.string.custom_message_txt_girl));
+            //收益相关
+            if (type.equals(TUIChatConstants.CoustomMassageType.CHAT_EARNINGS)){
+                //收益退回提示
+                if (customIMTextEntity.getIsRefundMoney() != null) {
+                    if (isCharger) {//收益方
+                        custom_tip_text.setText(appContext.getString(R.string.custom_message_txt_girl));
+                    }else {//付费方
+                        custom_tip_text.setText(appContext.getString(R.string.custom_message_txt_male));
+                    }
+                }else {
+                    //过滤收益消息--隐藏
+                    setContentLayoutVisibility(false);
                 }
             }
 
@@ -216,8 +222,8 @@ public class CustomTextMessageHolder extends TextMessageHolder {
                 });
             }
 
+            customJsonMsgContentFrame.addView(tipView);
         }
-        customJsonMsgContentFrame.addView(tipView);
     }
 
     /**
