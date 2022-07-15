@@ -1216,7 +1216,8 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                 messageHandler.sendMessage(messageInfo);
                 return;
             }
-            if (TUIChatUtils.isLineNumber(messageInfo.getExtra().toString()) || TUIChatUtils.isContains(messageInfo.getExtra().toString(), viewModel.sensitiveWords.get())) {
+            if (TUIChatUtils.isLineNumber(messageInfo.getExtra().toString())
+                    || TUIChatUtils.isContains(messageInfo.getExtra().toString(), viewModel.sensitiveWords.get())) {
                 //包含台湾电话号码或者包含屏蔽关键字
                 sendLocalMessage(messageInfo.getExtra().toString(), "send_violation_message", null);
                 return;

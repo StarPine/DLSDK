@@ -833,7 +833,8 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                                     mMessageHandler.sendMessage(ChatMessageBuilder.buildTextAtMessage(atUserList, mTextInput.getText().toString().trim()));
                                 }
                             } else {
-                                mMessageHandler.sendMessage(ChatMessageBuilder.buildTextMessage(mTextInput.getText().toString().trim()));
+//                                mMessageHandler.sendMessage(ChatMessageBuilder.buildTextMessage(mTextInput.getText().toString().trim()));
+                                sendOnClickCallbacks.sendOnClickCallbackOk(mMessageHandler,ChatMessageBuilder.buildTextMessage(mTextInput.getText().toString().trim()));
                             }
                         }
                     }

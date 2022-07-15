@@ -87,6 +87,9 @@ public class CustomTextMessageHolder extends TextMessageHolder {
                 case TUIChatConstants.CoustomMassageType.MESSAGE_CALLINGBUSY:
                     setCallingBusyItemView(msg,extra);
                     break;
+                case TUIChatConstants.CoustomMassageType.SEND_VIOLATION_MESSAGE:
+                    setViolationItemView(msg,extra,position);
+                    break;
                 default:
                     setContentLayoutVisibility(false);
                     break;
@@ -100,6 +103,16 @@ public class CustomTextMessageHolder extends TextMessageHolder {
     private void initView() {
         mLeftView.setVisibility(View.GONE);
         mRightView.setVisibility(View.GONE);
+    }
+
+    private void setViolationItemView(TUIMessageBean msg, String extra, int position) {
+        FaceManager.handlerEmojiText(msgBodyText, TUIChatUtils.json2Massage(extra, "text"), false);
+        setBackColor(msg);
+        String busyContent = appContext.getString(R.string.custom_send_violation_message_tip);
+        profitTip.setText(busyContent);
+        profitTip.setVisibility(View.VISIBLE);
+        statusImage.setVisibility(View.VISIBLE);
+        sendingProgress.setVisibility(View.GONE);
     }
 
     private void setCallingBusyItemView(TUIMessageBean msg, String extra) {
@@ -187,7 +200,7 @@ public class CustomTextMessageHolder extends TextMessageHolder {
 
     private void setCustomTypeItemView(String extra, String type) {
         hideWithAvatarView();
-        View tipView = View.inflate(appContext, R.layout.message_adapter_content_tip, null);
+        View tipView = getTipItemView();
         TextView custom_tip_text = tipView.findViewById(R.id.custom_tip_text);
         CustomIMTextEntity customIMTextEntity = IMGsonUtils.fromJson(TUIChatUtils.json2Massage(extra, "data"), CustomIMTextEntity.class);
         if (customIMTextEntity != null) {
@@ -224,6 +237,10 @@ public class CustomTextMessageHolder extends TextMessageHolder {
 
             customJsonMsgContentFrame.addView(tipView);
         }
+    }
+
+    private View getTipItemView() {
+        return View.inflate(appContext, R.layout.message_adapter_content_server_tip, null);
     }
 
     /**

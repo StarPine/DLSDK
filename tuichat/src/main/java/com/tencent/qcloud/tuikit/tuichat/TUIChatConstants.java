@@ -83,7 +83,7 @@ public class TUIChatConstants {
     public static class CoustomMassageType {
         public static final String TOAST_LOCAL = "toast_local";
         public static final String MESSAGE_TAG = "message_tag";//搭讪文字
-        public static final String MESSAGE_COUNTDOWN = "message_countdown";//余额不足
+        public static final String MESSAGE_COUNTDOWN = "message_countdown";//语音视频余额不足推送
         public static final String MESSAGE_PHOTO = "message_photo";//相册
         public static final String MESSAGE_EVALUATE = "message_evaluate";//评价
         public static final String MESSAGE_GIFT = "message_gift";//礼物消息
