@@ -367,21 +367,21 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
         if (copyAction != null) {
             mPopActions.add(copyAction);
         }
-        if (forwardAction != null) {
-            mPopActions.add(forwardAction);
-        }
-        if (multiSelectAction != null) {
-            mPopActions.add(multiSelectAction);
-        }
-        if (quoteAction != null && TUIChatConfigs.getConfigs().getGeneralConfig().isQuoteEnable()) {
-            mPopActions.add(quoteAction);
-        }
-        if (replyAction != null && TUIChatConfigs.getConfigs().getGeneralConfig().isReplyEnable()) {
-            mPopActions.add(replyAction);
-        }
-        if (revokeAction != null) {
-            mPopActions.add(revokeAction);
-        }
+//        if (forwardAction != null) {
+//            mPopActions.add(forwardAction);
+//        }
+//        if (multiSelectAction != null) {
+//            mPopActions.add(multiSelectAction);
+//        }
+//        if (quoteAction != null && TUIChatConfigs.getConfigs().getGeneralConfig().isQuoteEnable()) {
+//            mPopActions.add(quoteAction);
+//        }
+//        if (replyAction != null && TUIChatConfigs.getConfigs().getGeneralConfig().isReplyEnable()) {
+//            mPopActions.add(replyAction);
+//        }
+//        if (revokeAction != null) {
+//            mPopActions.add(revokeAction);
+//        }
         if (deleteAction != null) {
             mPopActions.add(deleteAction);
         }

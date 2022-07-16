@@ -53,6 +53,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.GroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.ReplyPreviewBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 import com.tencent.qcloud.tuikit.tuichat.component.face.Emoji;
 import com.tencent.qcloud.tuikit.tuichat.component.noticelayout.NoticeLayout;
@@ -241,7 +242,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
             if (groupAtInfos != null && groupAtInfos.size() > 0) {
                 V2TIMGroupAtInfo groupAtInfo = groupAtInfos.get(0);
                 if (groupAtInfo != null) {
-                    displayBackToAtMessages(groupAtInfo);
+//                    displayBackToAtMessages(groupAtInfo);
                 } else {
                     mJumpGroupAtInfoShow = false;
                     hideJumpMessageLayouts();
@@ -557,7 +558,10 @@ public class ChatView extends LinearLayout  implements IChatLayout {
                 if (clipboard == null || msg == null) {
                     return;
                 }
-                String copyContent = msg.getSelectText();
+                String copyContent = msg.getExtra();
+                if (TUIChatUtils.isJSON2(copyContent)){
+                    copyContent = TUIChatUtils.json2Massage(copyContent, "text");
+                }
                 ClipData clip = ClipData.newPlainText("message", copyContent);
                 clipboard.setPrimaryClip(clip);
 
@@ -650,7 +654,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
                         }
 
                         if (messageBean != null) {
-                            displayBackToLastMessages(messageBean.getId());
+//                            displayBackToLastMessages(messageBean.getId());
                         } else {
                             TUIChatLog.e(TAG, "displayJumpLayout messageBean is null");
                         }
@@ -665,7 +669,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
             @Override
             public void displayBackToNewMessage(boolean display, String messageId, int count) {
                 if (display) {
-                    displayBackToNewMessages(messageId, count);
+//                    displayBackToNewMessages(messageId, count);
                 } else {
                     mJumpNewMessageShow = false;
                     hideJumpMessageLayouts();

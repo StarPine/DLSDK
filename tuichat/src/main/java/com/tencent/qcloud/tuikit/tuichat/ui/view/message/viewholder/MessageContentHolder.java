@@ -291,14 +291,14 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
                         }
                     }
                 });
-                statusImage.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (onItemClickListener != null) {
-                            onItemClickListener.onSendFailBtnClick(statusImage, position, msg);
-                        }
-                    }
-                });
+//                statusImage.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        if (onItemClickListener != null) {
+//                            onItemClickListener.onSendFailBtnClick(statusImage, position, msg);
+//                        }
+//                    }
+//                });
             } else {
                 msgContentFrame.setOnClickListener(new View.OnClickListener() {
                     @Override

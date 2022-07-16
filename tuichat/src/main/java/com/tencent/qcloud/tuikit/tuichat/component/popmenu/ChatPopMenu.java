@@ -249,12 +249,13 @@ public class ChatPopMenu {
         int[] location = new int[2];
         anchorView.getLocationOnScreen(location);
         int screenWidth = ScreenUtil.getScreenWidth(context);
-        int x = location[0] - indicatorHeight;
+//        int x = location[0] - indicatorHeight;
+        int x = (int) (location[0] + anchorWidth/2 - popWidth/2);
         int y = location[1] - popHeight - indicatorHeight;
         // if popup show on the right
-        if (location[0] * 2 + anchorWidth > screenWidth) {
-            x = (int) (location[0] + anchorWidth - popWidth) + indicatorHeight;
-        }
+//        if (location[0] * 2 + anchorWidth > screenWidth) {
+//            x = (int) (location[0] + anchorWidth - popWidth) + indicatorHeight;
+//        }
         // if it's too high, should show on the anchor's bottom
         boolean isTop = y <= minY;
 
