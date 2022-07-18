@@ -67,7 +67,6 @@ public class AppConfig {
     public static final String PRIVACY_POLICY_URL = "https://sites.google.com/view/playchat-privacy-agreement";
 //
 //    public static final String BUCKET_NAME = "jmasktest";
-    public static BannerItemEntity radioAlertFlagEntity = null;
     //新IM 发送图片oss文件夹定义
     public static String OSS_CUSTOM_FILE_NAME_CHAT = "chat";
 
