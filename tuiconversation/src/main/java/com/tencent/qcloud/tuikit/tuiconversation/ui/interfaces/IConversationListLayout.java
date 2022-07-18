@@ -86,6 +86,16 @@ public interface IConversationListLayout {
      */
     void setAdapter(IConversationListAdapter adapter);
 
+    /**
+     * 会话列表头像点击
+     * @param listener
+     */
     void setOnItemAvatarClickListener(ConversationListLayout.OnItemAvatarClickListener listener);
+
+    /**
+     * 删除所有封号会话列表
+     * @param listener
+     */
+    void setBanConversationDelListener(ConversationListLayout.BanConversationDelListener listener);
 
 }

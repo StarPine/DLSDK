@@ -112,6 +112,11 @@ public class ConversationListLayout extends RecyclerView implements IConversatio
     }
 
     @Override
+    public void setBanConversationDelListener(BanConversationDelListener listener) {
+        mAdapter.setBanConversationDelListener(listener);
+    }
+
+    @Override
     public void setOnItemLongClickListener(OnItemLongClickListener listener) {
         mAdapter.setOnItemLongClickListener(listener);
     }
@@ -172,4 +177,10 @@ public class ConversationListLayout extends RecyclerView implements IConversatio
     public interface OnItemAvatarClickListener{
         void onItemAvatarClick(View view, int position, ConversationInfo messageInfo);
     }
+
+    public interface BanConversationDelListener{
+        void banConversationDel();
+    }
+
+
 }

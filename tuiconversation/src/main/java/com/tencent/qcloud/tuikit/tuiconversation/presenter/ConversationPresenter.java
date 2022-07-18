@@ -2,14 +2,20 @@ package com.tencent.qcloud.tuikit.tuiconversation.presenter;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 
+import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMUserFullInfo;
+import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationService;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.interfaces.ConversationEventListener;
 import com.tencent.qcloud.tuikit.tuiconversation.model.ConversationProvider;
+import com.tencent.qcloud.tuikit.tuiconversation.ui.view.ConversationListAdapter;
 import com.tencent.qcloud.tuikit.tuiconversation.util.ConversationUtils;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.interfaces.IConversationListAdapter;
 import com.tencent.qcloud.tuikit.tuiconversation.util.TUIConversationLog;
@@ -25,6 +31,8 @@ public class ConversationPresenter {
     private static final String TAG = ConversationPresenter.class.getSimpleName();
 
     private final static int GET_CONVERSATION_COUNT = 100;
+    private int needDelCount = 0;//需要删除个数
+    private boolean isDelBanCovversation = false;//删除封号会话
 
     ConversationEventListener conversationEventListener;
 
@@ -387,13 +395,68 @@ public class ConversationPresenter {
                 int index = loadedConversationInfoList.indexOf(conversation);
                 boolean isRemove = loadedConversationInfoList.remove(conversation);
                 if (adapter != null && isRemove && index != -1) {
+                    if (isDelBanCovversation){
+                        needDelCount--;
+                    }
                     adapter.onItemRemoved(index);
+                }
+                if (needDelCount == 0){
+                    isDelBanCovversation = false;
+                    ((ConversationListAdapter)adapter).banConversationDel();
                 }
             }
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
+                needDelCount--;
+                if (needDelCount == 0){
+                    isDelBanCovversation = false;
+                    ((ConversationListAdapter)adapter).banConversationDel();
+                }
+            }
+        });
 
+    }
+
+    /**
+     * DL add lsf
+     * 删除所有封号会话
+     */
+    public void deleteAllBannedConversation() {
+        isDelBanCovversation = true;
+        List<ConversationInfo> dataSource = ((ConversationListAdapter) adapter).getDataSource();
+
+        List<String> users = new ArrayList<String>();
+
+        for (ConversationInfo conversationInfo : dataSource) {
+            users.add(conversationInfo.getId());
+        }
+
+        //获取用户资料
+        V2TIMManager.getInstance().getUsersInfo(users,new V2TIMValueCallback<List<V2TIMUserFullInfo>>(){
+            @Override
+            public void onSuccess(List<V2TIMUserFullInfo> v2TIMUserFullInfos) {
+                    if(v2TIMUserFullInfos!=null && !v2TIMUserFullInfos.isEmpty()){
+                        for (V2TIMUserFullInfo v2TIMUserFullInfo : v2TIMUserFullInfos) {
+                            int level = v2TIMUserFullInfo.getLevel();
+                            if (level == 6){
+                                needDelCount++;
+                                String conversationid = "c2c_" + v2TIMUserFullInfo.getUserID();
+                                deleteConversation(conversationid);
+                            }
+                        }
+                        if (needDelCount == 0){
+                            isDelBanCovversation = false;
+                            ((ConversationListAdapter)adapter).banConversationDel();
+                        }
+                    }
+            }
+
+            @Override
+            public void onError(int code, String desc){
+                //错误码 code 和错误描述 desc，可用于定位请求失败原因
+                Log.e("获取用户信息失败", "getUsersProfile failed: " + code + " desc");
+                ToastUtil.toastLongMessage(code + " " + desc);
             }
         });
 

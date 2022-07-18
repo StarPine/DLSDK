@@ -41,6 +41,7 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
 
     //彭石林新增
     public ConversationListLayout.OnItemAvatarClickListener mOnItemAvatarClickListener;
+    public ConversationListLayout.BanConversationDelListener mBanConversationDelListener;
     private ConversationListLayout mRecycleView;
 
     //消息转发
@@ -159,9 +160,22 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
         this.mOnItemAvatarClickListener = listener;
     }
 
+    public void setBanConversationDelListener(ConversationListLayout.BanConversationDelListener listener) {
+        this.mBanConversationDelListener = listener;
+    }
+
+    public void banConversationDel(){
+        if (mBanConversationDelListener != null)
+            mBanConversationDelListener.banConversationDel();
+    }
+
     @Override
     public void onDataSourceChanged(List<ConversationInfo> dataSource) {
         this.mDataSource = dataSource;
+    }
+
+    public List<ConversationInfo> getDataSource(){
+        return mDataSource;
     }
 
     @NonNull
@@ -266,8 +280,8 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
                 @Override
                 public boolean onLongClick(View view) {
                     mOnItemLongClickListener.OnItemLongClick(view, position, conversationInfo);
-                    setCurrentPosition(position, true);
-                    notifyItemChanged(position);
+//                    setCurrentPosition(position, true);
+//                    notifyItemChanged(position);
                     return true;
                 }
             });

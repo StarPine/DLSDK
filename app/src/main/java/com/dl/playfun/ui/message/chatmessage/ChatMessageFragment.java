@@ -156,6 +156,14 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
             }
         });
 
+        binding.conversationLayout.getConversationList().setBanConversationDelListener(new ConversationListLayout.BanConversationDelListener() {
+            @Override
+            public void banConversationDel() {
+
+                viewModel.dismissHUD();
+            }
+        });
+
         binding.conversationLayout.getConversationList().setOnItemClickListener(new ConversationListLayout.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position, ConversationInfo messageInfo) {
@@ -173,7 +181,7 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
         binding.conversationLayout.getConversationList().setOnItemLongClickListener(new ConversationListLayout.OnItemLongClickListener() {
             @Override
             public void OnItemLongClick(View view, int position, ConversationInfo messageInfo) {
-                String[] items = new String[]{getString(R.string.playfun_top_chat), getString(R.string.playfun_delet_chat)};
+                String[] items = new String[]{getString(R.string.playfun_top_chat), getString(R.string.playfun_delet_chat),"删除所有封号账号"};
                 AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                 builder.setSingleChoiceItems(items, 0, (dialog, which) -> {
                     dialog.dismiss();
@@ -184,6 +192,11 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
                         //删除会话
                         binding.conversationLayout.deleteConversation(messageInfo);
                         binding.conversationLayout.clearConversationMessage(messageInfo);
+                    } else if (which == 2) {
+                        //删除会话
+                        if (viewModel != null)
+                            viewModel.showHUD();
+                        binding.conversationLayout.deleteAllBannedConversation();
                     }
                 });
                 AlertDialog dialog = builder.create();

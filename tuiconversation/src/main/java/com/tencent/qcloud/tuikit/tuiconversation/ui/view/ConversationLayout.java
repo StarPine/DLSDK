@@ -100,6 +100,15 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
         }
     }
 
+    /**
+     * 删除所有已封号账号
+     */
+    public void deleteAllBannedConversation() {
+        if (presenter != null) {
+            presenter.deleteAllBannedConversation();
+        }
+    }
+
     @Override
     public void clearConversationMessage(ConversationInfo conversation) {
         if (presenter != null) {
