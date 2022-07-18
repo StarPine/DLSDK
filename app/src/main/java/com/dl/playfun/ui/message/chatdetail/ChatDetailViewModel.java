@@ -124,6 +124,9 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
 
     private PhotoAlbumEntity photoAlbumEntity;
 
+    //点击与它视频
+    public BindingCommand callVideoClick = new BindingCommand(() -> uc.callVideoViewEvent.call());
+
     public BindingCommand moreOnClickCommand = new BindingCommand(new BindingAction() {
         @Override
         public void call() {
@@ -877,6 +880,8 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
         //钻石不足。唤起充值
         public SingleLiveEvent<Void> sendDialogViewEvent = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> starNotepad = new SingleLiveEvent<>();
+        //拨打视频电话
+        public SingleLiveEvent<Void> callVideoViewEvent = new SingleLiveEvent<>();
 
     }
 

@@ -2,6 +2,7 @@ package com.dl.playfun.ui.message.chatdetail;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +29,8 @@ import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.ToastUtils;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
@@ -83,6 +87,7 @@ import com.tencent.coustom.CustomIMTextEntity;
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomImageMessageBean;
@@ -131,6 +136,10 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     private C2CChatPresenter presenter;
     private TUIMessageBean photoBean = null;
 
+    //默认记录马上视频的距离底部宽高
+    private volatile int defBottomMargin = 0;
+    private volatile int defBottomMarginHeight = 0;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -174,6 +183,11 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         super.initData();
         giftView = binding.giftView;
         binding.chatLayout.getTitleBar().setVisibility(View.GONE);
+        //非客服账号加载用户标签和状态
+        if (!mChatInfo.getId().startsWith(AppConfig.CHAT_SERVICE_USER_ID)) {
+            binding.rlLayout.setVisibility(View.VISIBLE);
+            initCallVideoHint();
+        }
     }
 
     @Override
@@ -187,6 +201,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         if (!mChatInfo.getId().contains(AppConfig.CHAT_SERVICE_USER_ID)) {
             viewModel.loadUserInfo(getTaUserIdIM());
             viewModel.loadTagUser(String.valueOf(getTaUserIdIM()));
+            initCallVideoHint();
         }
         initChatView();
         int userId = getTaUserIdIM(); //获取当前聊天对象的ID
@@ -200,9 +215,82 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         }
     }
 
+    public void initCallVideoHint() {
+        defBottomMarginHeight = dp2px(getContext(), 30);
+        Glide.with(getContext()).asGif().load(R.drawable.call_video_gif)
+                .error(R.drawable.call_video_gif)
+                .placeholder(R.drawable.call_video_gif)
+                .into(binding.gifCallVideo);
+        if (mChatInfo != null && mChatInfo.getId() != null) {
+            List<String> userList = new ArrayList<>();
+            userList.add(mChatInfo.getId());
+            //获取用户资料
+            V2TIMManager.getInstance().getUsersInfo(userList, new V2TIMValueCallback<List<V2TIMUserFullInfo>>() {
+                @Override
+                public void onSuccess(List<V2TIMUserFullInfo> v2TIMUserFullInfos) {
+                    if (v2TIMUserFullInfos != null && !v2TIMUserFullInfos.isEmpty()) {
+                        String faceUrl = v2TIMUserFullInfos.get(0).getFaceUrl();
+                        if (faceUrl != null) {
+                            Glide.with(getContext()).load(faceUrl)
+                                    .error(R.drawable.default_avatar)
+                                    .placeholder(R.drawable.default_avatar)
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                    .into(binding.imgFaceAvatar);
+                        }
+                    }
+                }
+
+                @Override
+                public void onError(int code, String desc) {
+                    //错误码 code 和错误描述 desc，可用于定位请求失败原因
+                    Log.e("获取用户信息失败", "getUsersProfile failed: " + code + " desc");
+                }
+            });
+        }
+
+    }
+
+    public int dp2px(Context ctx, float dpValue) {
+        final float scale = ctx.getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
+    }
     @Override
     public void initViewObservable() {
         super.initViewObservable();
+        //拨打视频电话
+        viewModel.uc.callVideoViewEvent.observe(this, event -> {
+            if (viewModel.tagEntitys.get() != null) {
+                if (viewModel.tagEntitys.get().getBlacklistStatus() == 1 || viewModel.tagEntitys.get().getBlacklistStatus() == 3) {
+                    Toast.makeText(mActivity, R.string.playfun_chat_detail_pull_black_other, Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (viewModel.tagEntitys.get().getBlacklistStatus() == 2) {
+                    Toast.makeText(mActivity, R.string.playfun_chat_detail_blocked, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                new RxPermissions(mActivity)
+                        .request(Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA)
+                        .subscribe(granted -> {
+                            if (granted) {
+                                AppContext.instance().logEvent(AppsFlyerEvent.im_video_call);
+                                viewModel.getCallingInvitedInfo(2, getUserIdIM(), mChatInfo.getId());
+                            } else {
+                                TraceDialog.getInstance(mActivity)
+                                        .setCannelOnclick(dialog -> {
+
+                                        })
+                                        .setConfirmOnlick(dialog -> new RxPermissions(mActivity)
+                                                .request(Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA)
+                                                .subscribe(granted1 -> {
+                                                    if (granted1) {
+                                                        AppContext.instance().logEvent(AppsFlyerEvent.im_video_call);
+                                                        viewModel.getCallingInvitedInfo(2, getUserIdIM(), mChatInfo.getId());
+                                                    }
+                                                }))
+                                        .AlertCallAudioPermissions().show();
+                            }
+                        });
+            }
+        });
         viewModel.uc.sendDialogViewEvent.observe(this, event -> {
             paySelectionboxChoose(false);
         });
@@ -1030,6 +1118,36 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             }
         } catch (Exception e) {
             LogUtils.i("sendBlackStatus: ");
+        }
+    }
+
+    @Override
+    public void onChangedFaceLayout(boolean flag, int height, int faceHeight) {
+        try {
+            //非客服账号加载用户标签和状态
+            if (!mChatInfo.getId().startsWith(AppConfig.CHAT_SERVICE_USER_ID)) {
+                if (flag) {
+                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) binding.rlLayout.getLayoutParams();
+                    if (defBottomMargin == 0) {
+                        defBottomMargin = layoutParams.bottomMargin;
+                    }
+                    int ctHeight = 0;
+                    if (height == 0 || faceHeight == 0) {
+                        ctHeight = faceHeight == 0 ? 1084 : faceHeight;
+                    }
+                    layoutParams.bottomMargin = height + ctHeight + defBottomMarginHeight;
+                    binding.rlLayout.setLayoutParams(layoutParams);
+                } else {
+                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) binding.rlLayout.getLayoutParams();
+                    if (defBottomMargin == 0) {
+                        defBottomMargin = layoutParams.bottomMargin;
+                    }
+                    layoutParams.bottomMargin = defBottomMargin;
+                    binding.rlLayout.setLayoutParams(layoutParams);
+                }
+            }
+        } catch (Exception e) {
+
         }
     }
 

@@ -855,6 +855,7 @@
     <string name="playfun_text_accost_error2">至少搭訕一個人</string>
     <string name="playfun_text_accost_error3">下次搭訕倒計時\n</string>
     <string name="playfun_text_accost_empty">今天次數已用完\n請明天再來</string>
+    <string name="playfun_text_accost_empty2">無可搭訕用戶</string>
     <string name="playfun_text_accost_hint">換一換</string>
 
     <string name="playfun_tw_money_text">新台幣</string>

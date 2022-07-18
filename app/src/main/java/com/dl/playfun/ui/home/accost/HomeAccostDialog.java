@@ -1,4 +1,4 @@
-package com.dl.playfun.ui.dialog;
+package com.dl.playfun.ui.home.accost;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -11,6 +11,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -78,10 +79,14 @@ public class HomeAccostDialog extends BaseDialog {
     private CheckBox item_entity_check1, item_entity_check2, item_entity_check3, item_entity_check4, item_entity_check5, item_entity_check6;
     private ImageView item_tag_img1, item_tag_img2, item_tag_img3, item_tag_img4, item_tag_img5, item_tag_img6;
     private LottieAnimationView item_lottie1, item_lottie2, item_lottie3, item_lottie4, item_lottie5, item_lottie6;
+
+    private LinearLayout itemEntityLayout1, itemEntityLayout2, itemEntityLayout3, itemEntityLayout4, itemEntityLayout5, itemEntityLayout6;
     private ImageView iv_dialog_close;//关闭按钮
     private ImageView btn_submit,incomplete,iv_accost_match;//提交按钮
     private TextView exp_time;//提示
     private DialogAccostClicksListener dialogAccostClicksListener;
+    //换一批
+    private RelativeLayout refresh_layout;
 
     private TextView changeText;
 
@@ -116,6 +121,12 @@ public class HomeAccostDialog extends BaseDialog {
         changeText = rootView.findViewById(R.id.change_text);
         incomplete = rootView.findViewById(R.id.iv_accost_incomplete);
         iv_accost_match = rootView.findViewById(R.id.iv_accost_match);
+        itemEntityLayout1 = rootView.findViewById(R.id.item_entity_layout1);
+        itemEntityLayout2 = rootView.findViewById(R.id.item_entity_layout2);
+        itemEntityLayout3 = rootView.findViewById(R.id.item_entity_layout3);
+        itemEntityLayout4 = rootView.findViewById(R.id.item_entity_layout4);
+        itemEntityLayout5 = rootView.findViewById(R.id.item_entity_layout5);
+        itemEntityLayout6 = rootView.findViewById(R.id.item_entity_layout6);
         item_entity_img1 = rootView.findViewById(R.id.item_entity_img1);
         item_entity_img2 = rootView.findViewById(R.id.item_entity_img2);
         item_entity_img3 = rootView.findViewById(R.id.item_entity_img3);
@@ -154,12 +165,6 @@ public class HomeAccostDialog extends BaseDialog {
         item_lottie4 = rootView.findViewById(R.id.item_lottie4);
         item_lottie5 = rootView.findViewById(R.id.item_lottie5);
         item_lottie6 = rootView.findViewById(R.id.item_lottie6);
-//        item_lottie1.setImageDrawable(getContext().getDrawable(R.drawable.dialog_accost_submit));
-//        item_lottie2.setImageDrawable(getContext().getDrawable(R.drawable.dialog_accost_submit));
-//        item_lottie3.setImageDrawable(getContext().getDrawable(R.drawable.dialog_accost_submit));
-//        item_lottie4.setImageDrawable(getContext().getDrawable(R.drawable.dialog_accost_submit));
-//        item_lottie5.setImageDrawable(getContext().getDrawable(R.drawable.dialog_accost_submit));
-//        item_lottie6.setImageDrawable(getContext().getDrawable(R.drawable.dialog_accost_submit));
 
         item_lottie1.setImageAssetsFolder("images/");
         item_lottie2.setImageAssetsFolder("images/");
@@ -248,7 +253,7 @@ public class HomeAccostDialog extends BaseDialog {
                 }
             }
         });
-        RelativeLayout refresh_layout = rootView.findViewById(R.id.refresh_layout);
+        refresh_layout = rootView.findViewById(R.id.refresh_layout);
         refresh_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -363,72 +368,109 @@ public class HomeAccostDialog extends BaseDialog {
                             }
                             $listData = accostEntity.getData();
                             if ($listData != null) {
-                                AccostItemEntity itemEntity1 = $listData.get(0);
-                                AccostItemEntity itemEntity2 = $listData.get(1);
-                                AccostItemEntity itemEntity3 = $listData.get(2);
-                                AccostItemEntity itemEntity4 = $listData.get(3);
-                                AccostItemEntity itemEntity5 = $listData.get(4);
-                                AccostItemEntity itemEntity6 = $listData.get(5);
-                                loadImage(itemEntity1.getAvatar(), item_entity_img1);
-                                loadImage(itemEntity2.getAvatar(), item_entity_img2);
-                                loadImage(itemEntity3.getAvatar(), item_entity_img3);
-                                loadImage(itemEntity4.getAvatar(), item_entity_img4);
-                                loadImage(itemEntity5.getAvatar(), item_entity_img5);
-                                loadImage(itemEntity6.getAvatar(), item_entity_img6);
-                                item_entity_name1.setText(itemEntity1.getNickname());
-                                item_entity_name2.setText(itemEntity2.getNickname());
-                                item_entity_name3.setText(itemEntity3.getNickname());
-                                item_entity_name4.setText(itemEntity4.getNickname());
-                                item_entity_name5.setText(itemEntity5.getNickname());
-                                item_entity_name6.setText(itemEntity6.getNickname());
-                                item_entity_text1.setText(String.format(StringUtils.getString(R.string.playfun_mine_age), itemEntity1.getAge()));
-                                item_entity_text2.setText(String.format(StringUtils.getString(R.string.playfun_mine_age), itemEntity2.getAge()));
-                                item_entity_text3.setText(String.format(StringUtils.getString(R.string.playfun_mine_age), itemEntity3.getAge()));
-                                item_entity_text4.setText(String.format(StringUtils.getString(R.string.playfun_mine_age), itemEntity4.getAge()));
-                                item_entity_text5.setText(String.format(StringUtils.getString(R.string.playfun_mine_age), itemEntity5.getAge()));
-                                item_entity_text6.setText(String.format(StringUtils.getString(R.string.playfun_mine_age), itemEntity6.getAge()));
-                                if (itemEntity1.getCertification() == 1) {
-                                    item_tag_img1.setVisibility(View.VISIBLE);
-                                    item_tag_img1.setImageResource(R.drawable.ic_real_man);
-                                } else if (itemEntity1.getIsVip() == 1) {
-                                    item_tag_img1.setVisibility(View.VISIBLE);
-                                    item_tag_img1.setImageResource(R.drawable.ic_vip);
+                                int size = $listData.size();
+                                if (size > 0) {
+                                    AccostItemEntity itemEntity1 = $listData.get(0);
+                                    loadImage(itemEntity1.getAvatar(), item_entity_img1);
+                                    item_entity_name1.setText(itemEntity1.getNickname());
+                                    item_entity_text1.setText(String.format(StringUtils.getString(R.string.playfun_mine_age), itemEntity1.getAge()));
+                                    if (itemEntity1.getCertification() == 1) {
+                                        item_tag_img1.setVisibility(View.VISIBLE);
+                                        item_tag_img1.setImageResource(R.drawable.ic_real_man);
+                                    } else if (itemEntity1.getIsVip() == 1) {
+                                        item_tag_img1.setVisibility(View.VISIBLE);
+                                        item_tag_img1.setImageResource(R.drawable.ic_vip);
+                                    }
+                                } else {
+                                    itemEntityLayout1.setVisibility(View.GONE);
                                 }
-                                if (itemEntity2.getCertification() == 1) {
-                                    item_tag_img2.setVisibility(View.VISIBLE);
-                                    item_tag_img2.setImageResource(R.drawable.ic_real_man);
-                                } else if (itemEntity2.getIsVip() == 1) {
-                                    item_tag_img2.setVisibility(View.VISIBLE);
-                                    item_tag_img2.setImageResource(R.drawable.ic_vip);
+
+                                if (size > 1) {
+                                    AccostItemEntity itemEntity2 = $listData.get(1);
+                                    loadImage(itemEntity2.getAvatar(), item_entity_img2);
+                                    item_entity_name2.setText(itemEntity2.getNickname());
+                                    item_entity_text2.setText(String.format(StringUtils.getString(R.string.playfun_mine_age), itemEntity2.getAge()) );
+                                    if (itemEntity2.getCertification() == 1) {
+                                        item_tag_img2.setVisibility(View.VISIBLE);
+                                        item_tag_img2.setImageResource(R.drawable.ic_real_man);
+                                    } else if (itemEntity2.getIsVip() == 1) {
+                                        item_tag_img2.setVisibility(View.VISIBLE);
+                                        item_tag_img2.setImageResource(R.drawable.ic_vip);
+                                    }
+                                } else {
+                                    itemEntityLayout2.setVisibility(View.GONE);
                                 }
-                                if (itemEntity3.getCertification() == 1) {
-                                    item_tag_img3.setVisibility(View.VISIBLE);
-                                    item_tag_img3.setImageResource(R.drawable.ic_real_man);
-                                } else if (itemEntity3.getIsVip() == 1) {
-                                    item_tag_img3.setVisibility(View.VISIBLE);
-                                    item_tag_img3.setImageResource(R.drawable.ic_vip);
+                                if (size > 2) {
+                                    AccostItemEntity itemEntity3 = $listData.get(2);
+                                    loadImage(itemEntity3.getAvatar(), item_entity_img3);
+                                    item_entity_name3.setText(itemEntity3.getNickname());
+                                    item_entity_text3.setText(String.format(StringUtils.getString(R.string.playfun_mine_age), itemEntity3.getAge()));
+                                    if (itemEntity3.getCertification() == 1) {
+                                        item_tag_img3.setVisibility(View.VISIBLE);
+                                        item_tag_img3.setImageResource(R.drawable.ic_real_man);
+                                    } else if (itemEntity3.getIsVip() == 1) {
+                                        item_tag_img3.setVisibility(View.VISIBLE);
+                                        item_tag_img3.setImageResource(R.drawable.ic_vip);
+                                    }
+                                } else {
+                                    itemEntityLayout3.setVisibility(View.GONE);
                                 }
-                                if (itemEntity4.getCertification() == 1) {
-                                    item_tag_img4.setVisibility(View.VISIBLE);
-                                    item_tag_img4.setImageResource(R.drawable.ic_real_man);
-                                } else if (itemEntity4.getIsVip() == 1) {
-                                    item_tag_img4.setVisibility(View.VISIBLE);
-                                    item_tag_img4.setImageResource(R.drawable.ic_vip);
+                                if (size > 3) {
+                                    AccostItemEntity itemEntity4 = $listData.get(3);
+                                    loadImage(itemEntity4.getAvatar(), item_entity_img4);
+                                    item_entity_name4.setText(itemEntity4.getNickname());
+                                    item_entity_text4.setText(String.format(StringUtils.getString(R.string.playfun_mine_age), itemEntity4.getAge()));
+
+                                    if (itemEntity4.getCertification() == 1) {
+                                        item_tag_img4.setVisibility(View.VISIBLE);
+                                        item_tag_img4.setImageResource(R.drawable.ic_real_man);
+                                    } else if (itemEntity4.getIsVip() == 1) {
+                                        item_tag_img4.setVisibility(View.VISIBLE);
+                                        item_tag_img4.setImageResource(R.drawable.ic_vip);
+                                    }
+                                } else {
+                                    itemEntityLayout4.setVisibility(View.GONE);
                                 }
-                                if (itemEntity5.getCertification() == 1) {
-                                    item_tag_img5.setVisibility(View.VISIBLE);
-                                    item_tag_img5.setImageResource(R.drawable.ic_real_man);
-                                } else if (itemEntity5.getIsVip() == 1) {
-                                    item_tag_img5.setVisibility(View.VISIBLE);
-                                    item_tag_img5.setImageResource(R.drawable.ic_vip);
+                                if (size > 4) {
+                                    AccostItemEntity itemEntity5 = $listData.get(4);
+                                    loadImage(itemEntity5.getAvatar(), item_entity_img5);
+                                    item_entity_name5.setText(itemEntity5.getNickname());
+                                    item_entity_text5.setText(String.format(StringUtils.getString(R.string.playfun_mine_age), itemEntity5.getAge()));
+                                    if (itemEntity5.getCertification() == 1) {
+                                        item_tag_img5.setVisibility(View.VISIBLE);
+                                        item_tag_img5.setImageResource(R.drawable.ic_real_man);
+                                    } else if (itemEntity5.getIsVip() == 1) {
+                                        item_tag_img5.setVisibility(View.VISIBLE);
+                                        item_tag_img5.setImageResource(R.drawable.ic_vip);
+                                    }
+                                } else {
+                                    itemEntityLayout5.setVisibility(View.GONE);
                                 }
-                                if (itemEntity6.getCertification() == 1) {
-                                    item_tag_img6.setVisibility(View.VISIBLE);
-                                    item_tag_img6.setImageResource(R.drawable.ic_real_man);
-                                } else if (itemEntity6.getIsVip() == 1) {
-                                    item_tag_img6.setVisibility(View.VISIBLE);
-                                    item_tag_img6.setImageResource(R.drawable.ic_vip);
+                                if (size > 5) {
+                                    AccostItemEntity itemEntity6 = $listData.get(5);
+                                    loadImage(itemEntity6.getAvatar(), item_entity_img6);
+                                    item_entity_name6.setText(itemEntity6.getNickname());
+                                    item_entity_text6.setText(String.format(StringUtils.getString(R.string.playfun_mine_age), itemEntity6.getAge()));
+                                    if (itemEntity6.getCertification() == 1) {
+                                        item_tag_img6.setVisibility(View.VISIBLE);
+                                        item_tag_img6.setImageResource(R.drawable.ic_real_man);
+                                    } else if (itemEntity6.getIsVip() == 1) {
+                                        item_tag_img6.setVisibility(View.VISIBLE);
+                                        item_tag_img6.setImageResource(R.drawable.ic_vip);
+                                    }
+                                } else {
+                                    itemEntityLayout6.setVisibility(View.GONE);
                                 }
+
+                            } else {
+                                if (refresh_layout != null) {
+                                    refresh_layout.setVisibility(View.GONE);
+                                }
+                                btn_submit.setEnabled(true);
+                                btn_submit.setImageResource(R.drawable.dialog_accos_submitt_no);
+                                exp_time.setVisibility(View.VISIBLE);
+                                exp_time.setTextColor(ColorUtils.getColor(R.color.black));
+                                exp_time.setText(mContext.getString(R.string.playfun_text_accost_empty2));
                             }
                         }
                     }
@@ -446,23 +488,38 @@ public class HomeAccostDialog extends BaseDialog {
 
     private void submitAccostList() {
         List<Integer> dataAccessList = new ArrayList<Integer>();
-        if (item_entity_check1.isChecked()) {
-            dataAccessList.add($listData.get(0).getId());
-        }
-        if (item_entity_check2.isChecked()) {
-            dataAccessList.add($listData.get(1).getId());
-        }
-        if (item_entity_check3.isChecked()) {
-            dataAccessList.add($listData.get(2).getId());
-        }
-        if (item_entity_check4.isChecked()) {
-            dataAccessList.add($listData.get(3).getId());
-        }
-        if (item_entity_check5.isChecked()) {
-            dataAccessList.add($listData.get(4).getId());
-        }
-        if (item_entity_check6.isChecked()) {
-            dataAccessList.add($listData.get(5).getId());
+        if ($listData != null) {
+            int size = $listData.size();
+            if (size > 0) {
+                if (item_entity_check1.isChecked()) {
+                    dataAccessList.add($listData.get(0).getId());
+                }
+            }
+            if (size > 1) {
+                if (item_entity_check2.isChecked()) {
+                    dataAccessList.add($listData.get(1).getId());
+                }
+            }
+            if (size > 2) {
+                if (item_entity_check3.isChecked()) {
+                    dataAccessList.add($listData.get(2).getId());
+                }
+            }
+            if (size > 3) {
+                if (item_entity_check4.isChecked()) {
+                    dataAccessList.add($listData.get(3).getId());
+                }
+            }
+            if (size > 4) {
+                if (item_entity_check5.isChecked()) {
+                    dataAccessList.add($listData.get(4).getId());
+                }
+            }
+            if (size > 5) {
+                if (item_entity_check6.isChecked()) {
+                    dataAccessList.add($listData.get(5).getId());
+                }
+            }
         }
         if (!ObjectUtils.isEmpty(dataAccessList) && dataAccessList.size() > 0) {
             if (dialogAccostClicksListener != null) {

@@ -115,8 +115,9 @@ public class TaskCenterItemViewModel extends MultiItemViewModel<TaskCenterViewMo
             int dex = 0;
             //拿到position
             dex = taskCenterViewModel.daily_task_observableList.indexOf(TaskCenterItemViewModel.this);
-            taskCenterViewModel.ToaskSubBonus(itemEntity.get().getSulg(), type, dex);
-
+            if(dex!=-1){
+                taskCenterViewModel.ToaskSubBonus(itemEntity.get().getSulg(), type, dex);
+            }
         }
     });
     private final boolean isMale;

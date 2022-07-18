@@ -264,12 +264,12 @@ public class CustomTextMessageHolder extends TextMessageHolder {
                 gift_title.setText(appContext.getString(R.string.custom_gift_left_title));
                 gift_title.setTextColor(appContext.getResources().getColor(R.color.gift_right_color));
                 gift_text.setTextColor(appContext.getResources().getColor(R.color.gift_right_txt_color));
-                custom_gift_layout.setBackground(appContext.getDrawable(R.drawable.custom_right_gift_backdrop));
+                custom_gift_layout.setBackground(appContext.getResources().getDrawable(R.drawable.custom_right_gift_backdrop));
             } else {
                 gift_title.setText(appContext.getString(R.string.custom_gift_right_title));
                 gift_title.setTextColor(appContext.getResources().getColor(R.color.gift_left_color));
                 gift_text.setTextColor(appContext.getResources().getColor(R.color.gift_left_txt_color));
-                custom_gift_layout.setBackground(appContext.getDrawable(R.drawable.custom_left_gift_backdrop));
+                custom_gift_layout.setBackground(appContext.getResources().getDrawable(R.drawable.custom_left_gift_backdrop));
                 if (giftEntity.getProfitTwd() != null) {
                     double total = giftEntity.getProfitTwd() * giftEntity.getAmount();
                     String custom_message_txt2 = appContext.getString(R.string.profit);

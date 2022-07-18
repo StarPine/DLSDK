@@ -28,22 +28,19 @@ public class HomeMainTabPagerAdapter extends FragmentStatePagerAdapter {
     //男生分类类型
     public static final int[] TAB_MALE_IDX_TYPE = new int[]{1, 4};
 
-    private final Context mContext;
-
     private final int gender;
 
     private final HomeMainViewModel homeMainViewModel;
 
     public HomeMainTabPagerAdapter(Context context, FragmentManager fm, int gender, HomeMainViewModel homeMainViewModel) {
         super(fm);
-        mContext = context;
         this.gender = gender;
         this.homeMainViewModel = homeMainViewModel;
     }
 
     @Override
     public Fragment getItem(int position) {
-        int type = 0;
+        int type;
         if (gender == 1){
             type = TAB_MALE_IDX_TYPE[position];
         }else {
