@@ -128,6 +128,48 @@
 
         </LinearLayout>
 
+        <RelativeLayout
+            android:id="@+id/rl_layout"
+            android:clickable="true"
+            binding:onClickCommand="@{viewModel.callVideoClick}"
+            android:layout_width="72dp"
+            android:layout_height="87dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="135dp"
+            android:visibility="gone">
+
+            <View
+                android:id="@+id/img_call_layout"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                binding:drawable_color="@{@color/purple_text}"
+                binding:drawable_cornersRadius="@{50}" />
+
+            <com.dl.playfun.widget.image.CircleImageView
+                android:id="@+id/img_face_avatar"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginStart="1dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginEnd="1dp"
+                android:layout_marginBottom="1dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/default_avatar"
+                app:riv_corner_radius="8dp"
+                binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
+                binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
+                tools:ignore="MissingConstraints" />
+
+            <ImageView
+                android:id="@+id/gif_call_video"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_alignParentBottom="true"
+                android:src="@drawable/call_video_gif" />
+        </RelativeLayout>
+
         <com.opensource.svgaplayer.SVGAImageView
             android:id="@+id/gift_view"
             android:layout_width="match_parent"

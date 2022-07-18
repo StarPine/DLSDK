@@ -802,6 +802,9 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                 mInputMoreView.setVisibility(View.GONE);
                 mEmojiInputButton.setImageResource(R.drawable.action_face_selector);
                 mTextInput.setVisibility(VISIBLE);
+                if (sendOnClickCallbacks != null) {
+                    sendOnClickCallbacks.onChangedFaceLayout(false, 0, 0);
+                }
 //                showSoftInput();
             } else {
                 mCurrentState = STATE_FACE_INPUT;
@@ -971,6 +974,16 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                     mChatInputHandler.onInputAreaClick();
                 }
             }, 100);
+        }
+        if (mInputMoreView != null) {
+            mInputMoreView.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (sendOnClickCallbacks != null) {
+                        sendOnClickCallbacks.onChangedFaceLayout(true, getMeasuredHeight(), mInputMoreView.getMeasuredHeight());
+                    }
+                }
+            });
         }
     }
 
@@ -1500,6 +1513,9 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         void onClickCallPlayUser();
 
         void sendBlackStatus(int status);
+
+        //简体表情按钮是否展开
+        void onChangedFaceLayout(boolean flag, int height, int faceHeight);
     }
 
 }
