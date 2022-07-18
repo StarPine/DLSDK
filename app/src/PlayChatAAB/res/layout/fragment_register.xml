@@ -76,16 +76,17 @@
                 binding:drawable_cornersRadius="@{10}"
                 android:layout_width="80dp"
                 android:layout_height="match_parent">
+
                 <TextView
-                    android:textColor="@color/black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_centerInParent="true"
                     android:layout_marginStart="10dp"
-                    tools:text="+886"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:includeFontPadding="false"
-                    />
+                    android:textColor="@color/black"
+                    android:text="@{viewModel.areaCode}"
+                    tools:text="+886" />
                 <ImageView
                     android:layout_centerInParent="true"
                     android:layout_alignParentEnd="true"

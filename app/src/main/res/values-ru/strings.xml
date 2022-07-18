@@ -858,6 +858,7 @@
     <string name="playfun_text_accost_error2">Пожалуйста, поприветствуйте хотя бы одного пользователя.</string>
     <string name="playfun_text_accost_error3">Время ожидания до следующего приветствия\n</string>
     <string name="playfun_text_accost_empty">Приветствий в один кликизрасходовано. Приходи завтра.</string>
+    <string name="playfun_text_accost_empty2">無可搭訕用戶</string>
     <string name="playfun_text_accost_hint">обновить</string>
 
     <string name="playfun_tw_money_text">₽</string>

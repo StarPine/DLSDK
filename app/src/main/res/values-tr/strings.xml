@@ -811,6 +811,7 @@
     <string name="playfun_text_accost_error2">Lütfen en az bir kullanıcıyla sohbet başlatın</string>
     <string name="playfun_text_accost_error3">Bir sonraki sohbet başlatmaya\n</string>
     <string name="playfun_text_accost_empty">Bugünkü haklar tükendi\nLütfen yarın tekrar gelin</string>
+    <string name="playfun_text_accost_empty2">無可搭訕用戶</string>
     <string name="playfun_text_accost_hint">Değiştir</string>
     <string name="playfun_tw_money_text">TRY</string>
     <string name="playfun_tw_money_text1">Gelir</string>

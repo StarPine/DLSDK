@@ -812,6 +812,7 @@
     <string name="playfun_text_accost_error2">Greet at least one user.</string>
     <string name="playfun_text_accost_error3">Cooldown for next greeting\n</string>
     <string name="playfun_text_accost_empty">The number of one-click greetings has been used up today. \nPlease come back tomorrow.</string>
+    <string name="playfun_text_accost_empty2">無可搭訕用戶</string>
     <string name="playfun_text_accost_hint">refresh</string>
     <string name="playfun_tw_money_text">New Taiwan Dollar</string>
     <string name="playfun_tw_money_text1">income</string>

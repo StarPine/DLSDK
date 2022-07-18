@@ -29,7 +29,7 @@ import com.dl.playfun.kl.view.VideoPresetActivity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocationManager;
 import com.dl.playfun.ui.base.BaseFragment;
-import com.dl.playfun.ui.dialog.HomeAccostDialog;
+import com.dl.playfun.ui.home.accost.HomeAccostDialog;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.google.android.material.tabs.TabLayout;
@@ -139,7 +139,7 @@ public class HomeMainFragment extends BaseFragment<FragmentHomeMainBinding, Home
                             viewModel.showLocationAlert.set(true);
                         }
                     });
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
     }
@@ -265,7 +265,7 @@ public class HomeMainFragment extends BaseFragment<FragmentHomeMainBinding, Home
     public void onSupportVisible() {
         super.onSupportVisible();
         ImmersionBarUtils.setupStatusBar(this, true, true);
-        if (!viewModel.locationService.get()) {
+        if (Boolean.FALSE.equals(viewModel.locationService.get())) {
         }
     }
 
