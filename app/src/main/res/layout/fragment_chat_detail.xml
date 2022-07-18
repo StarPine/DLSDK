@@ -7,6 +7,7 @@
     <data>
 
         <import type="android.view.View" />
+        <import type="com.dl.playfun.R" />
 
         <import type="me.tatarka.bindingcollectionadapter2.LayoutManagers" />
 
