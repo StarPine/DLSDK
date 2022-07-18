@@ -183,6 +183,11 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         super.initData();
         giftView = binding.giftView;
         binding.chatLayout.getTitleBar().setVisibility(View.GONE);
+        //非客服账号加载用户标签和状态
+        if (!mChatInfo.getId().startsWith(AppConfig.CHAT_SERVICE_USER_ID)) {
+            binding.rlLayout.setVisibility(View.VISIBLE);
+            initCallVideoHint();
+        }
     }
 
     @Override
