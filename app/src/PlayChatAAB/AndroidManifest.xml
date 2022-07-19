@@ -8,7 +8,8 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
@@ -52,7 +53,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:replace="android:allowBackup">
+        tools:replace="android:allowBackup"
+        tools:targetApi="n">
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -134,7 +136,8 @@
             android:requestLegacyExternalStorage="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan|adjustResize|stateHidden"><!--" adjustResize|stateHidden"-->
+            android:windowSoftInputMode="adjustPan|adjustResize|stateHidden"
+            android:exported="true"><!--" adjustResize|stateHidden"-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -155,6 +158,7 @@
         <activity
             android:name="com.dl.playfun.kl.view.DialingAudioActivity"
             android:launchMode="singleTop"
+            android:exported="true"
             android:requestLegacyExternalStorage="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
@@ -164,6 +168,7 @@
         <activity
             android:name="com.dl.playfun.kl.view.CallingVideoActivity"
             android:launchMode="singleTop"
+            android:exported="true"
             android:requestLegacyExternalStorage="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
@@ -173,6 +178,7 @@
         <activity
             android:name="com.dl.playfun.kl.view.AudioCallChatingActivity"
             android:launchMode="singleTop"
+            android:exported="true"
             android:requestLegacyExternalStorage="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
@@ -180,6 +186,7 @@
         <activity
             android:name="com.dl.playfun.kl.view.VideoPresetActivity"
             android:launchMode="singleTop"
+            android:exported="true"
             android:requestLegacyExternalStorage="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
@@ -187,6 +194,7 @@
         <activity
             android:name=".ui.message.chatdetail.notepad.NotepadActivity"
             android:launchMode="singleTop"
+            android:exported="true"
             android:requestLegacyExternalStorage="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
