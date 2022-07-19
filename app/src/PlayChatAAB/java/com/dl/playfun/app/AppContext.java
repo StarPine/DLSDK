@@ -23,6 +23,7 @@ import com.appsflyer.deeplink.DeepLinkListener;
 import com.appsflyer.deeplink.DeepLinkResult;
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.Utils;
+import com.bumptech.glide.Glide;
 import com.dl.playfun.BuildConfig;
 import com.dl.playfun.R;
 import com.dl.playfun.data.AppRepository;
@@ -152,6 +153,20 @@ public class AppContext extends Application {
 
     public static void runOnUIThread(Runnable work, long delayMillis) {
         sUiThreadHandler.postDelayed(work, delayMillis);
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        // 清理所有图片内存缓存
+        Glide.get(this).onLowMemory();
+    }
+
+    @Override
+    public void onTrimMemory(int level) {
+        super.onTrimMemory(level);
+        // 根据手机内存剩余情况清理图片内存缓存
+        Glide.get(this).onTrimMemory(level);
     }
 
     @Override

@@ -40,7 +40,7 @@ public class FaceManager {
     private static LruCache<String, Bitmap> drawableCache = new LruCache(1024);
     private static Context context = TUIChatService.getAppContext();
     private static String[] emojiFilters = context.getResources().getStringArray(R.array.emoji_filter_key);
-    private static String[] emojiFilters_values = context.getResources().getStringArray(R.array.emoji_filter_value);
+    private static String[] emojiFilters_values = context.getResources().getStringArray(R.array.emoji_filter_key);
     private static ArrayList<FaceGroup> customFace = new ArrayList<>();
 
     public static ArrayList<Emoji> getEmojiList() {
