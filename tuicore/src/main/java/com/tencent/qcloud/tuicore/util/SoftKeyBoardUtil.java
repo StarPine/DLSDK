@@ -20,7 +20,7 @@ public class SoftKeyBoardUtil {
         softKeyBoardHeight = preferences.getInt(TUIConstants.TUIChat.SOFT_KEY_BOARD_HEIGHT, 0);
         if (softKeyBoardHeight == 0) {
             int height = getScreenSize()[1];
-            return height * 2 / 5;
+            return height * 2 / 7;
         }
         return softKeyBoardHeight;
     }
