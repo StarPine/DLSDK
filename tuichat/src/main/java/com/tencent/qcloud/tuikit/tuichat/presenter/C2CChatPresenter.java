@@ -14,6 +14,7 @@ import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -117,7 +118,7 @@ public class C2CChatPresenter extends ChatPresenter {
 
                     //过滤旧的相册数据
                     if (data.toString().contains("message_photo")){
-                        removePhotoMessage(data, itemCount,"message_photo");
+                        removeAssignTypeMessage(data,"message_photo");
                     }
 
                     //新增新版相册数据
@@ -139,17 +140,22 @@ public class C2CChatPresenter extends ChatPresenter {
         }
     }
 
-    private void removePhotoMessage(List<TUIMessageBean> data, int itemCount, String message_photo) {
-        for (int i = 0; i < itemCount; i++) {
-            TUIMessageBean lastMsg = data.get(i);
+    /**
+     * 删除指定类型的消息
+     * @param data
+     * @param type
+     */
+    private void removeAssignTypeMessage(List<TUIMessageBean> data, String type) {
+        Iterator<TUIMessageBean> iterator = data.iterator();
+        while (iterator.hasNext()) {
+            TUIMessageBean lastMsg =  iterator.next();
             if (lastMsg != null && lastMsg.getExtra() != null) {
-                if (isJSON2(lastMsg.getExtra().toString())) {//判断后台自定义消息体
+                if (isJSON2(lastMsg.getExtra())) {//判断后台自定义消息体
                     Map<String, Object> map_data = new Gson().fromJson(lastMsg.getExtra().toString(), Map.class);
                     if (map_data != null && map_data.get("type") != null) {
-                        if (map_data.get("type").equals(message_photo)) {//相册类型置顶
-                            data.remove(i);
+                        if (map_data.get("type").equals(type)) {//相册类型置顶
+                            iterator.remove();
                             lastMsg.remove();
-                            return;
                         }
                     }
                 }
