@@ -200,6 +200,19 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan|adjustResize|stateHidden" /><!--" adjustResize|stateHidden"-->
 
+        <activity android:name="com.dl.playfun.api.login.email.LoginEmailMangerActivity"
+            android:launchMode="singleTop"
+            android:exported="true"
+            android:requestLegacyExternalStorage="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/dialog_activity_style"/>
+        <activity android:name="com.dl.playfun.ui.mine.account.bind.EmailMangerBindActivity"
+            android:launchMode="singleTop"
+            android:exported="true"
+            android:requestLegacyExternalStorage="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/dialog_activity_style"/>
+
     </application>
 
 </manifest>

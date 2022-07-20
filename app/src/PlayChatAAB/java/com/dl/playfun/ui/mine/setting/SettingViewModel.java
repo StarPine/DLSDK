@@ -23,7 +23,7 @@ import com.dl.playfun.manager.GlideCacheManager;
 import com.dl.playfun.ui.login.LoginFragment;
 import com.dl.playfun.ui.main.MainFragment;
 import com.dl.playfun.ui.message.pushsetting.PushSettingFragment;
-import com.dl.playfun.ui.mine.account.CommunityAccountFragment;
+import com.dl.playfun.ui.mine.setting.account.CommunityAccountFragment;
 import com.dl.playfun.ui.mine.changepassword.ChangePasswordFragment;
 import com.dl.playfun.ui.mine.creenlock.ScreenLockFragment;
 import com.dl.playfun.ui.mine.webdetail.WebDetailFragment;

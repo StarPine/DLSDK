@@ -117,6 +117,13 @@ public interface HttpDataSource {
      */
     Observable<BaseDataResponse<ApiConfigManagerEntity>> initApiConfig();
 
+    /**
+     * 注销账号
+     *
+     * @return
+     */
+    Observable<BaseResponse> cancellation();
+
     /*=====================================================任务中心相关接口=================================================*/
     /**
      * @return io.reactivex.Observable<com.dl.play.chat.data.source.http.response.BaseResponse>

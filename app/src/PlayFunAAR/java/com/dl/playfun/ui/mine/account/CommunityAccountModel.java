@@ -42,7 +42,7 @@ public class CommunityAccountModel extends BaseViewModel<AppRepository> {
     }
     //绑定 、 修改邮箱
     public BindingCommand bindingEmailCommand = new BindingCommand(() -> {
-
+        UC.dialogBindEmail.call();
     });
     //绑定 、 修改邮箱
     public BindingCommand bindingPwdCommand = new BindingCommand(() -> {

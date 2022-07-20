@@ -1083,6 +1083,11 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
+    public Observable<BaseResponse> cancellation() {
+        return apiService.cancellation();
+    }
+
+    @Override
     public Observable<BaseResponse> ExchangeIntegraBuy(Integer id) {
         return apiService.ExchangeIntegraBuy(id);
     }

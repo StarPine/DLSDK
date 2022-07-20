@@ -1371,6 +1371,11 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
+    public Observable<BaseResponse> cancellation() {
+        return mHttpDataSource.cancellation();
+    }
+
+    @Override
     public Observable<BaseResponse> ExchangeIntegraBuy(Integer id) {
         return mHttpDataSource.ExchangeIntegraBuy(id);
     }

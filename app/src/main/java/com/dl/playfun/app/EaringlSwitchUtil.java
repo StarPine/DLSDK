@@ -14,4 +14,6 @@ public class EaringlSwitchUtil {
     public static String REMOVE_IM_MESSAGE = "removeIMMessageSwitches";
     //钱包入口点击开关
     public static String KEY_WALLET_ENTRANCE = "wallet.entrance";
+    //注销账号开关
+    public static String KEY_DELETE_ACCOUNT = "delete.account";
 }

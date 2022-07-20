@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -596,4 +597,39 @@ public class MMAlertDialog {
         // 取消操作
         void confirmSub(DialogInterface dialog);
     }
+
+    //删除声音提示
+    public static Dialog AlertAccountCancell(Context context, RegUserAlertInterface regUserAlertInterface) {
+        Dialog dialog = new Dialog(context);
+        //强制引导去应用市场更新
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+        dialog.setOnKeyListener((dialog1, keyCode, event) -> keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0);
+        View contentView = LayoutInflater.from(context).inflate(R.layout.alert_account_cancell, null);
+
+        TextView btn_submit = contentView.findViewById(R.id.btn_sub);
+        btn_submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                regUserAlertInterface.confirm(dialog, 0);
+                dialog.dismiss();
+            }
+        });
+
+        dialog.getWindow().setGravity(Gravity.CENTER);
+        dialog.getWindow().setWindowAnimations(R.style.BottomDialog_Animation);
+        //设置背景透明,去四个角
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.setContentView(contentView);
+        //设置宽度充满屏幕
+        Window window = dialog.getWindow();
+        window.setGravity(Gravity.CENTER); //可设置dialog的位置
+        window.getDecorView().setPadding(0, 0, 0, 0); //消除边距
+        WindowManager.LayoutParams lp = window.getAttributes();
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;   //设置宽度充满屏幕
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        window.setAttributes(lp);
+        return dialog;
+    }
+
 }

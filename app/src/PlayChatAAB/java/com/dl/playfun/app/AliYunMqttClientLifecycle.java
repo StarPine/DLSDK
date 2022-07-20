@@ -1,14 +1,12 @@
 package com.dl.playfun.app;
 
 import android.app.Application;
-import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
 
-import com.android.billingclient.api.Purchase;
 import com.blankj.utilcode.util.GsonUtils;
 import com.dl.playfun.entity.MqBroadcastGiftEntity;
 
@@ -21,16 +19,9 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
-import java.math.BigInteger;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
-import me.goldze.mvvmhabit.utils.ToastUtils;
 
 /**
  * Author: 彭石林
@@ -43,6 +34,11 @@ public class AliYunMqttClientLifecycle implements LifecycleObserver {
     public int MQTT_ConnectionTimeout = 10;             // 设置超时时间，单位：秒
     public int KeepAliveIntervalTime = 20;              // 设置心跳包发送间隔，单位：秒
     public boolean CleanSession = true;                 // 设置是否清除缓存
+
+    //页面创建第一次连接时间
+    private long mqttConnectCreateLastTime = 0L;
+    //页面处于可见状态最后依次连接时间
+    private long mqttConnectResumeLastTime = 0L;
     //使用实列
     /*   在 act or fragment中注入声明周期管理
      *   AliYunMqttClientLifecycle aliYunMqttClientLifecycle = ((MyContext) getApplication()).getBillingClientLifecycle();
@@ -86,6 +82,22 @@ public class AliYunMqttClientLifecycle implements LifecycleObserver {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     public void create() {
+        mqttConnectCreateLastTime = System.currentTimeMillis();
+        initClient();
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+    public void onResume() {
+        //页面再次可见时再次进入判断。防止弱引用持有回收
+        mqttConnectResumeLastTime = System.currentTimeMillis();
+        if(mqttConnectResumeLastTime!=0L && mqttConnectCreateLastTime!=0L){
+            //页面可见时间 - 页面创建时间 < 10秒。不在进行连接。避免重复创建
+            if((mqttConnectResumeLastTime / 1000) - (mqttConnectCreateLastTime / 1000) <= 10){
+                return;
+            }
+        }else {
+            return;
+        }
         initClient();
     }
 
@@ -123,20 +135,39 @@ public class AliYunMqttClientLifecycle implements LifecycleObserver {
         mqttConnectOptions.setConnectionTimeout(MQTT_ConnectionTimeout);
         mqttConnectOptions.setKeepAliveInterval(KeepAliveIntervalTime);
         mqttConnectOptions.setUserName("Signature|LTAI4G25QqrdXwYKMi9aGLYK|mqtt-cn-i7m2rnxmn06");
-        mqttConnectOptions.setPassword("8BNVWyPxuS9OmPFePLrXylMjQC4=".toCharArray());
-        mqttConnectOptions.setCleanSession(true);
+        mqttConnectOptions.setPassword("gkd6A68riwrjWzmTBEVus0WH4Po=".toCharArray());
+        mqttConnectOptions.setCleanSession(CleanSession);
         mqttConnectOptions.setMqttVersion(3);
         /* 创建MqttAndroidClient对象, 并设置回调接口 */
-        mqttAndroidClient = new MqttAndroidClient(appContext, "tcp://mqtt-cn-i7m2rnxmn06.mqtt.aliyuncs.com:1883", "GID_TEST@@@2541");
+        mqttAndroidClient = new MqttAndroidClient(appContext, "tcp://mqtt-cn-i7m2rnxmn06.mqtt.aliyuncs.com:1883", "GID_TEST@@@TEST1381");
         mqttAndroidClient.setCallback(new MqttCallback() {
             @Override
             public void connectionLost(Throwable cause) {
+                //断开链接进入这里
                 Log.i(TAG, "connection lost");
+                long reconnectTimes = 1;
+                while (true) {
+                    try {
+                        if (mqttAndroidClient.isConnected()) {
+                            Log.i(TAG,"mqtt reconnect success end");
+                            break;
+                        }
+                        Log.e(TAG,"mqtt reconnect times = {} try again..."+ reconnectTimes++);
+                        mqttAndroidClient.connect();
+                    } catch (MqttException e) {
+                        Log.e(TAG, e.getMessage());
+                    }
+                    try {
+                        Thread.sleep(10 * 1000);
+                    } catch (InterruptedException e1) {
+//                            e1.printStackTrace();
+                    }
+                }
             }
 
             @Override
             public void messageArrived(String topic, MqttMessage message) {
-                Log.i(TAG, "topic: " + topic + ", msg: " + new String(message.getPayload()));
+                Log.i(TAG, message.getId()+"====="+"，topic: " + topic + ", msg: " + new String(message.getPayload()));
                 try {
                     if(message.getPayload() != null){
                         String msgBody = new String(message.getPayload());
@@ -172,7 +203,6 @@ public class AliYunMqttClientLifecycle implements LifecycleObserver {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
                     Log.i(TAG, "connect succeed");
-
                     subscribeTopic(SUB_TOPIC);
                 }
 
@@ -205,7 +235,9 @@ public class AliYunMqttClientLifecycle implements LifecycleObserver {
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                     Log.i(TAG, "subscribed failed");
-                    Log.e(TAG,"订阅异常原因:"+exception.getMessage());
+                    if(exception!=null && exception.getMessage()!=null){
+                        Log.e(TAG,"订阅异常原因:"+exception.getMessage());
+                    }
                 }
             });
 
