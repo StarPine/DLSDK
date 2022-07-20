@@ -42,13 +42,11 @@ import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.entity.CallingInviteInfo;
 import com.dl.playfun.entity.CoinExchangePriceInfo;
 import com.dl.playfun.entity.GiftBagEntity;
-import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.event.CallChatingHangupEvent;
 import com.dl.playfun.kl.viewmodel.VideoCallViewModel;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocaleManager;
 import com.dl.playfun.utils.AutoSizeUtils;
-import com.dl.playfun.utils.ChatUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.StringUtil;
@@ -74,10 +72,10 @@ import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.liteav.trtccalling.TUICalling;
 import com.tencent.liteav.trtccalling.model.TRTCCalling;
 import com.tencent.liteav.trtccalling.model.util.TUICallingConstants;
+import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
@@ -290,8 +288,17 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
     public void initViewObservable() {
         super.initViewObservable();
         //水晶兑换规则
-        viewModel.uc.clickCrystalExchange.observe(this, o -> {
-            TraceDialog.getInstance(CallingVideoActivity.this).getCrystalExchange().show();
+        viewModel.uc.clickCrystalExchange.observe(this, data -> {
+            TraceDialog.getInstance(CallingVideoActivity.this)
+                    .setConfirmOnlick(new TraceDialog.ConfirmOnclick() {
+                        @Override
+                        public void confirm(Dialog dialog) {
+                            ConfigManagerUtil.getInstance().putExchangeRulesFlag(true);
+                            viewModel.isShowedExchangeRules.set(true);
+                        }
+                    })
+                    .getCrystalExchange(data)
+                    .show();
         });
 
         //破冰文案刷新動畫

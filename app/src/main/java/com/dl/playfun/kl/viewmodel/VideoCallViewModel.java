@@ -36,6 +36,7 @@ import com.dl.playfun.entity.CallingStatusEntity;
 import com.dl.playfun.entity.CallingVideoTryToReconnectEvent;
 import com.dl.playfun.entity.CustomMessageIMTextEntity;
 import com.dl.playfun.entity.GiftBagEntity;
+import com.dl.playfun.entity.MallWithdrawTipsInfoEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.entity.UserProfileInfo;
 import com.dl.playfun.event.CallVideoUserEnterEvent;
@@ -53,6 +54,7 @@ import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMMessageReceipt;
 import com.tencent.liteav.trtccalling.TUICalling;
+import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.MyImageSpan;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
@@ -84,6 +86,9 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
 
     public ObservableField<Boolean> isShowCountdown = new ObservableField(false);
     public ObservableField<Boolean> isShowBeauty = new ObservableField(false);
+
+    //是否已经显示过兑换规则
+    public ObservableField<Boolean> isShowedExchangeRules = new ObservableField<>(false);
 
     //录音文案数组坐标
     public int sayHiePosition = 0;
@@ -222,7 +227,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
     public BindingCommand crystalOnClick = new BindingCommand(new BindingAction() {
         @Override
         public void call() {
-            uc.clickCrystalExchange.call();
+            getMallWithdrawTipsInfo(1);
         }
     });
 
@@ -382,6 +387,14 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
 
     public VideoCallViewModel(@NonNull @NotNull Application application, AppRepository model) {
         super(application, model);
+        setShowRule();
+    }
+
+    /***
+     * 设置兑换规则框是否显示
+     */
+    public void setShowRule(){
+        isShowedExchangeRules.set(ConfigManagerUtil.getInstance().getExchangeRulesFlag());
     }
 
     //    protected TRTCCallingDelegate mTRTCCallingDelegate;
@@ -404,6 +417,27 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
         this.isCalledBinding.set(role == TUICalling.Role.CALLED);
         this.isCalledWaitingBinding.set(role == TUICalling.Role.CALLED);
         this.roomId = roomId;
+    }
+
+    public void getMallWithdrawTipsInfo(Integer channel){
+        model.getMallWithdrawTipsInfo(channel)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseDataResponse<MallWithdrawTipsInfoEntity>>() {
+                    @Override
+                    public void onSuccess(BaseDataResponse<MallWithdrawTipsInfoEntity> response) {
+                        MallWithdrawTipsInfoEntity data = response.getData();
+                        uc.clickCrystalExchange.setValue(data);
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        dismissHUD();
+                    }
+                });
     }
 
     public Drawable getVipGodsImg(CallingInviteInfo callingInviteInfo) {
@@ -851,7 +885,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<GiftEntity> acceptUserGift = new SingleLiveEvent<>();
         //关闭消息
         public SingleLiveEvent<Void> closeViewHint = new SingleLiveEvent<>();
-        public SingleLiveEvent clickCrystalExchange = new SingleLiveEvent<>();
+        public SingleLiveEvent<MallWithdrawTipsInfoEntity> clickCrystalExchange = new SingleLiveEvent<>();
         //滚动到屏幕底部
         public SingleLiveEvent<Void> scrollToEnd = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> startVideoUpSayHiAnimotor = new SingleLiveEvent<>();

@@ -17,7 +17,7 @@ public class MallWithdrawTipsInfoEntity implements Serializable {
      * goodsList : [{"quantity":200,"profits":9999},{"quantity":2000,"profits":19999}]
      */
 
-    private String title;
+    private String title;//标题
     private List<GoodsListBean> goodsList;
 
     public String getTitle() {
@@ -42,8 +42,8 @@ public class MallWithdrawTipsInfoEntity implements Serializable {
          * profits : 9999
          */
 
-        private int quantity;
-        private int profits;
+        private int quantity;//数量
+        private int profits;//所需水晶
 
         public int getQuantity() {
             return quantity;
@@ -61,20 +61,5 @@ public class MallWithdrawTipsInfoEntity implements Serializable {
             this.profits = profits;
         }
 
-        @Override
-        public String toString() {
-            return "GoodsListBean{" +
-                    "quantity=" + quantity +
-                    ", profits=" + profits +
-                    '}';
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "MallWithdrawTipsInfoEntity{" +
-                "title='" + title + '\'' +
-                ", goodsList=" + goodsList +
-                '}';
     }
 }

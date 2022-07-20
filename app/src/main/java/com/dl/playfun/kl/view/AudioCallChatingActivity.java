@@ -45,6 +45,7 @@ import com.dl.playfun.kl.viewmodel.AudioCallChatingViewModel;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocaleManager;
 import com.dl.playfun.ui.dialog.GiftBagDialog;
+import com.dl.playfun.ui.message.chatdetail.ChatDetailFragment;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.StringUtil;
@@ -59,6 +60,7 @@ import com.opensource.svgaplayer.SVGAParser;
 import com.opensource.svgaplayer.SVGASoundManager;
 import com.opensource.svgaplayer.SVGAVideoEntity;
 import com.tencent.coustom.GiftEntity;
+import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -195,8 +197,17 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
             }
         });
         //水晶兑换规则
-        viewModel.uc.clickCrystalExchange.observe(this, o -> {
-            TraceDialog.getInstance(AudioCallChatingActivity.this).getCrystalExchange().show();
+        viewModel.uc.clickCrystalExchange.observe(this, data -> {
+            TraceDialog.getInstance(AudioCallChatingActivity.this)
+                    .setConfirmOnlick(new TraceDialog.ConfirmOnclick() {
+                        @Override
+                        public void confirm(Dialog dialog) {
+                            ConfigManagerUtil.getInstance().putExchangeRulesFlag(true);
+                            viewModel.isShowedExchangeRules.set(true);
+                        }
+                    })
+                    .getCrystalExchange(data)
+                    .show();
         });
 
         //破冰文案刷新動畫

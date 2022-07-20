@@ -2,8 +2,10 @@ package com.dl.playfun.widget.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,8 @@ import android.widget.TextView;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
 import com.dl.playfun.R;
+import com.dl.playfun.entity.MallWithdrawTipsInfoEntity;
+import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.StringUtil;
 
 /**
@@ -278,8 +282,9 @@ public class TraceDialog {
     /**
      * 水晶兑换dialog
      * @return
+     * @param data
      */
-    public Dialog getCrystalExchange() {
+    public Dialog getCrystalExchange(MallWithdrawTipsInfoEntity data) {
         Dialog bottomDialog = new Dialog(context, R.style.BottomDialog);
         View contentView = LayoutInflater.from(context).inflate(R.layout.dialog_crystal_exchange, null);
         bottomDialog.setContentView(contentView);
@@ -288,8 +293,20 @@ public class TraceDialog {
         bottomDialog.getWindow().setGravity(Gravity.CENTER);
 //        bottomDialog.getWindow().setWindowAnimations(R.style.BottomDialog_Animation);
         Button confirmBtn = contentView.findViewById(R.id.confirm);
+        TextView title = contentView.findViewById(R.id.title);
         TextView questionMark = contentView.findViewById(R.id.question_mark);
         TextView questionMark2 = contentView.findViewById(R.id.question_mark2);
+        TextView price1 = contentView.findViewById(R.id.price1);
+        TextView price2 = contentView.findViewById(R.id.price2);
+        TextView crystal1 = contentView.findViewById(R.id.crystal1);
+        TextView crystal2 = contentView.findViewById(R.id.crystal2);
+        if (data != null){
+            title.setText(data.getTitle());
+            price1.setText(""+data.getGoodsList().get(0).getQuantity());
+            price2.setText(""+data.getGoodsList().get(1).getQuantity());
+            crystal1.setText(""+data.getGoodsList().get(0).getProfits());
+            crystal2.setText(""+data.getGoodsList().get(1).getProfits());
+        }
 
         questionMark.setText("???");
         questionMark2.setText("???");

@@ -184,6 +184,7 @@
             android:layout_marginTop="@dimen/dp_145"
             android:layout_alignParentRight="true"
             android:layout_marginRight="13dp"
+            android:visibility="@{viewModel.isShowedExchangeRules?View.GONE:View.VISIBLE}"
             onClickCommand="@{viewModel.crystalOnClick}"
             >
 

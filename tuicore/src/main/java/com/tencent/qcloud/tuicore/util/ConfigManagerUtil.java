@@ -20,6 +20,7 @@ public class ConfigManagerUtil {
     private final String cryptKey = "playfun@2022";
     private static final String KEY_GAME_CONFIG = "key_game_config";
     private static final String KEY_PLAY_GAME_FLAG = "key_play_game_flag";
+    private static final String EXCHANGE_RULESFLAG_FLAG = "exchange_rulesflag_flag";
     private static final String KEY_IS_CHAT_PUSH = "key_is_chat_push";
     private final MMKV kv = MMKV.mmkvWithID("cache", MMKV.SINGLE_PROCESS_MODE, cryptKey);
     private Gson gson;
@@ -75,6 +76,14 @@ public class ConfigManagerUtil {
 
     public void putPlayGameFlag(boolean playGameFlag) {
         kv.encode(KEY_PLAY_GAME_FLAG, playGameFlag);
+    }
+
+    public boolean getExchangeRulesFlag() {
+        return kv.decodeBool(EXCHANGE_RULESFLAG_FLAG,false);
+    }
+
+    public void putExchangeRulesFlag(boolean playGameFlag) {
+        kv.encode(EXCHANGE_RULESFLAG_FLAG, playGameFlag);
     }
 
     public static boolean isEmpty(final CharSequence obj) {

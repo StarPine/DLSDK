@@ -37,6 +37,7 @@ import com.dl.playfun.entity.CallingInfoEntity;
 import com.dl.playfun.entity.CallingStatusEntity;
 import com.dl.playfun.entity.CustomMessageIMTextEntity;
 import com.dl.playfun.entity.GiftBagEntity;
+import com.dl.playfun.entity.MallWithdrawTipsInfoEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.AudioCallingCancelEvent;
 import com.dl.playfun.kl.Utils;
@@ -55,6 +56,7 @@ import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMMessageReceipt;
 import com.tencent.liteav.trtccalling.model.TRTCCalling;
 import com.tencent.liteav.trtccalling.model.TRTCCallingDelegate;
+import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.MyImageSpan;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
@@ -126,6 +128,8 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     public ObservableField<String> timeTextField = new ObservableField<>();
     public ObservableField<CallingInfoEntity.FromUserProfile> rightUserInfoField = new ObservableField<>();
     public ObservableField<CallingInfoEntity.FromUserProfile> leftUserInfoField = new ObservableField<>();
+    //是否已经显示过兑换规则
+    public ObservableField<Boolean> isShowedExchangeRules = new ObservableField<>(false);
     //男生收益框是否展示
     public ObservableBoolean maleTextLayoutSHow = new ObservableBoolean(false);
     //男性收益内容
@@ -169,7 +173,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     public BindingCommand crystalOnClick = new BindingCommand(new BindingAction() {
         @Override
         public void call() {
-            uc.clickCrystalExchange.call();
+            getMallWithdrawTipsInfo(1);
         }
     });
 
@@ -217,6 +221,14 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
 
     public AudioCallChatingViewModel(@NonNull @NotNull Application application, AppRepository model) {
         super(application, model);
+        setShowRule();
+    }
+
+    /***
+     * 设置兑换规则框是否显示
+     */
+    public void setShowRule(){
+        isShowedExchangeRules.set(ConfigManagerUtil.getInstance().getExchangeRulesFlag());
     }
 
     //关注
@@ -616,6 +628,25 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
         putRcvItemMessage(itemMessageBuilder, null, false);
     }
 
+    public void getMallWithdrawTipsInfo(Integer channel){
+        model.getMallWithdrawTipsInfo(channel)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseDataResponse<MallWithdrawTipsInfoEntity>>() {
+                    @Override
+                    public void onSuccess(BaseDataResponse<MallWithdrawTipsInfoEntity> response) {
+                        MallWithdrawTipsInfoEntity data = response.getData();
+                        uc.clickCrystalExchange.setValue(data);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        dismissHUD();
+                    }
+                });
+    }
 
     //获取房间状态
     public void getRoomStatus(Integer roomId) {
@@ -770,7 +801,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
 
     public class UIChangeObservable {
         //水晶兑换规则
-        public SingleLiveEvent clickCrystalExchange = new SingleLiveEvent<>();
+        public SingleLiveEvent<MallWithdrawTipsInfoEntity> clickCrystalExchange = new SingleLiveEvent<>();
         //接听成功
         public SingleLiveEvent<Void> callAudioStart = new SingleLiveEvent<>();
         //调用发送礼物弹窗

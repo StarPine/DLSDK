@@ -31,6 +31,7 @@ import com.dl.playfun.entity.EvaluateItemEntity;
 import com.dl.playfun.entity.EvaluateObjEntity;
 import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.entity.IMTransUserEntity;
+import com.dl.playfun.entity.MallWithdrawTipsInfoEntity;
 import com.dl.playfun.entity.MessageRuleEntity;
 import com.dl.playfun.entity.PhotoAlbumEntity;
 import com.dl.playfun.entity.PriceConfigEntity;
@@ -57,6 +58,7 @@ import com.dl.playfun.utils.Utils;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.google.gson.Gson;
 import com.luck.picture.lib.entity.LocalMedia;
+import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.CustomHelloMessage;
 import com.tencent.qcloud.tuikit.tuichat.bean.CustomImageMessage;
@@ -94,7 +96,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
     public ObservableField<Boolean> isTagShow = new ObservableField<>(false);
     public ObservableField<Boolean> inBlacklist = new ObservableField<>(false);
     public ObservableField<Boolean> isTrack = new ObservableField<>(false);//todo 还没根据后端进行初始化
-    public ObservableField<Boolean> dialogShow = new ObservableField<>(false);
+    public ObservableField<Boolean> isShowedExchangeRules = new ObservableField<>(false);
     public ObservableField<String> menuTrack = new ObservableField<>();
     public ObservableField<String> menuBlockade = new ObservableField<>("封鎖");
     public ObservableField<TagEntity> tagEntitys = new ObservableField<>();
@@ -130,6 +132,8 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
     public BindingCommand moreOnClickCommand = new BindingCommand(new BindingAction() {
         @Override
         public void call() {
+            ConfigManagerUtil.getInstance().putExchangeRulesFlag(false);
+            isShowedExchangeRules.set(false);
             hideKeyboard();
             uc.clickMore.call();
         }
@@ -152,7 +156,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
     public BindingCommand crystalOnClick = new BindingCommand(new BindingAction() {
             @Override
             public void call() {
-                uc.clickCrystalExchange.call();
+                getMallWithdrawTipsInfo(1);
             }
     });
 
@@ -160,11 +164,19 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
     public ChatDetailViewModel(@NonNull Application application, AppRepository repository) {
         super(application, repository);
         sensitiveWords.set(model.readSensitiveWords());
+        setShowRule();
     }
 
     @Override
     public void onEnterAnimationEnd() {
         super.onEnterAnimationEnd();
+    }
+
+    /***
+     * 设置兑换规则框是否显示
+     */
+    public void setShowRule(){
+        isShowedExchangeRules.set(ConfigManagerUtil.getInstance().getExchangeRulesFlag());
     }
 
     public void loadUserInfo(int userId) {
@@ -518,6 +530,28 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                 });
     }
 
+    public void getMallWithdrawTipsInfo(Integer channel){
+        model.getMallWithdrawTipsInfo(channel)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseDataResponse<MallWithdrawTipsInfoEntity>>() {
+                    @Override
+                    public void onSuccess(BaseDataResponse<MallWithdrawTipsInfoEntity> response) {
+                        MallWithdrawTipsInfoEntity data = response.getData();
+                        LogUtils.i("onSuccess: "+data);
+                        uc.clickCrystalExchange.setValue(data);
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        dismissHUD();
+                    }
+                });
+    }
+
     //拨打语音、视频
     public void getCallingInvitedInfo(int callingType, String IMUserId, String toIMUserId) {
         model.callingInviteInfo(callingType, IMUserId, toIMUserId)
@@ -842,7 +876,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<Void> clickConnMic = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> imProfit = new SingleLiveEvent<>();
         public SingleLiveEvent clickMore = new SingleLiveEvent<>();
-        public SingleLiveEvent clickCrystalExchange = new SingleLiveEvent<>();
+        public SingleLiveEvent<MallWithdrawTipsInfoEntity> clickCrystalExchange = new SingleLiveEvent<>();
         //对方忙线
         public SingleLiveEvent otherBusy = new SingleLiveEvent<>();
         //新增

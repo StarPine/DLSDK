@@ -644,6 +644,7 @@
                 android:layout_centerInParent="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="13dp"
+                android:visibility="@{viewModel.isShowedExchangeRules?View.GONE:View.VISIBLE}"
                 onClickCommand="@{viewModel.crystalOnClick}"
                 >
 

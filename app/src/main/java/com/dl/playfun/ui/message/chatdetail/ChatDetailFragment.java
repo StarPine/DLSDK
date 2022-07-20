@@ -43,6 +43,7 @@ import com.dl.playfun.entity.CoinExchangePriceInfo;
 import com.dl.playfun.entity.EvaluateItemEntity;
 import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.entity.LocalMessageIMEntity;
+import com.dl.playfun.entity.MallWithdrawTipsInfoEntity;
 import com.dl.playfun.entity.MessageRuleEntity;
 import com.dl.playfun.entity.PhotoAlbumEntity;
 import com.dl.playfun.entity.TagEntity;
@@ -89,6 +90,7 @@ import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
+import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
@@ -456,8 +458,17 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                     }).TraceVipDialog().show();
         });
         //水晶兑换规则
-        viewModel.uc.clickCrystalExchange.observe(this, o -> {
-            TraceDialog.getInstance(ChatDetailFragment.this.getContext()).getCrystalExchange().show();
+        viewModel.uc.clickCrystalExchange.observe(this, data -> {
+            TraceDialog.getInstance(ChatDetailFragment.this.getContext())
+                    .setConfirmOnlick(new TraceDialog.ConfirmOnclick() {
+                        @Override
+                        public void confirm(Dialog dialog) {
+                            ConfigManagerUtil.getInstance().putExchangeRulesFlag(true);
+                            viewModel.isShowedExchangeRules.set(true);
+                        }
+                    })
+                    .getCrystalExchange(data)
+                    .show();
         });
 
         //更多按钮
@@ -899,7 +910,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             inputLayout.getMessageHandler().sendMessage(ChatMessageBuilder.buildTextMessage(str));
         }
     }
-
 
     @Override
     public void onPause() {
