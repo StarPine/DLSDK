@@ -57,6 +57,7 @@ import com.dl.playfun.entity.IsChatEntity;
 import com.dl.playfun.entity.LevelApiEntity;
 import com.dl.playfun.entity.LevelPageInfoEntity;
 import com.dl.playfun.entity.LocalGooglePayCache;
+import com.dl.playfun.entity.MallWithdrawTipsInfoEntity;
 import com.dl.playfun.entity.MessageGroupEntity;
 import com.dl.playfun.entity.MessageRuleEntity;
 import com.dl.playfun.entity.NewsEntity;
@@ -1503,4 +1504,10 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     public Observable<BaseDataResponse<CallingStatusEntity>> getRoomStatus(Integer roomId) {
         return mHttpDataSource.getRoomStatus(roomId);
     }
+
+    @Override
+    public Observable<BaseDataResponse<MallWithdrawTipsInfoEntity>> getMallWithdrawTipsInfo(Integer channel) {
+        return mHttpDataSource.getMallWithdrawTipsInfo(channel);
+    }
+
 }

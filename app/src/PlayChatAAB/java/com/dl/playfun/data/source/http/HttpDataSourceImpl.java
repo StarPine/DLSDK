@@ -51,6 +51,7 @@ import com.dl.playfun.entity.IMTransUserEntity;
 import com.dl.playfun.entity.IsChatEntity;
 import com.dl.playfun.entity.LevelApiEntity;
 import com.dl.playfun.entity.LevelPageInfoEntity;
+import com.dl.playfun.entity.MallWithdrawTipsInfoEntity;
 import com.dl.playfun.entity.MessageGroupEntity;
 import com.dl.playfun.entity.MessageRuleEntity;
 import com.dl.playfun.entity.NewsEntity;
@@ -1215,4 +1216,10 @@ public class HttpDataSourceImpl implements HttpDataSource {
     public Observable<BaseDataResponse<CallingStatusEntity>> getRoomStatus(Integer roomId) {
         return apiService.getRoomStatus(roomId);
     }
+
+    @Override
+    public Observable<BaseDataResponse<MallWithdrawTipsInfoEntity>> getMallWithdrawTipsInfo(Integer channel) {
+        return apiService.getMallWithdrawTipsInfo(channel);
+    }
+
 }

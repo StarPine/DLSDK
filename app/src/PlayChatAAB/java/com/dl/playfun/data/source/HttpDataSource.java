@@ -48,6 +48,7 @@ import com.dl.playfun.entity.IMTransUserEntity;
 import com.dl.playfun.entity.IsChatEntity;
 import com.dl.playfun.entity.LevelApiEntity;
 import com.dl.playfun.entity.LevelPageInfoEntity;
+import com.dl.playfun.entity.MallWithdrawTipsInfoEntity;
 import com.dl.playfun.entity.MessageGroupEntity;
 import com.dl.playfun.entity.MessageRuleEntity;
 import com.dl.playfun.entity.NewsEntity;
@@ -98,6 +99,14 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface HttpDataSource {
+
+
+    /***
+     * 水晶兑换弹窗提示
+     * @param channel 渠道类型 ：1安卓  2ios
+     * @return
+     */
+    Observable<BaseDataResponse<MallWithdrawTipsInfoEntity>> getMallWithdrawTipsInfo(Integer channel);
 
     /**
      * @Desc TODO(初始化api接口)
