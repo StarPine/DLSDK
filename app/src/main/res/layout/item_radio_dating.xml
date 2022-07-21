@@ -30,7 +30,10 @@
             android:scaleType="centerCrop"
             binding:LocalImagePath="@{viewModel.itemEntity.iconChecked}"
             binding:imageErrorPlaceholderRes="@{R.drawable.default_placeholder_img}"
-            binding:imagePlaceholderRes="@{R.drawable.default_placeholder_img}" />
+            binding:imagePlaceholderRes="@{R.drawable.default_placeholder_img}"
+            binding:resizeH="@{24}"
+            binding:resizeW="@{24}"
+            />
 
     </RelativeLayout>
 </layout>

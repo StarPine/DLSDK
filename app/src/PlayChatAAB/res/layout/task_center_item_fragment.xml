@@ -38,7 +38,10 @@
             app:riv_corner_radius="8dp"
             binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
             binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
-            binding:imageThumbPath="@{viewModel.itemEntity.icon}" />
+            binding:imageThumbPath="@{viewModel.itemEntity.icon}"
+            binding:resizeH="@{48}"
+            binding:resizeW="@{48}"
+            />
 
         <LinearLayout
             android:id="@+id/content"

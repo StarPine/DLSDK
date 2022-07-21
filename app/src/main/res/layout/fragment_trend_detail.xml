@@ -92,6 +92,8 @@
                     binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
                     binding:imageThumbPath="@{viewModel.newsEntityObservableField.user.avatar}"
                     binding:onClickCommand="@{viewModel.avatarClick}"
+                    binding:resizeH="@{34}"
+                    binding:resizeW="@{34}"
                     tools:ignore="MissingConstraints" />
 
                 <TextView

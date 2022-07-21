@@ -51,7 +51,10 @@
                     app:riv_corner_radius="8dip"
                     binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
                     binding:imagePath="@{viewModel.redpackageDetail.user.avatar}"
-                    binding:imagePlaceholderRes="@{R.drawable.default_avatar}" />
+                    binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
+                    binding:resizeH="@{70}"
+                    binding:resizeW="@{70}"
+                    />
 
                 <LinearLayout
                     android:layout_width="match_parent"

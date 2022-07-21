@@ -23,6 +23,9 @@
             android:src="@drawable/default_load_img_purl"
             binding:imageErrorPlaceholderRes="@{R.drawable.default_load_img_purl}"
             binding:imagePlaceholderRes="@{R.drawable.default_load_img_purl}"
-            binding:imageThumbPath="@{viewModel.levelInfoData.levelImage}" />
+            binding:imageThumbPath="@{viewModel.levelInfoData.levelImage}"
+            binding:resizeH="@{110}"
+            binding:resizeW="@{110}"
+            />
     </FrameLayout>
 </layout>

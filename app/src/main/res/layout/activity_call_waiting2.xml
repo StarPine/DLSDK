@@ -45,7 +45,9 @@
                 android:scaleType="centerCrop"
                 binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
                 binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
-                binding:imageThumbPath="@{viewModel.callingInviteInfoField.userProfileInfo.avatar}" />
+                binding:imageThumbPath="@{viewModel.callingInviteInfoField.userProfileInfo.avatar}"
+                binding:resizeH="@{90}"
+                binding:resizeW="@{90}"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"

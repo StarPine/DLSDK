@@ -29,7 +29,10 @@
             app:riv_corner_radius="4dip"
             binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
             binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
-            binding:imageThumbPath="@{viewModel.itemEntity.fromUserInfo.avatar}" />
+            binding:imageThumbPath="@{viewModel.itemEntity.fromUserInfo.avatar}"
+            binding:resizeH="@{48}"
+            binding:resizeW="@{48}"
+            />
 
         <TextView
             android:id="@+id/tv_content"

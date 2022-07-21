@@ -191,6 +191,7 @@
                     android:scaleType="centerCrop"
                     android:src="@drawable/radio_dating_img_default"
                     android:visibility="@{StringUtils.isEmpty(viewModel.newsEntityObservableField.video)?View.VISIBLE:View.GONE}"
+                    binding:addWaterMark="@{true}"
                     binding:imageErrorPlaceholderRes="@{R.drawable.radio_dating_img_default}"
                     binding:imagePath='@{ListUtils.isEmpty(viewModel.newsEntityObservableField.images)?viewModel.newsEntityObservableField.user.avatar:viewModel.newsEntityObservableField.images.get(0)}'
                     binding:imagePlaceholderRes="@{R.drawable.radio_dating_img_default}"
