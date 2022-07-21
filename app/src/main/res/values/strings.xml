@@ -980,10 +980,10 @@
     <string name="playfun_mine_setting_account_pwd_hint2">請再次輸入密碼</string>
 
     <string name="playfun_mine_setting_account_pwd">賬號密碼</string>
-    <string name="notepad_hint">將對方的特徵筆記下來，幫你回想對方曾聊過餓內容。</string>
+    <string name="notepad_hint">將對方的特徵筆記下來，幫你回想對方曾聊過的內容。</string>
     <string name="save">保存</string>
-    <string name="notepad_word_count_format">%s/200</string>
-    <string name="notepad_word_count">0/200</string>
+    <string name="notepad_word_count_format">%s/400</string>
+    <string name="notepad_word_count">0/400</string>
     <string name="playfun_mine_shop">商店</string>
     <string name="playfun_coin_electronic_wallet">電子錢包</string>
 

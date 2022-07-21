@@ -381,7 +381,7 @@
     <string name="playfun_mine_upload_first_pic_sub">有照片才能吸引%s哦</string>
     <string name="playfun_exit_app">再次返回退出程序</string>
     <string name="playfun_pull_black_shield_both_sides">封鎖</string>
-    <string name="playfun_remove_black_shield_both_sides">移出封鎖名單(取消封鎖)</string>
+    <string name="playfun_remove_black_shield_both_sides">取消封鎖</string>
     <string name="playfun_no_information_cant_comment">你還沒與對方聊天，無法評價</string>
     <string name="playfun_no_information_cant_comment_him">你們私訊過少還不能評價</string>
     <string name="playfun_no_information_cant_comment_hims">你已經評價過了</string>

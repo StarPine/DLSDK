@@ -296,6 +296,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         viewModel.uc.sendDialogViewEvent.observe(this, event -> {
             paySelectionboxChoose(false);
         });
+        //跳转笔记界面
         viewModel.uc.starNotepad.observe(this, event -> {
             Intent intent = new Intent(mActivity, NotepadActivity.class);
             mActivity.startActivity(intent);

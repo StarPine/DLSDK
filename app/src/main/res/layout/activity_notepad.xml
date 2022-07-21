@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <variable
+            name="viewModel"
+            type="com.dl.playfun.ui.message.chatdetail.notepad.NotepadViewModel" />
     </data>
 
     <RelativeLayout
@@ -57,7 +60,7 @@
             android:gravity="left"
             android:hint="@string/notepad_hint"
             android:padding="8dp"
-            android:maxLength="200"
+            android:maxLength="400"
             android:textSize="@dimen/text_size_middle" />
 
         <TextView
@@ -66,9 +69,11 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/edit_notepad"
             android:layout_alignRight="@id/edit_notepad"
-            android:text="@string/notepad_word_count"
+            android:text="@{viewModel.notepadTextFlag}"
             android:textColor="@color/gray_light"
-            android:textSize="@dimen/text_size_small" />
+            android:textSize="@dimen/text_size_small"
+            tools:text="0/400"
+            />
 
     </RelativeLayout>
 </layout>
