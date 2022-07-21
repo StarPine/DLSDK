@@ -60,7 +60,7 @@ public class NotepadActivity extends BaseActivity<ActivityNotepadBinding, Notepa
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                binding.tvWordCount.setText(String.format(getString(R.string.notepad_word_count_format),binding.editNotepad.getText().toString().length()+""));
+                viewModel.notepadTextFlag.set(String.format(getString(R.string.notepad_word_count_format),binding.editNotepad.getText().toString().length()+""));
             }
 
             @Override
