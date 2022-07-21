@@ -87,6 +87,8 @@
                     binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
                     binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
                     binding:imagePath="@{viewModel.leftUserInfoField.avatar}"
+                    binding:resizeH="@{90}"
+                    binding:resizeW="@{90}"
                     tools:src="@drawable/default_avatar" />
 
                 <FrameLayout
@@ -110,6 +112,8 @@
                     binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
                     binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
                     binding:imagePath="@{viewModel.rightUserInfoField.avatar}"
+                    binding:resizeH="@{90}"
+                    binding:resizeW="@{90}"
                     tools:src="@drawable/default_avatar"  />
             </LinearLayout>
 

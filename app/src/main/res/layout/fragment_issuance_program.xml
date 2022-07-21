@@ -176,7 +176,10 @@
                             android:visibility="@{viewModel.selectMediaPath==null?View.GONE:View.VISIBLE}"
                             binding:imageErrorPlaceholderRes="@{R.drawable.clop_img_video_loadding}"
                             binding:imagePlaceholderRes="@{R.drawable.clop_img_video_loadding}"
-                            binding:imageThumbPath='@{viewModel.selectMediaPath}' />
+                            binding:imageThumbPath='@{viewModel.selectMediaPath}'
+                            binding:resizeH="@{81}"
+                            binding:resizeW="@{81}"
+                            />
 
                         <TextView
                             android:id="@+id/bottom_hint"

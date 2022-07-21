@@ -62,7 +62,10 @@
                         android:scaleType="centerCrop"
                         binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
                         binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
-                        binding:imageThumbPath="@{viewModel.itemEntity.img}" />
+                        binding:imageThumbPath="@{viewModel.itemEntity.img}"
+                        binding:resizeH="@{67}"
+                        binding:resizeW="@{67}"
+                        />
                 </androidx.cardview.widget.CardView>
 
                 <TextView

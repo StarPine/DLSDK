@@ -37,7 +37,10 @@
             app:riv_corner_radius="8dp"
             binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
             binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
-            binding:imageThumbPath="@{viewModel.itemEntity.avatar}" />
+            binding:imageThumbPath="@{viewModel.itemEntity.avatar}"
+            binding:resizeH="@{65}"
+            binding:resizeW="@{65}"
+            />
 
         <RelativeLayout
             android:id="@+id/rl_name"

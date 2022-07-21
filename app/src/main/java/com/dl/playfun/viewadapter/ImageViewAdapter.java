@@ -16,6 +16,7 @@ import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.ImageViewTarget;
+import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.utils.StringUtil;
 
 import me.goldze.mvvmhabit.utils.StringUtils;
@@ -24,8 +25,9 @@ import me.goldze.mvvmhabit.utils.StringUtils;
  * @author wulei
  */
 public class ImageViewAdapter {
-    @BindingAdapter(value = {"imagePath", "imageThumbPath", "LocalImagePath", "imagePlaceholderRes", "imageErrorPlaceholderRes", "addWaterMark"}, requireAll = false)
-    public static void setImageUri(ImageView imageView, String imagePath, String imageThumbPath, String LocalImagePath, int imagePlaceholderRes, int imageErrorPlaceholderRes, boolean addWaterMark) {
+    @BindingAdapter(value = {"imagePath", "imageThumbPath", "LocalImagePath", "imagePlaceholderRes", "imageErrorPlaceholderRes", "resizeH", "resizeW", "addWaterMark"}, requireAll = false)
+    public static void setImageUri(ImageView imageView, String imagePath, String imageThumbPath, String LocalImagePath, int imagePlaceholderRes, int imageErrorPlaceholderRes,Integer resizeH,Integer resizeW, boolean addWaterMark) {
+
         try {
             String url = "";
             boolean isVideo = false;
@@ -38,7 +40,7 @@ public class ImageViewAdapter {
                 if (addWaterMark) {
                     url = StringUtil.getFullImageWatermarkUrl(imagePath);
                 } else {
-                    url = StringUtil.getFullImageUrl(imagePath);
+                    url = StringUtil.getFullImageUrl(imagePath) + checkResizeProper(imageView.getContext(),resizeH, resizeW);
                 }
             }
             RequestManager requestManager = Glide.with(imageView.getContext());
@@ -66,6 +68,29 @@ public class ImageViewAdapter {
             e.printStackTrace();
         }
     }
+    /**
+    * @Desc TODO(根据宽高)
+    * @author 彭石林
+    * @parame [resizeH, resizeW]
+    * @return java.lang.String
+    * @Date 2022/7/21
+    */
+    private static String checkResizeProper(Context context,Integer resizeH,Integer resizeW){
+        String value = "";
+        if(resizeH == null && resizeW == null){
+            return value;
+        }else{
+            int h = 0,w = 0;
+            value = AppConfig.OSS_END_RESIZE;
+            if(resizeH!=null){
+                h = dp2px(context,resizeH);
+            }
+            if(resizeW!=null){
+                w = dp2px(context,resizeW);
+            }
+            return String.format(value,String.valueOf(h == 0 ? w : h),String.valueOf(w == 0 ? h : w));
+        }
+    }
 
     @BindingAdapter(value = {"animateImage"}, requireAll = false)
     public static void CoustemAnimateImage(ImageView imageView, boolean animateImage) {
@@ -89,25 +114,6 @@ public class ImageViewAdapter {
                 }
             });
             imageView.setAnimation(animation);
-        }
-    }
-
-    @BindingAdapter(value = {"imagePathEd", "imagePathNo", "checked", "imagePlaceholderRes", "imageErrorPlaceholderRes"}, requireAll = false)
-    public static void checkVipImg(ImageView imageView, String imagePathEd, String imagePathNo,boolean checked, int imagePlaceholderRes, int imageErrorPlaceholderRes){
-        if(checked){
-            Glide.with(imageView.getContext()).load(StringUtil.getFullImageUrl(imagePathEd))
-                    .error(imageErrorPlaceholderRes)
-                    .placeholder(imagePlaceholderRes)
-                    .dontAnimate()
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(imageView);
-        }else{
-            Glide.with(imageView.getContext()).load(StringUtil.getFullImageUrl(imagePathNo))
-                    .error(imageErrorPlaceholderRes)
-                    .placeholder(imagePlaceholderRes)
-                    .dontAnimate()
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(imageView);
         }
     }
 
@@ -140,6 +146,9 @@ public class ImageViewAdapter {
      * @return
      */
     public static int dp2px(Context mContext, float dpValue) {
+        if(mContext==null){
+            return 0;
+        }
         final float scale = mContext.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }

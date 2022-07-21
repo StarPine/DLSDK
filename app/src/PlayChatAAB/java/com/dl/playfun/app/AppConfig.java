@@ -54,6 +54,8 @@ public class AppConfig {
     public static final String IMAGE_BASE_URL = BuildConfig.IMAGE_BASE_URL;
     // 访问的endpoint地址
     public static final String OSS_ENDPOINT = "https://oss-ap-southeast-1.aliyuncs.com";
+    // oss缩放图片格式
+    public static final String OSS_END_RESIZE = "?x-oss-process=image/resize,m_lfit,h_%s,w_%s";
 //    // 或者根据工程sts_local_server目录中本地鉴权服务脚本代码启动本地STS 鉴权服务器。详情参见sts_local_server 中的脚本内容。
     public static final String STS_SERVER_URL =  "/api/aliyun/sts";//STS 地址
     public static final String BUCKET_NAME = BuildConfig.BUCKET_NAME;
