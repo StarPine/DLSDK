@@ -1,5 +1,6 @@
 package com.dl.playfun.ui.message.chatmessage;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,7 @@ import com.dl.playfun.tim.TUIUtils;
 import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.ui.message.chatdetail.ChatDetailFragment;
 import com.dl.playfun.utils.AutoSizeUtils;
+import com.dl.playfun.widget.dialog.TraceDialog;
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMConversationListener;
@@ -181,27 +183,37 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
         binding.conversationLayout.getConversationList().setOnItemLongClickListener(new ConversationListLayout.OnItemLongClickListener() {
             @Override
             public void OnItemLongClick(View view, int position, ConversationInfo messageInfo) {
-                String[] items = new String[]{getString(R.string.playfun_top_chat), getString(R.string.playfun_delet_chat),"删除所有封号账号"};
-                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-                builder.setSingleChoiceItems(items, 0, (dialog, which) -> {
-                    dialog.dismiss();
-                    if (which == 0) {
-                        //置顶会话
-                        binding.conversationLayout.setConversationTop(messageInfo,null);
-                    } else if (which == 1) {
-                        //删除会话
-                        binding.conversationLayout.deleteConversation(messageInfo);
-                        binding.conversationLayout.clearConversationMessage(messageInfo);
-                    } else if (which == 2) {
-                        //删除会话
-                        if (viewModel != null)
-                            viewModel.showHUD();
-                        binding.conversationLayout.deleteAllBannedConversation();
-                    }
-                });
-                AlertDialog dialog = builder.create();
-                dialog.show();
-                dialog.setCanceledOnTouchOutside(true);
+
+                TraceDialog.getInstance(ChatMessageFragment.this.getContext())
+                        .setConfirmOnlick(dialog -> {
+                            //置顶会话
+                            binding.conversationLayout.setConversationTop(messageInfo,null);
+
+                        })
+                        .setConfirmTwoOnlick(dialog -> {
+                            //删除会话
+                            binding.conversationLayout.deleteConversation(messageInfo);
+                            binding.conversationLayout.clearConversationMessage(messageInfo);
+                        })
+                        .setConfirmThreeOnlick(dialog -> {
+                            TraceDialog.getInstance(ChatMessageFragment.this.getContext())
+                                    .setTitle(getString(R.string.playfun_del_banned_account_content))
+                                    .setTitleSize(18)
+                                    .setCannelText(getString(R.string.playfun_cancel))
+                                    .setConfirmText(getString(R.string.playfun_mine_trace_delike_confirm))
+                                    .chooseType(TraceDialog.TypeEnum.CENTER)
+                                    .setConfirmOnlick(new TraceDialog.ConfirmOnclick() {
+                                        @Override
+                                        public void confirm(Dialog dialog) {
+                                            dialog.dismiss();
+                                            //删除所有封号会话
+                                            viewModel.showHUD();
+                                            binding.conversationLayout.deleteAllBannedConversation();
+                                        }
+                                    }).show();
+                        })
+                        .convasationItemMenuDialog(messageInfo)
+                        .show();
             }
         });
         viewModel.uc.startChatUserView.observe(this, new Observer<Integer>() {

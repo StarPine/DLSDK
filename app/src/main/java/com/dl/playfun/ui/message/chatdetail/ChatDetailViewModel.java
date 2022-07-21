@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
@@ -662,7 +663,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                     public void onSuccess(BaseResponse response) {
                         dismissHUD();
                         isTrack.set(true);
-//                        uc.addLikeSuccess.postValue(msgId);
+                        Toast.makeText(AppContext.instance(), R.string.playfun_cancel_zuizong_3, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override

@@ -2,10 +2,9 @@ package com.dl.playfun.widget.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +20,14 @@ import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
 import com.dl.playfun.R;
 import com.dl.playfun.entity.MallWithdrawTipsInfoEntity;
-import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.StringUtil;
+import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMUserFullInfo;
+import com.tencent.imsdk.v2.V2TIMValueCallback;
+import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Author: 彭石林
@@ -45,6 +50,7 @@ public class TraceDialog {
 
     private ConfirmOnclick confirmOnclick;
     private ConfirmTwoOnclick confirmTwoOnclick;
+    private ConfirmThreeOnclick confirmThreeOnclick;
 
     private CannelOnclick cannelOnclick;
 
@@ -210,6 +216,13 @@ public class TraceDialog {
         return INSTANCE;
     }
 
+    public TraceDialog setConfirmThreeOnlick(ConfirmThreeOnclick confirmThreeOnclick) {
+        this.confirmThreeOnclick = confirmThreeOnclick;
+        return INSTANCE;
+    }
+
+
+
     public TraceDialog setCannelOnclick(CannelOnclick cannelOnclick) {
         this.cannelOnclick = cannelOnclick;
         return INSTANCE;
@@ -322,7 +335,86 @@ public class TraceDialog {
         return bottomDialog;
     }
 
+    /**
+     * 会话列表长按menu
+     * @return
+     * @param conversationInfo
+     */
+    public Dialog convasationItemMenuDialog(ConversationInfo conversationInfo){
+        Dialog bottomDialog = new Dialog(context, R.style.BottomDialog);
+        View contentView = LayoutInflater.from(context).inflate(R.layout.dialog_conversation_item_menu, null);
+        bottomDialog.setContentView(contentView);
+        ViewGroup.LayoutParams layoutParams = contentView.getLayoutParams();
+        contentView.setLayoutParams(layoutParams);
+        bottomDialog.getWindow().setGravity(Gravity.CENTER);
+        TextView topChat = contentView.findViewById(R.id.tv_chat_top);
+        TextView delChat = contentView.findViewById(R.id.tv_del_chat);
+        TextView delBannedAccount = contentView.findViewById(R.id.tv_del_banned_account);
+        if (conversationInfo.isTop()){
+            topChat.setText(R.string.quit_chat_top);
+        }else {
+            topChat.setText(R.string.playfun_top_chat);
+        }
+        setDelBannedVisibility(conversationInfo, delBannedAccount);
+        topChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (confirmOnclick != null) {
+                    confirmOnclick.confirm(bottomDialog);
+                }
+                bottomDialog.dismiss();
+            }
+        });
+        delChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (confirmTwoOnclick != null) {
+                    confirmTwoOnclick.confirmTwo(bottomDialog);
+                }
+                bottomDialog.dismiss();
+            }
+        });
+        delBannedAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (confirmThreeOnclick != null) {
+                    confirmThreeOnclick.confirmThree(bottomDialog);
+                }
+                bottomDialog.dismiss();
+            }
+        });
 
+        return bottomDialog;
+    }
+
+    /**
+     * 设置一键删除封号账号的item可见度
+     * @param conversationInfo
+     * @param delBannedAccount
+     */
+    private void setDelBannedVisibility(ConversationInfo conversationInfo, TextView delBannedAccount) {
+        List<String> users = new ArrayList<String>();
+        users.add(conversationInfo.getId());
+        //获取用户资料
+        V2TIMManager.getInstance().getUsersInfo(users, new V2TIMValueCallback<List<V2TIMUserFullInfo>>() {
+            @Override
+            public void onSuccess(List<V2TIMUserFullInfo> v2TIMUserFullInfos) {
+                for (V2TIMUserFullInfo res : v2TIMUserFullInfos) {
+                    int level = res.getLevel();
+                    if (level == 6){
+                        delBannedAccount.setVisibility(View.VISIBLE);
+                    }else {
+                        delBannedAccount.setVisibility(View.GONE);
+                    }
+                }
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                Log.e("获取用户信息失败", "getUsersProfile failed: " + code + " desc");
+            }
+        });
+    }
 
     public Dialog TraceVipDialog() {
         Dialog bottomDialog = new Dialog(context, R.style.BottomDialog);
@@ -856,6 +948,10 @@ public class TraceDialog {
 
     public interface ConfirmTwoOnclick {
         void confirmTwo(Dialog dialog);
+    }
+
+    public interface ConfirmThreeOnclick {
+        void confirmThree(Dialog dialog);
     }
 
     public interface CannelOnclick {

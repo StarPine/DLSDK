@@ -24,17 +24,15 @@
             android:text="@string/playfun_mine_trace_delike"
             android:textAlignment="center"
             android:gravity="center_horizontal"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
             android:textColor="@color/text_default"
             android:textSize="20sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
             android:layout_marginTop="28dp"
-            android:layout_marginEnd="20dp"
             android:gravity="center_horizontal"
             android:orientation="horizontal"
             android:paddingTop="2dp"

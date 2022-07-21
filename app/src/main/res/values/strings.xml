@@ -1012,6 +1012,7 @@
     <string name="playfun_setting_account_hint3">確認註銷即代表你已閱讀並同意《重要提醒》</string>
     <string name="playfun_setting_account_hint4">重要提醒：</string>
     <string name="playfun_setting_account_hint5">支付並申請註銷</string>
-
+    <string name="playfun_delet_banned_account">一鍵刪除被封賬號</string>
+    <string name="playfun_del_banned_account_content">確認一鍵刪除與所有已封禁用戶的聊天？</string>
 
 </resources>
