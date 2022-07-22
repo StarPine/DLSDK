@@ -208,8 +208,12 @@ public class BillingClientLifecycle implements LifecycleObserver, BillingClientS
     * @Date 2022/7/21
     */
     public void  querySkuDetailsAsync(SkuDetailsParams.Builder params , Activity activity){
+        Log.e(TAG,"查询商品是否存在并开始购买："+params.toString());
+        long startTime = System.currentTimeMillis() /1000;
         //查询商品是否存在
         billingClient.querySkuDetailsAsync(params.build(), (billingResult, skuDetailsList) -> {
+            long endTime = System.currentTimeMillis() /1000;
+            Log.e(TAG,"查询商品时间消耗："+(endTime-startTime));
             Log.e(TAG,"查询商品："+billingResult.getResponseCode()+"===="+ (skuDetailsList != null ? skuDetailsList.size() : 0));
             //执行api成功
             if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
@@ -231,6 +235,7 @@ public class BillingClientLifecycle implements LifecycleObserver, BillingClientS
                     }
                 }
             } else {
+                PAYMENT_FAIL.postValue(null);
                 Log.i(TAG, "Get SkuDetails Failed,Msg=" + billingResult.getDebugMessage());
             }
         });

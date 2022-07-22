@@ -81,8 +81,9 @@ public class CoinExchargeItegralPayDialog extends BaseDialog implements View.OnC
     public CoinExchargeItegralPayDialog(@NonNull Context context, AppCompatActivity activity) {
         super(context);
         this.mActivity = activity;
-        init(activity);
         this.billingClientLifecycle = ((AppContext)activity.getApplication()).getBillingClientLifecycle();
+        Log.e("当前谷歌连接池为", String.valueOf(billingClientLifecycle==null));
+        init(activity);
     }
 
     public CoinExchargeItegralPayDialog.CoinRechargeSheetViewListener getCoinRechargeSheetViewListener() {
@@ -139,13 +140,21 @@ public class CoinExchargeItegralPayDialog extends BaseDialog implements View.OnC
         this.billingClientLifecycle.PAYMENT_SUCCESS.observe(this, new Observer<Purchase>() {
             @Override
             public void onChanged(Purchase purchase) {
-                Log.e("BillingClientLifecycle","dialog支付购买成功："+purchase.toString());
+                Log.e("BillingClientLifecycle","支付购买成功回调");
+                if(purchase!=null){
+                    Log.e("BillingClientLifecycle","dialog支付购买成功："+purchase.toString());
+                }
+
             }
         });
         this.billingClientLifecycle.PAYMENT_FAIL.observe(this, new Observer<Purchase>() {
             @Override
             public void onChanged(Purchase purchase) {
-                Log.e("BillingClientLifecycle","dialog支付购买失败："+purchase.toString());
+                Log.e("BillingClientLifecycle","支付购买失败回调");
+                if(purchase!=null){
+                    Log.e("BillingClientLifecycle","dialog支付购买失败："+purchase.toString());
+                }
+
             }
         });
         this.loadBalance();
