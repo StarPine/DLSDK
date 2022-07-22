@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ProcessLifecycleOwner;
 
 import com.android.billingclient.api.Purchase;
 import com.appsflyer.AFInAppEventParameterName;
@@ -82,14 +83,12 @@ public class AppContext extends Application {
     public static final String TAG = "AppContext";
     public static final String LOG_TAG = "AppsFlyerOneLinkSimApp";
     public static final String DL_ATTRS = "dl_attrs";
-    public static String currPage = "not_in";
     public static boolean isHomePage = false;
     public static boolean isCalling = false;
     public static boolean isShowNotPaid = false;
-    public static Handler sUiThreadHandler;
-    public static CountDownTimer downTimer = null;
     private static AppContext instance;
-    private static Thread sUiThread;
+    //谷歌支付购买工具累
+    private BillingClientLifecycle billingClientLifecycle;
 
     static {
         //设置全局默认配置（优先级最低，会被其他设置覆盖）
@@ -138,23 +137,6 @@ public class AppContext extends Application {
         return instance;
     }
 
-    /**
-     * 在主线程执行
-     *
-     * @param work Runnable对象
-     */
-    public static void runOnUIThread(Runnable work) {
-        if (Thread.currentThread() != sUiThread) {
-            sUiThreadHandler.post(work);
-        } else {
-            work.run();
-        }
-    }
-
-    public static void runOnUIThread(Runnable work, long delayMillis) {
-        sUiThreadHandler.postDelayed(work, delayMillis);
-    }
-
     @Override
     public void onLowMemory() {
         super.onLowMemory();
@@ -177,19 +159,17 @@ public class AppContext extends Application {
         try {
             File cacheDir = new File(this.getApplicationContext().getExternalCacheDir().getPath(), "https");
             HttpResponseCache.install(cacheDir, 1024 * 1024 * 128);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        Log.i("kltest", "---------------------------eeee");
 
         instance = this;
-        // 主线程
-        sUiThread = Thread.currentThread();
-        // 主线程的Handler
-        sUiThreadHandler = new Handler();
         BaseApplication.setApplication(this);
 
         FirebaseApp.initializeApp(this);
+
+        billingClientLifecycle = BillingClientLifecycle.getInstance(this);
+        ProcessLifecycleOwner.get().getLifecycle().addObserver(billingClientLifecycle);
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         initAppflyer();
@@ -294,11 +274,7 @@ public class AppContext extends Application {
                     Map<String, String> map = new HashMap<>();
                     map.put("code", code);
                     map.put("channel", channel);
-                    if (code == null && channel == null) {
-
-                    } else {
-                        appRepository.saveOneLinkCode(GsonUtils.toJson(map));
-                    }
+                    appRepository.saveOneLinkCode(GsonUtils.toJson(map));
 
                 }
                 String status = Objects.requireNonNull(conversionDataMap.get("af_status")).toString();
@@ -374,11 +350,7 @@ public class AppContext extends Application {
                         Map<String, String> map = new HashMap<>();
                         map.put("code", code);
                         map.put("channel", channel);
-                        if (code == null && channel == null) {
-
-                        } else {
-                            appRepository.saveOneLinkCode(GsonUtils.toJson(map));
-                        }
+                        appRepository.saveOneLinkCode(GsonUtils.toJson(map));
                     }
                     Log.e(LOG_TAG, "The DeepLink data is: " + deepLinkObj.toString());
                 } catch (Exception e) {
@@ -617,9 +589,22 @@ public class AppContext extends Application {
     * @return com.dl.playfun.app.AliYunMqttClientLifecycle
     * @Date 2022/7/5
     */
-    public AliYunMqttClientLifecycle getBillingClientLifecycle() {
+    public AliYunMqttClientLifecycle getBqttClientLifecycle() {
         return AliYunMqttClientLifecycle.getInstance(this);
     }
+
+    public BillingClientLifecycle getBillingClientLifecycle() {
+        if(billingClientLifecycle==null){
+            synchronized(BillingClientLifecycle.class){
+                if(billingClientLifecycle==null){
+                    billingClientLifecycle =  BillingClientLifecycle.getInstance(this);
+                    ProcessLifecycleOwner.get().getLifecycle().addObserver(billingClientLifecycle);
+                }
+            }
+        }
+        return billingClientLifecycle;
+    }
+
 
 
 }

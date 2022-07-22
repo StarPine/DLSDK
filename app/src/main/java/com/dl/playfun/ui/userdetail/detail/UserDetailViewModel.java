@@ -663,19 +663,7 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
                 .subscribe(new BaseObserver<BaseDataResponse<IsChatEntity>>() {
                     @Override
                     public void onSuccess(BaseDataResponse<IsChatEntity> response) {
-                        if (type == 1) {//私聊他  彭石林2021-3-26修改
-                            isLinkMic = false;
-                            //判断如果是男用户，且不是VIP状态下
-                            if (response.getData().getIsChant() == 1 || (model.readUserData().getSex() == AppConfig.MALE && model.readUserData().getIsVip() == 0)) {
-                                addFriend();
-                            } else {
-                                if (response.getData().getChatNumber() > 0) {
-                                    uc.clickVipChat.postValue(response.getData().getChatNumber());
-                                } else {
-                                    uc.clickPayChat.postValue(ConfigManager.getInstance().getImMoney());
-                                }
-                            }
-                        } else if (type == 2) {
+                        if (type == 2) {
                             //查看相册
                             if (response.getData().getIsVip() == 1) {
                                 //会员查看相册
@@ -924,7 +912,6 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
         public SingleLiveEvent<List<EvaluateEntity>> clickEvaluate = new SingleLiveEvent<>();
         public SingleLiveEvent<Integer> clickPayAlbum = new SingleLiveEvent<>();
         public SingleLiveEvent<Integer> clickVipCheckAlbum = new SingleLiveEvent<>();
-        public SingleLiveEvent<Integer> clickPayChat = new SingleLiveEvent<>();
         public SingleLiveEvent<Integer> clickVipChat = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> clickConnMic = new SingleLiveEvent<>();
         public SingleLiveEvent<Integer> todayCheckNumber = new SingleLiveEvent<>();

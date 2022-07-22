@@ -121,13 +121,13 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
     public void initViewObservable() {
         super.initViewObservable();
         AppContext.instance().logEvent(AppsFlyerEvent.main_open);
-        aliYunMqttClientLifecycle.broadcastGiftEvent.observe(this, new Observer<MqBroadcastGiftEntity>() {
-            @Override
-            public void onChanged(MqBroadcastGiftEntity mqBroadcastGiftEntity) {
-                viewModel.publicScreenBannerGiftEntity.add(mqBroadcastGiftEntity);
-                viewModel.playBannerGift();
-            }
-        });
+//        aliYunMqttClientLifecycle.broadcastGiftEvent.observe(this, new Observer<MqBroadcastGiftEntity>() {
+//            @Override
+//            public void onChanged(MqBroadcastGiftEntity mqBroadcastGiftEntity) {
+//                viewModel.publicScreenBannerGiftEntity.add(mqBroadcastGiftEntity);
+//                viewModel.playBannerGift();
+//            }
+//        });
         //未付费弹窗
         viewModel.uc.notPaidDialog.observe(this,s -> {
 
@@ -421,8 +421,8 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         if(ImgSrcPath!=-1){
             binding.navigationRankImg.setImageResource(ImgSrcPath);
         }
-        aliYunMqttClientLifecycle = ((AppContext)mActivity.getApplication()).getBillingClientLifecycle();
-        getLifecycle().addObserver(aliYunMqttClientLifecycle);
+//        aliYunMqttClientLifecycle = ((AppContext)mActivity.getApplication()).getBillingClientLifecycle();
+//        getLifecycle().addObserver(aliYunMqttClientLifecycle);
         initView();
         try{
             ConversationCommonHolder.sexMale = ConfigManager.getInstance().isMale();
