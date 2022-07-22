@@ -301,6 +301,9 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         //跳转笔记界面
         viewModel.uc.starNotepad.observe(this, event -> {
             Intent intent = new Intent(mActivity, NotepadActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putInt("toUserId", toUserDataId);
+            intent.putExtras(bundle);
             mActivity.startActivity(intent);
         });
         //播放SVGA动画

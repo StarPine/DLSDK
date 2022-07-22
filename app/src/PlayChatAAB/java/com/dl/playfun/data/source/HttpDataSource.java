@@ -52,6 +52,7 @@ import com.dl.playfun.entity.MallWithdrawTipsInfoEntity;
 import com.dl.playfun.entity.MessageGroupEntity;
 import com.dl.playfun.entity.MessageRuleEntity;
 import com.dl.playfun.entity.NewsEntity;
+import com.dl.playfun.entity.NoteInfoEntity;
 import com.dl.playfun.entity.OccupationConfigItemEntity;
 import com.dl.playfun.entity.ParkItemEntity;
 import com.dl.playfun.entity.PhotoAlbumEntity;
@@ -100,6 +101,20 @@ import retrofit2.http.Query;
 
 public interface HttpDataSource {
 
+    /**
+     * 保存个人笔记内容
+     * @param user_id
+     * @param note
+     * @return
+     */
+    Observable<BaseDataResponse> putNoteText(int user_id, String note);
+
+    /**
+     * 获取个人笔记内容
+     * @param user_id
+     * @return
+     */
+    Observable<BaseDataResponse<NoteInfoEntity>> getNoteText(int user_id);
 
     /***
      * 水晶兑换弹窗提示

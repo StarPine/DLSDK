@@ -25,6 +25,8 @@ import me.tatarka.bindingcollectionadapter2.BR;
  */
 public class NotepadActivity extends BaseActivity<ActivityNotepadBinding, NotepadViewModel> implements BasicToolbar.ToolbarListener{
 
+    private Integer toUserDataId = null;
+
     @Override
     public int initContentView(Bundle savedInstanceState) {
         return R.layout.activity_notepad;
@@ -45,7 +47,15 @@ public class NotepadActivity extends BaseActivity<ActivityNotepadBinding, Notepa
     @Override
     public void initParam() {
         super.initParam();
+        Bundle bundle = this.getIntent().getExtras();
+        toUserDataId = bundle.getInt("toUserId");
+    }
 
+    @Override
+    public void initData() {
+        super.initData();
+        viewModel.userId = toUserDataId;
+        viewModel.getNoteText(toUserDataId);
     }
 
     @Override
@@ -61,6 +71,7 @@ public class NotepadActivity extends BaseActivity<ActivityNotepadBinding, Notepa
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 viewModel.notepadTextFlag.set(String.format(getString(R.string.notepad_word_count_format),binding.editNotepad.getText().toString().length()+""));
+                viewModel.notepadText.set(binding.editNotepad.getText().toString());
             }
 
             @Override

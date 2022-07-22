@@ -61,6 +61,7 @@ import com.dl.playfun.entity.MallWithdrawTipsInfoEntity;
 import com.dl.playfun.entity.MessageGroupEntity;
 import com.dl.playfun.entity.MessageRuleEntity;
 import com.dl.playfun.entity.NewsEntity;
+import com.dl.playfun.entity.NoteInfoEntity;
 import com.dl.playfun.entity.OccupationConfigItemEntity;
 import com.dl.playfun.entity.ParkItemEntity;
 import com.dl.playfun.entity.PhotoAlbumEntity;
@@ -1513,6 +1514,16 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     @Override
     public Observable<BaseDataResponse<MallWithdrawTipsInfoEntity>> getMallWithdrawTipsInfo(Integer channel) {
         return mHttpDataSource.getMallWithdrawTipsInfo(channel);
+    }
+
+    @Override
+    public Observable<BaseDataResponse> putNoteText(int user_id, String note) {
+        return mHttpDataSource.putNoteText(user_id, note);
+    }
+
+    @Override
+    public Observable<BaseDataResponse<NoteInfoEntity>> getNoteText(int user_id) {
+        return mHttpDataSource.getNoteText(user_id);
     }
 
 }
