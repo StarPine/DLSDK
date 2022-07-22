@@ -75,7 +75,7 @@ public class CustomTextMessageHolder extends TextMessageHolder {
                 case TUIChatConstants.CoustomMassageType.CHAT_EARNINGS:
                 case TUIChatConstants.CoustomMassageType.MESSAGE_CUSTOM:
                 case TUIChatConstants.CoustomMassageType.MESSAGE_TRACKING:
-                    setCustomTypeItemView(extra,type);
+                    setCustomTypeItemView(extra,type,msg);
                     break;
                 case TUIChatConstants.CoustomMassageType.MESSAGE_TAG:
                     FaceManager.handlerEmojiText(msgBodyText, TUIChatUtils.json2Massage(extra, "text"), false);
@@ -116,31 +116,15 @@ public class CustomTextMessageHolder extends TextMessageHolder {
     }
 
     private void setCallingBusyItemView(TUIMessageBean msg, String extra) {
-        String busyContent = appContext.getString(R.string.custom_message_book_next_call);
-        profitTip.setText(busyContent);
-        profitTip.setVisibility(View.VISIBLE);
+//        String busyContent = appContext.getString(R.string.custom_message_book_next_call);
+//        profitTip.setText(busyContent);
+//        profitTip.setVisibility(View.VISIBLE);
         Map callData = IMGsonUtils.fromJson(TUIChatUtils.json2Massage(extra, "data"), Map.class);
         int callType = Double.valueOf(String.valueOf(callData.get("callingType"))).intValue();
         if (properties.getChatContextFontSize() != 0) {
             msgBodyText.setTextSize(properties.getChatContextFontSize());
         }
-        if (msg.isSelf()) {
-            mRightView.setBackgroundResource(callType == 1 ?
-                    R.drawable.custom_audio_right_img_2 : R.drawable.custom_video_right_img_1);
-            mRightView.setVisibility(View.VISIBLE);
-            msgBodyText.setText(appContext.getString(R.string.custom_message_other_busy));
-            if (properties.getRightChatContentFontColor() != 0) {
-                msgBodyText.setTextColor(properties.getRightChatContentFontColor());
-            }
-        } else {
-            mLeftView.setBackgroundResource(callType == 1 ?
-                    R.drawable.custom_audio_left_img_2 : R.drawable.custom_video_left_img_1);
-            mLeftView.setVisibility(View.VISIBLE);
-            msgBodyText.setText(appContext.getString(R.string.custom_message_busy_missed));
-            if (properties.getLeftChatContentFontColor() != 0) {
-                msgBodyText.setTextColor(properties.getLeftChatContentFontColor());
-            }
-        }
+        setMsgBodyTextStyle(msg, callType);
     }
 
     private void setPhotoItemView(String extra, int position, TUIMessageBean msg) {
@@ -198,7 +182,7 @@ public class CustomTextMessageHolder extends TextMessageHolder {
         customJsonMsgContentFrame.addView(photoView);
     }
 
-    private void setCustomTypeItemView(String extra, String type) {
+    private void setCustomTypeItemView(String extra, String type, TUIMessageBean msg) {
         hideWithAvatarView();
         View tipView = getTipItemView();
         TextView custom_tip_text = tipView.findViewById(R.id.custom_tip_text);
@@ -208,6 +192,14 @@ public class CustomTextMessageHolder extends TextMessageHolder {
             //系统提示
             if (!TextUtils.isEmpty(customIMTextEntity.getContent())) {
                 custom_tip_text.setText(Html.fromHtml(customIMTextEntity.getContent()));
+            }
+
+            //通话结束时间
+            int totalSeconds = customIMTextEntity.getTotalSeconds();
+            int callingType = customIMTextEntity.getCallingType();
+            if (totalSeconds > 0 && callingType> 0){
+                setMsgBodyTextStyle(msg, callingType);
+                msgBodyText.setText(itemView.getContext().getString(R.string.custom_message_call_message_deatail_time_msg,totalSeconds/60,totalSeconds%60));
             }
 
             //收益相关
@@ -236,6 +228,31 @@ public class CustomTextMessageHolder extends TextMessageHolder {
             }
 
             customJsonMsgContentFrame.addView(tipView);
+        }
+    }
+
+    /**
+     * 修改通话消息相关样式
+     * @param msg
+     * @param callingType
+     */
+    private void setMsgBodyTextStyle(TUIMessageBean msg, int callingType) {
+        if (msg.isSelf()) {
+            mRightView.setBackgroundResource(callingType == 1 ?
+                    R.drawable.custom_audio_right_img_2 : R.drawable.custom_video_right_img_1);
+            mRightView.setVisibility(View.VISIBLE);
+            msgBodyText.setText(appContext.getString(R.string.custom_message_other_busy));
+            if (properties.getRightChatContentFontColor() != 0) {
+                msgBodyText.setTextColor(properties.getRightChatContentFontColor());
+            }
+        } else {
+            mLeftView.setBackgroundResource(callingType == 1 ?
+                    R.drawable.custom_audio_left_img_2 : R.drawable.custom_video_left_img_1);
+            mLeftView.setVisibility(View.VISIBLE);
+            msgBodyText.setText(appContext.getString(R.string.custom_message_busy_missed));
+            if (properties.getLeftChatContentFontColor() != 0) {
+                msgBodyText.setTextColor(properties.getLeftChatContentFontColor());
+            }
         }
     }
 

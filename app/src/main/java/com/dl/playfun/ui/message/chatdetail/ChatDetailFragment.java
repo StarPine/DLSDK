@@ -207,13 +207,15 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         }
         initChatView();
         int userId = getTaUserIdIM(); //获取当前聊天对象的ID
-        viewModel.getPhotoAlbum(getTaUserIdIM());
         if (userId != 0) {
             //加载聊天规则
             viewModel.getMessageRule();
             //聊天价格配置
             viewModel.getPriceConfig(userId);
             viewModel.verifyGoddessTips(userId);
+            viewModel.getPhotoAlbum(getTaUserIdIM());
+        }else {
+            binding.chatLayout.setChatInfo(mChatInfo);
         }
     }
 

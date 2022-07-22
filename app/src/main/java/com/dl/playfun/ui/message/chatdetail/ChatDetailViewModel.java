@@ -133,8 +133,6 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
     public BindingCommand moreOnClickCommand = new BindingCommand(new BindingAction() {
         @Override
         public void call() {
-            ConfigManagerUtil.getInstance().putExchangeRulesFlag(false);
-            isShowedExchangeRules.set(false);
             hideKeyboard();
             uc.clickMore.call();
         }
@@ -404,15 +402,15 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
      */
     public Drawable onLineDrawables(TagEntity detailEntity) {
         if (detailEntity == null)return null;
-        if (detailEntity.getCallingStatus() == 0) {
-            if (detailEntity.getIsOnline() == 1) {
-                return com.blankj.utilcode.util.Utils.getApp().getResources().getDrawable(R.drawable.user_detail_online2);
-            }
-        } else if (detailEntity.getCallingStatus() == 1) {
-            return com.blankj.utilcode.util.Utils.getApp().getResources().getDrawable(R.drawable.user_detail_calling2);
-        } else if (detailEntity.getCallingStatus() == 2) {
-            return com.blankj.utilcode.util.Utils.getApp().getResources().getDrawable(R.drawable.user_detail_video2);
-        }
+//        if (detailEntity.getCallingStatus() == 0) {
+//            if (detailEntity.getIsOnline() == 1) {
+//                return com.blankj.utilcode.util.Utils.getApp().getResources().getDrawable(R.drawable.user_detail_online2);
+//            }
+//        } else if (detailEntity.getCallingStatus() == 1) {
+//            return com.blankj.utilcode.util.Utils.getApp().getResources().getDrawable(R.drawable.user_detail_calling2);
+//        } else if (detailEntity.getCallingStatus() == 2) {
+//            return com.blankj.utilcode.util.Utils.getApp().getResources().getDrawable(R.drawable.user_detail_video2);
+//        }
         return com.blankj.utilcode.util.Utils.getApp().getResources().getDrawable(R.drawable.user_detail_online2);
     }
 

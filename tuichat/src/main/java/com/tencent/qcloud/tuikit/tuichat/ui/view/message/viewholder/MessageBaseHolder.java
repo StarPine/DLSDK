@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.qcloud.tuicore.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
@@ -31,6 +32,7 @@ import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemClickListener;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.MyImageSpan;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.MessageRecyclerView;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.reply.ChatFlowReactView;
+import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
 import java.util.Date;
 import java.util.regex.Matcher;
@@ -107,7 +109,7 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
         msgContentReservFrame.removeAllViews();
         customJsonMsgContentFrame.removeAllViews();
         Log.i("starpine","========="+msg.getV2TIMMessage());
-        //显示收益消息
+        //显示收益相关消息
         showProfitView(msg);
 
         //// 时间线设置
@@ -139,20 +141,31 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
     }
 
     private void showProfitView(TUIMessageBean msg) {
-
+        profitTip.setVisibility(View.GONE);
+        String loginUser = V2TIMManager.getInstance().getLoginUser();
         String cloudCustomData = msg.getV2TIMMessage().getCloudCustomData();
-        if (!TextUtils.isEmpty(cloudCustomData)) {
-            String profitContent = appContext.getString(R.string.profit);
-            if (!MessageRecyclerView.isCertification()) {
-                profitContent = appContext.getString(R.string.custom_message_txt2_test2);
-                profitTip.setOnClickListener(v -> onItemClickListener.onClickCustomText());
+        if (TUIChatUtils.isJSON2(cloudCustomData)){
+            String cost = TUIChatUtils.json2Massage(cloudCustomData, "cost");
+            String refundMoney = TUIChatUtils.json2Massage(cloudCustomData, "isRefundMoney");
+            String charger = TUIChatUtils.json2Massage(cloudCustomData, "payId");
+            if (cost != null && msg.isSelf() && charger != null && charger.equals(loginUser)){//有收益金额,是自己发送，自己是收费方
+                String profitContent = appContext.getString(R.string.profit);
+                if (!MessageRecyclerView.isCertification()) {
+                    profitContent = appContext.getString(R.string.custom_message_txt2_test2);
+                    profitTip.setOnClickListener(v -> onItemClickListener.onClickCustomText());
+                }
+                String format = String.format(profitContent, cost);
+                SpannableString iconSpannable = matcherSearchText("#A72DFE", format, appContext.getString(R.string.custom_message_txt1_key));
+                iconSpannable.setSpan(new MyImageSpan(TUIChatService.getAppContext(), R.drawable.icon_crystal), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                profitTip.setText(iconSpannable);
+                profitTip.setVisibility(View.VISIBLE);
             }
-            String format = String.format(profitContent, cloudCustomData);
-            SpannableString iconSpannable = matcherSearchText("#A72DFE", format, appContext.getString(R.string.custom_message_txt1_key));
-            iconSpannable.setSpan(new MyImageSpan(TUIChatService.getAppContext(), R.drawable.icon_crystal), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            profitTip.setText(iconSpannable);
-            profitTip.setVisibility(View.VISIBLE);
-        } else {
+            if (refundMoney != null  && !msg.isSelf()){
+                profitTip.setText(appContext.getString(R.string.custom_message_txt_girl));
+                profitTip.setVisibility(View.VISIBLE);
+            }
+        }
+        if (!MessageRecyclerView.isFlagTipMoney()){
             profitTip.setVisibility(View.GONE);
         }
     }

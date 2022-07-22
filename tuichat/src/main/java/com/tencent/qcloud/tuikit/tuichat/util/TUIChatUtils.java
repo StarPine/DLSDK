@@ -1,5 +1,7 @@
 package com.tencent.qcloud.tuikit.tuichat.util;
 
+import android.text.TextUtils;
+
 import com.google.gson.Gson;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMImageElem;
@@ -13,6 +15,8 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+
+import me.goldze.mvvmhabit.utils.StringUtils;
 
 import static com.tencent.qcloud.tuicore.TUIConstants.TUIConversation.CONVERSATION_C2C_PREFIX;
 import static com.tencent.qcloud.tuicore.TUIConstants.TUIConversation.CONVERSATION_GROUP_PREFIX;
@@ -133,7 +137,7 @@ public class TUIChatUtils {
 
     public static boolean isJSON2(String str) {
         boolean result = false;
-        if (str.isEmpty()){
+        if (StringUtils.isEmpty(str)){
             return result;
         }
         try {
