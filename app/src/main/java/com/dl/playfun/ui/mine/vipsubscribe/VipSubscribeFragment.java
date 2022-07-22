@@ -51,7 +51,7 @@ import me.goldze.mvvmhabit.utils.ToastUtils;
 /**
  * @author wulei
  */
-public class VipSubscribeFragment extends BaseToolbarFragment<FragmentVipSubscribeBinding, VipSubscribeViewModel> implements View.OnClickListener, PurchasesUpdatedListener, BillingClientStateListener {
+public class VipSubscribeFragment extends BaseToolbarFragment<FragmentVipSubscribeBinding, VipSubscribeViewModel> implements PurchasesUpdatedListener, BillingClientStateListener {
     public static final String TAG = "VipSubscribeFragment";
 
     @Override
@@ -158,32 +158,6 @@ public class VipSubscribeFragment extends BaseToolbarFragment<FragmentVipSubscri
         });
     }
 
-    private void showDialog() {
-        if (viewModel.selectedPosition.get() < 0) {
-            ToastUtils.showShort(R.string.playfun_please_choose_top_up_package);
-            return;
-        }
-        VipPackageItemEntity entity = viewModel.observableList.get(viewModel.selectedPosition.get()).itemEntity.get();
-
-        new CoinPaySheet.Builder(mActivity).setPayParams(2, entity.getId(), getString(R.string.playfun_dialog_coin_pay_project), false, new CoinPaySheet.CoinPayDialogListener() {
-            @Override
-            public void onPaySuccess(CoinPaySheet sheet, String orderNo, Integer payPrice) {
-                sheet.dismiss();
-                ToastUtils.showShort(R.string.playfun_recharge_success);
-                UserDataEntity userDataEntity = ConfigManager.getInstance().getAppRepository().readUserData();
-                userDataEntity.setIsVip(1);
-                ConfigManager.getInstance().getAppRepository().saveUserData(userDataEntity);
-                RxBus.getDefault().post(new VipRechargeSuccessEvent());
-                pop();
-            }
-
-            @Override
-            public void onRechargeSuccess(CoinExchargeItegralPayDialog coinExchargeItegralPayDialog) {
-
-            }
-        }).build().show();
-    }
-
     //进行支付
     private void pay(String payCode) {
         AppContext.instance().logEvent(AppsFlyerEvent.Subscribe);
@@ -265,13 +239,6 @@ public class VipSubscribeFragment extends BaseToolbarFragment<FragmentVipSubscri
     }
 
     @Override
-    public void onClick(View view) {
-        if (view.getId() == R.id.btn_confirm) {
-            showDialog();
-        }
-    }
-
-    @Override
     public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
         Log.i(TAG, "billingResult Code=" + billingResult.getResponseCode());
         if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
@@ -312,13 +279,6 @@ public class VipSubscribeFragment extends BaseToolbarFragment<FragmentVipSubscri
                     if (!purchase.isAcknowledged()) {
                         acknowledgePurchase(purchase);
                     }
-//                    //消耗品 开始消耗
-//                    new Handler().postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            consumePuchase(purchase, consumeDelay);
-//                        }
-//                    }, 1000);
                     //TODO:发放商品
                 } else if (purchase.getPurchaseState() == Purchase.PurchaseState.PENDING) {
                     //需要用户确认

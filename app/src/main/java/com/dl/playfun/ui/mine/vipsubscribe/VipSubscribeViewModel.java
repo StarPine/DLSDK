@@ -77,10 +77,6 @@ public class VipSubscribeViewModel extends BaseViewModel<AppRepository> {
 
     public ItemBinding<VipSubscribeItemViewModel> itemBinding = ItemBinding.of(BR.viewModel, R.layout.item_vip_subscribe);
 
-    public ObservableField<Boolean> dialogShow = new ObservableField<>(false);
-
-
-    public ObservableField<String> memberEndTime = new ObservableField<>();
 
     public ObservableField<Integer> selectedPosition = new ObservableField<>(-1);
 
@@ -89,10 +85,6 @@ public class VipSubscribeViewModel extends BaseViewModel<AppRepository> {
     public BillingClient billingClient;
     public String orderNumber;
     public Integer pay_good_day = 0;
-    public BindingCommand adOnClickCommand = new BindingCommand(() -> dialogShow.set(true));
-    //确定
-    public BindingCommand buyOnClickCommand = new BindingCommand(() -> dialogShow.set(true));
-    public BindingCommand dialogBgOnClickCommand = new BindingCommand(() -> dialogShow.set(false));
     UIChangeObservable uc = new UIChangeObservable();
     private Integer ActualValue;
     public BindingCommand confirmOnClickCommand = new BindingCommand(() -> rechargeCreateOrder());
@@ -102,9 +94,6 @@ public class VipSubscribeViewModel extends BaseViewModel<AppRepository> {
     public VipSubscribeViewModel(@NonNull Application application, AppRepository repository) {
         super(application, repository);
         UserDataEntity userDataEntity = model.readUserData();
-        if (userDataEntity.getIsVip() == 1 && userDataEntity != null && userDataEntity.getEndTime() != null) {
-            memberEndTime.set(StringUtils.getString(R.string.playfun_valid_time) + userDataEntity.getEndTime());
-        }
     }
 
     public TaskAdEntity $taskEntity1;
@@ -133,9 +122,6 @@ public class VipSubscribeViewModel extends BaseViewModel<AppRepository> {
                     public void onSuccess(BaseDataResponse<UserDataEntity> response) {
                         UserDataEntity userDataEntity = response.getData();
                         model.saveUserData(userDataEntity);
-                        if (userDataEntity.getIsVip() == 1 && userDataEntity != null && userDataEntity.getEndTime() != null) {
-                            memberEndTime.set(StringUtils.getString(R.string.playfun_valid_time) + userDataEntity.getEndTime());
-                        }
                     }
                 });
     }
@@ -223,22 +209,10 @@ public class VipSubscribeViewModel extends BaseViewModel<AppRepository> {
             ToastUtils.showShort(e.getMessage());
         }
 
-//
-//        VipPackageItemEntity entity = observableList.get(selectedPosition).itemEntity.get();
-//        model.createOrder(entity.getId(), 2)
-//                .compose(RxUtils.schedulersTransformer())
-//                .compose(RxUtils.exceptionTransformer())
-//                .doOnSubscribe(this)
-//                .subscribe(new BaseObserver<BaseDataResponse<CreateOrderEntity>>() {
-//                    @Override
-//                    public void onSuccess(BaseDataResponse<CreateOrderEntity> response) {
-//                        payOrder(response.getData().getOrderNumber());
-//                    }
-//                });
     }
 
     public void paySuccessNotify(String packageName, List<String> productId, String token, Integer event) {
-        if (event.intValue() == 0) {
+        if (event == 0) {
             UserDataEntity userDataEntity = model.readUserData();
             userDataEntity.setIsVip(1);
             userDataEntity.setEndTime(Utils.formatday.format(Utils.addDate(new Date(), pay_good_day == null ? 0 : pay_good_day)));

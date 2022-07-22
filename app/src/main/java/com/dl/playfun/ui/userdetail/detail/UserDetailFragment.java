@@ -2,9 +2,6 @@ package com.dl.playfun.ui.userdetail.detail;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,7 +19,6 @@ import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
-import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
@@ -51,8 +47,8 @@ import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.widget.AppBarStateChangeListener;
 import com.dl.playfun.widget.bottomsheet.BottomSheet;
 import com.dl.playfun.widget.coinpaysheet.CoinPaySheet;
-import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
 import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralPayDialog;
+import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
 import com.dl.playfun.widget.custom.FlowAdapter;
 import com.dl.playfun.widget.dialog.MMAlertDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
@@ -357,12 +353,6 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
                     return;
                 }
                 vipLockAlbum(viewModel.detailEntity.get().getNickname(), count, viewModel.detailEntity.get().getAlbumPayMoney());
-            }
-        });
-        viewModel.uc.clickPayChat.observe(this, new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer coinPrice) {
-                payCheckChat(coinPrice);
             }
         });
         viewModel.uc.clickVipChat.observe(this, integer -> vipCheckChat(integer, ConfigManager.getInstance().getImMoney()));
@@ -706,76 +696,6 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
 
     private boolean isVip() {
         return ConfigManager.getInstance().getAppRepository().readUserData().getIsVip() == 1;
-    }
-
-    private void payCheckChat(Integer coinPrice) {
-        String btn1 = "";
-        String title = "";
-        int sex = ConfigManager.getInstance().getAppRepository().readUserData().getSex();
-        if (sex == AppConfig.MALE) {
-            title = getString(R.string.playfun_to_chat_her);
-            btn1 = getString(R.string.playfun_to_be_member_free_chat);
-        } else {
-            title = getString(R.string.playfun_to_chat_he);
-            if (ConfigManager.getInstance().getAppRepository().readUserData().getCertification() == 1) {
-                btn1 = getString(R.string.playfun_to_be_goddess_free_chat);
-            } else {
-                btn1 = getString(R.string.playfun_warn_no_certification);
-            }
-        }
-        if (!isVip()) {
-            MVDialog.getInstance(UserDetailFragment.this.getContext())
-                    .setContent(title)
-                    .setConfirmText(btn1)
-                    .setConfirmTwoText(String.format(getString(R.string.playfun_paid_viewing_private_chat), coinPrice))
-                    .setConfirmOnlick(dialog -> {
-                        dialog.dismiss();
-                        if (sex == AppConfig.MALE) {
-                            viewModel.start(VipSubscribeFragment.class.getCanonicalName());
-                        } else {
-                            viewModel.start(CertificationFemaleFragment.class.getCanonicalName());
-                        }
-                    })
-                    .setConfirmTwoOnclick(dialog -> {
-                        dialog.dismiss();
-                        showCoinPaySheet(false);
-                    })
-                    .chooseType(MVDialog.TypeEnum.CENTER)
-                    .show();
-        } else {
-            MVDialog.getInstance(UserDetailFragment.this.getContext())
-                    .setContent(title)
-                    .setConfirmText(String.format(getString(R.string.playfun_paid_viewing_private_chat), coinPrice))
-                    .setConfirmTextSize(12)
-                    .setConfirmOnlick(dialog -> {
-                        dialog.dismiss();
-                        showCoinPaySheet(false);
-                    })
-                    .chooseType(MVDialog.TypeEnum.CENTER)
-                    .show();
-        }
-    }
-
-    private void showCoinPaySheet(boolean autoPay) {
-        new CoinPaySheet.Builder(mActivity).setPayParams(6, userId, getString(R.string.playfun_check_detail), autoPay, new CoinPaySheet.CoinPayDialogListener() {
-            @Override
-            public void onPaySuccess(CoinPaySheet sheet, String orderNo, Integer payPrice) {
-                sheet.dismiss();
-                ToastUtils.showShort(R.string.playfun_pay_success);
-                viewModel.chatPaySuccess();
-            }
-
-            @Override
-            public void onRechargeSuccess(CoinExchargeItegralPayDialog coinExchargeItegralPayDialog) {
-                // 充值成功，再次唤起浮层，且自动支付
-                try {
-                    AppContext.runOnUIThread(coinExchargeItegralPayDialog::dismiss, 100);
-                    AppContext.runOnUIThread(() -> showCoinPaySheet(true), 500);
-                } catch (Throwable e) {
-                    e.printStackTrace();
-                }
-            }
-        }).build().show();
     }
 
     private void vipCheckChat(Integer number, Integer coinPrice) {
