@@ -1,45 +1,31 @@
 package com.dl.playfun.widget.coinrechargesheet;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.billingclient.api.AcknowledgePurchaseParams;
-import com.android.billingclient.api.AcknowledgePurchaseResponseListener;
 import com.android.billingclient.api.BillingClient;
-import com.android.billingclient.api.BillingClientStateListener;
-import com.android.billingclient.api.BillingFlowParams;
-import com.android.billingclient.api.BillingResult;
-import com.android.billingclient.api.ConsumeParams;
 import com.android.billingclient.api.Purchase;
-import com.android.billingclient.api.PurchaseHistoryRecord;
-import com.android.billingclient.api.PurchaseHistoryResponseListener;
-import com.android.billingclient.api.PurchasesUpdatedListener;
-import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
-import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.blankj.utilcode.util.ObjectUtils;
+import com.dl.playfun.R;
 import com.dl.playfun.api.AppGameConfig;
 import com.dl.playfun.app.AppContext;
-import com.dl.playfun.app.AppsFlyerEvent;
+import com.dl.playfun.app.BillingClientLifecycle;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
@@ -51,14 +37,9 @@ import com.dl.playfun.event.MyCardPayResultEvent;
 import com.dl.playfun.event.UMengCustomEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseDialog;
-import com.dl.playfun.utils.StringUtil;
-import com.dl.playfun.R;
-import com.dl.playfun.ui.base.BasePopupWindow;
 import com.dl.playfun.ui.dialog.PayMethodDialog;
 import com.dl.playfun.ui.dialog.adapter.GameCoinTopupAdapter;
 import com.jakewharton.rxbinding2.view.RxView;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -76,7 +57,7 @@ import me.goldze.mvvmhabit.utils.ToastUtils;
  * Time: 2022/4/26 13:05
  * Description: This is CoinExchargeItegralPayDialog
  */
-public class CoinExchargeItegralPayDialog extends BaseDialog implements View.OnClickListener, GameCoinTopupAdapter.GameCoinTopupAdapterListener, PurchasesUpdatedListener, BillingClientStateListener {
+public class CoinExchargeItegralPayDialog extends BaseDialog implements View.OnClickListener, GameCoinTopupAdapter.GameCoinTopupAdapterListener {
 
     public static final String TAG = "CoinRechargeSheetView";
 
@@ -88,7 +69,6 @@ public class CoinExchargeItegralPayDialog extends BaseDialog implements View.OnC
     private ImageView ivRefresh;
     private ViewGroup loadingView;
     private GameCoinTopupAdapter adapter;
-    private BillingClient billingClient;
     private List<GameCoinBuy> mGoodsList;
     private String orderNumber = null;
     private CoinExchargeItegralPayDialog.CoinRechargeSheetViewListener coinRechargeSheetViewListener;
@@ -96,9 +76,13 @@ public class CoinExchargeItegralPayDialog extends BaseDialog implements View.OnC
     private GameCoinBuy sel_goodsEntity;
     private ImageView imgGameCoin;
 
+    private BillingClientLifecycle billingClientLifecycle;
+
     public CoinExchargeItegralPayDialog(@NonNull Context context, AppCompatActivity activity) {
         super(context);
         this.mActivity = activity;
+        this.billingClientLifecycle = ((AppContext)activity.getApplication()).getBillingClientLifecycle();
+        Log.e("当前谷歌连接池为", String.valueOf(billingClientLifecycle==null));
         init(activity);
     }
 
@@ -153,6 +137,29 @@ public class CoinExchargeItegralPayDialog extends BaseDialog implements View.OnC
             }
 
         });
+        this.billingClientLifecycle.PAYMENT_SUCCESS.observe(this, new Observer<Purchase>() {
+            @Override
+            public void onChanged(Purchase purchase) {
+                Log.e("BillingClientLifecycle","支付购买成功回调");
+                if(purchase!=null){
+                    String packageName = purchase.getPackageName();
+
+                    paySuccessNotify(packageName,orderNumber,purchase.getSkus(),purchase.getPurchaseToken(),1);
+                    Log.e("BillingClientLifecycle","dialog支付购买成功："+purchase.toString());
+                }
+
+            }
+        });
+        this.billingClientLifecycle.PAYMENT_FAIL.observe(this, new Observer<Purchase>() {
+            @Override
+            public void onChanged(Purchase purchase) {
+                Log.e("BillingClientLifecycle","支付购买失败回调");
+                if(purchase!=null){
+                    Log.e("BillingClientLifecycle","dialog支付购买失败："+purchase.toString());
+                }
+
+            }
+        });
         this.loadBalance();
         this.loadGoods();
     }
@@ -194,17 +201,11 @@ public class CoinExchargeItegralPayDialog extends BaseDialog implements View.OnC
             this.handler.removeCallbacksAndMessages((Object)null);
         }
 
-        if (this.billingClient != null) {
-            this.billingClient.endConnection();
-            this.billingClient = null;
-        }
-
     }
 
     public void show() {
-        if (this.billingClient == null) {
-            this.billingClient = BillingClient.newBuilder(this.mActivity).setListener(this).enablePendingPurchases().build();
-            this.billingClient.startConnection(this);
+        if (this.billingClientLifecycle == null) {
+            this.billingClientLifecycle = ((AppContext)mActivity.getApplication()).getBillingClientLifecycle();
         }
 
         //设置背景透明,去四个角
@@ -372,234 +373,11 @@ public class CoinExchargeItegralPayDialog extends BaseDialog implements View.OnC
                 skus.add(datum.getGoogleGoodsId());
             }
 
-            if (!this.billingClient.isReady()) {
-                Log.e("CoinRechargeSheetView", "querySkuList: BillingClient is not ready");
-            }
-
             this.loadingView.setVisibility(View.VISIBLE);
             SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
-            params.setSkusList(skus).setType("inapp");
-            this.billingClient.querySkuDetailsAsync(params.build(), (billingResult, skuDetailsList) -> {
-                this.loadingView.setVisibility(View.GONE);
-                int responseCode = billingResult.getResponseCode();
-                String debugMessage = billingResult.getDebugMessage();
-                switch(responseCode) {
-                    case -2:
-                    case 7:
-                    case 8:
-                    default:
-                        Log.wtf("CoinRechargeSheetView", "onSkuDetailsResponse: " + responseCode + " " + debugMessage);
-                        break;
-                    case -1:
-                    case 2:
-                    case 3:
-                    case 4:
-                    case 5:
-                    case 6:
-                        Log.e("CoinRechargeSheetView", "onSkuDetailsResponse: " + responseCode + " " + debugMessage);
-                        break;
-                    case 0:
-                        Log.i("CoinRechargeSheetView", "onSkuDetailsResponse: " + responseCode + " " + debugMessage);
-                        if (skuDetailsList == null) {
-                            Log.w("CoinRechargeSheetView", "onSkuDetailsResponse: null SkuDetails list");
-                        } else if (skuDetailsList != null && !skuDetailsList.isEmpty()) {
-                            AppContext.instance().logEvent("One_Click_Purchase");
-                            this.pay(((SkuDetails)skuDetailsList.get(0)).getSku());
-                        } else {
-                            ToastUtils.showShort(R.string.playfun_goods_not_exits);
-                        }
-                        break;
-                    case 1:
-                        Log.i("CoinRechargeSheetView", "onSkuDetailsResponse: " + responseCode + " " + debugMessage);
-                }
-
-            });
+            params.setSkusList(skus).setType(BillingClient.SkuType.INAPP);
+            billingClientLifecycle.querySkuDetailsAsync(params,mActivity);
         }
-    }
-
-    private void queryAndConsumePurchase() {
-        this.loadingView.setVisibility(View.VISIBLE);
-        if (this.billingClient != null) {
-            this.billingClient.queryPurchaseHistoryAsync("inapp", new PurchaseHistoryResponseListener() {
-                public void onPurchaseHistoryResponse(BillingResult billingResult, List<PurchaseHistoryRecord> purchaseHistoryRecordList) {
-                    CoinExchargeItegralPayDialog.this.loadingView.setVisibility(View.GONE);
-                    if (billingResult != null && purchaseHistoryRecordList != null) {
-                        if (billingResult.getResponseCode() == 0 && purchaseHistoryRecordList != null) {
-                            Iterator var3 = purchaseHistoryRecordList.iterator();
-
-                            while(var3.hasNext()) {
-                                PurchaseHistoryRecord purchaseHistoryRecord = (PurchaseHistoryRecord)var3.next();
-
-                                try {
-                                    Purchase purchase = new Purchase(purchaseHistoryRecord.getOriginalJson(), purchaseHistoryRecord.getSignature());
-                                    if (purchase.getPurchaseState() == 1) {
-                                        CoinExchargeItegralPayDialog.this.consumePuchase(purchase, 0);
-                                        if (!purchase.isAcknowledged()) {
-                                            CoinExchargeItegralPayDialog.this.acknowledgePurchase(purchase);
-                                        }
-                                    }
-                                } catch (JSONException var6) {
-                                    var6.printStackTrace();
-                                }
-                            }
-                        }
-
-                    }
-                }
-            });
-        }
-    }
-
-    private void consumePuchase(final Purchase purchase, final int state) {
-        this.loadingView.setVisibility(View.VISIBLE);
-        String packageName = purchase.getPackageName();
-        if (StringUtil.isEmpty(packageName)) {
-            packageName = AppContext.instance().getApplicationInfo().packageName;
-        }
-
-        List<String> sku = purchase.getSkus();
-        String pToken = purchase.getPurchaseToken();
-        com.android.billingclient.api.ConsumeParams.Builder consumeParams = ConsumeParams.newBuilder();
-        consumeParams.setPurchaseToken(purchase.getPurchaseToken());
-        String finalPackageName = packageName;
-        this.billingClient.consumeAsync(consumeParams.build(), (billingResult, purchaseToken) -> {
-            Log.i("CoinRechargeSheetView", "onConsumeResponse, code=" + billingResult.getResponseCode());
-            this.loadingView.setVisibility(View.GONE);
-
-            try {
-                AppContext.instance().logEvent("Successful_top_up", this.sel_goodsEntity.getPrice(), purchase);
-            } catch (Exception var9) {
-            }
-
-            if (billingResult.getResponseCode() == 0) {
-                Log.i("CoinRechargeSheetView", "onConsumeResponse,code=BillingResponseCode.OK");
-                this.paySuccessNotify(finalPackageName, this.orderNumber, sku, pToken, billingResult.getResponseCode());
-            } else {
-                Log.i("CoinRechargeSheetView", "onConsumeResponse=getDebugMessage==" + billingResult.getDebugMessage());
-                if (state == 1 && billingResult.getDebugMessage().contains("Server error, please try again") && this.handler != null) {
-                    this.handler.postDelayed(new Runnable() {
-                        public void run() {
-                            CoinExchargeItegralPayDialog.this.queryAndConsumePurchase();
-                        }
-                    }, 5000L);
-                }
-            }
-
-        });
-    }
-
-    private void acknowledgePurchase(Purchase purchase) {
-        this.loadingView.setVisibility(View.VISIBLE);
-        AcknowledgePurchaseParams acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder().setPurchaseToken(purchase.getPurchaseToken()).build();
-        AcknowledgePurchaseResponseListener acknowledgePurchaseResponseListener = new AcknowledgePurchaseResponseListener() {
-            public void onAcknowledgePurchaseResponse(BillingResult billingResult) {
-                CoinExchargeItegralPayDialog.this.loadingView.setVisibility(View.GONE);
-                String packageName;
-                ArrayList sku;
-                String pToken;
-                if (billingResult.getResponseCode() == 0) {
-                    Log.i("CoinRechargeSheetView", "Acknowledge purchase success");
-                    packageName = purchase.getPackageName();
-                    sku = purchase.getSkus();
-                    pToken = purchase.getPurchaseToken();
-                    CoinExchargeItegralPayDialog.this.paySuccessNotify(packageName, CoinExchargeItegralPayDialog.this.orderNumber, sku, pToken, billingResult.getResponseCode());
-                } else {
-                    packageName = purchase.getPackageName();
-                    sku = purchase.getSkus();
-                    pToken = purchase.getPurchaseToken();
-                    CoinExchargeItegralPayDialog.this.paySuccessNotify(packageName, CoinExchargeItegralPayDialog.this.orderNumber, sku, pToken, billingResult.getResponseCode());
-                    Log.i("CoinRechargeSheetView", "Acknowledge purchase failed,code=" + billingResult.getResponseCode() + ",\nerrorMsg=" + billingResult.getDebugMessage());
-                }
-
-            }
-        };
-        this.billingClient.acknowledgePurchase(acknowledgePurchaseParams, acknowledgePurchaseResponseListener);
-    }
-
-    private void pay(String payCode) {
-        List<String> skuList = new ArrayList();
-        skuList.add(payCode);
-        SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
-        params.setSkusList(skuList).setType("inapp");
-        this.billingClient.querySkuDetailsAsync(params.build(), new SkuDetailsResponseListener() {
-            public void onSkuDetailsResponse(BillingResult billingResult, List<SkuDetails> skuDetailsList) {
-                Log.i("CoinRechargeSheetView", "querySkuDetailsAsync=getResponseCode==" + billingResult.getResponseCode() + ",skuDetailsList.size=" + skuDetailsList.size());
-                if (billingResult.getResponseCode() == 0) {
-                    if (skuDetailsList.size() > 0) {
-                        Iterator var3 = skuDetailsList.iterator();
-
-                        while(var3.hasNext()) {
-                            SkuDetails skuDetails = (SkuDetails)var3.next();
-                            String sku = skuDetails.getSku();
-                            String price = skuDetails.getPrice();
-                            Log.i("CoinRechargeSheetView", "Sku=" + sku + ",price=" + price);
-                            BillingFlowParams flowParams = BillingFlowParams.newBuilder().setSkuDetails(skuDetails).build();
-                            int responseCode = CoinExchargeItegralPayDialog.this.billingClient.launchBillingFlow(CoinExchargeItegralPayDialog.this.mActivity, flowParams).getResponseCode();
-                            if (responseCode == 0) {
-                                Log.i("CoinRechargeSheetView", "成功啟動google支付");
-                            } else {
-                                Log.i("CoinRechargeSheetView", "LaunchBillingFlow Fail,code=" + responseCode);
-                            }
-                            CoinExchargeItegralPayDialog.this.loadingView.setVisibility(View.GONE);
-                        }
-                    } else {
-                        Log.i("CoinRechargeSheetView", "skuDetailsList is empty.");
-                        CoinExchargeItegralPayDialog.this.loadingView.setVisibility(View.GONE);
-                    }
-                } else {
-                    Log.i("CoinRechargeSheetView", "Get SkuDetails Failed,Msg=" + billingResult.getDebugMessage());
-                    CoinExchargeItegralPayDialog.this.loadingView.setVisibility(View.GONE);
-                }
-
-            }
-        });
-    }
-
-    public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
-        Log.i("CoinRechargeSheetView", "billingResult Code=" + billingResult.getResponseCode());
-        if (billingResult.getResponseCode() == 0) {
-            Log.i("CoinRechargeSheetView", "Init success,The BillingClient is ready");
-            this.queryAndConsumePurchase();
-        } else {
-            Log.i("CoinRechargeSheetView", "Init failed,The BillingClient is not ready,code=" + billingResult.getResponseCode() + "\nMsg=" + billingResult.getDebugMessage());
-            ToastUtils.showShort(billingResult.getDebugMessage());
-        }
-
-    }
-
-    public void onBillingServiceDisconnected() {
-        Log.d("CoinRechargeSheetView", "onBillingServiceDisconnected");
-    }
-
-    public void onPurchasesUpdated(@NonNull BillingResult billingResult, @Nullable List<Purchase> purchases) {
-        if (billingResult.getResponseCode() == 0 && purchases != null) {
-            Iterator var3 = purchases.iterator();
-
-            while(var3.hasNext()) {
-                final Purchase purchase = (Purchase)var3.next();
-                if (purchase.getPurchaseState() == 1) {
-                    Log.i("CoinRechargeSheetView", "Purchase success");
-                    if (!purchase.isAcknowledged()) {
-                        this.acknowledgePurchase(purchase);
-                    }
-
-                    this.handler.postDelayed(new Runnable() {
-                        public void run() {
-                            CoinExchargeItegralPayDialog.this.consumePuchase(purchase, 1);
-                        }
-                    }, 1000L);
-                } else if (purchase.getPurchaseState() == 2) {
-                    Log.i("CoinRechargeSheetView", "Purchase pending,need to check");
-                }
-            }
-        } else if (billingResult.getResponseCode() == 1) {
-            Log.i("CoinRechargeSheetView", "Purchase cancel");
-            this.loadingView.setVisibility(View.GONE);
-        } else {
-            Log.i("CoinRechargeSheetView", "Pay result error,code=" + billingResult.getResponseCode() + "\nerrorMsg=" + billingResult.getDebugMessage());
-            this.loadingView.setVisibility(View.GONE);
-        }
-
     }
 
     public interface CoinRechargeSheetViewListener {

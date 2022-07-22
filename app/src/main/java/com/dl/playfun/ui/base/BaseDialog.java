@@ -2,6 +2,13 @@ package com.dl.playfun.ui.base;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LifecycleRegistry;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -12,9 +19,11 @@ import io.reactivex.functions.Consumer;
  * Time: 2021/9/29 14:41
  * Description: This is BaseDialog
  */
-public class BaseDialog  extends Dialog implements Consumer<Disposable> {
+public class BaseDialog  extends Dialog implements Consumer<Disposable>, LifecycleOwner {
     
     private CompositeDisposable mCompositeDisposable;
+
+    private final LifecycleRegistry mLifecycle = new LifecycleRegistry(this);
 
     public BaseDialog(Context context) {
         super(context);
@@ -50,5 +59,37 @@ public class BaseDialog  extends Dialog implements Consumer<Disposable> {
             mCompositeDisposable.clear();
         }
         super.dismiss();
+    }
+
+    @NonNull
+    @Override
+    public Lifecycle getLifecycle() {
+        return mLifecycle;
+    }
+
+    /**
+     * {@link DialogInterface.OnDismissListener}
+     */
+//    @Override
+//    public void onDismiss(DialogInterface dialog) {
+//        mLifecycle.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY);
+//    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mLifecycle.handleLifecycleEvent(Lifecycle.Event.ON_CREATE);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mLifecycle.handleLifecycleEvent(Lifecycle.Event.ON_START);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mLifecycle.handleLifecycleEvent(Lifecycle.Event.ON_STOP);
     }
 }
