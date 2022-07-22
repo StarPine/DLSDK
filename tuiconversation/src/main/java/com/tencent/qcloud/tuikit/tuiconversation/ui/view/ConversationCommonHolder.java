@@ -112,19 +112,21 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             messageText.setText(draftText);
             timelineText.setText(DateTimeUtil.getTimeFormatText(new Date(draftInfo.getDraftTime() * 1000)));
         } else {
-            HashMap<String, Object> param = new HashMap<>();
             V2TIMMessage lastMessage = conversation.getLastMessage();
-            param.put(TUIConstants.TUIChat.V2TIMMESSAGE, lastMessage);
-            String lastMsgDisplayString = (String) TUICore.callService(TUIConstants.TUIChat.SERVICE_NAME, TUIConstants.TUIChat.METHOD_GET_DISPLAY_STRING, param);
+            String lastMsgDisplayString;
 
-            if (lastMsgDisplayString != null && TUIChatUtils.isJSON2(lastMsgDisplayString) && lastMsgDisplayString.contains("type")) {
-                if (lastMessage.isSelf()) {
-                    lastMsgDisplayString = TUIConversationService.getAppContext().getString(R.string.default_message_content3);
-                } else {
-                    lastMsgDisplayString = TUIConversationService.getAppContext().getString(R.string.default_message_content);
-                }
+//            HashMap<String, Object> param = new HashMap<>();
+//            param.put(TUIConstants.TUIChat.V2TIMMESSAGE, lastMessage);
+//            String lastMsgDisplayString = (String) TUICore.callService(TUIConstants.TUIChat.SERVICE_NAME, TUIConstants.TUIChat.METHOD_GET_DISPLAY_STRING, param);
+//            if (lastMsgDisplayString != null && TUIChatUtils.isJSON2(lastMsgDisplayString) && lastMsgDisplayString.contains("type")) {
 //                lastMsgDisplayString = TUIChatUtils.json2ConversationMsg(lastMsgDisplayString);
+//            }
+            if (lastMessage.isSelf()) {
+                lastMsgDisplayString = TUIConversationService.getAppContext().getString(R.string.default_message_content3);
+            } else {
+                lastMsgDisplayString = TUIConversationService.getAppContext().getString(R.string.default_message_content);
             }
+
             // 如果最后一条消息是自定义消息, 获取要显示的字符
             if (lastMsgDisplayString != null) {
                 messageText.setText(Html.fromHtml(lastMsgDisplayString));
