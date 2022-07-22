@@ -142,6 +142,9 @@ public class CoinExchargeItegralPayDialog extends BaseDialog implements View.OnC
             public void onChanged(Purchase purchase) {
                 Log.e("BillingClientLifecycle","支付购买成功回调");
                 if(purchase!=null){
+                    String packageName = purchase.getPackageName();
+
+                    paySuccessNotify(packageName,orderNumber,purchase.getSkus(),purchase.getPurchaseToken(),1);
                     Log.e("BillingClientLifecycle","dialog支付购买成功："+purchase.toString());
                 }
 

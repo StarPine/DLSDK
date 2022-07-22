@@ -247,6 +247,7 @@ public class BillingClientLifecycle implements LifecycleObserver, BillingClientS
                 .setPurchaseToken(purchase.getPurchaseToken())
                 .build();
         AcknowledgePurchaseResponseListener acknowledgePurchaseResponseListener = billingResult -> {
+            Log.e(TAG,"確認訂單成功回調："+billingResult.getResponseCode());
             //确认购买成功
             if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                 Log.i(TAG, "Acknowledge purchase success");
