@@ -29,6 +29,7 @@ import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.SelectTextHelper;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.reply.ChatFlowReactView;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
+import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -210,7 +211,9 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
                 }
             }
         } else {
-            rightUserIcon.setIconUrls(null);
+            List<Object> urllist = new ArrayList<>();
+            urllist.add(TUIChatUtils.getFullImageUrl(properties.getFaceUrl()));
+            rightUserIcon.setIconUrls(urllist);
             leftUserIcon.setIconUrls(null);
         }
 

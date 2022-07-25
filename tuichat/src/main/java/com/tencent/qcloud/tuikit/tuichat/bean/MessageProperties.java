@@ -8,6 +8,7 @@ import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.IMessageProperties;
 public class MessageProperties implements IMessageProperties {
     private static MessageProperties sP = new MessageProperties();
     private int mAvatarId;
+    private String faceUrl;
     private int mAvatarRadius;
     private int[] avatarSize = null;
     private int mNameFontSize;
@@ -69,6 +70,14 @@ public class MessageProperties implements IMessageProperties {
     @Override
     public void setAvatar(int resId) {
         this.mAvatarId = resId;
+    }
+
+    public String getFaceUrl() {
+        return faceUrl;
+    }
+
+    public void setOwnAvatar(String faceUrl) {
+        this.faceUrl = faceUrl;
     }
 
     @Override
