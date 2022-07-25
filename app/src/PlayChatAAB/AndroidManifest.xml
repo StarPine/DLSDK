@@ -198,7 +198,16 @@
             android:requestLegacyExternalStorage="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan|adjustResize|stateHidden" /><!--" adjustResize|stateHidden"-->
+            android:windowSoftInputMode="adjustPan|adjustResize|stateHidden" />
+
+        <activity
+            android:name=".ui.mine.wallet.recharge.RechargeActivity"
+            android:launchMode="singleTop"
+            android:requestLegacyExternalStorage="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan|adjustResize|stateHidden" />
+
 
         <activity android:name="com.dl.playfun.api.login.email.LoginEmailMangerActivity"
             android:launchMode="singleTop"

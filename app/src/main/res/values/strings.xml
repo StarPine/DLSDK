@@ -1017,5 +1017,6 @@
     <string name="playfun_txt_exchange_apply_game_coin">兌換申請</string>
     <string name="playfun_txt_diamond_exchange">鑽石兌換</string>
     <string name="playfun_crystal_details_text">水晶明細</string>
+    <string name="playfun_recharge_text">储值</string>
 
 </resources>
