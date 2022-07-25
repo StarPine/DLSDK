@@ -10,6 +10,8 @@ import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseListDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.AccostEntity;
+import com.dl.playfun.entity.AdBannerEntity;
+import com.dl.playfun.entity.AdItemEntity;
 import com.dl.playfun.entity.AddressEntity;
 import com.dl.playfun.entity.AlbumPhotoEntity;
 import com.dl.playfun.entity.AllConfigEntity;
@@ -1508,6 +1510,11 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     @Override
     public Observable<BaseDataResponse<CallingStatusEntity>> getRoomStatus(Integer roomId) {
         return mHttpDataSource.getRoomStatus(roomId);
+    }
+
+    @Override
+    public Observable<BaseDataResponse<AdBannerEntity>> getMainAdBannerList(int position) {
+        return mHttpDataSource.getMainAdBannerList(position);
     }
 
     @Override

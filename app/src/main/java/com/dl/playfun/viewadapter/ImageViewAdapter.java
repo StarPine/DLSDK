@@ -123,21 +123,13 @@ public class ImageViewAdapter {
     }
 
     //针对附近页面单独提供。解决缩放问题
-    @BindingAdapter(value = {"imageItemPath", "imageItemPlaceholderRes", "imageItemErrorPlaceholderRes"}, requireAll = false)
-    public static void setHomeListItemImageUrl(ImageView imageView, String imagePath, int imageItemPlaceholderRes, int imageItemErrorPlaceholderRes){
-        Glide.with(imageView.getContext()).asBitmap().load(StringUtil.getFullImageUrl(imagePath))
-                .override(dp2px(imageView.getContext(),76),dp2px(imageView.getContext(),76))
+    @BindingAdapter(value = {"imageItemPath", "imageItemPlaceholderRes", "imageItemErrorPlaceholderRes", "resizeH", "resizeW"}, requireAll = true)
+    public static void setHomeListItemImageUrl(ImageView imageView, String imagePath, int imageItemPlaceholderRes, int imageItemErrorPlaceholderRes,Integer resizeH,Integer resizeW){
+        String oosResize = checkResizeProper(imageView.getContext(),resizeH, resizeW);
+        Glide.with(imageView.getContext()).load(StringUtil.getFullImageUrl(imagePath)+oosResize)
                 .error(imageItemErrorPlaceholderRes)
                 .placeholder(imageItemPlaceholderRes)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(new ImageViewTarget<Bitmap>(imageView) {
-                    @Override
-                    protected void setResource(@Nullable Bitmap resource) {
-                        if (resource != null) {
-                            imageView.setImageBitmap(resource);
-                        }
-                    }
-                });
+                .into(imageView);
     }
 
     /***

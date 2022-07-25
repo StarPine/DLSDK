@@ -7,10 +7,9 @@ import androidx.databinding.BindingAdapter;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.dl.playfun.entity.AdItemEntity;
+import com.dl.playfun.R;
 import com.dl.playfun.entity.TaskAdEntity;
 import com.dl.playfun.utils.StringUtil;
-import com.dl.playfun.R;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.Transformer;
@@ -29,36 +28,6 @@ import me.goldze.mvvmhabit.binding.command.BindingCommand;
  * @Date 2021/9/4
  */
 public class BannetDataAdapter {
-    @BindingAdapter(value = {"BannerData", "onBannerClickCommand"}, requireAll = false)
-    public static void setImageUri(Banner banner, List<AdItemEntity> adItemEntities, BindingCommand<Integer> OnBannerClickCommand) {
-        try {
-            //设置banner样式
-            banner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR);
-            //设置图片加载器
-            banner.setImageLoader(new GlideImageLoader());
-            //设置图片集合
-            banner.setImages(adItemEntities);
-            //设置banner动画效果
-            banner.setBannerAnimation(Transformer.Default);
-            //设置自动轮播，默认为true
-            banner.isAutoPlay(true);
-            //设置轮播时间
-            banner.setDelayTime(2500);
-            //设置指示器位置（当banner模式中有指示器时）
-            banner.setIndicatorGravity(BannerConfig.CENTER);
-            banner.setOnBannerListener(new OnBannerListener() {
-                @Override
-                public void OnBannerClick(int position) {
-                    OnBannerClickCommand.execute(position);
-//                    ToastUtils.showShort("位置：" + position + ".路劲：" + adItemEntities.get(position).getLink());
-                }
-            });
-            //banner设置方法全部调用完毕时最后调用
-            banner.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     @BindingAdapter(value = {"BannerTaskAdData", "onBannerClickCommand"}, requireAll = false)
     public static void setTaskAdImageUri(Banner banner, List<TaskAdEntity> adItemEntities, BindingCommand<Integer> OnBannerClickCommand) {

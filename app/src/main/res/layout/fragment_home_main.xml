@@ -15,116 +15,171 @@
         <variable
             name="viewModel"
             type="com.dl.playfun.ui.home.HomeMainViewModel" />
+
+        <import type="me.tatarka.bindingcollectionadapter2.LayoutManagers" />
+
+        <import type="com.dl.playfun.widget.recyclerview.LineManagers" />
+
+        <import type="androidx.recyclerview.widget.LinearLayoutManager" />
     </data>
 
     <RelativeLayout
+        android:background="@color/status_bar_color"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/img_bar_background"
+            android:layout_width="match_parent"
+            android:layout_height="210dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/img_main_bar_backdrop"
+            />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcv_banner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="65dp"
+            binding:adapter="@{viewModel.adapterBanner}"
+            binding:itemBinding="@{viewModel.itemBannerBinding}"
+            binding:items="@{viewModel.observableBanner}"
+            binding:layoutManager="@{LayoutManagers.linear(LinearLayoutManager.HORIZONTAL,false)}"
+            tools:itemCount="6"
+            tools:layoutManager="LinearLayoutManager"
+            tools:layout_height="110dp"
+            tools:listitem="@layout/item_main_banner" />
         <LinearLayout
+            android:layout_below="@+id/img_bar_background"
+            android:layout_marginTop="-20dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            binding:drawable_color="@{@color/white}"
+            binding:drawable_radius_leftTop="@{20}"
+            binding:drawable_radius_rightTop="@{20}"
             android:orientation="vertical"
             tools:context="com.dl.playfun.ui.home.HomeMainFragment">
-
-            <View
-                android:id="@+id/status_bar_view"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:background="@color/status_bar_color" />
-
-            <com.google.android.material.appbar.AppBarLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/AppTheme.AppBarOverlay"
-                app:elevation="0dp">
+                android:paddingTop="20dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                tools:background="@color/white"
+                >
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_search"
+                    android:layout_marginStart="5dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_search"
+                    binding:onClickCommand="@{viewModel.searchOnClickCommand}"
+                    android:contentDescription="TODO" />
 
-                <androidx.appcompat.widget.Toolbar
-                    android:id="@+id/toolbar"
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="21dp"
+                    android:layout_height="21dp"
+                    android:layout_marginStart="18dp"
+                    android:layout_toEndOf="@+id/iv_search"
+                    android:scaleType="fitXY"
+                    android:src="@{safeUnbox(viewModel.gender) ? @drawable/ic_head_male : @drawable/ic_head_female}"
+                    binding:onClickCommand="@{viewModel.genderOnClickCommand}"
+                    tools:src="@drawable/ic_head_male" />
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_alignParentEnd="true"
+                    binding:onClickCommand="@{viewModel.regionOnClickCommand}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text="@{viewModel.regionTitle}"
+                        android:includeFontPadding="false"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="台北市"
+                        android:textColor="#ff333333"
+                        android:textSize="18sp"
+                        />
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/arrow_right_black"/>
+                </LinearLayout>
+
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/img_online"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignTop="@+id/rcv_table"
+                    android:layout_marginEnd="5dp"
+                    android:scaleType="fitXY"
+                    android:src="@{safeUnbox(viewModel.online)?@drawable/img_toolbar_online : @drawable/img_toolbar_noline}"
+                    binding:onClickCommand="@{viewModel.onlineOnCheckedChangeCommand}"
+                    tools:src="@drawable/img_toolbar_online" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rcv_table"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/action_bar_height"
-                    android:background="?attr/colorPrimary"
-                    app:contentInsetStart="0dp"
-                    app:popupTheme="@style/AppTheme.PopupOverlay">
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/iv_search"
+                    android:layout_toStartOf="@+id/img_online"
+                    android:layout_marginTop="26dp"
+                    binding:adapter="@{viewModel.adapterTab}"
+                    android:nestedScrollingEnabled="false"
+                    binding:itemBinding="@{viewModel.itemTabBinding}"
+                    binding:items="@{viewModel.observableListTab}"
+                    binding:layoutManager="@{LayoutManagers.linear(LinearLayoutManager.HORIZONTAL,false)}"
+                    tools:layoutManager="LinearLayoutManager"
+                    tools:listitem="@layout/item_main_tab"
+                    tools:itemCount="6"
+                    tools:layout_height="40dp" />
+            </RelativeLayout>
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp">
-
-                        <ImageView
-                            android:id="@+id/iv_search"
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:layout_centerVertical="true"
-                            android:scaleType="centerInside"
-                            android:src="@drawable/ic_search"
-                            binding:onClickCommand="@{viewModel.searchOnClickCommand}" />
-
-                        <Switch
-                            android:visibility="visible"
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="10dp"
-                            android:layout_toRightOf="@+id/iv_search"
-                            android:background="@android:color/transparent"
-                            android:button="@null"
-                            android:drawableStart="@drawable/gender_checkbok_background"
-                            android:scaleType="centerInside"
-                            android:thumb="@null"
-                            android:track="@null"
-                            binding:onClickCommand="@{viewModel.genderOnClickCommand}"
-                            binding:switchState="@{safeUnbox(viewModel.gender)}" />
-
-                        <Switch
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:button="@null"
-                            android:paddingLeft="9dp"
-                            android:paddingTop="7dp"
-                            android:paddingRight="1dp"
-                            android:paddingBottom="7dp"
-                            android:text="@string/playfun_fragment_home_on_line"
-                            android:textColor="@drawable/online_checkbok_text_color"
-                            android:textSize="12sp"
-                            android:maxLines="1"
-                            android:ellipsize="end"
-                            android:thumb="@null"
-                            android:track="@null"
-                            binding:onCheckedChangeCommand="@{viewModel.onlineOnCheckedChangeCommand}"
-                            binding:switchState="@{safeUnbox(viewModel.online)}" />
-                        <!--                    android:background="@drawable/online_checkbok_background"-->
-                    </RelativeLayout>
-                </androidx.appcompat.widget.Toolbar>
-
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tabs"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/tab_bar_height"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp" />
-
-            </com.google.android.material.appbar.AppBarLayout>
 
             <TextView
                 android:id="@+id/tv_location_warn"
                 style="@style/TopWarn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableRight="@drawable/ic_arrow_right_golden"
                 android:text="@string/playfun_homt_main_lication_title"
-                android:visibility="@{viewModel.locationService?View.GONE:View.VISIBLE}" />
-
-            <androidx.viewpager.widget.ViewPager
-                android:id="@+id/view_pager"
+                android:visibility="@{viewModel.locationService?View.GONE:View.VISIBLE}"
+                app:drawableRightCompat="@drawable/ic_arrow_right_golden" />
+            <com.scwang.smart.refresh.layout.SmartRefreshLayout
+                android:id="@+id/refresh_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
-                android:paddingBottom="@dimen/home_bottom_nav_height" />
+                android:layout_marginBottom="50dp"
+                android:background="@color/container_background"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                binding:onLoadMoreCommand="@{viewModel.onLoadMoreCommand}"
+                binding:onRefreshCommand="@{viewModel.onRefreshCommand}">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcv_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layoutManager="LinearLayoutManager"
+                        binding:adapter="@{viewModel.adapter}"
+                        binding:itemBinding="@{viewModel.itemBinding}"
+                        binding:items="@{viewModel.observableList}"
+                        binding:lineManager="@{LineManagers.horizontal(1,104,0)}" />
+
+                    <include
+                        layout="@layout/empty_view"
+                        app:stateModel="@{viewModel.stateModel}" />
+
+                </RelativeLayout>
+            </com.scwang.smart.refresh.layout.SmartRefreshLayout>
         </LinearLayout>
 
 
@@ -132,7 +187,7 @@
             tools:visibility="gone"
             android:layout_width="58dp"
             android:layout_height="58dp"
-            android:layout_marginLeft="288dp"
+            android:layout_marginStart="288dp"
             android:layout_marginTop="430dp"
             android:elevation="50dp"
             android:clickable="true"

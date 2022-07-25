@@ -18,7 +18,6 @@ import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
-import com.dl.playfun.entity.AdItemEntity;
 import com.dl.playfun.entity.BroadcastEntity;
 import com.dl.playfun.entity.BroadcastListEntity;
 import com.dl.playfun.entity.ConfigItemEntity;
@@ -36,15 +35,10 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.mine.broadcast.mytrends.TrendItemViewModel;
 import com.dl.playfun.ui.mine.wallet.WalletFragment;
 import com.dl.playfun.ui.radio.issuanceprogram.IssuanceProgramFragment;
-import com.dl.playfun.utils.Utils;
 import com.dl.playfun.viewmodel.BaseRefreshViewModel;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import io.reactivex.disposables.Disposable;
 import me.goldze.mvvmhabit.base.MultiItemViewModel;

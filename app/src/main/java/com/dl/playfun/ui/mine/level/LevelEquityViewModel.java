@@ -87,9 +87,7 @@ public class LevelEquityViewModel extends BaseViewModel<AppRepository> {
     public ObservableBoolean tabLayoutState = new ObservableBoolean(true);
 
     //点击切换tab
-    public BindingCommand<Boolean> backView = new BindingCommand(() -> {
-        pop();
-    });
+    public BindingCommand<Boolean> backView = new BindingCommand(this::pop);
     public ObservableBoolean clickChatSubDisplay = new ObservableBoolean(false);
     public ObservableBoolean clickAudioSubDisplay = new ObservableBoolean(false);
     public ObservableBoolean clickVideoSubDisplay = new ObservableBoolean(false);

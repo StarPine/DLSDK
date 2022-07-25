@@ -4,6 +4,8 @@ import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseListDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.AccostEntity;
+import com.dl.playfun.entity.AdBannerEntity;
+import com.dl.playfun.entity.AdItemEntity;
 import com.dl.playfun.entity.AddressEntity;
 import com.dl.playfun.entity.AlbumPhotoEntity;
 import com.dl.playfun.entity.AllConfigEntity;
@@ -100,6 +102,15 @@ import retrofit2.http.Query;
 
 public interface HttpDataSource {
 
+
+    /**
+     * @Desc TODO(广告列表获取  1：首页 2：广场页)
+     * @author 彭石林
+     * @parame []
+     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseListDataResponse<com.dl.playfun.entity.AdItemEntity>>
+     * @Date 2022/7/25
+     */
+    Observable<BaseDataResponse<AdBannerEntity>> getMainAdBannerList(int position);
 
     /***
      * 水晶兑换弹窗提示

@@ -32,26 +32,25 @@
         binding:onClickCommand="@{viewModel.itemClick}">
         <RelativeLayout
             android:id="@+id/rl_iv_avatar"
-            android:layout_width="76dp"
-            android:layout_height="76dp">
+            android:layout_width="80dp"
+            android:layout_height="80dp">
 
-            <com.dl.playfun.widget.roundedimageview.RoundedImageView
+            <com.dl.playfun.widget.image.CircleImageView
                 android:id="@+id/iv_avatar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="fitXY"
                 android:src="@drawable/default_avatar"
-                app:riv_corner_radius="8dp"
                 binding:imageItemErrorPlaceholderRes="@{R.drawable.default_avatar}"
                 binding:imageItemPath="@{viewModel.itemEntity.avatar}"
                 binding:imageItemPlaceholderRes="@{R.drawable.default_avatar}"
-                binding:resizeH="@{76}"
-                binding:resizeW="@{76}" />
+                binding:resizeH="@{80}"
+                binding:resizeW="@{80}" />
 
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/item_lottie"
-                android:layout_width="76dp"
-                android:layout_height="76dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_gravity="center"
                 android:elevation="11dp"
                 android:visibility="gone"

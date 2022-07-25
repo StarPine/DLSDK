@@ -62,7 +62,7 @@ public class CityChooseAdapter extends RecyclerView.Adapter<CityChooseAdapter.Re
         holder.itemView.setOnClickListener(v -> {
             if (cityChooseAdapterListener != null) {
                 int p = (int) v.getTag();
-                cityChooseAdapterListener.onItemClick(dataList.get(p));
+                cityChooseAdapterListener.onItemClick(dataList.get(p),p);
             }
         });
     }
@@ -73,7 +73,7 @@ public class CityChooseAdapter extends RecyclerView.Adapter<CityChooseAdapter.Re
     }
 
     public interface CityChooseAdapterListener {
-        void onItemClick(ConfigItemEntity itemEntity);
+        void onItemClick(ConfigItemEntity itemEntity,int position);
     }
 
     class RecyclerHolder extends RecyclerView.ViewHolder {

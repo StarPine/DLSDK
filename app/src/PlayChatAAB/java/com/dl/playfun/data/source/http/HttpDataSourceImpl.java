@@ -7,6 +7,8 @@ import com.dl.playfun.data.source.http.response.BaseListDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.data.source.http.service.ApiService;
 import com.dl.playfun.entity.AccostEntity;
+import com.dl.playfun.entity.AdBannerEntity;
+import com.dl.playfun.entity.AdItemEntity;
 import com.dl.playfun.entity.AddressEntity;
 import com.dl.playfun.entity.AlbumPhotoEntity;
 import com.dl.playfun.entity.AllConfigEntity;
@@ -1220,6 +1222,11 @@ public class HttpDataSourceImpl implements HttpDataSource {
     @Override
     public Observable<BaseDataResponse<CallingStatusEntity>> getRoomStatus(Integer roomId) {
         return apiService.getRoomStatus(roomId);
+    }
+
+    @Override
+    public Observable<BaseDataResponse<AdBannerEntity>> getMainAdBannerList(int position) {
+        return apiService.getMainAdBannerList(position);
     }
 
     @Override

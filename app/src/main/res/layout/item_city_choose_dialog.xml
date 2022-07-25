@@ -12,6 +12,6 @@
         android:layout_centerInParent="true"
         android:text="100个"
         android:textColor="@color/gray_dark"
-        android:textSize="15.37sp" />
+        android:textSize="14sp" />
 
 </RelativeLayout>

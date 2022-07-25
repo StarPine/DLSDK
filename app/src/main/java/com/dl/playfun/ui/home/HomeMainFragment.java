@@ -1,6 +1,8 @@
 package com.dl.playfun.ui.home;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,7 +14,9 @@ import android.widget.Button;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.blankj.utilcode.util.IntentUtils;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.dl.playfun.BR;
@@ -23,26 +27,30 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.Injection;
 import com.dl.playfun.databinding.FragmentHomeMainBinding;
+import com.dl.playfun.entity.CoinExchangePriceInfo;
 import com.dl.playfun.entity.ConfigItemEntity;
 import com.dl.playfun.event.LocationChangeEvent;
 import com.dl.playfun.kl.view.VideoPresetActivity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocationManager;
 import com.dl.playfun.ui.base.BaseFragment;
+import com.dl.playfun.ui.base.BaseRefreshFragment;
 import com.dl.playfun.ui.home.accost.HomeAccostDialog;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
+import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
 import com.google.android.material.tabs.TabLayout;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.List;
 
 import me.goldze.mvvmhabit.bus.RxBus;
+import me.goldze.mvvmhabit.utils.ToastUtils;
 
 /**
  * @author wulei
  */
-public class HomeMainFragment extends BaseFragment<FragmentHomeMainBinding, HomeMainViewModel> {
+public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBinding, HomeMainViewModel> {
 
     private List<ConfigItemEntity> citys;
 
@@ -72,53 +80,17 @@ public class HomeMainFragment extends BaseFragment<FragmentHomeMainBinding, Home
         nearItemEntity.setName(getStringByResId(R.string.playfun_tab_female_1));
         citys.add(0, nearItemEntity);
 
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext()) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
+        binding.rcvTable.setLayoutManager(layoutManager);
+
         binding.tvLocationWarn.setOnClickListener(view -> {
             Intent intent = IntentUtils.getLaunchAppDetailsSettingsIntent(mActivity.getPackageName());
             startActivity(intent);
-        });
-
-        //boolean b = viewModel.gender.get();
-        //
-        boolean isMale = ConfigManager.getInstance().isMale();
-        HomeMainTabPagerAdapter adapter = new HomeMainTabPagerAdapter(mActivity, this.getChildFragmentManager(), !isMale ? AppConfig.MALE : AppConfig.FEMALE, viewModel);
-        if(isMale){
-            //男缓存3个viewpage
-            binding.viewPager.setOffscreenPageLimit(3);
-        }else{
-            //男缓存2个viewpage
-            binding.viewPager.setOffscreenPageLimit(2);
-        }
-
-        binding.viewPager.setAdapter(adapter);
-        binding.tabs.setSelectedTabIndicatorHeight(0);
-        binding.tabs.setupWithViewPager(binding.viewPager);
-
-        viewModel.gender.set(!isMale);
-        createTabs(!isMale ? AppConfig.MALE : AppConfig.FEMALE);
-        binding.tabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                try {
-                    tab.getCustomView().findViewById(R.id.tab_text).setSelected(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                try {
-                    //tab未被选择的时候回调
-                    tab.getCustomView().findViewById(R.id.tab_text).setSelected(false);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-                //tab重新选择的时候回调
-            }
         });
         try {
 
@@ -142,25 +114,8 @@ public class HomeMainFragment extends BaseFragment<FragmentHomeMainBinding, Home
         } catch (Exception ignored) {
 
         }
-    }
-
-    private void createTabs(Integer integer) {
-        boolean isMale = integer == 1;
-        for (int i = 0; i < binding.tabs.getTabCount(); i++) {
-            TabLayout.Tab tab = binding.tabs.getTabAt(i);
-            if (tab != null) {
-                tab.setCustomView(R.layout.tab_item);
-                View customView = tab.getCustomView();
-                if (customView != null) {
-                    if (i == 0) {
-                        customView.findViewById(R.id.tab_text).setSelected(true);
-                    }
-                    Button button = customView.findViewById(R.id.tab_text);
-                    button.setOnClickListener(v -> tab.select());
-                    button.setText(isMale ? HomeMainTabPagerAdapter.TAB_MALE_TITLES[i] : HomeMainTabPagerAdapter.TAB_FEMALE_TITLES[i]);
-                }
-            }
-        }
+        //展示首页广告位
+        viewModel.getAdListBannber();
     }
 
     @Override
@@ -181,6 +136,12 @@ public class HomeMainFragment extends BaseFragment<FragmentHomeMainBinding, Home
     @Override
     public void initViewObservable() {
         super.initViewObservable();
+        viewModel.uc.clickRegion.observe(this, new Observer<Void>() {
+            @Override
+            public void onChanged(Void unused) {
+
+            }
+        });
         viewModel.uc.starActivity.observe(this, new Observer<Void>() {
             @Override
             public void onChanged(Void aBoolean) {
@@ -221,24 +182,54 @@ public class HomeMainFragment extends BaseFragment<FragmentHomeMainBinding, Home
                 homeAccostDialog.show();
             }
         });
-        //加载背景图片
-//        viewModel.uc.loadSysConfigTask.observe(this, new Observer<SystemConfigTaskEntity>() {
-//            @Override
-//            public void onChanged(SystemConfigTaskEntity systemConfigTaskEntity) {
-//                if (!StringUtils.isTrimEmpty(systemConfigTaskEntity.getFloatingImg())) {
-//                    Glide.with(HomeMainFragment.this.getContext()).asGif().load(StringUtil.getFullImageUrl(systemConfigTaskEntity.getFloatingImg()))
-//                            .error(R.drawable.nearby_attendance)
-//                            .placeholder(R.drawable.nearby_attendance)
-//                            .into(binding.floatingImg);
-//
-//                }
-//            }
-//        });
-        viewModel.uc.genderCheckedChange.observe(this, integer -> {
-            HomeMainTabPagerAdapter adapter = new HomeMainTabPagerAdapter(mActivity, HomeMainFragment.this.getChildFragmentManager(), integer, viewModel);
-            binding.viewPager.setAdapter(adapter);
-            startLocation();
-            createTabs(integer);
+        //搭讪相关
+        viewModel.uc.sendAccostFirstError.observe(this, new Observer<Void>() {
+            @Override
+            public void onChanged(Void unused) {
+                AppContext.instance().logEvent(AppsFlyerEvent.Top_up);
+                GameCoinExchargeSheetView coinRechargeSheetView = new GameCoinExchargeSheetView(mActivity);
+                coinRechargeSheetView.show();
+                coinRechargeSheetView.setCoinRechargeSheetViewListener(new GameCoinExchargeSheetView.CoinRechargeSheetViewListener() {
+                    @Override
+                    public void onPaySuccess(GameCoinExchargeSheetView sheetView, CoinExchangePriceInfo sel_goodsEntity) {
+                        sheetView.dismiss();
+                    }
+
+                    @Override
+                    public void onPayFailed(GameCoinExchargeSheetView sheetView, String msg) {
+                        sheetView.dismiss();
+                        ToastUtils.showShort(msg);
+                        AppContext.instance().logEvent(AppsFlyerEvent.Failed_to_top_up);
+                    }
+                });
+            }
+        });
+        //播放搭讪动画
+        viewModel.uc.loadLoteAnime.observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer position) {
+                LinearLayoutManager layoutManager = (LinearLayoutManager) binding.rcvLayout.getLayoutManager();
+                final View child = layoutManager.findViewByPosition(position);
+                if (child != null) {
+                    LottieAnimationView itemLottie = child.findViewById(R.id.item_lottie);
+                    if (itemLottie != null) {
+                        itemLottie.setImageAssetsFolder("images/");
+                        itemLottie.addAnimatorListener(new AnimatorListenerAdapter() {
+
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                itemLottie.removeAnimatorListener(this);
+                                itemLottie.setVisibility(View.GONE);
+                            }
+                        });
+                        if (!itemLottie.isAnimating()) {
+                            itemLottie.setVisibility(View.VISIBLE);
+                            itemLottie.setAnimation(R.raw.accost_animation);
+                            itemLottie.playAnimation();
+                        }
+                    }
+                }
+            }
         });
     }
 
@@ -265,8 +256,7 @@ public class HomeMainFragment extends BaseFragment<FragmentHomeMainBinding, Home
     public void onSupportVisible() {
         super.onSupportVisible();
         ImmersionBarUtils.setupStatusBar(this, true, true);
-        if (Boolean.FALSE.equals(viewModel.locationService.get())) {
-        }
+        viewModel.locationService.get();
     }
 
     @Override
