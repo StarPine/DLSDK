@@ -47,7 +47,7 @@
                     android:id="@+id/basic_toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/action_bar_height"
-                    app:toolbar_title="@string/playfun_tw_money_text1" />
+                    app:toolbar_title="@string/playfun_crystal_details_text" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -97,7 +97,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="fitXY"
-                    android:src="@drawable/taiwan_dollar_backdrop_img" />
+                    android:src="@drawable/crystal_card_bg" />
             </RelativeLayout>
 
             <com.scwang.smart.refresh.layout.SmartRefreshLayout
