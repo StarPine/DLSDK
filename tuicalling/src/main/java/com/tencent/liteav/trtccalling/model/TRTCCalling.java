@@ -1255,7 +1255,10 @@ public class TRTCCalling {
     private void internalCall(int roomId, final List<String> userIdList, int type, String groupId) {
         if (!isOnCalling) {
             // 首次拨打电话，生成id，并进入trtc房间
-            mCurRoomID = generateRoomID();
+            if (roomId == 0) {
+                roomId = generateRoomID();
+            }
+            mCurRoomID = roomId;
             mCurGroupId = groupId;
             mCurCallType = type;
             mIsBeingCalled = false;

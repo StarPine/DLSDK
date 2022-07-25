@@ -28,6 +28,7 @@ public class AudioPlayer {
     private MediaPlayer mPlayer;
     private MediaRecorder mRecorder;
     private Handler mHandler;
+    private boolean isOutTime = false;//超过最大时长
 
     private AudioPlayer() {
         mHandler = new Handler();
@@ -55,9 +56,8 @@ public class AudioPlayer {
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    stopInternalRecord();
-                    onRecordCompleted(true);
-                    mRecordCallback = null;
+                    isOutTime = true;
+                    stopRecord();
                     ToastUtil.toastShortMessage(TUIChatService.getAppContext().getString(R.string.record_limit_tips));
                 }
             }, TUIChatService.getChatConfig().getGeneralConfig().getAudioRecordMaxTime() * 1000);
@@ -69,6 +69,7 @@ public class AudioPlayer {
     }
 
     public void stopRecord() {
+        Log.i("starpine", "run: "+ Thread.currentThread().getName());
         stopInternalRecord();
         onRecordCompleted(true);
         mRecordCallback = null;
@@ -130,14 +131,14 @@ public class AudioPlayer {
 
     private void onPlayCompleted(boolean success) {
         if (mPlayCallback != null) {
-            mPlayCallback.onCompletion(success);
+            mPlayCallback.onCompletion(success, isOutTime);
         }
         mPlayer = null;
     }
 
     private void onRecordCompleted(boolean success) {
         if (mRecordCallback != null) {
-            mRecordCallback.onCompletion(success);
+            mRecordCallback.onCompletion(success,isOutTime);
         }
         mRecorder = null;
     }
@@ -173,7 +174,7 @@ public class AudioPlayer {
     }
 
     public interface Callback {
-        void onCompletion(Boolean success);
+        void onCompletion(Boolean success,Boolean isOutTime);
     }
 
 }

@@ -568,7 +568,7 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
                         .into(binding.audioStart);
                 AudioPlayer.getInstance().startPlay(StringUtil.getFullAudioUrl(viewModel.detailEntity.get().getSound()), new AudioPlayer.Callback() {
                     @Override
-                    public void onCompletion(Boolean success) {
+                    public void onCompletion(Boolean success, Boolean isOutTime) {
                         binding.audioStart.setImageResource(R.drawable.mine_audio_start_img);
                     }
                 });

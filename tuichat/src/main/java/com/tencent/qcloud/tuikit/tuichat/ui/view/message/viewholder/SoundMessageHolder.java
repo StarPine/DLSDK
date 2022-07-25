@@ -107,7 +107,7 @@ public class SoundMessageHolder extends MessageContentHolder {
                 unreadAudioText.setVisibility(View.GONE);
                 AudioPlayer.getInstance().startPlay(message.getDataPath(), new AudioPlayer.Callback() {
                     @Override
-                    public void onCompletion(Boolean success) {
+                    public void onCompletion(Boolean success, Boolean isOutTime) {
                         audioPlayImage.post(new Runnable() {
                             @Override
                             public void run() {

@@ -37,7 +37,6 @@ import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
 import com.tencent.qcloud.tuicore.util.FileUtil;
-import com.tencent.qcloud.tuicore.util.PermissionRequester;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
@@ -343,7 +342,10 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                                 mSendAudioButton.setText(TUIChatService.getAppContext().getString(R.string.release_end));
                                 AudioPlayer.getInstance().startRecord(new AudioPlayer.Callback() {
                                     @Override
-                                    public void onCompletion(Boolean success) {
+                                    public void onCompletion(Boolean success, Boolean isOutTime) {
+                                        if (isOutTime){
+                                            mAudioCancel = false;
+                                        }
                                         recordComplete(success);
                                     }
                                 });

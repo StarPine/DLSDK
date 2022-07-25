@@ -43,7 +43,9 @@
                         android:layout_centerVertical="true"
                         android:text="@string/save"
                         android:textColor="@color/purple_text"
-                        android:textSize="@dimen/text_size_middle" />
+                        android:textSize="@dimen/text_size_middle"
+                        onClickCommand="@{viewModel.noteSaveOnClickCommand}"
+                        />
 
                 </RelativeLayout>
 
@@ -61,6 +63,7 @@
             android:hint="@string/notepad_hint"
             android:padding="8dp"
             android:maxLength="400"
+            android:text="@{viewModel.notepadText}"
             android:textSize="@dimen/text_size_middle" />
 
         <TextView

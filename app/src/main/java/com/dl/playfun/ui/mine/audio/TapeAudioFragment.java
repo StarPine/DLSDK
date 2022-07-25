@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -14,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -183,7 +181,7 @@ public class TapeAudioFragment extends BaseFragment<FragentTapeAudioBinding,Tape
                 }
                 AudioPlayer.getInstance().startPlay(playPath, new AudioPlayer.Callback() {
                     @Override
-                    public void onCompletion(Boolean success) {
+                    public void onCompletion(Boolean success, Boolean isOutTime) {
                         binding.startPlay.setImageResource(R.drawable.audio_backdrop_img_start_play);
                     }
                 });
@@ -202,7 +200,7 @@ public class TapeAudioFragment extends BaseFragment<FragentTapeAudioBinding,Tape
     public void startAudioCall(){
         AudioPlayer.getInstance().startRecord(new AudioPlayer.Callback() {
             @Override
-            public void onCompletion(Boolean success) {
+            public void onCompletion(Boolean success, Boolean isOutTime) {
                 if(deleteFlag){
                     try {
                         File deleteFile = new File(AudioPlayer.getInstance().getPath());
