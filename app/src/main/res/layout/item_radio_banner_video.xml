@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:binding="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+
+        <import type="com.dl.playfun.R" />
+        <variable
+            name="viewModel"
+            type="com.dl.playfun.ui.radio.radiohome.item.RadioItemBannerVideoViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <androidx.appcompat.widget.AppCompatImageView
+            binding:imageErrorPlaceholderRes="@{R.drawable.radio_dating_img_default}"
+            binding:imagePath='@{viewModel.adUserItemEntity.avatar}'
+            binding:imagePlaceholderRes="@{R.drawable.radio_dating_img_default}"
+            android:layout_width="170dp"
+            android:layout_height="200dp"/>
+    </RelativeLayout>
+</layout>

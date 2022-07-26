@@ -1,6 +1,7 @@
 package com.dl.playfun.ui.radio.radiohome;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableArrayList;
@@ -18,6 +19,7 @@ import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
+import com.dl.playfun.entity.AdUserItemEntity;
 import com.dl.playfun.entity.BroadcastEntity;
 import com.dl.playfun.entity.BroadcastListEntity;
 import com.dl.playfun.entity.ConfigItemEntity;
@@ -25,21 +27,26 @@ import com.dl.playfun.entity.RadioTwoFilterItemEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.BadioEvent;
 import com.dl.playfun.event.LikeChangeEvent;
+import com.dl.playfun.event.LoginExpiredEvent;
 import com.dl.playfun.event.MainTabEvent;
 import com.dl.playfun.event.RadioadetailEvent;
 import com.dl.playfun.event.TaskListEvent;
 import com.dl.playfun.event.TaskMainTabEvent;
 import com.dl.playfun.event.TaskTypeStatusEvent;
+import com.dl.playfun.event.UserDisableEvent;
 import com.dl.playfun.event.ZoomInPictureEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.mine.broadcast.mytrends.TrendItemViewModel;
 import com.dl.playfun.ui.mine.wallet.WalletFragment;
 import com.dl.playfun.ui.radio.issuanceprogram.IssuanceProgramFragment;
+import com.dl.playfun.ui.radio.radiohome.item.RadioItemBannerVideoViewModel;
 import com.dl.playfun.viewmodel.BaseRefreshViewModel;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 import me.goldze.mvvmhabit.base.MultiItemViewModel;
 import me.goldze.mvvmhabit.binding.command.BindingAction;
@@ -74,6 +81,10 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
     public boolean CollectFlag = false;
     public Integer certification = null;
     public boolean collectReLoad = false;
+
+    public BindingRecyclerViewAdapter<RadioItemBannerVideoViewModel> adapterAdUser = new BindingRecyclerViewAdapter<>();
+    public ObservableList<RadioItemBannerVideoViewModel> radioItemsAdUser = new ObservableArrayList<>();
+    public ItemBinding<RadioItemBannerVideoViewModel> radioItemAdUserBinding = ItemBinding.of(BR.viewModel, R.layout.item_radio_banner_video);
 
     public BindingRecyclerViewAdapter<MultiItemViewModel> adapter = new BindingRecyclerViewAdapter<>();
     public ObservableList<MultiItemViewModel> radioItems = new ObservableArrayList<>();
@@ -478,7 +489,38 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
                     }
                 });
     }
+    //获取用户广告列表
+    public void getAdUserBanner(){
+        model.getUserAdList(1)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseDataResponse<List<AdUserItemEntity>>>(){
+                    @Override
+                    public void onSuccess(BaseDataResponse<List<AdUserItemEntity>> listBaseDataResponse) {
+                        List<AdUserItemEntity> listData = listBaseDataResponse.getData();
+                        List<RadioItemBannerVideoViewModel> listReal = new ArrayList<>();
+                        for (AdUserItemEntity adUserItemEntity : listData) {
+                            RadioItemBannerVideoViewModel radioItemBannerVideoViewModel = new RadioItemBannerVideoViewModel(RadioViewModel.this,adUserItemEntity);
+                            listReal.add(radioItemBannerVideoViewModel);
+                        }
+                        if(!listReal.isEmpty()){
+                            radioItemsAdUser.addAll(listReal);
+                        }
+                    }
+                    @Override
+                    public void onError(RequestException e) {
+                        super.onError(e);
+                        Log.e("获取用户广告列表接口","异常原因："+e.getMessage());
+                    }
 
+                    @Override
+                    public void onComplete() {
+                        dismissHUD();
+                    }
+                });
+    }
 
     //动态点赞
     public void newsGive(int posion) {

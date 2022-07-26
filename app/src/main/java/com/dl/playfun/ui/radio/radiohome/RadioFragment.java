@@ -7,20 +7,26 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.PagerSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.StringUtils;
@@ -65,6 +71,12 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
     private Context mContext;
     private EasyPopup mCirclePop;
     private List<RadioFilterView.RadioFilterItemEntity> sexs;
+
+    private int mScreenWidth;
+    private static final float MIN_SCALE = 1f;
+    private static final float MAX_SCALE = 1.5f;
+    private int mMinWidth;
+    private int mMaxWidth;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -133,6 +145,48 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
         binding.radioFilterView.setRadioFilterListener(this);
 
         viewModel.loadHttpData();
+        viewModel.getAdUserBanner();
+        PagerSnapHelper pagerSnapHelper = new PagerSnapHelper();
+        pagerSnapHelper.attachToRecyclerView(binding.rcvAduser);
+
+        mScreenWidth = getContext().getResources().getDisplayMetrics().widthPixels;
+        mMinWidth = (int) (mScreenWidth * 0.28f);
+        mMaxWidth = mScreenWidth - 2 * mMinWidth;
+        binding.rcvAduser.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int childCount = recyclerView.getChildCount();
+                for (int i = 0; i < childCount; i++) {
+                    View child = recyclerView.getChildAt(i);
+                    int left = child.getLeft();
+                    int paddingStart = recyclerView.getPaddingStart();
+                    // 遍历recyclerView子项，以中间项左侧偏移量为基准进行缩放
+                    float bl = Math.min(1, Math.abs(left - paddingStart) * 1f / child.getWidth());
+                    float scale = MAX_SCALE - bl * (MAX_SCALE - MIN_SCALE);
+                    child.setScaleY(scale);
+                }
+//                final int childCount = recyclerView.getChildCount();
+//                Log.e("tag", childCount + "");
+//                for (int i = 0; i < childCount; i++) {
+//                    RelativeLayout child = (RelativeLayout) recyclerView.getChildAt(i);
+//                    RecyclerView.LayoutParams lp = (RecyclerView.LayoutParams) child.getLayoutParams();
+//                    lp.rightMargin = 5;
+//                    lp.height = 200;
+//
+//
+//                    int left = child.getLeft();
+//                    int right = mScreenWidth - child.getRight();
+//                    final float percent = left < 0 || right < 0 ? 0 : Math.min(left, right) * 1f / Math.max(left, right);
+//                    Log.e("tag", "percent = " + percent);
+//                    float scaleFactor = MIN_SCALE + Math.abs(percent) * (MAX_SCALE - MIN_SCALE);
+//                    int width = (int) (mMinWidth + Math.abs(percent) * (mMaxWidth - mMinWidth));
+//                    lp.width = width;
+//                    child.setLayoutParams(lp);
+//                    child.setScaleY(scaleFactor);
+//                }
+            }
+        });
     }
 
     @Override

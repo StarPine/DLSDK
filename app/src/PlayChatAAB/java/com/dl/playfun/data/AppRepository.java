@@ -12,6 +12,7 @@ import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.AccostEntity;
 import com.dl.playfun.entity.AdBannerEntity;
 import com.dl.playfun.entity.AdItemEntity;
+import com.dl.playfun.entity.AdUserItemEntity;
 import com.dl.playfun.entity.AddressEntity;
 import com.dl.playfun.entity.AlbumPhotoEntity;
 import com.dl.playfun.entity.AllConfigEntity;
@@ -1521,6 +1522,11 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     @Override
     public Observable<BaseDataResponse<MallWithdrawTipsInfoEntity>> getMallWithdrawTipsInfo(Integer channel) {
         return mHttpDataSource.getMallWithdrawTipsInfo(channel);
+    }
+
+    @Override
+    public Observable<BaseDataResponse<List<AdUserItemEntity>>> getUserAdList(Integer position) {
+        return mHttpDataSource.getUserAdList(position);
     }
 
     @Override

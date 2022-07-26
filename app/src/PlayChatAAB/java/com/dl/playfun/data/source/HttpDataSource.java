@@ -6,6 +6,7 @@ import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.AccostEntity;
 import com.dl.playfun.entity.AdBannerEntity;
 import com.dl.playfun.entity.AdItemEntity;
+import com.dl.playfun.entity.AdUserItemEntity;
 import com.dl.playfun.entity.AddressEntity;
 import com.dl.playfun.entity.AlbumPhotoEntity;
 import com.dl.playfun.entity.AllConfigEntity;
@@ -102,6 +103,16 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface HttpDataSource {
+
+    /**
+     * @Desc TODO(用户广告位)
+     * @author 彭石林
+     * @parame [position]
+     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse>
+     * @Date 2022/7/26
+     */
+    @GET("api/userAd")
+    Observable<BaseDataResponse<List<AdUserItemEntity>>> getUserAdList(Integer position);
 
     /**
      * 保存个人笔记内容
