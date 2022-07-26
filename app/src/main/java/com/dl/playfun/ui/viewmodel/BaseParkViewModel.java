@@ -37,7 +37,21 @@ public abstract class BaseParkViewModel<T extends AppRepository> extends BaseRef
 
     public BindingRecyclerViewAdapter<BaseParkItemViewModel> adapter = new BindingRecyclerViewAdapter<>();
     public ObservableList<BaseParkItemViewModel> observableList = new ObservableArrayList<>();
-    public ItemBinding<BaseParkItemViewModel> itemBinding = ItemBinding.of(BR.viewModel, R.layout.item_park);
+
+
+    public static final String ItemPark = "item_park";
+    public static final String ItemParkBanner = "item_park_banner";
+
+    public ItemBinding<BaseParkItemViewModel> itemBinding = ItemBinding.of((itemBinding, position, item) ->{
+        String itemType = String.valueOf(item.getItemType());
+        if (itemType.equals(ItemPark)) {
+            //评价别人
+            itemBinding.set(BR.viewModel, R.layout.item_park);
+        } else if (itemType.equals(ItemParkBanner)) {
+            //别人评价我
+            itemBinding.set(BR.viewModel, R.layout.item_park_banner);
+        }
+    });
     private Disposable mSubscription2;
     private Disposable mLikeSubscription;
     private Disposable taskTypeStatusEvent;

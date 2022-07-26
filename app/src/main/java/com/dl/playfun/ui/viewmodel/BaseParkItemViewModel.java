@@ -10,12 +10,17 @@ import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
+import com.dl.playfun.entity.AdItemEntity;
 import com.dl.playfun.entity.ParkItemEntity;
+import com.dl.playfun.entity.TaskAdEntity;
 import com.dl.playfun.manager.ConfigManager;
+import com.dl.playfun.ui.task.webview.FukuokaViewFragment;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.utils.ChatUtils;
 import com.dl.playfun.utils.ExceptionReportUtils;
 import com.dl.playfun.utils.TimeUtils;
+
+import java.util.List;
 
 import me.goldze.mvvmhabit.base.MultiItemViewModel;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
@@ -24,12 +29,15 @@ import me.goldze.mvvmhabit.binding.command.BindingCommand;
  * @author wulei
  */
 public class BaseParkItemViewModel extends MultiItemViewModel<BaseParkViewModel> {
+    //新增广告轮播类型
+    public ObservableField<List<AdItemEntity>> itemBannerEntity = new ObservableField<>();
+
     public ObservableField<Boolean> collectEnable = new ObservableField<>();
     public ObservableField<ParkItemEntity> itemEntity = new ObservableField<>();
     //单次搭讪成功
     public ObservableField<Boolean> accountCollect = new ObservableField<>();
     //条目的点击事件
-    public BindingCommand itemClick = new BindingCommand(() -> {
+    public final BindingCommand itemClick = new BindingCommand(() -> {
 //        try {
 //            AppContext.instance().logEvent(AppsFlyerEvent.Nearby_Follow);
 //            Bundle bundle = UserDetailFragment.getStartBundle(itemEntity.get().getId());
@@ -38,9 +46,9 @@ public class BaseParkItemViewModel extends MultiItemViewModel<BaseParkViewModel>
 //            ExceptionReportUtils.report(e);
 //        }
         try {
-                AppContext.instance().logEvent(AppsFlyerEvent.Nearby_Follow);
-                Bundle bundle = UserDetailFragment.getStartBundle(itemEntity.get().getId());
-                viewModel.start(UserDetailFragment.class.getCanonicalName(), bundle);
+            AppContext.instance().logEvent(AppsFlyerEvent.Nearby_Follow);
+            Bundle bundle = UserDetailFragment.getStartBundle(itemEntity.get().getId());
+            viewModel.start(UserDetailFragment.class.getCanonicalName(), bundle);
         } catch (Exception e) {
             ExceptionReportUtils.report(e);
         }
@@ -69,6 +77,24 @@ public class BaseParkItemViewModel extends MultiItemViewModel<BaseParkViewModel>
         this.itemEntity.set(itemEntity);
     }
 
+    public BaseParkItemViewModel(@NonNull BaseParkViewModel viewModel, List<AdItemEntity> itemBannerEntity) {
+        super(viewModel);
+        this.itemBannerEntity.set(itemBannerEntity);
+    }
+    //banner点击
+    public BindingCommand<Integer> onBannerClickCommand = new BindingCommand<>(index -> {
+        try {
+            AdItemEntity adItemEntity = itemBannerEntity.get().get(index);
+            if(adItemEntity!=null && adItemEntity.getLink()!=null){
+                Bundle bundle = new Bundle();
+                bundle.putString("link", adItemEntity.getLink());
+                viewModel.start(FukuokaViewFragment.class.getCanonicalName(), bundle);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    });
+
     public String getDistance() {
         String distance = StringUtils.getString(R.string.playfun_unknown);
         Double d = itemEntity.get().getDistance();
@@ -88,6 +114,19 @@ public class BaseParkItemViewModel extends MultiItemViewModel<BaseParkViewModel>
                 } else {
                     distance = String.format("%sm", d.intValue());
                 }
+            }
+        }
+        return distance;
+    }
+
+    public Integer getDistanceShow() {
+        Integer distance = View.GONE;
+        Double d = itemEntity.get().getDistance();
+        if (d != null) {
+            if (d == -1) {
+                distance = View.GONE;
+            } else {
+                distance = View.VISIBLE;
             }
         }
         return distance;

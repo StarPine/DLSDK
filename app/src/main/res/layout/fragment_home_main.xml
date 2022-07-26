@@ -64,6 +64,7 @@
                 android:paddingTop="20dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
+                android:paddingBottom="10dp"
                 tools:background="@color/white"
                 >
                 <androidx.appcompat.widget.AppCompatImageView
@@ -164,10 +165,6 @@
                         android:id="@+id/rcv_layout"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
                         app:layoutManager="LinearLayoutManager"
                         binding:adapter="@{viewModel.adapter}"
                         binding:itemBinding="@{viewModel.itemBinding}"

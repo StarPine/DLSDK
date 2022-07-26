@@ -6,6 +6,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,9 +36,11 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocationManager;
 import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.ui.base.BaseRefreshFragment;
+import com.dl.playfun.ui.dialog.CityChooseDialog;
 import com.dl.playfun.ui.home.accost.HomeAccostDialog;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
+import com.dl.playfun.viewadapter.CustomRefreshHeader;
 import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
 import com.google.android.material.tabs.TabLayout;
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -54,6 +57,7 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
 
     private List<ConfigItemEntity> citys;
 
+    private CityChooseDialog cityChooseDialog;
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         AutoSizeUtils.applyAdapt(this.getResources());
@@ -74,9 +78,11 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
     @Override
     public void initData() {
         super.initData();
+        binding.refreshLayout.setRefreshHeader(new CustomRefreshHeader(getContext()));
         AppContext.instance().logEvent(AppsFlyerEvent.Nearby);
-        citys = Injection.provideDemoRepository().readCityConfig();
+        citys = ConfigManager.getInstance().getAppRepository().readCityConfig();
         ConfigItemEntity nearItemEntity = new ConfigItemEntity();
+        nearItemEntity.setId(-1);
         nearItemEntity.setName(getStringByResId(R.string.playfun_tab_female_1));
         citys.add(0, nearItemEntity);
 
@@ -136,11 +142,19 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
     @Override
     public void initViewObservable() {
         super.initViewObservable();
-        viewModel.uc.clickRegion.observe(this, new Observer<Void>() {
-            @Override
-            public void onChanged(Void unused) {
-
+        //选择城市
+        viewModel.uc.clickRegion.observe(this, unused -> {
+            Log.e("当前选择城市列表数据",citys.size()+"===========================");
+            if(cityChooseDialog==null){
+                cityChooseDialog = new CityChooseDialog(getContext(),citys,viewModel.cityId.get());
             }
+            cityChooseDialog.show();
+            cityChooseDialog.setCityChooseDialogListener((dialog1, itemEntity) -> {
+                viewModel.cityId.set(itemEntity.getId());
+                binding.refreshLayout.autoRefresh();
+                dialog1.dismiss();
+
+            } );
         });
         viewModel.uc.starActivity.observe(this, new Observer<Void>() {
             @Override

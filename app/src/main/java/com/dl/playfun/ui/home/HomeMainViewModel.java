@@ -10,7 +10,6 @@ import androidx.databinding.ObservableList;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
-import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.data.AppRepository;
@@ -28,7 +27,6 @@ import com.dl.playfun.event.AddBlackListEvent;
 import com.dl.playfun.event.CityChangeEvent;
 import com.dl.playfun.event.LoadEvent;
 import com.dl.playfun.event.LocationChangeEvent;
-import com.dl.playfun.event.OnlineChangeEvent;
 import com.dl.playfun.ui.home.search.SearchFragment;
 import com.dl.playfun.ui.viewmodel.BaseParkItemViewModel;
 import com.dl.playfun.ui.viewmodel.BaseParkViewModel;
@@ -38,7 +36,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
 import me.goldze.mvvmhabit.bus.RxBus;
@@ -60,6 +57,7 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
     public BindingRecyclerViewAdapter<HomeMainBannerItemViewModel> adapterBanner = new BindingRecyclerViewAdapter<>();
     public ObservableList<HomeMainBannerItemViewModel> observableBanner = new ObservableArrayList<>();
     public ItemBinding<HomeMainBannerItemViewModel> itemBannerBinding = ItemBinding.of(BR.viewModel, R.layout.item_main_banner);
+
     //位置选择文字
     public ObservableField<String> regionTitle = new ObservableField<>(StringUtils.getString(R.string.playfun_tab_female_1));
 
@@ -109,7 +107,7 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
         if (online.get()) {
             AppContext.instance().logEvent(AppsFlyerEvent.Nearby_Online_First);
         }
-        RxBus.getDefault().post(new OnlineChangeEvent(online.get()));
+        startRefresh();
     });
     /**
      * 点击性别
@@ -119,7 +117,7 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
         AppContext.instance().logEvent(AppsFlyerEvent.Nearby_Change_gender);
         gender.set(!gender.get());
         initGenderTab();
-        onRefreshCommand.execute();
+        startRefresh();
     });
 
     public void initGenderTab() {
@@ -181,14 +179,14 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
             observableListTab.get(idx).checked.set(true);
             type.set(checkType);
             lastTabClickIdx = idx;
-            onRefreshCommand.execute();
+            startRefresh();
         } else {
             if (idx != lastTabClickIdx) {
                 observableListTab.get(lastTabClickIdx).checked.set(false);
                 observableListTab.get(idx).checked.set(true);
                 type.set(checkType);
                 lastTabClickIdx = idx;
-                onRefreshCommand.execute();
+                startRefresh();
             }
         }
         //展示首页广告位
@@ -229,10 +227,6 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
                 .subscribe(countDownTimerEvent -> {
                     uc.isLoad.postValue(countDownTimerEvent.isLoad());
                 });
-        mSubscription = RxBus.getDefault().toObservable(OnlineChangeEvent.class)
-                .subscribe(event -> {
-                    startRefresh();
-                });
         mLocationSubscription = RxBus.getDefault().toObservable(LocationChangeEvent.class)
                 .subscribe(event -> {
                     startRefresh();
@@ -248,7 +242,6 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
                 });
 
         //将订阅者加入管理站
-        RxSubscriptions.add(mSubscription);
         RxSubscriptions.add(mLocationSubscription);
         RxSubscriptions.add(mCitySubscription);
         RxSubscriptions.add(mAddBlackListSubscription);
@@ -259,7 +252,6 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
     public void removeRxBus() {
         super.removeRxBus();
         RxSubscriptions.remove(loadReceive);
-        RxSubscriptions.remove(mSubscription);
         RxSubscriptions.remove(mLocationSubscription);
         RxSubscriptions.remove(mCitySubscription);
         RxSubscriptions.remove(mAddBlackListSubscription);
@@ -326,8 +318,19 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
                         super.onSuccess(response);
                         int sex = model.readUserData().getSex();
                         for (ParkItemEntity itemEntity : response.getData().getData()) {
-                            BaseParkItemViewModel item = new BaseParkItemViewModel(HomeMainViewModel.this, sex, itemEntity);
-                            observableList.add(item);
+                            Integer itemType = itemEntity.getType();
+                            if(itemType!=null){
+                                BaseParkItemViewModel item;
+                                if(itemType==1){
+                                    item = new BaseParkItemViewModel(HomeMainViewModel.this, sex, itemEntity);
+                                    item.multiItemType(ItemPark);
+                                }else{
+                                    item = new BaseParkItemViewModel(HomeMainViewModel.this, itemEntity.getBannerList());
+                                    item.multiItemType(ItemParkBanner);
+                                }
+                                observableList.add(item);
+                            }
+
                         }
                     }
 

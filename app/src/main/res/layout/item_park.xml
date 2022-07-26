@@ -176,7 +176,7 @@
                     android:text="@{StringUtils.isEmpty(viewModel.itemEntity.city) ? @string/playfun_unknown_region : viewModel.itemEntity.city}"
                     android:textColor="#FF827692"
                     android:textSize="12sp"
-                    android:visibility="gone"
+                    android:visibility="@{StringUtils.isEmpty(viewModel.itemEntity.city) ? View.GONE : View.VISIBLE}"
                     tools:text="城市" />
 
                 <TextView
@@ -227,6 +227,7 @@
                 android:drawablePadding="2dp"
                 android:gravity="center_vertical"
                 android:text="@{viewModel.distance}"
+                android:visibility="@{viewModel.getDistanceShow}"
                 android:textColor="@color/text_9EA1B0"
                 android:textSize="@dimen/text_size_small"
                 tools:text="未知" />
@@ -237,6 +238,7 @@
                 android:layout_marginStart="7dp"
                 android:gravity="center_vertical"
                 android:text="|"
+                android:visibility="@{viewModel.getDistanceShow}"
                 android:textColor="#CDCED1"
                 android:textSize="@dimen/text_size_small"
                 tools:ignore="HardcodedText" />
@@ -252,27 +254,6 @@
                 tools:text="在线"
                 tools:textColor="@color/green"
                 tools:textStyle="bold" />
-
-            <!--            android:background="@{viewModel.itemEntity.isOnline == 1 ? @drawable/tag_background_green:@drawable/trans_bg}"-->
-
-            <TextView
-                style="@style/TagRed"
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:layout_marginStart="7dp"
-                android:drawableStart="@drawable/ic_red_packet"
-                android:gravity="center_vertical"
-                android:visibility="@{viewModel.isPaidAlbum()}" />
-
-            <TextView
-                style="@style/TagBlue"
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:layout_marginStart="7dp"
-                android:drawableLeft="@{viewModel.itemEntity.albumApply == 1 ? @drawable/ic_blue_unlock:@drawable/ic_blue_lock}"
-                android:gravity="center_vertical"
-                android:visibility="@{viewModel.isAuthAlbum()}"
-                tools:text="aaa" />
         </LinearLayout>
 
     </RelativeLayout>

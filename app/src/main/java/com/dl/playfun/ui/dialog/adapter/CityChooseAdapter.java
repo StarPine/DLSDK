@@ -24,9 +24,16 @@ public class CityChooseAdapter extends RecyclerView.Adapter<CityChooseAdapter.Re
     private List<ConfigItemEntity> dataList = new ArrayList<>();
 
     private CityChooseAdapterListener cityChooseAdapterListener = null;
+    private Integer currentChooseCityId;
 
-    public CityChooseAdapter(RecyclerView recyclerView) {
+    public CityChooseAdapter(RecyclerView recyclerView,Integer currentChooseCityId) {
         this.mContext = recyclerView.getContext();
+        this.currentChooseCityId = currentChooseCityId;
+    }
+
+    public void setCurrentChooseCityId(Integer currentChooseCityId) {
+        this.currentChooseCityId = currentChooseCityId;
+        notifyDataSetChanged();
     }
 
     public CityChooseAdapterListener getCityChooseAdapterListener() {
@@ -54,7 +61,7 @@ public class CityChooseAdapter extends RecyclerView.Adapter<CityChooseAdapter.Re
         ConfigItemEntity itemEntity = dataList.get(position);
         holder.tvName.setText(itemEntity.getName());
         holder.itemView.setTag(position);
-        if (itemEntity.getIsChoose()) {
+        if (currentChooseCityId.equals(itemEntity.getId())) {
             holder.tvName.setTextColor(mContext.getResources().getColor(R.color.purple));
         } else {
             holder.tvName.setTextColor(mContext.getResources().getColor(R.color.gray_dark));
@@ -76,7 +83,7 @@ public class CityChooseAdapter extends RecyclerView.Adapter<CityChooseAdapter.Re
         void onItemClick(ConfigItemEntity itemEntity,int position);
     }
 
-    class RecyclerHolder extends RecyclerView.ViewHolder {
+    static class RecyclerHolder extends RecyclerView.ViewHolder {
         TextView tvName = null;
 
         private RecyclerHolder(View itemView) {

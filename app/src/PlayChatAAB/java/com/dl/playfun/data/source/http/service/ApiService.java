@@ -54,6 +54,7 @@ import com.dl.playfun.entity.MallWithdrawTipsInfoEntity;
 import com.dl.playfun.entity.MessageGroupEntity;
 import com.dl.playfun.entity.MessageRuleEntity;
 import com.dl.playfun.entity.NewsEntity;
+import com.dl.playfun.entity.NoteInfoEntity;
 import com.dl.playfun.entity.OccupationConfigItemEntity;
 import com.dl.playfun.entity.ParkItemEntity;
 import com.dl.playfun.entity.PhotoAlbumEntity;

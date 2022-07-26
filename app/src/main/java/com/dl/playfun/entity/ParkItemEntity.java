@@ -8,6 +8,8 @@ import com.dl.playfun.data.typeadapter.BooleanTypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * @author wulei
  */
@@ -84,6 +86,26 @@ public class ParkItemEntity extends BaseObservable {
     //对方用户 IM iD
     @SerializedName("toImId")
     private String ImToUserId;
+
+    //新版首页为做 item跟广告banner区分
+    private Integer type;
+    private List<AdItemEntity> bannerList;
+
+    public List<AdItemEntity> getBannerList() {
+        return bannerList;
+    }
+
+    public void setBannerList(List<AdItemEntity> bannerList) {
+        this.bannerList = bannerList;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
 
     public String getImUserId() {
         return ImUserId;
