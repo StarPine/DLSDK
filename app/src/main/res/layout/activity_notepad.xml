@@ -9,11 +9,17 @@
             type="com.dl.playfun.ui.message.chatdetail.notepad.NotepadViewModel" />
     </data>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
         android:orientation="vertical">
+
+        <View
+            android:id="@+id/status_bar_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/status_bar_color" />
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/top_bar"
@@ -52,31 +58,36 @@
             </com.dl.playfun.widget.BasicToolbar>
         </com.google.android.material.appbar.AppBarLayout>
 
-        <EditText
-            android:id="@+id/edit_notepad"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_below="@+id/top_bar"
-            android:layout_margin="10dp"
-            android:background="@drawable/shape_gray_radius_6"
-            android:gravity="left"
-            android:hint="@string/notepad_hint"
-            android:padding="8dp"
-            android:maxLength="400"
-            android:text="@{viewModel.notepadText}"
-            android:textSize="@dimen/text_size_middle" />
-
-        <TextView
-            android:id="@+id/tv_word_count"
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/edit_notepad"
-            android:layout_alignRight="@id/edit_notepad"
-            android:text="@{viewModel.notepadTextFlag}"
-            android:textColor="@color/gray_light"
-            android:textSize="@dimen/text_size_small"
-            tools:text="0/400"
-            />
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/edit_notepad"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/shape_gray_radius_6"
+                android:gravity="left"
+                android:hint="@string/notepad_hint"
+                android:padding="8dp"
+                android:maxLength="400"
+                android:text="@{viewModel.notepadText}"
+                android:textSize="@dimen/text_size_middle" />
 
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/tv_word_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edit_notepad"
+                android:layout_alignRight="@id/edit_notepad"
+                android:text="@{viewModel.notepadTextFlag}"
+                android:textColor="@color/gray_light"
+                android:textSize="@dimen/text_size_small"
+                tools:text="0/400"
+                />
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
 </layout>

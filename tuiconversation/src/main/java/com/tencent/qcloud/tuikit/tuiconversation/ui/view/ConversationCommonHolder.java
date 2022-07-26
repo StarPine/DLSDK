@@ -113,7 +113,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             timelineText.setText(DateTimeUtil.getTimeFormatText(new Date(draftInfo.getDraftTime() * 1000)));
         } else {
             V2TIMMessage lastMessage = conversation.getLastMessage();
-            String lastMsgDisplayString;
+            String lastMsgDisplayString = "";
 
 //            HashMap<String, Object> param = new HashMap<>();
 //            param.put(TUIConstants.TUIChat.V2TIMMESSAGE, lastMessage);
@@ -121,10 +121,12 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
 //            if (lastMsgDisplayString != null && TUIChatUtils.isJSON2(lastMsgDisplayString) && lastMsgDisplayString.contains("type")) {
 //                lastMsgDisplayString = TUIChatUtils.json2ConversationMsg(lastMsgDisplayString);
 //            }
-            if (lastMessage.isSelf()) {
-                lastMsgDisplayString = TUIConversationService.getAppContext().getString(R.string.default_message_content3);
-            } else {
-                lastMsgDisplayString = TUIConversationService.getAppContext().getString(R.string.default_message_content);
+            if (lastMessage != null){
+                if (lastMessage.isSelf()) {
+                    lastMsgDisplayString = TUIConversationService.getAppContext().getString(R.string.default_message_content3);
+                } else {
+                    lastMsgDisplayString = TUIConversationService.getAppContext().getString(R.string.default_message_content);
+                }
             }
 
             // 如果最后一条消息是自定义消息, 获取要显示的字符

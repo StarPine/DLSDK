@@ -1,6 +1,7 @@
-package com.dl.playfun.ui.message.chatdetail.notepad;
+package com.dl.playfun.ui.mine.wallet.recharge;
 
 import android.app.Application;
+import android.graphics.drawable.Drawable;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.entity.NoteInfoEntity;
+import com.dl.playfun.ui.mine.wallet.coin.CoinFragment;
 import com.dl.playfun.viewmodel.BaseViewModel;
 
 import org.jetbrains.annotations.NotNull;
@@ -27,45 +29,33 @@ import me.goldze.mvvmhabit.utils.RxUtils;
  * @Date： 2022/6/15 18:23
  * 修改备注：
  */
-public class NotepadViewModel extends BaseViewModel<AppRepository> {
-    public ObservableField<String> notepadTextFlag = new ObservableField<>("0/400");
-    public ObservableField<String> notepadText = new ObservableField<>();
-    public int userId;
+public class RechargeViewModel extends BaseViewModel<AppRepository> {
+
+    public ObservableField<Boolean> isGooglepay = new ObservableField<>(false);
 
     /**
-     * 笔记保存
+     * 选择水晶支付
      */
-    public BindingCommand noteSaveOnClickCommand = new BindingCommand(new BindingAction() {
-        @Override
-        public void call() {
-            putNoteText(userId,notepadText.get());
-        }
+    public BindingCommand crystalPayOnClick = new BindingCommand(() -> {
+        isGooglepay.set(false);
     });
 
-    public NotepadViewModel(@NonNull @NotNull Application application, AppRepository model) {
+    /**
+     * 选择Google支付
+     */
+    public BindingCommand googlePayOnClick = new BindingCommand(() -> {
+        isGooglepay.set(true);
+    });
+
+    /**
+     * 确认支付
+     */
+    public BindingCommand confirmPayOnClick = new BindingCommand(() -> {
+
+    });
+
+    public RechargeViewModel(@NonNull @NotNull Application application, AppRepository model) {
         super(application, model);
-        notepadTextFlag.set(String.format(application.getString(R.string.notepad_word_count_format), "0"));
-    }
-
-    public void getNoteText(int userId) {
-        model.getNoteText(userId)
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .doOnSubscribe(this)
-                .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseDataResponse<NoteInfoEntity>>() {
-                    @Override
-                    public void onSuccess(BaseDataResponse<NoteInfoEntity> response) {
-                        NoteInfoEntity data = response.getData();
-                        notepadText.set(data.getNote());
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        super.onComplete();
-                        dismissHUD();
-                    }
-                });
     }
 
     public void putNoteText(int userId, String note) {

@@ -666,6 +666,8 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         messageLayout.setTipsMessageFontColor(0xFF999999);
         // 设置默认头像，默认与朋友与自己的头像相同
         messageLayout.setAvatar(R.drawable.default_avatar);
+        //设置自己的头像
+        messageLayout.setOwnAvatar(ConfigManager.getInstance().getAvatar());
         // 设置头像圆角，不设置则默认不做圆角处理
         messageLayout.setAvatarRadius(50);
         // 设置头像大小

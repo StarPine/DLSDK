@@ -726,6 +726,10 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
         properties.setAvatar(resId);
     }
 
+    public void setOwnAvatar(String faceUrl) {
+        properties.setOwnAvatar(faceUrl);
+    }
+
     @Override
     public Drawable getRightBubble() {
         return properties.getRightBubble();

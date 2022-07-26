@@ -17,7 +17,7 @@
     <string name="playfun_tab_message_2">官方訊息</string>
     <string name="playfun_tab_wallet_1">現金</string>
     <string name="playfun_tab_wallet_2">鑽石</string>
-    <string name="playfun_detail_link">詳情 ></string>
+    <string name="playfun_detail_link">明細 ></string>
     <string name="playfun_txt_exchange_game_coin">兌換</string>
     <string name="playfun_txt_drawings_apply">提領</string>
     <string name="playfun_btn_game_coin_topup">儲值</string>
@@ -861,9 +861,9 @@
     <string name="playfun_text_accost_empty2">無可搭訕用戶</string>
     <string name="playfun_text_accost_hint">換一換</string>
 
-    <string name="playfun_tw_money_text">新台幣</string>
+    <string name="playfun_tw_money_text">水晶</string>
     <string name="playfun_tw_money_text1">收入</string>
-    <string name="playfun_tw_money_text2">收入說明</string>
+    <string name="playfun_tw_money_text2">水晶說明</string>
     <string name="playfun_tw_money_empty">這裡還是空的\n你可以通過做任務、收禮物、回復信息、\n語音通話和視訊通話獲得鑽石</string>
 
     <string name="playfun_gift_bag_number_hint">數量：</string>
@@ -923,7 +923,7 @@
     <string name="playfun_coin_detail_detail">鑽石詳情</string>
 
     <string name="playfun_our_coin_hint2">鑽石可用於與您喜歡的人\n 進行語音或視訊通話，或發送禮物。</string>
-    <string name="playfun_game_coin_name">紅鑽</string>
+    <string name="playfun_game_coin_name">紅鑽/金幣/其他遊戲貨幣</string>
 
     <string name="playfun_view_exchange_coin_title">儲值</string>
     <string name="playfun_exchange_success_toast">兌換</string>
