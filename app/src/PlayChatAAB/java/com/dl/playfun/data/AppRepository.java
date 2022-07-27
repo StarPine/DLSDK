@@ -1525,6 +1525,11 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
+    public Observable<BaseDataResponse<List<AdItemEntity>>> getRadioAdBannerList(int position) {
+        return mHttpDataSource.getRadioAdBannerList(position);
+    }
+
+    @Override
     public Observable<BaseDataResponse<List<AdUserItemEntity>>> getUserAdList(Integer position) {
         return mHttpDataSource.getUserAdList(position);
     }

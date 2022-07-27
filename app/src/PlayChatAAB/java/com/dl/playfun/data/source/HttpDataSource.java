@@ -105,6 +105,15 @@ import retrofit2.http.Query;
 public interface HttpDataSource {
 
     /**
+     * @Desc TODO(广告列表获取  1：首页 2：广场页)
+     * @author 彭石林
+     * @parame []
+     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseListDataResponse<com.dl.playfun.entity.AdItemEntity>>
+     * @Date 2022/7/25
+     */
+    Observable<BaseDataResponse<List<AdItemEntity>>> getRadioAdBannerList(int position);
+
+    /**
      * @Desc TODO(用户广告位)
      * @author 彭石林
      * @parame [position]

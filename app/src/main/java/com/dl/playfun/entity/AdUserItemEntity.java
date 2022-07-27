@@ -12,6 +12,15 @@ public class AdUserItemEntity {
     private Integer sex;
     private String sound;
     private String soundTime;
+    private String imUserId;
+
+    public String getImUserId() {
+        return imUserId;
+    }
+
+    public void setImUserId(String imUserId) {
+        this.imUserId = imUserId;
+    }
 
     public Integer getUserId() {
         return userId;

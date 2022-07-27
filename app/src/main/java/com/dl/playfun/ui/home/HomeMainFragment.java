@@ -144,13 +144,13 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
         super.initViewObservable();
         //选择城市
         viewModel.uc.clickRegion.observe(this, unused -> {
-            Log.e("当前选择城市列表数据",citys.size()+"===========================");
             if(cityChooseDialog==null){
                 cityChooseDialog = new CityChooseDialog(getContext(),citys,viewModel.cityId.get());
             }
             cityChooseDialog.show();
             cityChooseDialog.setCityChooseDialogListener((dialog1, itemEntity) -> {
                 viewModel.cityId.set(itemEntity.getId());
+                viewModel.regionTitle.set(itemEntity.getName());
                 binding.refreshLayout.autoRefresh();
                 dialog1.dismiss();
 

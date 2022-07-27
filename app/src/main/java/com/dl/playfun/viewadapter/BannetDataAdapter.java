@@ -66,7 +66,6 @@ public class BannetDataAdapter {
 
     @BindingAdapter(value = {"BannerAdData", "onBannerClickCommand"}, requireAll = false)
     public static void setAdImageUri(Banner banner, List<AdItemEntity> adItemEntities, BindingCommand<Integer> OnBannerClickCommand) {
-        Log.e("进入banner广告列表播放","==============="+adItemEntities.size());
         try {
             //设置banner样式
             banner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR);

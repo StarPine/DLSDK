@@ -1237,6 +1237,11 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
+    public Observable<BaseDataResponse<List<AdItemEntity>>> getRadioAdBannerList(int position) {
+        return apiService.getRadioAdBannerList(position);
+    }
+
+    @Override
     public Observable<BaseDataResponse<List<AdUserItemEntity>>> getUserAdList(Integer position) {
         return apiService.getUserAdList(position);
     }
