@@ -625,8 +625,8 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
     //发送礼物
     public void sendUserGift(Dialog dialog, GiftBagEntity.giftEntity giftEntity, Integer to_user_id, Integer amount) {
         HashMap<String, Integer> map = new HashMap<>();
-        map.put("gift_id", giftEntity.getId());
-        map.put("to_user_id", to_user_id);
+        map.put("giftId", giftEntity.getId());
+        map.put("toUserId", to_user_id);
         map.put("type", 2);
         map.put("amount", amount);
         model.sendUserGift(ApiUitl.getBody(GsonUtils.toJson(map)))
@@ -785,17 +785,6 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
 
                                     //礼物收益提示
                                     giftIncome(giftEntity);
-                                } else if (map_data != null && map_data.get("type") != null && map_data.get("type").equals("message_tracking")) {//追踪提示
-                                    CustomMessageIMTextEntity giftEntity = IMGsonUtils.fromJson(String.valueOf(map_data.get("data")), CustomMessageIMTextEntity.class);
-                                    if (giftEntity != null) {
-                                        String sexText = isMale ? StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt3) : StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt2);
-                                        String toName = giftEntity.getUserId().equals(model.readUserData().getId())?callingVideoInviteInfoField.get().getNickname():model.readUserData().getNickname();
-                                        String msgText = toName + StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt4) + sexText;
-                                        SpannableString stringBuilder = new SpannableString(msgText);
-                                        ForegroundColorSpan blueSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint2));
-                                        stringBuilder.setSpan(blueSpan, 0, msgText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                        putRcvItemMessage(stringBuilder, null, false);
-                                    }
                                 }else if (map_data != null && map_data.get("type") != null && map_data.get("type").equals("message_countdown")) {//对方余额不足
                                     if (!isMale && ConfigManager.getInstance().getTipMoneyShowFlag()) {
                                         String data = (String) map_data.get("data");
