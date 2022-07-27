@@ -9,6 +9,7 @@ import com.dl.playfun.data.source.http.service.ApiService;
 import com.dl.playfun.entity.AccostEntity;
 import com.dl.playfun.entity.AdBannerEntity;
 import com.dl.playfun.entity.AdItemEntity;
+import com.dl.playfun.entity.AdUserItemEntity;
 import com.dl.playfun.entity.AddressEntity;
 import com.dl.playfun.entity.AlbumPhotoEntity;
 import com.dl.playfun.entity.AllConfigEntity;
@@ -1233,6 +1234,16 @@ public class HttpDataSourceImpl implements HttpDataSource {
     @Override
     public Observable<BaseDataResponse<MallWithdrawTipsInfoEntity>> getMallWithdrawTipsInfo(Integer channel) {
         return apiService.getMallWithdrawTipsInfo(channel);
+    }
+
+    @Override
+    public Observable<BaseDataResponse<List<AdItemEntity>>> getRadioAdBannerList(int position) {
+        return apiService.getRadioAdBannerList(position);
+    }
+
+    @Override
+    public Observable<BaseDataResponse<List<AdUserItemEntity>>> getUserAdList(Integer position) {
+        return apiService.getUserAdList(position);
     }
 
     @Override

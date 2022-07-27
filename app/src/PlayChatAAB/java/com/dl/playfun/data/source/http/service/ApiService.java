@@ -6,6 +6,8 @@ import com.dl.playfun.data.source.http.response.BaseListDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.AccostEntity;
 import com.dl.playfun.entity.AdBannerEntity;
+import com.dl.playfun.entity.AdItemEntity;
+import com.dl.playfun.entity.AdUserItemEntity;
 import com.dl.playfun.entity.AddressEntity;
 import com.dl.playfun.entity.AlbumPhotoEntity;
 import com.dl.playfun.entity.AllConfigEntity;
@@ -112,7 +114,24 @@ import retrofit2.http.Query;
  */
 
 public interface ApiService {
-
+    /**
+     * @Desc TODO(广告列表获取  1：首页 2：广场页)
+     * @author 彭石林
+     * @parame []
+     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseListDataResponse<com.dl.playfun.entity.AdItemEntity>>
+     * @Date 2022/7/25
+     */
+    @GET("api/ad/list")
+    Observable<BaseDataResponse<List<AdItemEntity>>> getRadioAdBannerList(@Query("position") int position);
+    /**
+    * @Desc TODO(用户广告位)
+    * @author 彭石林
+    * @parame [position]
+    * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse>
+    * @Date 2022/7/26
+    */
+    @GET("api/userAd")
+    Observable<BaseDataResponse<List<AdUserItemEntity>>> getUserAdList(@Query("position") Integer position);
     /**
      * @Desc TODO(广告列表获取  1：首页 2：广场页)
      * @author 彭石林

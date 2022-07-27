@@ -1,9 +1,12 @@
 package com.dl.playfun.ui.home;
 
+import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
 
 import com.dl.playfun.entity.AdItemEntity;
+import com.dl.playfun.ui.task.webview.FukuokaViewFragment;
 
 import me.goldze.mvvmhabit.base.MultiItemViewModel;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
@@ -23,6 +26,15 @@ public class HomeMainBannerItemViewModel extends MultiItemViewModel<HomeMainView
     }
 
     public BindingCommand clickBanner = new BindingCommand(() -> {
-
+        try {
+            AdItemEntity adItemEntity = itemEntity.get();
+            if(adItemEntity!=null && adItemEntity.getLink()!=null){
+                Bundle bundle = new Bundle();
+                bundle.putString("link", adItemEntity.getLink());
+                viewModel.start(FukuokaViewFragment.class.getCanonicalName(), bundle);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     });
 }

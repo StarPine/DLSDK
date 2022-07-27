@@ -1,6 +1,10 @@
 package com.dl.playfun.ui.radio.radiohome;
 
+import static com.blankj.utilcode.util.SnackbarUtils.dismiss;
+
 import android.app.Application;
+import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableArrayList;
@@ -18,28 +22,39 @@ import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
+import com.dl.playfun.entity.AdItemEntity;
+import com.dl.playfun.entity.AdUserItemEntity;
 import com.dl.playfun.entity.BroadcastEntity;
 import com.dl.playfun.entity.BroadcastListEntity;
+import com.dl.playfun.entity.CallingInviteInfo;
 import com.dl.playfun.entity.ConfigItemEntity;
 import com.dl.playfun.entity.RadioTwoFilterItemEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.BadioEvent;
 import com.dl.playfun.event.LikeChangeEvent;
+import com.dl.playfun.event.LoginExpiredEvent;
 import com.dl.playfun.event.MainTabEvent;
 import com.dl.playfun.event.RadioadetailEvent;
 import com.dl.playfun.event.TaskListEvent;
 import com.dl.playfun.event.TaskMainTabEvent;
 import com.dl.playfun.event.TaskTypeStatusEvent;
+import com.dl.playfun.event.UserDisableEvent;
 import com.dl.playfun.event.ZoomInPictureEvent;
+import com.dl.playfun.kl.Utils;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.mine.broadcast.mytrends.TrendItemViewModel;
 import com.dl.playfun.ui.mine.wallet.WalletFragment;
 import com.dl.playfun.ui.radio.issuanceprogram.IssuanceProgramFragment;
+import com.dl.playfun.ui.radio.radiohome.item.RadioItemBannerVideoViewModel;
+import com.dl.playfun.ui.task.webview.FukuokaViewFragment;
 import com.dl.playfun.viewmodel.BaseRefreshViewModel;
+import com.google.gson.Gson;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 import me.goldze.mvvmhabit.base.MultiItemViewModel;
 import me.goldze.mvvmhabit.binding.command.BindingAction;
@@ -52,13 +67,13 @@ import me.goldze.mvvmhabit.utils.ToastUtils;
 import me.tatarka.bindingcollectionadapter2.BindingRecyclerViewAdapter;
 import me.tatarka.bindingcollectionadapter2.ItemBinding;
 import me.tatarka.bindingcollectionadapter2.OnItemBind;
+import retrofit2.http.GET;
+import retrofit2.http.Query;
 
 /**
  * @author wulei
  */
 public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
-    //vip充值成功回调
-    public boolean EventVipSuccess = false;
     public static final String RadioRecycleType_New = "new";
     public static final String RadioRecycleType_trace = "emptyTrace";
     public ObservableField<UserDataEntity> userDataEntity = new ObservableField<>(new UserDataEntity());
@@ -74,6 +89,19 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
     public boolean CollectFlag = false;
     public Integer certification = null;
     public boolean collectReLoad = false;
+    //最后依次点击音怕播放item下标
+    public Integer lastClickAudioPlayer = -1;
+
+    //新增广告轮播类型
+    public ObservableField<List<AdItemEntity>> itemBannerEntity = new ObservableField<>();
+
+    //位置选择文字
+    public ObservableField<String> regionTitle = new ObservableField<>(StringUtils.getString(R.string.playfun_tab_female_1));
+    public ObservableField<String> tarckingTitle = new ObservableField<>(StringUtils.getString(R.string.playfun_radio_selected_zuiz));
+
+    public BindingRecyclerViewAdapter<RadioItemBannerVideoViewModel> adapterAdUser = new BindingRecyclerViewAdapter<>();
+    public ObservableList<RadioItemBannerVideoViewModel> radioItemsAdUser = new ObservableArrayList<>();
+    public ItemBinding<RadioItemBannerVideoViewModel> radioItemAdUserBinding = ItemBinding.of(BR.viewModel, R.layout.item_radio_banner_video);
 
     public BindingRecyclerViewAdapter<MultiItemViewModel> adapter = new BindingRecyclerViewAdapter<>();
     public ObservableList<MultiItemViewModel> radioItems = new ObservableArrayList<>();
@@ -91,30 +119,54 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
             }
         }
     });
-    public BindingCommand headerImageOnClick = new BindingCommand(() -> {
-        //跳转到我的页面
-        RxBus.getDefault().post(new MainTabEvent("mine"));
-    });
-    public BindingCommand moneyOnClick = new BindingCommand(() -> {
-        //打开电子钱包
-        start(WalletFragment.class.getCanonicalName());
-    });
-
-
     /**
      * 发布按钮的点击事件
      */
     public BindingCommand publishOnClickCommand = new BindingCommand(() -> {
-        radioUC.programSubject.call();
+        start(IssuanceProgramFragment.class.getCanonicalName());
     });
-    /*谷歌支付*/
+    //选择城市
+    public BindingCommand regionOnClickCommand = new BindingCommand(() -> radioUC.clickRegion.call());
+    //选择追踪的人栏目
+    public BindingCommand clickTackingClickCommand = new BindingCommand(() -> radioUC.clickTacking.call());
+
+    //banner点击
+    public BindingCommand<Integer> onBannerClickCommand = new BindingCommand<>(index -> {
+        try {
+            AdItemEntity adItemEntity = itemBannerEntity.get().get(index);
+            if(adItemEntity!=null && adItemEntity.getLink()!=null){
+                Bundle bundle = new Bundle();
+                bundle.putString("link", adItemEntity.getLink());
+                start(FukuokaViewFragment.class.getCanonicalName(), bundle);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    });
+    //item拨打视频电话
+    public void itemClickCallVideo(AdUserItemEntity adUserItemEntity){
+        //逻辑判断。有可能挤掉账号 没有下线。但是本地已经清空
+        UserDataEntity userDataEntity = model.readUserData();
+        if(userDataEntity!=null && adUserItemEntity!=null && adUserItemEntity.getImUserId()!=null){
+            //视频拨打
+            getCallingInvitedInfo(2, model.readUserData().getImUserId(), adUserItemEntity.getImUserId());
+        }
+
+    }
+    //音频播放
+    public void itemClickPlayAudio(int position){
+        if(lastClickAudioPlayer==-1){
+            lastClickAudioPlayer = position;
+        }else{
+            radioItemsAdUser.get(lastClickAudioPlayer).isPlaying.set(false);
+            lastClickAudioPlayer = position;
+        }
+    }
 
     private Integer default_sex = null;
     private Disposable badioEvent;
     private Disposable radioadetailEvent;
-    private Disposable UserUpdateVipEvent, taskTypeStatusEvent;
-    private String orderNumber = null;
-    private String google_goods_id = null;
+    private Disposable taskTypeStatusEvent;
     private Disposable likeChangeEventDisposable, zoomInPictureEvent;
     private boolean isFirstComment = false;
     private boolean isFirstLike = false;
@@ -129,15 +181,6 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
         avatar = model.readUserData().getAvatar();
         certification = model.readUserData().getCertification();
     }
-
-    //跳转发布界面
-    public BindingCommand toProgramVIew = new BindingCommand(new BindingAction() {
-        @Override
-        public void call() {
-            start(IssuanceProgramFragment.class.getCanonicalName());
-        }
-    });
-
 
     @Override
     public void registerRxBus() {
@@ -182,10 +225,6 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
                             }
                         }
                     }
-                });
-        UserUpdateVipEvent = RxBus.getDefault().toObservable(com.dl.playfun.event.UserUpdateVipEvent.class)
-                .subscribe(userUpdateVipEvent -> {
-                    EventVipSuccess = true;
                 });
         taskTypeStatusEvent = RxBus.getDefault().toObservable(TaskTypeStatusEvent.class)
                 .subscribe(taskTypeStatusEvent -> {
@@ -298,19 +337,6 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
                 area.set(cityConfig.get(i).getName());
             }
         }
-    }
-
-    public void loadGameCity() {
-        model.getGameCity()
-                .doOnSubscribe(this)
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .subscribe(new BaseObserver<BaseDataResponse<List<RadioTwoFilterItemEntity>>>() {
-                    @Override
-                    public void onSuccess(BaseDataResponse<List<RadioTwoFilterItemEntity>> listBaseDataResponse) {
-                        radioUC.getRadioTwoFilterItemEntity.setValue(listBaseDataResponse.getData());
-                    }
-                });
     }
 
     /**
@@ -478,7 +504,61 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
                     }
                 });
     }
+    //获取用户广告列表
+    public void getAdUserBanner(){
+        model.getUserAdList(1)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseDataResponse<List<AdUserItemEntity>>>(){
+                    @Override
+                    public void onSuccess(BaseDataResponse<List<AdUserItemEntity>> listBaseDataResponse) {
+                        List<AdUserItemEntity> listData = listBaseDataResponse.getData();
+                        List<RadioItemBannerVideoViewModel> listReal = new ArrayList<>();
+                        for (AdUserItemEntity adUserItemEntity : listData) {
+                            RadioItemBannerVideoViewModel radioItemBannerVideoViewModel = new RadioItemBannerVideoViewModel(RadioViewModel.this,adUserItemEntity);
+                            listReal.add(radioItemBannerVideoViewModel);
+                        }
+                        if(!listReal.isEmpty()){
+                            radioItemsAdUser.addAll(listReal);
+                        }
+                    }
+                    @Override
+                    public void onError(RequestException e) {
+                        super.onError(e);
+                        Log.e("获取用户广告列表接口","异常原因："+e.getMessage());
+                    }
 
+                    @Override
+                    public void onComplete() {
+                        dismissHUD();
+                    }
+                });
+    }
+
+    //获取广告列表
+    public void getAdListBanner(){
+        model.getRadioAdBannerList(2)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseDataResponse<List<AdItemEntity>>>(){
+                    @Override
+                    public void onSuccess(BaseDataResponse<List<AdItemEntity>> listBaseDataResponse) {
+                        List<AdItemEntity> listData = listBaseDataResponse.getData();
+                        if(listData!=null){
+                            itemBannerEntity.set(listData);
+                        }
+                    }
+                    @Override
+                    public void onComplete() {
+                        dismiss();
+                    }
+
+                });
+    }
 
     //动态点赞
     public void newsGive(int posion) {
@@ -614,20 +694,64 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
                 });
     }
 
+    //拨打语音、视频
+    public void getCallingInvitedInfo(int callingType, String IMUserId, String toIMUserId) {
+        model.callingInviteInfo(callingType, IMUserId, toIMUserId)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseDataResponse<CallingInviteInfo>>() {
+                    @Override
+                    public void onSuccess(BaseDataResponse<CallingInviteInfo> callingInviteInfoBaseDataResponse) {
+                        if (callingInviteInfoBaseDataResponse.getCode() == 2) {//對方忙線中
+                            radioUC.otherBusy.call();
+                            return;
+                        }
+                        CallingInviteInfo callingInviteInfo = callingInviteInfoBaseDataResponse.getData();
+                        if (callingInviteInfo != null) {
+                            Utils.tryStartCallSomeone(callingType, toIMUserId, callingInviteInfo.getRoomId(), new Gson().toJson(callingInviteInfo));
+                        }
+                    }
+
+                    @Override
+                    public void onError(RequestException e) {
+                        super.onError(e);
+                        if (e != null) {
+                            if (e.getCode() == 1) {
+                                radioUC.sendDialogViewEvent.call();
+                            }
+                        }
+                    }
+
+
+                    @Override
+                    public void onComplete() {
+                        dismissHUD();
+                    }
+                });
+    }
+
+
+
+
+
     public class UIChangeObservable {
         public SingleLiveEvent clickMore = new SingleLiveEvent<>();
         public SingleLiveEvent clickLike = new SingleLiveEvent<>();
         public SingleLiveEvent clickComment = new SingleLiveEvent<>();
         public SingleLiveEvent clickImage = new SingleLiveEvent<>();
-        public SingleLiveEvent<Boolean> loadLast = new SingleLiveEvent<>();
-        public SingleLiveEvent programSubject = new SingleLiveEvent<>();
         //追踪的人消息列表清空
         public SingleLiveEvent<Boolean> emptyLayoutShow = new SingleLiveEvent<>();
         public SingleLiveEvent<String> zoomInp = new SingleLiveEvent<>();
-        public SingleLiveEvent<List<RadioTwoFilterItemEntity>> getRadioTwoFilterItemEntity = new SingleLiveEvent<>();
-
+        //选择位置
+        public SingleLiveEvent<Void> clickRegion = new SingleLiveEvent<>();
+        //选择查询条目；追踪的人、男、女
+        public SingleLiveEvent<Void> clickTacking = new SingleLiveEvent<>();
+        //对方忙线
+        public SingleLiveEvent otherBusy = new SingleLiveEvent<>();
+        //钻石不足。唤起充值
+        public SingleLiveEvent<Void> sendDialogViewEvent = new SingleLiveEvent<>();
     }
-    /*=====谷歌支付核心代码=====*/
-
 
 }

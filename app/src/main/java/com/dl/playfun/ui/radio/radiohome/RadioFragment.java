@@ -3,6 +3,7 @@ package com.dl.playfun.ui.radio.radiohome;
 import static com.dl.playfun.ui.userdetail.report.ReportUserFragment.ARG_REPORT_TYPE;
 import static com.dl.playfun.ui.userdetail.report.ReportUserFragment.ARG_REPORT_USER_ID;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -31,22 +32,27 @@ import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.FragmentRadioBinding;
-import com.dl.playfun.entity.RadioTwoFilterItemEntity;
+import com.dl.playfun.entity.CoinExchangePriceInfo;
+import com.dl.playfun.entity.ConfigItemEntity;
+import com.dl.playfun.entity.GameCoinBuy;
+import com.dl.playfun.entity.RadioFilterItemEntity;
 import com.dl.playfun.helper.DialogHelper;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseRefreshFragment;
+import com.dl.playfun.ui.dialog.CityChooseDialog;
 import com.dl.playfun.ui.mine.broadcast.mytrends.TrendItemViewModel;
-import com.dl.playfun.ui.radio.issuanceprogram.IssuanceProgramFragment;
+import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.ui.userdetail.report.ReportUserFragment;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.PictureSelectorUtil;
-import com.dl.playfun.widget.RadioFilterView;
+import com.dl.playfun.viewadapter.CustomRefreshHeader;
+import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralPayDialog;
+import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
 import com.dl.playfun.widget.dialog.MMAlertDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.dl.playfun.widget.dialog.TraceDialog;
+import com.dl.playfun.widget.dropdownfilterpop.DropDownFilterPopupWindow;
 import com.google.gson.reflect.TypeToken;
-import com.luck.picture.lib.entity.LocalMedia;
-import com.luck.picture.lib.listener.OnResultCallbackListener;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.zyyoona7.popup.EasyPopup;
 import com.zyyoona7.popup.XGravity;
@@ -61,10 +67,16 @@ import me.goldze.mvvmhabit.utils.ToastUtils;
 /**
  * @author wulei
  */
-public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, RadioViewModel> implements RadioFilterView.RadioFilterListener {
+public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, RadioViewModel> {
     private Context mContext;
     private EasyPopup mCirclePop;
-    private List<RadioFilterView.RadioFilterItemEntity> sexs;
+
+    private CityChooseDialog cityChooseDialog;
+
+    private List<RadioFilterItemEntity> radioFilterListData;
+    private DropDownFilterPopupWindow radioFilterPopup;
+    private Integer radioFilterCheckIndex;
+    private List<ConfigItemEntity> citys;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -121,18 +133,50 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
     @Override
     public void initData() {
         super.initData();
-        sexs = new ArrayList<>();
-        //sexs.add(new RadioFilterView.RadioFilterItemEntity<>(getString(R.string.any_gender), null));
-        sexs.add(new RadioFilterView.RadioFilterItemEntity<>(getString(R.string.playfun_radio_selected_zuiz),2));
-        sexs.add(new RadioFilterView.RadioFilterItemEntity<>(getString(R.string.playfun_just_look_lady), 0));
-        sexs.add(new RadioFilterView.RadioFilterItemEntity<>(getString(R.string.playfun_just_look_man), 1));
+        binding.refreshLayout.setRefreshHeader(new CustomRefreshHeader(getContext()));
+        citys = ConfigManager.getInstance().getAppRepository().readCityConfig();
+        ConfigItemEntity nearItemEntity = new ConfigItemEntity();
+        nearItemEntity.setId(-1);
+        nearItemEntity.setName(getStringByResId(R.string.playfun_tab_female_1));
+        citys.add(0, nearItemEntity);
 
-        //viewModel.loadGameCity();
-
-
-        binding.radioFilterView.setRadioFilterListener(this);
+        radioFilterListData = new ArrayList<>();
+        radioFilterListData.add(new RadioFilterItemEntity<>(getString(R.string.playfun_radio_selected_zuiz),2));
+        radioFilterListData.add(new RadioFilterItemEntity<>(getString(R.string.playfun_just_look_lady), 0));
+        radioFilterListData.add(new RadioFilterItemEntity<>(getString(R.string.playfun_just_look_man), 1));
+        radioFilterPopup =  new DropDownFilterPopupWindow(mActivity, radioFilterListData);
+        radioFilterCheckIndex = 0;
+        radioFilterPopup.setSelectedPosition(radioFilterCheckIndex);
+        radioFilterPopup.setOnItemClickListener((popupWindow, position) -> {
+            popupWindow.dismiss();
+            RadioFilterItemEntity obj =radioFilterListData.get(position);
+            radioFilterCheckIndex = position;
+            if (obj.getData() == null) {
+                viewModel.setSexId(null);
+            } else {
+                if (((Integer) obj.getData()).intValue() == 0) {
+                    AppContext.instance().logEvent(AppsFlyerEvent.Male_Only);
+                } else {
+                    AppContext.instance().logEvent(AppsFlyerEvent.Female_Only);
+                }
+                if(((Integer)obj.getData()).intValue() == 2){//追踪的人
+                    viewModel.type = 1;//发布时间
+                    viewModel.cityId = null;
+                    viewModel.gameId = null;
+                    viewModel.setIsCollect(1);
+                    AppContext.instance().logEvent(AppsFlyerEvent.Follow_Only);
+                }else{
+                    viewModel.setSexId((Integer) obj.getData());
+                }
+                viewModel.tarckingTitle.set(obj.getName());
+            }
+        });
 
         viewModel.loadHttpData();
+        viewModel.getAdUserBanner();
+        viewModel.getAdListBanner();
+        ScalableCardHelper cardHelper = new ScalableCardHelper();
+        cardHelper.attachToRecyclerView(binding.rcvAduser);
     }
 
     @Override
@@ -158,24 +202,43 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
         super.initViewObservable();
         AppContext.instance().logEvent(AppsFlyerEvent.Broadcast);
         mContext = this.getContext();
-        //初始化加载选项列表
-        binding.radioFilterView.setFilterData(sexs, null);
-        viewModel.radioUC.getRadioTwoFilterItemEntity.observe(this, new Observer<List<RadioTwoFilterItemEntity>>() {
-            @Override
-            public void onChanged(List<RadioTwoFilterItemEntity> radioTwoFilterItemEntities) {
-                List<RadioTwoFilterItemEntity> regions = new ArrayList<>();
-                List<RadioTwoFilterItemEntity.CityBean> cityBeans = new ArrayList<>();
+        //弹起充值引导
+        viewModel.radioUC.sendDialogViewEvent.observe(this, event -> {
+            paySelectionboxChoose(false);
+        });
+        //对方忙线
+        viewModel.radioUC.otherBusy.observe(this, o -> {
+            TraceDialog.getInstance(getContext())
+                    .chooseType(TraceDialog.TypeEnum.CENTER)
+                    .setTitle(StringUtils.getString(R.string.playfun_other_busy_title))
+                    .setContent(StringUtils.getString(R.string.playfun_other_busy_text))
+                    .setConfirmText(StringUtils.getString(R.string.playfun_mine_trace_delike_confirm))
+                    .setConfirmOnlick(new TraceDialog.ConfirmOnclick() {
+                        @Override
+                        public void confirm(Dialog dialog) {
 
-                cityBeans.add(new RadioTwoFilterItemEntity.CityBean(0, getResources().getString(R.string.playfun_text_all)));
-                regions.add(new RadioTwoFilterItemEntity(0, getResources().getString(R.string.playfun_text_all),cityBeans));
-
-                if (radioTwoFilterItemEntities != null && radioTwoFilterItemEntities.size()>0){
-                    for (RadioTwoFilterItemEntity gameCity : radioTwoFilterItemEntities) {
-                        regions.add(gameCity);
-                    }
-                }
-                binding.radioFilterView.setFilterData(sexs, regions);
+                            dialog.dismiss();
+                        }
+                    }).TraceVipDialog().show();
+        });
+        //选择 追踪的人 男 女
+        viewModel.radioUC.clickTacking.observe(this, unused -> {
+            radioFilterPopup.setSelectedPosition(radioFilterCheckIndex);
+            radioFilterPopup.showAsDropDown(binding.llTracking);
+        });
+        //选择城市
+        viewModel.radioUC.clickRegion.observe(this, unused -> {
+            if(cityChooseDialog==null){
+                cityChooseDialog = new CityChooseDialog(getContext(),citys,viewModel.cityId);
             }
+            cityChooseDialog.show();
+            cityChooseDialog.setCityChooseDialogListener((dialog1, itemEntity) -> {
+                viewModel.cityId = itemEntity.getId();
+                viewModel.regionTitle.set(itemEntity.getName());
+                binding.refreshLayout.autoRefresh();
+                dialog1.dismiss();
+
+            } );
         });
         //放大图片
         viewModel.radioUC.zoomInp.observe(this, new Observer<String>() {
@@ -183,15 +246,6 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
             public void onChanged(String drawable) {
                 TraceDialog.getInstance(getContext())
                         .getImageDialog(mContext,drawable).show();
-            }
-        });
-        /**
-         * 节目发布
-         */
-        viewModel.radioUC.programSubject.observe(this, new Observer() {
-            @Override
-            public void onChanged(@Nullable Object o) {
-                viewModel.start(IssuanceProgramFragment.class.getCanonicalName());
             }
         });
 
@@ -309,30 +363,6 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
                             .show();
                 } else {
                     DialogHelper.showNotVipCommentDialog(RadioFragment.this);
-//                    if (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == MALE) {
-//                        DialogHelper.showNotVipCommentDialog(RadioFragment.this);
-//                    } else {
-//                    MVDialog.getInstance(RadioFragment.this.getContext())
-//                            .setTitele(getString(R.string.authentication_free_sign_up))
-//                            .setConfirmText(getString(R.string.mine_once_certification))
-//                            .chooseType(MVDialog.TypeEnum.CENTER)
-//                            .setConfirmOnlick(new MVDialog.ConfirmOnclick() {
-//                                @Override
-//                                public void confirm(MVDialog dialog) {
-//                                    if (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == MALE) {
-//                                        viewModel.start(CertificationMaleFragment.class.getCanonicalName());
-//                                        return;
-//                                    } else if (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == FEMALE) {
-//                                        viewModel.start(CertificationFemaleFragment.class.getCanonicalName());
-//                                        return;
-//                                    }
-//                                    com.blankj.utilcode.util.ToastUtils.showShort(R.string.sex_unknown);
-//                                    dialog.dismiss();
-//                                }
-//                            })
-//                            .chooseType(MVDialog.TypeEnum.CENTER)
-//                            .show();
-//                    }
                 }
 
             }
@@ -385,64 +415,72 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
         }
     }
 
+    //支付框样式选择
+    private void paySelectionboxChoose(boolean b) {
+        if (ConfigManager.getInstance().isMale()) {
+            if (ConfigManager.getInstance().isVip()) {
+                googleCoinValueBox();
+            } else {
+                dialogRechargeShow(b);
+            }
+        } else {
+            googleCoinValueBox();
+        }
+    }
+
+    private void googleCoinValueBox() {
+        CoinExchargeItegralPayDialog coinExchargeItegralPayDialog = new CoinExchargeItegralPayDialog(getContext(),mActivity);
+        coinExchargeItegralPayDialog.show();
+        coinExchargeItegralPayDialog.setCoinRechargeSheetViewListener(new CoinExchargeItegralPayDialog.CoinRechargeSheetViewListener() {
+            @Override
+            public void onPaySuccess(CoinExchargeItegralPayDialog sheetView, GameCoinBuy sel_goodsEntity) {
+                sheetView.endGooglePlayConnect();
+                sheetView.dismiss();
+                MVDialog.getInstance(getContext())
+                        .setTitele(getStringByResId(R.string.playfun_recharge_coin_success))
+                        .setConfirmText(getStringByResId(R.string.playfun_confirm))
+                        .setConfirmOnlick(dialog -> {
+                            dialog.dismiss();
+                        })
+                        .chooseType(MVDialog.TypeEnum.CENTER)
+                        .show();
+            }
+
+            @Override
+            public void onPayFailed(CoinExchargeItegralPayDialog sheetView, String msg) {
+                sheetView.dismiss();
+                ToastUtils.showShort(msg);
+                AppContext.instance().logEvent(AppsFlyerEvent.Failed_to_top_up);
+            }
+        });
+
+    }
+
+    //弹出钻石充值
+    private void dialogRechargeShow(boolean isGiftSend) {
+        if (!isGiftSend) {
+            AppContext.instance().logEvent(AppsFlyerEvent.im_topup);
+        }
+        AppContext.instance().logEvent(AppsFlyerEvent.Top_up);
+        GameCoinExchargeSheetView coinRechargeSheetView = new GameCoinExchargeSheetView(mActivity);
+        coinRechargeSheetView.show();
+        coinRechargeSheetView.setCoinRechargeSheetViewListener(new GameCoinExchargeSheetView.CoinRechargeSheetViewListener() {
+            @Override
+            public void onPaySuccess(GameCoinExchargeSheetView sheetView, CoinExchangePriceInfo sel_goodsEntity) {
+                sheetView.dismiss();
+            }
+
+            @Override
+            public void onPayFailed(GameCoinExchargeSheetView sheetView, String msg) {
+                sheetView.dismiss();
+                com.blankj.utilcode.util.ToastUtils.showShort(msg);
+            }
+        });
+    }
+
     @Override
     public void onEnterAnimationEnd(Bundle savedInstanceState) {
         super.onEnterAnimationEnd(savedInstanceState);
-    }
-
-    @Override
-    public void onPublishTimeSelected(RadioFilterView radioFilterView, int position, RadioFilterView.RadioFilterItemEntity obj) {
-        if(viewModel.CollectFlag && viewModel.IsCollect==0){
-            if (ConfigManager.getInstance() != null && ConfigManager.getInstance().isMale()) {
-                binding.radioFilterView.sexClick(1);
-            } else {
-                binding.radioFilterView.sexClick(2);
-            }
-        }
-        viewModel.setType((Integer) obj.getData());
-        try {
-            if (((Integer) obj.getData()).intValue() == 1) {
-                AppContext.instance().logEvent(AppsFlyerEvent.Post_Time);
-            } else {
-                AppContext.instance().logEvent(AppsFlyerEvent.Dating_Time);
-            }
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public void onSexSelected(RadioFilterView radioFilterView, int position, RadioFilterView.RadioFilterItemEntity obj) {
-        if (obj.getData() == null) {
-            viewModel.setSexId(null);
-        } else {
-            if (((Integer) obj.getData()).intValue() == 0) {
-                AppContext.instance().logEvent(AppsFlyerEvent.Male_Only);
-            } else {
-                AppContext.instance().logEvent(AppsFlyerEvent.Female_Only);
-            }
-            if(((Integer)obj.getData()).intValue() == 2){//追踪的人
-                viewModel.type = 1;//发布时间
-                binding.radioFilterView.sexClick(0);
-                viewModel.cityId = null;
-                viewModel.gameId = null;
-                viewModel.setIsCollect(1);
-                AppContext.instance().logEvent(AppsFlyerEvent.Follow_Only);
-            }else{
-                viewModel.setSexId((Integer) obj.getData());
-            }
-        }
-    }
-
-    @Override
-    public void onRegionSelected(RadioFilterView radioFilterView, int position, Integer gameId,Integer cityId) {
-        if(viewModel.CollectFlag && viewModel.IsCollect==0){
-            if (ConfigManager.getInstance() != null && ConfigManager.getInstance().isMale()) {
-                binding.radioFilterView.sexClick(1);
-            } else {
-                binding.radioFilterView.sexClick(2);
-            }
-        }
-        viewModel.setCityId(gameId,cityId);
     }
 
 }

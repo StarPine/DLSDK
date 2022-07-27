@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:binding="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+
+        <import type="com.dl.playfun.R" />
+        <variable
+            name="viewModel"
+            type="com.dl.playfun.ui.radio.radiohome.item.RadioItemBannerVideoViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_width="170dp"
+        android:layout_height="225dp">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/img_user_avatar"
+            android:layout_width="170dp"
+            android:layout_height="200dp"
+            android:layout_alignParentBottom="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/radio_dating_img_default"
+            binding:imageErrorPlaceholderRes="@{R.drawable.radio_dating_img_default}"
+            binding:imagePath='@{viewModel.adUserItemEntity.avatar}'
+            binding:imagePlaceholderRes="@{R.drawable.radio_dating_img_default}"
+            binding:resizeH="@{200}"
+            binding:resizeW="@{170}" />
+        <RelativeLayout
+            android:layout_width="58dp"
+            android:layout_height="25dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="10dp"
+            android:visibility="@{viewModel.getSoundShow}">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/user_detail_audio_layout" />
+
+            <ImageView
+                android:id="@+id/audio_start"
+                binding:onClickCommand="@{viewModel.audioPlayClickCommand}"
+                android:scaleType="fitXY"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="2dp"
+                tools:src="@drawable/mine_audio_start_img"
+                android:src="@{viewModel.isPlaying ? @drawable/mine_audio_stop_img : @drawable/mine_audio_start_img }" />
+
+            <TextView
+                android:id="@+id/audio_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/audio_start"
+                android:layout_centerInParent="true"
+                android:includeFontPadding="false"
+                android:text="@{String.valueOf(viewModel.adUserItemEntity.soundTime)}"
+                android:textColor="#FFA72DFE"
+                android:textSize="13sp"
+                tools:text="14" />
+
+            <ImageView
+                android:layout_width="5dp"
+                android:layout_height="3dp"
+                android:layout_marginTop="5dp"
+                android:layout_toEndOf="@+id/audio_time"
+                android:src="@drawable/icon_mine_audio_dian" />
+        </RelativeLayout>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            binding:onClickCommand="@{viewModel.callVideoClickCommand}"
+            android:scaleType="fitXY"
+            android:src="@drawable/img_item_call_video" />
+    </RelativeLayout>
+</layout>

@@ -85,7 +85,6 @@ public class AudioPlayer {
     }
 
     public void startPlay(String filePath, Callback callback) {
-        Log.e("当前录音文件内容","==="+String.valueOf(filePath));
         mAudioRecordPath = filePath;
         mPlayCallback = callback;
         try {
