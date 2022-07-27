@@ -95,7 +95,7 @@
                         <com.youth.banner.Banner
                             android:id="@+id/banner"
                             android:layout_width="match_parent"
-                            android:layout_height="70dp"
+                            android:layout_height="90dp"
                             android:layout_marginStart="15dp"
                             android:layout_marginTop="20dp"
                             android:layout_marginBottom="10dp"
