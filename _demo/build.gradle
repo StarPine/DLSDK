@@ -8,7 +8,7 @@ android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
     defaultConfig {
-        applicationId "com.mvsee.test"
+        applicationId "com.sdk.playfun.test"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
@@ -47,10 +47,10 @@ android {
             v2SigningEnabled true
         }
         debug{
-            storeFile file('../../keystore/joymask-taiwan.keystore')
-            storePassword 'joymask'
-            keyAlias 'joymask'
-            keyPassword 'joymask'
+            storeFile file('../../keystore/starpine.jks')
+            storePassword 'starpine'
+            keyAlias 'starpine'
+            keyPassword 'starpine'
             v1SigningEnabled true
             v2SigningEnabled true
         }
