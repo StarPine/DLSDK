@@ -40,8 +40,28 @@ public class CustomIMTextEntity {
     private String textProfit;
 
     private String msgID;
+    private String payerUserId;
+    private String payeeUserId;
+    private String payerImId;
+    private String payeeImId;
 
     private Integer isRefundMoney;
+
+    public String getPayerUserId() {
+        return payerUserId;
+    }
+
+    public String getPayeeUserId() {
+        return payeeUserId;
+    }
+
+    public String getPayerImId() {
+        return payerImId;
+    }
+
+    public String getPayeeImId() {
+        return payeeImId;
+    }
 
     public int getTotalSeconds() {
         return totalSeconds;

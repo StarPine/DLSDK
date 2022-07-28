@@ -585,17 +585,23 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
 
             @Override
             public void onToastVipText(TUIMessageBean messageInfo) {
-
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onToastVipText(messageInfo);
+                }
             }
 
             @Override
             public void onTextReadUnlock(TextView textView, View view, TUIMessageBean messageInfo) {
-
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onTextReadUnlock(textView,view,messageInfo);
+                }
             }
 
             @Override
             public void onTextTOWebView(TUIMessageBean messageInfo) {
-
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onTextTOWebView(messageInfo);
+                }
             }
 
             @Override
@@ -610,12 +616,16 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
 
             @Override
             public void onClickEvaluate(int position, TUIMessageBean messageInfo, EvaluateItemEntity evaluateItemEntity, boolean more) {
-
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onClickEvaluate(position,messageInfo,evaluateItemEntity,more);
+                }
             }
 
             @Override
             public void onClickCustomText(int position, TUIMessageBean messageInfo, CustomIMTextEntity customIMTextEntity) {
-
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onClickCustomText(position, messageInfo, customIMTextEntity);
+                }
             }
 
             @Override

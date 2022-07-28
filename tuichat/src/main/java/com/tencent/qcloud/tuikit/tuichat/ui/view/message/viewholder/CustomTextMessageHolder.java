@@ -4,7 +4,7 @@ import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,6 +22,7 @@ import com.tencent.coustom.GiftEntity;
 import com.tencent.coustom.IMGsonUtils;
 import com.tencent.coustom.PhotoAlbumEntity;
 import com.tencent.coustom.PhotoAlbumItemRecyclerAdapter;
+import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
@@ -43,7 +44,10 @@ import java.util.Map;
  */
 public class CustomTextMessageHolder extends TextMessageHolder {
     private ImageView mLeftView, mRightView;
-    boolean isCharger = true;
+    boolean isCharger = false;//当前账号是否为收款人
+    private View tipView;
+    private TextView customTipText;
+    private CustomIMTextEntity customIMTextEntity;
 
     public CustomTextMessageHolder(View itemView) {
         super(itemView);
@@ -61,7 +65,6 @@ public class CustomTextMessageHolder extends TextMessageHolder {
 
         initView();
         String extra = msg.getExtra();
-        Log.i("starpine","custiom"+msg.getV2TIMMessage());
         if (TUIChatUtils.isJSON2(extra)) {//自定义json文本消息
             String type = TUIChatUtils.json2Massage(extra, "type");
             if (type == null){
@@ -73,9 +76,10 @@ public class CustomTextMessageHolder extends TextMessageHolder {
                     setGiftMessageItemView(msg, extra);
                     break;
                 case TUIChatConstants.CoustomMassageType.CHAT_EARNINGS:
+                    setChatEarningsItemView(extra,msg);
+                    break;
                 case TUIChatConstants.CoustomMassageType.MESSAGE_CUSTOM:
-                case TUIChatConstants.CoustomMassageType.MESSAGE_TRACKING:
-                    setCustomTypeItemView(extra,type,msg);
+                    setCustomTypeItemView(extra,position,msg);
                     break;
                 case TUIChatConstants.CoustomMassageType.MESSAGE_TAG:
                     FaceManager.handlerEmojiText(msgBodyText, TUIChatUtils.json2Massage(extra, "text"), false);
@@ -105,6 +109,126 @@ public class CustomTextMessageHolder extends TextMessageHolder {
         mRightView.setVisibility(View.GONE);
     }
 
+    //fixme 收益相关 兼容旧的收益消息
+    private void setChatEarningsItemView(String extra, TUIMessageBean msg) {
+        hideTimeView();
+        initServerDataAndView(extra);
+        LinearLayout.LayoutParams customHintTextLayoutParams = (LinearLayout.LayoutParams) customTipText.getLayoutParams();
+        if (!msg.isSelf()) {
+            customHintTextLayoutParams.gravity = Gravity.END;
+            customHintTextLayoutParams.rightMargin = dip2px(itemView.getContext(), 62);
+        } else {
+            customHintTextLayoutParams.gravity = Gravity.START;
+            customHintTextLayoutParams.leftMargin = dip2px(itemView.getContext(), 62);
+        }
+        if (customIMTextEntity != null) {
+            //收益退回提示
+            if (customIMTextEntity.getIsRefundMoney() != null) {
+                if (!MessageRecyclerView.sex) {//女方
+                    customTipText.setText(appContext.getString(R.string.custom_message_txt_girl));
+                } else {//男方
+                    customTipText.setText(appContext.getString(R.string.custom_message_txt_male));
+                }
+            } else {//收益水晶显示
+                setProfitDetails(customIMTextEntity.getTextProfit(), customTipText);
+            }
+            customJsonMsgContentFrame.addView(tipView);
+        }
+    }
+
+    private void setCustomTypeItemView(String extra, int position, TUIMessageBean msg) {
+        hideWithAvatarView();
+        initServerDataAndView(extra);
+        if (customIMTextEntity != null) {
+
+            //fixme 系统提示
+            if (!TextUtils.isEmpty(customIMTextEntity.getContent())) {
+
+                if (customIMTextEntity.getContent().contains("href") && customIMTextEntity.getContent().contains("</a>")) {
+                    CharSequence charSequence = Html.fromHtml(extra);
+                    msgBodyText.setText(charSequence);
+                    msgBodyText.setOnClickListener(view -> {
+                        if (onItemClickListener !=null)
+                            onItemClickListener.onTextTOWebView(msg);
+                    });
+                    return;
+                }
+
+                if (!TextUtils.isEmpty(customIMTextEntity.getKey())) {
+                    if (customIMTextEntity.getContent().contains("<font>")) {
+                        String fontText = "<font color='" + customIMTextEntity.getColor() + "'>" + customIMTextEntity.getKey() + "</font>";
+                        String content = customIMTextEntity.getContent();
+                        String CDATAText = content.replace("<font>" + customIMTextEntity.getKey() + "</font>", fontText);
+                        customTipText.setText(Html.fromHtml(CDATAText));
+                    } else {
+                        customTipText.setText(matcherSearchText(customIMTextEntity.getColor(), customIMTextEntity.getContent(), customIMTextEntity.getKey()));
+                    }
+                } else {
+                    customTipText.setText(customIMTextEntity.getContent());
+                }
+
+                if (customIMTextEntity.getGravity() != null) {
+                    LinearLayout.LayoutParams customHintTextLayoutParams = (LinearLayout.LayoutParams) customTipText.getLayoutParams();
+                    if (customIMTextEntity.getGravity().equals("left")) {
+                        customHintTextLayoutParams.gravity = Gravity.START;
+                        customHintTextLayoutParams.leftMargin = dip2px(itemView.getContext(), customIMTextEntity.getMargin());
+                    } else if (customIMTextEntity.getGravity().equals("right")) {
+                        customHintTextLayoutParams.gravity = Gravity.END;
+                        customHintTextLayoutParams.rightMargin = dip2px(itemView.getContext(), customIMTextEntity.getMargin());
+                    } else {
+                        customHintTextLayoutParams.gravity = Gravity.CENTER;
+                    }
+                    customTipText.setLayoutParams(customHintTextLayoutParams);
+                }
+                customTipText.setOnClickListener(v -> {
+                    if (onItemClickListener != null)
+                        onItemClickListener.onClickCustomText(position, msg, customIMTextEntity);
+                });
+            }
+
+            if (customIMTextEntity.getIsRemindPay() != null) {
+
+                int totalSeconds = customIMTextEntity.getTotalSeconds();
+                int callingType = customIMTextEntity.getCallingType();
+                String price = customIMTextEntity.getPrice();
+                //fixme 通话结束时间
+                if (totalSeconds > 0 && callingType > 0) {
+                    showWithAvatarView(msg.isSelf());
+                    setBackColor(msg);
+                    setCallingMsgIconStyle(msg, callingType);
+                    msgBodyText.setText(itemView.getContext()
+                            .getString(R.string.custom_message_call_message_deatail_time_msg, totalSeconds / 60, totalSeconds % 60));
+
+                }
+
+                //fixme 余额不足和收益提示
+                if (customIMTextEntity.getIsRemindPay() == 1
+                        && Double.parseDouble(price) <= 0 ) {
+                    tipView = View.inflate(appContext, R.layout.custom_not_sufficient_view, null);
+                    LinearLayout male_hint_layout = tipView.findViewById(R.id.male_hint_layout);
+                    male_hint_layout.setOnClickListener(v -> {
+                        if (onItemClickListener != null)
+                            onItemClickListener.onClickDialogRechargeShow();
+                    });
+                } else {
+                    if (customIMTextEntity.getPayeeImId() != null) {
+                        isCharger = customIMTextEntity.getPayeeImId().equals(V2TIMManager.getInstance().getLoginUser());
+                        if (isCharger) {//收款人显示
+                            setProfitDetails(price, profitTip);
+                        }
+                    } else {
+                        if (!MessageRecyclerView.sex){//女生显示
+                            setProfitDetails(price, profitTip);
+                        }
+                    }
+                    return;
+                }
+            }
+
+            customJsonMsgContentFrame.addView(tipView);
+        }
+    }
+
     private void setViolationItemView(TUIMessageBean msg, String extra, int position) {
         FaceManager.handlerEmojiText(msgBodyText, TUIChatUtils.json2Massage(extra, "text"), false);
         setBackColor(msg);
@@ -121,10 +245,13 @@ public class CustomTextMessageHolder extends TextMessageHolder {
 //        profitTip.setVisibility(View.VISIBLE);
         Map callData = IMGsonUtils.fromJson(TUIChatUtils.json2Massage(extra, "data"), Map.class);
         int callType = Double.valueOf(String.valueOf(callData.get("callingType"))).intValue();
-        if (properties.getChatContextFontSize() != 0) {
-            msgBodyText.setTextSize(properties.getChatContextFontSize());
+        setBackColor(msg);
+        setCallingMsgIconStyle(msg, callType);
+        if (msg.isSelf()) {
+            msgBodyText.setText(appContext.getString(R.string.custom_message_other_busy));
+        } else {
+            msgBodyText.setText(appContext.getString(R.string.custom_message_busy_missed));
         }
-        setMsgBodyTextStyle(msg, callType);
     }
 
     private void setPhotoItemView(String extra, int position, TUIMessageBean msg) {
@@ -182,82 +309,21 @@ public class CustomTextMessageHolder extends TextMessageHolder {
         customJsonMsgContentFrame.addView(photoView);
     }
 
-    private void setCustomTypeItemView(String extra, String type, TUIMessageBean msg) {
-        hideWithAvatarView();
-        View tipView = getTipItemView();
-        TextView custom_tip_text = tipView.findViewById(R.id.custom_tip_text);
-        CustomIMTextEntity customIMTextEntity = IMGsonUtils.fromJson(TUIChatUtils.json2Massage(extra, "data"), CustomIMTextEntity.class);
-        if (customIMTextEntity != null) {
-
-            //系统提示
-            if (!TextUtils.isEmpty(customIMTextEntity.getContent())) {
-                custom_tip_text.setText(Html.fromHtml(customIMTextEntity.getContent()));
-            }
-
-            //通话结束时间
-            int totalSeconds = customIMTextEntity.getTotalSeconds();
-            int callingType = customIMTextEntity.getCallingType();
-            if (totalSeconds > 0 && callingType> 0){
-                setMsgBodyTextStyle(msg, callingType);
-                msgBodyText.setText(itemView.getContext().getString(R.string.custom_message_call_message_deatail_time_msg,totalSeconds/60,totalSeconds%60));
-            }
-
-            //收益相关
-            if (type.equals(TUIChatConstants.CoustomMassageType.CHAT_EARNINGS)){
-                //收益退回提示
-                if (customIMTextEntity.getIsRefundMoney() != null) {
-                    if (isCharger) {//收益方
-                        custom_tip_text.setText(appContext.getString(R.string.custom_message_txt_girl));
-                    }else {//付费方
-                        custom_tip_text.setText(appContext.getString(R.string.custom_message_txt_male));
-                    }
-                }else {
-                    //过滤收益消息--隐藏
-                    setContentLayoutVisibility(false);
-                }
-            }
-
-            //余额不足提示
-            if (customIMTextEntity.getIsRemindPay() != null && customIMTextEntity.getIsRemindPay().intValue() > 0) {
-                tipView = View.inflate(appContext, R.layout.custom_not_sufficient_view, null);
-                LinearLayout male_hint_layout = tipView.findViewById(R.id.male_hint_layout);
-                male_hint_layout.setOnClickListener(v -> {
-                    if (onItemClickListener != null)
-                        onItemClickListener.onClickDialogRechargeShow();
-                });
-            }
-
-            customJsonMsgContentFrame.addView(tipView);
-        }
-    }
-
     /**
      * 修改通话消息相关样式
      * @param msg
      * @param callingType
      */
-    private void setMsgBodyTextStyle(TUIMessageBean msg, int callingType) {
+    private void setCallingMsgIconStyle(TUIMessageBean msg, int callingType) {
         if (msg.isSelf()) {
             mRightView.setBackgroundResource(callingType == 1 ?
                     R.drawable.custom_audio_right_img_2 : R.drawable.custom_video_right_img_1);
             mRightView.setVisibility(View.VISIBLE);
-            msgBodyText.setText(appContext.getString(R.string.custom_message_other_busy));
-            if (properties.getRightChatContentFontColor() != 0) {
-                msgBodyText.setTextColor(properties.getRightChatContentFontColor());
-            }
         } else {
             mLeftView.setBackgroundResource(callingType == 1 ?
                     R.drawable.custom_audio_left_img_2 : R.drawable.custom_video_left_img_1);
             mLeftView.setVisibility(View.VISIBLE);
-            msgBodyText.setText(appContext.getString(R.string.custom_message_busy_missed));
-            if (properties.getLeftChatContentFontColor() != 0) {
-                msgBodyText.setTextColor(properties.getLeftChatContentFontColor());
-            }
         }
-    }
-
-    private View getTipItemView() {
-        return View.inflate(appContext, R.layout.message_adapter_content_server_tip, null);
     }
 
     /**
@@ -275,7 +341,6 @@ public class CustomTextMessageHolder extends TextMessageHolder {
             ImageView gift_img = giftView.findViewById(R.id.gift_img);
             TextView gift_text = giftView.findViewById(R.id.gift_text);
             TextView gift_title = giftView.findViewById(R.id.gift_title);
-            TextView custom_gift_hint_text = giftView.findViewById(R.id.custom_gift_hint_text);
 
             if (msg.isSelf()) {
                 gift_title.setText(appContext.getString(R.string.custom_gift_left_title));
@@ -289,25 +354,8 @@ public class CustomTextMessageHolder extends TextMessageHolder {
                 custom_gift_layout.setBackground(appContext.getResources().getDrawable(R.drawable.custom_left_gift_backdrop));
                 if (giftEntity.getProfitTwd() != null) {
                     double total = giftEntity.getProfitTwd() * giftEntity.getAmount();
-                    String custom_message_txt2 = appContext.getString(R.string.profit);
-                    if (!MessageRecyclerView.isCertification()) {
-                        custom_message_txt2 = appContext.getString(R.string.custom_message_txt2_test2);
-                        custom_gift_hint_text.setOnClickListener(v -> {
-                            if (onItemClickListener != null)
-                                onItemClickListener.onClickCustomText();
-                        });
-                    }
-                    SpannableString iconSpannable = matcherSearchText("#A72DFE", String.format(custom_message_txt2,
-                            String.format("%.2f", total)), appContext.getString(R.string.custom_message_txt1_key));
-                    iconSpannable.setSpan(new MyImageSpan(appContext, R.drawable.icon_crystal),
-                            0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    custom_gift_hint_text.setText(iconSpannable);
+                    setProfitDetails(total+"", profitTip);
                 }
-            }
-            if (!MessageRecyclerView.isFlagTipMoney() || msg.isSelf()) {
-                custom_gift_hint_text.setVisibility(View.GONE);
-            } else {
-                custom_gift_hint_text.setVisibility(View.VISIBLE);
             }
             gift_text.setText(giftEntity.getTitle() + " x" + giftEntity.getAmount());
             Glide.with(TUIChatService.getAppContext())
@@ -321,6 +369,24 @@ public class CustomTextMessageHolder extends TextMessageHolder {
         }
     }
 
+    /**
+     * 初始化系统消息的view和数据
+     * @param extra
+     */
+    private void initServerDataAndView(String extra) {
+        tipView = View.inflate(appContext, R.layout.message_adapter_content_server_tip, null);
+        customTipText = tipView.findViewById(R.id.custom_tip_text);
+        try {
+            customIMTextEntity = IMGsonUtils.fromJson(TUIChatUtils.json2Massage(extra, "data"), CustomIMTextEntity.class);
+        }catch (Exception ignored){
+            setContentLayoutVisibility(false);
+        }
+    }
+
+    /**
+     * 设置内容字体和颜色
+     * @param msg
+     */
     public void setBackColor(TUIMessageBean msg) {
         if (properties.getChatContextFontSize() != 0) {
             msgBodyText.setTextSize(properties.getChatContextFontSize());

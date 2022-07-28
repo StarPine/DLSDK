@@ -155,7 +155,14 @@ public class TUIChatUtils {
         try {
             Map<String, Object> map_data = new Gson().fromJson(json, Map.class);
             if (map_data != null && map_data.containsKey(key)) {
-                msgType = (String) map_data.get(key);
+                Object o = map_data.get(key);
+                if (o instanceof Integer){
+                    msgType = (Integer) o + "";
+                }else if(o instanceof String){
+                    msgType = (String) o;
+                }else if(o instanceof Double){
+                    msgType = (Double) o + "";
+                }
             }
         }catch (Exception e){
 

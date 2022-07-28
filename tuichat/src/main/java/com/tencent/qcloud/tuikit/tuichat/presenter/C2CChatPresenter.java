@@ -3,6 +3,8 @@ package com.tencent.qcloud.tuikit.tuichat.presenter;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
+import com.tencent.coustom.CustomIMTextEntity;
+import com.tencent.coustom.IMGsonUtils;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
@@ -116,9 +118,14 @@ public class C2CChatPresenter extends ChatPresenter {
                     }
                     int itemCount = data.size();
 
+                    //重排收益消息
+                    if (data.toString().contains(TUIChatConstants.CoustomMassageType.CHAT_EARNINGS)) {
+                        rearrangeChatearningsMsg(data, itemCount);
+                    }
+
                     //过滤旧的相册数据
-                    if (data.toString().contains("message_photo")){
-                        removeAssignTypeMessage(data,"message_photo");
+                    if (data.toString().contains(TUIChatConstants.CoustomMassageType.MESSAGE_PHOTO)){
+                        removeAssignTypeMessage(data,TUIChatConstants.CoustomMassageType.MESSAGE_PHOTO);
                     }
 
                     //新增新版相册数据
@@ -137,6 +144,39 @@ public class C2CChatPresenter extends ChatPresenter {
             });
         } else { // 向后拉更新的消息 或者 前后同时拉消息
             loadHistoryMessageList(chatId, false, type, MSG_PAGE_COUNT, lastMessageInfo, callback);
+        }
+    }
+
+    /**
+     * 重排旧的收益消息
+     * @param data
+     * @param itemCount
+     */
+    private void rearrangeChatearningsMsg(List<TUIMessageBean> data, int itemCount) {
+        for (int i = 0; i < itemCount; i++) {
+            TUIMessageBean lastMsg = data.get(i);
+            if (lastMsg != null && lastMsg.getExtra() != null) {
+                if (isJSON2(lastMsg.getExtra())) {//判断后台自定义消息体
+                    Map<String, Object> map_data = new Gson().fromJson(lastMsg.getExtra(), Map.class);
+                    if (map_data != null && map_data.get("type") != null) {
+                        if (map_data.get("type").equals("chat_earnings")) {
+                            CustomIMTextEntity customIMTextEntity = IMGsonUtils.fromJson(String.valueOf(map_data.get("data")), CustomIMTextEntity.class);
+                            if (customIMTextEntity != null) {
+                                String msgID = customIMTextEntity.getMsgID();
+                                if (msgID != null) {
+                                    for (int j = 0; j < itemCount; j++) {
+                                        TUIMessageBean backMsg = data.get(j);
+                                        if (backMsg.getId().lastIndexOf(msgID) != -1) {//收入提示追加到指定文案后
+                                            data.add(i, data.remove(j));
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 

@@ -17,14 +17,17 @@ public abstract class BaseDisposableObserver<T extends BaseResponse> extends Dis
     public void onNext(T t) {
         if (t.isSuccess()) {
             onSuccess(t);
+        }else if (t.isInfo()) {
+            onSuccess(t);
         } else if (t.isFail()) {
             ApiFailException apiFailException = new ApiFailException(t.getCode(), t.getMessage());
             onError(apiFailException);
         } else if (t.isError()) {
             ApiErrorException apiErrorException = new ApiErrorException(t.getCode(), t.getMessage());
             onError(apiErrorException);
-        }else if (t.isInfo()) {
-            onSuccess(t);
+        } else {
+            ApiFailException apiFailException = new ApiFailException(t.getCode(), t.getMessage());
+            onError(apiFailException);
         }
     }
 

@@ -15,15 +15,12 @@ import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.component.gatherimage.UserIconView;
-import com.tencent.qcloud.tuicore.util.DateTimeUtil;
 import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageReactBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageRepliesBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.SelectTextHelper;
@@ -32,7 +29,6 @@ import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public abstract class MessageContentHolder extends MessageBaseHolder {
@@ -70,13 +66,22 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
         messageDetailsTimeTv = itemView.findViewById(R.id.msg_detail_time_tv);
     }
 
-    protected void hideWithAvatarView(){
+    protected void hideWithAvatarView() {
         leftUserIcon.setVisibility(View.GONE);
         rightUserIcon.setVisibility(View.GONE);
         msgContentLinear.setVisibility(View.GONE);
     }
 
-    protected void hideTimeView(){
+    protected void showWithAvatarView(boolean isSelf) {
+        if (isSelf) {
+            rightUserIcon.setVisibility(View.VISIBLE);
+        } else {
+            leftUserIcon.setVisibility(View.VISIBLE);
+        }
+        msgContentLinear.setVisibility(View.VISIBLE);
+    }
+
+    protected void hideTimeView() {
         hideWithAvatarView();
         chatTimeText.setVisibility(View.GONE);
     }
@@ -91,7 +96,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
         }
 
         List<TUIMessageBean> mediaSource = new ArrayList<>();
-        for(TUIMessageBean messageBean : dataSource) {
+        for (TUIMessageBean messageBean : dataSource) {
             int type = messageBean.getMsgType();
             if (type == V2TIMMessage.V2TIM_ELEM_TYPE_IMAGE || type == V2TIMMessage.V2TIM_ELEM_TYPE_VIDEO) {
                 mediaSource.add(messageBean);
@@ -183,7 +188,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
         if (properties.getNameFontSize() != 0) {
             try {
                 usernameText.setTextSize((float) properties.getNameFontSize());
-            }catch (Exception e){
+            } catch (Exception e) {
 
             }
         }
@@ -512,7 +517,8 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
 
     public abstract void layoutVariableViews(final TUIMessageBean msg, final int position);
 
-    public void onRecycled() {}
+    public void onRecycled() {
+    }
 
     public void startShowUnread(TUIMessageBean messageBean) {
         Bundle bundle = new Bundle();
