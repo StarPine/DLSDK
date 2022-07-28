@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:binding="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <import type="android.view.View" />
@@ -20,11 +21,12 @@
         android:layout_width="170dp"
         android:layout_height="225dp">
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <com.dl.playfun.widget.roundedimageview.RoundedImageView
             android:id="@+id/img_user_avatar"
             android:layout_width="170dp"
             android:layout_height="200dp"
             android:layout_alignParentBottom="true"
+            app:riv_corner_radius="10dip"
             android:scaleType="fitXY"
             android:src="@drawable/radio_dating_img_default"
             binding:imageErrorPlaceholderRes="@{R.drawable.radio_dating_img_default}"
