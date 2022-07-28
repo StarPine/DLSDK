@@ -317,14 +317,35 @@ public class ApiUitl {
                 // 插入图库
                 //MediaStore.Images.Media.insertImage(context.getContentResolver(), file.getAbsolutePath(), bitName, null);
             }
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-
         }
         // 发送广播，通知刷新图库的显示
         context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + fileName)));
+    }
+
+    /*
+     * 保存文件，文件名为当前日期
+     */
+    public static void saveBitmap(Bitmap bitmap, String fileName, SaveBitmapListener saveBitmapListener) {
+        File file;
+        file = new File(fileName);
+        if (file.exists()) {
+            file.delete();
+        }
+        FileOutputStream out;
+        try {
+            out = new FileOutputStream(file);
+            // 格式为 JPEG，照相机拍出的图片为JPEG格式的，PNG格式的不能显示在相册中
+            if (bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)) {
+                out.flush();
+                out.close();
+                saveBitmapListener.saveCallback(true);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            saveBitmapListener.saveCallback(false);
+        }
     }
 
     //获取当前时间的缩写名
@@ -334,7 +355,23 @@ public class ApiUitl {
         return sdf.format(date);
     }
 
+    /**
+     * @param ctx
+     * @return
+     */
+    public static String getDiskCacheDir(Context ctx) {
+        File filesDir = ctx.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        if (filesDir == null) {
+            return "";
+        }
+        return filesDir.getPath();
+    }
+
     public interface CallBackUploadFileNameCallback {
         void success(String fileName);
+    }
+
+    public interface SaveBitmapListener {
+        void saveCallback(boolean flag);
     }
 }

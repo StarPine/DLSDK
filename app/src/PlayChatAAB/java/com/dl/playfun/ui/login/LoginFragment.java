@@ -3,6 +3,7 @@ package com.dl.playfun.ui.login;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -29,6 +30,7 @@ import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.FragmentLoginBinding;
+import com.dl.playfun.entity.OverseasUserEntity;
 import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.ui.login.LoginViewModel;
 import com.dl.playfun.utils.AutoSizeUtils;
@@ -38,6 +40,7 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -116,7 +119,6 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
                 }
                 Collection<String> collection = new ArrayList<String>();
                 collection.add("email");
-                collection.add("public_profile");
                 loginManager.logIn(LoginFragment.this, collection);
             }
         });
@@ -129,7 +131,21 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
                             @Override
                             public void onCompleted(@Nullable JSONObject jsonObject, @Nullable GraphResponse graphResponse) {
                                 try {
-                                    viewModel.authLogin(loginResult.getAccessToken().getUserId(), "facebook", null, null, null, jsonObject.getString("token_for_business"));
+                                    OverseasUserEntity overseasUserEntity = new OverseasUserEntity();
+                                    overseasUserEntity.setEmail(jsonObject.getString("email"));
+
+                                    Profile profile = Profile.getCurrentProfile();
+                                    String phoneUrl = null;
+                                    if (profile != null) {
+                                        overseasUserEntity.setName(profile.getName());
+                                        Uri uriFacebook = profile.getProfilePictureUri(500, 500);
+                                        if(uriFacebook!=null){
+                                            phoneUrl = uriFacebook.toString();
+                                        }
+                                    }
+                                    overseasUserEntity.setPhoto(phoneUrl);
+                                    AppConfig.overseasUserEntity = overseasUserEntity;
+                                    viewModel.authLogin(loginResult.getAccessToken().getUserId(), "facebook", overseasUserEntity.getEmail(), null, null, jsonObject.getString("token_for_business"));
                                     AppContext.instance().logEvent(AppsFlyerEvent.LOG_IN_WITH_FACEBOOK);
                                 } catch (Exception e) {
                                     Log.e("获取facebook关键资料", "异常原因: " + e.getMessage());
@@ -139,7 +155,7 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
                             }
                         });
                         Bundle paramters = new Bundle();
-                        paramters.putString("fields", "token_for_business");
+                        paramters.putString("fields", "token_for_business,email");
                         request.setParameters(paramters);
                         request.executeAsync();
                     }
@@ -152,7 +168,6 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
 
                     @Override
                     public void onError(FacebookException exception) {
-                        Log.e("FaceBook登入异常返回:", exception.getMessage());
                         // App code
                         ToastUtils.showShort(R.string.playfun_error_facebook);
                     }
@@ -191,12 +206,12 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
         try {
             GoogleSignInAccount signInAccount = googleData.getResult(ApiException.class);
             if (signInAccount != null) {
-//                String str =   signInAccount.getEmail()+"\n"
-//                        +signInAccount.getId()+"\n"+
-//                        signInAccount.getAccount().name+"\n"+
-//                        signInAccount.getDisplayName()+"\n"+
-//                        signInAccount.getGivenName()+"\n";
-                viewModel.authLogin(signInAccount.getId(), "google", null, null, null, null);
+                OverseasUserEntity overseasUserEntity = new OverseasUserEntity();
+                overseasUserEntity.setEmail(signInAccount.getEmail());
+                overseasUserEntity.setName(signInAccount.getDisplayName());
+                overseasUserEntity.setPhoto(signInAccount.getPhotoUrl() == null ? null : String.valueOf(signInAccount.getPhotoUrl()));
+                AppConfig.overseasUserEntity = overseasUserEntity;
+                viewModel.authLogin(signInAccount.getId(), "google", overseasUserEntity.getEmail(), null, null, null);
                 AppContext.instance().logEvent(AppsFlyerEvent.LOG_IN_WITH_GOOGLE);
             } else {
                 Log.e("account", "si" + "\n");

@@ -435,4 +435,17 @@
     </declare-styleable>
 
     <style name="PCustomSeekBar" parent="android:Widget"></style>
+
+    <declare-styleable name="MisterPBannerLayout">
+        <attr name="interval" format="integer" />
+        <attr name="showIndicator" format="boolean" />
+        <attr name="orientation" format="enum">
+            <enum name="horizontal" value="0"/>
+            <enum name="vertical" value="1"/>
+        </attr>
+        <attr name="autoPlaying" format="boolean"/>
+        <attr name="itemSpace" format="integer"/>
+        <attr name="centerScale" format="float"/>
+        <attr name="moveSpeed" format="float"/>
+    </declare-styleable>
 </resources>

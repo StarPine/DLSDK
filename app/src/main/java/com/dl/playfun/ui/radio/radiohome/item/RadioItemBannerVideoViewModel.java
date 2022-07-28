@@ -36,6 +36,14 @@ public class RadioItemBannerVideoViewModel extends MultiItemViewModel<RadioViewM
         super(viewModel);
         this.adUserItemEntity.set(adUserItemEntity);
     }
+    //item点击
+    public BindingCommand itemClick = new BindingCommand(()->{
+        int position = viewModel.radioItemsAdUser.indexOf(this);
+        if(position!=-1){
+            viewModel.itemClickChangeIdx(position);
+        }
+    });
+
     //播放语音
     public BindingCommand  audioPlayClickCommand = new BindingCommand(() -> {
         isPlaying.set(true);

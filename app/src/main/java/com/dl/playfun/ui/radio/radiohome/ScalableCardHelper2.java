@@ -1,19 +1,17 @@
 package com.dl.playfun.ui.radio.radiohome;
 
-import android.content.Context;
+/**
+ * Author: 彭石林
+ * Time: 2022/7/28 14:53
+ * Description: This is ScalableCardHelper2
+ */
 import android.graphics.Rect;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.dl.playfun.R;
 
 import java.lang.ref.WeakReference;
 
@@ -22,52 +20,14 @@ import java.lang.ref.WeakReference;
  * Created by yjwfn on 2017/9/21.
  */
 
-public class ScalableCardHelper {
+public class ScalableCardHelper2 {
 
     private static final float STAY_SCALE = 0.95f;
 
     private String TAG = "ScalableCardHelper";
     private PagerSnapHelper snapHelper = new PagerSnapHelper();
-//    private PagerSnapHelper snapHelper = new PagerSnapHelper(){
-//        // 在 Adapter的 onBindViewHolder 之后执行
-//        @Override
-//        public int findTargetSnapPosition(RecyclerView.LayoutManager layoutManager, int velocityX, int velocityY) {
-//            // TODO 找到对应的Index
-//            if (!(layoutManager instanceof RecyclerView.SmoothScroller.ScrollVectorProvider)) {
-//                return RecyclerView.NO_POSITION;
-//            }
-//
-//            final View currentView = findSnapView(layoutManager);
-//
-//            if (currentView == null) {
-//                return RecyclerView.NO_POSITION;
-//            }
-//
-//            LinearLayoutManager myLayoutManager = (LinearLayoutManager) layoutManager;
-//
-//            int position1 = myLayoutManager.findFirstVisibleItemPosition();
-//            int position2 = myLayoutManager.findLastVisibleItemPosition();
-//
-//            int currentPosition = layoutManager.getPosition(currentView);
-//
-//            if (currentPosition == RecyclerView.NO_POSITION) {
-//                return RecyclerView.NO_POSITION;
-//            }
-//            if (currentPosition >= 0) {
-//                pageScrolled();
-//            }
-//            return currentPosition;
-//        }
-//
-//        // 在 Adapter的 onBindViewHolder 之后执行
-//        @Nullable
-//        @Override
-//        public View findSnapView(RecyclerView.LayoutManager layoutManager) {
-//            // TODO 找到对应的View
-//            return super.findSnapView(layoutManager);
-//        }
-//    };
     private RecyclerView recyclerView;
+    private WeakReference<OnPageChangeListener> pageChangeListenerRef;
 
     private RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
 
@@ -77,6 +37,16 @@ public class ScalableCardHelper {
         }
     };
 
+
+    public ScalableCardHelper2(OnPageChangeListener pageChangeListener) {
+        if(pageChangeListener != null)
+            this.pageChangeListenerRef = new WeakReference<>(pageChangeListener);
+    }
+
+
+    public ScalableCardHelper2( ) {
+        this(null);
+    }
 
     private void pageScrolled() {
         if (recyclerView == null || recyclerView.getChildCount() == 0)
@@ -88,37 +58,46 @@ public class ScalableCardHelper {
         int snapingViewPosition = recyclerView.getChildAdapterPosition(snapingView);
         View leftSnapingView = layoutManager.findViewByPosition(snapingViewPosition - 1);
         View rightSnapingView = layoutManager.findViewByPosition(snapingViewPosition + 1);
-        // 只有LinearLayoutManager才有查找第一个和最后一个可见view位置的方法
-        if (layoutManager instanceof LinearLayoutManager) {
-            LinearLayoutManager linearManager = (LinearLayoutManager) layoutManager;
-            //获取第一个可见view的位置
-            int firstItemPosition = linearManager.findFirstVisibleItemPosition();
-            //获取最后一个可见view的位置
-            int lastItemPosition = linearManager.findLastVisibleItemPosition();
-            //可见第一个 和最后一个 相减数量大于1.且是居中的。其它均为缩小
-            if(lastItemPosition!=snapingViewPosition ||  firstItemPosition!=snapingViewPosition){
-                resizeScaleY(snapingView,1.2f);
-                resizeScaleY(leftSnapingView,1f);
-                resizeScaleY(rightSnapingView,1f);
-                //当前仅仅是第一个可见
-                resizeScaleY(snapingView,1.2f);
-                if(firstItemPosition == snapingViewPosition){
-                    resizeScaleY(rightSnapingView,1f);
-                }else{
-                    resizeScaleY(leftSnapingView,1f);
-                }
-            }
+
+
+        float leftSnapingOffset = calculateOffset(recyclerView, leftSnapingView);
+        float rightSnapingOffset = calculateOffset(recyclerView, rightSnapingView);
+        float currentSnapingOffset = calculateOffset(recyclerView, snapingView);
+
+        if (snapingView != null) {
+            snapingView.setScaleX(currentSnapingOffset);
+            snapingView.setScaleY(currentSnapingOffset);
         }
+
+        if (leftSnapingView != null) {
+            leftSnapingView.setScaleX(leftSnapingOffset);
+            leftSnapingView.setScaleY(leftSnapingOffset);
+        }
+
+        if (rightSnapingView != null) {
+            rightSnapingView.setScaleX(rightSnapingOffset);
+            rightSnapingView.setScaleY(rightSnapingOffset);
+        }
+
+
+        if(snapingView != null && currentSnapingOffset >= 1){
+            OnPageChangeListener listener = pageChangeListenerRef != null ? pageChangeListenerRef.get(): null;
+            if(listener != null)
+                listener.onPageSelected(snapingViewPosition);
+        }
+
+        Log.d(TAG, String.format("left: %f, right: %f, current: %f", leftSnapingOffset, rightSnapingOffset, currentSnapingOffset));
     }
 
-    public void resizeScaleY(View currentView,float scale) {
-        if(currentView!=null){
-            View imgUserAvatar = currentView.findViewById(R.id.rl_layout);
-            if(imgUserAvatar != null){
-                imgUserAvatar.setScaleY(scale);
-            }
-        }
+
+    public int getCurrentPage(){
+        View page = snapHelper.findSnapView(recyclerView.getLayoutManager());
+        if(page == null)
+            return -1;
+
+        return recyclerView.getChildAdapterPosition(page);
     }
+
 
     public void attachToRecyclerView(final RecyclerView recyclerView) {
         this.recyclerView = recyclerView;
@@ -132,6 +111,46 @@ public class ScalableCardHelper {
             }
         });
     }
+
+    /**
+     * 通过计算{@code view}中间点与{@link RecyclerView}的中间点的距离，算出{@code view}的偏移量。
+     *
+     * @param view              view
+     * @return
+     */
+    private float calculateOffset(RecyclerView recyclerView, View view) {
+        if (view == null)
+            return -1;
+
+
+        RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+        boolean isVertical = layoutManager.canScrollVertically();
+        int viewStart = isVertical ? view.getTop() : view.getLeft();
+        int viewEnd = isVertical ? view.getBottom() : view.getRight();
+        int centerX = isVertical ? recyclerView.getHeight() / 2 : recyclerView.getWidth() / 2;
+        int childCenter = (viewStart + viewEnd) / 2;
+        int distance =   Math.abs(childCenter - centerX);
+
+        if (distance > centerX)
+            return STAY_SCALE;
+
+        float offset = 1.f - (distance / (float) centerX);
+        return (1.f - STAY_SCALE) * offset + STAY_SCALE;
+    }
+
+
+    public void detachFromRecyclerView(RecyclerView recyclerView) {
+        if (recyclerView != null)
+            recyclerView.removeOnScrollListener(scrollListener);
+        this.recyclerView = null;
+    }
+
+    public interface OnPageChangeListener{
+        void onPageSelected(int position);
+    }
+
+
+
 
 
     public static int getPeekWidth(RecyclerView recyclerView, View itemView) {
@@ -196,6 +215,7 @@ public class ScalableCardHelper {
             int peekWidth = getPeekWidth(parent, view);
             boolean isVertical = layoutManager.canScrollVertically();
             //移除item时adapter position为-1。
+
             if (isVertical) {
                 if (position == 0) {
                     outRect.set(0, peekWidth, 0, 0);
@@ -214,14 +234,6 @@ public class ScalableCardHelper {
                 }
             }
         }
-    }
-
-    /**
-     * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
-     */
-    public int dip2px(Context mContext,float dpValue) {
-        final float scale = mContext.getResources().getDisplayMetrics().density;
-        return (int) (dpValue * scale + 0.5f);
     }
 
 }

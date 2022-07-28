@@ -193,8 +193,6 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
                 startRefresh();
             }
         }
-        //展示首页广告位
-        getAdListBannber();
     }
 
     public void isBindCity(Integer city_id) {
@@ -368,6 +366,9 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
                                 HomeMainBannerItemViewModel homeItemBanner = new HomeMainBannerItemViewModel(HomeMainViewModel.this,adItemEntity);
                                 observableBanner.add(homeItemBanner);
                             }
+                            rcvBannerDisplay.set(!listData.isEmpty());
+                        }else{
+                            rcvBannerDisplay.set(false);
                         }
                     }
 

@@ -85,7 +85,7 @@
                     android:layout_marginStart="10dp"
                     android:includeFontPadding="false"
                     android:textColor="@color/black"
-                    android:text="@{viewModel.areaCode}"
+                    android:text="@{viewModel.getAreaPhoneCode(viewModel.areaCode)}"
                     tools:text="+886" />
                 <ImageView
                     android:layout_centerInParent="true"

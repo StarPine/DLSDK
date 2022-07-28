@@ -11,9 +11,11 @@ import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import androidx.databinding.BindingAdapter;
 
+import com.blankj.utilcode.util.SizeUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.ImageViewTarget;
 import com.dl.playfun.app.AppConfig;
@@ -25,8 +27,8 @@ import me.goldze.mvvmhabit.utils.StringUtils;
  * @author wulei
  */
 public class ImageViewAdapter {
-    @BindingAdapter(value = {"imagePath", "imageThumbPath", "LocalImagePath", "imagePlaceholderRes", "imageErrorPlaceholderRes", "resizeH", "resizeW", "addWaterMark"}, requireAll = false)
-    public static void setImageUri(ImageView imageView, String imagePath, String imageThumbPath, String LocalImagePath, int imagePlaceholderRes, int imageErrorPlaceholderRes,Integer resizeH,Integer resizeW, boolean addWaterMark) {
+    @BindingAdapter(value = {"imagePath", "imageThumbPath", "LocalImagePath", "imagePlaceholderRes", "imageErrorPlaceholderRes", "resizeH", "resizeW","imgRadius", "addWaterMark"}, requireAll = false)
+    public static void setImageUri(ImageView imageView, String imagePath, String imageThumbPath, String LocalImagePath, int imagePlaceholderRes, int imageErrorPlaceholderRes,Integer resizeH,Integer resizeW,Integer imgRadius, boolean addWaterMark) {
 
         try {
             String url = "";
@@ -43,24 +45,36 @@ public class ImageViewAdapter {
                     url = StringUtil.getFullImageUrl(imagePath) + checkResizeProper(imageView.getContext(),resizeH, resizeW);
                 }
             }
+            RequestOptions overrideOptions;
+            if(imgRadius!=null){
+                //设置图片圆角角度
+                RoundedCorners roundedCorners = new RoundedCorners(dp2px(imageView.getContext(),imgRadius));
+                //通过RequestOptions扩展功能,override:采样率,因为ImageView就这么大,可以压缩图片,降低内存消耗
+                overrideOptions = RequestOptions.bitmapTransform(roundedCorners);
+            }else{
+                overrideOptions = new RequestOptions();
+            }
+
+
+
             RequestManager requestManager = Glide.with(imageView.getContext());
             if (isVideo) {
                 requestManager.setDefaultRequestOptions(
-                        new RequestOptions()
+                        overrideOptions
                                 .frame(1)
                                 .centerCrop()
                 );
             }
             if (!StringUtil.isEmpty(LocalImagePath)) {
                 requestManager.load(imageView.getContext().getResources().getIdentifier(LocalImagePath, "mipmap", imageView.getContext().getPackageName()))
-                        .apply(new RequestOptions()
+                        .apply(overrideOptions
                                 .placeholder(imagePlaceholderRes)
                                 .error(imageErrorPlaceholderRes))
                         .into(imageView);
                 return;
             }
             requestManager.load(url)
-                    .apply(new RequestOptions()
+                    .apply(overrideOptions
                             .placeholder(imagePlaceholderRes)
                             .error(imageErrorPlaceholderRes))
                     .into(imageView);

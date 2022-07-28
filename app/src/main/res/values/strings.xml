@@ -1021,4 +1021,18 @@
 
     <string name="playfun_smart_header_text">青春最好的度過方式就是要和朋友們在一起</string>
 
+    <string name="fragment_perfect_name_phone_hint">頭貼&amp;暱稱</string>
+    <string name="fragment_perfect_sex_birther_hint">性別&amp;生日</string>
+
+    <string name="fragment_perfect_reg_hint">讓大家更好認識您！</string>
+    <string name="fragment_perfect_reg_hint2">性別確認後不可更改</string>
+
+    <string name="playfun_fragment_perfect_sex_male">男生</string>
+    <string name="playfun_fragment_perfect_sex_female">女生</string>
+    <string name="reg_user_name_maxlen">昵稱長度不能超過10</string>
+
+    <string name="playfun_submit_success">提交成功</string>
+    <string name="playfun_reg_user_name_error">名稱不能出現重復</string>
+    <string name="playfun_fragment_perfect_avatar1">請重新上傳頭貼</string>
+
 </resources>

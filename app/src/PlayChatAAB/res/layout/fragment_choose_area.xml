@@ -7,6 +7,10 @@
         <variable
             name="viewModel"
             type="com.dl.playfun.ui.login.choose.ChooseAreaViewModel" />
+
+        <import type="me.tatarka.bindingcollectionadapter2.LayoutManagers" />
+
+        <import type="com.dl.playfun.widget.recyclerview.LineManagers" />
     </data>
 
     <LinearLayout
@@ -34,9 +38,10 @@
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            binding:adapter="@{viewModel.area_adapter}"
-            binding:itemBinding="@{viewModel.area_itemBinding}"
-            binding:items="@{viewModel.area_observableList}"
-            />
+            binding:adapter="@{viewModel.areaAdapter}"
+            binding:itemBinding="@{viewModel.areaItemBinding}"
+            binding:items="@{viewModel.areaObservableList}"
+            binding:layoutManager="@{LayoutManagers.linear()}"
+            binding:lineManager="@{LineManagers.horizontal(1,72,0)}" />
     </LinearLayout>
 </layout>

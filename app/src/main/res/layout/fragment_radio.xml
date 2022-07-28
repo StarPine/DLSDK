@@ -82,16 +82,20 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         app:layout_scrollFlags="scroll">
-                        <androidx.recyclerview.widget.RecyclerView
+                        <com.dl.playfun.widget.recyclerview.banner.BannerRecyclerView
                             android:id="@+id/rcv_aduser"
+                            android:clipChildren="false"
                             android:layout_width="match_parent"
-                            android:layout_height="230dp"
+                            android:layout_height="270dp"
                             android:overScrollMode="never"
+                            app:autoPlaying="true"
+                            app:centerScale="1.15"
+                            app:itemSpace="30"
+                            app:moveSpeed="1.8"
                             app:layout_behavior="@string/appbar_scrolling_view_behavior"
                             binding:adapter="@{viewModel.adapterAdUser}"
                             binding:itemBinding="@{viewModel.radioItemAdUserBinding}"
-                            binding:items="@{viewModel.radioItemsAdUser}"
-                            binding:layoutManager="@{LayoutManagers.linear(LinearLayoutManager.HORIZONTAL,false)}" />
+                            binding:items="@{viewModel.radioItemsAdUser}" />
                         <com.youth.banner.Banner
                             android:id="@+id/banner"
                             android:layout_width="match_parent"

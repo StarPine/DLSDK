@@ -6,6 +6,7 @@ import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.AccostEntity;
 import com.dl.playfun.entity.AdBannerEntity;
 import com.dl.playfun.entity.AdItemEntity;
+import com.dl.playfun.entity.AdUserBannerEntity;
 import com.dl.playfun.entity.AdUserItemEntity;
 import com.dl.playfun.entity.AddressEntity;
 import com.dl.playfun.entity.AlbumPhotoEntity;
@@ -26,6 +27,8 @@ import com.dl.playfun.entity.CallingStatusEntity;
 import com.dl.playfun.entity.CashWalletEntity;
 import com.dl.playfun.entity.ChatDetailCoinEntity;
 import com.dl.playfun.entity.ChatRedPackageEntity;
+import com.dl.playfun.entity.CheckNicknameEntity;
+import com.dl.playfun.entity.ChooseAreaEntity;
 import com.dl.playfun.entity.CoinExchangeBoxInfo;
 import com.dl.playfun.entity.CoinWalletEntity;
 import com.dl.playfun.entity.CommentMessageEntity;
@@ -105,13 +108,32 @@ import retrofit2.http.Query;
 public interface HttpDataSource {
 
     /**
+     * 检查昵称是否被占用
+     *
+     * @param nickname
+     * @return
+     */
+    Observable<BaseDataResponse<CheckNicknameEntity>> checkNickname(
+            String nickname
+    );
+
+    /*
+     * @Desc TODO(手机号码注册拉取所有地区)
+     * @author 彭石林
+     * @parame []
+     * @return io.reactivex.Observable<com.dl.play.chat.data.source.http.response.BaseDataResponse<com.dl.play.chat.entity.ChooseAreaEntity>>
+     * @Date 2022/7/7
+     */
+    Observable<BaseDataResponse<ChooseAreaEntity>> getChooseAreaList();
+
+    /**
      * @Desc TODO(广告列表获取  1：首页 2：广场页)
      * @author 彭石林
      * @parame []
      * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseListDataResponse<com.dl.playfun.entity.AdItemEntity>>
      * @Date 2022/7/25
      */
-    Observable<BaseDataResponse<List<AdItemEntity>>> getRadioAdBannerList(int position);
+    Observable<BaseDataResponse<AdBannerEntity>> getRadioAdBannerList(int position);
 
     /**
      * @Desc TODO(用户广告位)
@@ -121,7 +143,7 @@ public interface HttpDataSource {
      * @Date 2022/7/26
      */
     @GET("api/userAd")
-    Observable<BaseDataResponse<List<AdUserItemEntity>>> getUserAdList(Integer position);
+    Observable<BaseDataResponse<AdUserBannerEntity>> getUserAdList(Integer position);
 
     /**
      * 保存个人笔记内容
@@ -958,7 +980,7 @@ public interface HttpDataSource {
      * @param sex
      * @return
      */
-    Observable<BaseDataResponse<UserDataEntity>> regUser(String nickname, String avatar, String birthday, Integer sex);
+    Observable<BaseDataResponse<UserDataEntity>> regUser(String nickname, String avatar, String birthday, Integer sex, String channel);
 
     /**
      * 上报用户当前坐标
@@ -1042,7 +1064,7 @@ public interface HttpDataSource {
      * @param phone
      * @return
      */
-    Observable<BaseResponse> verifyCodePost(String phone);
+    Observable<BaseResponse> verifyCodePost(RequestBody requestBody);
 
     /**
      * 手机号注册

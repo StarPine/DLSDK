@@ -7,6 +7,7 @@ import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.AccostEntity;
 import com.dl.playfun.entity.AdBannerEntity;
 import com.dl.playfun.entity.AdItemEntity;
+import com.dl.playfun.entity.AdUserBannerEntity;
 import com.dl.playfun.entity.AdUserItemEntity;
 import com.dl.playfun.entity.AddressEntity;
 import com.dl.playfun.entity.AlbumPhotoEntity;
@@ -27,6 +28,8 @@ import com.dl.playfun.entity.CallingStatusEntity;
 import com.dl.playfun.entity.CashWalletEntity;
 import com.dl.playfun.entity.ChatDetailCoinEntity;
 import com.dl.playfun.entity.ChatRedPackageEntity;
+import com.dl.playfun.entity.CheckNicknameEntity;
+import com.dl.playfun.entity.ChooseAreaEntity;
 import com.dl.playfun.entity.CoinExchangeBoxInfo;
 import com.dl.playfun.entity.CoinWalletEntity;
 import com.dl.playfun.entity.CommentMessageEntity;
@@ -114,6 +117,27 @@ import retrofit2.http.Query;
  */
 
 public interface ApiService {
+
+    /**
+     * 检查昵称是否被占用
+     *
+     * @param nickname
+     * @return
+     */
+    @FormUrlEncoded
+    @POST("api/user/checkNickname")
+    Observable<BaseDataResponse<CheckNicknameEntity>> checkNickname(
+            @Field("nickname") String nickname
+    );
+    /*
+     * @Desc TODO(手机号码注册拉取所有地区)
+     * @author 彭石林
+     * @parame []
+     * @return io.reactivex.Observable<com.dl.play.chat.data.source.http.response.BaseDataResponse<com.dl.play.chat.entity.ChooseAreaEntity>>
+     * @Date 2022/7/7
+     */
+    @GET("calling/region/getList")
+    Observable<BaseDataResponse<ChooseAreaEntity>> getChooseAreaList();
     /**
      * @Desc TODO(广告列表获取  1：首页 2：广场页)
      * @author 彭石林
@@ -122,7 +146,7 @@ public interface ApiService {
      * @Date 2022/7/25
      */
     @GET("api/ad/list")
-    Observable<BaseDataResponse<List<AdItemEntity>>> getRadioAdBannerList(@Query("position") int position);
+    Observable<BaseDataResponse<AdBannerEntity>> getRadioAdBannerList(@Query("position") int position);
     /**
     * @Desc TODO(用户广告位)
     * @author 彭石林
@@ -131,7 +155,7 @@ public interface ApiService {
     * @Date 2022/7/26
     */
     @GET("api/userAd")
-    Observable<BaseDataResponse<List<AdUserItemEntity>>> getUserAdList(@Query("position") Integer position);
+    Observable<BaseDataResponse<AdUserBannerEntity>> getUserAdList(@Query("position") Integer position);
     /**
      * @Desc TODO(广告列表获取  1：首页 2：广场页)
      * @author 彭石林
@@ -1166,7 +1190,7 @@ public interface ApiService {
      * @return
      */
     @POST("api/v2/user")
-    Observable<BaseDataResponse<UserDataEntity>> regUser(@Query("nickname") String nickname, @Query("avatar") String avatar, @Query("birthday") String birthday, @Query("sex") Integer sex);
+    Observable<BaseDataResponse<UserDataEntity>> regUser(@Query("nickname") String nickname, @Query("avatar") String avatar, @Query("birthday") String birthday, @Query("sex") Integer sex, @Query("channel") String channel);
 
     /**
      * 上报用户当前坐标
@@ -1256,13 +1280,12 @@ public interface ApiService {
     /**
      * 短信验证码接口
      *
-     * @param phone
      * @return
      */
-    @FormUrlEncoded
-    @POST("api/verify-code")
+    @Headers("Content-Type: application/json")
+    @POST("calling/captcha/sendCaptcha")
     Observable<BaseResponse> verifyCodePost(
-            @Field("phone") String phone
+            @Body RequestBody requestBody
     );
 
     /**
