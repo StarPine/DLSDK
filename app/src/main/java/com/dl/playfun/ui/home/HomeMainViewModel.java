@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableArrayList;
+import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableList;
 
@@ -49,6 +50,9 @@ import me.tatarka.bindingcollectionadapter2.ItemBinding;
  * @author wulei
  */
 public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
+    //控制banner是否显示
+    public ObservableBoolean rcvBannerDisplay = new ObservableBoolean(true);
+
 
     public BindingRecyclerViewAdapter<HomeMainTabItemViewModel> adapterTab = new BindingRecyclerViewAdapter<>();
     public ObservableList<HomeMainTabItemViewModel> observableListTab = new ObservableArrayList<>();
