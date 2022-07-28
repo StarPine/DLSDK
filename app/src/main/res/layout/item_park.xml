@@ -203,15 +203,6 @@
                     tools:text="城市" />
 
             </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:includeFontPadding="false"
-                android:text="@{SystemDictUtils.getOccupationById(safeUnbox(viewModel.itemEntity.occupationId))}"
-                android:textColor="#FF827692"
-                android:textSize="12sp"
-                tools:text="职业" />
         </LinearLayout>
 
         <LinearLayout

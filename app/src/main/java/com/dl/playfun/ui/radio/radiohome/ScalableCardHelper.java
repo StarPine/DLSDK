@@ -113,7 +113,7 @@ public class ScalableCardHelper {
 
     public void resizeScaleY(View currentView,float scale) {
         if(currentView!=null){
-            ImageView imgUserAvatar = currentView.findViewById(R.id.img_user_avatar);
+            View imgUserAvatar = currentView.findViewById(R.id.rl_layout);
             if(imgUserAvatar != null){
                 imgUserAvatar.setScaleY(scale);
             }

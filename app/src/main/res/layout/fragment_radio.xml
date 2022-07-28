@@ -33,8 +33,8 @@
             android:id="@+id/img_bar_background"
             android:layout_width="match_parent"
             android:layout_height="210dp"
-            android:scaleType="fitXY"
             android:elevation="10dp"
+            android:scaleType="fitXY"
             android:src="@drawable/img_main_bar_backdrop" />
             <View
                 android:background="@color/transparent"
@@ -82,29 +82,46 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         app:layout_scrollFlags="scroll">
-                        <androidx.recyclerview.widget.RecyclerView
+                        <com.dl.playfun.widget.recyclerview.banner.BannerRecyclerView
                             android:id="@+id/rcv_aduser"
+                            android:background="@drawable/img_main_bar_backdrop2"
+                            android:clipChildren="false"
                             android:layout_width="match_parent"
-                            android:layout_height="230dp"
+                            android:layout_height="270dp"
                             android:overScrollMode="never"
+                            app:autoPlaying="true"
+                            app:centerScale="1.15"
+                            app:itemSpace="30"
+                            app:moveSpeed="1.8"
                             app:layout_behavior="@string/appbar_scrolling_view_behavior"
                             binding:adapter="@{viewModel.adapterAdUser}"
                             binding:itemBinding="@{viewModel.radioItemAdUserBinding}"
-                            binding:items="@{viewModel.radioItemsAdUser}"
-                            binding:layoutManager="@{LayoutManagers.linear(LinearLayoutManager.HORIZONTAL,false)}" />
-                        <com.youth.banner.Banner
-                            android:id="@+id/banner"
+                            binding:items="@{viewModel.radioItemsAdUser}" />
+                        <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="90dp"
                             android:layout_marginStart="15dp"
                             android:layout_marginTop="20dp"
                             android:layout_marginBottom="10dp"
                             android:layout_marginEnd="15dp"
-                            android:adjustViewBounds="true"
-                            app:banner_default_image="@drawable/img_banner_default"
-                            app:image_scale_type="fit_xy"
-                            binding:onBannerClickCommand="@{viewModel.onBannerClickCommand}"
-                            binding:BannerAdData="@{viewModel.itemBannerEntity}" />
+                            >
+                            <com.youth.banner.Banner
+                                android:id="@+id/banner"
+                                android:layout_width="match_parent"
+                                android:layout_height="90dp"
+                                android:adjustViewBounds="true"
+                                app:banner_default_image="@drawable/img_banner_default"
+                                app:image_scale_type="fit_xy"
+                                binding:onBannerClickCommand="@{viewModel.onBannerClickCommand}"
+                                binding:BannerAdData="@{viewModel.itemBannerEntity}" />
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:src="@drawable/img_banner_default_display"
+                                android:scaleType="fitXY"
+                                android:visibility="@{viewModel.itemBannerEntity.empty?View.VISIBLE:View.GONE}"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"/>
+                        </FrameLayout>
+
                     </LinearLayout>
                     <RelativeLayout
                         android:paddingTop="10dp"

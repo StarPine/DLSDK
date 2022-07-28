@@ -175,8 +175,6 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
         viewModel.loadHttpData();
         viewModel.getAdUserBanner();
         viewModel.getAdListBanner();
-        ScalableCardHelper cardHelper = new ScalableCardHelper();
-        cardHelper.attachToRecyclerView(binding.rcvAduser);
     }
 
     @Override
@@ -202,6 +200,12 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
         super.initViewObservable();
         AppContext.instance().logEvent(AppsFlyerEvent.Broadcast);
         mContext = this.getContext();
+        //开始播放
+        viewModel.radioUC.startBannerEvent.observe(this, unused -> binding.rcvAduser.setPlaying(true));
+        //点击banner切换
+        viewModel.radioUC.clickBannerIdx.observe(this, integer -> {
+            binding.rcvAduser.scrollToPosition(integer);
+        });
         //弹起充值引导
         viewModel.radioUC.sendDialogViewEvent.observe(this, event -> {
             paySelectionboxChoose(false);

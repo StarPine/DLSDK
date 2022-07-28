@@ -837,7 +837,6 @@
                                                     android:gravity="center_vertical"
                                                     android:minHeight="30dp"
                                                     android:orientation="horizontal"
-                                                    android:visibility="gone"
                                                     android:paddingRight="14dp">
 
                                                     <TextView
@@ -852,7 +851,7 @@
                                                         style="@style/LabelContent"
                                                         android:layout_width="wrap_content"
                                                         android:layout_height="wrap_content"
-                                                        android:text="@{SystemDictUtils.getCityByIds(viewModel.detailEntity.permanentCityIds)}"
+                                                        android:text="@{SystemDictUtils.getCityByIdsAll(viewModel.detailEntity.permanentCityIds)}"
                                                         tools:text="桃園市/台中市" />
                                                 </LinearLayout>
 

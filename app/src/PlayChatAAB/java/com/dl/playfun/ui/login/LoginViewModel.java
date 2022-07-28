@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
 
 import com.appsflyer.AppsFlyerLib;
+import com.blankj.utilcode.util.GsonUtils;
+import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
@@ -18,9 +20,11 @@ import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
+import com.dl.playfun.entity.ChooseAreaItemEntity;
+import com.dl.playfun.entity.SystemConfigEntity;
 import com.dl.playfun.entity.TokenEntity;
 import com.dl.playfun.entity.UserDataEntity;
-import com.dl.playfun.manager.ConfigManager;
+import com.dl.playfun.event.ItemChooseAreaEvent;
 import com.dl.playfun.manager.ThirdPushTokenMgr;
 import com.dl.playfun.ui.login.choose.ChooseAreaFragment;
 import com.dl.playfun.ui.login.register.RegisterFragment;
@@ -33,9 +37,13 @@ import com.dl.playfun.viewmodel.BaseViewModel;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import io.reactivex.disposables.Disposable;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
+import me.goldze.mvvmhabit.bus.RxBus;
+import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.utils.KLog;
 import me.goldze.mvvmhabit.utils.RxUtils;
 import me.goldze.mvvmhabit.utils.ToastUtils;
@@ -47,9 +55,12 @@ import me.goldze.mvvmhabit.utils.ToastUtils;
 public class LoginViewModel extends BaseViewModel<AppRepository>  {
 
     public ObservableField<String> mobile = new ObservableField<>();
-    public ObservableField<String> areaCode = new ObservableField<>();
+    public ObservableField<ChooseAreaItemEntity> areaCode = new ObservableField<>();
     public ObservableField<String> code = new ObservableField<>();
     public ObservableField<Boolean> agree = new ObservableField<>(true);
+
+
+    private Disposable ItemChooseAreaSubscription;
     //选择地区
     public BindingCommand ChooseAreaView = new BindingCommand(()->{
         start(ChooseAreaFragment.class.getCanonicalName());
@@ -92,10 +103,10 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
      * 手机号码直接登录
      */
     private void v2Login() {
-//        if(TextUtils.isEmpty(areaCode.get())){
-//            ToastUtils.showShort(R.string.register_error_hint);
-//            return;
-//        }
+        if (ObjectUtils.isEmpty(areaCode.get())) {
+            ToastUtils.showShort(R.string.register_error_hint);
+            return;
+        }
         if (TextUtils.isEmpty(mobile.get())) {
             ToastUtils.showShort(StringUtils.getString(R.string.mobile_hint));
             return;
@@ -240,16 +251,20 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
     }
 
     private void reqVerifyCode() {
-//        if(TextUtils.isEmpty(areaCode.get())){
-//            ToastUtils.showShort(R.string.register_error_hint);
-//            return;
-//        }
+
         if (TextUtils.isEmpty(mobile.get())) {
             ToastUtils.showShort(R.string.mobile_hint);
             return;
         }
+        if (ObjectUtils.isEmpty(areaCode.get())) {
+            ToastUtils.showShort(R.string.register_error_hint);
+            return;
+        }
         if (!isDownTime) {
-            model.verifyCodePost(mobile.get())
+            Map<String, String> mapData = new HashMap<String, String>();
+            mapData.put("regionCode", areaCode.get().getCode());
+            mapData.put("phone", mobile.get());
+            model.verifyCodePost(ApiUitl.getBody(GsonUtils.toJson(mapData)))
                     .doOnSubscribe(this)
                     .compose(RxUtils.schedulersTransformer())
                     .compose(RxUtils.exceptionTransformer())
@@ -285,5 +300,43 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
                         }
                     });
         }
+    }
+
+    //获取用户ip地址区号
+    public void getUserIpCode() {
+        SystemConfigEntity systemConfigEntity = model.readSystemConfig();
+        if (systemConfigEntity != null) {
+            ChooseAreaItemEntity chooseAreaItemEntity = new ChooseAreaItemEntity();
+            chooseAreaItemEntity.setCode(systemConfigEntity.getRegionCode());
+            areaCode.set(chooseAreaItemEntity);
+        }
+    }
+
+    public String getAreaPhoneCode(ChooseAreaItemEntity chooseAreaItem) {
+        if (chooseAreaItem != null) {
+            if (chooseAreaItem.getCode() != null) {
+                return "+" + chooseAreaItem.getCode();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void registerRxBus() {
+        super.registerRxBus();
+        ItemChooseAreaSubscription = RxBus.getDefault().toObservable(ItemChooseAreaEvent.class)
+                .subscribe(event -> {
+                    if (event.getChooseAreaItemEntity() != null) {
+                        areaCode.set(event.getChooseAreaItemEntity());
+                    }
+
+                });
+        RxSubscriptions.add(ItemChooseAreaSubscription);
+    }
+
+    @Override
+    public void removeRxBus() {
+        super.removeRxBus();
+        RxSubscriptions.remove(ItemChooseAreaSubscription);
     }
 }

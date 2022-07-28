@@ -38,6 +38,7 @@ public class ChooseAreaFragment extends BaseFragment<FragmentChooseAreaBinding,C
     @Override
     public void initData() {
         super.initData();
+        viewModel.getChooseAreaList();
     }
 
     @Override

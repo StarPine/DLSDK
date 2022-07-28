@@ -2,6 +2,7 @@ package com.dl.playfun.app;
 
 import com.dl.playfun.BuildConfig;
 import com.dl.playfun.entity.BannerItemEntity;
+import com.dl.playfun.entity.OverseasUserEntity;
 
 /**
  * @author wulei
@@ -59,6 +60,9 @@ public class AppConfig {
 //    // 或者根据工程sts_local_server目录中本地鉴权服务脚本代码启动本地STS 鉴权服务器。详情参见sts_local_server 中的脚本内容。
     public static final String STS_SERVER_URL =  "/api/aliyun/sts";//STS 地址
     public static final String BUCKET_NAME = BuildConfig.BUCKET_NAME;
+
+    //临时存放第三方登录用户信息。用来注册默认读取
+    public static OverseasUserEntity overseasUserEntity = null;
     /**
      * 服务条款url
      */

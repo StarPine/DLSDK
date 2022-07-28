@@ -23,9 +23,8 @@ import com.dl.playfun.manager.GlideCacheManager;
 import com.dl.playfun.ui.login.LoginFragment;
 import com.dl.playfun.ui.main.MainFragment;
 import com.dl.playfun.ui.message.pushsetting.PushSettingFragment;
-import com.dl.playfun.ui.mine.setting.account.CommunityAccountFragment;
-import com.dl.playfun.ui.mine.changepassword.ChangePasswordFragment;
 import com.dl.playfun.ui.mine.creenlock.ScreenLockFragment;
+import com.dl.playfun.ui.mine.setting.account.CommunityAccountFragment;
 import com.dl.playfun.ui.mine.webdetail.WebDetailFragment;
 import com.dl.playfun.viewmodel.BaseViewModel;
 
@@ -60,8 +59,6 @@ public class SettingViewModel extends BaseViewModel<AppRepository> {
     });
     //推送设置按钮的点击事件
     public BindingCommand pushSettingOnClickCommand = new BindingCommand(() -> start(PushSettingFragment.class.getCanonicalName()));
-    //修改密码按钮的点击事件
-    public BindingCommand changePasswordOnClickCommand = new BindingCommand(() -> start(ChangePasswordFragment.class.getCanonicalName()));
     //隐私设置按钮的点击事件
     public BindingCommand clearCacheOnClickCommand = new BindingCommand(() -> {
         GlideCacheManager.getInstance().clearImageDiskCache(getApplication());

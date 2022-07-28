@@ -22,7 +22,9 @@ import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
+import com.dl.playfun.entity.AdBannerEntity;
 import com.dl.playfun.entity.AdItemEntity;
+import com.dl.playfun.entity.AdUserBannerEntity;
 import com.dl.playfun.entity.AdUserItemEntity;
 import com.dl.playfun.entity.BroadcastEntity;
 import com.dl.playfun.entity.BroadcastListEntity;
@@ -143,6 +145,10 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
             e.printStackTrace();
         }
     });
+    //item点击切换
+    public void itemClickChangeIdx (int position){
+        radioUC.clickBannerIdx.postValue(position);
+    }
     //item拨打视频电话
     public void itemClickCallVideo(AdUserItemEntity adUserItemEntity){
         //逻辑判断。有可能挤掉账号 没有下线。但是本地已经清空
@@ -511,17 +517,21 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
                 .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseDataResponse<List<AdUserItemEntity>>>(){
+                .subscribe(new BaseObserver<BaseDataResponse<AdUserBannerEntity>>(){
                     @Override
-                    public void onSuccess(BaseDataResponse<List<AdUserItemEntity>> listBaseDataResponse) {
-                        List<AdUserItemEntity> listData = listBaseDataResponse.getData();
-                        List<RadioItemBannerVideoViewModel> listReal = new ArrayList<>();
-                        for (AdUserItemEntity adUserItemEntity : listData) {
-                            RadioItemBannerVideoViewModel radioItemBannerVideoViewModel = new RadioItemBannerVideoViewModel(RadioViewModel.this,adUserItemEntity);
-                            listReal.add(radioItemBannerVideoViewModel);
-                        }
-                        if(!listReal.isEmpty()){
-                            radioItemsAdUser.addAll(listReal);
+                    public void onSuccess(BaseDataResponse<AdUserBannerEntity> listBaseDataResponse) {
+                        AdUserBannerEntity adUserBanner = listBaseDataResponse.getData();
+                        if(adUserBanner!=null){
+                            List<AdUserItemEntity> listData = adUserBanner.getDataList();
+                            List<RadioItemBannerVideoViewModel> listReal = new ArrayList<>();
+                            for (AdUserItemEntity adUserItemEntity : listData) {
+                                RadioItemBannerVideoViewModel radioItemBannerVideoViewModel = new RadioItemBannerVideoViewModel(RadioViewModel.this,adUserItemEntity);
+                                listReal.add(radioItemBannerVideoViewModel);
+                            }
+                            if(!listReal.isEmpty()){
+                                radioUC.startBannerEvent.call();
+                                radioItemsAdUser.addAll(listReal);
+                            }
                         }
                     }
                     @Override
@@ -544,12 +554,15 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
                 .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseDataResponse<List<AdItemEntity>>>(){
+                .subscribe(new BaseObserver<BaseDataResponse<AdBannerEntity>>(){
                     @Override
-                    public void onSuccess(BaseDataResponse<List<AdItemEntity>> listBaseDataResponse) {
-                        List<AdItemEntity> listData = listBaseDataResponse.getData();
-                        if(listData!=null){
-                            itemBannerEntity.set(listData);
+                    public void onSuccess(BaseDataResponse<AdBannerEntity> adBannerEntityDataResponse) {
+                        AdBannerEntity adBannerEntity = adBannerEntityDataResponse.getData();
+                        if(adBannerEntity!=null){
+                            List<AdItemEntity> listData = adBannerEntity.getDataList();
+                            if(listData!=null){
+                                itemBannerEntity.set(listData);
+                            }
                         }
                     }
                     @Override
@@ -752,6 +765,10 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
         public SingleLiveEvent otherBusy = new SingleLiveEvent<>();
         //钻石不足。唤起充值
         public SingleLiveEvent<Void> sendDialogViewEvent = new SingleLiveEvent<>();
+        //点击切换banner
+        public SingleLiveEvent<Integer> clickBannerIdx = new SingleLiveEvent<>();
+        //开始播放banner
+        public SingleLiveEvent<Void> startBannerEvent = new SingleLiveEvent<>();
     }
 
 }

@@ -46,7 +46,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/status_bar_view"
             android:layout_marginTop="25dp"
-            android:visibility="@{viewModel.rcvBannerDisplay ? View.VISIBLE:View.GONE}"
             binding:adapter="@{viewModel.adapterBanner}"
             binding:itemBinding="@{viewModel.itemBannerBinding}"
             binding:items="@{viewModel.observableBanner}"

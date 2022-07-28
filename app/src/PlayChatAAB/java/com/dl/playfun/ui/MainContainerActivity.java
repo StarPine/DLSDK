@@ -111,30 +111,11 @@ public class MainContainerActivity extends MySupportActivity {
         AutoSizeUtils.applyAdapt(this.getResources());
         setContentView(R.layout.activity_main_container);
         ImmersionBarUtils.setupStatusBar(this, true, false);
-
-        UserDataEntity userDataEntity = ConfigManager.getInstance().getAppRepository().readUserData();
-        if (userDataEntity != null && userDataEntity.getSex()!=null && userDataEntity.getSex().intValue()<0) {
-            Observable.just("")
-                    .delay(1500, TimeUnit.MILLISECONDS)
-                    .subscribeOn(Schedulers.io())
-                    // Be notified on the main thread
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(s -> {
-                        //startWithPop(ChooseSexFragment.class.getCanonicalName());
-                        //栈内查找 如果存在及复用
-                        if(findFragment(PerfectProfileFragment.class)!=null){
-                            loadRootFragment(R.id.fl_container, findFragment(PerfectProfileFragment.class));
-                        }else{
-                            loadRootFragment(R.id.fl_container, new PerfectProfileFragment());
-                        }
-                    });
-        } else {
-            //栈内查找 如果存在及复用
-            if(findFragment(SplashFragment.class)!=null){
-                loadRootFragment(R.id.fl_container, findFragment(SplashFragment.class));
-            }else{
-                loadRootFragment(R.id.fl_container, new SplashFragment());
-            }
+        //栈内查找 如果存在及复用
+        if(findFragment(SplashFragment.class)!=null){
+            loadRootFragment(R.id.fl_container, findFragment(SplashFragment.class));
+        }else{
+            loadRootFragment(R.id.fl_container, new SplashFragment());
         }
 
         registerRxBus();

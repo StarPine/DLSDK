@@ -61,6 +61,7 @@ public class LocalDataSourceImpl implements LocalDataSource {
     private static final String KEY_CHAT_MESSAGE_ISSHAKE = "chat_message_isShake";
     private static final String KEY_DEFAULT_HOME_PAGE_NAME = "default_home_page_name";
     private static final String KEY_API_CONFIG_MANAGER = "api_config_manager";
+    private static final String KEY_CITY_CONFIG_ALL = "key_city_config_all";
     private static final String KEY_IS_FIRST = "is_first";
     private volatile static LocalDataSourceImpl INSTANCE = null;
     private final String cryptKey = "playfun@2022";
@@ -83,6 +84,26 @@ public class LocalDataSourceImpl implements LocalDataSource {
             }
         }
         return INSTANCE;
+    }
+
+    @Override
+    public void saveCityConfigAll(List<ConfigItemEntity> configs) {
+        String json = GsonUtils.toJson(configs);
+        kv.encode(KEY_CITY_CONFIG_ALL, json);
+
+    }
+
+    @Override
+    public List<ConfigItemEntity> readCityConfigAll() {
+        String json = kv.decodeString(KEY_CITY_CONFIG_ALL);
+        if (json == null) {
+            return new ArrayList<>();
+        } else if (json.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<ConfigItemEntity> list = GsonUtils.fromJson(json, new TypeToken<List<ConfigItemEntity>>() {
+        }.getType());
+        return list;
     }
 
     /**

@@ -9,6 +9,7 @@ import com.dl.playfun.data.source.http.service.ApiService;
 import com.dl.playfun.entity.AccostEntity;
 import com.dl.playfun.entity.AdBannerEntity;
 import com.dl.playfun.entity.AdItemEntity;
+import com.dl.playfun.entity.AdUserBannerEntity;
 import com.dl.playfun.entity.AdUserItemEntity;
 import com.dl.playfun.entity.AddressEntity;
 import com.dl.playfun.entity.AlbumPhotoEntity;
@@ -29,6 +30,9 @@ import com.dl.playfun.entity.CallingStatusEntity;
 import com.dl.playfun.entity.CashWalletEntity;
 import com.dl.playfun.entity.ChatDetailCoinEntity;
 import com.dl.playfun.entity.ChatRedPackageEntity;
+import com.dl.playfun.entity.CheckNicknameEntity;
+import com.dl.playfun.entity.ChooseAreaEntity;
+import com.dl.playfun.entity.CityAllEntity;
 import com.dl.playfun.entity.CoinExchangeBoxInfo;
 import com.dl.playfun.entity.CoinWalletEntity;
 import com.dl.playfun.entity.CommentMessageEntity;
@@ -384,8 +388,8 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
-    public Observable<BaseDataResponse<UserDataEntity>> regUser(String nickname, String avatar, String birthday, Integer sex) {
-        return apiService.regUser(nickname, avatar, birthday, sex);
+    public Observable<BaseDataResponse<UserDataEntity>> regUser(String nickname, String avatar, String birthday, Integer sex, String channel) {
+        return apiService.regUser(nickname, avatar, birthday, sex, channel);
     }
 
     @Override
@@ -429,8 +433,8 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
-    public Observable<BaseResponse> verifyCodePost(String phone) {
-        return apiService.verifyCodePost(phone);
+    public Observable<BaseResponse> verifyCodePost(RequestBody requestBody) {
+        return apiService.verifyCodePost(requestBody);
     }
 
 
@@ -1237,12 +1241,27 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
-    public Observable<BaseDataResponse<List<AdItemEntity>>> getRadioAdBannerList(int position) {
+    public Observable<BaseDataResponse<CityAllEntity>> getCityConfigAll() {
+        return apiService.getCityConfigAll();
+    }
+
+    @Override
+    public Observable<BaseDataResponse<CheckNicknameEntity>> checkNickname(String nickname) {
+        return apiService.checkNickname(nickname);
+    }
+
+    @Override
+    public Observable<BaseDataResponse<ChooseAreaEntity>> getChooseAreaList() {
+        return apiService.getChooseAreaList();
+    }
+
+    @Override
+    public Observable<BaseDataResponse<AdBannerEntity>> getRadioAdBannerList(int position) {
         return apiService.getRadioAdBannerList(position);
     }
 
     @Override
-    public Observable<BaseDataResponse<List<AdUserItemEntity>>> getUserAdList(Integer position) {
+    public Observable<BaseDataResponse<AdUserBannerEntity>> getUserAdList(Integer position) {
         return apiService.getUserAdList(position);
     }
 

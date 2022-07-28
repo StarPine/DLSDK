@@ -12,6 +12,7 @@ import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.AccostEntity;
 import com.dl.playfun.entity.AdBannerEntity;
 import com.dl.playfun.entity.AdItemEntity;
+import com.dl.playfun.entity.AdUserBannerEntity;
 import com.dl.playfun.entity.AdUserItemEntity;
 import com.dl.playfun.entity.AddressEntity;
 import com.dl.playfun.entity.AlbumPhotoEntity;
@@ -32,6 +33,9 @@ import com.dl.playfun.entity.CallingStatusEntity;
 import com.dl.playfun.entity.CashWalletEntity;
 import com.dl.playfun.entity.ChatDetailCoinEntity;
 import com.dl.playfun.entity.ChatRedPackageEntity;
+import com.dl.playfun.entity.CheckNicknameEntity;
+import com.dl.playfun.entity.ChooseAreaEntity;
+import com.dl.playfun.entity.CityAllEntity;
 import com.dl.playfun.entity.CoinExchangeBoxInfo;
 import com.dl.playfun.entity.CoinWalletEntity;
 import com.dl.playfun.entity.CommentMessageEntity;
@@ -398,8 +402,8 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
-    public Observable<BaseDataResponse<UserDataEntity>> regUser(String nickname, String avatar, String birthday, Integer sex) {
-        return mHttpDataSource.regUser(nickname, avatar, birthday, sex);
+    public Observable<BaseDataResponse<UserDataEntity>> regUser(String nickname, String avatar, String birthday, Integer sex, String channel) {
+        return mHttpDataSource.regUser(nickname, avatar, birthday, sex, channel);
     }
 
     @Override
@@ -440,6 +444,16 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     @Override
     public Observable<BaseDataResponse<GooglePoiBean>> textSearchPlace(RequestBody requestBody) {
         return mHttpDataSource.textSearchPlace(requestBody);
+    }
+
+    @Override
+    public void saveCityConfigAll(List<ConfigItemEntity> configs) {
+        mLocalDataSource.saveCityConfigAll(configs);
+    }
+
+    @Override
+    public List<ConfigItemEntity> readCityConfigAll() {
+        return mLocalDataSource.readCityConfigAll();
     }
 
     @Override
@@ -803,8 +817,8 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
 
 
     @Override
-    public Observable<BaseResponse> verifyCodePost(String phone) {
-        return mHttpDataSource.verifyCodePost(phone);
+    public Observable<BaseResponse> verifyCodePost(RequestBody requestBody) {
+        return mHttpDataSource.verifyCodePost(requestBody);
     }
 
     @Override
@@ -1525,12 +1539,27 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
-    public Observable<BaseDataResponse<List<AdItemEntity>>> getRadioAdBannerList(int position) {
+    public Observable<BaseDataResponse<CityAllEntity>> getCityConfigAll() {
+        return mHttpDataSource.getCityConfigAll();
+    }
+
+    @Override
+    public Observable<BaseDataResponse<CheckNicknameEntity>> checkNickname(String nickname) {
+        return mHttpDataSource.checkNickname(nickname);
+    }
+
+    @Override
+    public Observable<BaseDataResponse<ChooseAreaEntity>> getChooseAreaList() {
+        return mHttpDataSource.getChooseAreaList();
+    }
+
+    @Override
+    public Observable<BaseDataResponse<AdBannerEntity>> getRadioAdBannerList(int position) {
         return mHttpDataSource.getRadioAdBannerList(position);
     }
 
     @Override
-    public Observable<BaseDataResponse<List<AdUserItemEntity>>> getUserAdList(Integer position) {
+    public Observable<BaseDataResponse<AdUserBannerEntity>> getUserAdList(Integer position) {
         return mHttpDataSource.getUserAdList(position);
     }
 
