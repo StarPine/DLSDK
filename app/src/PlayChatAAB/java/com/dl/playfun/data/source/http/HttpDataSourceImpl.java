@@ -32,6 +32,7 @@ import com.dl.playfun.entity.ChatDetailCoinEntity;
 import com.dl.playfun.entity.ChatRedPackageEntity;
 import com.dl.playfun.entity.CheckNicknameEntity;
 import com.dl.playfun.entity.ChooseAreaEntity;
+import com.dl.playfun.entity.CityAllEntity;
 import com.dl.playfun.entity.CoinExchangeBoxInfo;
 import com.dl.playfun.entity.CoinWalletEntity;
 import com.dl.playfun.entity.CommentMessageEntity;
@@ -1237,6 +1238,11 @@ public class HttpDataSourceImpl implements HttpDataSource {
     @Override
     public Observable<BaseDataResponse<MallWithdrawTipsInfoEntity>> getMallWithdrawTipsInfo(Integer channel) {
         return apiService.getMallWithdrawTipsInfo(channel);
+    }
+
+    @Override
+    public Observable<BaseDataResponse<CityAllEntity>> getCityConfigAll() {
+        return apiService.getCityConfigAll();
     }
 
     @Override

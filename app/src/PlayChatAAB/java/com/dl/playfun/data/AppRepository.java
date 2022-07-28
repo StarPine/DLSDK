@@ -35,6 +35,7 @@ import com.dl.playfun.entity.ChatDetailCoinEntity;
 import com.dl.playfun.entity.ChatRedPackageEntity;
 import com.dl.playfun.entity.CheckNicknameEntity;
 import com.dl.playfun.entity.ChooseAreaEntity;
+import com.dl.playfun.entity.CityAllEntity;
 import com.dl.playfun.entity.CoinExchangeBoxInfo;
 import com.dl.playfun.entity.CoinWalletEntity;
 import com.dl.playfun.entity.CommentMessageEntity;
@@ -443,6 +444,16 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     @Override
     public Observable<BaseDataResponse<GooglePoiBean>> textSearchPlace(RequestBody requestBody) {
         return mHttpDataSource.textSearchPlace(requestBody);
+    }
+
+    @Override
+    public void saveCityConfigAll(List<ConfigItemEntity> configs) {
+        mLocalDataSource.saveCityConfigAll(configs);
+    }
+
+    @Override
+    public List<ConfigItemEntity> readCityConfigAll() {
+        return mLocalDataSource.readCityConfigAll();
     }
 
     @Override
@@ -1525,6 +1536,11 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     @Override
     public Observable<BaseDataResponse<MallWithdrawTipsInfoEntity>> getMallWithdrawTipsInfo(Integer channel) {
         return mHttpDataSource.getMallWithdrawTipsInfo(channel);
+    }
+
+    @Override
+    public Observable<BaseDataResponse<CityAllEntity>> getCityConfigAll() {
+        return mHttpDataSource.getCityConfigAll();
     }
 
     @Override

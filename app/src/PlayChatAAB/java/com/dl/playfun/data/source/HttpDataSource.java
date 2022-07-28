@@ -29,6 +29,7 @@ import com.dl.playfun.entity.ChatDetailCoinEntity;
 import com.dl.playfun.entity.ChatRedPackageEntity;
 import com.dl.playfun.entity.CheckNicknameEntity;
 import com.dl.playfun.entity.ChooseAreaEntity;
+import com.dl.playfun.entity.CityAllEntity;
 import com.dl.playfun.entity.CoinExchangeBoxInfo;
 import com.dl.playfun.entity.CoinWalletEntity;
 import com.dl.playfun.entity.CommentMessageEntity;
@@ -106,6 +107,13 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface HttpDataSource {
+
+    /**
+     * @return
+     * @Desc TODO(获取所有城市内容)
+     * @author 彭石林
+     */
+    Observable<BaseDataResponse<CityAllEntity>> getCityConfigAll();
 
     /**
      * 检查昵称是否被占用

@@ -20,6 +20,18 @@ import java.util.Map;
  * @date 2019/3/26
  */
 public interface LocalDataSource {
+    /**
+     * 保存城市配置
+     *
+     * @param configs
+     */
+    void saveCityConfigAll(List<ConfigItemEntity> configs);
+    /**
+     * 获取所有配置
+     *
+     * @return
+     */
+    List<ConfigItemEntity> readCityConfigAll();
     //保存api配置
     void saveApiConfigManager(ApiConfigManagerEntity apiConfigManager);
     //读取api配置

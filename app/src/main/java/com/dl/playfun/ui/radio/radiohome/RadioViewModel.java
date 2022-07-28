@@ -529,6 +529,7 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
                                 listReal.add(radioItemBannerVideoViewModel);
                             }
                             if(!listReal.isEmpty()){
+                                radioUC.startBannerEvent.call();
                                 radioItemsAdUser.addAll(listReal);
                             }
                         }
@@ -766,6 +767,8 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
         public SingleLiveEvent<Void> sendDialogViewEvent = new SingleLiveEvent<>();
         //点击切换banner
         public SingleLiveEvent<Integer> clickBannerIdx = new SingleLiveEvent<>();
+        //开始播放banner
+        public SingleLiveEvent<Void> startBannerEvent = new SingleLiveEvent<>();
     }
 
 }

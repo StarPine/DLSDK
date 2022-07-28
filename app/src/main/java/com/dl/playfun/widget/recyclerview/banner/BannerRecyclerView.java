@@ -87,7 +87,7 @@ public class BannerRecyclerView extends RecyclerView {
      *
      * @param playing 开始播放
      */
-    protected synchronized void setPlaying(boolean playing) {
+    public synchronized void setPlaying(boolean playing) {
         if (isAutoPlaying && hasInit) {
             if (!isPlaying && playing) {
                 mHandler.sendEmptyMessageDelayed(WHAT_AUTO_PLAY, autoPlayDuration);

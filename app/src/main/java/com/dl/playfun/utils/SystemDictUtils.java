@@ -37,6 +37,30 @@ public class SystemDictUtils {
         return sb.toString();
     }
 
+    //根据id数组查询所有城市得到数据
+    public static String getCityByIdsAll(List<Integer> ids) {
+        if (ids == null) {
+            return "";
+        }
+        List<ConfigItemEntity> data = Injection.provideDemoRepository().readCityConfigAll();
+        StringBuffer sb = new StringBuffer();
+        if (data != null && !data.isEmpty()) {
+            for (ConfigItemEntity config : data) {
+                for (int i = 0; i < ids.size(); i++) {
+                    if (ids.get(i).intValue() == config.getId()) {
+                        if (i == ids.size() - 1) {
+                            sb.append(config.getName());
+                        } else {
+                            sb.append(config.getName()).append("/");
+                        }
+                    }
+
+                }
+            }
+        }
+        return sb.toString();
+    }
+
     public static String getCityById(Integer id) {
         List<ConfigItemEntity> data = Injection.provideDemoRepository().readCityConfig();
         StringBuffer sb = new StringBuffer();

@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.databinding.ObservableBoolean;
 
 import com.appsflyer.AppsFlyerLib;
+import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
@@ -17,6 +18,7 @@ import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.entity.AllConfigEntity;
 import com.dl.playfun.entity.ApiConfigManagerEntity;
+import com.dl.playfun.entity.CityAllEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.ui.login.LoginFragment;
 import com.dl.playfun.ui.main.MainFragment;
@@ -200,7 +202,39 @@ public class SplashViewModel extends BaseViewModel<AppRepository> {
                         } catch (Exception e) {
                             ExceptionReportUtils.report(e);
                         }
-                        initData();
+                        initCityConfigAll();
+                    }
+
+                    @Override
+                    public void onError(RequestException e) {
+                        e.printStackTrace();
+                        hintRetryShow.set(true);
+                    }
+
+                });
+    }
+
+    public void initCityConfigAll() {
+        model.getCityConfigAll()
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseDataResponse<CityAllEntity>>() {
+                    @Override
+                    public void onComplete() {
+                        dismissHUD();
+                    }
+
+                    @Override
+                    public void onSuccess(BaseDataResponse<CityAllEntity> response) {
+                        CityAllEntity cityData = response.getData();
+                        if (ObjectUtils.isNotEmpty(cityData.getCityAll())) {
+                            model.saveCityConfigAll(cityData.getCityAll());
+                            initData();
+                        } else {
+                            hintRetryShow.set(true);
+                        }
                     }
 
                     @Override

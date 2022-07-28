@@ -117,8 +117,8 @@ public class BannetDataAdapter {
             Glide.with(context)
                     .load(StringUtil.getFullImageUrl(adItemEntity.getImg()))
                     .apply(new RequestOptions()
-                            .placeholder(context.getResources().getDrawable(R.drawable.img_vip_sub_banner_default))
-                            .error(context.getResources().getDrawable(R.drawable.img_vip_sub_banner_default)))
+                            .placeholder(context.getResources().getDrawable(R.drawable.img_banner_default))
+                            .error(context.getResources().getDrawable(R.drawable.img_banner_default)))
                     .into(imageView);
         }
     }

@@ -200,6 +200,8 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
         super.initViewObservable();
         AppContext.instance().logEvent(AppsFlyerEvent.Broadcast);
         mContext = this.getContext();
+        //开始播放
+        viewModel.radioUC.startBannerEvent.observe(this, unused -> binding.rcvAduser.setPlaying(true));
         //点击banner切换
         viewModel.radioUC.clickBannerIdx.observe(this, integer -> {
             binding.rcvAduser.scrollToPosition(integer);
