@@ -178,11 +178,8 @@ public class WebViewFragment extends BaseFragment<WebviewFragmentBinding, WebVie
             cookieManager.setAcceptCookie(true);
             cookieManager.removeSessionCookie();//移除
             cookieManager.removeAllCookie();
-            StringBuilder sbCookie = new StringBuilder();
-            sbCookie.append("local=" + context.getString(R.string.playfun_local_language));
-            sbCookie.append("appId=" + AppConfig.APPID);
-            String cookieValue = sbCookie.toString();
-            cookieManager.setCookie(url, cookieValue);
+            cookieManager.setCookie(url, "local="+context.getString(R.string.playfun_local_language));
+            cookieManager.setCookie(url, "appId="+AppConfig.APPID);
             CookieSyncManager.getInstance().sync();
         } catch (Exception e) {
             e.printStackTrace();

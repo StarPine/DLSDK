@@ -59,10 +59,10 @@ import com.dl.playfun.entity.VipPackageItemEntity;
 import com.dl.playfun.event.UserUpdateVipEvent;
 import com.dl.playfun.ui.base.BaseDialog;
 import com.dl.playfun.ui.webview.BrowserView;
+import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.utils.Utils;
 import com.google.gson.Gson;
-import com.jakewharton.rxbinding2.view.RxView;
 
 import org.json.JSONException;
 
@@ -71,9 +71,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-import io.reactivex.functions.Consumer;
 import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.utils.RxUtils;
 import me.goldze.mvvmhabit.utils.ToastUtils;
@@ -112,7 +110,7 @@ public class WebViewDialog extends BaseDialog implements PurchasesUpdatedListene
         this.mActivity = activity;
         this.webUrl = url;
         this.confirmOnclick = confirmOnclick;
-//        initGooglePay();
+        initGooglePay();
     }
 
 
@@ -230,11 +228,8 @@ public class WebViewDialog extends BaseDialog implements PurchasesUpdatedListene
             cookieManager.setAcceptCookie(true);
             cookieManager.removeSessionCookie();//移除
             cookieManager.removeAllCookie();
-            StringBuilder sbCookie = new StringBuilder();
-            sbCookie.append("local=" + context.getString(R.string.playfun_local_language));
-            sbCookie.append("appId=" + AppConfig.APPID);
-            String cookieValue = sbCookie.toString();
-            cookieManager.setCookie(url, cookieValue);
+            cookieManager.setCookie(url, "local="+context.getString(R.string.playfun_local_language));
+            cookieManager.setCookie(url, "appId="+AppConfig.APPID);
             CookieSyncManager.getInstance().sync();
         } catch (Exception e) {
             e.printStackTrace();
