@@ -42,6 +42,7 @@ import com.dl.playfun.databinding.FragmentChatDetailBinding;
 import com.dl.playfun.entity.CoinExchangePriceInfo;
 import com.dl.playfun.entity.EvaluateItemEntity;
 import com.dl.playfun.entity.GiftBagEntity;
+import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.entity.LocalMessageIMEntity;
 import com.dl.playfun.entity.MallWithdrawTipsInfoEntity;
 import com.dl.playfun.entity.MessageRuleEntity;
@@ -59,7 +60,9 @@ import com.dl.playfun.ui.message.chatdetail.notepad.NotepadActivity;
 import com.dl.playfun.ui.message.photoreview.PhotoReviewFragment;
 import com.dl.playfun.ui.message.sendcoinredpackage.SendCoinRedPackageFragment;
 import com.dl.playfun.ui.mine.myphotoalbum.MyPhotoAlbumFragment;
+import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
 import com.dl.playfun.ui.mine.wallet.girl.TwDollarMoneyFragment;
+import com.dl.playfun.ui.mine.webview.WebViewFragment;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.ui.userdetail.report.ReportUserFragment;
 import com.dl.playfun.utils.ApiUitl;
@@ -70,11 +73,13 @@ import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.PictureSelectorUtil;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.utils.Utils;
+import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
 import com.dl.playfun.widget.dialog.MMAlertDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.dl.playfun.widget.dialog.MessageDetailDialog;
 import com.dl.playfun.widget.dialog.TraceDialog;
+import com.dl.playfun.widget.dialog.WebViewDialog;
 import com.google.gson.Gson;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.listener.OnResultCallbackListener;
@@ -1296,24 +1301,42 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         if (!isGiftSend) {
             AppContext.instance().logEvent(AppsFlyerEvent.im_topup);
         }
-        AppContext.instance().logEvent(AppsFlyerEvent.Top_up);
-        GameCoinExchargeSheetView coinRechargeSheetView = new GameCoinExchargeSheetView(mActivity);
-        coinRechargeSheetView.show();
-        coinRechargeSheetView.setCoinRechargeSheetViewListener(new GameCoinExchargeSheetView.CoinRechargeSheetViewListener() {
+        String url = AppConfig.WEB_BASE_URL+"recharge/recharge.html";
+        new WebViewDialog(getContext(), mActivity, url, new WebViewDialog.ConfirmOnclick() {
             @Override
-            public void onPaySuccess(GameCoinExchargeSheetView sheetView, CoinExchangePriceInfo sel_goodsEntity) {
-                sheetView.dismiss();
-                int actualValue = sel_goodsEntity.getCoins().intValue();
-                viewModel.maleBalance += actualValue;
+            public void webToVipRechargeVC(Dialog dialog) {
+                if(dialog!=null){
+                    dialog.dismiss();
+                }
+                viewModel.start(VipSubscribeFragment.class.getCanonicalName());
             }
 
             @Override
-            public void onPayFailed(GameCoinExchargeSheetView sheetView, String msg) {
-                sheetView.dismiss();
-                ToastUtils.showShort(msg);
-                AppContext.instance().logEvent(AppsFlyerEvent.Failed_to_top_up);
+            public void vipRechargeDiamondSuccess(Dialog dialog, Integer coinValue) {
+                Log.e("支付上报成功回传","=========="+(dialog==null));
+                if(dialog!=null){
+                    this.cancel();
+                    dialog.dismiss();
+                }
+                viewModel.maleBalance += coinValue.intValue();
             }
-        });
+
+            @Override
+            public void moreRechargeDiamond(Dialog dialog) {
+                dialog.dismiss();
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        googleCoinValueBox(isGiftSend);
+                    }
+                });
+            }
+
+            @Override
+            public void cancel() {
+            }
+
+        }).noticeDialog().show();
     }
 
     private void googleCoinValueBox(boolean isGiftSend) {
@@ -1321,20 +1344,27 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             AppContext.instance().logEvent(AppsFlyerEvent.im_topup);
         }
         AppContext.instance().logEvent(AppsFlyerEvent.Top_up);
-        GameCoinExchargeSheetView coinRechargeSheetView = new GameCoinExchargeSheetView(mActivity);
+        CoinRechargeSheetView coinRechargeSheetView = new CoinRechargeSheetView(mActivity);
         coinRechargeSheetView.show();
-        coinRechargeSheetView.setCoinRechargeSheetViewListener(new GameCoinExchargeSheetView.CoinRechargeSheetViewListener() {
+        coinRechargeSheetView.setCoinRechargeSheetViewListener(new CoinRechargeSheetView.CoinRechargeSheetViewListener() {
             @Override
-            public void onPaySuccess(GameCoinExchargeSheetView sheetView, CoinExchangePriceInfo sel_goodsEntity) {
+            public void onPaySuccess(CoinRechargeSheetView sheetView, GoodsEntity sel_goodsEntity) {
                 sheetView.dismiss();
-                int actualValue = sel_goodsEntity.getCoins().intValue();
-                viewModel.maleBalance += actualValue;
+                MVDialog.getInstance(ChatDetailFragment.this.getContext())
+                        .setTitle(getStringByResId(R.string.playfun_recharge_coin_success))
+                        .setConfirmText(getStringByResId(R.string.confirm))
+                        .setConfirmOnlick(dialog -> {
+                            dialog.dismiss();
+//                                viewModel.loadDatas(1);
+                        })
+                        .chooseType(MVDialog.TypeEnum.CENTER)
+                        .show();
             }
 
             @Override
-            public void onPayFailed(GameCoinExchargeSheetView sheetView, String msg) {
+            public void onPayFailed(CoinRechargeSheetView sheetView, String msg) {
                 sheetView.dismiss();
-                ToastUtils.showShort(msg);
+                me.goldze.mvvmhabit.utils.ToastUtils.showShort(msg);
                 AppContext.instance().logEvent(AppsFlyerEvent.Failed_to_top_up);
             }
         });
