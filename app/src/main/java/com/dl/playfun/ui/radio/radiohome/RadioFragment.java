@@ -173,8 +173,6 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
         });
 
         viewModel.loadHttpData();
-        viewModel.getAdUserBanner();
-        viewModel.getAdListBanner();
     }
 
     @Override
@@ -201,7 +199,12 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
         AppContext.instance().logEvent(AppsFlyerEvent.Broadcast);
         mContext = this.getContext();
         //开始播放
-        viewModel.radioUC.startBannerEvent.observe(this, unused -> binding.rcvAduser.setPlaying(true));
+        viewModel.radioUC.startBannerEvent.observe(this, unused -> {
+            if(viewModel.radioItemsAdUser.size()>2){
+                binding.rcvAduser.setPlaying(true);
+                //binding.rcvAduser.scrollToPosition(2);
+            }
+        });
         //点击banner切换
         viewModel.radioUC.clickBannerIdx.observe(this, integer -> {
             binding.rcvAduser.scrollToPosition(integer);
@@ -282,7 +285,6 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
                 } else {
                     mCirclePop.findViewById(R.id.tv_detele).setVisibility(View.GONE);
                     stop.setText(getString(R.string.playfun_report_user_title));
-                    isSelf = false;
                 }
             }
 

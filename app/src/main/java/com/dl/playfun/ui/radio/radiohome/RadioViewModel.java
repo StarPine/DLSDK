@@ -263,8 +263,9 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
 
     //初始化
     public void loadHttpData() {
-        super.onEnterAnimationEnd();
         loadDatas(1);
+        getAdUserBanner();
+        getAdListBanner();
     }
 
     public void setType(Integer type) {
