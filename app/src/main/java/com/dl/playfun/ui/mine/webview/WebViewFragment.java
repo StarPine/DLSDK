@@ -180,6 +180,7 @@ public class WebViewFragment extends BaseFragment<WebviewFragmentBinding, WebVie
             cookieManager.removeAllCookie();
             StringBuilder sbCookie = new StringBuilder();
             sbCookie.append("local=" + context.getString(R.string.playfun_local_language));
+            sbCookie.append("appId=" + AppConfig.APPID);
             String cookieValue = sbCookie.toString();
             cookieManager.setCookie(url, cookieValue);
             CookieSyncManager.getInstance().sync();

@@ -17,6 +17,8 @@ public class AppConfig {
     public static final String VERSION_NAME = BuildConfig.VERSION_NAME;
     //上报
     public static final String VERSION_NAME_PUSH = "1.4.1";
+    //source 来源ID 1642158125=喵遊(俄语) 1648520220=杜拉克 //playchat 1648626888
+    public static final String APPID = "1648626888";
     /**
      * 女
      */

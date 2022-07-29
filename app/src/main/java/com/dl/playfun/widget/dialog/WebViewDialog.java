@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebResourceRequest;
@@ -44,6 +46,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.FutureTarget;
 import com.dl.playfun.R;
+import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.Injection;
@@ -109,7 +112,7 @@ public class WebViewDialog extends BaseDialog implements PurchasesUpdatedListene
         this.mActivity = activity;
         this.webUrl = url;
         this.confirmOnclick = confirmOnclick;
-        initGooglePay();
+//        initGooglePay();
     }
 
 
@@ -202,6 +205,7 @@ public class WebViewDialog extends BaseDialog implements PurchasesUpdatedListene
         }
         webView.setGson(new Gson());
         webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        setCookie(mActivity,webUrl);
         //设置打开的页面地址
         webView.loadUrl(webUrl);
 
@@ -217,6 +221,24 @@ public class WebViewDialog extends BaseDialog implements PurchasesUpdatedListene
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         window.setAttributes(lp);
         return dialog;
+    }
+
+    public static void setCookie(Context context, String url) {
+        try {
+            CookieSyncManager.createInstance(context);
+            CookieManager cookieManager = CookieManager.getInstance();
+            cookieManager.setAcceptCookie(true);
+            cookieManager.removeSessionCookie();//移除
+            cookieManager.removeAllCookie();
+            StringBuilder sbCookie = new StringBuilder();
+            sbCookie.append("local=" + context.getString(R.string.playfun_local_language));
+            sbCookie.append("appId=" + AppConfig.APPID);
+            String cookieValue = sbCookie.toString();
+            cookieManager.setCookie(url, cookieValue);
+            CookieSyncManager.getInstance().sync();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -429,7 +451,6 @@ public class WebViewDialog extends BaseDialog implements PurchasesUpdatedListene
                     }
                 });
     }
-
 
     //查询最近的购买交易，并消耗商品
     private void queryAndConsumePurchase() {
