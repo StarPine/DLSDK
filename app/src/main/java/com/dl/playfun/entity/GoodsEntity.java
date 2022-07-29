@@ -2,7 +2,9 @@ package com.dl.playfun.entity;
 
 import com.google.gson.annotations.SerializedName;
 
-public class GoodsEntity {
+import java.io.Serializable;
+
+public class GoodsEntity implements Serializable {
 
     /**
      * id : 1

@@ -49,23 +49,26 @@
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_marginTop="20dp"
-                    android:src="@drawable/ic_recharge_money_red_diamond" />
+                    android:layout_marginBottom="20dp"
+                    android:src="@{viewModel.goodsEntity.getIsRecommend() == 1 ? @drawable/coin_recharge_img_item_1 : @drawable/coin_recharge_img_item_2 }" />
 
                 <TextView
                     android:id="@+id/tv_original_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="x142"
                     android:textColor="@color/gray_light"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:visibility="gone"
+                    tools:text="x142" />
 
                 <TextView
                     android:id="@+id/tv_current_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="x142"
-                    android:textColor="#EF5345"
-                    android:textSize="22sp" />
+                    android:text="@{String.format(@string/playfun_x_count2,viewModel.goodsEntity.goodsName)}"
+                    android:textColor="@color/red_10"
+                    android:textSize="22sp"
+                    tools:text="x142" />
 
             </LinearLayout>
 
@@ -122,7 +125,7 @@
                     android:orientation="vertical"
                     android:paddingTop="15dp"
                     android:paddingBottom="15dp">
-<!--                    tools:background="@{!viewModel.isGooglepay ? @drawable/bg_recharge_type_10dp : @drawable/bg_recharge_checked}">-->
+                    <!--                    tools:background="@{!viewModel.isGooglepay ? @drawable/bg_recharge_type_10dp : @drawable/bg_recharge_checked}">-->
 
                     <ImageView
                         android:layout_width="30dp"
@@ -161,9 +164,10 @@
                 android:layout_marginRight="18dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="₺2,609.99"
-                android:textColor="#EF5345"
-                android:textSize="23sp" />
+                android:text="@{viewModel.getPriceText()}"
+                android:textColor="@color/red_10"
+                android:textSize="23sp"
+                tools:text="₺2,609.99" />
 
             <Button
                 style="@style/ButtonPrimary"

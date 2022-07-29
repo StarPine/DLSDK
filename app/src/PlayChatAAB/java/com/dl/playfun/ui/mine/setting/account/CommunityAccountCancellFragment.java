@@ -60,17 +60,6 @@ public class CommunityAccountCancellFragment extends BaseToolbarFragment<Fragmen
                     //调用充值钻石弹窗
                     CoinRechargeSheetView coinRechargeSheetView = new CoinRechargeSheetView(mActivity);
                     coinRechargeSheetView.show();
-                    coinRechargeSheetView.setCoinRechargeSheetViewListener(new CoinRechargeSheetView.CoinRechargeSheetViewListener() {
-                        @Override
-                        public void onPaySuccess(CoinRechargeSheetView sheetView, GoodsEntity sel_goodsEntity) {
-                            AppContext.instance().logEvent(AppsFlyerEvent.success_diamond_top_up);
-                        }
-
-                        @Override
-                        public void onPayFailed(CoinRechargeSheetView sheetView, String msg) {
-                            // do nothing
-                        }
-                    });
                 }
             }
         });

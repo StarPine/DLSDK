@@ -23,6 +23,7 @@ import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
 import com.dl.playfun.ui.certification.certificationmale.CertificationMaleFragment;
 import com.dl.playfun.utils.AutoSizeUtils;
+import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
 import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralPayDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
@@ -88,22 +89,8 @@ public class WalletFragment extends BaseToolbarFragment<FragmentWalletBinding, W
     public void onClick(View v) {
         if (v.getId() == R.id.btn_exchange_game_coin) {
             AppContext.instance().logEvent(AppsFlyerEvent.Top_up);
-            GameCoinExchargeSheetView coinRechargeSheetView = new GameCoinExchargeSheetView(mActivity);
+            CoinRechargeSheetView coinRechargeSheetView = new CoinRechargeSheetView(mActivity);
             coinRechargeSheetView.show();
-            coinRechargeSheetView.setCoinRechargeSheetViewListener(new GameCoinExchargeSheetView.CoinRechargeSheetViewListener() {
-                @Override
-                public void onPaySuccess(GameCoinExchargeSheetView sheetView, CoinExchangePriceInfo sel_goodsEntity) {
-                    sheetView.dismiss();
-                    viewModel.getUserAccount();
-                }
-
-                @Override
-                public void onPayFailed(GameCoinExchargeSheetView sheetView, String msg) {
-                    sheetView.dismiss();
-                    ToastUtils.showShort(msg);
-                    AppContext.instance().logEvent(AppsFlyerEvent.Failed_to_top_up);
-                }
-            });
         }else if(R.id.btn_game_coin_topup == v.getId()){
             CoinExchargeItegralPayDialog coinRechargeSheetView = new CoinExchargeItegralPayDialog(getContext(),mActivity);
             coinRechargeSheetView.show();

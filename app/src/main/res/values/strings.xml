@@ -1034,5 +1034,7 @@
     <string name="playfun_submit_success">提交成功</string>
     <string name="playfun_reg_user_name_error">名稱不能出現重復</string>
     <string name="playfun_fragment_perfect_avatar1">請重新上傳頭貼</string>
+    <string name="playfun_x_count2">x%s</string>
+    <string name="playfun_pay_fail">支付失敗</string>
 
 </resources>

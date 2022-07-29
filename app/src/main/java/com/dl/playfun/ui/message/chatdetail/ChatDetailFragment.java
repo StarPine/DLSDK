@@ -1346,29 +1346,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         AppContext.instance().logEvent(AppsFlyerEvent.Top_up);
         CoinRechargeSheetView coinRechargeSheetView = new CoinRechargeSheetView(mActivity);
         coinRechargeSheetView.show();
-        coinRechargeSheetView.setCoinRechargeSheetViewListener(new CoinRechargeSheetView.CoinRechargeSheetViewListener() {
-            @Override
-            public void onPaySuccess(CoinRechargeSheetView sheetView, GoodsEntity sel_goodsEntity) {
-                sheetView.dismiss();
-                MVDialog.getInstance(ChatDetailFragment.this.getContext())
-                        .setTitle(getStringByResId(R.string.playfun_recharge_coin_success))
-                        .setConfirmText(getStringByResId(R.string.confirm))
-                        .setConfirmOnlick(dialog -> {
-                            dialog.dismiss();
-//                                viewModel.loadDatas(1);
-                        })
-                        .chooseType(MVDialog.TypeEnum.CENTER)
-                        .show();
-            }
-
-            @Override
-            public void onPayFailed(CoinRechargeSheetView sheetView, String msg) {
-                sheetView.dismiss();
-                me.goldze.mvvmhabit.utils.ToastUtils.showShort(msg);
-                AppContext.instance().logEvent(AppsFlyerEvent.Failed_to_top_up);
-            }
-        });
-
     }
 
     @Override
