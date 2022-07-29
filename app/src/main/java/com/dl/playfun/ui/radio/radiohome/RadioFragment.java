@@ -3,7 +3,6 @@ package com.dl.playfun.ui.radio.radiohome;
 import static com.dl.playfun.ui.userdetail.report.ReportUserFragment.ARG_REPORT_TYPE;
 import static com.dl.playfun.ui.userdetail.report.ReportUserFragment.ARG_REPORT_USER_ID;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -41,7 +40,6 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseRefreshFragment;
 import com.dl.playfun.ui.dialog.CityChooseDialog;
 import com.dl.playfun.ui.mine.broadcast.mytrends.TrendItemViewModel;
-import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.ui.userdetail.report.ReportUserFragment;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.PictureSelectorUtil;
@@ -77,6 +75,8 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
     private DropDownFilterPopupWindow radioFilterPopup;
     private Integer radioFilterCheckIndex;
     private List<ConfigItemEntity> citys;
+
+    private RadioFragmentLifecycle radioFragmentLifecycle;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -133,6 +133,9 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
     @Override
     public void initData() {
         super.initData();
+        radioFragmentLifecycle = new RadioFragmentLifecycle();
+        //让radioFragmentLifecycle拥有View的生命周期感应
+        getLifecycle().addObserver(radioFragmentLifecycle);
         binding.refreshLayout.setRefreshHeader(new CustomRefreshHeader(getContext()));
         citys = ConfigManager.getInstance().getAppRepository().readCityConfig();
         ConfigItemEntity nearItemEntity = new ConfigItemEntity();
@@ -173,24 +176,6 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
         });
 
         viewModel.loadHttpData();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        GSYVideoManager.onPause();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        GSYVideoManager.onResume();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        GSYVideoManager.releaseAllVideos();
     }
 
     @Override
