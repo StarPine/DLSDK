@@ -28,7 +28,17 @@ public class TagEntity {
     private Integer isBlacklist;
     @SerializedName("blacklist_status")
     private Integer blacklistStatus;
+    @SerializedName("is_collect")
+    private int isCollect;
     private Integer isChatPush;
+
+    public Integer getIsCollect() {
+        return isCollect;
+    }
+
+    public void setIsCollect(Integer isCollect) {
+        this.isCollect = isCollect;
+    }
 
     public Integer getIsChatPush() {
         return isChatPush;

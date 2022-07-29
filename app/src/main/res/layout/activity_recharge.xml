@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -78,6 +79,7 @@
                 android:paddingRight="10dp">
 
                 <LinearLayout
+                    onClickCommand="@{viewModel.crystalPayOnClick}"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -89,8 +91,7 @@
                     android:orientation="vertical"
                     android:paddingTop="15dp"
                     android:paddingBottom="15dp"
-                    onClickCommand="@{viewModel.crystalPayOnClick}"
-                    >
+                    android:visibility="gone">
 
                     <ImageView
                         android:layout_width="30dp"
@@ -109,18 +110,19 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    onClickCommand="@{viewModel.googlePayOnClick}"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
                     android:layout_weight="1"
-                    android:background="@{!viewModel.isGooglepay ? @drawable/bg_recharge_type_10dp : @drawable/bg_recharge_checked}"
+                    android:background="@null"
                     android:gravity="center"
                     android:orientation="vertical"
                     android:paddingTop="15dp"
-                    onClickCommand="@{viewModel.googlePayOnClick}"
                     android:paddingBottom="15dp">
+<!--                    tools:background="@{!viewModel.isGooglepay ? @drawable/bg_recharge_type_10dp : @drawable/bg_recharge_checked}">-->
 
                     <ImageView
                         android:layout_width="30dp"
@@ -165,12 +167,12 @@
 
             <Button
                 style="@style/ButtonPrimary"
+                onClickCommand="@{viewModel.confirmPayOnClick}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/playfun_confirm_pay"
                 android:textSize="@dimen/text_size_14"
-                onClickCommand="@{viewModel.confirmPayOnClick}"
                 android:textStyle="normal" />
 
         </LinearLayout>

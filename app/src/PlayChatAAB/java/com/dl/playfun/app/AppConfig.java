@@ -16,7 +16,7 @@ public class AppConfig {
     public static final Integer VERSION_CODE = BuildConfig.VERSION_CODE;
     public static final String VERSION_NAME = BuildConfig.VERSION_NAME;
     //上报
-    public static final String VERSION_NAME_PUSH = "1.3.6";
+    public static final String VERSION_NAME_PUSH = "1.4.1";
     /**
      * 女
      */

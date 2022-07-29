@@ -98,8 +98,8 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
     public ObservableField<Boolean> inBlacklist = new ObservableField<>(false);
     public ObservableField<Boolean> isTrack = new ObservableField<>(false);//todo 还没根据后端进行初始化
     public ObservableField<Boolean> isShowedExchangeRules = new ObservableField<>(false);
-    public ObservableField<String> menuTrack = new ObservableField<>();
-    public ObservableField<String> menuBlockade = new ObservableField<>("封鎖");
+    public ObservableField<String> menuTrack = new ObservableField<>();//追踪
+    public ObservableField<String> menuBlockade = new ObservableField<>();//封锁
     public ObservableField<TagEntity> tagEntitys = new ObservableField<>();
     public ObservableField<List<String>> sensitiveWords = new ObservableField<>();
     //聊天对方IM 用户ID
@@ -218,6 +218,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                         if (tagEntity != null) {
                             uc.loadTag.postValue(tagEntity);
                             tagEntitys.set(tagEntity);
+                            isTrack.set(tagEntity.getIsCollect() == 1);
                             model.saveChatPushStatus(tagEntitys.get().getIsChatPush());
                         }
                     }
@@ -335,6 +336,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                     }
                 });
     }
+
     //获取聊天照片规则
     public void getMessageRule(){
         model.getMessageRule()
@@ -357,6 +359,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                     }
                 });
     }
+
     //获取用户聊天相册
     public void getPhotoAlbum(Integer userId){
         model.getPhotoAlbum(userId)
@@ -377,6 +380,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                     }
                 });
     }
+
     //效验用户是否可以评价
     public void loadCanEvaluate(Integer userId) {
         model.evaluateStatus(userId)
@@ -402,15 +406,15 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
      */
     public Drawable onLineDrawables(TagEntity detailEntity) {
         if (detailEntity == null)return null;
-//        if (detailEntity.getCallingStatus() == 0) {
-//            if (detailEntity.getIsOnline() == 1) {
-//                return com.blankj.utilcode.util.Utils.getApp().getResources().getDrawable(R.drawable.user_detail_online2);
-//            }
-//        } else if (detailEntity.getCallingStatus() == 1) {
-//            return com.blankj.utilcode.util.Utils.getApp().getResources().getDrawable(R.drawable.user_detail_calling2);
-//        } else if (detailEntity.getCallingStatus() == 2) {
-//            return com.blankj.utilcode.util.Utils.getApp().getResources().getDrawable(R.drawable.user_detail_video2);
-//        }
+        if (detailEntity.getCallingStatus() == 0) {
+            if (detailEntity.getIsOnline() == 1) {
+                return com.blankj.utilcode.util.Utils.getApp().getResources().getDrawable(R.drawable.user_detail_online2);
+            }
+        } else if (detailEntity.getCallingStatus() == 1) {
+            return com.blankj.utilcode.util.Utils.getApp().getResources().getDrawable(R.drawable.user_detail_calling2);
+        } else if (detailEntity.getCallingStatus() == 2) {
+            return com.blankj.utilcode.util.Utils.getApp().getResources().getDrawable(R.drawable.user_detail_video2);
+        }
         return com.blankj.utilcode.util.Utils.getApp().getResources().getDrawable(R.drawable.user_detail_online2);
     }
 
@@ -463,6 +467,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                     }
                 });
     }
+
     /**
      * 提交评价
      *
@@ -494,8 +499,8 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
 
     public void sendUserGift(Dialog dialog, GiftBagEntity.giftEntity giftEntity, Integer to_user_id, Integer amount) {
         HashMap<String, Integer> map = new HashMap<>();
-        map.put("gift_id", giftEntity.getId());
-        map.put("to_user_id", to_user_id);
+        map.put("giftId", giftEntity.getId());
+        map.put("toUserId", to_user_id);
         map.put("type", 1);
         map.put("amount", amount);
         model.sendUserGift(ApiUitl.getBody(GsonUtils.toJson(map)))
@@ -525,6 +530,11 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                             AppContext.instance().logEvent(AppsFlyerEvent.im_gifts_Insufficient_topup);
                             uc.sendUserGiftError.call();
                         }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        dismissHUD();
                     }
                 });
     }
@@ -590,6 +600,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                     }
                 });
     }
+
     //IM聊天价格配置
     public void getPriceConfig(Integer toUserId){
         model.getPriceConfig(toUserId)

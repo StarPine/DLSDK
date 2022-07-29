@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:57540100126:android:cdfb189e1d8f2efb7dae0f",
         "android_client_info": {
-          "package_name": "com.mvsee.test"
+          "package_name": "com.sdk.playfun.test"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "57540100126-14200l23j3jo43p2jecgtbfnuerkm2fr.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.mvsee.test",
+            "package_name": "com.sdk.playfun.test",
             "certificate_hash": "c4f85776e397f27620471d3c0ad16f1392388593"
           }
         },

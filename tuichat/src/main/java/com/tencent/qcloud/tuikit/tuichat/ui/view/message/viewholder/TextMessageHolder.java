@@ -1,5 +1,6 @@
 package com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder;
 
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -70,16 +71,27 @@ public class TextMessageHolder extends MessageContentHolder {
             }
         });
         boolean isEmoji = false;
-        if (textMessageBean.getText() != null) {
-            isEmoji = FaceManager.handlerEmojiText(msgBodyText, textMessageBean.getText(), false);
-        } else if (!TextUtils.isEmpty(textMessageBean.getExtra())) {
-            isEmoji = FaceManager.handlerEmojiText(msgBodyText, textMessageBean.getExtra(), false);
+        String extra = msg.getExtra();
+        if (extra != null && extra.contains("href") && extra.contains("</a>")) {
+            CharSequence charSequence = Html.fromHtml(extra);
+            msgBodyText.setText(charSequence);
+            msgBodyText.setOnClickListener(view -> {
+                if (onItemClickListener !=null)
+                    onItemClickListener.onTextTOWebView(msg);
+            });
         } else {
-            isEmoji = FaceManager.handlerEmojiText(msgBodyText, TUIChatService.getAppContext().getString(R.string.no_support_msg), false);
+            FaceManager.handlerEmojiText(msgBodyText, extra, false);
         }
-        if (isForwardMode || isReplyDetailMode) {
-            return;
-        }
+//        if (textMessageBean.getText() != null) {
+//            isEmoji = FaceManager.handlerEmojiText(msgBodyText, textMessageBean.getText(), false);
+//        } else if (!TextUtils.isEmpty(textMessageBean.getExtra())) {
+//            isEmoji = FaceManager.handlerEmojiText(msgBodyText, textMessageBean.getExtra(), false);
+//        } else {
+//            isEmoji = FaceManager.handlerEmojiText(msgBodyText, TUIChatService.getAppContext().getString(R.string.no_support_msg), false);
+//        }
+//        if (isForwardMode || isReplyDetailMode) {
+//            return;
+//        }
 //        setSelectableTextHelper(msg, msgBodyText, position, isEmoji);
     }
 

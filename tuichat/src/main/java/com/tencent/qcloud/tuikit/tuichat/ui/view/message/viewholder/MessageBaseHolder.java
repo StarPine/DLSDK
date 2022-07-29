@@ -140,6 +140,10 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
         }
     }
 
+    /**
+     * 显示收益view
+     * @param msg
+     */
     private void showProfitView(TUIMessageBean msg) {
         profitTip.setVisibility(View.GONE);
         String loginUser = V2TIMManager.getInstance().getLoginUser();
@@ -147,18 +151,9 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
         if (TUIChatUtils.isJSON2(cloudCustomData)){
             String cost = TUIChatUtils.json2Massage(cloudCustomData, "cost");
             String refundMoney = TUIChatUtils.json2Massage(cloudCustomData, "isRefundMoney");
-            String charger = TUIChatUtils.json2Massage(cloudCustomData, "payId");
-            if (cost != null && msg.isSelf() && charger != null && charger.equals(loginUser)){//有收益金额,是自己发送，自己是收费方
-                String profitContent = appContext.getString(R.string.profit);
-                if (!MessageRecyclerView.isCertification()) {
-                    profitContent = appContext.getString(R.string.custom_message_txt2_test2);
-                    profitTip.setOnClickListener(v -> onItemClickListener.onClickCustomText());
-                }
-                String format = String.format(profitContent, cost);
-                SpannableString iconSpannable = matcherSearchText("#A72DFE", format, appContext.getString(R.string.custom_message_txt1_key));
-                iconSpannable.setSpan(new MyImageSpan(TUIChatService.getAppContext(), R.drawable.icon_crystal), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                profitTip.setText(iconSpannable);
-                profitTip.setVisibility(View.VISIBLE);
+            String payId = TUIChatUtils.json2Massage(cloudCustomData, "payId");//付费方id
+            if (cost != null && !cost.equals("0.0") && msg.isSelf() && payId != null && !payId.equals(loginUser)){//有收益金额,是自己发送，自己是收费方
+                setProfitDetails(cost, profitTip);
             }
             if (refundMoney != null  && !msg.isSelf()){
                 profitTip.setText(appContext.getString(R.string.custom_message_txt_girl));
@@ -168,6 +163,30 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
         if (!MessageRecyclerView.isFlagTipMoney()){
             profitTip.setVisibility(View.GONE);
         }
+    }
+
+    /**
+     * 设置收益详情
+     * @param profit
+     * @param profitTipView
+     */
+    public void setProfitDetails(String profit, TextView profitTipView) {
+        if (profit == null)return;
+        String profitContent = appContext.getString(R.string.profit);
+        if (!MessageRecyclerView.isCertification()) {
+            profitContent = appContext.getString(R.string.custom_message_txt2_test2);
+            profitTipView.setOnClickListener(v -> onItemClickListener.onClickCustomText());
+        }
+        try {
+            profit = String.format("%.2f", Double.parseDouble(profit));
+        }catch (Exception ignored){
+            Log.e("imsdk", "收益格式错误: " + profit);
+        }
+        String format = String.format(profitContent, profit);
+        SpannableString iconSpannable = matcherSearchText("#A72DFE", format, appContext.getString(R.string.custom_message_txt1_key));
+        iconSpannable.setSpan(new MyImageSpan(TUIChatService.getAppContext(), R.drawable.icon_crystal), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        profitTipView.setText(iconSpannable);
+        profitTipView.setVisibility(View.VISIBLE);
     }
 
 
@@ -275,6 +294,15 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
             param.width = 0;
         }
         itemView.setLayoutParams(param);
+    }
+
+
+    /**
+     * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
+     */
+    public int dip2px(Context context, float dpValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
     }
 
 }
