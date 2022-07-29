@@ -8,25 +8,16 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 
 import com.aliyun.svideo.crop.bean.AlivcCropOutputParam;
 import com.android.billingclient.api.BillingClient;
-import com.android.billingclient.api.BillingClientStateListener;
-import com.android.billingclient.api.BillingResult;
-import com.android.billingclient.api.Purchase;
-import com.android.billingclient.api.PurchaseHistoryRecord;
-import com.android.billingclient.api.PurchaseHistoryResponseListener;
-import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.blankj.utilcode.util.KeyboardUtils;
-import com.blankj.utilcode.util.ObjectUtils;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
-import com.dl.playfun.data.source.http.observer.BaseObserver;
-import com.dl.playfun.data.source.http.response.BaseResponse;
-import com.dl.playfun.entity.UserDataEntity;
+import com.dl.playfun.app.BillingClientLifecycle;
 import com.dl.playfun.event.LoginExpiredEvent;
 import com.dl.playfun.event.UserDisableEvent;
 import com.dl.playfun.manager.ConfigManager;
@@ -35,29 +26,14 @@ import com.dl.playfun.tim.TUIUtils;
 import com.dl.playfun.ui.base.MySupportActivity;
 import com.dl.playfun.ui.login.LoginFragment;
 import com.dl.playfun.ui.main.MainFragment;
-import com.dl.playfun.ui.mine.profile.PerfectProfileFragment;
 import com.dl.playfun.ui.splash.SplashFragment;
-import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
-import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.utils.RxUtils;
@@ -72,15 +48,12 @@ import me.yokeyword.fragmentation.anim.FragmentAnimator;
 public class MainContainerActivity extends MySupportActivity {
     // 再点一次退出程序时间设置
     private static final long WAIT_TIME = 2000L;
-    /**
-     * 谷歌支付连接
-     */
-    public BillingClient billingClient;
-    public boolean billingConnection = false;
     private long TOUCH_TIME = 0;
     private MVDialog userDisableDialog;
     private MVDialog loginExpiredDialog;
+    private BillingClientLifecycle billingClientLifecycle;
 
+    private long onCreateTime = 0l ;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -108,6 +81,7 @@ public class MainContainerActivity extends MySupportActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        onCreateTime = System.currentTimeMillis() / 1000;
         AutoSizeUtils.applyAdapt(this.getResources());
         setContentView(R.layout.activity_main_container);
         ImmersionBarUtils.setupStatusBar(this, true, false);
@@ -117,37 +91,17 @@ public class MainContainerActivity extends MySupportActivity {
         }else{
             loadRootFragment(R.id.fl_container, new SplashFragment());
         }
-
+        //改变游戏装填---兼容代码
+        ConfigManagerUtil.getInstance().putPlayGameFlag(false);
         registerRxBus();
-        //getAndroiodScreenProperty();
-        billingClient = BillingClient.newBuilder(this.getBaseContext()).setListener(new PurchasesUpdatedListener() {
+
+        this.billingClientLifecycle = ((AppContext)getApplication()).getBillingClientLifecycle();
+        billingClientLifecycle.CONNECTION_SUCCESS.observe(this, new Observer<Boolean>() {
             @Override
-            public void onPurchasesUpdated(@NonNull @NotNull BillingResult billingResult, @Nullable @org.jetbrains.annotations.Nullable List<Purchase> purchases) {
-                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && purchases != null) {
-                } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) {
-                    //用户取消
-                    // Log.i(TAG, "Purchase cancel");
-                } else {
-                    //支付错误
-                    //Log.i(TAG, "Pay result error,code=" + billingResult.getResponseCode() + "\nerrorMsg=" + billingResult.getDebugMessage());
-                }
-            }
-        }).enablePendingPurchases().build();
-        //连接google服务器
-        billingClient.startConnection(new BillingClientStateListener() {
-            @Override
-            public void onBillingSetupFinished(@NonNull @NotNull BillingResult billingResult) {
-                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                    billingConnection = true;
-                    //每次进行重连的时候都应该消耗之前缓存的商品，不然可能会导致用户支付不了
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean){
                     queryAndConsumePurchase();
                 }
-            }
-
-            @Override
-            public void onBillingServiceDisconnected() {
-                //通过调用 startConnection() 方法在下一个请求// Google Play 时重新启动连接。
-                billingConnection = false;
             }
         });
     }
@@ -319,10 +273,17 @@ public class MainContainerActivity extends MySupportActivity {
         super.onResume();
         try{
             AppContext.instance().mFirebaseAnalytics.setCurrentScreen(this, "Screen Name", this.getClass().getSimpleName());
-        }catch(Exception e){
+            //页面处于可见状态最后依次连接时间
+            long onResumeLastTime = System.currentTimeMillis() / 1000;
+            if(onCreateTime != 0L){
+                //页面可见时间 - 页面创建时间 < 10秒。说明再次进入。继续查询订单
+                if(onResumeLastTime - onCreateTime  >= 10){
+                    queryAndConsumePurchase();
+                }
+            }
+        }catch(Exception ignored){
 
         }
-        //MobclickAgent.onResume(this);
     }
 
     @Override
@@ -334,130 +295,14 @@ public class MainContainerActivity extends MySupportActivity {
     //查询最近的购买交易，并消耗商品
     public void queryAndConsumePurchase() {
         //queryPurchases() 方法会使用 Google Play 商店应用的缓存，而不会发起网络请求
-        //  Purchase.PurchasesResult mResult = billingClient.queryPurchases(BillingClient.SkuType.SUBS);
-        billingClient.queryPurchaseHistoryAsync(BillingClient.SkuType.SUBS,
-                new PurchaseHistoryResponseListener() {
-                    @Override
-                    public void onPurchaseHistoryResponse(BillingResult billingResult,
-                                                          List<PurchaseHistoryRecord> purchaseHistoryRecordList) {
-                        //开始连接进入以下：
-                        if (purchaseHistoryRecordList != null) {
-                            List<Map> purchaseList = new ArrayList<>();
-                            Date endTime = new Date();
-                            Date beginTime = ApiUitl.toDayMinTwo(endTime);
-                            for (PurchaseHistoryRecord purchaseHistoryRecord : purchaseHistoryRecordList) {
-                                try {
-                                    Purchase purchase = new Purchase(purchaseHistoryRecord.getOriginalJson(), purchaseHistoryRecord.getSignature());
-                                    Date date = new Date();
-                                    date.setTime(purchase.getPurchaseTime());
-                                    if (purchase.isAcknowledged()) {
-                                        if (ApiUitl.belongCalendar(date, beginTime, endTime)) {
-                                            String pack = purchase.getPackageName();
-                                            if (StringUtil.isEmpty(pack)) {
-                                                //pack = BuildConfig.APPLICATION_ID;
-                                            }
-                                            Map<String, Object> maps = new HashMap<>();
-                                            maps.put("orderId", purchase.getOrderId());
-                                            maps.put("token", purchase.getPurchaseToken());
-                                            maps.put("sku", purchase.getSkus().toString());
-                                            maps.put("package", pack);
-                                            purchaseList.add(maps);
-                                        }
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            UserDataEntity userDataEntity = ConfigManager.getInstance().getAppRepository().readUserData();
-                            if (userDataEntity == null || userDataEntity.getId() == null) {
-                                return;
-                            }
-                            if (!ObjectUtils.isEmpty(purchaseList) && purchaseList.size() > 0) {
-                                Map<String, Object> map = new HashMap<>();
-                                map.put("data", purchaseList);
-                                ConfigManager.getInstance().getAppRepository().repoetLocalGoogleOrder(map)
-                                        .compose(RxUtils.schedulersTransformer())
-                                        .compose(RxUtils.exceptionTransformer())
-                                        .subscribe(new BaseObserver<BaseResponse>() {
-                                            @Override
-                                            public void onSuccess(BaseResponse baseResponse) {
-                                            }
-
-                                            @Override
-                                            public void onComplete() {
-                                                billingClient.endConnection();
-                                            }
-                                        });
-                            }
-                        }
-                    }
-
-                });
+        billingClientLifecycle.queryPurchaseHistoryAsync(BillingClient.SkuType.SUBS);
         //购买商品上报补偿机制
-        billingClient.queryPurchaseHistoryAsync(BillingClient.SkuType.INAPP,
-                new PurchaseHistoryResponseListener() {
-                    @Override
-                    public void onPurchaseHistoryResponse(BillingResult billingResult,
-                                                          List<PurchaseHistoryRecord> purchaseHistoryRecordList) {
-                        //开始连接进入以下：
-                        if (purchaseHistoryRecordList != null) {
-                            List<Map> purchaseList = new ArrayList<>();
-                            Date endTime = new Date();
-                            Date beginTime = ApiUitl.toDayMinTwo(endTime);
-                            for (PurchaseHistoryRecord purchaseHistoryRecord : purchaseHistoryRecordList) {
-                                try {
-                                    Purchase purchase = new Purchase(purchaseHistoryRecord.getOriginalJson(), purchaseHistoryRecord.getSignature());
-                                    Date date = new Date();
-                                    date.setTime(purchase.getPurchaseTime());
-                                    if (purchase.isAcknowledged()) {
-                                        if (ApiUitl.belongCalendar(date, beginTime, endTime)) {
-                                            String pack = purchase.getPackageName();
-                                            if (StringUtil.isEmpty(pack)) {
-                                                //pack = BuildConfig.APPLICATION_ID;
-                                            }
-                                            Map<String, Object> maps = new HashMap<>();
-                                            maps.put("orderId", purchase.getOrderId());
-                                            maps.put("token", purchase.getPurchaseToken());
-                                            maps.put("sku", purchase.getSkus().toString());
-                                            maps.put("package", pack);
-                                            purchaseList.add(maps);
-                                        }
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            UserDataEntity userDataEntity = ConfigManager.getInstance().getAppRepository().readUserData();
-                            if (userDataEntity == null || userDataEntity.getId() == null) {
-                                return;
-                            }
-                            if (!ObjectUtils.isEmpty(purchaseList) && purchaseList.size() > 0) {
-                                Map<String, Object> map = new HashMap<>();
-                                map.put("data", purchaseList);
-                                ConfigManager.getInstance().getAppRepository().repoetLocalGoogleOrder(map)
-                                        .compose(RxUtils.schedulersTransformer())
-                                        .compose(RxUtils.exceptionTransformer())
-                                        .subscribe(new BaseObserver<BaseResponse>() {
-                                            @Override
-                                            public void onSuccess(BaseResponse baseResponse) {
-                                            }
-
-                                            @Override
-                                            public void onComplete() {
-                                                billingClient.endConnection();
-                                            }
-                                        });
-                            }
-                        }
-                    }
-
-                });
+        billingClientLifecycle.queryPurchaseHistoryAsync(BillingClient.SkuType.INAPP);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         AutoSizeUtils.closeAdapt(this.getResources());
-        ConfigManagerUtil.getInstance().putPlayGameFlag(true);
     }
 }

@@ -25,6 +25,7 @@ import com.blankj.utilcode.util.ObjectUtils;
 import com.dl.playfun.R;
 import com.dl.playfun.api.AppGameConfig;
 import com.dl.playfun.app.AppContext;
+import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.BillingClientLifecycle;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
@@ -33,20 +34,16 @@ import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.CreateOrderEntity;
 import com.dl.playfun.entity.GameCoinBuy;
 import com.dl.playfun.entity.GameCoinWalletEntity;
-import com.dl.playfun.event.MyCardPayResultEvent;
 import com.dl.playfun.event.UMengCustomEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseDialog;
-import com.dl.playfun.ui.dialog.PayMethodDialog;
 import com.dl.playfun.ui.dialog.adapter.GameCoinTopupAdapter;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.utils.RxUtils;
@@ -72,7 +69,6 @@ public class CoinExchargeItegralPayDialog extends BaseDialog implements View.OnC
     private List<GameCoinBuy> mGoodsList;
     private String orderNumber = null;
     private CoinExchargeItegralPayDialog.CoinRechargeSheetViewListener coinRechargeSheetViewListener;
-    private Disposable mSubscription;
     private GameCoinBuy sel_goodsEntity;
     private ImageView imgGameCoin;
 
@@ -82,7 +78,6 @@ public class CoinExchargeItegralPayDialog extends BaseDialog implements View.OnC
         super(context);
         this.mActivity = activity;
         this.billingClientLifecycle = ((AppContext)activity.getApplication()).getBillingClientLifecycle();
-        Log.e("当前谷歌连接池为", String.valueOf(billingClientLifecycle==null));
         init(activity);
     }
 
@@ -120,54 +115,46 @@ public class CoinExchargeItegralPayDialog extends BaseDialog implements View.OnC
         this.adapter.setCoinRechargeAdapterListener(this);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(context));
         this.recyclerView.setAdapter(this.adapter);
-        this.mSubscription = RxBus.getDefault().toObservable(MyCardPayResultEvent.class).subscribe((event) -> {
-            if (event.getStatus() != 1) {
-                if (event.getStatus() == 3) {
-                    if (this.coinRechargeSheetViewListener != null) {
-                        this.coinRechargeSheetViewListener.onPayFailed(this, event.getErrorMsg());
-                    } else {
-                        this.dismiss();
-                        ToastUtils.showShort(R.string.playfun_pay_success);
-                        this.loadBalance();
-                        this.dismiss();
+
+        this.billingClientLifecycle.PAYMENT_SUCCESS.observe(this, billingPurchasesState -> {
+            Log.e("BillingClientLifecycle","支付购买成功回调");
+            switch (billingPurchasesState.getBillingFlowNode()){
+                //查询商品阶段
+                case querySkuDetails:
+                    break;
+                case launchBilling: //启动购买
+                    break;
+                case purchasesUpdated: //用户购买操作 可在此购买成功 or 取消支付
+                    break;
+                case acknowledgePurchase:  // 用户操作购买成功 --> 商家确认操作 需要手动确定收货（消耗这笔订单并且发货（给与用户购买奖励）） 否则 到达一定时间 自动退款
+                    Purchase purchase = billingPurchasesState.getPurchase();
+                    if(purchase!=null){
+                        String packageName = purchase.getPackageName();
+
+                        paySuccessNotify(packageName,orderNumber,purchase.getSkus(),purchase.getPurchaseToken(),1);
+                        Log.e("BillingClientLifecycle","dialog支付购买成功："+purchase.toString());
                     }
-                } else if (event.getStatus() == 2) {
-                    ToastUtils.showShort(R.string.playfun_pay_cancel);
-                }
-            }
-
-        });
-        this.billingClientLifecycle.PAYMENT_SUCCESS.observe(this, new Observer<Purchase>() {
-            @Override
-            public void onChanged(Purchase purchase) {
-                Log.e("BillingClientLifecycle","支付购买成功回调");
-                if(purchase!=null){
-                    String packageName = purchase.getPackageName();
-
-                    paySuccessNotify(packageName,orderNumber,purchase.getSkus(),purchase.getPurchaseToken(),1);
-                    Log.e("BillingClientLifecycle","dialog支付购买成功："+purchase.toString());
-                }
-
+                    break;
             }
         });
-        this.billingClientLifecycle.PAYMENT_FAIL.observe(this, new Observer<Purchase>() {
-            @Override
-            public void onChanged(Purchase purchase) {
-                Log.e("BillingClientLifecycle","支付购买失败回调");
-                if(purchase!=null){
-                    Log.e("BillingClientLifecycle","dialog支付购买失败："+purchase.toString());
-                }
-
+        this.billingClientLifecycle.PAYMENT_FAIL.observe(this, billingPurchasesState -> {
+            Log.e("BillingClientLifecycle","支付购买失败回调");
+            switch (billingPurchasesState.getBillingFlowNode()){
+                //查询商品阶段-->异常
+                case querySkuDetails:
+                    break;
+                case launchBilling: //启动购买-->异常
+                    break;
+                case purchasesUpdated: //用户购买操作 可在此购买成功 or 取消支付 -->异常
+                    break;
+                case acknowledgePurchase:  // 用户操作购买成功 --> 商家确认操作 需要手动确定收货（消耗这笔订单并且发货（给与用户购买奖励）） 否则 到达一定时间 自动退款 -->异常
+                    break;
             }
         });
         this.loadBalance();
         this.loadGoods();
     }
     public void dismiss() {
-        if (this.mSubscription != null) {
-            this.mSubscription.dispose();
-        }
-
         Log.e("CoinRechargeSheetView", "dismiss view destory google connection");
         if (this.mActivity != null && !this.mActivity.isFinishing()) {
             Window dialogWindow = this.mActivity.getWindow();
@@ -266,25 +253,9 @@ public class CoinExchargeItegralPayDialog extends BaseDialog implements View.OnC
             public void onSuccess(BaseDataResponse<CreateOrderEntity> response) {
                 CoinExchargeItegralPayDialog.this.loadingView.setVisibility(View.GONE);
                 CoinExchargeItegralPayDialog.this.orderNumber = ((CreateOrderEntity)response.getData()).getOrderNumber();
-                PayMethodDialog dialog = new PayMethodDialog(String.valueOf(((CreateOrderEntity)response.getData()).getMoney()));
-                dialog.setPayMethodDialogListener(new PayMethodDialog.PayMethodDialogListener() {
-                    public void onConfirmClick(PayMethodDialog dialog, int payMethod) {
-                        dialog.dismiss();
-                        if (payMethod != 1002 && payMethod == 1001) {
-                            List<GameCoinBuy> goodsEntityList = new ArrayList();
-                            goodsEntityList.add(goodsEntity);
-                            CoinExchargeItegralPayDialog.this.querySkuList(goodsEntityList);
-                        }
-
-                    }
-
-                    public void onCancelClick(PayMethodDialog dialog) {
-                        dialog.dismiss();
-                    }
-                });
                 List<GameCoinBuy> goodsEntityList = new ArrayList();
                 goodsEntityList.add(goodsEntity);
-                CoinExchargeItegralPayDialog.this.querySkuList(goodsEntityList);
+                querySkuList(goodsEntityList);
             }
 
             public void onError(RequestException e) {
@@ -366,17 +337,15 @@ public class CoinExchargeItegralPayDialog extends BaseDialog implements View.OnC
     private void querySkuList(List<GameCoinBuy> goodsList) {
         if (goodsList != null && !goodsList.isEmpty()) {
             List<String> skus = new ArrayList();
-            Iterator var3 = goodsList.iterator();
 
-            while(var3.hasNext()) {
-                GameCoinBuy datum = (GameCoinBuy)var3.next();
+            for (GameCoinBuy datum : goodsList) {
                 skus.add(datum.getGoogleGoodsId());
             }
 
             this.loadingView.setVisibility(View.VISIBLE);
             SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
             params.setSkusList(skus).setType(BillingClient.SkuType.INAPP);
-            billingClientLifecycle.querySkuDetailsAsync(params,mActivity);
+            billingClientLifecycle.querySkuDetailsLaunchBillingFlow(params,mActivity,orderNumber);
         }
     }
 

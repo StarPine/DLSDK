@@ -549,9 +549,6 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
             @Override
             public void onClick(View v) {
                 setSelectedItemId(binding.navigationRank);
-//                ConfigManagerUtil.getInstance().putPlayGameFlag(true);
-//                //直接返回上一级
-//                mActivity.finish();
             }
         });
         binding.navigationMessage.setOnClickListener(new View.OnClickListener() {

@@ -1,30 +1,18 @@
 package com.dl.playfun.ui.task.record.list;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.databinding.ObservableArrayList;
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableList;
 
-import com.android.billingclient.api.AcknowledgePurchaseParams;
-import com.android.billingclient.api.AcknowledgePurchaseResponseListener;
 import com.android.billingclient.api.BillingClient;
-import com.android.billingclient.api.BillingResult;
-import com.android.billingclient.api.ConsumeParams;
-import com.android.billingclient.api.Purchase;
-import com.android.billingclient.api.PurchaseHistoryRecord;
-import com.android.billingclient.api.PurchaseHistoryResponseListener;
 import com.android.billingclient.api.SkuDetails;
-import com.android.billingclient.api.SkuDetailsParams;
-import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
-import com.dl.playfun.app.AppContext;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseListEmptyObserver;
@@ -39,17 +27,14 @@ import com.dl.playfun.entity.SystemRoleMoneyConfigEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.AddressEvent;
 import com.dl.playfun.event.UserUpdateVipEvent;
-import com.dl.playfun.ui.task.record.TaskExchangeRecordViewModel;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.ChatUtils;
 import com.dl.playfun.utils.ExceptionReportUtils;
 import com.dl.playfun.utils.ListUtils;
-import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.utils.Utils;
 import com.dl.playfun.viewmodel.BaseViewModel;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -87,8 +72,6 @@ public class ExchangeRecordListViewModel extends BaseViewModel<AppRepository> {
     //放置主键
     public List<Integer> sub_key;
     public UIChangeObservable uc = new UIChangeObservable();
-    /*谷歌支付*/
-    public BillingClient billingClient;
     public SkuDetails goodSkuDetails = null;
     public SingleLiveEvent<String> clickPay = new SingleLiveEvent();
     //全选
@@ -305,61 +288,6 @@ public class ExchangeRecordListViewModel extends BaseViewModel<AppRepository> {
                 });
     }
 
-    /*=====谷歌支付核心代码=====*/
-    //根据iD查询谷歌商品。并且订购它 7days_free
-    public void querySkuOrder(String goodId) {
-        ArrayList<String> goodList = new ArrayList<>();
-        goodList.add(goodId);
-        SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
-        params.setSkusList(goodList).setType(BillingClient.SkuType.SUBS);
-        if (billingClient == null) {
-            ToastUtils.showShort(R.string.playfun_invite_web_detail_error);
-            return;
-        }
-        billingClient.querySkuDetailsAsync(params.build(), new SkuDetailsResponseListener() {
-            @Override
-            public void onSkuDetailsResponse(@NonNull @NotNull BillingResult billingResult, @Nullable @org.jetbrains.annotations.Nullable List<SkuDetails> skuDetailsList) {
-                int responseCode = billingResult.getResponseCode();
-                String debugMessage = billingResult.getDebugMessage();
-                switch (responseCode) {
-                    case BillingClient.BillingResponseCode.OK:
-                        Log.i(TAG, "onSkuDetailsResponse: " + responseCode + " " + debugMessage);
-                        if (skuDetailsList == null) {
-                            //订阅找不到
-                            Log.w(TAG, "onSkuDetailsResponse: null SkuDetails list");
-                            ToastUtils.showShort(R.string.playfun_invite_web_detail_error2);
-                        } else {
-                            for (SkuDetails skuDetails : skuDetailsList) {
-                                if (skuDetails.getSku().equals(goodId)) {
-                                    goodSkuDetails = skuDetails;
-                                    clickPay.postValue(skuDetails.getSku());
-                                    break;
-                                }
-                            }
-                        }
-                        break;
-                    case BillingClient.BillingResponseCode.SERVICE_DISCONNECTED:
-                    case BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE:
-                    case BillingClient.BillingResponseCode.BILLING_UNAVAILABLE:
-                    case BillingClient.BillingResponseCode.ITEM_UNAVAILABLE:
-                    case BillingClient.BillingResponseCode.DEVELOPER_ERROR:
-                    case BillingClient.BillingResponseCode.ERROR:
-                        Log.e(TAG, "onSkuDetailsResponse: " + responseCode + " " + debugMessage);
-                        break;
-                    case BillingClient.BillingResponseCode.USER_CANCELED:
-                        Log.i(TAG, "onSkuDetailsResponse: " + responseCode + " " + debugMessage);
-                        break;
-                    // These response codes are not expected.
-                    case BillingClient.BillingResponseCode.FEATURE_NOT_SUPPORTED:
-                    case BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED:
-                    case BillingClient.BillingResponseCode.ITEM_NOT_OWNED:
-                    default:
-                        Log.wtf(TAG, "onSkuDetailsResponse: " + responseCode + " " + debugMessage);
-                }
-            }
-        });
-    }
-
     public void createOrder(Integer goods_type) {
         model.freeSevenDay(2, goods_type)
                 .doOnSubscribe(this)
@@ -374,7 +302,7 @@ public class ExchangeRecordListViewModel extends BaseViewModel<AppRepository> {
                     public void onSuccess(BaseDataResponse<Map<String, String>> mapBaseDataResponse) {
                         orderNumber = mapBaseDataResponse.getData().get("order_number");
                         google_goods_id = mapBaseDataResponse.getData().get("google_goods_id");
-                        querySkuOrder(google_goods_id);
+                        uc.querySkuOrderEvent.postValue(google_goods_id);
                     }
 
                     @Override
@@ -391,85 +319,6 @@ public class ExchangeRecordListViewModel extends BaseViewModel<AppRepository> {
                 });
     }
 
-    //查询最近的购买交易，并消耗商品
-    public void queryAndConsumePurchase() {
-        //queryPurchases() 方法会使用 Google Play 商店应用的缓存，而不会发起网络请求
-        this.showHUD();
-
-        billingClient.queryPurchaseHistoryAsync(BillingClient.SkuType.INAPP,
-                new PurchaseHistoryResponseListener() {
-                    @Override
-                    public void onPurchaseHistoryResponse(BillingResult billingResult,
-                                                          List<PurchaseHistoryRecord> purchaseHistoryRecordList) {
-                        dismissHUD();
-                        if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && purchaseHistoryRecordList != null) {
-                            for (PurchaseHistoryRecord purchaseHistoryRecord : purchaseHistoryRecordList) {
-                                // Process the result.
-                                //确认购买交易，不然三天后会退款给用户
-                                try {
-                                    Purchase purchase = new Purchase(purchaseHistoryRecord.getOriginalJson(), purchaseHistoryRecord.getSignature());
-                                    if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
-                                        //消耗品 开始消耗
-                                        consumePuchase(purchase, consumeImmediately);
-                                        //确认购买交易
-                                        if (!purchase.isAcknowledged()) {
-                                            acknowledgePurchase(purchase);
-                                        }
-                                        //TODO：这里可以添加订单找回功能，防止变态用户付完钱就杀死App的这种
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    }
-
-                });
-    }
-
-    //消耗商品
-    private void consumePuchase(final Purchase purchase, final int state) {
-        this.showHUD();
-        String packageName = purchase.getPackageName();
-        if (StringUtil.isEmpty(packageName)) {
-            packageName = AppContext.instance().getApplicationInfo().packageName;
-        }
-        List sku = purchase.getSkus();
-        String pToken = purchase.getPurchaseToken();
-        ConsumeParams.Builder consumeParams = ConsumeParams.newBuilder();
-        consumeParams.setPurchaseToken(purchase.getPurchaseToken());
-        final String finalPackageName = packageName;
-        billingClient.consumeAsync(consumeParams.build(), (billingResult, purchaseToken) -> {
-            Log.i(TAG, "onConsumeResponse, code=" + billingResult.getResponseCode());
-            dismissHUD();
-            if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                Log.i(TAG, "onConsumeResponse,code=BillingResponseCode.OK");
-                paySuccessNotify(finalPackageName, sku, pToken, billingResult.getResponseCode());
-            } else {
-                //如果消耗不成功，那就再消耗一次
-                Log.i(TAG, "onConsumeResponse=getDebugMessage==" + billingResult.getDebugMessage());
-            }
-        });
-    }
-
-    //确认订单
-    private void acknowledgePurchase(Purchase purchase) {
-        AcknowledgePurchaseParams acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()
-                .setPurchaseToken(purchase.getPurchaseToken())
-                .build();
-        AcknowledgePurchaseResponseListener acknowledgePurchaseResponseListener = new AcknowledgePurchaseResponseListener() {
-            @Override
-            public void onAcknowledgePurchaseResponse(BillingResult billingResult) {
-                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                    Log.i(TAG, "Acknowledge purchase success");
-                } else {
-                    Log.i(TAG, "Acknowledge purchase failed,code=" + billingResult.getResponseCode() + ",\nerrorMsg=" + billingResult.getDebugMessage());
-                }
-
-            }
-        };
-        billingClient.acknowledgePurchase(acknowledgePurchaseParams, acknowledgePurchaseResponseListener);
-    }
 
     /**
      * 回调结果给后台
@@ -541,6 +390,8 @@ public class ExchangeRecordListViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<Void> subSupplySuccess = new SingleLiveEvent<>();
 
         public SingleLiveEvent<Integer> toSubVipPlay = new SingleLiveEvent<>();
+        //拉起订阅
+        public SingleLiveEvent<String> querySkuOrderEvent = new SingleLiveEvent<>();
     }
     /*=====谷歌支付核心代码=====*/
 }

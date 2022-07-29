@@ -18,12 +18,25 @@ import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.PurchaseHistoryRecord;
+import com.android.billingclient.api.PurchaseHistoryResponseListener;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
+import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.blankj.utilcode.util.ObjectUtils;
+import com.dl.playfun.data.source.http.observer.BaseObserver;
+import com.dl.playfun.data.source.http.response.BaseResponse;
+import com.dl.playfun.entity.UserDataEntity;
+import com.dl.playfun.manager.ConfigManager;
+import com.dl.playfun.utils.ApiUitl;
+import com.dl.playfun.utils.StringUtil;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -31,6 +44,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
+import me.goldze.mvvmhabit.utils.RxUtils;
 
 /**
  * Author: 彭石林
@@ -56,11 +70,12 @@ public class BillingClientLifecycle implements LifecycleObserver, BillingClientS
     public boolean isConnectionSuccessful() {
         return connectionSuccessful;
     }
-
-    //付款成功回调
-    public SingleLiveEvent<Purchase> PAYMENT_SUCCESS = new SingleLiveEvent<>();
-    //付款异常回调
-    public SingleLiveEvent<Purchase> PAYMENT_FAIL = new SingleLiveEvent<>();
+    //连接成功回调
+    public SingleLiveEvent<Boolean> CONNECTION_SUCCESS = new SingleLiveEvent<>();
+    //支付购买成功流程回调
+    public SingleLiveEvent<BillingPurchasesState> PAYMENT_SUCCESS = new SingleLiveEvent<>();
+    //支付购买异常流程回调
+    public SingleLiveEvent<BillingPurchasesState> PAYMENT_FAIL = new SingleLiveEvent<>();
 
     private BillingClientLifecycle(Application app) {
         this.app = app;
@@ -138,7 +153,65 @@ public class BillingClientLifecycle implements LifecycleObserver, BillingClientS
         if (billingResult.getResponseCode() ==  BillingClient.BillingResponseCode.OK) {
             // The BillingClient is ready. You can query purchases here.
             connectionSuccessful = true;
+            CONNECTION_SUCCESS.postValue(true);
+        }else{
+            CONNECTION_SUCCESS.postValue(false);
         }
+    }
+    /**
+    * @Desc TODO(查询本地谷歌商店购买订单记录并且上报)
+    * @author 彭石林
+    * @parame [SkuType]
+    * @return void
+    * @Date 2022/7/29
+    */
+    public void queryPurchaseHistoryAsync(String SkuType){
+        billingClient.queryPurchaseHistoryAsync(SkuType, (billingResult, purchaseHistoryRecordList) -> {
+            //开始连接进入以下：
+            if (purchaseHistoryRecordList != null) {
+                List<Map> purchaseList = new ArrayList<>();
+                Date endTime = new Date();
+                Date beginTime = ApiUitl.toDayMinTwo(endTime);
+                for (PurchaseHistoryRecord purchaseHistoryRecord : purchaseHistoryRecordList) {
+                    try {
+                        Purchase purchase = new Purchase(purchaseHistoryRecord.getOriginalJson(), purchaseHistoryRecord.getSignature());
+                        Date date = new Date();
+                        date.setTime(purchase.getPurchaseTime());
+                        if (purchase.isAcknowledged()) {
+                            if (ApiUitl.belongCalendar(date, beginTime, endTime)) {
+                                String pack = purchase.getPackageName();
+                                Map<String, Object> maps = new HashMap<>();
+                                maps.put("orderId", purchase.getOrderId());
+                                maps.put("token", purchase.getPurchaseToken());
+                                maps.put("sku", purchase.getSkus().toString());
+                                maps.put("package", pack);
+                                purchaseList.add(maps);
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                UserDataEntity userDataEntity = ConfigManager.getInstance().getAppRepository().readUserData();
+                if (userDataEntity == null || userDataEntity.getId() == null) {
+                    return;
+                }
+                if (!ObjectUtils.isEmpty(purchaseList) && purchaseList.size() > 0) {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("data", purchaseList);
+                    ConfigManager.getInstance().getAppRepository().repoetLocalGoogleOrder(map)
+                            .compose(RxUtils.exceptionTransformer())
+                            .subscribe(new BaseObserver<BaseResponse>() {
+                                @Override
+                                public void onSuccess(BaseResponse baseResponse) {
+                                }
+                                @Override
+                                public void onComplete() {
+                                }
+                            });
+                }
+            }
+        });
     }
 
     /**
@@ -157,6 +230,7 @@ public class BillingClientLifecycle implements LifecycleObserver, BillingClientS
                     Log.i(TAG, "Purchase success");
                     //确认购买交易，不然三天后会退款给用户 而且此时也没有支付成功
                     if (!purchase.isAcknowledged()) {
+                        PAYMENT_SUCCESS.postValue(getBillingPurchasesState(0,BillingPurchasesState.BillingFlowNode.purchasesUpdated,purchase));
                         acknowledgePurchase(purchase);
                     }
                 } else if (purchase.getPurchaseState() == Purchase.PurchaseState.PENDING) {
@@ -167,11 +241,11 @@ public class BillingClientLifecycle implements LifecycleObserver, BillingClientS
         } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) {
             //用户取消
             Log.i(TAG, "Purchase cancel");
-            AppContext.instance().logEvent(AppsFlyerEvent.vip_google_start_cancel);
+            PAYMENT_FAIL.postValue(getBillingPurchasesState(billingResult.getResponseCode(),BillingPurchasesState.BillingFlowNode.purchasesUpdated,null));
         } else {
             //支付错误
             Log.i(TAG, "Pay result error,code=" + billingResult.getResponseCode() + "\nerrorMsg=" + billingResult.getDebugMessage());
-            AppContext.instance().logEvent(AppsFlyerEvent.vip_google_play_result+billingResult.getResponseCode());
+            PAYMENT_FAIL.postValue(getBillingPurchasesState(billingResult.getResponseCode(),BillingPurchasesState.BillingFlowNode.purchasesUpdated,null));
         }
     }
 
@@ -202,12 +276,22 @@ public class BillingClientLifecycle implements LifecycleObserver, BillingClientS
         return skuDetailsList.get();
     }
     /**
+     * @Desc TODO(根据类型查询可供购买的商品--这里改成内部回调)
+     * @author 彭石林
+     * @parame []
+     * @return void
+     * @Date 2022/7/21
+     */
+    public void querySkuDetailsAsync(SkuDetailsParams.Builder params, SkuDetailsResponseListener skuDetailsResponseListener) {
+        billingClient.querySkuDetailsAsync(params.build(), skuDetailsResponseListener);
+    }
+    /**
     * @Desc TODO(查询商品是否存在并开始购买)
     * @author 彭石林
     * @parame [params, activity]
     * @Date 2022/7/21
     */
-    public void  querySkuDetailsAsync(SkuDetailsParams.Builder params , Activity activity){
+    public void  querySkuDetailsLaunchBillingFlow(SkuDetailsParams.Builder params , Activity activity,String orderNumber){
         Log.e(TAG,"查询商品是否存在并开始购买："+params.toString());
         long startTime = System.currentTimeMillis() /1000;
         //查询商品是否存在
@@ -217,6 +301,7 @@ public class BillingClientLifecycle implements LifecycleObserver, BillingClientS
             Log.e(TAG,"查询商品："+billingResult.getResponseCode()+"===="+ (skuDetailsList != null ? skuDetailsList.size() : 0));
             //执行api成功
             if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                PAYMENT_SUCCESS.postValue(getBillingPurchasesState(0,BillingPurchasesState.BillingFlowNode.querySkuDetails,null));
                 //成功找到商品
                 if (ObjectUtils.isNotEmpty(skuDetailsList)) {
                     for (SkuDetails skuDetails : skuDetailsList) {
@@ -225,38 +310,49 @@ public class BillingClientLifecycle implements LifecycleObserver, BillingClientS
                         Log.i(TAG, "Sku=" + sku + ",price=" + price);
                         BillingFlowParams flowParams = BillingFlowParams.newBuilder()
                                 .setSkuDetails(skuDetails)
+                                .setObfuscatedAccountId(ConfigManager.getInstance().getUserId())
+                                .setObfuscatedProfileId(orderNumber)
                                 .build();
                         int responseCode = billingClient.launchBillingFlow(activity, flowParams).getResponseCode();
                         if (responseCode == BillingClient.BillingResponseCode.OK) {
                             Log.i(TAG, "成功啟動google支付");
+                            PAYMENT_SUCCESS.postValue(getBillingPurchasesState(responseCode,BillingPurchasesState.BillingFlowNode.launchBilling,null));
                         } else {
+                            PAYMENT_FAIL.postValue(getBillingPurchasesState(responseCode,BillingPurchasesState.BillingFlowNode.launchBilling,null));
                             Log.i(TAG, "LaunchBillingFlow Fail,code=" + responseCode);
                         }
                     }
                 }
             } else {
-                PAYMENT_FAIL.postValue(null);
+                //谷歌api状态
+                PAYMENT_FAIL.postValue(getBillingPurchasesState(billingResult.getResponseCode(),BillingPurchasesState.BillingFlowNode.querySkuDetails,null));
                 Log.i(TAG, "Get SkuDetails Failed,Msg=" + billingResult.getDebugMessage());
             }
         });
     }
 
-    //确认订单
+    //商家确认消耗订单
     private void acknowledgePurchase(final Purchase purchase) {
         AcknowledgePurchaseParams acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()
                 .setPurchaseToken(purchase.getPurchaseToken())
                 .build();
         AcknowledgePurchaseResponseListener acknowledgePurchaseResponseListener = billingResult -> {
-            Log.e(TAG,"確認訂單成功回調："+billingResult.getResponseCode());
+            //Log.e(TAG,"確認訂單成功回調："+billingResult.getResponseCode());
             //确认购买成功
             if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                 Log.i(TAG, "Acknowledge purchase success");
-                PAYMENT_SUCCESS.postValue(purchase);
+                PAYMENT_SUCCESS.postValue(getBillingPurchasesState(0,BillingPurchasesState.BillingFlowNode.acknowledgePurchase,purchase));
             } else {
-                //确认购买失败 原因多种：掉线、超时、无网络、用户主动关闭支付处理窗体
-                PAYMENT_FAIL.postValue(purchase);
+                //上架确认购买消耗失败 原因多种：掉线、超时、无网络、用户主动关闭支付处理窗体
+                PAYMENT_FAIL.postValue(getBillingPurchasesState(billingResult.getResponseCode(),BillingPurchasesState.BillingFlowNode.acknowledgePurchase,purchase));
             }
         };
         billingClient.acknowledgePurchase(acknowledgePurchaseParams, acknowledgePurchaseResponseListener);
     }
+
+    //返回支付流程节点
+    private BillingPurchasesState getBillingPurchasesState(int billingResponseCode, BillingPurchasesState.BillingFlowNode billingFlowNode, Purchase purchase){
+        return new BillingPurchasesState(billingResponseCode,billingFlowNode,purchase);
+    }
+
 }

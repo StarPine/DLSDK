@@ -9,36 +9,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.android.billingclient.api.AcknowledgePurchaseParams;
-import com.android.billingclient.api.AcknowledgePurchaseResponseListener;
 import com.android.billingclient.api.BillingClient;
-import com.android.billingclient.api.BillingClientStateListener;
-import com.android.billingclient.api.BillingFlowParams;
-import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.Purchase;
-import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
+import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
+import com.dl.playfun.app.BillingClientLifecycle;
 import com.dl.playfun.databinding.FragmentTaskRecordListBinding;
 import com.dl.playfun.entity.AddressEntity;
-import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.ui.task.address.AddressEditFragment;
 import com.dl.playfun.ui.task.address.list.AddressListFragment;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.widget.dialog.MMAlertDialog;
 import com.dl.playfun.widget.dialog.TraceDialog;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,9 +48,8 @@ public class ExchangeRecordListFragment extends BaseFragment<FragmentTaskRecordL
     private Integer grend;
 
     private DisplayMetrics dm;
-    private int lastX, lastY;
-    private int oldLastX, oldLastY;
-
+    /*谷歌支付*/
+    public BillingClientLifecycle billingClientLifecycle;
     public static ExchangeRecordListFragment newInstance(int grend) {
         ExchangeRecordListFragment fragment = new ExchangeRecordListFragment();
         Bundle bundle = new Bundle();
@@ -93,37 +84,54 @@ public class ExchangeRecordListFragment extends BaseFragment<FragmentTaskRecordL
     }
 
     @Override
+    public void  initData(){
+        billingClientLifecycle = ((AppContext)mActivity.getApplication()).getBillingClientLifecycle();
+    }
+
+    @Override
     public void initViewObservable() {
         dm = getResources().getDisplayMetrics();
+
+        this.billingClientLifecycle.PAYMENT_SUCCESS.observe(this, billingPurchasesState -> {
+            Log.e("BillingClientLifecycle","支付购买成功回调");
+            switch (billingPurchasesState.getBillingFlowNode()){
+                //查询商品阶段
+                case querySkuDetails:
+                    break;
+                case launchBilling: //启动购买
+                    break;
+                case purchasesUpdated: //用户购买操作 可在此购买成功 or 取消支付
+                    break;
+                case acknowledgePurchase:  // 用户操作购买成功 --> 商家确认操作 需要手动确定收货（消耗这笔订单并且发货（给与用户购买奖励）） 否则 到达一定时间 自动退款
+                    Purchase purchase = billingPurchasesState.getPurchase();
+                    if(purchase!=null){
+                        String packageName = purchase.getPackageName();
+                        viewModel.paySuccessNotify(packageName, purchase.getSkus(), purchase.getPurchaseToken(), 1);
+                        Log.e("BillingClientLifecycle","dialog支付购买成功："+purchase.toString());
+                    }
+                    break;
+            }
+        });
+        this.billingClientLifecycle.PAYMENT_FAIL.observe(this, billingPurchasesState -> {
+            Log.e("BillingClientLifecycle","支付购买失败回调");
+            switch (billingPurchasesState.getBillingFlowNode()){
+                //查询商品阶段-->异常
+                case querySkuDetails:
+                    break;
+                case launchBilling: //启动购买-->异常
+                    break;
+                case purchasesUpdated: //用户购买操作 可在此购买成功 or 取消支付 -->异常
+                    break;
+                case acknowledgePurchase:  // 用户操作购买成功 --> 商家确认操作 需要手动确定收货（消耗这笔订单并且发货（给与用户购买奖励）） 否则 到达一定时间 自动退款 -->异常
+                    break;
+            }
+        });
         binding.checkbox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 viewModel.clickSelAll.execute();
             }
         });
-//        binding.ivHelpAdmin.setTouchEventCallvack(new MoveImage.TouchEvent() {
-//            @Override
-//            public void ACTION_DOWN() {
-//                binding.refreshLayout.setEnableRefresh(false);
-//                binding.refreshLayout.setEnableLoadMore(false);
-//            }
-//
-//            @Override
-//            public void ACTION_MOVE() {
-//            }
-//
-//            @Override
-//            public void ACTION_UP() {
-//                binding.refreshLayout.setEnableRefresh(true);
-//                binding.refreshLayout.setEnableLoadMore(true);
-//            }
-//        });
-//        binding.ivPhoneBar.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                viewModel.toUseAdminMessage.execute();
-//            }
-//        });
         viewModel.uc.startRefreshing.observe(this, new Observer() {
             @Override
             public void onChanged(@Nullable Object o) {
@@ -194,92 +202,48 @@ public class ExchangeRecordListFragment extends BaseFragment<FragmentTaskRecordL
                         }).AlertTaskBonus().show();
             }
         });
-        viewModel.uc.toSubVipPlay.observe(this, new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer goods_type) {
-                initGoogle(goods_type);
-            }
-        });
+        viewModel.uc.toSubVipPlay.observe(this, goods_type -> initGoogle(goods_type));
         //谷歌支付
         viewModel.clickPay.observe(this, payCode -> pay(payCode));
+
+        //拉起订阅
+        viewModel.uc.querySkuOrderEvent.observe(this, s -> querySkuOrder(s));
     }
 
     public void initGoogle(Integer goods_type) {
-        viewModel.billingClient = BillingClient.newBuilder(getContext()).setListener(new PurchasesUpdatedListener() {
-            @Override
-            public void onPurchasesUpdated(@NonNull @NotNull BillingResult billingResult, @Nullable @org.jetbrains.annotations.Nullable List<Purchase> purchases) {
-                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && purchases != null) {
-                    for (final Purchase purchase : purchases) {
-                        if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
-                            // Acknowledge purchase and grant the item to the user
-                            Log.i(TAG, "Purchase success");
-                            //确认购买交易，不然三天后会退款给用户
-                            if (!purchase.isAcknowledged()) {
-                                acknowledgePurchase(purchase);
-                            }
-                            //TODO:发放商品
-                        } else if (purchase.getPurchaseState() == Purchase.PurchaseState.PENDING) {
-                            //需要用户确认
-                            Log.i(TAG, "Purchase pending,need to check");
-                        }
-                    }
-                } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) {
-                    //用户取消
-                    Log.i(TAG, "Purchase cancel");
-                } else {
-                    //支付错误
-                    Log.i(TAG, "Pay result error,code=" + billingResult.getResponseCode() + "\nerrorMsg=" + billingResult.getDebugMessage());
-                }
-            }
-        }).enablePendingPurchases().build();
-        //连接google服务器
-        viewModel.billingClient.startConnection(new BillingClientStateListener() {
-            @Override
-            public void onBillingSetupFinished(@NonNull @NotNull BillingResult billingResult) {
-                Log.i(TAG, "billingResult Code=" + billingResult.getResponseCode());
-                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                    // The BillingClient is ready. You can query purchases here.
-                    Log.i(TAG, "Init success,The BillingClient is ready");
-                    //每次进行重连的时候都应该消耗之前缓存的商品，不然可能会导致用户支付不了
-                    viewModel.queryAndConsumePurchase();
-                    viewModel.createOrder(goods_type);
-                } else {
-                    Log.i(TAG, "Init failed,The BillingClient is not ready,code=" + billingResult.getResponseCode() + "\nMsg=" + billingResult.getDebugMessage());
-                    ToastUtils.showShort(billingResult.getDebugMessage());
-                }
-            }
-
-            @Override
-            public void onBillingServiceDisconnected() {
-                //通过调用 startConnection() 方法在下一个请求// Google Play 时重新启动连接。
-            }
-        });
+        viewModel.createOrder(goods_type);
     }
 
-    //确认订单
-    private void acknowledgePurchase(Purchase purchase) {
-        AcknowledgePurchaseParams acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()
-                .setPurchaseToken(purchase.getPurchaseToken())
-                .build();
-        AcknowledgePurchaseResponseListener acknowledgePurchaseResponseListener = new AcknowledgePurchaseResponseListener() {
-            @Override
-            public void onAcknowledgePurchaseResponse(BillingResult billingResult) {
-                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                    Log.i(TAG, "Acknowledge purchase success");
-                    String packageName = purchase.getPackageName();
-                    List sku = purchase.getSkus();
-                    String pToken = purchase.getPurchaseToken();
-                    viewModel.paySuccessNotify(packageName, sku, pToken, billingResult.getResponseCode());
+    //根据iD查询谷歌商品。并且订购它 7days_free
+    public void querySkuOrder(String goodId) {
+        ArrayList<String> goodList = new ArrayList<>();
+        goodList.add(goodId);
+        SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
+        params.setSkusList(goodList).setType(BillingClient.SkuType.SUBS);
+        if (!billingClientLifecycle.isConnectionSuccessful()) {
+            ToastUtils.showShort(R.string.playfun_invite_web_detail_error);
+            return;
+        }
+        billingClientLifecycle.querySkuDetailsAsync(params, (billingResult, skuDetailsList) -> {
+            int responseCode = billingResult.getResponseCode();
+            String debugMessage = billingResult.getDebugMessage();
+            if (responseCode == BillingClient.BillingResponseCode.OK) {
+                Log.i(TAG, "onSkuDetailsResponse: " + responseCode + " " + debugMessage);
+                if (skuDetailsList == null) {
+                    //订阅找不到
+                    Log.w(TAG, "onSkuDetailsResponse: null SkuDetails list");
+                    ToastUtils.showShort(R.string.playfun_invite_web_detail_error2);
                 } else {
-                    String packageName = purchase.getPackageName();
-                    List sku = purchase.getSkus();
-                    String pToken = purchase.getPurchaseToken();
-                    viewModel.paySuccessNotify(packageName, sku, pToken, billingResult.getResponseCode());
-                    Log.i(TAG, "Acknowledge purchase failed,code=" + billingResult.getResponseCode() + ",\nerrorMsg=" + billingResult.getDebugMessage());
+                    for (SkuDetails skuDetails : skuDetailsList) {
+                        if (skuDetails.getSku().equals(goodId)) {
+                            viewModel.goodSkuDetails = skuDetails;
+                            viewModel.clickPay.postValue(skuDetails.getSku());
+                            break;
+                        }
+                    }
                 }
             }
-        };
-        viewModel.billingClient.acknowledgePurchase(acknowledgePurchaseParams, acknowledgePurchaseResponseListener);
+        });
     }
 
     //进行支付
@@ -288,44 +252,7 @@ public class ExchangeRecordListFragment extends BaseFragment<FragmentTaskRecordL
         skuList.add(payCode);
         SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
         params.setSkusList(skuList).setType(BillingClient.SkuType.SUBS);
-        viewModel.billingClient.querySkuDetailsAsync(params.build(),
-                (billingResult, skuDetailsList) -> {
-                    Log.i(TAG, "querySkuDetailsAsync=getResponseCode==" + billingResult.getResponseCode() + ",skuDetailsList.size=");
-                    // Process the result.
-                    if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                        if (skuDetailsList != null && skuDetailsList.size() > 0) {
-                            for (SkuDetails skuDetails : skuDetailsList) {
-                                String sku = skuDetails.getSku();
-                                String price = skuDetails.getPrice();
-                                Log.i(TAG, "Sku=" + sku + ",price=" + price);
-                                BillingFlowParams flowParams = BillingFlowParams.newBuilder()
-                                        .setSkuDetails(skuDetails)
-                                        .setObfuscatedAccountId(ConfigManager.getInstance().getUserId())
-                                        .setObfuscatedProfileId(viewModel.orderNumber)
-                                        .build();
-                                int responseCode = viewModel.billingClient.launchBillingFlow(mActivity, flowParams).getResponseCode();
-                                if (responseCode == BillingClient.BillingResponseCode.OK) {
-                                    Log.i(TAG, "成功啟動google支付");
-                                } else {
-                                    //BILLING_RESPONSE_RESULT_OK	0	成功
-                                    //BILLING_RESPONSE_RESULT_USER_CANCELED	1	用户按上一步或取消对话框
-                                    //BILLING_RESPONSE_RESULT_SERVICE_UNAVAILABLE	2	网络连接断开
-                                    //BILLING_RESPONSE_RESULT_BILLING_UNAVAILABLE	3	所请求的类型不支持 Google Play 结算服务 AIDL 版本
-                                    //BILLING_RESPONSE_RESULT_ITEM_UNAVAILABLE	4	请求的商品已不再出售
-                                    //BILLING_RESPONSE_RESULT_DEVELOPER_ERROR	5	提供给 API 的参数无效。此错误也可能说明应用未针对 Google Play 结算服务正确签名或设置，或者在其清单中缺少必要的权限。
-                                    //BILLING_RESPONSE_RESULT_ERROR	6	API 操作期间出现严重错误
-                                    //BILLING_RESPONSE_RESULT_ITEM_ALREADY_OWNED	7	未能购买，因为已经拥有此商品
-                                    //BILLING_RESPONSE_RESULT_ITEM_NOT_OWNED	8	未能消费，因为尚未拥有此商品
-                                    Log.i(TAG, "LaunchBillingFlow Fail,code=" + responseCode);
-                                }
-                            }
-                        } else {
-                            Log.i(TAG, "skuDetailsList is empty.");
-                        }
-                    } else {
-                        Log.i(TAG, "Get SkuDetails Failed,Msg=" + billingResult.getDebugMessage());
-                    }
-                });
+        billingClientLifecycle.querySkuDetailsLaunchBillingFlow(params,mActivity,viewModel.orderNumber);
     }
 
 }

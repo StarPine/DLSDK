@@ -1,23 +1,16 @@
 package com.dl.playfun.ui.mine.vipsubscribe;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableArrayList;
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableList;
 
-import com.android.billingclient.api.AcknowledgePurchaseParams;
-import com.android.billingclient.api.AcknowledgePurchaseResponseListener;
-import com.android.billingclient.api.BillingClient;
-import com.android.billingclient.api.BillingResult;
-import com.android.billingclient.api.ConsumeParams;
-import com.android.billingclient.api.Purchase;
-import com.android.billingclient.api.PurchaseHistoryRecord;
-import com.android.billingclient.api.PurchaseHistoryResponseListener;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
+import com.dl.playfun.BR;
+import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.data.AppRepository;
@@ -36,13 +29,8 @@ import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.entity.VipPackageItemEntity;
 import com.dl.playfun.event.UserUpdateVipEvent;
 import com.dl.playfun.utils.LogUtils;
-import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.utils.Utils;
 import com.dl.playfun.viewmodel.BaseViewModel;
-import com.dl.playfun.BR;
-import com.dl.playfun.R;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -82,7 +70,6 @@ public class VipSubscribeViewModel extends BaseViewModel<AppRepository> {
 
     public ObservableField<VipPackageItemEntity> checkedVipPackageItemEntity = new ObservableField<>();
 
-    public BillingClient billingClient;
     public String orderNumber;
     public Integer pay_good_day = 0;
     UIChangeObservable uc = new UIChangeObservable();
@@ -303,97 +290,6 @@ public class VipSubscribeViewModel extends BaseViewModel<AppRepository> {
                         dismissHUD();
                     }
                 });
-    }
-
-    //查询最近的购买交易，并消耗商品
-    public void queryAndConsumePurchase() {
-        //queryPurchases() 方法会使用 Google Play 商店应用的缓存，而不会发起网络请求
-        this.showHUD();
-        billingClient.queryPurchaseHistoryAsync(BillingClient.SkuType.SUBS,
-                new PurchaseHistoryResponseListener() {
-                    @Override
-                    public void onPurchaseHistoryResponse(BillingResult billingResult,
-                                                          List<PurchaseHistoryRecord> purchaseHistoryRecordList) {
-                        dismissHUD();
-                        if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && purchaseHistoryRecordList != null) {
-                            for (PurchaseHistoryRecord purchaseHistoryRecord : purchaseHistoryRecordList) {
-                                // Process the result.
-                                //确认购买交易，不然三天后会退款给用户
-                                try {
-                                    Purchase purchase = new Purchase(purchaseHistoryRecord.getOriginalJson(), purchaseHistoryRecord.getSignature());
-                                    if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
-                                        //消耗品 开始消耗
-                                        consumePuchase(purchase, consumeImmediately);
-                                        //确认购买交易
-                                        if (!purchase.isAcknowledged()) {
-                                            acknowledgePurchase(purchase);
-                                        }
-                                        //TODO：这里可以添加订单找回功能，防止变态用户付完钱就杀死App的这种
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    }
-
-                });
-    }
-
-    //消耗商品
-    private void consumePuchase(final Purchase purchase, final int state) {
-        this.showHUD();
-        String packageName = purchase.getPackageName();
-        if (StringUtil.isEmpty(packageName)) {
-            packageName = AppContext.instance().getApplicationInfo().packageName;
-        }
-        List<String> sku = purchase.getSkus();
-        String pToken = purchase.getPurchaseToken();
-        ConsumeParams.Builder consumeParams = ConsumeParams.newBuilder();
-        consumeParams.setPurchaseToken(purchase.getPurchaseToken());
-        final String finalPackageName = packageName;
-        billingClient.consumeAsync(consumeParams.build(), (billingResult, purchaseToken) -> {
-            Log.i(TAG, "onConsumeResponse, code=" + billingResult.getResponseCode());
-            dismissHUD();
-            if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                Log.i(TAG, "onConsumeResponse,code=BillingResponseCode.OK");
-                paySuccessNotify(finalPackageName, sku, pToken, billingResult.getResponseCode());
-                //paySuccessNotify(finalPackageName, orderNumber, sku, pToken);
-//                    if (state == consumeImmediately) {
-//                        viewModel.paySuccessNotify(orderId, packageName, sku, purchaseToken);
-//                    }
-            } else {
-                //如果消耗不成功，那就再消耗一次
-                Log.i(TAG, "onConsumeResponse=getDebugMessage==" + billingResult.getDebugMessage());
-//                if (state == consumeDelay && billingResult.getDebugMessage().contains("Server error, please try again")) {
-//                    handler.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            queryAndConsumePurchase();
-//                        }
-//                    }, 5 * 1000);
-//                }
-            }
-        });
-    }
-
-    //确认订单
-    private void acknowledgePurchase(Purchase purchase) {
-        AcknowledgePurchaseParams acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()
-                .setPurchaseToken(purchase.getPurchaseToken())
-                .build();
-        AcknowledgePurchaseResponseListener acknowledgePurchaseResponseListener = new AcknowledgePurchaseResponseListener() {
-            @Override
-            public void onAcknowledgePurchaseResponse(BillingResult billingResult) {
-                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                    Log.i(TAG, "Acknowledge purchase success");
-                } else {
-                    Log.i(TAG, "Acknowledge purchase failed,code=" + billingResult.getResponseCode() + ",\nerrorMsg=" + billingResult.getDebugMessage());
-                }
-
-            }
-        };
-        billingClient.acknowledgePurchase(acknowledgePurchaseParams, acknowledgePurchaseResponseListener);
     }
 
     public TaskAdEntity $taskEntity2;
