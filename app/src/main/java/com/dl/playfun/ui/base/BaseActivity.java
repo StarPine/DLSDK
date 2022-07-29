@@ -3,13 +3,16 @@ package com.dl.playfun.ui.base;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ProgressBar;
 
+import androidx.annotation.Nullable;
 import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.Observer;
 
 import com.dl.playfun.R;
 import com.dl.playfun.viewmodel.BaseViewModel;
+import com.gyf.immersionbar.ImmersionBar;
 import com.kaopiz.kprogresshud.KProgressHUD;
 
 import java.util.Map;
@@ -22,6 +25,19 @@ import java.util.Map;
 public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseViewModel> extends me.goldze.mvvmhabit.base.BaseActivity<V, VM> {
     private KProgressHUD hud;
     private KProgressHUD progressHud;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        View statusView = findViewById(R.id.status_bar_view);
+        if (statusView != null) {
+            ImmersionBar.setStatusBarView(this, statusView);
+        }
+        if (viewModel != null) {
+            viewModel.onViewCreated();
+        }
+    }
 
     @Override
     protected void registorUIChangeLiveDataCallBack() {

@@ -20,7 +20,7 @@ import com.gyf.immersionbar.ImmersionBar;
 /**
  * Author: 彭石林
  * Time: 2022/1/27 15:02
- * Description: This is WebUrlViewActivity
+ * Description: 协议url
  */
 public class WebUrlViewActivity extends Activity implements BasicToolbar.ToolbarListener{
     private WebView webView;

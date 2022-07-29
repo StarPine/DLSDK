@@ -181,7 +181,7 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
             }
         });
 
-        viewModel.loadHttpData();
+        binding.refreshLayout.autoRefresh();
     }
 
     @Override
