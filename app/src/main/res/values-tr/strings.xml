@@ -655,7 +655,7 @@
     <string name="playfun_error_DuplicatedTicketId">Gönderim tekrarlandı</string>
     <string name="playfun_vip_alert_goldPrice">$%s/gün</string>
     <string name="playfun_vip_alert_yj_price">Önceki fiyat %s</string>
-    <string name="playfun_vip_alert_gold_tag"><Data><![CDATA[ <s>Önceki Fiyat %s</s> ]]></Data></string>
+    <string name="playfun_vip_alert_gold_tag"><Data><![CDATA[ <s>%s</s> ]]></Data></string>
     <string name="playfun_vip_alert_my">TRY</string>
     <string name="playfun_vip_alert_empty"></string>
     <string name="playfun_vip_subscri_btn_title">Yeni kullanıcılar için süre sınırlı 30% indirim</string>

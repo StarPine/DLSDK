@@ -57,7 +57,7 @@ public class CoinExchargeIntegralAdapter extends RecyclerView.Adapter<CoinExchar
     public void onBindViewHolder(@NonNull RecyclerHolder holder, int position) {
         GoodsEntity goodsEntity = dataList.get(position);
         holder.tvName.setText(goodsEntity.getGoodsName());
-        holder.tvPrice.setText(goodsEntity.getPayPrice());
+        holder.tvPrice.setText(goodsEntity.getSymbol() + goodsEntity.getSalePrice());
         holder.itemView.setTag(position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,7 +79,7 @@ public class CoinExchargeIntegralAdapter extends RecyclerView.Adapter<CoinExchar
         void onBuyClick(View view, int position);
     }
 
-    class RecyclerHolder extends RecyclerView.ViewHolder {
+    static class RecyclerHolder extends RecyclerView.ViewHolder {
         TextView tvName = null;
         TextView tvPrice = null;
 

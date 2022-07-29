@@ -666,7 +666,7 @@
     <!--    TODO 格式有问题-->
     <string name="playfun_vip_alert_goldPrice">₽%s/день</string>
     <string name="playfun_vip_alert_yj_price">Оригинал %s</string>
-    <string name="playfun_vip_alert_gold_tag"><Данные><![CDATA[ <s>Оригинал %s</s> ]]></Данные></string>
+    <string name="playfun_vip_alert_gold_tag"><Данные><![CDATA[ <s>%s</s> ]]></Данные></string>
 
     <string name="playfun_vip_alert_my">RUB</string>
     <string name="playfun_vip_alert_empty"></string>

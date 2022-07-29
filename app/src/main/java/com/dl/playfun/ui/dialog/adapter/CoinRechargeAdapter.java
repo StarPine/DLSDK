@@ -56,10 +56,10 @@ public class CoinRechargeAdapter extends RecyclerView.Adapter<CoinRechargeAdapte
     public void onBindViewHolder(@NonNull RecyclerHolder holder, int position) {
         GoodsEntity goodsEntity = dataList.get(position);
         holder.good_text.setText(goodsEntity.getGoodsName());
-        holder.good_name.setText(goodsEntity.getPayPrice());
-        holder.good_lable.setText(goodsEntity.getGoodsLabel());
+        holder.good_name.setText(goodsEntity.getSymbol() + goodsEntity.getSalePrice());
+        holder.good_lable.setText(goodsEntity.getDiscountLabel());
         //是否推荐
-        if (goodsEntity.getIsRecommend() != null && goodsEntity.getIsRecommend().intValue() == 1) {
+        if (goodsEntity.getIsRecommend() != null && goodsEntity.getIsRecommend() == 1) {
             holder.layout1.setBackgroundResource(R.drawable.coin_recharge_img_custom_backop);
             holder.first_layout.setBackgroundResource(R.drawable.coin_recharge_img_custom_title);
             holder.good_text.setTextColor(ColorUtils.getColor(R.color.white));
@@ -76,7 +76,7 @@ public class CoinRechargeAdapter extends RecyclerView.Adapter<CoinRechargeAdapte
             holder.btn_sub.setBackgroundResource(R.drawable.coin_recharge_img_btn);
             holder.good_name.setTextColor(ColorUtils.getColor(R.color.white));
         }
-        if (goodsEntity.getIsFirst() != null && goodsEntity.getIsFirst().intValue() == 1) { //是否首冲
+        if (goodsEntity.getIsFirst() != null && goodsEntity.getIsFirst() == 1) { //是否首冲
             holder.good_lable.setText(goodsEntity.getFirstText());
             holder.first_layout.setVisibility(View.VISIBLE);
         } else {

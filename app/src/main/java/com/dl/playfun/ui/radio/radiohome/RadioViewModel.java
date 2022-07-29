@@ -30,22 +30,17 @@ import com.dl.playfun.entity.BroadcastEntity;
 import com.dl.playfun.entity.BroadcastListEntity;
 import com.dl.playfun.entity.CallingInviteInfo;
 import com.dl.playfun.entity.ConfigItemEntity;
-import com.dl.playfun.entity.RadioTwoFilterItemEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.BadioEvent;
 import com.dl.playfun.event.LikeChangeEvent;
-import com.dl.playfun.event.LoginExpiredEvent;
-import com.dl.playfun.event.MainTabEvent;
 import com.dl.playfun.event.RadioadetailEvent;
 import com.dl.playfun.event.TaskListEvent;
 import com.dl.playfun.event.TaskMainTabEvent;
 import com.dl.playfun.event.TaskTypeStatusEvent;
-import com.dl.playfun.event.UserDisableEvent;
 import com.dl.playfun.event.ZoomInPictureEvent;
 import com.dl.playfun.kl.Utils;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.mine.broadcast.mytrends.TrendItemViewModel;
-import com.dl.playfun.ui.mine.wallet.WalletFragment;
 import com.dl.playfun.ui.radio.issuanceprogram.IssuanceProgramFragment;
 import com.dl.playfun.ui.radio.radiohome.item.RadioItemBannerVideoViewModel;
 import com.dl.playfun.ui.task.webview.FukuokaViewFragment;
@@ -56,10 +51,8 @@ import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 import me.goldze.mvvmhabit.base.MultiItemViewModel;
-import me.goldze.mvvmhabit.binding.command.BindingAction;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
 import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.bus.RxSubscriptions;
@@ -69,8 +62,6 @@ import me.goldze.mvvmhabit.utils.ToastUtils;
 import me.tatarka.bindingcollectionadapter2.BindingRecyclerViewAdapter;
 import me.tatarka.bindingcollectionadapter2.ItemBinding;
 import me.tatarka.bindingcollectionadapter2.OnItemBind;
-import retrofit2.http.GET;
-import retrofit2.http.Query;
 
 /**
  * @author wulei
@@ -153,9 +144,9 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
     public void itemClickCallVideo(AdUserItemEntity adUserItemEntity){
         //逻辑判断。有可能挤掉账号 没有下线。但是本地已经清空
         UserDataEntity userDataEntity = model.readUserData();
-        if(userDataEntity!=null && adUserItemEntity!=null && adUserItemEntity.getImUserId()!=null){
+        if(userDataEntity!=null && adUserItemEntity!=null && adUserItemEntity.getToImId()!=null){
             //视频拨打
-            getCallingInvitedInfo(2, model.readUserData().getImUserId(), adUserItemEntity.getImUserId());
+            getCallingInvitedInfo(2, model.readUserData().getImUserId(), adUserItemEntity.getToImId());
         }
 
     }

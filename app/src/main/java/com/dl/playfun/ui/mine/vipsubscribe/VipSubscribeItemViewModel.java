@@ -1,6 +1,8 @@
 package com.dl.playfun.ui.mine.vipsubscribe;
 
 import android.graphics.drawable.Drawable;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -46,18 +48,18 @@ public class VipSubscribeItemViewModel extends MultiItemViewModel<VipSubscribeVi
     //获取标题文字
     public String getTitleText(){
         VipPackageItemEntity entity = itemEntity.get();
-        if(StringUtils.isEmpty(entity.getGoodsLabel())){
+        if (StringUtils.isEmpty(entity.getDiscountLabel())) {
             return "";
-        }else{
-            return entity.getGoodsLabel();
+        } else {
+            return entity.getDiscountLabel();
         }
     }
     //控制标题是否隐藏
     public int getTitleShow(){
         VipPackageItemEntity entity = itemEntity.get();
-        if(!StringUtils.isEmpty(entity.getGoodsLabel())){
+        if (!StringUtils.isEmpty(entity.getDiscountLabel())) {
             return View.VISIBLE;
-        }else{
+        } else {
             return View.GONE;
         }
     }
@@ -77,6 +79,25 @@ public class VipSubscribeItemViewModel extends MultiItemViewModel<VipSubscribeVi
             return View.VISIBLE;
         }
         return View.GONE;
+    }
+
+    //获取原价
+    public Spanned getOriginalPrice() {
+        VipPackageItemEntity entity = itemEntity.get();
+        if (entity != null && entity.getOriginalPrice() != null) {
+            return Html.fromHtml(String.format(StringUtils.getString(R.string.playfun_vip_alert_gold_tag, entity.getOriginalPrice())));
+        }
+        return null;
+    }
+
+    //获取每日价格
+    public String getDayPrice() {
+        VipPackageItemEntity entity = itemEntity.get();
+        if (entity != null && entity.getDayPrice() != null) {
+            String symbol = entity.getSymbol();
+            return symbol + entity.getDayPrice();
+        }
+        return null;
     }
 
 }

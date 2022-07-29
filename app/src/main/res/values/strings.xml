@@ -656,7 +656,7 @@
     <string name="playfun_error_DuplicatedTicketId">Repeated submit</string>
     <string name="playfun_vip_alert_goldPrice">$%s/Day</string>
     <string name="playfun_vip_alert_yj_price">Original %s</string>
-    <string name="playfun_vip_alert_gold_tag"><Data><![CDATA[ <s>Original %s</s> ]]></Data></string>
+    <string name="playfun_vip_alert_gold_tag"><Data><![CDATA[ <s>%s</s> ]]></Data></string>
     <string name="playfun_vip_alert_my">$</string>
     <string name="playfun_vip_alert_empty"></string>
     <string name="playfun_vip_subscri_btn_title">30% OFF for new users</string>

@@ -1,5 +1,7 @@
 package com.dl.playfun.entity;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Author: 彭石林
  * Time: 2022/7/26 19:09
@@ -12,14 +14,14 @@ public class AdUserItemEntity {
     private Integer sex;
     private String sound;
     private String soundTime;
-    private String imUserId;
+    private String toImId;
 
-    public String getImUserId() {
-        return imUserId;
+    public String getToImId() {
+        return toImId;
     }
 
-    public void setImUserId(String imUserId) {
-        this.imUserId = imUserId;
+    public void setToImId(String toImId) {
+        this.toImId = toImId;
     }
 
     public Integer getUserId() {

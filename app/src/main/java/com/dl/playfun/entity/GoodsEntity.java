@@ -33,9 +33,31 @@ public class GoodsEntity {
     @SerializedName("is_recommend")
     private Integer isRecommend; //是否推荐
 
-    //商品文案
-    @SerializedName("goods_label")
-    private String goodsLabel;
+    //标题文案
+    @SerializedName("discount_label")
+    private String discountLabel;
+
+    //vip--销售价格、通用
+    @SerializedName("sale_price")
+    private String salePrice;
+    //货币符号
+    private String symbol;
+
+    public String getSalePrice() {
+        return salePrice;
+    }
+
+    public void setSalePrice(String salePrice) {
+        this.salePrice = salePrice;
+    }
+
+    public String getSymbol() {
+        return symbol;
+    }
+
+    public void setSymbol(String symbol) {
+        this.symbol = symbol;
+    }
 
     public Integer getIsFirst() {
         return isFirst;
@@ -127,11 +149,11 @@ public class GoodsEntity {
         this.isRecommend = isRecommend;
     }
 
-    public String getGoodsLabel() {
-        return goodsLabel;
+    public String getDiscountLabel() {
+        return discountLabel;
     }
 
-    public void setGoodsLabel(String goodsLabel) {
-        this.goodsLabel = goodsLabel;
+    public void setDiscountLabel(String discountLabel) {
+        this.discountLabel = discountLabel;
     }
 }

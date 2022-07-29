@@ -664,7 +664,7 @@
     <!--    TODO 格式有问题-->
     <string name="playfun_vip_alert_goldPrice">$%s/天</string>
     <string name="playfun_vip_alert_yj_price">原價%s</string>
-    <string name="playfun_vip_alert_gold_tag"><Data><![CDATA[ <s>原價%s</s> ]]></Data></string>
+    <string name="playfun_vip_alert_gold_tag"><Data><![CDATA[ <s>%s</s> ]]></Data></string>
 
     <string name="playfun_vip_alert_my">$</string>
     <string name="playfun_vip_alert_empty">""</string>

@@ -38,11 +38,13 @@ public class VipPackageItemEntity extends BaseObservable {
     private Integer actualValue;
 
     private String price;//美元价格
+    //vip 每日价格
     @SerializedName("day_price")
     private String dayPrice;
 
-    @SerializedName("goods_label")
-    private String goodsLabel;
+    //标题文案
+    @SerializedName("discount_label")
+    private String discountLabel;
 
     //产品图片
     @SerializedName("pic_img")
@@ -59,8 +61,51 @@ public class VipPackageItemEntity extends BaseObservable {
     @SerializedName("give_coin")
     private Integer giveCoin;
 
+    //货币符号
+    private String symbol;
+    //vip-原价
+    @SerializedName("original_price")
+    private String originalPrice;
+    //vip--销售价格、通用
+    @SerializedName("sale_price")
+    private String salePrice;
+
+
     //首充状态（H5传递）
     private Integer purchased;
+
+    public String getDiscountLabel() {
+        return discountLabel;
+    }
+
+    public void setDiscountLabel(String discountLabel) {
+        this.discountLabel = discountLabel;
+    }
+
+    public String getOriginalPrice() {
+        return originalPrice;
+    }
+
+    public void setOriginalPrice(String originalPrice) {
+        this.originalPrice = originalPrice;
+    }
+
+    public String getSalePrice() {
+        return salePrice;
+    }
+
+    public void setSalePrice(String salePrice) {
+        this.salePrice = salePrice;
+    }
+
+    public String getSymbol() {
+        return symbol;
+    }
+
+    public void setSymbol(String symbol) {
+        this.symbol = symbol;
+    }
+
 
     public Integer getGiveCoin() {
         return giveCoin;
@@ -102,13 +147,6 @@ public class VipPackageItemEntity extends BaseObservable {
         this.selectImg = selectImg;
     }
 
-    public String getGoodsLabel() {
-        return goodsLabel;
-    }
-
-    public void setGoodsLabel(String goodsLabel) {
-        this.goodsLabel = goodsLabel;
-    }
 
     public String getPrice() {
         return price;
@@ -231,7 +269,6 @@ public class VipPackageItemEntity extends BaseObservable {
                 ", actualValue=" + actualValue +
                 ", price='" + price + '\'' +
                 ", dayPrice='" + dayPrice + '\'' +
-                ", goodsLabel='" + goodsLabel + '\'' +
                 ", picImg='" + picImg + '\'' +
                 ", selectImg='" + selectImg + '\'' +
                 ", isFirst=" + isFirst +
