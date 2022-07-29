@@ -35,6 +35,7 @@ import com.dl.playfun.entity.MqBroadcastGiftUserEntity;
 import com.dl.playfun.entity.VersionEntity;
 import com.dl.playfun.event.MainTabEvent;
 import com.dl.playfun.event.TaskListEvent;
+import com.dl.playfun.event.TaskMainTabEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.ui.home.accost.HomeAccostDialog;
@@ -306,6 +307,13 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                             setSelectedItemId(binding.navigationMine);//tbar切换到訊息
                             break;
                     }
+                }
+            }
+        });
+        viewModel.uc.taskCenterclickTab.observe(this, taskMainTabEvent -> {
+            if (taskMainTabEvent != null) {
+                if (taskMainTabEvent.isTbarClicked()) {//tbar切换到活动中心
+                    setSelectedItemId(binding.navigationRank);
                 }
             }
         });

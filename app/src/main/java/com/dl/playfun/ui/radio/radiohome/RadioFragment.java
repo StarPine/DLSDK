@@ -52,6 +52,7 @@ import com.dl.playfun.widget.dialog.TraceDialog;
 import com.dl.playfun.widget.dropdownfilterpop.DropDownFilterPopupWindow;
 import com.google.gson.reflect.TypeToken;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
+import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 import com.zyyoona7.popup.EasyPopup;
 import com.zyyoona7.popup.XGravity;
 import com.zyyoona7.popup.YGravity;
@@ -122,6 +123,11 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
 
+        if(hidden){
+            if (AudioPlayer.getInstance().isPlaying()) {
+                AudioPlayer.getInstance().stopPlay();
+            }
+        }
         try {
             GSYVideoManager.releaseAllVideos();
         } catch (Exception e) {

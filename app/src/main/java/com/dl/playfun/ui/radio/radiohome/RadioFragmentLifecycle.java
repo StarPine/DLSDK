@@ -15,7 +15,9 @@ import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 public class RadioFragmentLifecycle implements LifecycleObserver {
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     public void onPause() {
-        AudioPlayer.getInstance().stopPlay();
+        if (AudioPlayer.getInstance().isPlaying()) {
+            AudioPlayer.getInstance().stopPlay();
+        }
         GSYVideoManager.onPause();
     }
 
@@ -26,7 +28,9 @@ public class RadioFragmentLifecycle implements LifecycleObserver {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     public void onDestroy() {
-        AudioPlayer.getInstance().stopPlay();
+        if (AudioPlayer.getInstance().isPlaying()) {
+            AudioPlayer.getInstance().stopPlay();
+        }
         GSYVideoManager.releaseAllVideos();
     }
 

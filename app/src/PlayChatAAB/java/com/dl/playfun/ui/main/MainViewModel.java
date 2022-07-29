@@ -26,6 +26,7 @@ import com.dl.playfun.event.MainTabEvent;
 import com.dl.playfun.event.MessageCountChangeEvent;
 import com.dl.playfun.event.MessageGiftNewEvent;
 import com.dl.playfun.event.RewardRedDotEvent;
+import com.dl.playfun.event.TaskMainTabEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocationManager;
 import com.dl.playfun.utils.FastCallFunUtil;
@@ -47,6 +48,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
 import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.bus.RxSubscriptions;
@@ -64,7 +66,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
     public List<MqBroadcastGiftEntity> publicScreenBannerGiftEntity = new ArrayList<>();
     public boolean playing = false;
     UIChangeObservable uc = new UIChangeObservable();
-    private Disposable mSubscription, taskMainTabEventReceive, mainTabEventReceive, rewardRedDotEventReceive, BubbleTopShowEventSubscription,newUserEventSubscription;
+    private Disposable mSubscription, taskMainTabEventReceive, mainTabEventReceive, rewardRedDotEventReceive, BubbleTopShowEventSubscription;
 
     public MainViewModel(@NonNull Application application, AppRepository appRepository) {
         super(application, appRepository);
@@ -115,6 +117,10 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         BubbleTopShowEventSubscription = RxBus.getDefault().toObservable(BubbleTopShowEvent.class).subscribe(event -> {
             uc.bubbleTopShow.postValue(false);
         });
+        taskMainTabEventReceive = RxBus.getDefault().toObservable(TaskMainTabEvent.class)
+                .compose(RxUtils.exceptionTransformer())
+                .compose(RxUtils.schedulersTransformer())
+                .subscribe(o -> uc.taskCenterclickTab.postValue(((TaskMainTabEvent) o)));
 
         //将订阅者加入管理站
         RxSubscriptions.add(taskMainTabEventReceive);
@@ -367,6 +373,8 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         //未付费弹窗
         public SingleLiveEvent<String> notPaidDialog = new SingleLiveEvent<>();
         public SingleLiveEvent<MqBroadcastGiftEntity> giftBanner = new SingleLiveEvent<>();
+        //任务中心跳转
+        public SingleLiveEvent<TaskMainTabEvent> taskCenterclickTab = new SingleLiveEvent<>();
     }
 
 }
