@@ -796,7 +796,7 @@ public interface ApiService {
      * @param type 类型 1.appsflyer 2.用户注册填写 3用户注册后填写
      * @return
      */
-    @POST("api/v2/userInvite")
+    @POST("api/inviteCode")
     Observable<BaseResponse> userInvite(@Query("code") String code, @Query("type") Integer type, @Query("channel") String channel);
 
     /**
