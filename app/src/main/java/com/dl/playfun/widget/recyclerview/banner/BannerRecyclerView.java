@@ -114,6 +114,7 @@ public class BannerRecyclerView extends RecyclerView {
         super.setAdapter(adapter);
         bannerSize = adapter.getItemCount();
         mLayoutManager.setInfinite(bannerSize >= 3);
+        hasInit = true;
         setPlaying(true);
         addOnScrollListener(new OnScrollListener() {
 
@@ -127,7 +128,6 @@ public class BannerRecyclerView extends RecyclerView {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 int first = mLayoutManager.getCurrentPosition();
-                Log.d("xxx", "onScrollStateChanged");
                 if (currentIndex != first) {
                     currentIndex = first;
                 }
@@ -136,7 +136,6 @@ public class BannerRecyclerView extends RecyclerView {
                 }
             }
         });
-        hasInit = true;
     }
 
     @Override

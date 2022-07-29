@@ -61,7 +61,7 @@ public class ChatUtils {
             @Override
             public void onError(int code, String desc){
                 //错误码 code 和错误描述 desc，可用于定位请求失败原因
-                Log.e("获取用户信息失败", "getUsersProfile failed: " + code + " desc");
+                //Log.e("获取用户信息失败", "getUsersProfile failed: " + code + " desc");
                 ToastUtil.toastLongMessage(code + " " + desc);
             }
         });
