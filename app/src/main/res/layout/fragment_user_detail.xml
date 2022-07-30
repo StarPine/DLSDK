@@ -877,16 +877,6 @@
                                                         android:text="@{viewModel.detailEntity.desc}" />
                                                 </LinearLayout>
                                             </LinearLayout>
-
-                                            <TextView
-                                                android:layout_width="wrap_content"
-                                                android:layout_height="wrap_content"
-                                                android:layout_gravity="center"
-                                                android:layout_marginTop="14dp"
-                                                android:layout_marginBottom="19dp"
-                                                android:text="@string/playfun_user_detail_warn"
-                                                android:textColor="@color/gray_light"
-                                                android:textSize="@dimen/text_size_small" />
                                         </LinearLayout>
 
                                         <LinearLayout
