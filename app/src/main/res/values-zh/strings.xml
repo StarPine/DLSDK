@@ -883,7 +883,7 @@
 
     <string name="playfun_call_message_deatail_hint">歡迎進入私密1V1聊天</string>
     <string name="playfun_call_message_deatail_time_msg">通話時長 %02d:%02d</string>
-    <string name="playfun_call_message_deatail_girl_txt">獲得通話收入%s新台幣</string>
+    <string name="playfun_call_message_deatail_girl_txt">已獲得%s水晶</string>
     <string name="playfun_call_message_deatail_girl_txt1">送給</string>
     <string name="playfun_call_message_deatail_girl_txt2">妳</string>
     <string name="playfun_call_message_deatail_girl_txt4">追蹤了</string>

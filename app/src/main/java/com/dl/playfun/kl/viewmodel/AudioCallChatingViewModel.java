@@ -811,7 +811,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
 
     //追踪
     public void addLike(boolean isHangup) {
-        model.addIMCollect(leftUserInfoField.get().getId(), 1)
+        model.addCollect(leftUserInfoField.get().getId())
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
@@ -826,12 +826,6 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                             collected = 1;
                             collectedField.set(1);
                             ToastUtils.showShort(R.string.playfun_cancel_zuizong_3);
-                            String sexText = isMale ? StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt3) : StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt2);
-                            String msgText = sexText + StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt4) + leftUserInfoField.get().getNickname();
-                            SpannableString stringBuilder = new SpannableString(msgText);
-                            ForegroundColorSpan blueSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint2));
-                            stringBuilder.setSpan(blueSpan, 0, msgText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            putRcvItemMessage(stringBuilder, null, false);
                         }
                     }
 
