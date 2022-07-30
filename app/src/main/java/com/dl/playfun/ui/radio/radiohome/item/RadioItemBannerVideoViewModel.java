@@ -1,5 +1,6 @@
 package com.dl.playfun.ui.radio.radiohome.item;
 
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.View;
 
@@ -21,6 +22,7 @@ import java.util.Objects;
 import me.goldze.mvvmhabit.base.MultiItemViewModel;
 import me.goldze.mvvmhabit.binding.command.BindingAction;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
+import me.goldze.mvvmhabit.utils.Utils;
 
 /**
  * Author: 彭石林
@@ -43,17 +45,23 @@ public class RadioItemBannerVideoViewModel extends MultiItemViewModel<RadioViewM
             viewModel.itemClickChangeIdx(position);
         }
     });
+    //获取播放状态图片
+    public Drawable gerDrawablePlay(boolean play){
+        return play ? Utils.getContext().getDrawable(R.drawable.mine_audio_stop_img) :Utils.getContext().getDrawable(R.drawable.mine_audio_start_img) ;
+    }
 
     //播放语音
     public BindingCommand  audioPlayClickCommand = new BindingCommand(() -> {
-        isPlaying.set(true);
         if (AudioPlayer.getInstance().isPlaying()) {
             AudioPlayer.getInstance().stopPlay();
             isPlaying.set(false);
             return;
         }
+        isPlaying.set(true);
         //全局音频播放单列
-        AudioPlayer.getInstance().startPlay(StringUtil.getFullAudioUrl(Objects.requireNonNull(adUserItemEntity.get()).getSound()), (success, isOutTime) -> isPlaying.set(false));
+        AudioPlayer.getInstance().startPlay(StringUtil.getFullAudioUrl(Objects.requireNonNull(adUserItemEntity.get()).getSound()), (success, isOutTime) ->{
+            isPlaying.set(false);
+        });
         int position = viewModel.radioItemsAdUser.indexOf(this);
         if (position != - 1){
             viewModel.itemClickPlayAudio(position);

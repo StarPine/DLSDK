@@ -61,7 +61,7 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginTop="2dp"
                     tools:src="@drawable/mine_audio_start_img"
-                    android:src="@{viewModel.isPlaying ? @drawable/mine_audio_stop_img : @drawable/mine_audio_start_img }" />
+                    android:src="@{viewModel.gerDrawablePlay(viewModel.isPlaying)}" />
 
                 <TextView
                     android:id="@+id/audio_time"

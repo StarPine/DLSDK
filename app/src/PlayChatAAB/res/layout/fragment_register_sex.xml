@@ -147,7 +147,7 @@
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="27dp"
                 android:includeFontPadding="false"
-                android:text="未滿18歲不可註冊"
+                android:text="@string/fragment_perfect_hint"
                 android:textColor="#ff333333"
                 android:textSize="14sp" />
 
