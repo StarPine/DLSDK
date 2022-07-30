@@ -252,13 +252,6 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
         RxSubscriptions.remove(zoomInPictureEvent);
     }
 
-    //初始化
-    public void loadHttpData() {
-        loadDatas(1);
-        getAdUserBanner();
-        getAdListBanner();
-    }
-
     public void setType(Integer type) {
         this.type = type;
         CollectFlag = false;
@@ -288,6 +281,10 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
 
     @Override
     public void loadDatas(int page) {
+        if(page == 1) {
+            getAdUserBanner();
+            getAdListBanner();
+        }
         try {
             if (IsCollect == null) {
                 if (default_sex == null) {
@@ -514,6 +511,7 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
                     public void onSuccess(BaseDataResponse<AdUserBannerEntity> listBaseDataResponse) {
                         AdUserBannerEntity adUserBanner = listBaseDataResponse.getData();
                         if(adUserBanner!=null){
+                            radioItemsAdUser.clear();
                             List<AdUserItemEntity> listData = adUserBanner.getDataList();
                             List<RadioItemBannerVideoViewModel> listReal = new ArrayList<>();
                             for (AdUserItemEntity adUserItemEntity : listData) {

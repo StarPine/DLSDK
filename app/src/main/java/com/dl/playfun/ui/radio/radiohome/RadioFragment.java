@@ -99,6 +99,9 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
     public void onSupportInvisible() {
         super.onSupportInvisible();
         try {
+            if (AudioPlayer.getInstance().isPlaying()) {
+                AudioPlayer.getInstance().stopPlay();
+            }
             GSYVideoManager.releaseAllVideos();
         } catch (Exception e) {
 
@@ -181,7 +184,7 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
             }
         });
 
-        viewModel.loadHttpData();
+        binding.refreshLayout.autoRefresh();
     }
 
     @Override

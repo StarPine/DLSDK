@@ -1,6 +1,7 @@
 package com.dl.playfun.ui.viewmodel;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableArrayList;
@@ -43,13 +44,17 @@ public abstract class BaseParkViewModel<T extends AppRepository> extends BaseRef
     public static final String ItemParkBanner = "item_park_banner";
 
     public ItemBinding<BaseParkItemViewModel> itemBinding = ItemBinding.of((itemBinding, position, item) ->{
-        String itemType = String.valueOf(item.getItemType());
-        if (itemType.equals(ItemPark)) {
-            //评价别人
+        if(item.getItemType()==null){
             itemBinding.set(BR.viewModel, R.layout.item_park);
-        } else if (itemType.equals(ItemParkBanner)) {
-            //别人评价我
-            itemBinding.set(BR.viewModel, R.layout.item_park_banner);
+        }else{
+            String itemType = String.valueOf(item.getItemType());
+            if (itemType.equals(ItemPark)) {
+                //评价别人
+                itemBinding.set(BR.viewModel, R.layout.item_park);
+            } else if (itemType.equals(ItemParkBanner)) {
+                //别人评价我
+                itemBinding.set(BR.viewModel, R.layout.item_park_banner);
+            }
         }
     });
     private Disposable mSubscription2;
@@ -68,9 +73,10 @@ public abstract class BaseParkViewModel<T extends AppRepository> extends BaseRef
 
         mSubscription2 = RxBus.getDefault().toObservable(UserRemarkChangeEvent.class)
                 .subscribe(event -> {
-                    for (BaseParkItemViewModel viewModel : observableList) {
-                        if (Objects.requireNonNull(viewModel.itemEntity.get()).getId() == event.getUserId()) {
-                            Objects.requireNonNull(viewModel.itemEntity.get()).setNickname(event.getRemarkName());
+                    for (BaseParkItemViewModel itemViewModel : observableList) {
+                        ParkItemEntity parkItemEntity =  itemViewModel.itemEntity.get();
+                        if (parkItemEntity!=null && parkItemEntity.getId()  == event.getUserId()) {
+                            itemViewModel.itemEntity.get().setNickname(event.getRemarkName());
                             break;
                         }
                     }
@@ -78,9 +84,10 @@ public abstract class BaseParkViewModel<T extends AppRepository> extends BaseRef
         mLikeSubscription = RxBus.getDefault().toObservable(LikeChangeEvent.class)
                 .subscribe(event -> {
                     if (event.getFrom() == null || event.getFrom() != this) {
-                        for (BaseParkItemViewModel viewModel : observableList) {
-                            if (Objects.requireNonNull(viewModel.itemEntity.get()).getId() == event.getUserId()) {
-                                Objects.requireNonNull(viewModel.itemEntity.get()).setCollect(event.isLike());
+                        for (BaseParkItemViewModel itemViewModel : observableList) {
+                            ParkItemEntity parkItemEntity =  itemViewModel.itemEntity.get();
+                            if (parkItemEntity!=null && parkItemEntity.getId() == event.getUserId()) {
+                                itemViewModel.itemEntity.get().setCollect(event.isLike());
                                 break;
                             }
                         }
