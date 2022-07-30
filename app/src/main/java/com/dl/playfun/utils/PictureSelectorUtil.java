@@ -85,6 +85,7 @@ public class PictureSelectorUtil {
                 .imageSpanCount(IMAGE_SPAN_COUNT)
                 .theme(R.style.picture_white_style_custom)
                 .videoMaxSecond(20)//视频选最最大20秒
+                .videoMinSecond(3)//最小三秒
                 .recordVideoSecond(20)
                 .videoQuality(0)
                 .queryMaxFileSize(60)
