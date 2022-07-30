@@ -191,6 +191,9 @@ public class CustomTextMessageHolder extends TextMessageHolder {
                 int totalSeconds = customIMTextEntity.getTotalSeconds();
                 int callingType = customIMTextEntity.getCallingType();
                 String price = customIMTextEntity.getPrice();
+                if (price == null){
+                    price = "0";
+                }
                 //fixme 通话结束时间
                 if (totalSeconds > 0 && callingType > 0) {
                     showWithAvatarView(msg.isSelf());
@@ -211,6 +214,10 @@ public class CustomTextMessageHolder extends TextMessageHolder {
                             onItemClickListener.onClickDialogRechargeShow();
                     });
                 } else {
+                    if (Double.parseDouble(price) <= 0){
+                        setContentLayoutVisibility(false);
+                        return;
+                    }
                     if (customIMTextEntity.getPayeeImId() != null) {
                         isCharger = customIMTextEntity.getPayeeImId().equals(V2TIMManager.getInstance().getLoginUser());
                         if (isCharger) {//收款人显示

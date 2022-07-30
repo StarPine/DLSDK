@@ -192,5 +192,5 @@
     <string name="custom_message_other_busy">對方忙線中</string>
     <string name="opponent_in_game">在遊戲中</string>
     <string name="call_ended">通話結束</string>
-
+    <string name="chat_delete_msg_tip">立即刪除</string>
 </resources>

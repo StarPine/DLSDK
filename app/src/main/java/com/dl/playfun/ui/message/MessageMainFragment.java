@@ -111,4 +111,18 @@ public class MessageMainFragment extends BaseFragment<FragmentMessageMainBinding
     protected boolean isUmengReportPage() {
         return false;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        AppContext.isHomePage = true;
+        AppContext.isShowNotPaid = true;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        AppContext.isShowNotPaid = false;
+        AppContext.isHomePage = false;
+    }
 }
