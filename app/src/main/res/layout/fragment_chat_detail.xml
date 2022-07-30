@@ -137,9 +137,9 @@
             android:layout_height="87dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="15dp"
+            android:layout_marginEnd="25dp"
             android:layout_marginBottom="135dp"
-            android:visibility="gone">
+            android:visibility="@{viewModel.isShoweCallingVideo?View.VISIBLE:View.GONE}">
 
             <View
                 android:id="@+id/img_call_layout"
@@ -170,6 +170,18 @@
                 android:layout_alignParentBottom="true"
                 android:src="@drawable/call_video_gif" />
         </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/iv_close"
+            android:layout_alignTop="@+id/rl_layout"
+            android:layout_alignRight="@+id/rl_layout"
+            android:layout_marginTop="-10dp"
+            android:layout_marginRight="-10dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/icon_close"
+            binding:onClickCommand="@{viewModel.closeOnClick}"
+            />
 
         <com.opensource.svgaplayer.SVGAImageView
             android:id="@+id/gift_view"

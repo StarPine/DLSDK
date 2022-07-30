@@ -98,6 +98,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
     public ObservableField<Boolean> inBlacklist = new ObservableField<>(false);
     public ObservableField<Boolean> isTrack = new ObservableField<>(false);//todo 还没根据后端进行初始化
     public ObservableField<Boolean> isShowedExchangeRules = new ObservableField<>(false);
+    public ObservableField<Boolean> isShoweCallingVideo = new ObservableField<>(true);//是否显示马上视讯入口
     public ObservableField<String> menuTrack = new ObservableField<>();//追踪
     public ObservableField<String> menuBlockade = new ObservableField<>();//封锁
     public ObservableField<TagEntity> tagEntitys = new ObservableField<>();
@@ -129,6 +130,9 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
 
     //点击与它视频
     public BindingCommand callVideoClick = new BindingCommand(() -> uc.callVideoViewEvent.call());
+
+    //点击关闭马上视讯入口
+    public BindingCommand closeOnClick = new BindingCommand(() -> isShoweCallingVideo.set(false));
 
     public BindingCommand moreOnClickCommand = new BindingCommand(new BindingAction() {
         @Override

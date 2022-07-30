@@ -1048,8 +1048,5 @@
     <string name="playfun_fragment_perfect_avatar1">請重新上傳頭貼</string>
     <string name="playfun_x_count2">x%s</string>
     <string name="playfun_pay_fail">支付失敗</string>
-    <string name="playfun_binding_auth_success">綁定成功</string>
-    <string name="playfun_text_accost_empty2">無可搭訕用戶</string>
-    <string name="playfun_setting_account_cancell">註銷帳號</string>
 
 </resources>
