@@ -20,8 +20,10 @@ import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.Injection;
+import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.databinding.FragmentChatMessageBinding;
 import com.dl.playfun.entity.BrowseNumberEntity;
+import com.dl.playfun.entity.SystemConfigEntity;
 import com.dl.playfun.entity.TokenEntity;
 import com.dl.playfun.event.MessageCountChangeTagEvent;
 import com.dl.playfun.manager.ConfigManager;
@@ -38,6 +40,7 @@ import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
+import com.tencent.qcloud.tuikit.tuiconversation.model.CustomConfigSetting;
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.view.ConversationListLayout;
 
@@ -102,6 +105,18 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
     @Override
     public void initData() {
         super.initData();
+        //会话列表展示最多消息数量
+        AppRepository appRepository = ConfigManager.getInstance().getAppRepository();
+        SystemConfigEntity systemConfigEntity = appRepository.readSystemConfig();
+        if (systemConfigEntity != null) {
+            Integer visibleCount = systemConfigEntity.getConversationAstrictCount();
+            if (visibleCount != null) {
+                int ast = visibleCount;
+                if (ast >= 0) {
+                    CustomConfigSetting.conversationAstrictCount = ast;
+                }
+            }
+        }
         //腾讯IM登录
         TokenEntity tokenEntity = Injection.provideDemoRepository().readLoginInfo();
         if (tokenEntity != null) {
