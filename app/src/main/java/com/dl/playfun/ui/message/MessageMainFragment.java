@@ -29,7 +29,7 @@ import com.dl.playfun.utils.StringUtil;
  */
 public class MessageMainFragment extends BaseFragment<FragmentMessageMainBinding, MessageMainViewModel> {
 
-    private final BaseFragment[] mFragments = new BaseFragment[2];
+    private final BaseFragment[] mFragments = new BaseFragment[1];
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -59,22 +59,21 @@ public class MessageMainFragment extends BaseFragment<FragmentMessageMainBinding
         super.initData();
         AppContext.instance().logEvent(AppsFlyerEvent.Messages);
         viewModel.onViewCreated();
+        viewModel.loadDatas();
 
         BaseFragment firstFragment = findChildFragment(ChatMessageFragment.class);
         if (firstFragment == null) {
             mFragments[0] = new ChatMessageFragment();
-            mFragments[1] = new SystemMessageGroupFragment();
+//            mFragments[1] = new SystemMessageGroupFragment();
         } else {
             mFragments[0] = firstFragment;
-            mFragments[1] = findChildFragment(SystemMessageGroupFragment.class);
+//            mFragments[1] = findChildFragment(SystemMessageGroupFragment.class);
         }
         MessagePagerAdapter fragmentAdapter = new MessagePagerAdapter(this);
         fragmentAdapter.setFragmentList(mFragments);
 
-        // �ر����һ����л�ҳ��
         binding.viewPager.setUserInputEnabled(false);
-        // ���û������� ���������ؽ�
-        binding.viewPager.setOffscreenPageLimit(2);
+        binding.viewPager.setOffscreenPageLimit(1);
         binding.viewPager.setAdapter(fragmentAdapter);
         binding.viewPager.setCurrentItem(0, false);
     }

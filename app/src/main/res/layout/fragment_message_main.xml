@@ -53,129 +53,46 @@
                         android:layout_centerInParent="true"
                         android:text="@string/playfun_fragment_message_main_title" />
 
-                    <TextView
-                        style="@style/ActionBarMenu"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
+                    <ImageView
+                        android:id="@+id/iv_notify"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:layout_centerVertical="true"
-                        android:paddingTop="5dp"
-                        android:paddingBottom="5dp"
-                        android:text="@string/playfun_fragment_message_main_setting"
-                        android:textColor="@color/toolbar_title_color"
-                        binding:onClickCommand="@{viewModel.pushSettingOnClickCommand}" />
+                        android:layout_toLeftOf="@+id/iv_notify_setting"
+                        android:src="@drawable/icon_message_notify"
+                        binding:onClickCommand="@{viewModel.toRightTabClickCommand}"
+                        />
+
+                    <ImageView
+                        android:id="@+id/iv_notify_setting"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_alignParentRight="true"
+                        binding:onClickCommand="@{viewModel.pushSettingOnClickCommand}"
+                        android:src="@drawable/icon_setting"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="16dp"
+                        android:layout_marginStart="-10dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_toRightOf="@+id/iv_notify"
+                        android:background="@drawable/badge_background_white_border"
+                        android:gravity="center"
+                        android:minWidth="16dp"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp"
+                        android:text="@{String.valueOf(viewModel.systemMessageCount)}"
+                        android:textColor="@color/white"
+                        android:textSize="10dp"
+                        android:visibility="@{viewModel.systemMessageCount > 0 ? View.VISIBLE:View.INVISIBLE}" />
                 </RelativeLayout>
             </androidx.appcompat.widget.Toolbar>
 
         </com.google.android.material.appbar.AppBarLayout>
-
-        <LinearLayout
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="50dp">
-
-            <RelativeLayout
-                android:id="@+id/left_one"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_centerInParent="true"
-                binding:onClickCommand="@{viewModel.toLeftTabClickCommand}">
-
-                <ImageView
-                    android:layout_width="120dp"
-                    android:layout_height="30dp"
-                    android:layout_alignStart="@+id/tv_name"
-                    android:layout_alignTop="@+id/tv_name"
-                    android:layout_alignEnd="@+id/tv_name"
-                    android:layout_alignBottom="@+id/tv_name"
-                    android:background="@drawable/button_purple_background"
-                    android:visibility="@{viewModel.tabSelectSystemMessage==0?View.VISIBLE:View.GONE}" />
-
-                <TextView
-                    android:id="@+id/tv_name"
-                    android:layout_width="100dp"
-                    android:layout_height="30dp"
-                    android:layout_alignParentBottom="true"
-                    android:gravity="center"
-                    android:text="@string/playfun_tab_message_1"
-                    android:textColor="@{viewModel.tabSelectSystemMessage==0?@color/white:@color/toolbar_title_color}"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:visibility="visible" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="16dp"
-                    android:layout_gravity="top"
-                    android:layout_marginStart="-15dp"
-                    android:layout_toRightOf="@+id/tv_name"
-                    android:background="@drawable/badge_background_white_border"
-                    android:gravity="center"
-                    android:minWidth="16dp"
-                    android:paddingLeft="2dp"
-                    android:paddingRight="2dp"
-                    android:text="@{String.valueOf(viewModel.chatMessageCount)}"
-                    android:textColor="@color/white"
-                    android:textSize="10dp"
-                    android:visibility="@{viewModel.chatMessageCount > 0 ? View.VISIBLE:View.INVISIBLE}" />
-            </RelativeLayout>
-
-            <FrameLayout
-                android:layout_width="40dp"
-                android:layout_height="wrap_content"
-                android:visibility="invisible" />
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_centerInParent="true"
-                android:layout_toEndOf="@+id/left_one"
-                binding:onClickCommand="@{viewModel.toRightTabClickCommand}">
-
-                <ImageView
-                    android:layout_width="120dp"
-                    android:layout_height="30dp"
-                    android:layout_alignStart="@+id/tv_name1"
-                    android:layout_alignTop="@+id/tv_name1"
-                    android:layout_alignEnd="@+id/tv_name1"
-                    android:layout_alignBottom="@+id/tv_name1"
-                    android:background="@drawable/button_purple_background"
-                    android:visibility="@{viewModel.tabSelectSystemMessage==1?View.VISIBLE:View.GONE}" />
-
-                <TextView
-                    android:id="@+id/tv_name1"
-                    android:layout_width="110dp"
-                    android:layout_height="30dp"
-                    android:layout_alignParentBottom="true"
-                    android:gravity="center"
-                    android:text="@string/playfun_tab_message_2"
-                    android:textColor="@{viewModel.tabSelectSystemMessage==1?@color/white:@color/toolbar_title_color}"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:visibility="visible" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="16dp"
-                    android:layout_gravity="top"
-                    android:layout_marginStart="-15dp"
-                    android:layout_toRightOf="@+id/tv_name1"
-                    android:background="@drawable/badge_background_white_border"
-                    android:gravity="center"
-                    android:minWidth="16dp"
-                    android:paddingLeft="2dp"
-                    android:paddingRight="2dp"
-                    android:text="@{String.valueOf(viewModel.systemMessageCount)}"
-                    android:textColor="@color/white"
-                    android:textSize="10dp"
-                    android:visibility="@{viewModel.systemMessageCount > 0 ? View.VISIBLE:View.INVISIBLE}" />
-            </RelativeLayout>
-        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
