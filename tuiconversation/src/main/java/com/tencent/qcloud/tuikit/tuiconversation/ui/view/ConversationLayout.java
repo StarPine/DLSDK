@@ -13,6 +13,7 @@ import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
+import com.tencent.qcloud.tuikit.tuiconversation.model.CustomConfigSetting;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.interfaces.IConversationLayout;
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.interfaces.IConversationListAdapter;
@@ -61,7 +62,10 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
         if (presenter != null) {
             presenter.setAdapter(adapter);
         }
-        mConversationList.loadConversation(0);
+        //可见数量大于0 才会进行拉取消息
+        if (CustomConfigSetting.conversationAstrictCount > 0) {
+            mConversationList.loadConversation(0);
+        }
     }
 
     public void initSearchView(ConversationListAdapter adapter) {

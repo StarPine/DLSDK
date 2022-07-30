@@ -11,6 +11,7 @@ import android.view.View;
 
 import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
+import com.tencent.qcloud.tuikit.tuiconversation.model.CustomConfigSetting;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.interfaces.IConversationListAdapter;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.interfaces.IConversationListLayout;
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
@@ -140,6 +141,9 @@ public class ConversationListLayout extends RecyclerView implements IConversatio
             int lastPosition = layoutManager.findLastCompletelyVisibleItemPosition();
 
             if (mAdapter != null) {
+                if (CustomConfigSetting.conversationAstrictCount > 0 && mAdapter.getItemCount() >= CustomConfigSetting.conversationAstrictCount) {
+                    return;
+                }
                 if (lastPosition == mAdapter.getItemCount() - 1 && !isLoadCompleted()) {
                     mAdapter.onLoadingStateChanged(true);
                     if (presenter != null) {

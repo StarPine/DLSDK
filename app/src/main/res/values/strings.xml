@@ -1020,6 +1020,7 @@
 
     <string name="fragment_perfect_name_phone_hint">頭貼&amp;暱稱</string>
     <string name="fragment_perfect_sex_birther_hint">性別&amp;生日</string>
+    <string name="fragment_perfect_hint">未滿18歲不可註冊</string>
 
     <string name="fragment_perfect_reg_hint">讓大家更好認識您！</string>
     <string name="fragment_perfect_reg_hint2">性別確認後不可更改</string>

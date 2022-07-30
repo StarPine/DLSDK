@@ -152,11 +152,13 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
     }
     //音频播放
     public void itemClickPlayAudio(int position){
-        if(lastClickAudioPlayer==-1){
+        if(lastClickAudioPlayer ==-1){
             lastClickAudioPlayer = position;
         }else{
-            radioItemsAdUser.get(lastClickAudioPlayer).isPlaying.set(false);
-            lastClickAudioPlayer = position;
+            if(lastClickAudioPlayer!=position){
+                radioItemsAdUser.get(lastClickAudioPlayer).isPlaying.set(false);
+                lastClickAudioPlayer = position;
+            }
         }
     }
 
