@@ -644,8 +644,6 @@
     <string name="playfun_unfold">More</string>
     <string name="playfun_error_facebook">Failed to log in with Facebook</string>
     <string name="playfun_error_google">Failed to log in with Google</string>
-    <string name="playfun_binding_auth_success">綁定成功</string>
-    <string name="setting_account_cancell">註銷帳號</string>
     <string name="playfun_face_success">Verified</string>
     <string name="playfun_error_face_message">Verification failed</string>
     <string name="playfun_error_InternalError">Internal service error</string>
@@ -656,7 +654,7 @@
     <string name="playfun_error_DuplicatedTicketId">Repeated submit</string>
     <string name="playfun_vip_alert_goldPrice">$%s/Day</string>
     <string name="playfun_vip_alert_yj_price">Original %s</string>
-    <string name="playfun_vip_alert_gold_tag"><Data><![CDATA[ <s>%s</s> ]]></Data></string>
+    <string name="playfun_vip_alert_gold_tag"><Data><![CDATA[ <s>Original %s</s> ]]></Data></string>
     <string name="playfun_vip_alert_my">$</string>
     <string name="playfun_vip_alert_empty"></string>
     <string name="playfun_vip_subscri_btn_title">30% OFF for new users</string>
@@ -814,7 +812,6 @@
     <string name="playfun_text_accost_error2">Greet at least one user.</string>
     <string name="playfun_text_accost_error3">Cooldown for next greeting\n</string>
     <string name="playfun_text_accost_empty">The number of one-click greetings has been used up today. \nPlease come back tomorrow.</string>
-    <string name="playfun_text_accost_empty2">無可搭訕用戶</string>
     <string name="playfun_text_accost_hint">refresh</string>
     <string name="playfun_tw_money_text">New Taiwan Dollar</string>
     <string name="playfun_tw_money_text1">income</string>
@@ -952,55 +949,55 @@
     <string name="playfun_mine_vip_hint">PlayFun Privileges</string>
     <string name="playfun_vipsubscribe_item_vip_txt_currency">$</string>
 
-    <string name="playfun_setting_account_cancell">註銷帳號</string>
-    <string name="playfun_version_latest">已是最新版本!</string>
-    <string name="playfun_mine_setting_desc">無痕與隱藏</string>
-    <string name="playfun_mine_face_beauty">美顏</string>
-    <string name="playfun_version_update_store_error">請先安裝Google Play商店</string>
-    <string name="playfun_dialog_crystal_exchange_button">我了解了</string>
+    <string name="playfun_version_latest">Already the latest version!</string>
+    <string name="playfun_mine_setting_desc">Invisible and hidden</string>
+    <string name="playfun_mine_face_beauty">Beauty</string>
+    <string name="playfun_version_update_store_error">Please install Google Play Store first</string>
+    <string name="playfun_dialog_crystal_exchange_button">I understood.</string>
     <string name="playfun_dialog_question_mark">---</string>
-    <string name="auth_external_login_btn_next">下一步</string>
-    <string name="auth_external_login_btn">确认</string>
-    <string name="auth_external_login_btn2">登入</string>
-    <string name="auth_external_login_btn3">密碼登入 ></string>
+    <string name="auth_external_login_btn_next">Next</string>
+    <string name="auth_external_login_btn">Confirm</string>
+    <string name="auth_external_login_btn2">Login</string>
+    <string name="auth_external_login_btn3">Password login ></string>
 
-    <string name="playfun_mine_setting_account">賬戶管理</string>
-    <string name="playfun_mine_setting_account_bindEmail">綁定郵箱</string>
-    <string name="playfun_mine_setting_account_bindEmail_hint">請輸入郵箱</string>
-    <string name="playfun_mine_setting_account_bindEmail_hint1">請輸入驗證碼</string>
-    <string name="playfun_mine_setting_account_bindEmail_hint2">獲取</string>
-    <string name="playfun_mine_setting_account_bindEmail_hint3">推薦使用Gmail郵箱</string>
-    <string name="playfun_mine_setting_email_hint">設定密碼需要先綁定郵箱</string>
-    <string name="playfun_mine_setting_email_hint2">去綁定</string>
+    <string name="playfun_mine_setting_account">Account manage</string>
+    <string name="playfun_mine_setting_account_bindEmail">Bind email</string>
+    <string name="playfun_mine_setting_account_bindEmail_hint">Enter email</string>
+    <string name="playfun_mine_setting_account_bindEmail_hint1">Enter verification code</string>
+    <string name="playfun_mine_setting_account_bindEmail_hint2">Get</string>
+    <string name="playfun_mine_setting_account_bindEmail_hint3">Gmail mailbox is recommended</string>
+    <string name="playfun_mine_setting_email_hint">Bind an email address first to set a password</string>
+    <string name="playfun_mine_setting_email_hint2">Bind</string>
 
-    <string name="playfun_mine_setting_account_pwd_hint">修改密碼</string>
+    <string name="playfun_mine_setting_account_pwd_hint">Change Password</string>
 
 
-    <string name="playfun_mine_setting_account_pwd_hint1">請輸入密碼</string>
-    <string name="playfun_mine_setting_account_pwd_hint2">請再次輸入密碼</string>
+    <string name="playfun_mine_setting_account_pwd_hint1">Enter password</string>
+    <string name="playfun_mine_setting_account_pwd_hint2">Enter password again</string>
 
-    <string name="playfun_mine_setting_account_pwd">賬號密碼</string>
-    <string name="notepad_hint">將對方的特徵筆記下來，幫你回想對方曾聊過的內容。</string>
-    <string name="save">保存</string>
-    <string name="notepad_word_count_format">%s/400</string>
-    <string name="notepad_word_count">0/400</string>
-    <string name="playfun_mine_shop">商店</string>
-    <string name="playfun_coin_electronic_wallet">電子錢包</string>
+    <string name="playfun_mine_setting_account_pwd">Account password</string>
+    <string name="notepad_hint">Write down the characteristics of the other party to help you recall what the other party has talked</string>
+    <string name="save">Save</string>
+    <string name="notepad_word_count_format">%s/200</string>
+    <string name="notepad_word_count">0/200</string>
+    <string name="playfun_mine_shop">Shop</string>
+    <string name="playfun_coin_electronic_wallet">Wallet</string>
 
-    <string name="fragment_level_title">等級權益</string>
-    <string name="fragment_level_text3">* 最終解釋權為平台所有</string>
-    <string name="fragment_level_text4">等級</string>
-    <string name="fragment_level_text5">權益</string>
-    <string name="fragment_level_text6">%s 魅力值</string>
-    <string name="fragment_level_text7">鑽石/條</string>
-    <string name="fragment_level_text8">水晶獎勵</string>
+    <string name="fragment_level_title">Level privilege</string>
+    <string name="fragment_level_text3">* The final interpretation right belongs to the platform</string>
+    <string name="fragment_level_text4">Grade</string>
+    <string name="fragment_level_text5">Privilege</string>
+    <string name="fragment_level_text6">%s Charm</string>
+    <string name="fragment_level_text7">diamonds</string>
+    <string name="fragment_level_text8">Award</string>
 
-    <string name="fragment_level_text_chat">每條訊息價格%1$s～%2$s鑽石</string>
-    <string name="fragment_level_text_chat1">訊息%s鑽石/條</string>
-    <string name="fragment_level_text_audio">每分鐘語音價格%1$s～%2$s鑽石</string>
-    <string name="fragment_level_text_audio1">語音%s鑽石/分鐘</string>
-    <string name="fragment_level_text_video">每分鐘視訊價格%1$s～%2$s鑽石</string>
-    <string name="fragment_level_text_video2">視訊%s鑽石/分鐘</string>
+    <string name="fragment_level_text_chat">Price per message %1$s～%2$s diamonds</string>
+    <string name="fragment_level_text_chat1">Message %s diamonds/per message</string>
+    <string name="fragment_level_text_audio">Voice price %1$s～%2$s diamonds/min</string>
+    <string name="fragment_level_text_audio1">Voice %s diamonds/min</string>
+    <string name="fragment_level_text_video">Video price %1$s～%2$s diamonds/min</string>
+    <string name="fragment_level_text_video2">Video %s diamonds/min</string>
+
     <string name="playfun_accont_bind_hint">社群賬戶綁定</string>
     <string name="playfun_accont_bind_hint2">綁定社群賬戶後可直接登入PlayChat</string>
 
@@ -1036,5 +1033,8 @@
     <string name="playfun_fragment_perfect_avatar1">請重新上傳頭貼</string>
     <string name="playfun_x_count2">x%s</string>
     <string name="playfun_pay_fail">支付失敗</string>
+    <string name="playfun_binding_auth_success">綁定成功</string>
+    <string name="playfun_text_accost_empty2">無可搭訕用戶</string>
+    <string name="playfun_setting_account_cancell">註銷帳號</string>
 
 </resources>
