@@ -32,10 +32,16 @@ public class TraceItemViewModel extends MultiItemViewModel<TraceListViewModel> {
             if (grend.get().intValue() == 0) {
                 //拿到position
                 int position = viewModel.observableList.indexOf(TraceItemViewModel.this);
+                if(position==-1){
+                    return;
+                }
                 viewModel.uc.clickDelLike.setValue(position);
             } else if (grend.get().intValue() == 1) {
                 //拿到position
                 int position = viewModel.observableList.indexOf(TraceItemViewModel.this);
+                if(position==-1){
+                    return;
+                }
                 if (itemEntity.get().getFollow()) {
                     viewModel.uc.clickDelLike.setValue(position);
                 } else {

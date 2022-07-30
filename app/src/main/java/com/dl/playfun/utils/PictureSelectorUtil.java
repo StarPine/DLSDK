@@ -84,8 +84,8 @@ public class PictureSelectorUtil {
                 .setPictureWindowAnimationStyle(getPictureWindowAnimationStyle())// 自定义相册启动退出动画
                 .imageSpanCount(IMAGE_SPAN_COUNT)
                 .theme(R.style.picture_white_style_custom)
-                .videoMaxSecond(60)
-                .recordVideoSecond(60)
+                .videoMaxSecond(20)//视频选最最大20秒
+                .recordVideoSecond(20)
                 .videoQuality(0)
                 .queryMaxFileSize(60)
                 .isPreviewVideo(true)

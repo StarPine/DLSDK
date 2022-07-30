@@ -1,6 +1,7 @@
 package com.dl.playfun.ui.mine.trace.list;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableArrayList;
@@ -154,13 +155,13 @@ public class TraceListViewModel extends BaseViewModel<AppRepository> {
                     @Override
                     public void onSuccess(BaseResponse response) {
                         dismissHUD();
+                        RxBus.getDefault().post(new LikeChangeEvent(TraceListViewModel.this, traceEntity.getId(), false));
                         if (grend == 0) {
                             observableList.remove(position);
                         } else {
                             observableList.get(position).itemEntity.get().setFollow(false);
                             adapter.notifyDataSetChanged();
                         }
-                        RxBus.getDefault().post(new LikeChangeEvent(TraceListViewModel.this, traceEntity.getId(), false));
                         collect(1);
                     }
 
@@ -187,10 +188,10 @@ public class TraceListViewModel extends BaseViewModel<AppRepository> {
                 .subscribe(new BaseObserver<BaseResponse>() {
                     @Override
                     public void onSuccess(BaseResponse response) {
-                        dismissHUD();
+                        LikeChangeEvent likeChangeEvent = new LikeChangeEvent(TraceListViewModel.this, traceEntity.getId(), true);
+                        RxBus.getDefault().post(likeChangeEvent);
                         observableList.get(position).itemEntity.get().setFollow(true);
                         adapter.notifyDataSetChanged();
-                        RxBus.getDefault().post(new LikeChangeEvent(TraceListViewModel.this, observableList.get(position).itemEntity.get().getId(), true));
                     }
 
                     @Override
