@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,31 +19,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.billingclient.api.BillingClient;
-import com.android.billingclient.api.Purchase;
-import com.android.billingclient.api.SkuDetailsParams;
 import com.dl.playfun.R;
-import com.dl.playfun.app.AppContext;
-import com.dl.playfun.app.AppsFlyerEvent;
-import com.dl.playfun.app.BillingClientLifecycle;
 import com.dl.playfun.app.Injection;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
-import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.CoinWalletEntity;
-import com.dl.playfun.entity.CreateOrderEntity;
 import com.dl.playfun.entity.GoodsEntity;
-import com.dl.playfun.event.UMengCustomEvent;
 import com.dl.playfun.ui.base.BasePopupWindow;
 import com.dl.playfun.ui.dialog.adapter.CoinRechargeAdapter;
 import com.dl.playfun.ui.mine.wallet.recharge.RechargeActivity;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
-import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.utils.RxUtils;
 import me.goldze.mvvmhabit.utils.ToastUtils;
 
@@ -191,7 +178,6 @@ public class CoinRechargeSheetView extends BasePopupWindow implements View.OnCli
 
     @Override
     public void onBuyClick(View view, int position) {
-        RxBus.getDefault().post(new UMengCustomEvent(UMengCustomEvent.EVENT_PAY_RECHARGE_TOKEN));
         GoodsEntity goodsEntity = mGoodsList.get(position);
         startActivity(goodsEntity);
         dismiss();

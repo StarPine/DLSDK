@@ -142,9 +142,8 @@ public class AutoSizeUtils {
 
     /**
      * @param resources The resources.
-     * @return the resource
      */
-    public static Resources closeAdapt(Resources resources) {
+    public static void closeAdapt(Resources resources) {
         DisplayMetrics activityDm = resources.getDisplayMetrics();
         if (null == systemDm) {
             systemDm = Resources.getSystem().getDisplayMetrics();
@@ -183,7 +182,6 @@ public class AutoSizeUtils {
                 }
             }
         }
-        return resources;
     }
 
     private static void resetResources(DisplayMetrics activityDm, DisplayMetrics systemDm) {

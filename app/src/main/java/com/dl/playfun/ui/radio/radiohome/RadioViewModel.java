@@ -8,6 +8,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableArrayList;
+import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableList;
 
@@ -87,6 +88,7 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
 
     //新增广告轮播类型
     public ObservableField<List<AdItemEntity>> itemBannerEntity = new ObservableField<>();
+    public ObservableBoolean itemBannerShow = new ObservableBoolean(false);
 
     //位置选择文字
     public ObservableField<String> regionTitle = new ObservableField<>(StringUtils.getString(R.string.playfun_tab_female_1));
@@ -523,6 +525,7 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
                             if(!listReal.isEmpty()){
                                 radioUC.startBannerEvent.call();
                                 radioItemsAdUser.addAll(listReal);
+                            }else{
                             }
                         }
                     }
@@ -554,7 +557,12 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
                             List<AdItemEntity> listData = adBannerEntity.getDataList();
                             if(listData!=null){
                                 itemBannerEntity.set(listData);
+                                itemBannerShow.set(true);
+                            }else{
+                                itemBannerShow.set(false);
                             }
+                        }else{
+                            itemBannerShow.set(false);
                         }
                     }
                     @Override
