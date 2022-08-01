@@ -23,6 +23,7 @@ public class AutoSizeUtils {
     public static final int HEIGHT_PT = 0x45;
 
     private static final float widthSize = 360f;
+    private static final float heightSize = 640f;
 
     @IntDef({WIDTH_DP, WIDTH_PT, HEIGHT_PT})
     @Retention(RetentionPolicy.CLASS)
@@ -37,11 +38,29 @@ public class AutoSizeUtils {
 
 
     public static Resources applyAdapt(final Resources resources) {
+
+        return applyAdaptSize(resources,true);
+    }
+
+    /**
+    * @Desc TODO(适配规则类)
+    * @author 彭石林
+    * @parame resources 资源 Resources
+    * @parame OnWidth 是否已宽度进行适配
+    * @return android.content.res.Resources
+    * @Date 2022/8/1
+    */
+    public static Resources applyAdapt(final Resources resources,boolean OnWidth){
+        return applyAdaptSize(resources,OnWidth);
+    }
+
+    private static Resources applyAdaptSize(final Resources resources,boolean OnWidth){
+        final float autoDesignSize = OnWidth ? widthSize : heightSize;
         DisplayMetrics activityDm = resources.getDisplayMetrics();
         if (null == systemDm) {
             systemDm = Resources.getSystem().getDisplayMetrics();
         }
-        change(WIDTH_DP, resources, activityDm, systemDm, widthSize);
+        change(WIDTH_DP, resources, activityDm, systemDm, autoDesignSize);
         //兼容其他手机
         if (sMetricsFields == null) {
             sMetricsFields = new ArrayList<>();
@@ -54,7 +73,7 @@ public class AutoSizeUtils {
                         DisplayMetrics tmpDm = getMetricsFromField(resources, field);
                         if (tmpDm != null) {
                             sMetricsFields.add(field);
-                            change(WIDTH_DP, resources, tmpDm, systemDm, widthSize);
+                            change(WIDTH_DP, resources, tmpDm, systemDm, autoDesignSize);
                         }
                     }
                 }
@@ -69,7 +88,7 @@ public class AutoSizeUtils {
             for (Field metricsField : sMetricsFields) {
                 try {
                     DisplayMetrics dm = (DisplayMetrics) metricsField.get(resources);
-                    if (dm != null) change(WIDTH_DP, resources, dm, systemDm, widthSize);
+                    if (dm != null) change(WIDTH_DP, resources, dm, systemDm, autoDesignSize);
                 } catch (Exception e) {
 //                    Log.e("ScreenHelper", "applyMetricsFields: " + e);
                 }
@@ -77,7 +96,6 @@ public class AutoSizeUtils {
         }
         return resources;
     }
-
 
     private static void change(@ScreenMode int screenMode, final Resources resources, DisplayMetrics activityDm, DisplayMetrics systemDm, float size) {
         switch (screenMode) {

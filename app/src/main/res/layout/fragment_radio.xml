@@ -63,6 +63,7 @@
         <com.scwang.smart.refresh.layout.SmartRefreshLayout
             android:id="@+id/refresh_layout"
             android:elevation="30dp"
+            android:background="@color/white"
             android:layout_below="@+id/rl_title_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -82,46 +83,45 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         app:layout_scrollFlags="scroll">
-                        <com.dl.playfun.widget.recyclerview.banner.BannerRecyclerView
-                            android:id="@+id/rcv_aduser"
-                            android:background="@drawable/img_main_bar_backdrop2"
-                            android:clipChildren="false"
+                        <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="270dp"
-                            android:overScrollMode="never"
-                            app:autoPlaying="true"
-                            app:centerScale="1.15"
-                            app:itemSpace="30"
-                            app:moveSpeed="1.8"
-                            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                            binding:adapter="@{viewModel.adapterAdUser}"
-                            binding:itemBinding="@{viewModel.radioItemAdUserBinding}"
-                            binding:items="@{viewModel.radioItemsAdUser}" />
-                        <FrameLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="90dp"
-                            android:layout_marginStart="15dp"
-                            android:layout_marginTop="20dp"
-                            android:layout_marginBottom="10dp"
-                            android:layout_marginEnd="15dp"
-                            >
+                            android:layout_height="wrap_content">
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:scaleType="fitXY"
+                                android:src="@drawable/img_main_bar_backdrop2"
+                                android:layout_width="match_parent"
+                                android:layout_height="122dp"/>
+
+                            <com.dl.playfun.widget.recyclerview.banner.BannerRecyclerView
+                                android:id="@+id/rcv_aduser"
+                                android:layout_width="match_parent"
+                                android:layout_height="270dp"
+                                android:clipChildren="false"
+                                android:overScrollMode="never"
+                                android:visibility="@{viewModel.radioItemsAdUser.empty ? View.GONE : View.VISIBLE}"
+                                app:autoPlaying="true"
+                                app:centerScale="1.15"
+                                app:itemSpace="30"
+                                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                                app:moveSpeed="1.8"
+                                binding:adapter="@{viewModel.adapterAdUser}"
+                                binding:itemBinding="@{viewModel.radioItemAdUserBinding}"
+                                binding:items="@{viewModel.radioItemsAdUser}" />
+                        </RelativeLayout>
                             <com.youth.banner.Banner
                                 android:id="@+id/banner"
+                                android:layout_marginStart="15dp"
+                                android:layout_marginTop="20dp"
+                                android:layout_marginBottom="10dp"
+                                android:layout_marginEnd="15dp"
                                 android:layout_width="match_parent"
                                 android:layout_height="90dp"
                                 android:adjustViewBounds="true"
                                 app:banner_default_image="@drawable/img_banner_default"
                                 app:image_scale_type="fit_xy"
+                                android:visibility="@{viewModel.itemBannerEntity.empty?View.VISIBLE:View.GONE}"
                                 binding:onBannerClickCommand="@{viewModel.onBannerClickCommand}"
                                 binding:BannerAdData="@{viewModel.itemBannerEntity}" />
-                            <androidx.appcompat.widget.AppCompatImageView
-                                android:src="@drawable/img_banner_default_display"
-                                android:scaleType="fitXY"
-                                android:visibility="@{viewModel.itemBannerEntity.empty?View.VISIBLE:View.GONE}"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"/>
-                        </FrameLayout>
-
                     </LinearLayout>
                     <RelativeLayout
                         android:paddingTop="10dp"

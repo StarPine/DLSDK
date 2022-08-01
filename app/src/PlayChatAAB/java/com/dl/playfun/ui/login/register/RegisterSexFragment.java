@@ -21,6 +21,7 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.databinding.FragmentRegisterSexBinding;
 import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.ui.mine.profile.PerfectProfileViewModel;
+import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.DateUtil;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.utils.Utils;
@@ -45,6 +46,7 @@ public class RegisterSexFragment extends BaseFragment<FragmentRegisterSexBinding
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        AutoSizeUtils.applyAdapt(getResources(),false);
         return R.layout.fragment_register_sex;
     }
 
@@ -182,6 +184,12 @@ public class RegisterSexFragment extends BaseFragment<FragmentRegisterSexBinding
                 .setLineSpacingMultiplier(2.8f)
                 .setLabel(getString(R.string.playfun_year), getString(R.string.playfun_month), getString(R.string.playfun_daily), getString(R.string.playfun_hour), getString(R.string.playfun_minute), getString(R.string.playfun_second));
         registerChooseTimeView = new RegisterChooseTimeView(pvTime.build(), timePickerView);
+    }
+
+    @Override
+    public void onDestroy() {
+        AutoSizeUtils.closeAdapt(getResources());
+        super.onDestroy();
     }
 
 }

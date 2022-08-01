@@ -210,6 +210,9 @@ public class BaseParkItemViewModel extends MultiItemViewModel<BaseParkViewModel>
 
     //获取工作植页
     public String getOccupationByIdOnNull(){
+        if(itemEntity.get()==null || Objects.requireNonNull(itemEntity.get()).getOccupationId()==null){
+            return null;
+        }
         int occupationId = Objects.requireNonNull(itemEntity.get()).getOccupationId();
         return SystemDictUtils.getOccupationByIdOnNull(occupationId);
     }

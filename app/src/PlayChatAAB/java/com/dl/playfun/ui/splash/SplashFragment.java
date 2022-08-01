@@ -17,6 +17,7 @@ import com.dl.playfun.R;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.databinding.FragmentSplashBinding;
 import com.dl.playfun.ui.base.BaseFragment;
+import com.dl.playfun.utils.AutoSizeUtils;
 
 
 /**
@@ -26,6 +27,7 @@ public class SplashFragment extends BaseFragment<FragmentSplashBinding, SplashVi
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        AutoSizeUtils.applyAdapt(getResources(),false);
         return R.layout.fragment_splash;
     }
 
@@ -53,5 +55,11 @@ public class SplashFragment extends BaseFragment<FragmentSplashBinding, SplashVi
         stringBuilder.setSpan(redSpan, whiteLength, txt.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         stringBuilder.setSpan(new UnderlineSpan(), whiteLength, txt.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         binding.tvInit.setText(stringBuilder);
+    }
+
+    @Override
+    public void onDestroy() {
+        AutoSizeUtils.closeAdapt(getResources());
+        super.onDestroy();
     }
 }
