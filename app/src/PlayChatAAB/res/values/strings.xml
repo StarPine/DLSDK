@@ -14,7 +14,7 @@
     <string name="register_error_hint">請選擇區號</string>
 
     <string name="mobile_hint">請輸入手機號碼</string>
-    <string name="code_hint">請輸入收到的驗證碼</string>
+    <string name="code_hint">請輸入驗證碼</string>
     <string name="again_send">重新發送</string>
     <string name="code_sended">驗證碼已發送</string>
     <string name="get_userdata_defail">獲取用戶數據失敗！</string>

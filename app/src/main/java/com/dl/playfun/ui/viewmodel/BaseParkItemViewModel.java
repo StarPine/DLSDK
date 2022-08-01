@@ -16,6 +16,7 @@ import com.dl.playfun.entity.TaskAdEntity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.task.webview.FukuokaViewFragment;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
+import com.dl.playfun.ui.webview.WebHomeFragment;
 import com.dl.playfun.utils.ChatUtils;
 import com.dl.playfun.utils.ExceptionReportUtils;
 import com.dl.playfun.utils.TimeUtils;
@@ -88,7 +89,7 @@ public class BaseParkItemViewModel extends MultiItemViewModel<BaseParkViewModel>
             if(adItemEntity!=null && adItemEntity.getLink()!=null){
                 Bundle bundle = new Bundle();
                 bundle.putString("link", adItemEntity.getLink());
-                viewModel.start(FukuokaViewFragment.class.getCanonicalName(), bundle);
+                viewModel.start(WebHomeFragment.class.getCanonicalName(), bundle);
             }
         } catch (Exception e) {
             e.printStackTrace();

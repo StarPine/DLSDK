@@ -62,6 +62,11 @@ public class WebHomeFragment extends BaseFragment<ActivityWebHomePlayfunBinding,
     @Override
     public void initParam() {
         super.initParam();
+        Bundle bundle = getArguments();
+        if(bundle!=null){
+            webUrl = bundle.getString("link", AppConfig.FukubukuroWebUrl);
+        }
+
     }
 
     @Override
