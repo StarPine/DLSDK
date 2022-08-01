@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
@@ -879,6 +880,10 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
                     public void onSuccess(BaseDataResponse<CallingInviteInfo> callingInviteInfoBaseDataResponse) {
                         if (callingInviteInfoBaseDataResponse.getCode() == 2) {//對方忙線中
                             uc.otherBusy.call();
+                            return;
+                        }
+                        if (callingInviteInfoBaseDataResponse.getCode() == 22001) {//游戏中
+                            Toast.makeText(AppContext.instance(), R.string.playfun_in_game, Toast.LENGTH_SHORT).show();
                             return;
                         }
                         CallingInviteInfo callingInviteInfo = callingInviteInfoBaseDataResponse.getData();

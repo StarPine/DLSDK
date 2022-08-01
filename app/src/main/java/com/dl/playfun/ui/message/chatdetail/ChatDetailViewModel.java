@@ -575,15 +575,17 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                 .subscribe(new BaseObserver<BaseDataResponse<CallingInviteInfo>>() {
                     @Override
                     public void onSuccess(BaseDataResponse<CallingInviteInfo> callingInviteInfoBaseDataResponse) {
-                        if (callingInviteInfoBaseDataResponse.getCode() == 2) {
+                        if (callingInviteInfoBaseDataResponse.getCode() == 2) {//忙线中
                             uc.otherBusy.call();
                             return;
                         }
+                        if (callingInviteInfoBaseDataResponse.getCode() == 22001) {//游戏中
+                            Toast.makeText(AppContext.instance(), R.string.playfun_in_game, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
                         CallingInviteInfo callingInviteInfo = callingInviteInfoBaseDataResponse.getData();
                         if (callingInviteInfo != null) {
-                            LogUtils.i("onSuccess: "+callingInviteInfo.toString());
-                            LogUtils.i("callingType: "+callingType);
-                            LogUtils.i("toIMUserId: "+toIMUserId);
                             com.dl.playfun.kl.Utils.tryStartCallSomeone(callingType, toIMUserId, callingInviteInfo.getRoomId(), new Gson().toJson(callingInviteInfo));
                         }
                     }

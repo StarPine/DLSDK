@@ -151,16 +151,6 @@ public class CustomTextMessageHolder extends TextMessageHolder {
                     customIMTextEntity.setKey(null);
                 }
 
-                if (customIMTextEntity.getContent().contains("href") && customIMTextEntity.getContent().contains("</a>")) {
-                    CharSequence charSequence = Html.fromHtml(extra);
-                    msgBodyText.setText(charSequence);
-                    msgBodyText.setOnClickListener(view -> {
-                        if (onItemClickListener !=null)
-                            onItemClickListener.onTextTOWebView(msg);
-                    });
-                    return;
-                }
-
                 if (!TextUtils.isEmpty(customIMTextEntity.getKey())) {
                     if (customIMTextEntity.getContent().contains("<font>")) {
                         String fontText = "<font color='" + customIMTextEntity.getColor() + "'>" + customIMTextEntity.getKey() + "</font>";
@@ -208,7 +198,6 @@ public class CustomTextMessageHolder extends TextMessageHolder {
                     setCallingMsgIconStyle(msg, callingType);
                     msgBodyText.setText(itemView.getContext()
                             .getString(R.string.custom_message_call_message_deatail_time_msg, totalSeconds / 60, totalSeconds % 60));
-
                 }
 
                 //fixme 余额不足和收益提示
@@ -220,22 +209,24 @@ public class CustomTextMessageHolder extends TextMessageHolder {
                         if (onItemClickListener != null)
                             onItemClickListener.onClickDialogRechargeShow();
                     });
-                } else {
-                    if (Double.parseDouble(price) <= 0){
-                        setContentLayoutVisibility(false);
-                        return;
-                    }
-                    if (customIMTextEntity.getPayeeImId() != null) {
-                        isCharger = customIMTextEntity.getPayeeImId().equals(V2TIMManager.getInstance().getLoginUser());
-                        if (isCharger) {//收款人显示
-                            setProfitDetails(price, profitTip);
+                } else {//正常收益提示
+                    if (Double.parseDouble(price) > 0) {
+                        if (customIMTextEntity.getPayeeImId() != null) {
+                            isCharger = customIMTextEntity.getPayeeImId().equals(V2TIMManager.getInstance().getLoginUser());
+                            if (isCharger) {//收款人显示
+                                setProfitDetails(price, profitTip);
+                            }
+                        } else {
+                            if (!MessageRecyclerView.sex) {//女生显示
+                                setProfitDetails(price, profitTip);
+                            }
                         }
-                    } else {
-                        if (!MessageRecyclerView.sex){//女生显示
-                            setProfitDetails(price, profitTip);
+                    }else {
+                        if (totalSeconds <= 0){
+                            setContentLayoutVisibility(false);
+                            return;
                         }
                     }
-                    return;
                 }
             }
 
@@ -257,15 +248,29 @@ public class CustomTextMessageHolder extends TextMessageHolder {
 //        String busyContent = appContext.getString(R.string.custom_message_book_next_call);
 //        profitTip.setText(busyContent);
 //        profitTip.setVisibility(View.VISIBLE);
-        Map callData = IMGsonUtils.fromJson(TUIChatUtils.json2Massage(extra, "data"), Map.class);
-        int callType = Double.valueOf(String.valueOf(callData.get("callingType"))).intValue();
-        setBackColor(msg);
-        setCallingMsgIconStyle(msg, callType);
-        if (msg.isSelf()) {
-            msgBodyText.setText(appContext.getString(R.string.custom_message_other_busy));
-        } else {
-            msgBodyText.setText(appContext.getString(R.string.custom_message_busy_missed));
+        try {
+            Map callData = IMGsonUtils.fromJson(TUIChatUtils.json2Massage(extra, "data"), Map.class);
+            int callType = Double.valueOf(String.valueOf(callData.get("type"))).intValue();
+            int status = Double.valueOf(String.valueOf(callData.get("inStatus"))).intValue();
+            setBackColor(msg);
+            setCallingMsgIconStyle(msg, callType);
+            if (msg.isSelf()) {
+                if (status == 2){
+                    msgBodyText.setText(appContext.getString(R.string.playfun_in_game));
+                }else {
+                    msgBodyText.setText(appContext.getString(R.string.custom_message_other_busy));
+                }
+            } else {
+                if (status == 2){
+                    msgBodyText.setText(appContext.getString(R.string.playfun_in_game_missed));
+                }else {
+                    msgBodyText.setText(appContext.getString(R.string.custom_message_busy_missed));
+                }
+            }
+        }catch (Exception e){
+            setContentLayoutVisibility(false);
         }
+
     }
 
     private void setPhotoItemView(String extra, int position, TUIMessageBean msg) {

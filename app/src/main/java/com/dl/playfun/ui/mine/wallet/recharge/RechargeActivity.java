@@ -79,12 +79,16 @@ public class RechargeActivity extends BaseActivity<ActivityRechargeBinding, Rech
     public void initViewObservable() {
         super.initViewObservable();
 
-        viewModel.clickPay.observe(this, payCode -> pay(payCode));
+        viewModel.clickPay.observe(this, payCode -> {
+            viewModel.showHUD();
+            pay(payCode);
+        });
 
         viewModel.finsh.observe(this, Void -> finish());
 
         this.billingClientLifecycle.PAYMENT_SUCCESS.observe(this, billingPurchasesState -> {
             Log.e("BillingClientLifecycle","支付购买成功回调");
+            viewModel.dismissHUD();
             switch (billingPurchasesState.getBillingFlowNode()){
                 //查询商品阶段
                 case querySkuDetails:
@@ -105,6 +109,7 @@ public class RechargeActivity extends BaseActivity<ActivityRechargeBinding, Rech
         });
         this.billingClientLifecycle.PAYMENT_FAIL.observe(this, billingPurchasesState -> {
             Log.e("BillingClientLifecycle","支付购买失败回调");
+//            viewModel.dismissHUD();
             ToastUtils.showShort(StringUtils.getString(R.string.playfun_pay_fail));
             switch (billingPurchasesState.getBillingFlowNode()){
                 //查询商品阶段-->异常

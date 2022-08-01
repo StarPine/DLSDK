@@ -1,11 +1,14 @@
 package com.dl.playfun.ui.webview;
 
 import android.app.Application;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.JsonUtils;
+import com.dl.playfun.R;
+import com.dl.playfun.app.AppContext;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
@@ -53,6 +56,10 @@ public class WebHomeViewModel extends BaseViewModel<AppRepository> {
                     public void onSuccess(BaseDataResponse<CallingInviteInfo> callingInviteInfoBaseDataResponse) {
                         if (callingInviteInfoBaseDataResponse.getCode() == 2) {//對方忙線中
                             webUC.otherBusy.call();
+                            return;
+                        }
+                        if (callingInviteInfoBaseDataResponse.getCode() == 22001) {//游戏中
+                            Toast.makeText(AppContext.instance(), R.string.playfun_in_game, Toast.LENGTH_SHORT).show();
                             return;
                         }
                         CallingInviteInfo callingInviteInfo = callingInviteInfoBaseDataResponse.getData();
