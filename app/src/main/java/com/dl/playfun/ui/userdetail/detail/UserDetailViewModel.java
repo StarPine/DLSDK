@@ -3,6 +3,7 @@ package com.dl.playfun.ui.userdetail.detail;
 import android.app.Application;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -250,6 +251,17 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
         //将订阅者从管理站中移除
         RxSubscriptions.remove(mSubscription);
         RxSubscriptions.remove(mPhotoStateChangeSubscription);
+    }
+
+    public boolean personalInfoIsEmpty(UserDetailEntity userDetailEntity){
+        if (userDetailEntity != null){
+            if (TextUtils.isEmpty(userDetailEntity.getDesc())
+                    && (userDetailEntity.getWeight() == null || userDetailEntity.getWeight() <= 0)
+                    && (userDetailEntity.getHeight() == null || userDetailEntity.getHeight() <= 0)){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void refreshDistance() {
