@@ -144,6 +144,13 @@ public class CustomTextMessageHolder extends TextMessageHolder {
             //fixme 系统提示
             if (!TextUtils.isEmpty(customIMTextEntity.getContent())) {
 
+                String likeText = "一鍵追蹤她，不再失聯噢 已追蹤";
+                if (MessageRecyclerView.addLikeMsgId != null && msg.getId().equals(MessageRecyclerView.addLikeMsgId)) {
+                    customIMTextEntity.setContent(likeText);
+                    customIMTextEntity.setEvent(-1);
+                    customIMTextEntity.setKey(null);
+                }
+
                 if (customIMTextEntity.getContent().contains("href") && customIMTextEntity.getContent().contains("</a>")) {
                     CharSequence charSequence = Html.fromHtml(extra);
                     msgBodyText.setText(charSequence);

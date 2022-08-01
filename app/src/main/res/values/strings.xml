@@ -1038,5 +1038,6 @@
     <string name="playfun_binding_auth_success">綁定成功</string>
     <string name="playfun_text_accost_empty2">無可搭訕用戶</string>
     <string name="playfun_setting_account_cancell">註銷帳號</string>
+    <string name="playfun_visitor_total_count">訪客 %s</string>
 
 </resources>

@@ -1049,5 +1049,7 @@
     <string name="playfun_fragment_perfect_avatar1">請重新上傳頭貼</string>
     <string name="playfun_x_count2">x%s</string>
     <string name="playfun_pay_fail">支付失敗</string>
+    <string name="playfun_mine_setting_desc">無痕與隱藏</string>
+    <string name="playfun_mine_face_beauty">美顏</string>
 
 </resources>

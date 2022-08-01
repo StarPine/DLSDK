@@ -677,6 +677,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                         dismissHUD();
                         isTrack.set(true);
                         Toast.makeText(AppContext.instance(), R.string.playfun_cancel_zuizong_3, Toast.LENGTH_SHORT).show();
+                        uc.addLikeSuccess.postValue(msgId);
                     }
 
                     @Override
