@@ -33,6 +33,7 @@ import me.goldze.mvvmhabit.utils.ToastUtils;
  * Author: 彭石林
  * Time: 2021/8/4 12:26
  * Description: This is TraceManFragment
+ * fragment：誰看過我
  */
 public class TraceManFragment extends BaseToolbarFragment<FragmentMineTraceManBinding, TraeManViewModel> {
     Dialog vipDialog = null;
@@ -105,7 +106,7 @@ public class TraceManFragment extends BaseToolbarFragment<FragmentMineTraceManBi
         viewModel.uc.loadRefresh.observe(this, new Observer<Void>() {
             @Override
             public void onChanged(Void unused) {
-                binding.title.setText(String.format(StringUtils.getString(R.string.playfun_mine_trace_man_title1),viewModel.totalCount));
+                binding.title.setText(String.format(StringUtils.getString(R.string.playfun_mine_trace_man_title1),viewModel.totalCount.get()));
                 //binding.confirm.setText(String.format(StringUtils.getString(R.string.mine_trace_man_title3), viewModel.totalCount));
                 if (viewModel.isPlay != null && viewModel.isPlay == 1) {
                     binding.refreshLayout.setEnableRefresh(true);

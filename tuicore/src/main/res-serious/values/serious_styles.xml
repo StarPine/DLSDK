@@ -31,8 +31,8 @@
         <item name="core_title_bar_text_bg">@color/core_title_bar_text_bg_serious</item>
         <item name="core_title_bar_back_icon">@drawable/core_title_bar_back_serious</item>
         <item name="core_default_group_icon">@drawable/core_default_group_icon_serious</item>
-        <item name="core_default_user_icon">@drawable/core_default_user_icon_serious</item>
-
+<!--        <item name="core_default_user_icon">@drawable/core_default_user_icon_serious</item>-->
+        <item name="core_default_user_icon">@drawable/default_avatar</item>
     </style>
 
 </resources>

@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableArrayList;
+import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableList;
 
 import com.dl.playfun.BR;
@@ -37,13 +38,12 @@ public class TraeManViewModel extends BaseViewModel<AppRepository> {
     public ObservableList<TraceManItemViewModel> observableList = new ObservableArrayList<>();
 
     public ItemBinding<TraceManItemViewModel> itemBinding = ItemBinding.of(BR.viewModel, R.layout.trace_item_park_man);
-
+    public ObservableField<Integer> totalCount = new ObservableField<>(0);
 
     public UIChangeObservable uc = new UIChangeObservable();
 
     public long expireTime = 0;
     public Integer isPlay = -1;
-    public Integer totalCount = 0;
     public BindingCommand AlertVipOnClickCommand = new BindingCommand(() -> {
         uc.clickVip.call();
     });
@@ -99,7 +99,7 @@ public class TraeManViewModel extends BaseViewModel<AppRepository> {
                         if (currentPage == 1) {
                             observableList.clear();
                         }
-                        totalCount = response.getData().getTotal();
+                        totalCount.set(response.getData().getTotal());;
                         expireTime = response.getData().getExpireTime();
                         try {
                             long before = System.currentTimeMillis();
