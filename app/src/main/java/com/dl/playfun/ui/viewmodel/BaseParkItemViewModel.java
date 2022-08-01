@@ -16,11 +16,14 @@ import com.dl.playfun.entity.TaskAdEntity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.task.webview.FukuokaViewFragment;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
+import com.dl.playfun.ui.webview.WebHomeFragment;
 import com.dl.playfun.utils.ChatUtils;
 import com.dl.playfun.utils.ExceptionReportUtils;
+import com.dl.playfun.utils.SystemDictUtils;
 import com.dl.playfun.utils.TimeUtils;
 
 import java.util.List;
+import java.util.Objects;
 
 import me.goldze.mvvmhabit.base.MultiItemViewModel;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
@@ -88,7 +91,7 @@ public class BaseParkItemViewModel extends MultiItemViewModel<BaseParkViewModel>
             if(adItemEntity!=null && adItemEntity.getLink()!=null){
                 Bundle bundle = new Bundle();
                 bundle.putString("link", adItemEntity.getLink());
-                viewModel.start(FukuokaViewFragment.class.getCanonicalName(), bundle);
+                viewModel.start(WebHomeFragment.class.getCanonicalName(), bundle);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -203,6 +206,12 @@ public class BaseParkItemViewModel extends MultiItemViewModel<BaseParkViewModel>
         } else {
             return View.GONE;
         }
+    }
+
+    //获取工作植页
+    public String getOccupationByIdOnNull(){
+        int occupationId = Objects.requireNonNull(itemEntity.get()).getOccupationId();
+        return SystemDictUtils.getOccupationByIdOnNull(occupationId);
     }
 
 }

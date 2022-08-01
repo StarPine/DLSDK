@@ -9,6 +9,7 @@ import com.dl.playfun.entity.AdItemEntity;
 import com.dl.playfun.event.TaskMainTabEvent;
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
 import com.dl.playfun.ui.task.webview.FukuokaViewFragment;
+import com.dl.playfun.ui.webview.WebHomeFragment;
 
 import me.goldze.mvvmhabit.base.MultiItemViewModel;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
@@ -49,7 +50,7 @@ public class HomeMainBannerItemViewModel extends MultiItemViewModel<HomeMainView
                 if(adItemEntity!=null && adItemEntity.getLink()!=null){
                     Bundle bundle = new Bundle();
                     bundle.putString("link", adItemEntity.getLink());
-                    viewModel.start(FukuokaViewFragment.class.getCanonicalName(), bundle);
+                    viewModel.start(WebHomeFragment.class.getCanonicalName(), bundle);
                 }
             }
 

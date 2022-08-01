@@ -13,6 +13,7 @@
     <string name="playfun_tab_female_3">女神</string>
     <string name="playfun_tab_male_1">附近</string>
     <string name="playfun_tab_male_2">VIP</string>
+    <string name="playfun_tab_male_3">活躍</string>
     <string name="playfun_tab_message_1">聊天</string>
     <string name="playfun_tab_message_2">官方訊息</string>
     <string name="playfun_tab_wallet_1">現金</string>
@@ -117,7 +118,7 @@
     <string name="playfun_dialog_program_subject_choose_title">選擇活動主題</string>
     <string name="playfun_fragment_apply_message_title">申請訊息</string>
     <string name="playfun_mobile_hint">請輸入您的手機號碼</string>
-    <string name="playfun_code_hint">請輸入您收到的驗證碼</string>
+    <string name="playfun_code_hint">請輸入驗證碼</string>
     <string name="playfun_fragment_blacklist_title">封鎖名單</string>
     <string name="playfun_issuance">發布</string>
     <string name="playfun_fragment_broadcast_message_title">廣播訊息</string>
@@ -286,7 +287,7 @@
     <string name="playfun_line_error_hanzi">ID有誤！</string>
     <string name="playfun_updata_head_success">修改頭貼成功</string>
     <string name="playfun_please_input_code">請輸入驗證碼</string>
-    <string name="playfun_send_code">發送驗證碼</string>
+    <string name="playfun_send_code">獲取</string>
     <string name="playfun_userdetail_unlock_title">今天查看用戶主頁次數只剩%s次</string>
     <string name="playfun_userdetail_unlock_title1">今天查看用戶主頁次數已滿</string>
     <string name="playfun_userdetail_unlock_context">非VIP用戶每天15次\n（VIP用戶可升級為每天30次哦）</string>
@@ -999,7 +1000,7 @@
     <string name="auth_external_login_more">其他登入方式 ></string>
     <string name="playfun_fragment_perfect_name_hint">請輸入暱稱</string>
     <string name="playfun_fragment_perfect_brithday">生日</string>
-    <string name="playfun_fragment_perfect_avatar">請上傳頭像</string>
+    <string name="playfun_fragment_perfect_avatar">請上傳頭貼</string>
     <string name="playfun_fragment_perfect_sex_hint">請選擇性別</string>
     <string name="playfun_fragment_perfect_sex_hint2">確認後性別不可更改，請謹慎選擇</string>
     <string name="playfun_fragment_perfect_sex_hint3">提示：性別一旦選擇即不可更改</string>

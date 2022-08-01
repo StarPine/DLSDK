@@ -49,10 +49,10 @@ public abstract class BaseParkViewModel<T extends AppRepository> extends BaseRef
         }else{
             String itemType = String.valueOf(item.getItemType());
             if (itemType.equals(ItemPark)) {
-                //评价别人
+                //正常子item
                 itemBinding.set(BR.viewModel, R.layout.item_park);
             } else if (itemType.equals(ItemParkBanner)) {
-                //别人评价我
+                //广告图
                 itemBinding.set(BR.viewModel, R.layout.item_park_banner);
             }
         }

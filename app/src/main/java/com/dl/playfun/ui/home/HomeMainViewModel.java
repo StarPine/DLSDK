@@ -119,14 +119,19 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
     public BindingCommand genderOnClickCommand = new BindingCommand(() -> {
         observableListTab.clear();
         AppContext.instance().logEvent(AppsFlyerEvent.Nearby_Change_gender);
-        gender.set(!gender.get());
+        gender.set(Boolean.FALSE.equals(gender.get()));
         initGenderTab();
         startRefresh();
     });
 
     public void initGenderTab() {
         List<HomeMainTabItemViewModel> listData = new ArrayList<>();
-        if(gender.get()){
+        if(Boolean.TRUE.equals(gender.get())){
+            Map<String,Object> map3 = new HashMap<>();
+            map3.put("type",5);
+            map3.put("text",StringUtils.getString(R.string.playfun_tab_male_3));
+            HomeMainTabItemViewModel homeMainItemViewModel3 = new HomeMainTabItemViewModel(this,map3,true);
+            listData.add(homeMainItemViewModel3);
             Map<String,Object> map1 = new HashMap<>();
             map1.put("type",1);
             map1.put("text",StringUtils.getString(R.string.playfun_tab_male_1));
