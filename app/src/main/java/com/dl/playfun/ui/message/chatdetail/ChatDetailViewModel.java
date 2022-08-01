@@ -409,7 +409,10 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
      * @return
      */
     public Drawable onLineDrawables(TagEntity detailEntity) {
-        if (detailEntity == null)return null;
+        if (detailEntity == null
+                || detailEntity.getCallingStatus() == null
+                || detailEntity.getIsOnline() == null)return null;
+
         if (detailEntity.getCallingStatus() == 0) {
             if (detailEntity.getIsOnline() == 1) {
                 return com.blankj.utilcode.util.Utils.getApp().getResources().getDrawable(R.drawable.user_detail_online2);
