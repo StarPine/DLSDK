@@ -464,6 +464,7 @@
                             style="@style/ProfileItem"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/profile_item_height"
+                            android:visibility="gone"
                             binding:onClickCommand="@{viewModel.shopOnClickCommand}">
 
                             <ImageView
