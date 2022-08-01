@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,7 +24,6 @@ import com.blankj.utilcode.util.ObjectUtils;
 import com.dl.playfun.R;
 import com.dl.playfun.api.AppGameConfig;
 import com.dl.playfun.app.AppContext;
-import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.BillingClientLifecycle;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
@@ -34,7 +32,6 @@ import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.CreateOrderEntity;
 import com.dl.playfun.entity.GameCoinBuy;
 import com.dl.playfun.entity.GameCoinWalletEntity;
-import com.dl.playfun.event.UMengCustomEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseDialog;
 import com.dl.playfun.ui.dialog.adapter.GameCoinTopupAdapter;
@@ -45,7 +42,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.functions.Consumer;
-import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.utils.RxUtils;
 import me.goldze.mvvmhabit.utils.ToastUtils;
 
@@ -328,7 +324,6 @@ public class CoinExchargeItegralPayDialog extends BaseDialog implements View.OnC
     }
 
     public void onBuyClick(View view, int position) {
-        RxBus.getDefault().post(new UMengCustomEvent("pay-recharge-token"));
         GameCoinBuy goodsEntity = (GameCoinBuy)this.mGoodsList.get(position);
         this.sel_goodsEntity = goodsEntity;
         this.createOrder(goodsEntity);

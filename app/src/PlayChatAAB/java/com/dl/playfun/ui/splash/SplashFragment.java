@@ -27,7 +27,7 @@ public class SplashFragment extends BaseFragment<FragmentSplashBinding, SplashVi
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        AutoSizeUtils.applyAdapt(getResources(),false);
+        AutoSizeUtils.applyAdapt(getResources());
         return R.layout.fragment_splash;
     }
 
@@ -58,8 +58,9 @@ public class SplashFragment extends BaseFragment<FragmentSplashBinding, SplashVi
     }
 
     @Override
-    public void onDestroy() {
+    public void onDestroyView() {
+        super.onDestroyView();
+        //View销毁时会执行，同时取消所有异步任务
         AutoSizeUtils.closeAdapt(getResources());
-        super.onDestroy();
     }
 }

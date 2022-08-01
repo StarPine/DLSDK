@@ -119,7 +119,7 @@
                                 android:adjustViewBounds="true"
                                 app:banner_default_image="@drawable/img_banner_default"
                                 app:image_scale_type="fit_xy"
-                                android:visibility="@{viewModel.itemBannerEntity.empty?View.VISIBLE:View.GONE}"
+                                android:visibility="@{viewModel.itemBannerShow ?View.VISIBLE:View.GONE}"
                                 binding:onBannerClickCommand="@{viewModel.onBannerClickCommand}"
                                 binding:BannerAdData="@{viewModel.itemBannerEntity}" />
                     </LinearLayout>

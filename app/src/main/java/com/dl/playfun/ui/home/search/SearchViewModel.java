@@ -1,5 +1,7 @@
 package com.dl.playfun.ui.home.search;
 
+import static com.blankj.utilcode.util.SnackbarUtils.dismiss;
+
 import android.app.Application;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -95,11 +97,7 @@ public class SearchViewModel extends BaseParkViewModel<AppRepository> {
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
                 .doOnSubscribe(this)
-                .doOnSubscribe(disposable -> {
-//                    if (page == 1) {
-//                        stateModel.setEmptyState(EmptyState.PROGRESS);
-//                    }
-                })
+                .doOnSubscribe(disposable -> showHUD())
                 .subscribe(new BaseObserver<BaseListDataResponse<ParkItemEntity>>() {
 
                     @Override
@@ -133,6 +131,7 @@ public class SearchViewModel extends BaseParkViewModel<AppRepository> {
                     @Override
                     public void onComplete() {
                         stopRefreshOrLoadMore();
+                        dismiss();
                     }
                 });
     }
