@@ -165,6 +165,31 @@ public class SystemDictUtils {
     }
 
     /**
+     * 根据工作ID查询工作名称
+     *
+     * @param id 工作ID
+     * @return
+     */
+    public static String getOccupationByIdOnNull(int id) {
+        List<OccupationConfigItemEntity> list = Injection.provideDemoRepository().readOccupationConfig();
+        String name = null;
+        for (OccupationConfigItemEntity occupationConfigItemEntity : list) {
+            boolean find = false;
+            for (OccupationConfigItemEntity.ItemEntity itemEntity : occupationConfigItemEntity.getItem()) {
+                if (itemEntity.getId() == id) {
+                    find = true;
+                    name = itemEntity.getName();
+                    break;
+                }
+            }
+            if (find) {
+                break;
+            }
+        }
+        return name;
+    }
+
+    /**
      * 根据身高配置ID查询身高
      *
      * @param id 身高ID
