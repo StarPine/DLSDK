@@ -184,7 +184,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
-                android:visibility="@{viewModel.isEmpty(viewModel.ageAndConstellation)? View.GONE :View.VISIBLE}"
+                android:visibility="@{viewModel.isEmpty(viewModel.itemEntity.age)? View.GONE :View.VISIBLE}"
                 android:text="@{viewModel.ageAndConstellation}"
                 android:textColor="#827692"
                 tools:text="年龄和星座" />

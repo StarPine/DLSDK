@@ -100,7 +100,7 @@ public class TraceManItemViewModel extends MultiItemViewModel<TraeManViewModel> 
     }
 
     public String getAgeAndConstellation() {
-        return String.format(StringUtils.getString(R.string.playfun_age_and_constellation), itemEntity.get().getAge(), itemEntity.get().getConstellation());
+        return String.format(StringUtils.getString(R.string.playfun_mine_age), itemEntity.get().getAge());
     }
 
     public Drawable getVipGodsImg(TraceEntity traceEntity) {
