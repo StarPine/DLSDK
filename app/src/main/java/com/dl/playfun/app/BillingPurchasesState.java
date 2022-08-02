@@ -75,6 +75,8 @@ public class BillingPurchasesState {
         //用户购买操作 可在此购买成功 or 取消支付
         purchasesUpdated,
         // 用户操作购买成功 --> 商家确认操作 需要手动确定收货（消耗这笔订单并且发货（给与用户购买奖励）） 否则 到达一定时间 自动退款
-        acknowledgePurchase
+        acknowledgePurchase,
+        //查询本地历史订单。未消耗的
+        queryPurchaseHistory
     }
 }

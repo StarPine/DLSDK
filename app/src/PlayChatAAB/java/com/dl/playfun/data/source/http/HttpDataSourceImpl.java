@@ -1241,6 +1241,11 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
+    public Observable<BaseResponse> photoCallCover(Integer albumId, Integer type) {
+        return apiService.photoCallCover(albumId, type);
+    }
+
+    @Override
     public Observable<BaseDataResponse<CityAllEntity>> getCityConfigAll() {
         return apiService.getCityConfigAll();
     }

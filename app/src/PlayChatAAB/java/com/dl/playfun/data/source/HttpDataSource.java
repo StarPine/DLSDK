@@ -109,6 +109,15 @@ import retrofit2.http.Query;
 public interface HttpDataSource {
 
     /**
+     * @Desc TODO(设置视讯广场封面图)
+     * @author 彭石林
+     * @parame []
+     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
+     * @Date 2022/8/2
+     */
+    Observable<BaseResponse> photoCallCover(Integer albumId, Integer type);
+
+    /**
      * @return
      * @Desc TODO(获取所有城市内容)
      * @author 彭石林

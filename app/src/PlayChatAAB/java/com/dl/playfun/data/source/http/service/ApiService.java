@@ -120,6 +120,16 @@ import retrofit2.http.Query;
 public interface ApiService {
 
     /**
+    * @Desc TODO(设置视讯广场封面图)
+    * @author 彭石林
+    * @parame []
+    * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
+    * @Date 2022/8/2
+    */
+    @FormUrlEncoded
+    @POST("api/user/CallCover")
+    Observable<BaseResponse> photoCallCover(@Field("album_id")Integer albumId, @Field("type")Integer type);
+    /**
      * @return
      * @Desc TODO(获取所有城市内容)
      * @author 彭石林

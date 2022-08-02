@@ -5,11 +5,13 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.entity.AlbumPhotoEntity;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
+import com.dl.playfun.ui.dialog.PhotoDialog;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.dl.playfun.BR;
@@ -98,6 +100,9 @@ public class PhotoSettingFragment extends BaseToolbarFragment<FragmentPhotoSetti
                     })
                     .chooseType(MVDialog.TypeEnum.CENTER)
                     .show();
+        });
+        viewModel.uc.clickPhotoCoverAlert.observe(this, unused -> {
+            PhotoDialog.alertPhotoCover(getContext());
         });
     }
 

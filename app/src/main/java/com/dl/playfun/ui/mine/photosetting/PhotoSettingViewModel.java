@@ -16,6 +16,7 @@ import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.AlbumPhotoEntity;
 import com.dl.playfun.event.MyPhotoAlbumChangeEvent;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.utils.FileUploadUtils;
 import com.dl.playfun.utils.ImageUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
@@ -113,6 +114,21 @@ public class PhotoSettingViewModel extends BaseViewModel<AppRepository> {
         this.mType = type;
         for (AlbumPhotoEntity photo : photos) {
             PhotoSettingItemViewModel photoSettingItemViewModel = new PhotoSettingItemViewModel(PhotoSettingViewModel.this, photo);
+            //不为null  并且是本人
+            if(photo.getVerificationType()==1 && !ConfigManager.getInstance().isMale()){
+                Integer callCoverState = photo.getIsCallCover();
+                if(callCoverState!=null){
+                    if(callCoverState==0){
+                        photoSettingItemViewModel.photoCoverShow.set(0);
+                    }else if(callCoverState==1){
+                        photoSettingItemViewModel.photoCoverShow.set(1);
+                    }else{
+                        photoSettingItemViewModel.photoCoverShow.set(-1);
+                    }
+                }else{
+                    photoSettingItemViewModel.photoCoverShow.set(-1);
+                }
+            }
             items.add(photoSettingItemViewModel);
         }
         titleText.set(String.format("%s/%s", mIndex + 1, items.size()));
@@ -258,8 +274,46 @@ public class PhotoSettingViewModel extends BaseViewModel<AppRepository> {
                 });
     }
 
+    //上传为封面图片、视频
+    public void photoCallCover(int albumId,int position){
+        model.photoCallCover(albumId,1)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseResponse>(){
+                    @Override
+                    public void onSuccess(BaseResponse baseResponse) {
+                        if(items!=null){
+                            for (int j = 0; j < items.size(); j++) {
+                                AlbumPhotoEntity albumPhotoEntity = items.get(j).itemEntity.get();
+                                if(albumPhotoEntity!=null){
+                                    //不为null  并且是本人
+                                    if(albumPhotoEntity.getVerificationType()==1 && !ConfigManager.getInstance().isMale()){
+                                        if(albumId == albumPhotoEntity.getId()){
+                                            items.get(j).photoCoverShow.set(1);
+                                        }else{
+                                            items.get(j).photoCoverShow.set(0);
+                                        }
+                                    }else{
+                                        items.get(j).photoCoverShow.set(-1);
+                                    }
+                                }
+                            }
+                            adAdapter.notifyDataSetChanged();
+                        }
+                    }
+                    @Override
+                    public void onComplete(){
+                        dismissHUD();
+                    }
+                });
+    }
+
+
     public class UIChangeObservable {
         public SingleLiveEvent<Integer> clickDelete = new SingleLiveEvent<>();
+        public SingleLiveEvent<Void> clickPhotoCoverAlert = new SingleLiveEvent<>();
     }
 
 }

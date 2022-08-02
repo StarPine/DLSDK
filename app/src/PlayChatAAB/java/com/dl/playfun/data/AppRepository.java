@@ -1539,6 +1539,11 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
+    public Observable<BaseResponse> photoCallCover(Integer albumId, Integer type) {
+        return mHttpDataSource.photoCallCover(albumId, type);
+    }
+
+    @Override
     public Observable<BaseDataResponse<CityAllEntity>> getCityConfigAll() {
         return mHttpDataSource.getCityConfigAll();
     }
