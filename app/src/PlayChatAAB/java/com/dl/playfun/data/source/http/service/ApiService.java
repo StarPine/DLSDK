@@ -133,9 +133,10 @@ public interface ApiService {
      * @param nickname
      * @return
      */
-    @GET("api/user/checkNickname")
+    @FormUrlEncoded
+    @POST("api/user/checkNickname")
     Observable<BaseDataResponse<CheckNicknameEntity>> checkNickname(
-            @Query("nickname") String nickname
+            @Field("nickname") String nickname
     );
     /*
      * @Desc TODO(手机号码注册拉取所有地区)
