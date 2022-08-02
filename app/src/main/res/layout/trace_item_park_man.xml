@@ -157,8 +157,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/rl_name"
             android:layout_alignLeft="@+id/rl_name"
-            android:orientation="horizontal"
-            android:layout_marginTop="19dp">
+            android:layout_marginTop="19dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/city"
@@ -180,14 +180,14 @@
             <TextView
                 android:id="@+id/tag_primary"
                 style="@style/TagPrimary"
-                android:layout_gravity="center_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
+                android:layout_gravity="center_vertical"
                 android:layout_marginLeft="7dp"
                 android:layout_toRightOf="@+id/city"
-                android:visibility="@{viewModel.itemEntity.age==null?View.GONE:View.VISIBLE}"
-                android:text='@{viewModel.itemEntity.age+""}'
+                android:text='@{viewModel.getAgeAndConstellation}'
                 android:textColor="#827692"
+                android:visibility="@{viewModel.itemEntity.age==null?View.GONE:View.VISIBLE}"
                 tools:text="17" />
         </LinearLayout>
     </RelativeLayout>

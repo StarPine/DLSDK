@@ -99,9 +99,8 @@ public class TraceItemViewModel extends MultiItemViewModel<TraceListViewModel> {
         return View.GONE;
     }
 
-
     public String getAgeAndConstellation() {
-        return String.format(StringUtils.getString(R.string.playfun_age_and_constellation_only_age), itemEntity.get().getAge());
+        return String.format(StringUtils.getString(R.string.playfun_mine_age), itemEntity.get().getAge());
     }
 
     public boolean isEmpty(String obj) {
