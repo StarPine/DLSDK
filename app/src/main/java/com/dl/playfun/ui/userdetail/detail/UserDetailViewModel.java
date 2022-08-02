@@ -3,7 +3,9 @@ package com.dl.playfun.ui.userdetail.detail;
 import android.app.Application;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
@@ -250,6 +252,17 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
         //将订阅者从管理站中移除
         RxSubscriptions.remove(mSubscription);
         RxSubscriptions.remove(mPhotoStateChangeSubscription);
+    }
+
+    public boolean personalInfoIsEmpty(UserDetailEntity userDetailEntity){
+        if (userDetailEntity != null){
+            if (TextUtils.isEmpty(userDetailEntity.getDesc())
+                    && (userDetailEntity.getWeight() == null || userDetailEntity.getWeight() <= 0)
+                    && (userDetailEntity.getHeight() == null || userDetailEntity.getHeight() <= 0)){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void refreshDistance() {
@@ -867,6 +880,10 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
                     public void onSuccess(BaseDataResponse<CallingInviteInfo> callingInviteInfoBaseDataResponse) {
                         if (callingInviteInfoBaseDataResponse.getCode() == 2) {//對方忙線中
                             uc.otherBusy.call();
+                            return;
+                        }
+                        if (callingInviteInfoBaseDataResponse.getCode() == 22001) {//游戏中
+                            Toast.makeText(AppContext.instance(), R.string.playfun_in_game, Toast.LENGTH_SHORT).show();
                             return;
                         }
                         CallingInviteInfo callingInviteInfo = callingInviteInfoBaseDataResponse.getData();

@@ -212,4 +212,6 @@
 	<string name="chat_reply_detail">Reply detail</string>
 
 	<string name="chat_not_read">Unread</string>
+	<string name="playfun_in_game">對方在遊戲中</string>
+	<string name="playfun_in_game_missed">遊戲中未接聽</string>
 </resources>

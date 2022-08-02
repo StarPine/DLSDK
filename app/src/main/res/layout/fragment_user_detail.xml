@@ -74,7 +74,7 @@
                         binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
                         binding:imageThumbPath="@{viewModel.detailEntity.avatar}"
                         binding:resizeH="@{29}"
-                        binding:resizeW="@{29}"/>
+                        binding:resizeW="@{29}" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -185,12 +185,11 @@
                                             android:id="@+id/iv_online"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:layout_toRightOf="@+id/iv_back"
                                             android:layout_marginTop="46dp"
+                                            android:layout_toRightOf="@+id/iv_back"
                                             android:elevation="15dp"
-                                            android:visibility="@{viewModel.detailEntity.isOnline == 1? View.VISIBLE:View.GONE}"
-                                            android:src="@{viewModel.onLineDrawables(viewModel.detailEntity)}" />
-
+                                            android:src="@{viewModel.onLineDrawables(viewModel.detailEntity)}"
+                                            android:visibility="@{viewModel.detailEntity.isOnline == 1? View.VISIBLE:View.GONE}" />
 
 
                                         <ImageView
@@ -207,7 +206,6 @@
                                             android:id="@+id/me_avatar"
                                             android:layout_width="69dp"
                                             android:layout_height="69dp"
-                                            android:layout_above="@+id/list_profile_layout"
                                             android:layout_marginStart="24dp"
                                             android:layout_marginTop="243dp">
 
@@ -359,8 +357,8 @@
 
                             <RelativeLayout
                                 android:id="@+id/zuizong"
-                                android:layout_width="38dp"
-                                android:layout_height="38dp"
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
                                 android:layout_alignParentEnd="true"
                                 android:layout_marginEnd="24dp"
                                 android:elevation="20dp"
@@ -369,25 +367,18 @@
                                 <ImageView
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:src="@drawable/user_detail_zuizong"
+                                    android:src="@drawable/icon_user_detail_like"
                                     android:visibility="@{viewModel.detailEntity.collect?View.GONE:View.VISIBLE}"
                                     binding:onClickCommand="@{viewModel.collectOnClickCommand}" />
 
-                                <ImageView
-                                    android:layout_width="22dp"
-                                    android:layout_height="22dp"
-                                    android:layout_centerInParent="true"
-                                    android:elevation="90dp"
-                                    android:src="@drawable/user_detail_zuizong_img"
-                                    android:visibility="@{viewModel.detailEntity.collect?View.GONE:View.VISIBLE}" />
                             </RelativeLayout>
 
                             <androidx.cardview.widget.CardView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_below="@+id/zuizong"
+                                android:layout_marginTop="-35dp"
                                 android:visibility="@{viewModel.detailEntity.blacklistStatus == 0 ? View.VISIBLE : View.GONE}"
-                                android:layout_marginTop="-19dp"
                                 app:cardCornerRadius="20dp"
                                 app:cardElevation="0dp">
 
@@ -502,27 +493,21 @@
                                                 android:minHeight="41dp"
                                                 binding:onClickCommand="@{viewModel.userDynamicOnClickCommand}">
 
-                                                <TextView
-                                                    android:id="@+id/left_tx_1"
+                                                <ImageView
+                                                    android:id="@+id/iv_feeling"
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
                                                     android:layout_alignParentTop="true"
                                                     android:layout_marginStart="14dp"
-                                                    android:layout_marginTop="18dp"
-                                                    android:layout_marginBottom="23dp"
-                                                    android:includeFontPadding="false"
-                                                    android:text='@string/playfun_user_detail_ta_dynamic'
-                                                    android:textColor="@color/text_default"
-                                                    android:textSize="15sp"
-                                                    android:textStyle="bold" />
+                                                    android:layout_marginTop="15dp"
+                                                    android:layout_marginEnd="15dp"
+                                                    android:src="@drawable/icon_user_detail_feeling" />
 
                                                 <TextView
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
-                                                    android:layout_alignTop="@+id/left_tx_1"
-                                                    android:layout_marginStart="18dp"
-                                                    android:layout_marginTop="1dp"
-                                                    android:layout_toEndOf="@+id/left_tx_1"
+                                                    android:layout_alignTop="@+id/iv_feeling"
+                                                    android:layout_toEndOf="@+id/iv_feeling"
                                                     android:text="@string/playfun_user_detail_evaluation_hint3"
                                                     android:textColor="#FFBFBFBF"
                                                     android:textSize="12sp"
@@ -531,16 +516,15 @@
                                                 <LinearLayout
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
-                                                    android:layout_below="@+id/left_tx_1"
-                                                    android:layout_marginStart="14dp"
-                                                    android:layout_marginTop="14dp"
+                                                    android:layout_alignTop="@+id/iv_feeling"
+                                                    android:layout_toEndOf="@+id/iv_feeling"
                                                     android:orientation="horizontal"
                                                     android:visibility="@{ObjectUtils.isEmpty(viewModel.detailEntity.news) ? View.GONE:View.VISIBLE}"
                                                     tools:visibility="gone">
 
                                                     <com.dl.playfun.widget.roundedimageview.RoundedImageView
-                                                        android:layout_width="78dp"
-                                                        android:layout_height="78dp"
+                                                        android:layout_width="75dp"
+                                                        android:layout_height="75dp"
                                                         android:layout_centerVertical="true"
                                                         android:layout_gravity="start"
                                                         android:layout_marginRight="6dp"
@@ -550,12 +534,11 @@
                                                         binding:imageErrorPlaceholderRes="@{R.drawable.default_placeholder_img}"
                                                         binding:imageThumbPath="@{viewModel.dynamicPic1}"
                                                         binding:resizeH="@{78}"
-                                                        binding:resizeW="@{78}"
-                                                        />
+                                                        binding:resizeW="@{78}" />
 
                                                     <com.dl.playfun.widget.roundedimageview.RoundedImageView
-                                                        android:layout_width="78dp"
-                                                        android:layout_height="78dp"
+                                                        android:layout_width="75dp"
+                                                        android:layout_height="75dp"
                                                         android:layout_centerVertical="true"
                                                         android:layout_gravity="start"
                                                         android:layout_marginRight="10dp"
@@ -565,12 +548,11 @@
                                                         binding:imageErrorPlaceholderRes="@{R.drawable.default_placeholder_img}"
                                                         binding:imageThumbPath="@{viewModel.dynamicPic2}"
                                                         binding:resizeH="@{78}"
-                                                        binding:resizeW="@{78}"
-                                                        />
+                                                        binding:resizeW="@{78}" />
 
                                                     <com.dl.playfun.widget.roundedimageview.RoundedImageView
-                                                        android:layout_width="78dp"
-                                                        android:layout_height="78dp"
+                                                        android:layout_width="75dp"
+                                                        android:layout_height="75dp"
                                                         android:layout_centerVertical="true"
                                                         android:layout_gravity="start"
                                                         android:layout_marginRight="6dp"
@@ -580,26 +562,24 @@
                                                         binding:imageErrorPlaceholderRes="@{R.drawable.default_placeholder_img}"
                                                         binding:imageThumbPath="@{viewModel.dynamicPic3}"
                                                         binding:resizeH="@{78}"
-                                                        binding:resizeW="@{78}"
-                                                        />
+                                                        binding:resizeW="@{78}" />
 
                                                     <RelativeLayout
-                                                        android:layout_width="78dp"
-                                                        android:layout_height="78dp"
+                                                        android:layout_width="75dp"
+                                                        android:layout_height="75dp"
                                                         android:layout_centerVertical="true"
                                                         android:layout_gravity="start">
 
                                                         <com.dl.playfun.widget.roundedimageview.RoundedImageView
-                                                            android:layout_width="78dp"
-                                                            android:layout_height="78dp"
+                                                            android:layout_width="75dp"
+                                                            android:layout_height="75dp"
                                                             android:scaleType="centerCrop"
                                                             android:visibility="@{StringUtils.isEmpty(viewModel.dynamicPic4) ? View.GONE:View.VISIBLE}"
                                                             app:riv_corner_radius="8dip"
                                                             binding:imageErrorPlaceholderRes="@{R.drawable.default_placeholder_img}"
                                                             binding:imageThumbPath="@{viewModel.dynamicPic4}"
                                                             binding:resizeH="@{78}"
-                                                            binding:resizeW="@{78}"
-                                                            />
+                                                            binding:resizeW="@{78}" />
                                                         <!-- 更多数字 -->
                                                         <TextView
                                                             android:layout_width="match_parent"
@@ -625,29 +605,22 @@
                                                 android:background="@color/white"
                                                 android:minHeight="41dp">
 
-                                                <TextView
-                                                    android:id="@+id/tv_1"
+                                                <ImageView
+                                                    android:id="@+id/iv_photo"
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
-                                                    android:layout_alignParentStart="true"
                                                     android:layout_alignParentTop="true"
                                                     android:layout_marginStart="14dp"
                                                     android:layout_marginTop="18dp"
-                                                    android:layout_marginBottom="23dp"
-                                                    android:includeFontPadding="false"
-                                                    android:text="@string/playfun_user_detail_album_tital"
-                                                    android:textColor="@color/text_default"
-                                                    android:textSize="15sp"
-                                                    android:textStyle="bold" />
+                                                    android:layout_marginEnd="15dp"
+                                                    android:src="@drawable/icon_user_detail_photo" />
 
 
                                                 <TextView
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
-                                                    android:layout_alignTop="@+id/tv_1"
-                                                    android:layout_marginStart="18dp"
-                                                    android:layout_marginTop="1dp"
-                                                    android:layout_toEndOf="@+id/tv_1"
+                                                    android:layout_alignTop="@+id/iv_photo"
+                                                    android:layout_toEndOf="@+id/iv_photo"
                                                     android:text="@{viewModel.detailEntity.getSex() == 0? @string/playfun_he_not_uploaded_photo_girl:@string/playfun_he_not_uploaded_photo(viewModel.sexName)}"
                                                     android:textColor="@color/gray_light"
                                                     android:textSize="12sp"
@@ -657,9 +630,8 @@
                                                 <androidx.recyclerview.widget.RecyclerView
                                                     android:layout_width="match_parent"
                                                     android:layout_height="wrap_content"
-                                                    android:layout_marginBottom="10dp"
-                                                    android:layout_below="@+id/tv_1"
-                                                    android:layout_alignStart="@+id/tv_1"
+                                                    android:layout_alignTop="@+id/iv_photo"
+                                                    android:layout_toEndOf="@+id/iv_photo"
                                                     android:background="@color/white"
                                                     android:scrollbars="none"
                                                     binding:adapter="@{viewModel.adapter}"
@@ -671,12 +643,13 @@
                                                 <LinearLayout
                                                     android:layout_width="match_parent"
                                                     android:layout_height="wrap_content"
+                                                    android:layout_alignTop="@+id/iv_photo"
+                                                    android:layout_toEndOf="@+id/iv_photo"
                                                     android:background="@color/white"
-                                                    android:layout_below="@+id/tv_1"
+                                                    android:clickable="true"
                                                     android:gravity="center"
                                                     android:orientation="vertical"
                                                     android:padding="20dp"
-                                                    android:clickable="true"
                                                     android:visibility="@{viewModel.detailEntity.albumType == 2 ? View.VISIBLE:View.GONE}"
                                                     tools:visibility="gone">
 
@@ -701,7 +674,6 @@
                                                         android:text="@{viewModel.albumNumberText}"
                                                         android:textColor="@color/gray_middle"
                                                         android:textSize="@dimen/text_size_small"
-
                                                         tools:text="ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd" />
 
                                                     <Button
@@ -726,29 +698,23 @@
                                                 android:background="@color/white"
                                                 android:minHeight="41dp">
 
-                                                <TextView
-                                                    android:id="@+id/flow_layout_left_text"
-                                                    style="@style/LabelContent"
+                                                <ImageView
+                                                    android:id="@+id/iv_evaluation"
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
                                                     android:layout_alignParentTop="true"
                                                     android:layout_marginStart="14dp"
                                                     android:layout_marginTop="18dp"
+                                                    android:layout_marginEnd="15dp"
                                                     android:layout_marginBottom="23dp"
-                                                    android:includeFontPadding="false"
-                                                    android:text="@{viewModel.detailEntity.sex==1?@string/playfun_user_detail_evaluation_he:@string/playfun_user_detail_evaluation_her}"
-                                                    android:textColor="@color/text_default"
-                                                    android:textSize="15sp"
-                                                    android:textStyle="bold"
-                                                    tools:text="@string/playfun_user_detail_evaluation_he" />
+                                                    android:src="@drawable/icon_user_detail_evaluation" />
 
                                                 <TextView
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
-                                                    android:layout_alignTop="@+id/flow_layout_left_text"
-                                                    android:layout_marginStart="18dp"
+                                                    android:layout_alignTop="@+id/iv_evaluation"
                                                     android:layout_marginTop="1dp"
-                                                    android:layout_toEndOf="@+id/flow_layout_left_text"
+                                                    android:layout_toEndOf="@+id/iv_evaluation"
                                                     android:text="@string/playfun_user_detail_evaluation_empty"
                                                     android:textColor="#FFBFBFBF"
                                                     android:textSize="12sp"
@@ -758,10 +724,9 @@
                                                     android:id="@+id/flow_layout"
                                                     android:layout_width="match_parent"
                                                     android:layout_height="wrap_content"
-                                                    android:layout_alignTop="@+id/flow_layout_left_text"
-                                                    android:layout_marginStart="18dp"
+                                                    android:layout_alignTop="@+id/iv_evaluation"
                                                     android:layout_marginTop="-1dp"
-                                                    android:layout_toEndOf="@+id/flow_layout_left_text"
+                                                    android:layout_toEndOf="@+id/iv_evaluation"
                                                     android:background="@color/white"
                                                     android:minHeight="30dp"
                                                     android:scrollbars="none"
@@ -776,7 +741,8 @@
                                                 android:layout_marginTop="10dp"
                                                 android:background="@color/white"
                                                 android:orientation="vertical"
-                                                android:padding="15dp">
+                                                android:padding="15dp"
+                                                android:visibility="@{!viewModel.personalInfoIsEmpty(viewModel.detailEntity) ? View.VISIBLE:View.GONE}">
 
                                                 <TextView
                                                     style="@style/LabelContent"
@@ -803,9 +769,9 @@
 
                                                     <TextView
                                                         style="@style/LabelContent"
-                                                        android:layout_marginStart="48dp"
                                                         android:layout_width="wrap_content"
                                                         android:layout_height="wrap_content"
+                                                        android:layout_marginStart="48dp"
                                                         android:text="@{SystemDictUtils.getHeightById(viewModel.detailEntity.height)}"
                                                         tools:text="176CM" />
                                                 </LinearLayout>
@@ -818,41 +784,19 @@
                                                     android:orientation="horizontal"
                                                     android:paddingEnd="14dp"
                                                     android:visibility="@{viewModel.detailEntity.weight > 0 ? View.VISIBLE:View.GONE}">
+
                                                     <ImageView
                                                         android:layout_width="18dp"
                                                         android:layout_height="18dp"
                                                         android:src="@drawable/ic_user_detail_weight" />
+
                                                     <TextView
                                                         style="@style/LabelContent"
-                                                        android:layout_marginStart="48dp"
                                                         android:layout_width="wrap_content"
                                                         android:layout_height="wrap_content"
+                                                        android:layout_marginStart="48dp"
                                                         android:text="@{SystemDictUtils.getWidthById(viewModel.detailEntity.weight)}"
                                                         tools:text="76KG" />
-                                                </LinearLayout>
-
-                                                <LinearLayout
-                                                    android:layout_width="match_parent"
-                                                    android:layout_height="wrap_content"
-                                                    android:gravity="center_vertical"
-                                                    android:minHeight="30dp"
-                                                    android:orientation="horizontal"
-                                                    android:paddingRight="14dp">
-
-                                                    <TextView
-                                                        style="@style/LabelContent"
-                                                        android:layout_width="110dp"
-                                                        android:layout_height="wrap_content"
-                                                        android:drawablePadding="5dp"
-                                                        android:text="@string/playfun_user_detail_resident_city"
-                                                        app:drawableStartCompat="@drawable/ic_user_detail_residence" />
-
-                                                    <TextView
-                                                        style="@style/LabelContent"
-                                                        android:layout_width="wrap_content"
-                                                        android:layout_height="wrap_content"
-                                                        android:text="@{SystemDictUtils.getCityByIdsAll(viewModel.detailEntity.permanentCityIds)}"
-                                                        tools:text="桃園市/台中市" />
                                                 </LinearLayout>
 
                                                 <LinearLayout
@@ -862,6 +806,7 @@
                                                     android:orientation="horizontal"
                                                     android:paddingEnd="14dp"
                                                     android:visibility="@{StringUtils.isEmpty(viewModel.detailEntity.desc) ? View.GONE:View.VISIBLE}">
+
                                                     <ImageView
                                                         android:layout_width="18dp"
                                                         android:layout_height="18dp"
@@ -940,6 +885,7 @@
                                     </RelativeLayout>
                                 </LinearLayout>
                             </androidx.cardview.widget.CardView>
+
                             <androidx.cardview.widget.CardView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
@@ -986,8 +932,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:visibility="@{viewModel.detailEntity.blacklistStatus == 0 ? View.VISIBLE : View.GONE}"
-            android:background="@drawable/bottom_navigation_backgroup_user_detail">
+            android:background="@drawable/bottom_navigation_backgroup_user_detail"
+            android:visibility="@{viewModel.detailEntity.blacklistStatus == 0 ? View.VISIBLE : View.GONE}">
 
             <include
                 android:id="@+id/detail_bottom_toolbar"

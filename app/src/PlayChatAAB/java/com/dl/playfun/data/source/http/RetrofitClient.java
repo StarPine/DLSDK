@@ -79,7 +79,7 @@ public class RetrofitClient {
 //                - OKEY土耳其 source值 1648520220 troken_
 //                - 宠物大富翁-台湾繁体 source值 1648699860 twpet_
         headers.put("client", "Android");
-        headers.put("sdkVersion", AppConfig.VERSION_NAME_PUSH);
+        headers.put("sdkVersion", AppConfig.SDK_VERSION_NAME_PUSH);
         headers.put("version", AppConfig.VERSION_NAME_PUSH);
         //source 来源ID 1642158125=喵遊(俄语) 1648520220=杜拉克 //playchat 1648626888
         headers.put("appId",AppConfig.APPID);

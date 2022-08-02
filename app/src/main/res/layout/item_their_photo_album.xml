@@ -16,8 +16,8 @@
     </data>
 
     <com.dl.playfun.widget.SquareLayout
-        android:layout_width="78dp"
-        android:layout_height="78dp"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:layout_marginBottom="7dp"
         binding:onClickCommand="@{viewModel.itemClick}">
 
