@@ -645,7 +645,6 @@
     <string name="playfun_error_facebook">Facebook yetkilendirmesi başarısız</string>
     <string name="playfun_error_google">Google yetkilendirmesi başarısız</string>
     <string name="playfun_binding_auth_success">綁定成功</string>
-    <string name="setting_account_cancell">註銷帳號</string>
     <string name="playfun_face_success">Doğrulandı</string>
     <string name="playfun_error_face_message">Doğrulama başarısız</string>
     <string name="playfun_error_InternalError">Hizmette bilinmeyen hata meydana geldi</string>

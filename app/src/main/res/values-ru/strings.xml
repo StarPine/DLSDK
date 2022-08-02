@@ -654,7 +654,6 @@
     <string name="playfun_error_facebook">Не удалось войти через Facebook</string>
     <string name="playfun_error_google">Не удалось войти через Google</string>
     <string name="playfun_binding_auth_success">綁定成功</string>
-    <string name="setting_account_cancell">註銷帳號</string>
     <string name="playfun_face_success">Верифицировано</string>
     <string name="playfun_error_face_message">Не удалось выполнить верификацию</string>
     <string name="playfun_error_InternalError">Возникла ошибка внутри сервера</string>

@@ -13,7 +13,7 @@
     <string name="playfun_tab_female_3">Queen</string>
     <string name="playfun_tab_male_1">Nearby</string>
     <string name="playfun_tab_male_2">VIP</string>
-    <string name="playfun_tab_male_3">活躍</string>
+    <string name="playfun_tab_male_3">Active</string>
     <string name="playfun_tab_message_1">Chat</string>
     <string name="playfun_tab_message_2">System Messages</string>
     <string name="playfun_tab_wallet_1">Cash</string>
@@ -166,7 +166,6 @@
     <string name="playfun_fragment_edit_profile_program">Event</string>
     <string name="playfun_fragment_edit_profile_hope">Expectant lover</string>
     <string name="playfun_fragment_edit_profile_line_account">Social Account</string>
-
     <string name="playfun_weight">Weight</string>
     <string name="playfun_fragment_edit_profile_self_explain">Self Introduction</string>
     <string name="playfun_fragment_edit_profile_self_explain_hint">Describe who you are</string>
@@ -282,7 +281,7 @@
     <string name="playfun_program_must">Event is required</string>
     <string name="playfun_hope_object_must">Expectation is required</string>
     <string name="playfun_line_must">Enter the social account</string>
-    <string name="playfun_line_error_hanzi">The ID is wrong.</string>
+    <string name="playfun_line_error_hanzi">The LINE ID is wrong.</string>
     <string name="playfun_updata_head_success">Avatar changed</string>
     <string name="playfun_please_input_code">Verification code</string>
     <string name="playfun_send_code">Get code</string>
@@ -543,7 +542,7 @@
     <string name="playfun_chat_service_name">Customer Service</string>
     <string name="playfun_warn_no_certification">Verify your identity</string>
     <string name="playfun_dialog_add_blacklist_content">Block this user?</string>
-    <string name="playfun_dialog_add_blacklist_content2">Confirm</string>
+    <string name="playfun_dialog_add_blacklist_content2">confirm</string>
     <string name="playfun_chat_account_not_exit">The requested user account does not exist</string>
     <string name="playfun_to_be_goddess_free_albums">Get the Queen Verification, unlock albums for free</string>
     <string name="playfun_unlock_he_photo_album_goddess_free">Unlock (%s), a Queen does not need to pay!</string>
@@ -645,8 +644,6 @@
     <string name="playfun_unfold">More</string>
     <string name="playfun_error_facebook">Failed to log in with Facebook</string>
     <string name="playfun_error_google">Failed to log in with Google</string>
-    <string name="playfun_binding_auth_success">綁定成功</string>
-    <string name="setting_account_cancell">註銷帳號</string>
     <string name="playfun_face_success">Verified</string>
     <string name="playfun_error_face_message">Verification failed</string>
     <string name="playfun_error_InternalError">Internal service error</string>
@@ -657,7 +654,7 @@
     <string name="playfun_error_DuplicatedTicketId">Repeated submit</string>
     <string name="playfun_vip_alert_goldPrice">$%s/Day</string>
     <string name="playfun_vip_alert_yj_price">Original %s</string>
-    <string name="playfun_vip_alert_gold_tag"><Data><![CDATA[ <s>%s</s> ]]></Data></string>
+    <string name="playfun_vip_alert_gold_tag"><Data><![CDATA[ <s>Original %s</s> ]]></Data></string>
     <string name="playfun_vip_alert_my">$</string>
     <string name="playfun_vip_alert_empty"></string>
     <string name="playfun_vip_subscri_btn_title">30% OFF for new users</string>
@@ -815,7 +812,6 @@
     <string name="playfun_text_accost_error2">Greet at least one user.</string>
     <string name="playfun_text_accost_error3">Cooldown for next greeting\n</string>
     <string name="playfun_text_accost_empty">The number of one-click greetings has been used up today. \nPlease come back tomorrow.</string>
-    <string name="playfun_text_accost_empty2">無可搭訕用戶</string>
     <string name="playfun_text_accost_hint">refresh</string>
     <string name="playfun_tw_money_text">New Taiwan Dollar</string>
     <string name="playfun_tw_money_text1">income</string>
@@ -889,9 +885,7 @@
     <string name="playfun_fragment_edit_profile_female">Female</string>
     <string name="playfun_chat_detail_tool_bar_title">Enter the invitation code</string>
     <string name="playfun_homt_main_lication_title">PlayFun can\'t calculate the distance between you and other users without enabling location services</string>
-    <string name="playfun_message_hint_all">Hi, before making new friends, we warmly inform you:\n
- 1) Please abide by the "Platform Usage Specifications" and "Broadcast Publication Instructions", if you publish illegal content (such as pornographic and vulgar nudity content, etc.), the platform has the right to restrict the account permissions, and even freeze the account processing. \n
-2) In the process of using the platform, if you encounter any problems and need help or provide valuable advice, please contact the customer service in the personal center to deal with it.</string>
+    <string name="playfun_message_hint_all">Hello, welcome to PlayFun, before we make new friends, we remind you: \n1 Please follow the rules and guidelines of the platform, according to which PlayFun has the right to restrict access to your account and even freeze them. \n2) During the use of the platform, if you need help or valuable advice, please contact the personal customer service of the personal center. Our philosophy is Freeship Powers People! I hope you find valuable friendships and have fun on PlayFun</string>
     <string name="playfun_edit_profile_weight_empty">Weight</string>
     <string name="playfun_edit_profile_height_empty">Height</string>
     <string name="playfun_edit_profile_desc_empty">Please fill in the personal profile</string>
@@ -952,19 +946,85 @@
     <string name="playfun_blocked_each_other">They\'ve been blocked and you can\'t view their Page content</string>
     <string name="playfun_accost_same_sex">Can\'t talk to the same sex</string>
     <string name="playfun_name_number_too_long2">Can\'t exceed 10 words</string>
-    <string name="playfun_mine_vip_hint">VIP privileges</string>
+    <string name="playfun_mine_vip_hint">PlayFun Privileges</string>
     <string name="playfun_vipsubscribe_item_vip_txt_currency">$</string>
-    <string name="auth_external_login_btn_next">下一步</string>
-    <string name="playfun_accont_bind_hint">社群賬戶綁定</string>
-    <string name="playfun_accont_bind_hint2">綁定社群賬戶後可直接登入PlayChat</string>
+    <string name="playfun_version_latest">Already the latest version!</string>
+    <string name="playfun_mine_setting_desc">Invisible and hidden</string>
+    <string name="playfun_mine_face_beauty">Beauty</string>
+    <string name="playfun_version_update_store_error">Please install Google Play Store first</string>
+    <string name="playfun_dialog_crystal_exchange_button">I understood.</string>
+    <string name="playfun_dialog_question_mark">---</string>
+    <string name="auth_external_login_btn_next">Next</string>
+    <string name="auth_external_login_btn">Confirm</string>
+    <string name="auth_external_login_btn2">Login</string>
+    <string name="auth_external_login_btn3">Password login ></string>
+    <string name="playfun_mine_setting_account">Account manage</string>
+    <string name="playfun_mine_setting_account_bindEmail">Bind email</string>
+    <string name="playfun_mine_setting_account_bindEmail_hint">Enter email</string>
+    <string name="playfun_mine_setting_account_bindEmail_hint1">Enter verification code</string>
+    <string name="playfun_mine_setting_account_bindEmail_hint2">Get</string>
+    <string name="playfun_mine_setting_account_bindEmail_hint3">Gmail mailbox is recommended</string>
+    <string name="playfun_mine_setting_email_hint">Bind an email address first to set a password</string>
+    <string name="playfun_mine_setting_email_hint2">Bind</string>
+    <string name="playfun_mine_setting_account_pwd_hint">Change Password</string>
+    <string name="playfun_mine_setting_account_pwd_hint1">Enter password</string>
+    <string name="playfun_mine_setting_account_pwd_hint2">Enter password again</string>
+    <string name="playfun_mine_setting_account_pwd">Account password</string>
+    <string name="notepad_hint">Write down the characteristics of the other party to help you recall what the other party has talked</string>
+    <string name="save">Save</string>
+    <string name="notepad_word_count_format">%s/200</string>
+    <string name="notepad_word_count">0/200</string>
+    <string name="playfun_mine_shop">Shop</string>
+    <string name="playfun_coin_electronic_wallet">Wallet</string>
+    <string name="fragment_level_title">Level privilege</string>
+    <string name="fragment_level_text3">* The final interpretation right belongs to the platform</string>
+    <string name="fragment_level_text4">Grade</string>
+    <string name="fragment_level_text5">Privilege</string>
+    <string name="fragment_level_text6">%s Charm</string>
+    <string name="fragment_level_text7">diamonds</string>
+    <string name="fragment_level_text8">Award</string>
+    <string name="fragment_level_text_chat">Price per message %1$s～%2$s diamonds</string>
+    <string name="fragment_level_text_chat1">Message %s diamonds/per message</string>
+    <string name="fragment_level_text_audio">Voice price %1$s～%2$s diamonds/min</string>
+    <string name="fragment_level_text_audio1">Voice %s diamonds/min</string>
+    <string name="fragment_level_text_video">Video price %1$s～%2$s diamonds/min</string>
+    <string name="fragment_level_text_video2">Video %s diamonds/min</string>
+    <string name="playfun_accont_bind_hint">Bind the social account</string>
+    <string name="playfun_accont_bind_hint2">Use social account to login</string>
+    <string name="playfun_setting_account_hint2">1. Canceling your PlayChat account is an unrecoverable operation. In order to protect your legitimate rights and interests, before canceling your account, please back up the information and data related to the proposed cancellation of your PlayChat account. If you have any questions, comments and suggestions for account cancellation, you can contact PlayChat customer service and we will give you the necessary help.
+                                        \n2. If your PlayChat account is complained about by others, investigated, or is in litigation or arbitration proceedings, PlayChat has the right to terminate the cancellation of your PlayChat account without your consent.
+                                        \n3. Canceling your PlayChat account does not mean that the account behavior and related liabilities before the cancellation of the PlayChat account have been waived or reduced.
+                                        \n4. After you confirm and successfully log out of your PlayChat account, you will no longer be able to use this account. If your PlayChat account has unused diamonds, points or unredeems rewards, the portion of the diamonds, points and rewards will be automatically frozen from the date you submit the cancellation and the operation is irrevocable.
+                                        \n5. Canceling the account needs to be paid, and the cancellation fee is 1000 diamonds.</string>
+    <string name="playfun_setting_account_hint3">By confirming your cancellation, you have read and agreed to the Important Reminder</string>
+    <string name="playfun_setting_account_hint4">Important:</string>
+    <string name="playfun_setting_account_hint5">Pay and cancel</string>
+    <string name="playfun_delet_banned_account">Delete all frozen accounts</string>
+    <string name="playfun_del_banned_account_content">Confirm one-click deletion of chats with all blocked users?</string>
+    <string name="playfun_txt_exchange_apply_game_coin">Withdrawl</string>
+    <string name="playfun_txt_diamond_exchange">Exchange</string>
+    <string name="playfun_crystal_details_text">Details</string>
+    <string name="playfun_recharge_text">Top up </string>
+    <string name="playfun_smart_header_text">Being with friends is the best way to spend your youth</string>
+    <string name="fragment_perfect_name_phone_hint">Header&amp;Nickname</string>
+    <string name="fragment_perfect_sex_birther_hint">Gender&amp;Birthday</string>
+    <string name="fragment_perfect_reg_hint">Let everyone get to know you better!</string>
+    <string name="fragment_perfect_reg_hint2">Gender cannot be changed</string>
+    <string name="playfun_fragment_perfect_sex_male">Boy</string>
+    <string name="playfun_fragment_perfect_sex_female">Girl</string>
+    <string name="reg_user_name_maxlen">The nickname length cannot exceed 10</string>
+    <string name="playfun_submit_success">Success</string>
+    <string name="playfun_reg_user_name_error">The name cannot be duplicated</string>
+    <string name="playfun_fragment_perfect_avatar1">Please re-upload the avatar</string>
+    <string name="playfun_x_count2">x%s</string>
+    <string name="playfun_pay_fail">Payment failed</string>
+    <string name="playfun_binding_auth_success">Binded</string>
+    <string name="playfun_text_accost_empty2">No more user</string>
+    <string name="playfun_setting_account_cancell">Cancel account</string>
+    <string name="playfun_visitor_total_count">訪客 %s</string>
+    <string name="playfun_mine_profile">個人檔案</string>
+    <string name="playfun_mine_wallet">錢包</string>
+    <string name="playfun_mine_my_visitors_man">誰看過我</string>
+    <string name="fragment_perfect_hint">未滿18歲不可註冊</string>
 
-    <string name="playfun_setting_account_cancell">註銷帳號</string>
-    <string name="playfun_setting_account_hint2">1、註銷PlayChat賬號是不可恢復的操作。為了保護你的合法權益，在註銷賬號前，請你自行備份擬註銷PlayChat賬號相關的信息和數據。若你對賬號註銷有任何提問、意見、建議，可與PlayChat客服聯繫，我們會給予你必要的幫助。
-                                        \n2、如你的PlayChat賬號被他人投訴、被調查或正處於訴訟、仲裁程序中，PlayChat有權自行終止你的PlayChat賬號註銷而無需得到你的同意。
-                                        \n3、註銷你的PlayChat賬號並不代表本PlayChat賬號註銷前的賬號行為和相關責任得到豁免或減輕。
-                                        \n4、在你確認並成功註銷你的PlayChat賬號後，你將無法再使用本賬號。若你的PlayChat賬號有未消費鑽石、積分或未兌換的獎勵，自你提交註銷賬之日起該部分鑽石、積分及獎勵將自動凍結，且該操作不可撤銷。
-                                        \n5、註銷賬號需要支付註手續費，註銷金為1000鑽石。</string>
-    <string name="playfun_setting_account_hint3">確認註銷即代表你已閱讀並同意《重要提醒》</string>
-    <string name="playfun_setting_account_hint4">重要提醒：</string>
-    <string name="playfun_setting_account_hint5">支付並申請註銷</string>
 </resources>

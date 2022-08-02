@@ -652,7 +652,6 @@
     <string name="playfun_error_facebook">臉書授權失敗</string>
     <string name="playfun_error_google">無法通過Google授權</string>
     <string name="playfun_binding_auth_success">綁定成功</string>
-    <string name="setting_account_cancell">註銷帳號</string>
     <string name="playfun_face_success">認證通過</string>
     <string name="playfun_error_face_message">認證失敗</string>
     <string name="playfun_error_InternalError">服務內部出現未知錯誤</string>

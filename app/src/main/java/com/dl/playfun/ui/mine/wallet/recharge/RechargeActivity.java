@@ -109,7 +109,7 @@ public class RechargeActivity extends BaseActivity<ActivityRechargeBinding, Rech
         });
         this.billingClientLifecycle.PAYMENT_FAIL.observe(this, billingPurchasesState -> {
             Log.e("BillingClientLifecycle","支付购买失败回调");
-//            viewModel.dismissHUD();
+            viewModel.dismissHUD();
             ToastUtils.showShort(StringUtils.getString(R.string.playfun_pay_fail));
             switch (billingPurchasesState.getBillingFlowNode()){
                 //查询商品阶段-->异常
