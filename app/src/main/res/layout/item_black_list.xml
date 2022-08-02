@@ -33,8 +33,7 @@
             binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
             binding:imageThumbPath="@{viewModel.itemEntity.user.avatar}"
             binding:resizeH="@{50}"
-            binding:resizeW="@{50}"
-            />
+            binding:resizeW="@{50}" />
 
         <TextView
             android:id="@+id/tv_name"

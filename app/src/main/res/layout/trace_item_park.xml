@@ -12,6 +12,8 @@
 
         <import type="com.blankj.utilcode.util.StringUtils" />
 
+        <import type="com.blankj.utilcode.util.ObjectUtils" />
+
         <import type="android.view.View" />
 
         <variable
@@ -174,7 +176,7 @@
                 style="@style/TagPrimary"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
-                android:text="@{StringUtils.isEmpty(viewModel.itemEntity.city) ? @string/playfun_unknown_region : viewModel.itemEntity.city}"
+                android:text="@{ObjectUtils.isEmpty(viewModel.itemEntity.city) ? @string/playfun_unknown_region : viewModel.itemEntity.city}"
                 android:textColor="#827692"
                 android:visibility="gone"
                 tools:text="台北市" />
@@ -184,7 +186,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
-                android:visibility="@{viewModel.isEmpty(viewModel.itemEntity.age)? View.GONE :View.VISIBLE}"
+                android:visibility="@{ObjectUtils.isEmpty(viewModel.itemEntity.age)? View.GONE :View.VISIBLE}"
                 android:text="@{viewModel.ageAndConstellation}"
                 android:textColor="#827692"
                 tools:text="年龄和星座" />
