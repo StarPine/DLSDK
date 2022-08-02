@@ -46,7 +46,7 @@ public class RegisterSexFragment extends BaseFragment<FragmentRegisterSexBinding
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        AutoSizeUtils.applyAdapt(getResources(),false);
+        AutoSizeUtils.applyAdapt(getResources());
         return R.layout.fragment_register_sex;
     }
 
