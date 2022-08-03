@@ -131,7 +131,7 @@ public class SearchViewModel extends BaseParkViewModel<AppRepository> {
                     @Override
                     public void onComplete() {
                         stopRefreshOrLoadMore();
-                        dismiss();
+                        dismissHUD();
                     }
                 });
     }

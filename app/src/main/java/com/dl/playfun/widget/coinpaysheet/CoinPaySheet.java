@@ -31,6 +31,7 @@ import com.dl.playfun.entity.CreateOrderEntity;
 import com.dl.playfun.entity.GameCoinBuy;
 import com.dl.playfun.ui.base.BasePopupWindow;
 import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralPayDialog;
+import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 import com.dl.playfun.widget.dialog.MVDialog;
 
 import me.goldze.mvvmhabit.utils.RxUtils;
@@ -284,29 +285,8 @@ public class CoinPaySheet {
 
         private void showRecharge() {
             this.dismiss();
-
-            CoinExchargeItegralPayDialog coinExchargeItegralPayDialog = new CoinExchargeItegralPayDialog(mActivity,mActivity);
-            coinExchargeItegralPayDialog.show();
-            coinExchargeItegralPayDialog.setCoinRechargeSheetViewListener(new CoinExchargeItegralPayDialog.CoinRechargeSheetViewListener() {
-                @Override
-                public void onPaySuccess(CoinExchargeItegralPayDialog sheetView, GameCoinBuy sel_goodsEntity) {
-                    sheetView.endGooglePlayConnect();
-                    sheetView.dismiss();
-                    loadBalance();//刷新钻石
-                    // payorder
-                    if (bottomSheet.builder.coinPayDialogListener != null) {
-                        AppContext.instance().logEvent(AppsFlyerEvent.success_diamond_top_up);
-                        bottomSheet.builder.coinPayDialogListener.onRechargeSuccess(sheetView);
-                    }
-                }
-
-                @Override
-                public void onPayFailed(CoinExchargeItegralPayDialog sheetView, String msg) {
-                    sheetView.dismiss();
-                    // do nothing
-                    Log.e("IM充值失败", "=================");
-                }
-            });
+            CoinRechargeSheetView coinRechargeSheetView = new CoinRechargeSheetView(mActivity);
+            coinRechargeSheetView.show();
         }
 
         private void loadBalance() {

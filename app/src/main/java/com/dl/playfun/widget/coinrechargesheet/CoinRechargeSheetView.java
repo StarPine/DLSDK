@@ -37,6 +37,7 @@ import me.goldze.mvvmhabit.utils.ToastUtils;
 
 /**
  * @author litchi
+ * 储值列表 popup
  */
 public class CoinRechargeSheetView extends BasePopupWindow implements View.OnClickListener, CoinRechargeAdapter.CoinRechargeAdapterListener {
     public static final String TAG = "CoinRechargeSheetView";

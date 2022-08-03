@@ -379,7 +379,7 @@
     <string name="playfun_mine_upload_first_pic_sub">Upload photos to attract %s.</string>
     <string name="playfun_exit_app">Back again to exit the app</string>
     <string name="playfun_pull_black_shield_both_sides">Block (both sides)</string>
-    <string name="playfun_remove_black_shield_both_sides">Remove from blocked list (unblock)</string>
+    <string name="playfun_remove_black_shield_both_sides">Unlock</string>
     <string name="playfun_no_information_cant_comment">Unable to send a impression before chat.</string>
     <string name="playfun_no_information_cant_comment_him">Can not evaluate before chatting further.</string>
     <string name="playfun_no_information_cant_comment_hims">You have already sent an impression.</string>
@@ -691,7 +691,7 @@
     <string name="playfun_mine_trace_delike">Sure to unfollow?</string>
     <string name="playfun_mine_trace_delike_cannel">Cancel</string>
     <string name="playfun_mine_trace_delike_confirm">Confirm</string>
-    <string name="playfun_mine_trace_man_title">People who are interested in me</string>
+    <string name="playfun_mine_trace_man_title">My visitors</string>
     <string name="playfun_mine_trace_man_title2">Following %s girls.</string>
     <string name="playfun_mine_trace_man_title3">See all people who are interested in me %s</string>
     <string name="playfun_mine_trace_man_title4">Unlock 24 hours real-time view of all the people who are interested in me</string>
@@ -1021,7 +1021,7 @@
     <string name="playfun_binding_auth_success">Binded</string>
     <string name="playfun_text_accost_empty2">No more user</string>
     <string name="playfun_setting_account_cancell">Cancel account</string>
-    <string name="playfun_visitor_total_count">訪客 %s</string>
+    <string name="playfun_visitor_total_count">See all visitors %s</string>
     <string name="playfun_mine_profile">個人檔案</string>
     <string name="playfun_mine_wallet">錢包</string>
     <string name="playfun_mine_my_visitors_man">誰看過我</string>
