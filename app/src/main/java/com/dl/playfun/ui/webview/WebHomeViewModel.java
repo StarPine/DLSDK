@@ -9,12 +9,14 @@ import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.JsonUtils;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
+import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.entity.CallingInviteInfo;
 import com.dl.playfun.kl.Utils;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.radio.radiohome.RadioViewModel;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.google.gson.Gson;
@@ -46,6 +48,13 @@ public class WebHomeViewModel extends BaseViewModel<AppRepository> {
 
     //拨打语音、视频
     public void getCallingInvitedInfo(int callingType, String IMUserId, String toIMUserId) {
+        if(callingType==1){
+            //男女点击拨打语音
+            AppContext.instance().logEvent(ConfigManager.getInstance().isMale() ? AppsFlyerEvent.call_voice_male : AppsFlyerEvent.call_voice_female);
+        }else{
+            //男女点击拨打视频
+            AppContext.instance().logEvent(ConfigManager.getInstance().isMale() ? AppsFlyerEvent.call_video_male : AppsFlyerEvent.call_video_female);
+        }
         model.callingInviteInfo(callingType, IMUserId, toIMUserId)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())

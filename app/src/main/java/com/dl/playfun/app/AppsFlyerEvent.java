@@ -491,5 +491,24 @@ public interface AppsFlyerEvent {
     String videocall_close_hangup_F = "videocall_close_hangup_F";
     //女生在视频聊天中，點右上角關閉，在彈框中選擇【继续聊】，上報
     String videocall_close_goon_F = "videocall_close_goon_F";
+    //個人搭訕（男用戶發起）
+    String greet_male = "greet_male";
+    //個人搭訕（女用戶發起）
+    String greet_female = "greet_female";
+    //一鍵搭訕（男用戶發起）
+    String one_click_greet_male = "one_click_greet_male";
+    //一鍵搭訕（女用戶發起）
+    String one_click_greet_female = "one_click_greet_female";
+    //發起視頻（男用戶發起）
+    String call_video_male = "call_video_male";
+    //發起視頻（女用戶發起）
+    String call_video_female = "call_video_female";
+    //發起語音（男用戶發起）
+    String call_voice_male = "call_voice_male";
+    //發起語音（女用戶發起）
+    String call_voice_female = "call_voice_female";
+    //用户支付购买成功
+    String pay_success = "pay_success";
+
 
 }

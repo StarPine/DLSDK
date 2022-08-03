@@ -64,6 +64,12 @@ public class BaseParkItemViewModel extends MultiItemViewModel<BaseParkViewModel>
                 ChatUtils.chatUser(itemEntity.get().getImUserId(), itemEntity.get().getId(), itemEntity.get().getNickname(), viewModel);
                 AppContext.instance().logEvent(AppsFlyerEvent.homepage_chat);
             } else {
+                try {
+                    //男女点击搭讪
+                    AppContext.instance().logEvent(ConfigManager.getInstance().isMale() ? AppsFlyerEvent.greet_male : AppsFlyerEvent.greet_female);
+                }catch (Exception ignored){
+
+                }
                 int position = viewModel.observableList.indexOf(BaseParkItemViewModel.this);
                 viewModel.putAccostFirst(position);
                 AppContext.instance().logEvent(AppsFlyerEvent.homepage_accost);

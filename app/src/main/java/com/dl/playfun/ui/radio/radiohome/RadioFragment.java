@@ -37,11 +37,13 @@ import com.dl.playfun.helper.DialogHelper;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseRefreshFragment;
 import com.dl.playfun.ui.dialog.CityChooseDialog;
+import com.dl.playfun.ui.dialog.MyEvaluateDialog;
 import com.dl.playfun.ui.mine.broadcast.mytrends.TrendItemViewModel;
 import com.dl.playfun.ui.userdetail.report.ReportUserFragment;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.PictureSelectorUtil;
 import com.dl.playfun.viewadapter.CustomRefreshHeader;
+import com.dl.playfun.widget.coinrechargesheet.CoinRechargeFragmentView;
 import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 import com.dl.playfun.widget.dialog.MMAlertDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
@@ -419,8 +421,10 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
     //支付弹窗
     private void googleCoinValueBox() {
         AppContext.instance().logEvent(AppsFlyerEvent.Top_up);
-        CoinRechargeSheetView coinRechargeSheetView = new CoinRechargeSheetView(mActivity);
-        coinRechargeSheetView.show();
+//        CoinRechargeSheetView coinRechargeSheetView = new CoinRechargeSheetView(mActivity);
+//        coinRechargeSheetView.show();
+        CoinRechargeFragmentView coinRechargeFragmentView = new CoinRechargeFragmentView(mActivity);
+        coinRechargeFragmentView.show(getParentFragmentManager(),"coinRechargeFragmentView");
     }
 
     @Override
