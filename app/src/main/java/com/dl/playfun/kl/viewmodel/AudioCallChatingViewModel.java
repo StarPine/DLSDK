@@ -108,9 +108,6 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     public int sayHiePosition = 0;
     public int sayHiePage = 1;
 
-    //是否已经显示过兑换规则
-    public ObservableField<Boolean> isShowedExchangeRules = new ObservableField<>(false);
-
     //当前用户是否男性
     public boolean isMale = false;
     //是否已追踪0未追踪1已追踪
@@ -222,15 +219,6 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
 
     public AudioCallChatingViewModel(@NonNull @NotNull Application application, AppRepository model) {
         super(application, model);
-        setShowRule();
-    }
-
-    /***
-     * 设置兑换规则框是否显示
-     */
-    public void setShowRule(){
-        isShowedExchangeRules.set(ConfigManagerUtil.getInstance().getExchangeRulesFlag());
-        isHideExchangeRules.set(ConfigManagerUtil.getInstance().getExchangeRulesFlag());
     }
 
     //关注

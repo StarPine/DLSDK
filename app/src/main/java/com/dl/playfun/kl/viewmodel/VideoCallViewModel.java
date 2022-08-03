@@ -386,14 +386,6 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
 
     public VideoCallViewModel(@NonNull @NotNull Application application, AppRepository model) {
         super(application, model);
-        setShowRule();
-    }
-
-    /***
-     * 设置兑换规则框是否显示
-     */
-    public void setShowRule(){
-        isHideExchangeRules.set(ConfigManagerUtil.getInstance().getExchangeRulesFlag());
     }
 
     //    protected TRTCCallingDelegate mTRTCCallingDelegate;
