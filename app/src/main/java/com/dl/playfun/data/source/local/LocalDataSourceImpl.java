@@ -7,6 +7,7 @@ import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.data.source.LocalDataSource;
 import com.dl.playfun.entity.ApiConfigManagerEntity;
 import com.dl.playfun.entity.ConfigItemEntity;
+import com.dl.playfun.entity.CrystalDetailsConfigEntity;
 import com.dl.playfun.entity.EvaluateObjEntity;
 import com.dl.playfun.entity.GameConfigEntity;
 import com.dl.playfun.entity.LocalGooglePayCache;
@@ -48,6 +49,7 @@ public class LocalDataSourceImpl implements LocalDataSource {
     private static final String KEY_IS_CHAT_PUSH = "key_is_chat_push";
     private static final String KEY_SENSITIVE_WORDS = "key_sensitive_words";
     private static final String KEY_GAME_CONFIG = "key_game_config";
+    private static final String KEY_CRYSTAL_CONFIG = "key_crystal_config";
     private static final String KEY_REPORT_REASON_CONFIG = "key_report_reason_config";
     private static final String KEY_FAMALE_EVALUATE_CONFIG = "key_female_evaluate_config";
     private static final String KEY_MALE_EVALUATE_CONFIG = "key_male_evaluate_config";
@@ -517,6 +519,23 @@ public class LocalDataSourceImpl implements LocalDataSource {
         List<GameConfigEntity> list = GsonUtils.fromJson(json, new TypeToken<List<GameConfigEntity>>() {
         }.getType());
         return list;
+    }
+
+    @Override
+    public void saveCrystalDetailsConfig (CrystalDetailsConfigEntity configs) {
+        String json = GsonUtils.toJson(configs);
+        boolean b = kv.encode(KEY_CRYSTAL_CONFIG, json);
+        System.out.println(b);
+    }
+
+    @Override
+    public CrystalDetailsConfigEntity readCrystalDetailsConfig() {
+        String json = kv.decodeString(KEY_CRYSTAL_CONFIG);
+        if (json != null) {
+            CrystalDetailsConfigEntity crystalDetailsConfigEntity = GsonUtils.fromJson(json, CrystalDetailsConfigEntity.class);
+            return crystalDetailsConfigEntity;
+        }
+        return null;
     }
 
     @Override

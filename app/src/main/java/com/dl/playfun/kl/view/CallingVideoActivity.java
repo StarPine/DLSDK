@@ -36,24 +36,23 @@ import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
-import com.dl.playfun.databinding.ActivityCallVideoBinding;
 import com.dl.playfun.entity.CallingInviteInfo;
+import com.dl.playfun.entity.CoinExchangePriceInfo;
+import com.dl.playfun.entity.CrystalDetailsConfigEntity;
 import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.event.CallChatingHangupEvent;
 import com.dl.playfun.kl.viewmodel.VideoCallViewModel;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocaleManager;
-import com.dl.playfun.ui.dialog.GiftBagDialog;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.utils.ToastCenterUtils;
-import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
+import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
 import com.dl.playfun.widget.dialog.MessageDetailDialog;
 import com.dl.playfun.widget.dialog.TraceDialog;
 import com.dl.playfun.widget.image.CircleImageView;
@@ -61,6 +60,9 @@ import com.faceunity.nama.FURenderer;
 import com.faceunity.nama.data.FaceUnityDataFactory;
 import com.faceunity.nama.ui.FaceUnityView;
 import com.google.gson.Gson;
+import com.dl.playfun.R;
+import com.dl.playfun.databinding.ActivityCallVideoBinding;
+import com.dl.playfun.ui.dialog.GiftBagDialog;
 import com.opensource.svgaplayer.SVGACallback;
 import com.opensource.svgaplayer.SVGAImageView;
 import com.opensource.svgaplayer.SVGAParser;
@@ -214,6 +216,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
     @Override
     public void initData() {
         super.initData();
+        hideExchangeRules();
         giftEffects = binding.giftEffects;
         mFaceUnityView = binding.fuView;
         //1.先打开渲染器
@@ -392,24 +395,23 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         viewModel.uc.sendUserGiftError.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean isGiftSend) {
-                CoinRechargeSheetView coinRechargeSheetView = new CoinRechargeSheetView(CallingVideoActivity.this);
+
+                GameCoinExchargeSheetView coinRechargeSheetView = new GameCoinExchargeSheetView(CallingVideoActivity.this);
+                coinRechargeSheetView.setCallMedia(true);
+                coinRechargeSheetView.setMaleBalance(viewModel.maleBalanceMoney);
                 coinRechargeSheetView.show();
-//                GameCoinExchargeSheetView coinRechargeSheetView = new GameCoinExchargeSheetView(CallingVideoActivity.this);
-//                coinRechargeSheetView.setCallMedia(true);
-//                coinRechargeSheetView.setMaleBalance(viewModel.maleBalanceMoney);
-//                coinRechargeSheetView.show();
-//                coinRechargeSheetView.setCoinRechargeSheetViewListener(new GameCoinExchargeSheetView.CoinRechargeSheetViewListener() {
-//                    @Override
-//                    public void onPaySuccess(GameCoinExchargeSheetView sheetView, CoinExchangePriceInfo sel_goodsEntity) {
-//                        sheetView.dismiss();
-//                        viewModel.getCallingStatus(viewModel.roomId);
-//                    }
-//
-//                    @Override
-//                    public void onPayFailed(GameCoinExchargeSheetView sheetView, String msg) {
-//                        sheetView.dismiss();
-//                    }
-//                });
+                coinRechargeSheetView.setCoinRechargeSheetViewListener(new GameCoinExchargeSheetView.CoinRechargeSheetViewListener() {
+                    @Override
+                    public void onPaySuccess(GameCoinExchargeSheetView sheetView, CoinExchangePriceInfo sel_goodsEntity) {
+                        sheetView.dismiss();
+                        viewModel.getCallingStatus(viewModel.roomId);
+                    }
+
+                    @Override
+                    public void onPayFailed(GameCoinExchargeSheetView sheetView, String msg) {
+                        sheetView.dismiss();
+                    }
+                });
             }
         });
         //发送礼物弹窗

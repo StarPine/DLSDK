@@ -35,7 +35,6 @@ import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.CallingInfoEntity;
 import com.dl.playfun.entity.CallingStatusEntity;
-import com.dl.playfun.entity.CustomMessageIMTextEntity;
 import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.entity.MallWithdrawTipsInfoEntity;
 import com.dl.playfun.entity.UserDataEntity;
@@ -129,7 +128,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     public ObservableField<CallingInfoEntity.FromUserProfile> rightUserInfoField = new ObservableField<>();
     public ObservableField<CallingInfoEntity.FromUserProfile> leftUserInfoField = new ObservableField<>();
     //是否已经显示过兑换规则
-    public ObservableField<Boolean> isShowedExchangeRules = new ObservableField<>(false);
+    public ObservableField<Boolean> isHideExchangeRules = new ObservableField<>(false);
     //男生收益框是否展示
     public ObservableBoolean maleTextLayoutSHow = new ObservableBoolean(false);
     //男性收益内容
@@ -228,7 +227,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
      * 设置兑换规则框是否显示
      */
     public void setShowRule(){
-        isShowedExchangeRules.set(ConfigManagerUtil.getInstance().getExchangeRulesFlag());
+        isHideExchangeRules.set(ConfigManagerUtil.getInstance().getExchangeRulesFlag());
     }
 
     //关注

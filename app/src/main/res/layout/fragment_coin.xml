@@ -56,6 +56,7 @@
                     android:layout_marginRight="15dp"
                     android:src="@drawable/icon_shop2"
                     binding:onClickCommand="@{viewModel.shopOnClickCommand}"
+                    android:visibility="gone"
                     />
             </RelativeLayout>
 

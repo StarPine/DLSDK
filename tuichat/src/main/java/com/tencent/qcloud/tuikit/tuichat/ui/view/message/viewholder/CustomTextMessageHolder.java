@@ -215,10 +215,12 @@ public class CustomTextMessageHolder extends TextMessageHolder {
                             isCharger = customIMTextEntity.getPayeeImId().equals(V2TIMManager.getInstance().getLoginUser());
                             if (isCharger) {//收款人显示
                                 setProfitDetails(price, profitTip);
+                                return;
                             }
                         } else {
                             if (!MessageRecyclerView.sex) {//女生显示
                                 setProfitDetails(price, profitTip);
+                                return;
                             }
                         }
                     }else {

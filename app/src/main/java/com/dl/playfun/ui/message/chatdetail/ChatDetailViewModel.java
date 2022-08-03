@@ -3,11 +3,8 @@ package com.dl.playfun.ui.message.chatdetail;
 import android.app.Application;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -39,21 +36,16 @@ import com.dl.playfun.entity.PriceConfigEntity;
 import com.dl.playfun.entity.StatusEntity;
 import com.dl.playfun.entity.TagEntity;
 import com.dl.playfun.entity.TaskRewardReceiveEntity;
-import com.dl.playfun.entity.TraceEntity;
 import com.dl.playfun.entity.UserConnMicStatusEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.AddBlackListEvent;
 import com.dl.playfun.event.CallChatingHangupEvent;
-import com.dl.playfun.event.LikeChangeEvent;
 import com.dl.playfun.event.MessageGiftNewEvent;
-import com.dl.playfun.kl.view.VideoPresetActivity;
 import com.dl.playfun.manager.ConfigManager;
-import com.dl.playfun.ui.mine.likelist.LikeListViewModel;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.FileUploadUtils;
 import com.dl.playfun.utils.LogUtils;
-import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.utils.Utils;
 import com.dl.playfun.viewmodel.BaseViewModel;
@@ -61,13 +53,11 @@ import com.google.gson.Gson;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
-import com.tencent.qcloud.tuikit.tuichat.bean.CustomHelloMessage;
 import com.tencent.qcloud.tuikit.tuichat.bean.CustomImageMessage;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.event.InsufficientBalanceEvent;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -86,7 +76,6 @@ import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.RxUtils;
-import me.goldze.mvvmhabit.utils.StringUtils;
 import me.goldze.mvvmhabit.utils.ToastUtils;
 
 /**
@@ -97,7 +86,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
     public ObservableField<Boolean> isTagShow = new ObservableField<>(false);
     public ObservableField<Boolean> inBlacklist = new ObservableField<>(false);
     public ObservableField<Boolean> isTrack = new ObservableField<>(false);//todo 还没根据后端进行初始化
-    public ObservableField<Boolean> isShowedExchangeRules = new ObservableField<>(false);
+    public ObservableField<Boolean> isHideExchangeRules = new ObservableField<>(true);
     public ObservableField<Boolean> isShoweCallingVideo = new ObservableField<>(true);//是否显示马上视讯入口
     public ObservableField<String> menuTrack = new ObservableField<>();//追踪
     public ObservableField<String> menuBlockade = new ObservableField<>();//封锁
@@ -179,7 +168,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
      * 设置兑换规则框是否显示
      */
     public void setShowRule(){
-        isShowedExchangeRules.set(ConfigManagerUtil.getInstance().getExchangeRulesFlag());
+        isHideExchangeRules.set(ConfigManagerUtil.getInstance().getExchangeRulesFlag());
     }
 
     public void loadUserInfo(int userId) {
