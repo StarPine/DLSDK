@@ -119,6 +119,7 @@ public class MyPhotoAlbumFragment extends BaseRefreshToolbarFragment<FragmentMyP
                     } else {
                         break;
                     }
+                    albumPhotoEntity.setLocalUpdate(true);
                     albumPhotoList.add(albumPhotoEntity);
                 }
                 if (albumPhotoList.size() == 0) {
@@ -165,6 +166,7 @@ public class MyPhotoAlbumFragment extends BaseRefreshToolbarFragment<FragmentMyP
                     } else {
                         break;
                     }
+                    albumPhotoEntity.setLocalUpdate(true);
                     albumPhotoList.add(albumPhotoEntity);
                 }
                 if (albumPhotoList.size() == 0) {

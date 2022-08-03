@@ -37,12 +37,28 @@ public class AlbumPhotoEntity extends BaseObservable implements Parcelable {
     private String createAt;
     @SerializedName("burn_status")
     private int burnStatus;
+    //审核状态 -1为审核中，0为非本人，1为本人
     @SerializedName("verification_type")
     private int verificationType;
     @SerializedName("is_pay")
     private int isPay;
     @Expose(serialize = false, deserialize = false)
     private String msgId;
+
+    //是否是视频、图片封面
+    @SerializedName("is_call_cover")
+    private Integer isCallCover;
+
+    //自定义 用来区分是本地上传的还是云端
+    private boolean isLocalUpdate = false;
+
+    public boolean isLocalUpdate() {
+        return isLocalUpdate;
+    }
+
+    public void setLocalUpdate(boolean localUpdate) {
+        isLocalUpdate = localUpdate;
+    }
 
     public AlbumPhotoEntity() {
     }
@@ -59,6 +75,16 @@ public class AlbumPhotoEntity extends BaseObservable implements Parcelable {
         this.verificationType = (Integer) in.readValue(Integer.class.getClassLoader());
         this.isPay = (Integer) in.readValue(Integer.class.getClassLoader());
         this.msgId = in.readString();
+        this.isCallCover = in.readInt();
+        this.isLocalUpdate = (Boolean) in.readValue(Boolean.class.getClassLoader());
+    }
+
+    public Integer getIsCallCover() {
+        return isCallCover;
+    }
+
+    public void setIsCallCover(Integer isCallCover) {
+        this.isCallCover = isCallCover;
     }
 
     public Integer getId() {
@@ -179,5 +205,7 @@ public class AlbumPhotoEntity extends BaseObservable implements Parcelable {
         dest.writeValue(this.verificationType);
         dest.writeValue(this.isPay);
         dest.writeString(this.msgId);
+        dest.writeInt(this.isCallCover);
+        dest.writeValue(this.isLocalUpdate);
     }
 }

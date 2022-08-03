@@ -70,6 +70,10 @@ public class RechargeActivity extends BaseActivity<ActivityRechargeBinding, Rech
     public void initData() {
         super.initData();
         this.billingClientLifecycle = ((AppContext)getApplication()).getBillingClientLifecycle();
+        if(billingClientLifecycle!=null){
+            //查询并消耗本地历史订单类型： INAPP 支付购买  SUBS订阅
+            billingClientLifecycle.queryAndConsumePurchase(BillingClient.SkuType.INAPP);
+        }
         binding.tvOriginalPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         binding.basicToolbar.setToolbarListener(this);
         viewModel.goodsEntity.set(goodsEntity);
@@ -120,6 +124,18 @@ public class RechargeActivity extends BaseActivity<ActivityRechargeBinding, Rech
                 case purchasesUpdated: //用户购买操作 可在此购买成功 or 取消支付 -->异常
                     break;
                 case acknowledgePurchase:  // 用户操作购买成功 --> 商家确认操作 需要手动确定收货（消耗这笔订单并且发货（给与用户购买奖励）） 否则 到达一定时间 自动退款 -->异常
+                    break;
+            }
+        });
+        //查询消耗本地历史订单
+        this.billingClientLifecycle.PurchaseHistory.observe(this,billingPurchasesState -> {
+            Log.e("BillingClientLifecycle","查询本地历史订单。没有消耗确认的商品");
+            switch (billingPurchasesState.getBillingFlowNode()){
+                //有历史订单支付。开始消耗
+                case queryPurchaseHistory:
+                    break;
+                    //确认收货
+                case acknowledgePurchase:
                     break;
             }
         });

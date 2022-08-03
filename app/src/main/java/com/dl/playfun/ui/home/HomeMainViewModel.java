@@ -8,6 +8,7 @@ import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableList;
 
+import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
@@ -367,11 +368,13 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
                     public void onSuccess(BaseDataResponse<AdBannerEntity> listBaseDataResponse) {
                         if( listBaseDataResponse.getData()!=null){
                             List<AdItemEntity> listData = listBaseDataResponse.getData().getDataList();
-                            for (AdItemEntity adItemEntity : listData){
-                                HomeMainBannerItemViewModel homeItemBanner = new HomeMainBannerItemViewModel(HomeMainViewModel.this,adItemEntity);
-                                observableBanner.add(homeItemBanner);
+                            if(!ObjectUtils.isEmpty(listData)){
+                                for (AdItemEntity adItemEntity : listData){
+                                    HomeMainBannerItemViewModel homeItemBanner = new HomeMainBannerItemViewModel(HomeMainViewModel.this,adItemEntity);
+                                    observableBanner.add(homeItemBanner);
+                                }
                             }
-                            rcvBannerDisplay.set(!listData.isEmpty());
+                            rcvBannerDisplay.set(ObjectUtils.isNotEmpty(listData));
                         }else{
                             rcvBannerDisplay.set(false);
                         }

@@ -124,6 +124,8 @@ public class AutoSizeUtils {
         activityDm.scaledDensity = activityDm.density * (systemDm.scaledDensity / systemDm.density);
         //确保设置的 dpi
         activityDm.densityDpi = (int) (160 * activityDm.density);
+        Configuration activityConfiguration = resources.getConfiguration();
+        setScreenSizeDp(activityConfiguration,(int)widthSize,(int)heightSize);
     }
 
     /**
@@ -199,5 +201,17 @@ public class AutoSizeUtils {
 //            Log.e("ScreenHelper", "getMetricsFromField: " + e);
             return null;
         }
+    }
+
+    /**
+     * Configuration赋值
+     *
+     * @param configuration  {@link Configuration}
+     * @param screenWidthDp  {@link Configuration#screenWidthDp}
+     * @param screenHeightDp {@link Configuration#screenHeightDp}
+     */
+    private static void setScreenSizeDp(Configuration configuration, int screenWidthDp, int screenHeightDp) {
+        configuration.screenWidthDp = screenWidthDp;
+        configuration.screenHeightDp = screenHeightDp;
     }
 }

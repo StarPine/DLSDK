@@ -135,19 +135,38 @@ public class BaseParkItemViewModel extends MultiItemViewModel<BaseParkViewModel>
         return distance;
     }
 
-    public String getOnlineStatus() {
-        String onlineStatus = StringUtils.getString(R.string.playfun_unknown);
-        if (itemEntity.get().getIsOnline() == -1) {
-            onlineStatus = StringUtils.getString(R.string.playfun_keep);
-        } else if (itemEntity.get().getIsOnline() == 1) {
-            onlineStatus = StringUtils.getString(R.string.playfun_on_line);
-        } else if (itemEntity.get().getIsOnline() == 0) {
-            if (StringUtils.isEmpty(itemEntity.get().getOfflineTime())) {
-                onlineStatus = StringUtils.getString(R.string.playfun_unknown);
-            } else {
-                onlineStatus = TimeUtils.getFriendlyTimeSpan(itemEntity.get().getOfflineTime());
+    public int onLineColor(ParkItemEntity itemEntity){
+        if (itemEntity == null)return -1;
+        if (itemEntity.getCallingStatus() == 0){
+            if (itemEntity.getIsOnline() == 1) {
+                return AppContext.instance().getResources().getColor(R.color.green2);
             }
+        }else {
+            return AppContext.instance().getResources().getColor(R.color.red_9);
         }
+        return AppContext.instance().getResources().getColor(R.color.text_9EA1B0);
+    }
+
+    public String getOnlineStatus() {
+        String onlineStatus = null;
+        if (itemEntity.get().getCallingStatus() == 0){
+            if (itemEntity.get().getIsOnline() == -1) {
+                onlineStatus = null;
+            } else if (itemEntity.get().getIsOnline() == 1) {
+                onlineStatus = StringUtils.getString(R.string.playfun_on_line);
+            } else if (itemEntity.get().getIsOnline() == 0) {
+                if (StringUtils.isEmpty(itemEntity.get().getOfflineTime())) {
+                    onlineStatus = null;
+                } else {
+                    onlineStatus = TimeUtils.getFriendlyTimeSpan(itemEntity.get().getOfflineTime());
+                }
+            }
+        }else if (itemEntity.get().getCallingStatus() == 1){
+            onlineStatus = StringUtils.getString(R.string.playfun_calling);
+        }else if (itemEntity.get().getCallingStatus() == 2){
+            onlineStatus = StringUtils.getString(R.string.playfun_in_video);
+        }
+
         return onlineStatus;
     }
 

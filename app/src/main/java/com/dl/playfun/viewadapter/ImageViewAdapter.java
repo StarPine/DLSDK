@@ -146,6 +146,22 @@ public class ImageViewAdapter {
                 .into(imageView);
     }
 
+    //针对相册页面临时提供 解决本地文件预览问题
+    @BindingAdapter(value = {"imageItemPhotoPath", "imageItemPhotoPlaceholderRes", "imageItemPhotoErrorPlaceholderRes","isLocalFile"}, requireAll = true)
+    public static void setPhotoItemImageUrl(ImageView imageView, String imageItemPhotoPath, int imageItemPhotoPlaceholderRes, int imageItemPhotoErrorPlaceholderRes,Boolean isLocalFile){
+        if(!isLocalFile){
+            Glide.with(imageView.getContext()).load(StringUtil.getFullImageUrl(imageItemPhotoPath))
+                    .error(imageItemPhotoErrorPlaceholderRes)
+                    .placeholder(imageItemPhotoPlaceholderRes)
+                    .into(imageView);
+        }else{
+            Glide.with(imageView.getContext()).load(imageItemPhotoPath)
+                    .error(imageItemPhotoErrorPlaceholderRes)
+                    .placeholder(imageItemPhotoPlaceholderRes)
+                    .into(imageView);
+        }
+
+    }
     /***
      * 根据手机的分辨率从 dip 的单位 转成为 px(像素)
      * @param dpValue

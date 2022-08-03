@@ -86,17 +86,8 @@ public class SplashViewModel extends BaseViewModel<AppRepository> {
                         if (!response.isDataEmpty()) {
                             ApiConfigManagerEntity apiConfigManager = response.getData();
                             if (apiConfigManager != null) {
-                                ApiConfigManagerEntity oldApiConfigManager = model.readApiConfigManagerEntity();
                                 model.saveApiConfigManager(apiConfigManager);
-                                if (oldApiConfigManager != null) {
-                                    if (oldApiConfigManager.getPlayFunApiUrl() != null && !oldApiConfigManager.getPlayFunApiUrl().equals(apiConfigManager.getPlayFunApiUrl())) {
-                                        initSettingConfig();
-                                    } else {
-                                        initData();
-                                    }
-                                }else{
-                                    initSettingConfig();
-                                }
+                                initSettingConfig();
                             } else {
                                 hintRetryShow.set(true);
                             }

@@ -90,7 +90,22 @@ public class VipSubscribeFragment extends BaseToolbarFragment<FragmentVipSubscri
         billingClientLifecycle = ((AppContext)mActivity.getApplication()).getBillingClientLifecycle();
         //查询商品价格
         viewModel.loadPackage();
-
+        if(billingClientLifecycle!=null){
+            //查询并消耗本地历史订单类型： INAPP 支付购买  SUBS订阅
+            billingClientLifecycle.queryAndConsumePurchase(BillingClient.SkuType.SUBS);
+        }
+        //查询消耗本地历史订单
+        this.billingClientLifecycle.PurchaseHistory.observe(this,billingPurchasesState -> {
+            Log.e("BillingClientLifecycle","查询本地历史订单。没有消耗确认的商品");
+            switch (billingPurchasesState.getBillingFlowNode()){
+                //有历史订单支付。开始消耗
+                case queryPurchaseHistory:
+                    break;
+                //确认收货
+                case acknowledgePurchase:
+                    break;
+            }
+        });
         this.billingClientLifecycle.PAYMENT_SUCCESS.observe(this, billingPurchasesState -> {
             Log.e("BillingClientLifecycle","支付购买成功回调");
             switch (billingPurchasesState.getBillingFlowNode()){

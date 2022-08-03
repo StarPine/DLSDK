@@ -17,6 +17,7 @@ import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.ConsumeParams;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchaseHistoryRecord;
 import com.android.billingclient.api.PurchaseHistoryResponseListener;
@@ -31,6 +32,8 @@ import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.StringUtil;
+
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -76,6 +79,8 @@ public class BillingClientLifecycle implements LifecycleObserver, BillingClientS
     public SingleLiveEvent<BillingPurchasesState> PAYMENT_SUCCESS = new SingleLiveEvent<>();
     //支付购买异常流程回调
     public SingleLiveEvent<BillingPurchasesState> PAYMENT_FAIL = new SingleLiveEvent<>();
+    //查询本地订单消耗
+    public SingleLiveEvent<BillingPurchasesState> PurchaseHistory = new SingleLiveEvent<>();
 
     private BillingClientLifecycle(Application app) {
         this.app = app;
@@ -201,6 +206,7 @@ public class BillingClientLifecycle implements LifecycleObserver, BillingClientS
                     map.put("data", purchaseList);
                     ConfigManager.getInstance().getAppRepository().repoetLocalGoogleOrder(map)
                             .compose(RxUtils.exceptionTransformer())
+                            .compose(RxUtils.schedulersTransformer())
                             .subscribe(new BaseObserver<BaseResponse>() {
                                 @Override
                                 public void onSuccess(BaseResponse baseResponse) {
@@ -345,6 +351,67 @@ public class BillingClientLifecycle implements LifecycleObserver, BillingClientS
             } else {
                 //上架确认购买消耗失败 原因多种：掉线、超时、无网络、用户主动关闭支付处理窗体
                 PAYMENT_FAIL.postValue(getBillingPurchasesState(billingResult.getResponseCode(),BillingPurchasesState.BillingFlowNode.acknowledgePurchase,purchase));
+            }
+        };
+        billingClient.acknowledgePurchase(acknowledgePurchaseParams, acknowledgePurchaseResponseListener);
+    }
+
+    //查询本地谷歌缓存、消耗历史订单
+    public void queryAndConsumePurchase(String SkuType){
+        //queryPurchases() 方法会使用 Google Play 商店应用的缓存，而不会发起网络请求
+        billingClient.queryPurchaseHistoryAsync(SkuType,
+                (billingResult, purchaseHistoryRecordList) -> {
+                    if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && purchaseHistoryRecordList != null) {
+                        for (PurchaseHistoryRecord purchaseHistoryRecord : purchaseHistoryRecordList) {
+                            // Process the result.
+                            //确认购买交易，不然三天后会退款给用户
+                            try {
+                                Purchase purchase = new Purchase(purchaseHistoryRecord.getOriginalJson(), purchaseHistoryRecord.getSignature());
+                                if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
+                                    //消耗品 开始消耗
+                                    consumePurchaseHistory(purchase);
+                                    //确认购买交易
+                                    if (!purchase.isAcknowledged()) {
+                                        acknowledgeHistoryPurchase(purchase);
+                                    }
+                                    //TODO：这里可以添加订单找回功能，防止变态用户付完钱就杀死App的这种
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+    }
+    //消耗商品
+    private void consumePurchaseHistory(final Purchase purchase) {
+        ConsumeParams.Builder consumeParams = ConsumeParams.newBuilder();
+        consumeParams.setPurchaseToken(purchase.getPurchaseToken());
+        billingClient.consumeAsync(consumeParams.build(), (billingResult, purchaseToken) -> {
+            Log.i(TAG, "onConsumeResponse, code=" + billingResult.getResponseCode());
+            if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                Log.i(TAG, "onConsumeResponse,code=BillingResponseCode.OK");
+                PurchaseHistory.postValue(getBillingPurchasesState(0,BillingPurchasesState.BillingFlowNode.queryPurchaseHistory,purchase));
+            } else {
+                //如果消耗不成功，那就再消耗一次
+                Log.i(TAG, "onConsumeResponse=getDebugMessage==" + billingResult.getDebugMessage());
+            }
+        });
+    }
+    //商家确认消耗订单
+    private void acknowledgeHistoryPurchase(final Purchase purchase) {
+        AcknowledgePurchaseParams acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()
+                .setPurchaseToken(purchase.getPurchaseToken())
+                .build();
+        AcknowledgePurchaseResponseListener acknowledgePurchaseResponseListener = billingResult -> {
+            //Log.e(TAG,"確認訂單成功回調："+billingResult.getResponseCode());
+            //确认购买成功
+            if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                Log.i(TAG, "Acknowledge purchase success");
+                PurchaseHistory.postValue(getBillingPurchasesState(0,BillingPurchasesState.BillingFlowNode.acknowledgePurchase,purchase));
+            } else {
+                //上架确认购买消耗失败 原因多种：掉线、超时、无网络、用户主动关闭支付处理窗体
+                PurchaseHistory.postValue(getBillingPurchasesState(billingResult.getResponseCode(),BillingPurchasesState.BillingFlowNode.acknowledgePurchase,purchase));
             }
         };
         billingClient.acknowledgePurchase(acknowledgePurchaseParams, acknowledgePurchaseResponseListener);
