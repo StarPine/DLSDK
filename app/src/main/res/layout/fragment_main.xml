@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <import type="com.dl.playfun.R" />
@@ -43,24 +43,23 @@
                     android:id="@+id/navigation_home_img"
                     android:layout_width="21dp"
                     android:layout_height="21dp"
-                    android:layout_above="@+id/navigation_home_text"
                     android:layout_centerInParent="true"
                     android:layout_marginBottom="4dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/tab_home_checked" />
 
-                <TextView
-                    android:id="@+id/navigation_home_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerInParent="true"
-                    android:layout_marginBottom="5dp"
-                    android:includeFontPadding="false"
-                    android:text="@string/playfun_title_home"
-                    android:textColor="@color/black"
-                    android:textSize="9sp"
-                    android:visibility="invisible" />
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/navigation_home_img_lottie"
+                    android:layout_width="21dp"
+                    android:layout_height="21dp"
+                    android:layout_alignStart="@+id/navigation_home_img"
+                    android:layout_alignTop="@+id/navigation_home_img"
+                    android:elevation="11dp"
+                    android:visibility="gone"
+                    app:lottie_autoPlay="false"
+                    app:lottie_loop="false"
+                    app:lottie_rawRes="@raw/lottie_navigation_home" />
+
             </RelativeLayout>
 
             <RelativeLayout
@@ -75,24 +74,21 @@
                     android:id="@+id/navigation_radio_img"
                     android:layout_width="21dp"
                     android:layout_height="21dp"
-                    android:layout_above="@+id/navigation_radio_text"
                     android:layout_centerInParent="true"
                     android:layout_marginBottom="4dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/tab_radio_normal" />
-
-                <TextView
-                    android:id="@+id/navigation_radio_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerInParent="true"
-                    android:layout_marginBottom="5dp"
-                    android:includeFontPadding="false"
-                    android:text="@string/playfun_title_nearby"
-                    android:textColor="@color/black"
-                    android:textSize="9sp"
-                    android:visibility="invisible" />
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/navigation_radio_img_lottie"
+                    android:layout_alignTop="@+id/navigation_radio_img"
+                    android:layout_alignStart="@+id/navigation_radio_img"
+                    android:elevation="11dp"
+                    android:layout_width="21dp"
+                    android:layout_height="21dp"
+                    android:visibility="gone"
+                    app:lottie_autoPlay="false"
+                    app:lottie_loop="false"
+                    app:lottie_rawRes="@raw/lottie_navigation_radio" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -162,32 +158,29 @@
                     android:paddingRight="2dp"
                     android:text=""
                     android:textColor="@color/white"
-                    android:textSize="10dp"
+                    android:textSize="10sp"
                     android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/navigation_message_img"
                     android:layout_width="21dp"
                     android:layout_height="21dp"
-                    android:layout_above="@+id/navigation_message_text"
                     android:layout_centerInParent="true"
                     android:layout_gravity="center_horizontal|top"
                     android:layout_marginBottom="4dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/tab_message_normal" />
-
-                <TextView
-                    android:id="@+id/navigation_message_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerInParent="true"
-                    android:layout_marginBottom="5dp"
-                    android:includeFontPadding="false"
-                    android:text="@string/playfun_title_notifications"
-                    android:textColor="@color/black"
-                    android:textSize="9sp"
-                    android:visibility="invisible" />
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/navigation_message_img_lottie"
+                    android:layout_alignTop="@+id/navigation_message_img"
+                    android:layout_alignStart="@+id/navigation_message_img"
+                    android:elevation="11dp"
+                    android:layout_width="21dp"
+                    android:layout_height="21dp"
+                    android:visibility="gone"
+                    app:lottie_autoPlay="false"
+                    app:lottie_loop="false"
+                    app:lottie_rawRes="@raw/lottie_navigation_message" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -203,24 +196,21 @@
                     android:id="@+id/navigation_mine_img"
                     android:layout_width="21dp"
                     android:layout_height="21dp"
-                    android:layout_above="@+id/navigation_mine_text"
                     android:layout_centerInParent="true"
                     android:layout_marginBottom="4dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/tab_mine_female_normal" />
-
-                <TextView
-                    android:id="@+id/navigation_mine_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerInParent="true"
-                    android:layout_marginBottom="5dp"
-                    android:includeFontPadding="false"
-                    android:text="@string/playfun_title_mine"
-                    android:textColor="@color/black"
-                    android:textSize="9sp"
-                    android:visibility="invisible" />
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/navigation_mine_img_lottie"
+                    android:layout_alignTop="@+id/navigation_mine_img"
+                    android:layout_alignStart="@+id/navigation_mine_img"
+                    android:elevation="11dp"
+                    android:layout_width="21dp"
+                    android:layout_height="21dp"
+                    android:visibility="gone"
+                    app:lottie_autoPlay="false"
+                    app:lottie_loop="false"
+                    app:lottie_rawRes="@raw/lottie_navigation_mine" />
             </RelativeLayout>
         </LinearLayout>
         <ImageView

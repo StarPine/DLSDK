@@ -424,7 +424,7 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
 //        CoinRechargeSheetView coinRechargeSheetView = new CoinRechargeSheetView(mActivity);
 //        coinRechargeSheetView.show();
         CoinRechargeFragmentView coinRechargeFragmentView = new CoinRechargeFragmentView(mActivity);
-        coinRechargeFragmentView.show(getParentFragmentManager(),"coinRechargeFragmentView");
+        coinRechargeFragmentView.show(getChildFragmentManager(),CoinRechargeFragmentView.class.getCanonicalName());
     }
 
     @Override

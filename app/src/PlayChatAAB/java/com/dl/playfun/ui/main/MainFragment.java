@@ -1,6 +1,9 @@
 package com.dl.playfun.ui.main;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,7 +74,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
     private final BaseFragment[] mFragments = new BaseFragment[5];
     private TextView tvBadgeNum;
 
-    private RelativeLayout selRelativeLayout;
+    private ImageView selTabImgLayout;
     private ViewPager2 mainViewPager;
 
     private static final long WAIT_TIME = 3000L;
@@ -213,13 +216,13 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                 if (mainTabEvent != null) {
                     switch (mainTabEvent.getTabName()) {
                         case "home":
-                            setSelectedItemId(binding.navigationHome);//tbar切换到首頁
+                            setSelectedItemId(binding.navigationHomeImg);//tbar切换到首頁
                             break;
                         case "plaza":
-                            setSelectedItemId(binding.navigationRadio);//tbar切换到廣場
+                            setSelectedItemId(binding.navigationRadioImg);//tbar切换到廣場
                             break;
                         case "message":
-                            setSelectedItemId(binding.navigationMessage);//tbar切换到訊息
+                            setSelectedItemId(binding.navigationMessageImg);//tbar切换到訊息
                             break;
                     }
                 }
@@ -291,16 +294,16 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                 if (mainTabEvent != null) {
                     switch (mainTabEvent.getTabName()) {
                         case "home":
-                            setSelectedItemId(binding.navigationHome);//tbar切换到首頁
+                            setSelectedItemId(binding.navigationHomeImg);//tbar切换到首頁
                             break;
                         case "redio":
-                            setSelectedItemId(binding.navigationRadio);//tbar切换到廣場
+                            setSelectedItemId(binding.navigationRadioImg);//tbar切换到廣場
                             break;
                         case "message":
-                            setSelectedItemId(binding.navigationMessage);//tbar切换到訊息
+                            setSelectedItemId(binding.navigationMessageImg);//tbar切换到訊息
                             break;
                         case "mine":
-                            setSelectedItemId(binding.navigationMine);//tbar切换到訊息
+                            setSelectedItemId(binding.navigationMineImg);//tbar切换到訊息
                             break;
                     }
                 }
@@ -309,7 +312,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         viewModel.uc.taskCenterclickTab.observe(this, taskMainTabEvent -> {
             if (taskMainTabEvent != null) {
                 if (taskMainTabEvent.isTbarClicked()) {//tbar切换到活动中心
-                    setSelectedItemId(binding.navigationRank);
+                    setSelectedItemId(binding.navigationRankImg);
                 }
             }
         });
@@ -457,23 +460,23 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                 switch (AppConfig.homePageName) {
                     case "home":
                         AppConfig.homePageName = null;
-                        setSelectedItemId(binding.navigationHome);
+                        setSelectedItemId(binding.navigationHomeImg);
                         break;
                     case "broadcast":
                         AppConfig.homePageName = null;
-                        setSelectedItemId(binding.navigationRadio);
+                        setSelectedItemId(binding.navigationRadioImg);
                         break;
                     case "navigation_rank":
                         AppConfig.homePageName = null;
-                        setSelectedItemId(binding.navigationRank);
+                        setSelectedItemId(binding.navigationRankImg);
                         break;
                     case "message":
                         AppConfig.homePageName = null;
-                        setSelectedItemId(binding.navigationMessage);
+                        setSelectedItemId(binding.navigationMessageImg);
                         break;
                     case "user":
                         AppConfig.homePageName = null;
-                        setSelectedItemId(binding.navigationMine);
+                        setSelectedItemId(binding.navigationMineImg);
                         break;
                     default:
                         break;
@@ -488,19 +491,19 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         String homePageName = ConfigManager.getInstance().getAppRepository().readDefaultHomePageConfig();
         switch (homePageName) {
             case "home":
-                setSelectedItemId(binding.navigationHome);
+                setSelectedItemId(binding.navigationHomeImg);
                 break;
             case "broadcast":
-                setSelectedItemId(binding.navigationRadio);
+                setSelectedItemId(binding.navigationRadioImg);
                 break;
             case "navigation_rank":
-                setSelectedItemId(binding.navigationRank);
+                setSelectedItemId(binding.navigationRankImg);
                 break;
             case "message":
-                setSelectedItemId(binding.navigationMessage);
+                setSelectedItemId(binding.navigationMessageImg);
                 break;
             case "user":
-                setSelectedItemId(binding.navigationMine);
+                setSelectedItemId(binding.navigationMineImg);
                 break;
             default:
                 break;
@@ -536,44 +539,12 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         //添加到Tab上
 
         //首页点击
-        binding.navigationHome.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                setSelectedItemId(binding.navigationHome);
-            }
-        });
-        binding.navigationRadio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setSelectedItemId(binding.navigationRadio);
-            }
-        });
-        binding.navigationRank.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setSelectedItemId(binding.navigationRank);
-            }
-        });
-        binding.navigationMessage.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                setSelectedItemId(binding.navigationMessage);
-            }
-        });
-        binding.navigationMine.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setSelectedItemId(binding.navigationMine);
-            }
-        });
-        binding.bubbleTip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setSelectedItemId(binding.navigationMessage);
-            }
-        });
+        binding.navigationHome.setOnClickListener(v -> setSelectedItemId(binding.navigationHomeImg));
+        binding.navigationRadio.setOnClickListener(v -> setSelectedItemId(binding.navigationRadioImg));
+        binding.navigationRank.setOnClickListener(v -> setSelectedItemId(binding.navigationRankImg));
+        binding.navigationMessage.setOnClickListener(v -> setSelectedItemId(binding.navigationMessageImg));
+        binding.navigationMine.setOnClickListener(v -> setSelectedItemId(binding.navigationMineImg));
+        binding.bubbleTip.setOnClickListener(v -> setSelectedItemId(binding.navigationMessageImg));
         mainViewPager = binding.viewPager;
         FragmentAdapter fragmentAdapter = new FragmentAdapter(this);
         fragmentAdapter.setFragmentList(mFragments);
@@ -584,81 +555,118 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         mainViewPager.setAdapter(fragmentAdapter);
         mainViewPager.setCurrentItem(0, false);
 
-        if (selRelativeLayout == null) {
-            selRelativeLayout = binding.navigationHome;
+        if (selTabImgLayout == null) {
+            selTabImgLayout = binding.navigationHomeImg;
         } else {
             // 初始化时，强制切换tab到上一次的位置
-            RelativeLayout tmp = selRelativeLayout;
-            selRelativeLayout = null;
+            ImageView tmp = selTabImgLayout;
             setSelectedItemId(tmp);
-            selRelativeLayout = tmp;
+            selTabImgLayout = tmp;
         }
+        lottieAddAnimatorListener();
     }
 
-    private void setSelectedItemId(RelativeLayout view) {
-        if (selRelativeLayout != null && selRelativeLayout.getId() == view.getId()) {
-            return;
+    private void setSelectedItemId(ImageView view) {
+        if(selTabImgLayout==null){
+            selTabImgLayout = view;
         }
-        selRelativeLayout = view;
-        resetMenuState();
-        int id = view.getId();
-        if (id == R.id.navigation_home) {
-            mainViewPager.setCurrentItem(0, false);
-            binding.navigationHomeImg.setImageResource(R.drawable.tab_home_checked);
-            binding.navigationHomeText.setTextColor(getResources().getColor(R.color.navigation_checked));
-        } else if (id == R.id.navigation_radio) {
-            mainViewPager.setCurrentItem(1, false);
-            binding.navigationRadioImg.setImageResource(R.drawable.tab_radio_checked);
-            binding.navigationRadioText.setTextColor(getResources().getColor(R.color.navigation_checked));
-        } else if (id == R.id.navigation_rank) {
-            mainViewPager.setCurrentItem(2, false);
-            binding.navigationRankImg.setImageResource(R.drawable.toolbar_icon_task_checked);
-            binding.navigationRankText.setTextColor(getResources().getColor(R.color.navigation_checked));
-        } else if (id == R.id.navigation_message) {
-            mainViewPager.setCurrentItem(3, false);
-            binding.navigationMessageImg.setImageResource(R.drawable.tab_message_checked);
-            binding.navigationMessageText.setTextColor(getResources().getColor(R.color.navigation_checked));
-        } else if (id == R.id.navigation_mine) {
-            mainViewPager.setCurrentItem(4, false);
-            if (viewModel.uc.gender.get()) {
-                binding.navigationMineImg.setImageResource(R.drawable.tab_mine_male_checked);
-            } else {
-                binding.navigationMineImg.setImageResource(R.drawable.tab_mine_female_checked);
+        if (selTabImgLayout != null && selTabImgLayout.getId() != view.getId()) {
+            resetMenuState(selTabImgLayout.getId());
+            int id = view.getId();
+            if (id == R.id.navigation_home_img) {
+                mainViewPager.setCurrentItem(0, false);
+                //binding.navigationHomeImg.setVisibility(View.VISIBLE);
+                binding.navigationHomeImg.setVisibility(View.INVISIBLE);
+                binding.navigationHomeImgLottie.setVisibility(View.VISIBLE);
+                binding.navigationHomeImgLottie.playAnimation();
+                binding.navigationHomeImg.setImageResource(R.drawable.tab_home_checked);
+            } else if (id == R.id.navigation_radio_img) {
+                mainViewPager.setCurrentItem(1, false);
+                binding.navigationRadioImg.setVisibility(View.INVISIBLE);
+                binding.navigationRadioImgLottie.setVisibility(View.VISIBLE);
+                binding.navigationRadioImgLottie.playAnimation();
+                binding.navigationRadioImg.setImageResource(R.drawable.tab_radio_checked);
+            } else if (id == R.id.navigation_rank_img) {
+                mainViewPager.setCurrentItem(2, false);
+                binding.navigationRankImg.setVisibility(View.INVISIBLE);
+                binding.navigationRadioImgLottie.setVisibility(View.VISIBLE);
+                binding.navigationHomeImgLottie.playAnimation();
+                binding.navigationHomeImgLottie.setImageResource(R.drawable.toolbar_icon_task_checked);
+            } else if (id == R.id.navigation_message_img) {
+                mainViewPager.setCurrentItem(3, false);
+                binding.navigationMessageImg.setVisibility(View.INVISIBLE);
+                binding.navigationMessageImgLottie.setVisibility(View.VISIBLE);
+                binding.navigationMessageImgLottie.playAnimation();
+                binding.navigationMessageImg.setImageResource(R.drawable.tab_message_checked);
+            } else if (id == R.id.navigation_mine_img) {
+                mainViewPager.setCurrentItem(4, false);
+                binding.navigationMineImg.setVisibility(View.INVISIBLE);
+                binding.navigationMineImgLottie.setVisibility(View.VISIBLE);
+                binding.navigationMineImgLottie.playAnimation();
+                if (viewModel.uc.gender.get()) {
+                    binding.navigationMineImg.setImageResource(R.drawable.tab_mine_male_checked);
+                } else {
+                    binding.navigationMineImg.setImageResource(R.drawable.tab_mine_female_checked);
+                }
             }
-            binding.navigationMineText.setTextColor(getResources().getColor(R.color.navigation_checked));
+            selTabImgLayout = view;
         }
     }
 
     //初始化按钮状态
-    private void resetMenuState() {
-        binding.navigationHomeText.setTextColor(getResources().getColor(R.color.navigation_checkno));
-        binding.navigationRadioText.setTextColor(getResources().getColor(R.color.navigation_checkno));
-        binding.navigationRankText.setTextColor(getResources().getColor(R.color.navigation_checkno));
-        binding.navigationMessageText.setTextColor(getResources().getColor(R.color.navigation_checkno));
-        binding.navigationMineText.setTextColor(getResources().getColor(R.color.navigation_checkno));
-
-        binding.navigationHomeImg.setImageResource(R.drawable.tab_home_normal);
-        binding.navigationRadioImg.setImageResource(R.drawable.tab_radio_normal);
-        int ImgSrcPath = TbarCenterImgConfig.getInstance().getImgSrcPath();
-        if(ImgSrcPath!=-1){
-            binding.navigationRankImg.setImageResource(ImgSrcPath);
-        }else{
-            binding.navigationRankImg.setImageResource(R.drawable.toolbar_icon_task_checked);
+    private void resetMenuState(int id) {
+        if (id == R.id.navigation_home_img) { //首页
+            binding.navigationHomeImg.setImageResource(R.drawable.tab_home_normal);
+        } else if (id == R.id.navigation_radio_img) { //广场
+            binding.navigationRadioImg.setImageResource(R.drawable.tab_radio_normal);
+        } else if (id == R.id.navigation_rank_img) { //任务中心
+            int ImgSrcPath = TbarCenterImgConfig.getInstance().getImgSrcPath();
+            if(ImgSrcPath!=-1){
+                binding.navigationRankImg.setImageResource(ImgSrcPath);
+            }else{
+                binding.navigationRankImg.setImageResource(R.drawable.toolbar_icon_task_checked);
+            }
+            binding.navigationRankText.setTextColor(getResources().getColor(R.color.navigation_checkno));
+        } else if (id == R.id.navigation_message_img) { //讯息页面
+            binding.navigationMessageImg.setImageResource(R.drawable.tab_message_normal);
+        } else if (id == R.id.navigation_mine_img) { //我的页面
+            if (viewModel.uc.gender.get()) {
+                binding.navigationMineImg.setImageResource(R.drawable.tab_mine_male_image);
+            } else {
+                binding.navigationMineImg.setImageResource(R.drawable.tab_mine_female_normal);
+            }
         }
-        binding.navigationMessageImg.setImageResource(R.drawable.tab_message_normal);
-        if (viewModel.uc.gender.get()) {
-            binding.navigationMineImg.setImageResource(R.drawable.tab_mine_male_image);
-        } else {
-            binding.navigationMineImg.setImageResource(R.drawable.tab_mine_female_normal);
-        }
-
     }
-
-    /**
-     * start other BrotherFragment
-     */
-    public void startBrotherFragment(SupportFragment targetFragment) {
-        start(targetFragment);
+    //添加lottie监听
+    private void lottieAddAnimatorListener(){
+        binding.navigationHomeImgLottie.addAnimatorListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                binding.navigationHomeImgLottie.setVisibility(View.GONE);
+                binding.navigationHomeImg.setVisibility(View.VISIBLE);
+            }
+        });
+        binding.navigationRadioImgLottie.addAnimatorListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                binding.navigationRadioImgLottie.setVisibility(View.GONE);
+                binding.navigationRadioImg.setVisibility(View.VISIBLE);
+            }
+        });
+        binding.navigationMessageImgLottie.addAnimatorListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                binding.navigationMessageImgLottie.setVisibility(View.GONE);
+                binding.navigationMessageImg.setVisibility(View.VISIBLE);
+            }
+        });
+        binding.navigationMineImgLottie.addAnimatorListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                binding.navigationMineImgLottie.setVisibility(View.GONE);
+                binding.navigationMineImg.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.dl.playfun.widget.coinrechargesheet;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -42,7 +43,7 @@ import me.goldze.mvvmhabit.utils.ToastUtils;
  * Time: 2022/8/3 18:44
  * Description: This is CoinRechargeFragmentView
  */
-public class CoinRechargeFragmentView extends BaseDialogFragment implements Consumer<Disposable>,View.OnClickListener,CoinRechargeAdapter.CoinRechargeAdapterListener{
+public class CoinRechargeFragmentView extends BaseDialogFragment implements View.OnClickListener,CoinRechargeAdapter.CoinRechargeAdapterListener{
     private final AppCompatActivity mActivity;
     private RecyclerView recyclerView;
     private TextView tvBalance;
@@ -65,7 +66,7 @@ public class CoinRechargeFragmentView extends BaseDialogFragment implements Cons
 
         adapter = new CoinRechargeAdapter(recyclerView);
         adapter.setCoinRechargeAdapterListener(this);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        recyclerView.setLayoutManager(new GridLayoutManager(viewCurrent.getContext(), 2));
         recyclerView.setAdapter(adapter);
         loadBalance();
         //查询商品价格
@@ -76,7 +77,7 @@ public class CoinRechargeFragmentView extends BaseDialogFragment implements Cons
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(STYLE_NORMAL, R.style.BottomDialog);
+        setStyle(STYLE_NORMAL, R.style.MyDialog);
     }
 
     @Override
@@ -103,6 +104,12 @@ public class CoinRechargeFragmentView extends BaseDialogFragment implements Cons
         return R.layout.view_coin_recharge_sheet;
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+    }
+
     /**
      * 初始化数据
      */
@@ -127,7 +134,6 @@ public class CoinRechargeFragmentView extends BaseDialogFragment implements Cons
     private void loadBalance() {
         Injection.provideDemoRepository()
                 .coinWallet()
-                .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
                 .subscribe(new BaseObserver<BaseDataResponse<CoinWalletEntity>>() {
@@ -151,14 +157,13 @@ public class CoinRechargeFragmentView extends BaseDialogFragment implements Cons
     private void loadGoods() {
         Injection.provideDemoRepository()
                 .goods()
-                .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
                 .subscribe(new BaseObserver<BaseDataResponse<List<GoodsEntity>>>() {
                     @Override
                     public void onSuccess(BaseDataResponse<List<GoodsEntity>> response) {
                         mGoodsList = response.getData();
-                        adapter.setData(mGoodsList);
+                        //adapter.setData(mGoodsList);
 //                        querySkuList(response.getData());
                     }
 

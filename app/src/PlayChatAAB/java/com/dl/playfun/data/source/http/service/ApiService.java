@@ -218,7 +218,7 @@ public interface ApiService {
     * @Date 2022/7/2
     */
     @Headers(RetrofitHeadersConfig.DEFAULT_API_INIT_URL)
-    @GET("api/hla")
+    @GET("api/entrance")
     Observable<BaseDataResponse<ApiConfigManagerEntity>> initApiConfig();
 
     /**

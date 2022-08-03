@@ -443,6 +443,11 @@ public class WebViewFragment extends BaseFragment<WebviewFragmentBinding, WebVie
             pop();
             //
         }
+        //获取当前AppId
+        @JavascriptInterface
+        public String getAppId(){
+            return AppConfig.APPID;
+        }
 
         @JavascriptInterface
         public String getToken() {
