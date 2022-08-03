@@ -137,17 +137,24 @@ public class BaseParkItemViewModel extends MultiItemViewModel<BaseParkViewModel>
 
     public String getOnlineStatus() {
         String onlineStatus = StringUtils.getString(R.string.playfun_unknown);
-        if (itemEntity.get().getIsOnline() == -1) {
-            onlineStatus = StringUtils.getString(R.string.playfun_keep);
-        } else if (itemEntity.get().getIsOnline() == 1) {
-            onlineStatus = StringUtils.getString(R.string.playfun_on_line);
-        } else if (itemEntity.get().getIsOnline() == 0) {
-            if (StringUtils.isEmpty(itemEntity.get().getOfflineTime())) {
-                onlineStatus = StringUtils.getString(R.string.playfun_unknown);
-            } else {
-                onlineStatus = TimeUtils.getFriendlyTimeSpan(itemEntity.get().getOfflineTime());
+        if (itemEntity.get().getCallingStatus() == 0){
+            if (itemEntity.get().getIsOnline() == -1) {
+                onlineStatus = StringUtils.getString(R.string.playfun_keep);
+            } else if (itemEntity.get().getIsOnline() == 1) {
+                onlineStatus = StringUtils.getString(R.string.playfun_on_line);
+            } else if (itemEntity.get().getIsOnline() == 0) {
+                if (StringUtils.isEmpty(itemEntity.get().getOfflineTime())) {
+                    onlineStatus = StringUtils.getString(R.string.playfun_unknown);
+                } else {
+                    onlineStatus = TimeUtils.getFriendlyTimeSpan(itemEntity.get().getOfflineTime());
+                }
             }
+        }else if (itemEntity.get().getCallingStatus() == 1){
+            onlineStatus = StringUtils.getString(R.string.playfun_calling);
+        }else if (itemEntity.get().getCallingStatus() == 2){
+            onlineStatus = StringUtils.getString(R.string.playfun_in_video);
         }
+
         return onlineStatus;
     }
 

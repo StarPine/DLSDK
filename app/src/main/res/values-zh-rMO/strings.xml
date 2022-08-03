@@ -412,6 +412,8 @@
     <string name="playfun_keep">保密</string>
     <string name="playfun_on_line">在線</string>
     <string name="playfun_unknown">未知</string>
+    <string name="playfun_calling">通話中</string>
+    <string name="playfun_in_video">通話中</string>
     <string name="playfun_year">年</string>
     <string name="playfun_month">月</string>
     <string name="playfun_daily">日</string>

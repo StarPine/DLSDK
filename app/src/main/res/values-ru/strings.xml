@@ -415,6 +415,8 @@
     <string name="playfun_keep">Скрыто</string>
     <string name="playfun_on_line">Онлайн</string>
     <string name="playfun_unknown">Неизвестно</string>
+    <string name="playfun_calling">通話中</string>
+    <string name="playfun_in_video">通話中</string>
     <string name="playfun_year">год</string>
     <string name="playfun_month">месяц</string>
     <string name="playfun_daily">день</string>

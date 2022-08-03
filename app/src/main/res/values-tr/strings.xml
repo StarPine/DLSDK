@@ -408,6 +408,8 @@
     <string name="playfun_keep">Gizli</string>
     <string name="playfun_on_line">Çevrimiçi</string>
     <string name="playfun_unknown">Bilinmiyor</string>
+    <string name="playfun_calling">通話中</string>
+    <string name="playfun_in_video">通話中</string>
     <string name="playfun_year">yıl</string>
     <string name="playfun_month">ay</string>
     <string name="playfun_daily">gün</string>

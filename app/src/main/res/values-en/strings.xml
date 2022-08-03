@@ -409,6 +409,8 @@
     <string name="playfun_keep">Hidden</string>
     <string name="playfun_on_line">Online</string>
     <string name="playfun_unknown">Unknown</string>
+    <string name="playfun_calling">通話中</string>
+    <string name="playfun_in_video">通話中</string>
     <string name="playfun_year">year</string>
     <string name="playfun_month">month</string>
     <string name="playfun_daily">day</string>
