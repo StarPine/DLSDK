@@ -155,11 +155,7 @@ public class BaseParkItemViewModel extends MultiItemViewModel<BaseParkViewModel>
             } else if (itemEntity.get().getIsOnline() == 1) {
                 onlineStatus = StringUtils.getString(R.string.playfun_on_line);
             } else if (itemEntity.get().getIsOnline() == 0) {
-                if (StringUtils.isEmpty(itemEntity.get().getOfflineTime())) {
-                    onlineStatus = null;
-                } else {
-                    onlineStatus = TimeUtils.getFriendlyTimeSpan(itemEntity.get().getOfflineTime());
-                }
+                onlineStatus = null;
             }
         }else if (itemEntity.get().getCallingStatus() == 1){
             onlineStatus = StringUtils.getString(R.string.playfun_calling);
