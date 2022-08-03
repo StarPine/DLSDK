@@ -3,6 +3,7 @@ package com.dl.playfun.data.source;
 import com.dl.playfun.api.AppGameConfig;
 import com.dl.playfun.entity.ApiConfigManagerEntity;
 import com.dl.playfun.entity.ConfigItemEntity;
+import com.dl.playfun.entity.CrystalDetailsConfigEntity;
 import com.dl.playfun.entity.EvaluateObjEntity;
 import com.dl.playfun.entity.GameConfigEntity;
 import com.dl.playfun.entity.LocalGooglePayCache;
@@ -256,6 +257,18 @@ public interface LocalDataSource {
      * @return
      */
     List<GameConfigEntity> readGameConfig();
+
+    /**
+     * 保存水晶兌換规则显示标记
+     * @param configs
+     */
+    void saveCrystalDetailsConfig(CrystalDetailsConfigEntity configs);
+
+    /**
+     * 读取水晶兌換规则显示标记
+     * @return
+     */
+    CrystalDetailsConfigEntity readCrystalDetailsConfig();
 
     /**
      * 保存身高配置

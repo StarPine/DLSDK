@@ -198,6 +198,7 @@ public class SplashViewModel extends BaseViewModel<AppRepository> {
                             model.saveSystemConfigTask(response.getData().getTask());
                             model.saveDefaultHomePageConfig(response.getData().getDefaultHomePage());
                             model.saveGameConfig(response.getData().getGame());
+                            model.saveCrystalDetailsConfig(response.getData().getCrystalDetailsConfig());
                             model.putSwitches(EaringlSwitchUtil.KEY_TIPS, response.getData().getIsTips());
                         } catch (Exception e) {
                             ExceptionReportUtils.report(e);

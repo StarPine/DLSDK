@@ -41,6 +41,7 @@ import com.dl.playfun.entity.CoinWalletEntity;
 import com.dl.playfun.entity.CommentMessageEntity;
 import com.dl.playfun.entity.ConfigItemEntity;
 import com.dl.playfun.entity.CreateOrderEntity;
+import com.dl.playfun.entity.CrystalDetailsConfigEntity;
 import com.dl.playfun.entity.EjectEntity;
 import com.dl.playfun.entity.EjectSignInEntity;
 import com.dl.playfun.entity.EvaluateEntity;
@@ -651,7 +652,7 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
         mLocalDataSource.saveSystemConfig(config);
     }
 
-     @Override
+    @Override
     public void saveGameConfig(List<GameConfigEntity> configs) {
         mLocalDataSource.saveGameConfig(configs);
     }
@@ -659,6 +660,17 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     @Override
     public List<GameConfigEntity> readGameConfig() {
         return mLocalDataSource.readGameConfig();
+    }
+
+
+    @Override
+    public void saveCrystalDetailsConfig(CrystalDetailsConfigEntity configs) {
+        mLocalDataSource.saveCrystalDetailsConfig(configs);
+    }
+
+    @Override
+    public CrystalDetailsConfigEntity readCrystalDetailsConfig() {
+        return mLocalDataSource.readCrystalDetailsConfig();
     }
 
 

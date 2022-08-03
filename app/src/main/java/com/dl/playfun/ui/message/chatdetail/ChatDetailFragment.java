@@ -39,12 +39,10 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.data.source.local.LocalDataSourceImpl;
 import com.dl.playfun.databinding.FragmentChatDetailBinding;
-import com.dl.playfun.entity.CoinExchangePriceInfo;
+import com.dl.playfun.entity.CrystalDetailsConfigEntity;
 import com.dl.playfun.entity.EvaluateItemEntity;
 import com.dl.playfun.entity.GiftBagEntity;
-import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.entity.LocalMessageIMEntity;
-import com.dl.playfun.entity.MallWithdrawTipsInfoEntity;
 import com.dl.playfun.entity.MessageRuleEntity;
 import com.dl.playfun.entity.PhotoAlbumEntity;
 import com.dl.playfun.entity.TagEntity;
@@ -62,7 +60,6 @@ import com.dl.playfun.ui.message.sendcoinredpackage.SendCoinRedPackageFragment;
 import com.dl.playfun.ui.mine.myphotoalbum.MyPhotoAlbumFragment;
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
 import com.dl.playfun.ui.mine.wallet.girl.TwDollarMoneyFragment;
-import com.dl.playfun.ui.mine.webview.WebViewFragment;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.ui.userdetail.report.ReportUserFragment;
 import com.dl.playfun.utils.ApiUitl;
@@ -74,7 +71,6 @@ import com.dl.playfun.utils.PictureSelectorUtil;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.utils.Utils;
 import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
-import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
 import com.dl.playfun.widget.dialog.MMAlertDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.dl.playfun.widget.dialog.MessageDetailDialog;
@@ -203,12 +199,16 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         if (mChatInfo == null) {
             return;
         }
+        hideExchangeRules();
         viewModel.TMToUserId = mChatInfo.getId();
         //非客服账号加载用户标签和状态
         if (!mChatInfo.getId().contains(AppConfig.CHAT_SERVICE_USER_ID)) {
             viewModel.loadUserInfo(getTaUserIdIM());
             viewModel.loadTagUser(String.valueOf(getTaUserIdIM()));
             initCallVideoHint();
+        }else {
+            viewModel.isHideExchangeRules.set(true);
+            viewModel.isShoweCallingVideo.set(false);
         }
         initChatView();
         int userId = getTaUserIdIM(); //获取当前聊天对象的ID
@@ -221,6 +221,24 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             viewModel.getPhotoAlbum(getTaUserIdIM());
         }else {
             binding.chatLayout.setChatInfo(mChatInfo);
+        }
+    }
+
+    /**
+     * 隐藏水晶兑换规则弹框
+     */
+    private void hideExchangeRules() {
+        CrystalDetailsConfigEntity crystalDetailsConfig = ConfigManager.getInstance().getAppRepository().readCrystalDetailsConfig();
+        boolean isHideExchangeRules = ConfigManagerUtil.getInstance().getExchangeRulesFlag();
+        boolean isMale = ConfigManager.getInstance().isMale();
+        if (isMale){
+            if (crystalDetailsConfig.getMaleIsShow() != 1 || isHideExchangeRules){
+                viewModel.isHideExchangeRules.set(true);
+            }
+        }else {
+            if (crystalDetailsConfig.getFemaleIsShow() != 1 || isHideExchangeRules){
+                viewModel.isHideExchangeRules.set(true);
+            }
         }
     }
 
@@ -475,7 +493,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                         @Override
                         public void confirm(Dialog dialog) {
                             ConfigManagerUtil.getInstance().putExchangeRulesFlag(true);
-                            viewModel.isShowedExchangeRules.set(true);
+                            viewModel.isHideExchangeRules.set(true);
                         }
                     })
                     .getCrystalExchange(data)
