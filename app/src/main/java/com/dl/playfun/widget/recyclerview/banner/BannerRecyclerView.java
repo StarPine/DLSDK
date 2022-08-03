@@ -74,7 +74,13 @@ public class BannerRecyclerView extends RecyclerView {
             if (msg.what == WHAT_AUTO_PLAY) {
                 if (currentIndex == mLayoutManager.getCurrentPosition()) {
                     ++currentIndex;
-                    smoothScrollToPosition(currentIndex);
+                   // Log.e("当前向下个页面的坐标","==========="+currentIndex);
+                    //修正列表再次填充时。获取的子view 不为null在执行滚动
+                    try{
+                        smoothScrollToPosition(currentIndex);
+                    }catch (Exception ignored){
+
+                    }
                     mHandler.sendEmptyMessageDelayed(WHAT_AUTO_PLAY, autoPlayDuration);
                 }
             }
@@ -119,14 +125,14 @@ public class BannerRecyclerView extends RecyclerView {
         addOnScrollListener(new OnScrollListener() {
 
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 if (dx != 0) {
                     setPlaying(false);
                 }
             }
 
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 int first = mLayoutManager.getCurrentPosition();
                 if (currentIndex != first) {
                     currentIndex = first;
@@ -167,11 +173,7 @@ public class BannerRecyclerView extends RecyclerView {
     @Override
     protected void onWindowVisibilityChanged(int visibility) {
         super.onWindowVisibilityChanged(visibility);
-        if (visibility == VISIBLE) {
-            setPlaying(true);
-        } else {
-            setPlaying(false);
-        }
+        setPlaying(visibility == VISIBLE);
     }
 
 }

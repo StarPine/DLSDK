@@ -240,7 +240,7 @@
                 android:layout_height="20dp"
                 android:layout_marginStart="7dp"
                 android:text='@{viewModel.onlineStatus}'
-                android:textColor="@{viewModel.itemEntity.isOnline == 1 ? @color/green:@color/text_9EA1B0}"
+                android:textColor="@{viewModel.onLineColor(viewModel.itemEntity)}"
                 android:textSize="@dimen/text_size_small"
                 app:isBold="@{viewModel.itemEntity.isOnline == 1 ? true:false}"
                 tools:text="在线"
