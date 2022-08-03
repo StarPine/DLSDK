@@ -31,9 +31,7 @@ import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.FragmentRadioBinding;
-import com.dl.playfun.entity.CoinExchangePriceInfo;
 import com.dl.playfun.entity.ConfigItemEntity;
-import com.dl.playfun.entity.GameCoinBuy;
 import com.dl.playfun.entity.RadioFilterItemEntity;
 import com.dl.playfun.helper.DialogHelper;
 import com.dl.playfun.manager.ConfigManager;
@@ -44,8 +42,7 @@ import com.dl.playfun.ui.userdetail.report.ReportUserFragment;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.PictureSelectorUtil;
 import com.dl.playfun.viewadapter.CustomRefreshHeader;
-import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralPayDialog;
-import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
+import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 import com.dl.playfun.widget.dialog.MMAlertDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.dl.playfun.widget.dialog.TraceDialog;
@@ -205,7 +202,7 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
         });
         //弹起充值引导
         viewModel.radioUC.sendDialogViewEvent.observe(this, event -> {
-            paySelectionboxChoose(false);
+            googleCoinValueBox();
         });
         //对方忙线
         viewModel.radioUC.otherBusy.observe(this, o -> {
@@ -419,67 +416,11 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
         }
     }
 
-    //支付框样式选择
-    private void paySelectionboxChoose(boolean b) {
-        if (ConfigManager.getInstance().isMale()) {
-            if (ConfigManager.getInstance().isVip()) {
-                googleCoinValueBox();
-            } else {
-                dialogRechargeShow(b);
-            }
-        } else {
-            googleCoinValueBox();
-        }
-    }
-
+    //支付弹窗
     private void googleCoinValueBox() {
-        CoinExchargeItegralPayDialog coinExchargeItegralPayDialog = new CoinExchargeItegralPayDialog(getContext(),mActivity);
-        coinExchargeItegralPayDialog.show();
-        coinExchargeItegralPayDialog.setCoinRechargeSheetViewListener(new CoinExchargeItegralPayDialog.CoinRechargeSheetViewListener() {
-            @Override
-            public void onPaySuccess(CoinExchargeItegralPayDialog sheetView, GameCoinBuy sel_goodsEntity) {
-                sheetView.endGooglePlayConnect();
-                sheetView.dismiss();
-                MVDialog.getInstance(getContext())
-                        .setTitele(getStringByResId(R.string.playfun_recharge_coin_success))
-                        .setConfirmText(getStringByResId(R.string.playfun_confirm))
-                        .setConfirmOnlick(dialog -> {
-                            dialog.dismiss();
-                        })
-                        .chooseType(MVDialog.TypeEnum.CENTER)
-                        .show();
-            }
-
-            @Override
-            public void onPayFailed(CoinExchargeItegralPayDialog sheetView, String msg) {
-                sheetView.dismiss();
-                ToastUtils.showShort(msg);
-                AppContext.instance().logEvent(AppsFlyerEvent.Failed_to_top_up);
-            }
-        });
-
-    }
-
-    //弹出钻石充值
-    private void dialogRechargeShow(boolean isGiftSend) {
-        if (!isGiftSend) {
-            AppContext.instance().logEvent(AppsFlyerEvent.im_topup);
-        }
         AppContext.instance().logEvent(AppsFlyerEvent.Top_up);
-        GameCoinExchargeSheetView coinRechargeSheetView = new GameCoinExchargeSheetView(mActivity);
+        CoinRechargeSheetView coinRechargeSheetView = new CoinRechargeSheetView(mActivity);
         coinRechargeSheetView.show();
-        coinRechargeSheetView.setCoinRechargeSheetViewListener(new GameCoinExchargeSheetView.CoinRechargeSheetViewListener() {
-            @Override
-            public void onPaySuccess(GameCoinExchargeSheetView sheetView, CoinExchangePriceInfo sel_goodsEntity) {
-                sheetView.dismiss();
-            }
-
-            @Override
-            public void onPayFailed(GameCoinExchargeSheetView sheetView, String msg) {
-                sheetView.dismiss();
-                com.blankj.utilcode.util.ToastUtils.showShort(msg);
-            }
-        });
     }
 
     @Override

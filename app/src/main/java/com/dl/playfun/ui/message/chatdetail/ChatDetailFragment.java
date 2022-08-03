@@ -39,12 +39,10 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.data.source.local.LocalDataSourceImpl;
 import com.dl.playfun.databinding.FragmentChatDetailBinding;
-import com.dl.playfun.entity.CoinExchangePriceInfo;
+import com.dl.playfun.entity.ApiConfigManagerEntity;
 import com.dl.playfun.entity.EvaluateItemEntity;
 import com.dl.playfun.entity.GiftBagEntity;
-import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.entity.LocalMessageIMEntity;
-import com.dl.playfun.entity.MallWithdrawTipsInfoEntity;
 import com.dl.playfun.entity.MessageRuleEntity;
 import com.dl.playfun.entity.PhotoAlbumEntity;
 import com.dl.playfun.entity.TagEntity;
@@ -62,7 +60,6 @@ import com.dl.playfun.ui.message.sendcoinredpackage.SendCoinRedPackageFragment;
 import com.dl.playfun.ui.mine.myphotoalbum.MyPhotoAlbumFragment;
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
 import com.dl.playfun.ui.mine.wallet.girl.TwDollarMoneyFragment;
-import com.dl.playfun.ui.mine.webview.WebViewFragment;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.ui.userdetail.report.ReportUserFragment;
 import com.dl.playfun.utils.ApiUitl;
@@ -74,7 +71,6 @@ import com.dl.playfun.utils.PictureSelectorUtil;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.utils.Utils;
 import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
-import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
 import com.dl.playfun.widget.dialog.MMAlertDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.dl.playfun.widget.dialog.MessageDetailDialog;
@@ -1301,42 +1297,41 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         if (!isGiftSend) {
             AppContext.instance().logEvent(AppsFlyerEvent.im_topup);
         }
-        String url = AppConfig.WEB_BASE_URL+"recharge/recharge.html";
-        new WebViewDialog(getContext(), mActivity, url, new WebViewDialog.ConfirmOnclick() {
-            @Override
-            public void webToVipRechargeVC(Dialog dialog) {
-                if(dialog!=null){
-                    dialog.dismiss();
-                }
-                viewModel.start(VipSubscribeFragment.class.getCanonicalName());
-            }
-
-            @Override
-            public void vipRechargeDiamondSuccess(Dialog dialog, Integer coinValue) {
-                Log.e("支付上报成功回传","=========="+(dialog==null));
-                if(dialog!=null){
-                    this.cancel();
-                    dialog.dismiss();
-                }
-                viewModel.maleBalance += coinValue.intValue();
-            }
-
-            @Override
-            public void moreRechargeDiamond(Dialog dialog) {
-                dialog.dismiss();
-                mActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        googleCoinValueBox(isGiftSend);
+        ApiConfigManagerEntity apiConfigManagerEntity = ConfigManager.getInstance().getAppRepository().readApiConfigManagerEntity();
+        if(apiConfigManagerEntity!=null && apiConfigManagerEntity.getPlayFunWebUrl()!=null){
+            String url = apiConfigManagerEntity.getPlayFunWebUrl() + AppConfig.PAY_RECHARGE_URL;
+            new WebViewDialog(getContext(), mActivity, url, new WebViewDialog.ConfirmOnclick() {
+                @Override
+                public void webToVipRechargeVC(Dialog dialog) {
+                    if (dialog != null) {
+                        dialog.dismiss();
                     }
-                });
-            }
+                    viewModel.start(VipSubscribeFragment.class.getCanonicalName());
+                }
 
-            @Override
-            public void cancel() {
-            }
+                @Override
+                public void vipRechargeDiamondSuccess(Dialog dialog, Integer coinValue) {
+                    if (dialog != null) {
+                        this.cancel();
+                        dialog.dismiss();
+                    }
+                }
 
-        }).noticeDialog().show();
+                @Override
+                public void moreRechargeDiamond(Dialog dialog) {
+                    dialog.dismiss();
+                    if(mActivity!=null && !mActivity.isFinishing()){
+                        mActivity.runOnUiThread(() -> googleCoinValueBox(false));
+                    }
+                }
+
+                @Override
+                public void cancel() {
+                }
+            }).noticeDialog().show();
+        }else{
+            googleCoinValueBox(false);
+        }
     }
 
     private void googleCoinValueBox(boolean isGiftSend) {

@@ -29,18 +29,16 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.config.TbarCenterImgConfig;
 import com.dl.playfun.databinding.FragmentMainBinding;
-import com.dl.playfun.entity.GameCoinBuy;
 import com.dl.playfun.entity.MqBroadcastGiftEntity;
 import com.dl.playfun.entity.MqBroadcastGiftUserEntity;
 import com.dl.playfun.entity.VersionEntity;
 import com.dl.playfun.event.MainTabEvent;
 import com.dl.playfun.event.TaskListEvent;
-import com.dl.playfun.event.TaskMainTabEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseFragment;
-import com.dl.playfun.ui.home.accost.HomeAccostDialog;
 import com.dl.playfun.ui.dialog.LockDialog;
 import com.dl.playfun.ui.home.HomeMainFragment;
+import com.dl.playfun.ui.home.accost.HomeAccostDialog;
 import com.dl.playfun.ui.message.MessageMainFragment;
 import com.dl.playfun.ui.mine.MineFragment;
 import com.dl.playfun.ui.radio.radiohome.RadioFragment;
@@ -48,7 +46,6 @@ import com.dl.playfun.ui.task.main.TaskMainFragment;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.StringUtil;
-import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralPayDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.dl.playfun.widget.dialog.version.view.UpdateDialogView;
 import com.dl.playfun.widget.pageview.FragmentAdapter;
@@ -58,7 +55,6 @@ import com.tencent.qcloud.tuikit.tuiconversation.ui.view.ConversationCommonHolde
 import java.util.List;
 
 import me.goldze.mvvmhabit.bus.RxBus;
-import me.goldze.mvvmhabit.utils.ToastUtils;
 import me.yokeyword.fragmentation.SupportFragment;
 
 /**
@@ -631,25 +627,6 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
             }
             binding.navigationMineText.setTextColor(getResources().getColor(R.color.navigation_checked));
         }
-    }
-
-
-    private void showRecharge() {
-        CoinExchargeItegralPayDialog coinExchargeItegralPayDialog = new CoinExchargeItegralPayDialog(getContext(),mActivity);
-        coinExchargeItegralPayDialog.show();
-        coinExchargeItegralPayDialog.setCoinRechargeSheetViewListener(new CoinExchargeItegralPayDialog.CoinRechargeSheetViewListener() {
-            @Override
-            public void onPaySuccess(CoinExchargeItegralPayDialog sheetView, GameCoinBuy sel_goodsEntity) {
-                sheetView.endGooglePlayConnect();
-                sheetView.dismiss();
-            }
-
-            @Override
-            public void onPayFailed(CoinExchargeItegralPayDialog sheetView, String msg) {
-                sheetView.dismiss();
-                ToastUtils.showShort(msg);
-            }
-        });
     }
 
     //初始化按钮状态

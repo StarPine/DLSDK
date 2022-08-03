@@ -6,11 +6,9 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
@@ -23,33 +21,27 @@ import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
-import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
-import com.dl.playfun.app.Injection;
 import com.dl.playfun.databinding.FragmentHomeMainBinding;
-import com.dl.playfun.entity.CoinExchangePriceInfo;
 import com.dl.playfun.entity.ConfigItemEntity;
 import com.dl.playfun.event.LocationChangeEvent;
 import com.dl.playfun.kl.view.VideoPresetActivity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocationManager;
-import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.ui.base.BaseRefreshFragment;
 import com.dl.playfun.ui.dialog.CityChooseDialog;
 import com.dl.playfun.ui.home.accost.HomeAccostDialog;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.viewadapter.CustomRefreshHeader;
-import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
-import com.google.android.material.tabs.TabLayout;
+import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.List;
 
 import me.goldze.mvvmhabit.bus.RxBus;
-import me.goldze.mvvmhabit.utils.ToastUtils;
 
 /**
  * @author wulei
@@ -207,21 +199,23 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
             @Override
             public void onChanged(Void unused) {
                 AppContext.instance().logEvent(AppsFlyerEvent.Top_up);
-                GameCoinExchargeSheetView coinRechargeSheetView = new GameCoinExchargeSheetView(mActivity);
+                CoinRechargeSheetView coinRechargeSheetView = new CoinRechargeSheetView(mActivity);
                 coinRechargeSheetView.show();
-                coinRechargeSheetView.setCoinRechargeSheetViewListener(new GameCoinExchargeSheetView.CoinRechargeSheetViewListener() {
-                    @Override
-                    public void onPaySuccess(GameCoinExchargeSheetView sheetView, CoinExchangePriceInfo sel_goodsEntity) {
-                        sheetView.dismiss();
-                    }
-
-                    @Override
-                    public void onPayFailed(GameCoinExchargeSheetView sheetView, String msg) {
-                        sheetView.dismiss();
-                        ToastUtils.showShort(msg);
-                        AppContext.instance().logEvent(AppsFlyerEvent.Failed_to_top_up);
-                    }
-                });
+//                GameCoinExchargeSheetView coinRechargeSheetView = new GameCoinExchargeSheetView(mActivity);
+//                coinRechargeSheetView.show();
+//                coinRechargeSheetView.setCoinRechargeSheetViewListener(new GameCoinExchargeSheetView.CoinRechargeSheetViewListener() {
+//                    @Override
+//                    public void onPaySuccess(GameCoinExchargeSheetView sheetView, CoinExchangePriceInfo sel_goodsEntity) {
+//                        sheetView.dismiss();
+//                    }
+//
+//                    @Override
+//                    public void onPayFailed(GameCoinExchargeSheetView sheetView, String msg) {
+//                        sheetView.dismiss();
+//                        ToastUtils.showShort(msg);
+//                        AppContext.instance().logEvent(AppsFlyerEvent.Failed_to_top_up);
+//                    }
+//                });
             }
         });
         //播放搭讪动画

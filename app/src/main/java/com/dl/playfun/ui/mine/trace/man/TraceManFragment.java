@@ -23,7 +23,6 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.widget.coinpaysheet.CoinPaySheet;
-import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralPayDialog;
 import com.dl.playfun.widget.dialog.TraceDialog;
 
 import me.goldze.mvvmhabit.bus.RxBus;
@@ -145,22 +144,14 @@ public class TraceManFragment extends BaseToolbarFragment<FragmentMineTraceManBi
                             @Override
                             public void confirm(Dialog dialog) {
                                 dialog.dismiss();
-                                new CoinPaySheet.Builder(mActivity).setPayParams(13, userId, getString(R.string.playfun_mine_trace_man_play_title), false, new CoinPaySheet.CoinPayDialogListener() {
-                                    @Override
-                                    public void onPaySuccess(CoinPaySheet sheet, String orderNo, Integer payPrice) {
-                                        sheet.dismiss();
-                                        AppContext.instance().logEvent(AppsFlyerEvent.unlock_my_visitor);
-                                        ToastUtils.showShort(R.string.playfun_pay_success);
-                                        viewModel.isPlay = 1;
-                                        viewModel.currentPage = 1;
-                                        binding.btnConfirm.setVisibility(View.GONE);
-                                        viewModel.loadDatas(1);
-                                    }
-
-                                    @Override
-                                    public void onRechargeSuccess(CoinExchargeItegralPayDialog coinExchargeItegralPayDialog) {
-                                        // do nothing
-                                    }
+                                new CoinPaySheet.Builder(mActivity).setPayParams(13, userId, getString(R.string.playfun_mine_trace_man_play_title), false, (sheet, orderNo, payPrice) -> {
+                                    sheet.dismiss();
+                                    AppContext.instance().logEvent(AppsFlyerEvent.unlock_my_visitor);
+                                    ToastUtils.showShort(R.string.playfun_pay_success);
+                                    viewModel.isPlay = 1;
+                                    viewModel.currentPage = 1;
+                                    binding.btnConfirm.setVisibility(View.GONE);
+                                    viewModel.loadDatas(1);
                                 }).build().show();
                             }
                         }).TraceVipDialog();

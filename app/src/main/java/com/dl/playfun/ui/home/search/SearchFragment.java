@@ -20,12 +20,9 @@ import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.FragmentSearchBinding;
-import com.dl.playfun.entity.CoinExchangePriceInfo;
 import com.dl.playfun.ui.base.BaseRefreshToolbarFragment;
 import com.dl.playfun.utils.ImmersionBarUtils;
-import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
-
-import me.goldze.mvvmhabit.utils.ToastUtils;
+import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 
 /**
  * 搜索
@@ -79,21 +76,23 @@ public class SearchFragment extends BaseRefreshToolbarFragment<FragmentSearchBin
             @Override
             public void onChanged(Void unused) {
                 AppContext.instance().logEvent(AppsFlyerEvent.Top_up);
-                GameCoinExchargeSheetView coinRechargeSheetView = new GameCoinExchargeSheetView(mActivity);
+                CoinRechargeSheetView coinRechargeSheetView = new CoinRechargeSheetView(mActivity);
                 coinRechargeSheetView.show();
-                coinRechargeSheetView.setCoinRechargeSheetViewListener(new GameCoinExchargeSheetView.CoinRechargeSheetViewListener() {
-                    @Override
-                    public void onPaySuccess(GameCoinExchargeSheetView sheetView, CoinExchangePriceInfo sel_goodsEntity) {
-                        sheetView.dismiss();
-                    }
-
-                    @Override
-                    public void onPayFailed(GameCoinExchargeSheetView sheetView, String msg) {
-                        sheetView.dismiss();
-                        ToastUtils.showShort(msg);
-                        AppContext.instance().logEvent(AppsFlyerEvent.Failed_to_top_up);
-                    }
-                });
+//                GameCoinExchargeSheetView coinRechargeSheetView = new GameCoinExchargeSheetView(mActivity);
+//                coinRechargeSheetView.show();
+//                coinRechargeSheetView.setCoinRechargeSheetViewListener(new GameCoinExchargeSheetView.CoinRechargeSheetViewListener() {
+//                    @Override
+//                    public void onPaySuccess(GameCoinExchargeSheetView sheetView, CoinExchangePriceInfo sel_goodsEntity) {
+//                        sheetView.dismiss();
+//                    }
+//
+//                    @Override
+//                    public void onPayFailed(GameCoinExchargeSheetView sheetView, String msg) {
+//                        sheetView.dismiss();
+//                        ToastUtils.showShort(msg);
+//                        AppContext.instance().logEvent(AppsFlyerEvent.Failed_to_top_up);
+//                    }
+//                });
             }
         });
         //播放搭讪动画

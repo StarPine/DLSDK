@@ -19,16 +19,16 @@ import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
+import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.Injection;
 import com.dl.playfun.databinding.FragmentUserDetailBinding;
-import com.dl.playfun.entity.CoinExchangePriceInfo;
+import com.dl.playfun.entity.ApiConfigManagerEntity;
 import com.dl.playfun.entity.EvaluateEntity;
 import com.dl.playfun.entity.EvaluateItemEntity;
 import com.dl.playfun.entity.EvaluateObjEntity;
-import com.dl.playfun.entity.GameCoinBuy;
 import com.dl.playfun.entity.UserDetailEntity;
 import com.dl.playfun.helper.DialogHelper;
 import com.dl.playfun.manager.ConfigManager;
@@ -47,12 +47,12 @@ import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.widget.AppBarStateChangeListener;
 import com.dl.playfun.widget.bottomsheet.BottomSheet;
 import com.dl.playfun.widget.coinpaysheet.CoinPaySheet;
-import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralPayDialog;
-import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
+import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 import com.dl.playfun.widget.custom.FlowAdapter;
 import com.dl.playfun.widget.dialog.MMAlertDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.dl.playfun.widget.dialog.TraceDialog;
+import com.dl.playfun.widget.dialog.WebViewDialog;
 import com.dl.playfun.widget.emptyview.EmptyState;
 import com.google.android.material.appbar.AppBarLayout;
 import com.luck.picture.lib.entity.LocalMedia;
@@ -143,14 +143,8 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
 
     @Override
     public void initViewObservable() {
-//        viewModel.uc.loadEvaluate.observe(this, new Observer<List<EvaluateEntity>>() {
-//            @Override
-//            public void onChanged(List<EvaluateEntity> evaluateEntities) {
-//
-//            }
-//        });
         viewModel.uc.sendDialogViewEvent.observe(this, event -> {
-            paySelectionboxChoose(false);
+            paySelectionboxChoose();
         });
         //对方忙线
         viewModel.uc.otherBusy.observe(this, o -> {
@@ -637,18 +631,10 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
 //                    if(dialog!=null){
 //                        dialog.dismiss();
 //                    }
-                    new CoinPaySheet.Builder(mActivity).setPayParams(3, userId, getString(R.string.playfun_unlock_album), false, new CoinPaySheet.CoinPayDialogListener() {
-                        @Override
-                        public void onPaySuccess(CoinPaySheet sheet, String orderNo, Integer payPrice) {
-                            sheet.dismiss();
-                            ToastUtils.showShort(R.string.playfun_pay_success);
-                            viewModel.payLockAlbumSuccess(userId);
-                        }
-
-                        @Override
-                        public void onRechargeSuccess(CoinExchargeItegralPayDialog coinExchargeItegralPayDialog) {
-                            // do nothing
-                        }
+                    new CoinPaySheet.Builder(mActivity).setPayParams(3, userId, getString(R.string.playfun_unlock_album), false, (sheet, orderNo, payPrice) -> {
+                        sheet.dismiss();
+                        ToastUtils.showShort(R.string.playfun_pay_success);
+                        viewModel.payLockAlbumSuccess(userId);
                     }).build().show();
                 })
                 .getTop2BottomDialog()
@@ -662,18 +648,10 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
                     .setConfirmText(String.format(getString(R.string.playfun_pay_diamond), coinPrice))
                     .setConfirmOnlick(dialog -> {
                         dialog.dismiss();
-                        new CoinPaySheet.Builder(mActivity).setPayParams(3, userId, getString(R.string.playfun_unlock_album), false, new CoinPaySheet.CoinPayDialogListener() {
-                            @Override
-                            public void onPaySuccess(CoinPaySheet sheet, String orderNo, Integer payPrice) {
-                                sheet.dismiss();
-                                ToastUtils.showShort(R.string.playfun_pay_success);
-                                viewModel.payLockAlbumSuccess(userId);
-                            }
-
-                            @Override
-                            public void onRechargeSuccess(CoinExchargeItegralPayDialog coinExchargeItegralPayDialog) {
-                                // do nothing
-                            }
+                        new CoinPaySheet.Builder(mActivity).setPayParams(3, userId, getString(R.string.playfun_unlock_album), false, (sheet, orderNo, payPrice) -> {
+                            sheet.dismiss();
+                            ToastUtils.showShort(R.string.playfun_pay_success);
+                            viewModel.payLockAlbumSuccess(userId);
                         }).build().show();
                     })
                     .chooseType(MVDialog.TypeEnum.CENTER)
@@ -706,18 +684,10 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
                     .setConfirmText(String.format(getString(R.string.playfun_pay_diamond), coinPrice))
                     .setConfirmOnlick(dialog -> {
                         dialog.dismiss();
-                        new CoinPaySheet.Builder(mActivity).setPayParams(6, userId, getString(R.string.playfun_check_detail), false, new CoinPaySheet.CoinPayDialogListener() {
-                            @Override
-                            public void onPaySuccess(CoinPaySheet sheet, String orderNo, Integer payPrice) {
-                                sheet.dismiss();
-                                ToastUtils.showShort(R.string.playfun_pay_success);
-                                viewModel.chatPaySuccess();
-                            }
-
-                            @Override
-                            public void onRechargeSuccess(CoinExchargeItegralPayDialog coinExchargeItegralPayDialog) {
-                                // do nothing
-                            }
+                        new CoinPaySheet.Builder(mActivity).setPayParams(6, userId, getString(R.string.playfun_check_detail), false, (sheet, orderNo, payPrice) -> {
+                            sheet.dismiss();
+                            ToastUtils.showShort(R.string.playfun_pay_success);
+                            viewModel.chatPaySuccess();
                         }).build().show();
                     })
                     .chooseType(MVDialog.TypeEnum.CENTER)
@@ -736,66 +706,60 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
     }
 
     //支付框样式选择
-    private void paySelectionboxChoose(boolean b) {
+    private void paySelectionboxChoose() {
         if (ConfigManager.getInstance().isMale()) {
             if (ConfigManager.getInstance().isVip()) {
-                googleCoinValueBox(b);
+                googleCoinValueBox();
             } else {
-                dialogRechargeShow(b);
+                dialogRechargeShow();
             }
         } else {
-            googleCoinValueBox(b);
+            googleCoinValueBox();
         }
     }
 
-    private void googleCoinValueBox(boolean isGiftSend) {
-        CoinExchargeItegralPayDialog coinExchargeItegralPayDialog = new CoinExchargeItegralPayDialog(getContext(),mActivity);
-        coinExchargeItegralPayDialog.show();
-        coinExchargeItegralPayDialog.setCoinRechargeSheetViewListener(new CoinExchargeItegralPayDialog.CoinRechargeSheetViewListener() {
-            @Override
-            public void onPaySuccess(CoinExchargeItegralPayDialog sheetView, GameCoinBuy sel_goodsEntity) {
-                sheetView.endGooglePlayConnect();
-                sheetView.dismiss();
-                MVDialog.getInstance(UserDetailFragment.this.getContext())
-                        .setTitele(getStringByResId(R.string.playfun_recharge_coin_success))
-                        .setConfirmText(getStringByResId(R.string.playfun_confirm))
-                        .setConfirmOnlick(dialog -> {
-                            dialog.dismiss();
-                        })
-                        .chooseType(MVDialog.TypeEnum.CENTER)
-                        .show();
-            }
-
-            @Override
-            public void onPayFailed(CoinExchargeItegralPayDialog sheetView, String msg) {
-                sheetView.dismiss();
-                ToastUtils.showShort(msg);
-                AppContext.instance().logEvent(AppsFlyerEvent.Failed_to_top_up);
-            }
-        });
-
+    private void googleCoinValueBox() {
+        CoinRechargeSheetView coinRechargeSheetView = new CoinRechargeSheetView(mActivity);
+        coinRechargeSheetView.show();
     }
 
     //弹出钻石充值
-    private void dialogRechargeShow(boolean isGiftSend) {
-        if (!isGiftSend) {
-            AppContext.instance().logEvent(AppsFlyerEvent.im_topup);
-        }
-        AppContext.instance().logEvent(AppsFlyerEvent.Top_up);
-        GameCoinExchargeSheetView coinRechargeSheetView = new GameCoinExchargeSheetView(mActivity);
-        coinRechargeSheetView.show();
-        coinRechargeSheetView.setCoinRechargeSheetViewListener(new GameCoinExchargeSheetView.CoinRechargeSheetViewListener() {
-            @Override
-            public void onPaySuccess(GameCoinExchargeSheetView sheetView, CoinExchangePriceInfo sel_goodsEntity) {
-                sheetView.dismiss();
-            }
+    private void dialogRechargeShow() {
+        ApiConfigManagerEntity apiConfigManagerEntity = ConfigManager.getInstance().getAppRepository().readApiConfigManagerEntity();
+        if(apiConfigManagerEntity!=null && apiConfigManagerEntity.getPlayFunWebUrl()!=null){
+            String url = apiConfigManagerEntity.getPlayFunWebUrl() + AppConfig.PAY_RECHARGE_URL;
+            new WebViewDialog(getContext(), mActivity, url, new WebViewDialog.ConfirmOnclick() {
+                @Override
+                public void webToVipRechargeVC(Dialog dialog) {
+                    if (dialog != null) {
+                        dialog.dismiss();
+                    }
+                    viewModel.start(VipSubscribeFragment.class.getCanonicalName());
+                }
 
-            @Override
-            public void onPayFailed(GameCoinExchargeSheetView sheetView, String msg) {
-                sheetView.dismiss();
-                com.blankj.utilcode.util.ToastUtils.showShort(msg);
-            }
-        });
+                @Override
+                public void vipRechargeDiamondSuccess(Dialog dialog, Integer coinValue) {
+                    if (dialog != null) {
+                        this.cancel();
+                        dialog.dismiss();
+                    }
+                }
+
+                @Override
+                public void moreRechargeDiamond(Dialog dialog) {
+                    dialog.dismiss();
+                    if(mActivity!=null && !mActivity.isFinishing()){
+                        mActivity.runOnUiThread(() -> googleCoinValueBox());
+                    }
+                }
+
+                @Override
+                public void cancel() {
+                }
+            }).noticeDialog().show();
+        }else{
+            googleCoinValueBox();
+        }
     }
 
 }

@@ -360,39 +360,5 @@
             </LinearLayout>
 
         </com.scwang.smart.refresh.layout.SmartRefreshLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@color/white"
-            android:clipToPadding="false"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal"
-            android:padding="25dp"
-            android:visibility="gone">
-
-
-            <Button
-                android:id="@+id/btn_doing_task"
-                style="@style/ButtonDoingTsak"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="12dp"
-                android:layout_weight="1"
-                android:text="@string/playfun_dialong_coin_doing_task"
-                android:visibility="@{viewModel.isShowEmpty?View.VISIBLE:View.GONE}"
-                binding:onClickCommand="@{viewModel.doingTasknClickCommand}" />
-
-            <Button
-                android:id="@+id/btn_recharge"
-                style="@style/ButtonPrimary"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
-                android:layout_weight="1"
-                android:text="@string/playfun_dialong_coin_rechaege_top_up" />
-        </LinearLayout>
-
     </LinearLayout>
 </layout>

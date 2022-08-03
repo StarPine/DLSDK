@@ -41,7 +41,6 @@ import com.dl.playfun.ui.certification.certificationmale.CertificationMaleFragme
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.widget.coinpaysheet.CoinPaySheet;
-import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralPayDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.luck.picture.lib.permissions.PermissionChecker;
 
@@ -359,18 +358,10 @@ public class IssuanceProgramFragment extends BaseToolbarFragment<FragmentIssuanc
             titles = StringUtils.getString(R.string.playfun_send_show);
         }
 
-        new CoinPaySheet.Builder(mActivity).setPayParams(payType, ConfigManager.getInstance().getAppRepository().readUserData().getId(), titles, false, new CoinPaySheet.CoinPayDialogListener() {
-            @Override
-            public void onPaySuccess(CoinPaySheet sheet, String orderNo, Integer payPrice) {
-                sheet.dismiss();
-                ToastUtils.showShort(R.string.playfun_pay_success);
-                viewModel.sendConfirm();
-            }
-
-            @Override
-            public void onRechargeSuccess(CoinExchargeItegralPayDialog coinExchargeItegralPayDialog) {
-                // do nothing
-            }
+        new CoinPaySheet.Builder(mActivity).setPayParams(payType, ConfigManager.getInstance().getAppRepository().readUserData().getId(), titles, false, (sheet, orderNo, payPrice) -> {
+            sheet.dismiss();
+            ToastUtils.showShort(R.string.playfun_pay_success);
+            viewModel.sendConfirm();
         }).build().show();
     }
 

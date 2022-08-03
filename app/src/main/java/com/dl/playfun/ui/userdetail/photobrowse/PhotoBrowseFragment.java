@@ -15,7 +15,6 @@ import com.dl.playfun.databinding.FragmentPhotoBrowseBinding;
 import com.dl.playfun.entity.AlbumPhotoEntity;
 import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.widget.coinpaysheet.CoinPaySheet;
-import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralPayDialog;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 
 import java.util.ArrayList;
@@ -115,34 +114,18 @@ public class PhotoBrowseFragment extends BaseFragment<FragmentPhotoBrowseBinding
     }
 
     private void payReaPackagePhoto(int photoId) {
-        new CoinPaySheet.Builder(mActivity).setPayParams(4, photoId, getString(R.string.playfun_red_package_photo), false, new CoinPaySheet.CoinPayDialogListener() {
-            @Override
-            public void onPaySuccess(CoinPaySheet sheet, String orderNo, Integer payPrice) {
-                sheet.dismiss();
-                ToastUtils.showShort(R.string.playfun_pay_success);
-                viewModel.payRedPackageSuccess(photoId);
-            }
-
-            @Override
-            public void onRechargeSuccess(CoinExchargeItegralPayDialog coinExchargeItegralPayDialog) {
-
-            }
+        new CoinPaySheet.Builder(mActivity).setPayParams(4, photoId, getString(R.string.playfun_red_package_photo), false, (sheet, orderNo, payPrice) -> {
+            sheet.dismiss();
+            ToastUtils.showShort(R.string.playfun_pay_success);
+            viewModel.payRedPackageSuccess(photoId);
         }).build().show();
     }
 
     private void payReaPackageVideo(int photoId) {
-        new CoinPaySheet.Builder(mActivity).setPayParams(5, photoId, getString(R.string.playfun_red_package_video), false, new CoinPaySheet.CoinPayDialogListener() {
-            @Override
-            public void onPaySuccess(CoinPaySheet sheet, String orderNo, Integer payPrice) {
-                sheet.dismiss();
-                ToastUtils.showShort(R.string.playfun_pay_success);
-                viewModel.payRedPackageSuccess(photoId);
-            }
-
-            @Override
-            public void onRechargeSuccess(CoinExchargeItegralPayDialog coinExchargeItegralPayDialog) {
-
-            }
+        new CoinPaySheet.Builder(mActivity).setPayParams(5, photoId, getString(R.string.playfun_red_package_video), false, (sheet, orderNo, payPrice) -> {
+            sheet.dismiss();
+            ToastUtils.showShort(R.string.playfun_pay_success);
+            viewModel.payRedPackageSuccess(photoId);
         }).build().show();
     }
 

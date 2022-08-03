@@ -44,7 +44,7 @@ import me.goldze.mvvmhabit.utils.ToastUtils;
 /**
  * Author: 彭石林
  * Time: 2021/9/29 14:31
- * Description: This is CoinExchargeItegralDialog
+ * Description: 积分购买兑换弹窗
  */
 public class CoinExchargeItegralDialog extends BaseDialog implements View.OnClickListener {
 
