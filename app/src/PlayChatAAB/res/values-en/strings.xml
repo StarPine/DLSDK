@@ -2,19 +2,19 @@
 <resources>
     <string name="splash_init_tv">Startup failed, click Retry</string>
     <string name="splash_init_tv2">Click Retry</string>
-    <string name="register_title">Log in with phone number</string>
+    <string name="register_title">Log in</string>
     <string name="register_bom_title">Other login methods</string>
     <string name="register_bom_title2">Other Logins</string>
     <string name="agree">Agree</string>
     <string name="and">and</string>
     <string name="terms_of_service">Terms of Service</string>
     <string name="privacy_policy">Privacy Policy</string>
-    <string name="register_title_detail">Mobile phone numbers that are not registered are automatically created after registration</string>
+    <string name="register_title_detail">Log in with phone number</string>
 
     <string name="register_error_hint">Please select an area code</string>
 
     <string name="mobile_hint">Please enter phone number</string>
-    <string name="code_hint">Please enter the verification code</string>
+    <string name="code_hint">Enter verification code</string>
     <string name="again_send">Resend</string>
     <string name="code_sended">Sent</string>
     <string name="get_userdata_defail">Failed to get user data!</string>
