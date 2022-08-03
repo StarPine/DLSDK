@@ -251,33 +251,43 @@ public class JMTUICallVideoView extends BaseTUICallView {
             public void run() {
                 //用户进入房间
                 showCallingView();
-                //1.先造一个虚拟的用户添加到屏幕上
-                UserModel model = new UserModel();
-                model.userId = userId;
-                model.userAvatar = "";
-                mCallUserInfoList.add(model);
-                mCallUserModelMap.put(model.userId, model);
-                showVideoView(model);
                 //发送订阅事件通知有人加入了视频聊天房
                 RxBus.getDefault().post(new CallVideoUserEnterEvent(userId));
-                CallingInfoManager.getInstance().getUserInfoByUserId(userId, new CallingInfoManager.UserCallback() {
+                UserModel userModel = new UserModel();
+                userModel.userId = userId;
+                mCallUserModelMap.put(userId, userModel);
+                TRTCVideoLayout videoLayout = showVideoView(userModel);
+                loadUserInfo(userModel, videoLayout);
+            }
+        });
+    }
+
+    //查询昵称和头像
+    private void loadUserInfo(final UserModel userModel, TRTCVideoLayout layout) {
+        if (null == userModel || null == layout) {
+            return;
+        }
+        CallingInfoManager.getInstance().getUserInfoByUserId(userModel.userId, new CallingInfoManager.UserCallback() {
+            @Override
+            public void onSuccess(UserModel model) {
+                userModel.userName = model.userName;
+                userModel.userAvatar = model.userAvatar;
+                runOnUiThread(new Runnable() {
                     @Override
-                    public void onSuccess(UserModel model) {
+                    public void run() {
                         if (isDestroyed()) {
                             return;
                         }
-                        TRTCVideoLayout layout = mLayoutManagerTrtc.findCloudView(model.userId);
-                        if (layout != null) {
-                            layout.setUserName(model.userName);
-                            ImageLoader.loadImage(mContext, layout.getHeadImg(), model.userAvatar, R.drawable.trtccalling_ic_avatar);
-                        }
-                    }
-
-                    @Override
-                    public void onFailed(int code, String msg) {
-                        ToastUtils.showLong(mContext.getString(R.string.trtccalling_toast_search_fail, msg));
+                        layout.setUserName(userModel.userName);
+                        ImageLoader.loadImage(mContext, layout.getHeadImg(), userModel.userAvatar,
+                                com.tencent.liteav.trtccalling.R.drawable.trtccalling_ic_avatar);
                     }
                 });
+            }
+
+            @Override
+            public void onFailed(int code, String msg) {
+                ToastUtils.showLong(mContext.getString(com.tencent.liteav.trtccalling.R.string.trtccalling_toast_search_fail, msg));
             }
         });
     }
@@ -605,12 +615,12 @@ public class JMTUICallVideoView extends BaseTUICallView {
     }
 
     // 自己的video变成小窗口， 对方video变成全屏显示
-    private void showVideoView(final UserModel userInfo) {
+    private TRTCVideoLayout showVideoView(final UserModel userInfo) {
         isChatting = true;
         // 添加到 TRTCVideoLayoutManager, 返回的是对方的layout
         TRTCVideoLayout videoLayout = addUserToManager(userInfo);
         if (videoLayout == null) {
-            return;
+            return null;
         }
         // kl 添加以下代码，一对一视频聊天的
         TRTCVideoLayout myLayout = mLayoutManagerTrtc.findCloudView(mSelfModel.userId);
@@ -629,6 +639,7 @@ public class JMTUICallVideoView extends BaseTUICallView {
         // -----------------
         videoLayout.setVideoAvailable(!mIsAudioMode);
         videoLayout.setRemoteIconAvailable(mIsAudioMode);
+        return videoLayout;
     }
 
     private TRTCVideoLayout addUserToManager(UserModel userInfo) {
@@ -679,6 +690,13 @@ public class JMTUICallVideoView extends BaseTUICallView {
 //        mSwitchCameraImg.setActivated(mIsFrontCamera);
         ToastUtils.showLong(com.tencent.liteav.trtccalling.R.string.trtccalling_toast_switch_camera);
     }
+
+    public void switchVideoView() {
+        //todo 临时方案
+        mLayoutManagerTrtc.switchVideoView();
+    }
+
+
 
     /**
      * @return void

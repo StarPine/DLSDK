@@ -280,7 +280,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
     public BindingCommand switchCameraOnclick = new BindingCommand(new BindingAction() {
         @Override
         public void call() {
-            mCallVideoView.switchCamera();
+            mCallVideoView.switchVideoView();
         }
     });
 

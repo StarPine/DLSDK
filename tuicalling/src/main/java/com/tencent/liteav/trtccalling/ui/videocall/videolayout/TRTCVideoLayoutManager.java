@@ -15,6 +15,7 @@ import com.tencent.liteav.trtccalling.ui.base.VideoLayoutFactory;
 import com.tencent.rtmp.ui.TXCloudVideoView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -339,11 +340,7 @@ public class TRTCVideoLayoutManager extends RelativeLayout {
             TRTCLayoutEntity entity = mVideoFactory.mLayoutEntityList.get(size - i - 1);
             LayoutParams layoutParams = mFloatParamList.get(i);
             entity.layout.setLayoutParams(layoutParams);
-            if (i == 0) {
-                entity.layout.setMoveAble(false);
-            } else {
-                entity.layout.setMoveAble(true);
-            }
+            entity.layout.setMoveAble(i != 0);
             addFloatViewClickListener(entity);
             bringChildToFront(entity.layout);
         }
@@ -382,4 +379,13 @@ public class TRTCVideoLayoutManager extends RelativeLayout {
         mVideoFactory.mLayoutEntityList.addLast(entity);
         makeFloatLayout();
     }
+
+    /**
+     * 切换双方视图层级和位置
+     */
+    public void switchVideoView() {
+        Collections.reverse(mVideoFactory.mLayoutEntityList);
+        makeFloatLayout();
+    }
+
 }
