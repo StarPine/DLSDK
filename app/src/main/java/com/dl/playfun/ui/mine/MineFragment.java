@@ -35,6 +35,7 @@ import com.dl.playfun.entity.BrowseNumberEntity;
 import com.dl.playfun.entity.EvaluateEntity;
 import com.dl.playfun.entity.EvaluateItemEntity;
 import com.dl.playfun.entity.EvaluateObjEntity;
+import com.dl.playfun.entity.UserInfoEntity;
 import com.dl.playfun.ui.base.BaseRefreshFragment;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
 import com.dl.playfun.ui.dialog.MyEvaluateDialog;
@@ -155,26 +156,29 @@ public class MineFragment extends BaseRefreshFragment<FragmentMineBinding, MineV
         binding.audioStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                binding.audioStop.setImageResource(R.drawable.mine_audio_stop_img);
-                if (AudioPlayer.getInstance().isPlaying()) {
-                    AudioPlayer.getInstance().stopPlay();
-                    Glide.with(MineFragment.this.getContext()).asGif().load(R.drawable.audio_waves_stop)
+                UserInfoEntity userInfoEntity = viewModel.userInfoEntity.get();
+                if(userInfoEntity!=null && !StringUtils.isEmpty(userInfoEntity.getSound()) ){
+                    binding.audioStop.setImageResource(R.drawable.mine_audio_stop_img);
+                    if (AudioPlayer.getInstance().isPlaying()) {
+                        AudioPlayer.getInstance().stopPlay();
+                        Glide.with(MineFragment.this.getContext()).asGif().load(R.drawable.audio_waves_stop)
+                                .error(R.drawable.audio_waves_stop)
+                                .placeholder(R.drawable.audio_waves_stop)
+                                .into(binding.audioWaves);
+                        return;
+                    }
+                    Glide.with(MineFragment.this.getContext()).asGif().load(R.drawable.audio_waves)
                             .error(R.drawable.audio_waves_stop)
                             .placeholder(R.drawable.audio_waves_stop)
                             .into(binding.audioWaves);
-                    return;
+                    AudioPlayer.getInstance().startPlay(StringUtil.getFullAudioUrl(userInfoEntity.getSound()), new AudioPlayer.Callback() {
+                        @Override
+                        public void onCompletion(Boolean success, Boolean isOutTime) {
+                            binding.audioStop.setImageResource(R.drawable.mine_audio_start_img);
+                            binding.audioWaves.setImageResource(R.drawable.audio_waves_stop);
+                        }
+                    });
                 }
-                Glide.with(MineFragment.this.getContext()).asGif().load(R.drawable.audio_waves)
-                        .error(R.drawable.audio_waves_stop)
-                        .placeholder(R.drawable.audio_waves_stop)
-                        .into(binding.audioWaves);
-                AudioPlayer.getInstance().startPlay(StringUtil.getFullAudioUrl(viewModel.userInfoEntity.get().getSound()), new AudioPlayer.Callback() {
-                    @Override
-                    public void onCompletion(Boolean success, Boolean isOutTime) {
-                        binding.audioStop.setImageResource(R.drawable.mine_audio_start_img);
-                        binding.audioWaves.setImageResource(R.drawable.audio_waves_stop);
-                    }
-                });
             }
         });
     }

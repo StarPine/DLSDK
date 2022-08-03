@@ -1627,7 +1627,9 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             viewModel.animGiftList.remove(0);
         }
         //播放完成
-        giftView.setVisibility(View.GONE);
+        if(giftView!=null){
+            giftView.setVisibility(View.GONE);
+        }
         viewModel.animGiftPlaying = false;
         viewModel.playSVGAGift();
     }

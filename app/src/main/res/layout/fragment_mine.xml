@@ -379,7 +379,7 @@
                                             android:text="@{viewModel.userInfoEntity.sex==1?@string/playfun_mine_my_visitors_man:@string/playfun_mine_my_visitors_many}"
                                             android:textColor="@color/white"
                                             android:textSize="12sp"
-                                            tools:hint="@string/mine_my_visitors_man" />
+                                            tools:hint="@string/playfun_mine_my_visitors_man" />
                                     </RelativeLayout>
 
                                 </RelativeLayout>
