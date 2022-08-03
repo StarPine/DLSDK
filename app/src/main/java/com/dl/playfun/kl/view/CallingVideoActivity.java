@@ -41,6 +41,7 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.entity.CallingInviteInfo;
 import com.dl.playfun.entity.CoinExchangePriceInfo;
+import com.dl.playfun.entity.CrystalDetailsConfigEntity;
 import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.event.CallChatingHangupEvent;
 import com.dl.playfun.kl.viewmodel.VideoCallViewModel;
@@ -215,6 +216,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
     @Override
     public void initData() {
         super.initData();
+        hideExchangeRules();
         giftEffects = binding.giftEffects;
         mFaceUnityView = binding.fuView;
         //1.先打开渲染器
@@ -294,7 +296,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                         @Override
                         public void confirm(Dialog dialog) {
                             ConfigManagerUtil.getInstance().putExchangeRulesFlag(true);
-                            viewModel.isShowedExchangeRules.set(true);
+                            viewModel.isHideExchangeRules.set(true);
                         }
                     })
                     .getCrystalExchange(data)
@@ -447,6 +449,25 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                 giftBagDialog.show();
             }
         });
+    }
+
+
+    /**
+     * 隐藏水晶兑换规则弹框
+     */
+    private void hideExchangeRules() {
+        CrystalDetailsConfigEntity crystalDetailsConfig = ConfigManager.getInstance().getAppRepository().readCrystalDetailsConfig();
+        boolean isHideExchangeRules = ConfigManagerUtil.getInstance().getExchangeRulesFlag();
+        boolean isMale = ConfigManager.getInstance().isMale();
+        if (isMale){
+            if (crystalDetailsConfig.getMaleIsShow() != 1 || isHideExchangeRules){
+                viewModel.isHideExchangeRules.set(true);
+            }
+        }else {
+            if (crystalDetailsConfig.getFemaleIsShow() != 1 || isHideExchangeRules){
+                viewModel.isHideExchangeRules.set(true);
+            }
+        }
     }
 
     private void setTimerForCallinfo() {

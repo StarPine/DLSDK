@@ -38,6 +38,7 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.ActivityCallAudioChatingBinding;
 import com.dl.playfun.entity.CoinExchangePriceInfo;
+import com.dl.playfun.entity.CrystalDetailsConfigEntity;
 import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.event.CallChatingHangupEvent;
 import com.dl.playfun.kl.Utils;
@@ -45,7 +46,6 @@ import com.dl.playfun.kl.viewmodel.AudioCallChatingViewModel;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocaleManager;
 import com.dl.playfun.ui.dialog.GiftBagDialog;
-import com.dl.playfun.ui.message.chatdetail.ChatDetailFragment;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.StringUtil;
@@ -178,6 +178,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
     public void initData() {
         super.initData();
         giftEffects = binding.giftEffects;
+        hideExchangeRules();
         viewModel.init(this);
         viewModel.roomId = roomId;
         viewModel.fromUserId = fromUserId;
@@ -203,7 +204,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                         @Override
                         public void confirm(Dialog dialog) {
                             ConfigManagerUtil.getInstance().putExchangeRulesFlag(true);
-                            viewModel.isShowedExchangeRules.set(true);
+                            viewModel.isHideExchangeRules.set(true);
                         }
                     })
                     .getCrystalExchange(data)
@@ -342,6 +343,25 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                 giftBagDialog.show();
             }
         });
+    }
+
+
+    /**
+     * 隐藏水晶兑换规则弹框
+     */
+    private void hideExchangeRules() {
+        CrystalDetailsConfigEntity crystalDetailsConfig = ConfigManager.getInstance().getAppRepository().readCrystalDetailsConfig();
+        boolean isHideExchangeRules = ConfigManagerUtil.getInstance().getExchangeRulesFlag();
+        boolean isMale = ConfigManager.getInstance().isMale();
+        if (isMale){
+            if (crystalDetailsConfig.getMaleIsShow() != 1 || isHideExchangeRules){
+                viewModel.isHideExchangeRules.set(true);
+            }
+        }else {
+            if (crystalDetailsConfig.getFemaleIsShow() != 1 || isHideExchangeRules){
+                viewModel.isHideExchangeRules.set(true);
+            }
+        }
     }
 
     private void setTimerForCallinfo() {

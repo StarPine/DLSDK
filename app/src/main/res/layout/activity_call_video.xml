@@ -35,11 +35,11 @@
             android:visibility="@{viewModel.mainVIewShow?View.GONE:View.VISIBLE}"
             tools:visibility="gone">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#FF270830"
-                android:visibility="@{safeUnbox(viewModel.isCalledWaitingBinding) ? View.VISIBLE : View.GONE}" />
+<!--            <View-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:background="#FF270830"-->
+<!--                android:visibility="@{safeUnbox(viewModel.isCalledWaitingBinding) ? View.VISIBLE : View.GONE}" />-->
 
             <RelativeLayout
                 android:layout_width="178dp"
@@ -647,7 +647,7 @@
                 android:layout_centerInParent="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="13dp"
-                android:visibility="@{viewModel.isShowedExchangeRules?View.GONE:View.VISIBLE}"
+                android:visibility="@{viewModel.isHideExchangeRules?View.GONE:View.VISIBLE}"
                 onClickCommand="@{viewModel.crystalOnClick}"
                 >
 

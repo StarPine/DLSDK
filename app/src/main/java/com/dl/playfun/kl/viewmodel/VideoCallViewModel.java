@@ -34,7 +34,6 @@ import com.dl.playfun.entity.CallingInfoEntity;
 import com.dl.playfun.entity.CallingInviteInfo;
 import com.dl.playfun.entity.CallingStatusEntity;
 import com.dl.playfun.entity.CallingVideoTryToReconnectEvent;
-import com.dl.playfun.entity.CustomMessageIMTextEntity;
 import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.entity.MallWithdrawTipsInfoEntity;
 import com.dl.playfun.entity.UserDataEntity;
@@ -88,7 +87,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
     public ObservableField<Boolean> isShowBeauty = new ObservableField(false);
 
     //是否已经显示过兑换规则
-    public ObservableField<Boolean> isShowedExchangeRules = new ObservableField<>(false);
+    public ObservableField<Boolean> isHideExchangeRules = new ObservableField<>(false);
 
     //录音文案数组坐标
     public int sayHiePosition = 0;
@@ -394,7 +393,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
      * 设置兑换规则框是否显示
      */
     public void setShowRule(){
-        isShowedExchangeRules.set(ConfigManagerUtil.getInstance().getExchangeRulesFlag());
+        isHideExchangeRules.set(ConfigManagerUtil.getInstance().getExchangeRulesFlag());
     }
 
     //    protected TRTCCallingDelegate mTRTCCallingDelegate;
