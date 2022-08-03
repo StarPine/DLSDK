@@ -234,12 +234,16 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
             }
             cityChooseDialog.show();
             cityChooseDialog.setCityChooseDialogListener((dialog1, itemEntity) -> {
-                viewModel.cityId = itemEntity.getId();
-                viewModel.regionTitle.set(itemEntity.getName());
+                if(itemEntity!=null){
+                    viewModel.cityId = itemEntity.getId();
+                    viewModel.regionTitle.set(itemEntity.getName());
+                }else{
+                    viewModel.cityId = null;
+                    viewModel.regionTitle.set(StringUtils.getString(R.string.playfun_tab_female_1));
+                }
                 binding.refreshLayout.autoRefresh();
                 dialog1.dismiss();
-
-            } );
+            });
         });
         //放大图片
         viewModel.radioUC.zoomInp.observe(this, new Observer<String>() {

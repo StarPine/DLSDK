@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.airbnb.lottie.LottieAnimationView;
 import com.blankj.utilcode.util.IntentUtils;
 import com.blankj.utilcode.util.ObjectUtils;
+import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
@@ -149,8 +150,13 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
             }
             cityChooseDialog.show();
             cityChooseDialog.setCityChooseDialogListener((dialog1, itemEntity) -> {
-                viewModel.cityId.set(itemEntity.getId());
-                viewModel.regionTitle.set(itemEntity.getName());
+                if(itemEntity!=null){
+                    viewModel.cityId.set(itemEntity.getId());
+                    viewModel.regionTitle.set(itemEntity.getName());
+                }else{
+                    viewModel.cityId.set(null);
+                    viewModel.regionTitle.set(StringUtils.getString(R.string.playfun_tab_female_1));
+                }
                 binding.refreshLayout.autoRefresh();
                 dialog1.dismiss();
 
