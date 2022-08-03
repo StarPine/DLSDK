@@ -70,6 +70,7 @@ public class JMTUICallVideoView extends BaseTUICallView {
     private List<UserModel> mOtherInvitingUserInfoList;
     private boolean mIsHandsFree = true;
     private boolean mIsFrontCamera = true;
+    private boolean isStartRemoteView = false;
     private boolean isChatting = false;  // 是否已经接通
     private int roomId = 0;
     //断网总时间
@@ -257,6 +258,9 @@ public class JMTUICallVideoView extends BaseTUICallView {
                 userModel.userId = userId;
                 mCallUserModelMap.put(userId, userModel);
                 TRTCVideoLayout videoLayout = showVideoView(userModel);
+                if (!isStartRemoteView){//没有拉流时，重新拉流
+                    onUserVideoAvailable(userId,true);
+                }
                 loadUserInfo(userModel, videoLayout);
             }
         });
@@ -396,8 +400,10 @@ public class JMTUICallVideoView extends BaseTUICallView {
         if (layout != null) {
             layout.setVideoAvailable(isVideoAvailable);
             if (isVideoAvailable) {
+                isStartRemoteView = true;
                 mTRTCCalling.startRemoteView(userId, layout.getVideoView());
             } else {
+                isStartRemoteView = false;
                 mTRTCCalling.stopRemoteView(userId);
             }
         } else {
