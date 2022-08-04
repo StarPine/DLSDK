@@ -13,6 +13,9 @@ import com.dl.playfun.data.source.http.observer.BaseListEmptyObserver;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseListDataResponse;
 import com.dl.playfun.entity.AlbumPhotoEntity;
+import com.dl.playfun.entity.UserInfoEntity;
+import com.dl.playfun.event.PhotoCallCoverEvent;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.mine.myphotoalbum.MyPhotoAlbumItemViewModel;
 import com.dl.playfun.ui.mine.photosetting.PhotoSettingFragment;
 import com.dl.playfun.viewmodel.BaseRefreshViewModel;
@@ -21,6 +24,9 @@ import com.dl.playfun.R;
 
 import java.util.ArrayList;
 
+import io.reactivex.disposables.Disposable;
+import me.goldze.mvvmhabit.bus.RxBus;
+import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.utils.RxUtils;
 import me.tatarka.bindingcollectionadapter2.BindingRecyclerViewAdapter;
 import me.tatarka.bindingcollectionadapter2.ItemBinding;
@@ -36,6 +42,8 @@ public abstract class BaseMyPhotoAlbumViewModel<T extends AppRepository> extends
 
     public ItemBinding<MyPhotoAlbumItemViewModel> itemBinding = ItemBinding.of(BR.viewModel, R.layout.item_my_photo_album);
     protected ArrayList<AlbumPhotoEntity> photoEntityList = new ArrayList<>();
+
+    private Disposable photoCallCoverEventSub;
 
     public BaseMyPhotoAlbumViewModel(@NonNull Application application, T model) {
         super(application, model);
@@ -118,4 +126,41 @@ public abstract class BaseMyPhotoAlbumViewModel<T extends AppRepository> extends
                     }
                 });
     }
+
+    @Override
+    public void registerRxBus() {
+        super.registerRxBus();
+        photoCallCoverEventSub = RxBus.getDefault().toObservable(PhotoCallCoverEvent.class)
+                .compose(RxUtils.schedulersTransformer())
+                .subscribe(photoCallCoverEventSub -> {
+                    PhotoCallCoverEvent itemEntity = ((PhotoCallCoverEvent)photoCallCoverEventSub);
+                    if(observableList!=null && itemEntity!=null && itemEntity.getAlbumPhotoEntity()!=null){
+                        int albumId = itemEntity.getAlbumPhotoEntity().getId();
+                        for (int j = 0; j < observableList.size(); j++) {
+                            AlbumPhotoEntity albumPhotoEntity = observableList.get(j).itemEntity.get();
+                            if(albumPhotoEntity!=null){
+                                //不为null  并且是本人
+                                if(albumPhotoEntity.getVerificationType()==1 && !ConfigManager.getInstance().isMale()){
+                                    if(albumId == albumPhotoEntity.getId()){
+                                        observableList.get(j).itemEntity.get().setIsCallCover(1);
+                                    }else{
+                                        observableList.get(j).itemEntity.get().setIsCallCover(0);
+                                    }
+                                }else{
+                                    observableList.get(j).itemEntity.get().setIsCallCover(0);
+                                }
+                            }
+                        }
+                    }
+                });
+        RxSubscriptions.add(photoCallCoverEventSub);
+    }
+
+    @Override
+    public void removeRxBus() {
+        super.removeRxBus();
+        RxSubscriptions.remove(photoCallCoverEventSub);
+    }
+
+
 }

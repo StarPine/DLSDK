@@ -90,7 +90,7 @@ public class CoinRechargeFragmentView extends BaseDialogFragment implements View
         }
         mWindow.setGravity(Gravity.BOTTOM);
         mWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        //mWindow.setBackgroundDrawableResource(R.color.transparent);
+        mWindow.setBackgroundDrawableResource(R.color.transparent);
     }
 
     @Override
