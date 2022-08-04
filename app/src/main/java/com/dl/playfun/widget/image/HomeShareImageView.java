@@ -13,7 +13,7 @@ import android.widget.RelativeLayout;
  * Time: 2021/12/23 10:39
  * Description: This is HomeShareImageView
  */
-public class HomeShareImageView extends ImageView {
+public class HomeShareImageView extends androidx.appcompat.widget.AppCompatImageView {
 
     private final Context context;
     private final int screenHeight;
@@ -35,7 +35,7 @@ public class HomeShareImageView extends ImageView {
         screenHeight = getScreenHeight(context);
         screenWidth = getScreenWidth(context);
         top = dp2px(context, 130);
-        bottom = dp2px(context, 150);
+        bottom = dp2px(context, 100);
         start = dp2px(context, 280);
     }
 

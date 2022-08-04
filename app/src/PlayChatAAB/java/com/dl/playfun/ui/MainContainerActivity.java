@@ -96,6 +96,10 @@ public class MainContainerActivity extends MySupportActivity {
         registerRxBus();
 
         this.billingClientLifecycle = ((AppContext)getApplication()).getBillingClientLifecycle();
+        if(!billingClientLifecycle.isConnectionSuccessful()){
+            queryAndConsumePurchase();
+        }
+        queryAndConsumePurchase();
         billingClientLifecycle.CONNECTION_SUCCESS.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
@@ -274,13 +278,13 @@ public class MainContainerActivity extends MySupportActivity {
         try{
             AppContext.instance().mFirebaseAnalytics.setCurrentScreen(this, "Screen Name", this.getClass().getSimpleName());
             //页面处于可见状态最后依次连接时间
-            long onResumeLastTime = System.currentTimeMillis() / 1000;
-            if(onCreateTime != 0L){
-                //页面可见时间 - 页面创建时间 < 10秒。说明再次进入。继续查询订单
-                if(onResumeLastTime - onCreateTime  >= 10){
-                    queryAndConsumePurchase();
-                }
-            }
+//            long onResumeLastTime = System.currentTimeMillis() / 1000;
+//            if(onCreateTime != 0L){
+//                //页面可见时间 - 页面创建时间 < 10秒。说明再次进入。继续查询订单
+//                if(onResumeLastTime - onCreateTime  >= 10){
+//                    queryAndConsumePurchase();
+//                }
+//            }
         }catch(Exception ignored){
 
         }
@@ -294,6 +298,14 @@ public class MainContainerActivity extends MySupportActivity {
 
     //查询最近的购买交易，并消耗商品
     public void queryAndConsumePurchase() {
+        long onResumeLastTime = System.currentTimeMillis() / 1000;
+        if(onCreateTime != 0L){
+            //页面可见时间 - 页面创建时间 < 10秒。说明再次进入。继续查询订单
+            if(onResumeLastTime - onCreateTime  >= 10){
+                onCreateTime = onResumeLastTime;
+                queryAndConsumePurchase();
+            }
+        }
         //queryPurchases() 方法会使用 Google Play 商店应用的缓存，而不会发起网络请求
         billingClientLifecycle.queryPurchaseHistoryAsync(BillingClient.SkuType.SUBS);
         //购买商品上报补偿机制
