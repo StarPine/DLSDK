@@ -224,7 +224,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             viewModel.getMessageRule();
             //聊天价格配置
             viewModel.getPriceConfig(userId);
-            viewModel.verifyGoddessTips(userId);
             viewModel.getPhotoAlbum(getTaUserIdIM());
         }else {
             binding.chatLayout.setChatInfo(mChatInfo);
