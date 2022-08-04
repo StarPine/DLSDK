@@ -307,9 +307,9 @@ public class BillingClientLifecycle implements LifecycleObserver, BillingClientS
             Log.e(TAG,"查询商品："+billingResult.getResponseCode()+"===="+ (skuDetailsList != null ? skuDetailsList.size() : 0));
             //执行api成功
             if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                PAYMENT_SUCCESS.postValue(getBillingPurchasesState(0,BillingPurchasesState.BillingFlowNode.querySkuDetails,null));
                 //成功找到商品
                 if (ObjectUtils.isNotEmpty(skuDetailsList)) {
+                    PAYMENT_SUCCESS.postValue(getBillingPurchasesState(0,BillingPurchasesState.BillingFlowNode.querySkuDetails,null));
                     for (SkuDetails skuDetails : skuDetailsList) {
                         String sku = skuDetails.getSku();
                         String price = skuDetails.getPrice();
@@ -328,6 +328,8 @@ public class BillingClientLifecycle implements LifecycleObserver, BillingClientS
                             Log.i(TAG, "LaunchBillingFlow Fail,code=" + responseCode);
                         }
                     }
+                }else {
+                    PAYMENT_FAIL.postValue(getBillingPurchasesState(billingResult.getResponseCode(),BillingPurchasesState.BillingFlowNode.querySkuDetails,null));
                 }
             } else {
                 //谷歌api状态
