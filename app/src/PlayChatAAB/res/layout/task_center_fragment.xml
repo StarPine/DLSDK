@@ -84,16 +84,38 @@
                                 android:layout_marginTop="200dp"
                                 android:orientation="horizontal">
 
-                                <ImageView
+                                <LinearLayout
                                     android:layout_width="180dp"
                                     android:layout_height="match_parent"
-                                    android:background="@drawable/task_img_title1" />
+                                    android:gravity="center"
+                                    android:background="@drawable/task_img_title1" >
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textStyle="bold"
+                                        android:textSize="@dimen/text_size_big"
+                                        android:textColor="@color/purple2"
+                                        android:text="@string/playfun_task_center"/>
 
-                                <ImageView
+                                </LinearLayout>
+
+                                <LinearLayout
                                     android:layout_width="180dp"
                                     android:layout_height="match_parent"
+                                    android:gravity="center"
                                     android:background="@drawable/task_img_title2"
-                                    binding:onClickCommand="@{viewModel.toWebFudaiClickCommand}" />
+                                    binding:onClickCommand="@{viewModel.toWebFudaiClickCommand}">
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:textStyle="bold"
+                                        android:textSize="@dimen/text_size_small_12"
+                                        android:textColor="@color/coffee"
+                                        android:text="@string/playfun_lucky_bag"/>
+
+                                </LinearLayout>
+
                             </LinearLayout>
                             <RelativeLayout
                                 android:layout_width="match_parent"
@@ -487,6 +509,15 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="124dp"
                                         android:background="@drawable/daily_task_img_back" />
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/playfun_daily_task"
+                                        android:textStyle="bold"
+                                        android:textSize="@dimen/text_size_big_22"
+                                        android:layout_centerHorizontal="true"
+                                        android:layout_marginTop="35dp"
+                                        android:textColor="@color/coffee2"/>
 
                                     <androidx.recyclerview.widget.RecyclerView
                                         android:id="@+id/daily_task_rx"

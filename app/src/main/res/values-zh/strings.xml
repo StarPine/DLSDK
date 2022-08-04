@@ -1033,5 +1033,8 @@
     <string name="playfun_phone_cover_text">通話封面</string>
     <string name="playfun_photo_cover_content_text">1、您可以設置一張圖片或影片作為您的通話封面\n2、該照片、影片被刪除後，已設置的通話封面會被取消</string>
     <string name="playfun_points_balance">積分餘額</string>
+    <string name="playfun_task_center">任務中心</string>
+    <string name="playfun_lucky_bag">天天福袋</string>
+    <string name="playfun_daily_task">每日任務</string>
 
 </resources>
