@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -33,14 +34,17 @@ import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.FragmentIssuanceProgramBinding;
 import com.dl.playfun.entity.ConfigItemEntity;
 import com.dl.playfun.entity.DatingObjItemEntity;
+import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.entity.ThemeItemEntity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
 import com.dl.playfun.ui.certification.certificationmale.CertificationMaleFragment;
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
+import com.dl.playfun.ui.mine.wallet.recharge.RechargeActivity;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.widget.coinpaysheet.CoinPaySheet;
+import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.luck.picture.lib.permissions.PermissionChecker;
 
@@ -358,12 +362,43 @@ public class IssuanceProgramFragment extends BaseToolbarFragment<FragmentIssuanc
             titles = StringUtils.getString(R.string.playfun_send_show);
         }
 
-        new CoinPaySheet.Builder(mActivity).setPayParams(payType, ConfigManager.getInstance().getAppRepository().readUserData().getId(), titles, false, (sheet, orderNo, payPrice) -> {
-            sheet.dismiss();
-            ToastUtils.showShort(R.string.playfun_pay_success);
-            viewModel.sendConfirm();
+        new CoinPaySheet.Builder(mActivity).setPayParams(payType, ConfigManager.getInstance().getAppRepository().readUserData().getId(), titles, false, new CoinPaySheet.CoinPayDialogListener() {
+            @Override
+            public void onPaySuccess(CoinPaySheet sheet, String orderNo, Integer payPrice) {
+                sheet.dismiss();
+                ToastUtils.showShort(R.string.playfun_pay_success);
+                viewModel.sendConfirm();
+            }
+            @Override
+            public void toGooglePlayView() {
+                CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(mActivity);
+                coinRechargeFragmentView.setClickListener(new CoinRechargeSheetView.ClickListener() {
+                    @Override
+                    public void toGooglePlayView(GoodsEntity goodsEntity) {
+                        Intent intent = new Intent(mActivity, RechargeActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("Goods_info", goodsEntity);
+                        intent.putExtras(bundle);
+                        toGooglePlayIntent.launch(intent);
+                    }
+                });
+                coinRechargeFragmentView.show();
+            }
         }).build().show();
     }
+
+    //跳转谷歌支付act
+    ActivityResultLauncher<Intent> toGooglePlayIntent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        Log.e("进入支付页面回调","=========");
+        if (result.getData() != null) {
+            Intent intentData = result.getData();
+            GoodsEntity goodsEntity = (GoodsEntity) intentData.getSerializableExtra("goodsEntity");
+            if(goodsEntity!=null){
+                ToastUtils.showShort(R.string.playfun_pay_success);
+                viewModel.sendConfirm();
+            }
+        }
+    });
 
     @Override
     public void initData() {

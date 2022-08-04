@@ -1,10 +1,14 @@
 package com.dl.playfun.ui.mine.wallet;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -17,10 +21,12 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.FragmentWalletBinding;
 import com.dl.playfun.entity.GameCoinBuy;
+import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
 import com.dl.playfun.ui.certification.certificationmale.CertificationMaleFragment;
+import com.dl.playfun.ui.mine.wallet.recharge.RechargeActivity;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralPayDialog;
 import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
@@ -87,8 +93,18 @@ public class WalletFragment extends BaseToolbarFragment<FragmentWalletBinding, W
     public void onClick(View v) {
         if (v.getId() == R.id.btn_exchange_game_coin) {
             AppContext.instance().logEvent(AppsFlyerEvent.Top_up);
-            CoinRechargeSheetView coinRechargeSheetView = new CoinRechargeSheetView(mActivity);
-            coinRechargeSheetView.show();
+            CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(mActivity);
+            coinRechargeFragmentView.setClickListener(new CoinRechargeSheetView.ClickListener() {
+                @Override
+                public void toGooglePlayView(GoodsEntity goodsEntity) {
+                    Intent intent = new Intent(mActivity, RechargeActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("Goods_info", goodsEntity);
+                    intent.putExtras(bundle);
+                    toGooglePlayIntent.launch(intent);
+                }
+            });
+            coinRechargeFragmentView.show();
         }else if(R.id.btn_game_coin_topup == v.getId()){
             CoinExchargeItegralPayDialog coinRechargeSheetView = new CoinExchargeItegralPayDialog(getContext(),mActivity);
             coinRechargeSheetView.show();
@@ -119,5 +135,17 @@ public class WalletFragment extends BaseToolbarFragment<FragmentWalletBinding, W
 
 
     }
+
+    //跳转谷歌支付act
+    ActivityResultLauncher<Intent> toGooglePlayIntent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        Log.e("进入支付页面回调","=========");
+        if (result.getData() != null) {
+            Intent intentData = result.getData();
+            GoodsEntity goodsEntity = (GoodsEntity) intentData.getSerializableExtra("goodsEntity");
+            if(goodsEntity!=null){
+                Log.e("支付成功","===============");
+            }
+        }
+    });
 
 }

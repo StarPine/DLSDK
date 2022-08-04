@@ -50,6 +50,11 @@ public class CoinRechargeSheetView extends BasePopupWindow implements View.OnCli
     private ViewGroup loadingView;
     private CoinRechargeAdapter adapter;
     private List<GoodsEntity> mGoodsList;
+    private ClickListener clickListener;
+
+    public void setClickListener(ClickListener clickListener) {
+        this.clickListener = clickListener;
+    }
 
     public CoinRechargeSheetView(AppCompatActivity activity) {
         super(activity);
@@ -180,7 +185,10 @@ public class CoinRechargeSheetView extends BasePopupWindow implements View.OnCli
     @Override
     public void onBuyClick(View view, int position) {
         GoodsEntity goodsEntity = mGoodsList.get(position);
-        startActivity(goodsEntity);
+//        startActivity(goodsEntity);
+        if(clickListener!=null){
+            clickListener.toGooglePlayView(goodsEntity);
+        }
         dismiss();
     }
 
@@ -190,5 +198,12 @@ public class CoinRechargeSheetView extends BasePopupWindow implements View.OnCli
         bundle.putSerializable("Goods_info", goodsEntity);
         intent.putExtras(bundle);
         mActivity.startActivity(intent);
+    }
+
+    public interface ClickListener {
+        //跳转去谷歌支付页面
+        default void toGooglePlayView(GoodsEntity goodsEntity) {
+
+        }
     }
 }

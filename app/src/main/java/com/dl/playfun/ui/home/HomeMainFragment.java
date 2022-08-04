@@ -11,8 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,6 +29,7 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.FragmentHomeMainBinding;
 import com.dl.playfun.entity.ConfigItemEntity;
+import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.event.LocationChangeEvent;
 import com.dl.playfun.kl.view.VideoPresetActivity;
 import com.dl.playfun.manager.ConfigManager;
@@ -35,10 +37,10 @@ import com.dl.playfun.manager.LocationManager;
 import com.dl.playfun.ui.base.BaseRefreshFragment;
 import com.dl.playfun.ui.dialog.CityChooseDialog;
 import com.dl.playfun.ui.home.accost.HomeAccostDialog;
+import com.dl.playfun.ui.mine.wallet.recharge.RechargeActivity;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.viewadapter.CustomRefreshHeader;
-import com.dl.playfun.widget.coinrechargesheet.CoinRechargeFragmentView;
 import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
@@ -202,26 +204,18 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
             @Override
             public void onChanged(Void unused) {
                 AppContext.instance().logEvent(AppsFlyerEvent.Top_up);
-//                CoinRechargeSheetView coinRechargeSheetView = new CoinRechargeSheetView(mActivity);
-//                coinRechargeSheetView.show();
-                Log.e("当前进入回调次数","==============");
-                CoinRechargeFragmentView coinRechargeFragmentView = new CoinRechargeFragmentView(mActivity);
-                coinRechargeFragmentView.show(((FragmentActivity) getContext()).getSupportFragmentManager(),CoinRechargeFragmentView.class.getCanonicalName());
-//                GameCoinExchargeSheetView coinRechargeSheetView = new GameCoinExchargeSheetView(mActivity);
-//                coinRechargeSheetView.show();
-//                coinRechargeSheetView.setCoinRechargeSheetViewListener(new GameCoinExchargeSheetView.CoinRechargeSheetViewListener() {
-//                    @Override
-//                    public void onPaySuccess(GameCoinExchargeSheetView sheetView, CoinExchangePriceInfo sel_goodsEntity) {
-//                        sheetView.dismiss();
-//                    }
-//
-//                    @Override
-//                    public void onPayFailed(GameCoinExchargeSheetView sheetView, String msg) {
-//                        sheetView.dismiss();
-//                        ToastUtils.showShort(msg);
-//                        AppContext.instance().logEvent(AppsFlyerEvent.Failed_to_top_up);
-//                    }
-//                });
+                CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(mActivity);
+                coinRechargeFragmentView.setClickListener(new CoinRechargeSheetView.ClickListener() {
+                    @Override
+                    public void toGooglePlayView(GoodsEntity goodsEntity) {
+                        Intent intent = new Intent(mActivity, RechargeActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("Goods_info", goodsEntity);
+                        intent.putExtras(bundle);
+                        toGooglePlayIntent.launch(intent);
+                    }
+                });
+                coinRechargeFragmentView.show();
             }
         });
         //播放搭讪动画
@@ -252,6 +246,17 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
             }
         });
     }
+    //跳转谷歌支付act
+    ActivityResultLauncher<Intent> toGooglePlayIntent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        Log.e("进入支付页面回调","=========");
+        if (result.getData() != null) {
+            Intent intentData = result.getData();
+            GoodsEntity goodsEntity = (GoodsEntity) intentData.getSerializableExtra("goodsEntity");
+            if(goodsEntity!=null){
+                Log.e("支付成功","===============");
+            }
+        }
+    });
 
 
     @SuppressLint("MissingPermission")

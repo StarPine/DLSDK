@@ -13,6 +13,7 @@ import android.os.Message;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -39,12 +42,14 @@ import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.ActivityCallAudioChatingBinding;
 import com.dl.playfun.entity.CrystalDetailsConfigEntity;
 import com.dl.playfun.entity.GiftBagEntity;
+import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.event.CallChatingHangupEvent;
 import com.dl.playfun.kl.Utils;
 import com.dl.playfun.kl.viewmodel.AudioCallChatingViewModel;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocaleManager;
 import com.dl.playfun.ui.dialog.GiftBagDialog;
+import com.dl.playfun.ui.mine.wallet.recharge.RechargeActivity;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.StringUtil;
@@ -186,6 +191,19 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         viewModel.getCallingInfo(roomId, fromUserId, toUserId);
     }
 
+    //跳转谷歌支付act
+    ActivityResultLauncher<Intent> toGooglePlayIntent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        Log.e("进入支付页面回调","=========");
+        if (result.getData() != null) {
+            Intent intentData = result.getData();
+            GoodsEntity goodsEntity = (GoodsEntity) intentData.getSerializableExtra("goodsEntity");
+            if(goodsEntity!=null){
+                Log.e("支付成功","===============");
+                viewModel.getCallingStatus(roomId);
+            }
+        }
+    });
+
     @Override
     public void initViewObservable() {
         super.initViewObservable();
@@ -289,8 +307,18 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
 
             @Override
             public void onChanged(Boolean isGiftSend) {
-                CoinRechargeSheetView coinRechargeSheetView = new CoinRechargeSheetView(AudioCallChatingActivity.this);
-                coinRechargeSheetView.show();
+                CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(AudioCallChatingActivity.this);
+                coinRechargeFragmentView.setClickListener(new CoinRechargeSheetView.ClickListener() {
+                    @Override
+                    public void toGooglePlayView(GoodsEntity goodsEntity) {
+                        Intent intent = new Intent(AudioCallChatingActivity.this, RechargeActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("Goods_info", goodsEntity);
+                        intent.putExtras(bundle);
+                        toGooglePlayIntent.launch(intent);
+                    }
+                });
+                coinRechargeFragmentView.show();
 //                GameCoinExchargeSheetView coinRechargeSheetView = new GameCoinExchargeSheetView(AudioCallChatingActivity.this);
 //                coinRechargeSheetView.setCallMedia(true);
 //                coinRechargeSheetView.setMaleBalance(viewModel.maleBalanceMoney);
