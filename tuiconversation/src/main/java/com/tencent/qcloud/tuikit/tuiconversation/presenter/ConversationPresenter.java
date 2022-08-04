@@ -181,7 +181,7 @@ public class ConversationPresenter {
         for (ConversationInfo conversationInfo : conversationInfoList) {
             if (!ConversationUtils.isNeedUpdate(conversationInfo)) {
                 TUIConversationLog.i(TAG, "onNewConversation conversationInfo " + conversationInfo.toString());
-                if (!conversationInfo.getId().equals("customer")){//推送管理员账号不展示在会话列表
+                if (!conversationInfo.getConversationId().contains("customer")){//推送管理员账号不展示在会话列表
                     infos.add(conversationInfo);
                 }
             }
