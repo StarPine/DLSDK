@@ -584,7 +584,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="14dp"
                                         android:layout_marginTop="10dp"
-                                        android:text="免費領好禮"
+                                        android:text="@string/playfun_get_free_gifts"
                                         android:textColor="#ff43435e"
                                         android:textSize="17sp" />
 
