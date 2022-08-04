@@ -81,7 +81,7 @@ public class AppConfig {
     //兑换记录
     public static final String ExchangeRecord_URL = BuildConfig.WEB_BASE_URL + "ExchangeRule";
     //H5充值网址
-    public static final String  PAY_RECHARGE_URL = "recharge/recharge.html";
+    public static final String  PAY_RECHARGE_URL = "/recharge/recharge.html";
     /**
      * @Desc TODO(跳转页面地址)
      * @author 彭石林
