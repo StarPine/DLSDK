@@ -629,6 +629,12 @@ public class HomeAccostDialog extends BaseDialog {
 
     //批量搭讪
     public void putAccostList(List<Integer> userIds) {
+        try {
+            //男女点击一键搭讪
+            AppContext.instance().logEvent(ConfigManager.getInstance().isMale() ? AppsFlyerEvent.one_click_greet_male : AppsFlyerEvent.one_click_greet_female);
+        }catch (Exception ignored){
+
+        }
         ConfigManager.getInstance().getAppRepository().putAccostList(userIds)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())

@@ -710,6 +710,13 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
 
     //拨打语音、视频
     public void getCallingInvitedInfo(int callingType, String IMUserId, String toIMUserId) {
+        if(callingType==1){
+            //男女点击拨打语音
+            AppContext.instance().logEvent(ConfigManager.getInstance().isMale() ? AppsFlyerEvent.call_voice_male : AppsFlyerEvent.call_voice_female);
+        }else{
+            //男女点击拨打视频
+            AppContext.instance().logEvent(ConfigManager.getInstance().isMale() ? AppsFlyerEvent.call_video_male : AppsFlyerEvent.call_video_female);
+        }
         model.callingInviteInfo(callingType, IMUserId, toIMUserId)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())

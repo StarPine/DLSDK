@@ -261,6 +261,12 @@ public class WebHomeFragment extends BaseFragment<ActivityWebHomePlayfunBinding,
             return viewModel.getUserData();
         }
 
+        //获取当前AppId
+        @JavascriptInterface
+        public String getAppId(){
+            return AppConfig.APPID;
+        }
+
         //跳转用户主页
         @JavascriptInterface
         public void startUserMainView(String userId){

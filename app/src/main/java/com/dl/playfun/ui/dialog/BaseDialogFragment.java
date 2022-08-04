@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,16 +20,23 @@ import com.blankj.utilcode.util.KeyboardUtils;
 import com.dl.playfun.utils.Utils;
 import com.gyf.immersionbar.ImmersionBar;
 import com.dl.playfun.R;
+import com.kaopiz.kprogresshud.KProgressHUD;
+
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 /**
  * @author wulei
  */
-public abstract class BaseDialogFragment extends DialogFragment {
+public abstract class BaseDialogFragment extends DialogFragment implements Consumer<Disposable> {
     public Integer[] mWidthAndHeight;
     protected Activity mActivity;
     protected View mRootView;
     protected Window mWindow;
-
+    private CompositeDisposable mCompositeDisposable;
+    //加载进度条
+    private KProgressHUD hud;
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -39,6 +48,11 @@ public abstract class BaseDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         //全屏
         setStyle(DialogFragment.STYLE_NORMAL, R.style.MyDialog);
+        initDisposable();
+    }
+
+    private void initDisposable() {
+        mCompositeDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -130,4 +144,42 @@ public abstract class BaseDialogFragment extends DialogFragment {
     protected void setListener() {
 
     }
+
+    protected void addSubscribe(Disposable disposable) {
+        if (mCompositeDisposable == null) {
+            mCompositeDisposable = new CompositeDisposable();
+        }
+        mCompositeDisposable.add(disposable);
+    }
+
+    @Override
+    public void accept(Disposable disposable) throws Exception {
+        if (disposable != null) {
+            addSubscribe(disposable);
+        }
+    }
+
+    public void showHUD(){
+
+        if (hud == null) {
+            ProgressBar progressBar = new ProgressBar(getContext());
+            progressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(com.dl.playfun.R.color.white), PorterDuff.Mode.SRC_IN);
+
+            hud = KProgressHUD.create(mActivity)
+                    .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                    .setBackgroundColor(getResources().getColor(com.dl.playfun.R.color.hud_background))
+                    .setLabel(null)
+                    .setCustomView(progressBar)
+                    .setSize(100, 100)
+                    .setCancellable(false);
+        }
+        hud.show();
+    }
+
+    public void dismissHud() {
+        if (hud != null && hud.isShowing()) {
+            hud.dismiss();
+        }
+    }
+
 }

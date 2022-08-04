@@ -6,11 +6,13 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -36,6 +38,7 @@ import com.dl.playfun.ui.home.accost.HomeAccostDialog;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.viewadapter.CustomRefreshHeader;
+import com.dl.playfun.widget.coinrechargesheet.CoinRechargeFragmentView;
 import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
@@ -199,8 +202,11 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
             @Override
             public void onChanged(Void unused) {
                 AppContext.instance().logEvent(AppsFlyerEvent.Top_up);
-                CoinRechargeSheetView coinRechargeSheetView = new CoinRechargeSheetView(mActivity);
-                coinRechargeSheetView.show();
+//                CoinRechargeSheetView coinRechargeSheetView = new CoinRechargeSheetView(mActivity);
+//                coinRechargeSheetView.show();
+                Log.e("当前进入回调次数","==============");
+                CoinRechargeFragmentView coinRechargeFragmentView = new CoinRechargeFragmentView(mActivity);
+                coinRechargeFragmentView.show(((FragmentActivity) getContext()).getSupportFragmentManager(),CoinRechargeFragmentView.class.getCanonicalName());
 //                GameCoinExchargeSheetView coinRechargeSheetView = new GameCoinExchargeSheetView(mActivity);
 //                coinRechargeSheetView.show();
 //                coinRechargeSheetView.setCoinRechargeSheetViewListener(new GameCoinExchargeSheetView.CoinRechargeSheetViewListener() {

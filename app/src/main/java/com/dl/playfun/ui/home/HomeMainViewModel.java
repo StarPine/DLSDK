@@ -138,6 +138,7 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
             map1.put("text",StringUtils.getString(R.string.playfun_tab_male_1));
             HomeMainTabItemViewModel homeMainItemViewModel1 = new HomeMainTabItemViewModel(this,map1,false);
             lastTabClickIdx = 0;
+            type.set(5);
             listData.add(homeMainItemViewModel1);
             Map<String,Object> map2 = new HashMap<>();
             map2.put("type",4);
@@ -146,18 +147,19 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
             listData.add(homeMainItemViewModel2);
         }else{
             Map<String,Object> map1 = new HashMap<>();
-            map1.put("type",1);
+            map1.put("type",3);
             map1.put("text",StringUtils.getString(R.string.playfun_tab_female_3));
             HomeMainTabItemViewModel homeMainItemViewModel1 = new HomeMainTabItemViewModel(this,map1,true);
             lastTabClickIdx = 0;
+            type.set(3);
             listData.add(homeMainItemViewModel1);
             Map<String,Object> map2 = new HashMap<>();
-            map2.put("type",2);
+            map2.put("type",1);
             map2.put("text",StringUtils.getString(R.string.playfun_tab_female_1));
             HomeMainTabItemViewModel homeMainItemViewModel2 = new HomeMainTabItemViewModel(this,map2,false);
             listData.add(homeMainItemViewModel2);
             Map<String,Object> map3 = new HashMap<>();
-            map3.put("type",3);
+            map3.put("type",2);
             map3.put("text",StringUtils.getString(R.string.playfun_tab_female_2));
             HomeMainTabItemViewModel homeMainItemViewModel3 = new HomeMainTabItemViewModel(this,map3,false);
             listData.add(homeMainItemViewModel3);
