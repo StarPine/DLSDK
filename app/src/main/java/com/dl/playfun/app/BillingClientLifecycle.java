@@ -26,6 +26,7 @@ import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.blankj.utilcode.util.ObjectUtils;
+import com.dl.playfun.BuildConfig;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.UserDataEntity;
@@ -185,6 +186,9 @@ public class BillingClientLifecycle implements LifecycleObserver, BillingClientS
                         if (purchase.isAcknowledged()) {
                             if (ApiUitl.belongCalendar(date, beginTime, endTime)) {
                                 String pack = purchase.getPackageName();
+                                if (StringUtil.isEmpty(pack)) {
+                                    pack = BuildConfig.APPLICATION_ID;
+                                }
                                 Map<String, Object> maps = new HashMap<>();
                                 maps.put("orderId", purchase.getOrderId());
                                 maps.put("token", purchase.getPurchaseToken());
@@ -236,6 +240,11 @@ public class BillingClientLifecycle implements LifecycleObserver, BillingClientS
                     Log.i(TAG, "Purchase success");
                     //确认购买交易，不然三天后会退款给用户 而且此时也没有支付成功
                     if (!purchase.isAcknowledged()) {
+                        try {
+                            AppContext.instance().logEvent(AppsFlyerEvent.pay_success);
+                        }catch (Exception ignored) {
+
+                        }
                         PAYMENT_SUCCESS.postValue(getBillingPurchasesState(0,BillingPurchasesState.BillingFlowNode.purchasesUpdated,purchase));
                         acknowledgePurchase(purchase);
                     }

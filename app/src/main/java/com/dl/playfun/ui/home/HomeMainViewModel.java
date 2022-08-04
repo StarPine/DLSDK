@@ -148,7 +148,7 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
         }else{
             Map<String,Object> map1 = new HashMap<>();
             map1.put("type",3);
-            map1.put("text",StringUtils.getString(R.string.playfun_tab_female_3));
+            map1.put("text",StringUtils.getString(R.string.playfun_tab_male_3));
             HomeMainTabItemViewModel homeMainItemViewModel1 = new HomeMainTabItemViewModel(this,map1,true);
             lastTabClickIdx = 0;
             type.set(3);

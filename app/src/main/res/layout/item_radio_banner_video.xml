@@ -54,19 +54,19 @@
 
                 <ImageView
                     android:id="@+id/audio_start"
-                    binding:onClickCommand="@{viewModel.audioPlayClickCommand}"
-                    android:scaleType="fitXY"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginTop="2dp"
-                    tools:src="@drawable/mine_audio_start_img"
-                    android:src="@{viewModel.gerDrawablePlay(viewModel.isPlaying)}" />
+                    android:layout_marginStart="2dp"
+                    android:scaleType="fitXY"
+                    android:src="@{viewModel.gerDrawablePlay(viewModel.isPlaying)}"
+                    binding:onClickCommand="@{viewModel.audioPlayClickCommand}"
+                    tools:src="@drawable/mine_audio_start_img" />
 
                 <TextView
                     android:id="@+id/audio_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
                     android:layout_toEndOf="@+id/audio_start"
                     android:layout_centerInParent="true"
                     android:includeFontPadding="false"
