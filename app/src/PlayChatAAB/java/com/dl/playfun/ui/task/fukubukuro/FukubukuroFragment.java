@@ -430,6 +430,11 @@ public class FukubukuroFragment extends BaseFragment<FragmentFukubukuroBinding, 
         }
 
         @JavascriptInterface
+        public String getMultilingualFlag() {
+            return mActivity.getString(R.string.playfun_local_language);
+        }
+
+        @JavascriptInterface
         public void back() {
             ApiUitl.taskTop = true;
             RxBus.getDefault().post(new TaskMainTabEvent(false));

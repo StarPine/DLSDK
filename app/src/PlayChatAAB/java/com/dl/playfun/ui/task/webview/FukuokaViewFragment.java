@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
@@ -165,8 +167,24 @@ public class FukuokaViewFragment extends BaseFragment<WebviewFukubukuroFragmentB
         webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         //正在加载网页动画
         showLoading();
+        setCookie(mActivity,webUrl);
         //设置打开的页面地址
         webView.loadUrl(webUrl);
+    }
+
+    public static void setCookie(Context context, String url) {
+        try {
+            CookieSyncManager.createInstance(context);
+            CookieManager cookieManager = CookieManager.getInstance();
+            cookieManager.setAcceptCookie(true);
+            cookieManager.removeSessionCookie();//移除
+            cookieManager.removeAllCookie();
+            cookieManager.setCookie(url, "local="+context.getString(R.string.playfun_local_language));
+            cookieManager.setCookie(url, "appId="+ AppConfig.APPID);
+            CookieSyncManager.getInstance().sync();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     //重新加载页面
