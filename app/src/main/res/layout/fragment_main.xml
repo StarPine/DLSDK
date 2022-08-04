@@ -148,18 +148,20 @@
                     android:id="@+id/tv_msg_count"
                     android:layout_width="wrap_content"
                     android:layout_height="16dp"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="42dp"
+                    android:layout_toEndOf="@+id/navigation_message_img"
+                    android:layout_alignTop="@+id/navigation_message_img"
+                    android:layout_marginTop="-7dp"
+                    android:layout_marginStart="-3dp"
                     android:background="@drawable/badge_background"
                     android:elevation="1dp"
                     android:gravity="center"
                     android:minWidth="16dp"
                     android:paddingLeft="2dp"
                     android:paddingRight="2dp"
-                    android:text=""
+                    android:text="22"
                     android:textColor="@color/white"
                     android:textSize="10sp"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
 
                 <ImageView
                     android:id="@+id/navigation_message_img"
