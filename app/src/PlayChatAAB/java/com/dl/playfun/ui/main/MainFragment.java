@@ -588,10 +588,6 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                 binding.navigationRadioImg.setImageResource(R.drawable.tab_radio_checked);
             } else if (id == R.id.navigation_rank_img) {
                 mainViewPager.setCurrentItem(2, false);
-                binding.navigationRankImg.setVisibility(View.INVISIBLE);
-                binding.navigationRadioImgLottie.setVisibility(View.VISIBLE);
-                binding.navigationHomeImgLottie.playAnimation();
-                binding.navigationHomeImgLottie.setImageResource(R.drawable.toolbar_icon_task_checked);
             } else if (id == R.id.navigation_message_img) {
                 mainViewPager.setCurrentItem(3, false);
                 binding.navigationMessageImg.setVisibility(View.INVISIBLE);

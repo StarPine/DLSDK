@@ -49,7 +49,7 @@ public class PhotoSettingItemViewModel extends ItemViewModel<PhotoSettingViewMod
                     position = viewModel.items.indexOf(PhotoSettingItemViewModel.this);
                 }
                 if(position!=-1){
-                    viewModel.photoCallCover(albumPhotoEntity.getId(),position);
+                    viewModel.photoCallCover(albumPhotoEntity.getId());
                 }
             }
         }

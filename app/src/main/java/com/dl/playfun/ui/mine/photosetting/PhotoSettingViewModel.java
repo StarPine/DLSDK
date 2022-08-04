@@ -16,6 +16,7 @@ import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.AlbumPhotoEntity;
 import com.dl.playfun.event.MyPhotoAlbumChangeEvent;
+import com.dl.playfun.event.PhotoCallCoverEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.utils.FileUploadUtils;
 import com.dl.playfun.utils.ImageUtils;
@@ -275,7 +276,7 @@ public class PhotoSettingViewModel extends BaseViewModel<AppRepository> {
     }
 
     //上传为封面图片、视频
-    public void photoCallCover(int albumId,int position){
+    public void photoCallCover(int albumId){
         model.photoCallCover(albumId,1)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
@@ -292,6 +293,7 @@ public class PhotoSettingViewModel extends BaseViewModel<AppRepository> {
                                     if(albumPhotoEntity.getVerificationType()==1 && !ConfigManager.getInstance().isMale()){
                                         if(albumId == albumPhotoEntity.getId()){
                                             items.get(j).photoCoverShow.set(1);
+                                            RxBus.getDefault().post(new PhotoCallCoverEvent(albumPhotoEntity));
                                         }else{
                                             items.get(j).photoCoverShow.set(0);
                                         }
