@@ -152,6 +152,11 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
+    public Observable<BaseResponse> userMessageCollation(Integer user_id) {
+        return mHttpDataSource.userMessageCollation(user_id);
+    }
+
+    @Override
     public Observable<BaseDataResponse<ChatDetailCoinEntity>> getTotalCoins(Integer dismissRoom) {
         return mHttpDataSource.getTotalCoins(dismissRoom);
     }

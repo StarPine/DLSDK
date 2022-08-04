@@ -1024,18 +1024,19 @@
     <string name="playfun_text_accost_empty2">No more user</string>
     <string name="playfun_setting_account_cancell">Cancel account</string>
     <string name="playfun_visitor_total_count">See all visitors %s</string>
-    <string name="playfun_mine_profile">個人檔案</string>
-    <string name="playfun_mine_wallet">錢包</string>
-    <string name="playfun_mine_my_visitors_man">誰看過我</string>
-    <string name="fragment_perfect_hint">未滿18歲不可註冊</string>
-    <string name="setting_photo_cover_hint">可將其設置為通話封面</string>
-    <string name="playfun_setting_text">設置</string>
-    <string name="playfun_phone_cover_text">通話封面</string>
-    <string name="playfun_photo_cover_content_text">1、您可以設置一張圖片或影片作為您的通話封面\n2、該照片、影片被刪除後，已設置的通話封面會被取消</string>
+    <string name="playfun_mine_profile">Profile</string>
+    <string name="playfun_mine_wallet">Wallet</string>
+    <string name="playfun_mine_my_visitors_man">My visitors</string>
+    <string name="fragment_perfect_hint">At least 18 years old to register</string>
+    <string name="setting_photo_cover_hint">Set as cover</string>
+    <string name="playfun_setting_text">Setting</string>
+    <string name="playfun_phone_cover_text">Cover</string>
+    <string name="playfun_photo_cover_content_text">1. You can set a picture or video as your call cover\n2, After the photo or video is deleted, the call cover that has been set will be canceled</string>
     <string name="playfun_points_balance">Points</string>
     <string name="playfun_task_center">Mission Center</string>
     <string name="playfun_lucky_bag">Lucky bag</string>
     <string name="playfun_daily_task">Daily task</string>
     <string name="playfun_get_free_gifts">Get free gifts</string>
+    <string name="playfun_user_detail_user_disable3">The account has cancelled</string>
 
 </resources>

@@ -163,8 +163,6 @@
 	<!--C为水晶icon占位符	-->
 	<string name="profit">C+%s</string>
 
-	<string name="custom_message_txt8">餘額不足，請儲值</string>
-	<string name="custom_message_call_message_deatail_time_msg">結束通話，通話時長:  %02d:%02d</string>
 	<string name="modify_introduction">Change the group introduction to</string>
 	<string name="save_tips">Saved successfully.</string>
 	<string name="saving_tips">Saving</string>
@@ -212,6 +210,8 @@
 	<string name="chat_reply_detail">Reply detail</string>
 
 	<string name="chat_not_read">Unread</string>
-	<string name="playfun_in_game">對方在遊戲中</string>
-	<string name="playfun_in_game_missed">遊戲中未接聽</string>
+	<string name="playfun_in_game">In game</string>
+	<string name="playfun_in_game_missed">Playing and connection failed</string>
+	<string name="custom_message_txt8">Insufficient balance, to top up!</string>
+	<string name="custom_message_call_message_deatail_time_msg">Call ended, duration:  %02d:%02d</string>
 </resources>

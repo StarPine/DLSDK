@@ -193,4 +193,8 @@
     <string name="opponent_in_game">在遊戲中</string>
     <string name="call_ended">通話結束</string>
     <string name="chat_delete_msg_tip">立即刪除</string>
+    <string name="playfun_in_game">對方在遊戲中</string>
+    <string name="playfun_in_game_missed">遊戲中未接聽</string>
+    <string name="custom_message_txt8">餘額不足，請儲值</string>
+    <string name="custom_message_call_message_deatail_time_msg">結束通話，通話時長:  %02d:%02d</string>
 </resources>

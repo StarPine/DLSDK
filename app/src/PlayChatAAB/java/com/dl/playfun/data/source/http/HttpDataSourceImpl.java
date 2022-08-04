@@ -137,6 +137,11 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
+    public Observable<BaseResponse> userMessageCollation(Integer user_id) {
+        return apiService.userMessageCollation(user_id);
+    }
+
+    @Override
     public Observable<BaseDataResponse<ChatDetailCoinEntity>> getTotalCoins(Integer dismissRoom) {
         return apiService.getTotalCoins(dismissRoom);
     }

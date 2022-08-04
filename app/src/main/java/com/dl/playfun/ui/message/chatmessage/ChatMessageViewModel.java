@@ -6,16 +6,20 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
 
+import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.data.AppRepository;
+import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
+import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.BrowseNumberEntity;
 import com.dl.playfun.entity.IMTransUserEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.ui.mine.trace.man.TraceManFragment;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
+import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
 
 import java.util.List;
@@ -93,11 +97,39 @@ public class ChatMessageViewModel extends BaseViewModel<AppRepository> {
                                 Bundle bundle = UserDetailFragment.getStartBundle(imTransUserEntity.getUserId());
                                 start(UserDetailFragment.class.getCanonicalName(), bundle);
                             }else{//进入私聊页面
-                                uc.startChatUserView.postValue(imTransUserEntity.getUserId());
+                                userMessageCollation(imTransUserEntity.getUserId());
                             }
 
                         }
                     }
+                    @Override
+                    public void onComplete() {
+                        dismissHUD();
+                    }
+                });
+    }
+
+    public void userMessageCollation(int userId) {
+        model.userMessageCollation(userId)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseResponse>() {
+                    @Override
+                    public void onSuccess(BaseResponse response) {
+                        uc.startChatUserView.postValue(userId);
+                    }
+
+                    @Override
+                    public void onError(RequestException e) {
+                        if (e.getCode() == 11111) { //注销
+                            ToastCenterUtils.showShort(R.string.playfun_user_detail_user_disable3);
+                        } else {
+                            super.onError(e);
+                        }
+                    }
+
                     @Override
                     public void onComplete() {
                         dismissHUD();

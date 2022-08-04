@@ -573,6 +573,17 @@ public interface ApiService {
     @POST("api/im/transUser")
     Observable<BaseDataResponse<IMTransUserEntity>> transUserIM(@Field("imId") String IMUserId);
 
+
+    /**
+     * @return io.reactivex.Observable<com.dl.play.chat.data.source.http.response.BaseResponse>
+     * @Desc TODO(查询用户状态)
+     * @author 彭石林
+     * @parame [user_id]
+     * @Date 2022/6/8
+     */
+    @GET("api/user/status")
+    Observable<BaseResponse> userMessageCollation(@Query("user_id") Integer user_id);
+
     /**
      * @return io.reactivex.Observable<com.dl.play.chat.data.source.http.response.BaseDataResponse < com.dl.play.chat.entity.ChatDetailCoinEntity>>
      * @Desc TODO(拨打完成后调用查询总钻石 。 拨打发调用)
