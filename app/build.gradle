@@ -152,7 +152,7 @@ android {
             dimension "playfun"
             resConfigs "zh","en","zh-rCN","zh-rHK","zh-rMO","zh-rSG","zh-rTW"
             // 服务端接口HOST
-            buildConfigField "String", "DEFAULT_API_URL", "\"http://config.play-chat.net/\""
+            buildConfigField "String", "DEFAULT_API_URL", "\"http://t-config.play-chat.net/\""
             if(!rootProject.ext.BuildSdkPlayfun && !rootProject.ext.BuildPlayChatRelease){
                 applicationId "com.test.demo.chat"
                 manifestPlaceholders = [package_name: applicationId]
