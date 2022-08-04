@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.app.AppConfig;
-import com.dl.playfun.app.AppContext;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
 import com.dl.playfun.ui.certification.certificationmale.CertificationMaleFragment;

@@ -17,19 +17,18 @@ import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.AlbumPhotoEntity;
+import com.dl.playfun.entity.ApiConfigManagerEntity;
 import com.dl.playfun.entity.BannerItemEntity;
 import com.dl.playfun.entity.BrowseNumberEntity;
 import com.dl.playfun.entity.EvaluateEntity;
 import com.dl.playfun.entity.SystemConfigTaskEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.entity.UserInfoEntity;
-import com.dl.playfun.entity.VersionEntity;
 import com.dl.playfun.event.AvatarChangeEvent;
 import com.dl.playfun.event.FaceCertificationEvent;
 import com.dl.playfun.event.MyPhotoAlbumChangeEvent;
 import com.dl.playfun.event.ProfileChangeEvent;
 import com.dl.playfun.event.RefreshUserDataEvent;
-import com.dl.playfun.event.TaskMainTabEvent;
 import com.dl.playfun.event.TraceEmptyEvent;
 import com.dl.playfun.event.VipRechargeSuccessEvent;
 import com.dl.playfun.helper.JumpHelper;
@@ -37,6 +36,7 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
 import com.dl.playfun.ui.mine.audio.TapeAudioFragment;
 import com.dl.playfun.ui.mine.broadcast.BroadcastFragment;
+import com.dl.playfun.ui.mine.invitewebdetail.InviteWebDetailFragment;
 import com.dl.playfun.ui.mine.level.LevelEquityFragment;
 import com.dl.playfun.ui.mine.likelist.LikeListFragment;
 import com.dl.playfun.ui.mine.myphotoalbum.MyPhotoAlbumFragment;
@@ -151,7 +151,21 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
         }
         ToastUtils.showShort(R.string.playfun_sex_unknown);
     });
-
+    //邀请码按钮的点击事件
+    public BindingCommand invitationCodeOnClickCommand = new BindingCommand(() -> {
+        if (userInfoEntity.get() == null) {
+            return;
+        }
+        try {
+            ApiConfigManagerEntity apiConfigManagerEntity = ConfigManager.getInstance().getAppRepository().readApiConfigManagerEntity();
+            if(apiConfigManagerEntity!=null && apiConfigManagerEntity.getPlayFunWebUrl()!=null){
+                Bundle bundle = InviteWebDetailFragment.getStartBundle(apiConfigManagerEntity.getPlayChatWebUrl() + userInfoEntity.get().getInviteUrl(), userInfoEntity.get().getCode());
+                start(InviteWebDetailFragment.class.getCanonicalName(), bundle);
+            }
+        } catch (Exception e) {
+            ExceptionReportUtils.report(e);
+        }
+    });
     //商店点击入口
     public BindingCommand shopOnClickCommand = new BindingCommand(() -> {
         try {

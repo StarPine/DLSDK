@@ -127,7 +127,7 @@ public class VipSubscribeFragment extends BaseToolbarFragment<FragmentVipSubscri
                         String packageName = purchase.getPackageName();
                         List<String> sku = purchase.getSkus();
                         String pToken = purchase.getPurchaseToken();
-                        viewModel.paySuccessNotify(packageName, sku, pToken, 1);
+                        viewModel.paySuccessNotify(packageName, sku, pToken, 0);
                         Log.e("BillingClientLifecycle","dialog支付购买成功："+purchase.toString());
                     }
                     break;
