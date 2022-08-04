@@ -586,7 +586,47 @@
                             </LinearLayout>
 
                         </RelativeLayout>
+                        <RelativeLayout
+                            style="@style/ProfileItem"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/profile_item_height"
+                            android:visibility="@{StringUtils.isEmpty(viewModel.userInfoEntity.inviteUrl) ? View.GONE:View.VISIBLE}"
+                            binding:onClickCommand="@{viewModel.invitationCodeOnClickCommand}">
 
+                            <ImageView
+                                android:id="@+id/mine_item_3"
+                                android:layout_width="19dp"
+                                android:layout_height="19dp"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerInParent="true"
+                                android:src="@mipmap/ic_mine_item_img_3" />
+                            <TextView
+                                style="@style/ProfileItemTitle"
+                                android:layout_toEndOf="@+id/mine_item_3"
+                                android:layout_marginStart="8dp"
+                                android:textSize="13sp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/playfun_mine_apply_invitation_code" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:layout_marginEnd="5dp"
+                                android:layout_toStartOf="@+id/invitation_code_right_img"
+                                android:gravity="center"
+                                android:visibility="@{viewModel.userInfoEntity.sex==1 ? View.VISIBLE:View.GONE}"
+                                android:text="@string/mine_fragment_invitation_code_title"
+                                android:textColor="@color/purple1"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:id="@+id/invitation_code_right_img"
+                                style="@style/ProfileItemSubTitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+                        </RelativeLayout>
                         <TextView
                             android:id="@+id/tv_tip"
                             style="@style/TopWarn"
