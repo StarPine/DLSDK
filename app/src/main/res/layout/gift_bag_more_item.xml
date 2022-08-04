@@ -12,9 +12,10 @@
         android:layout_height="wrap_content">
         <LinearLayout
 
-            android:layout_width="match_parent"
+            android:layout_width="130dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:gravity="center_horizontal"
             android:paddingRight="10dp">
 
             <LinearLayout
@@ -28,21 +29,10 @@
 
                 <TextView
                     android:id="@+id/text_value1"
-                    android:layout_width="43dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="end"
                     android:text="3344"
                     android:textColor="#ffa72dfe"
-                    android:textSize="13sp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="14dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:text="@string/playfun_gift_bag_more_text1"
-                    android:textColor="#ff828282"
                     android:textSize="13sp" />
             </LinearLayout>
 
@@ -57,20 +47,12 @@
 
                 <TextView
                     android:id="@+id/text_value2"
-                    android:layout_width="43dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="end"
                     android:text="1314"
                     android:textColor="#ffa72dfe"
                     android:textSize="13sp" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="14dp"
-                    android:text="@string/playfun_gift_bag_more_text2"
-                    android:textColor="#ff828282"
-                    android:textSize="13sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -84,22 +66,12 @@
 
                 <TextView
                     android:id="@+id/text_value3"
-                    android:layout_width="43dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="end"
                     android:text="520"
                     android:textColor="#ffa72dfe"
                     android:textSize="13sp" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="14dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:text="@string/playfun_gift_bag_more_text3"
-                    android:textColor="#ff828282"
-                    android:textSize="13sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -113,22 +85,12 @@
 
                 <TextView
                     android:id="@+id/text_value4"
-                    android:layout_width="43dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="end"
                     android:text="188"
                     android:textColor="#ffa72dfe"
                     android:textSize="13sp" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="14dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:text="@string/playfun_gift_bag_more_text4"
-                    android:textColor="#ff828282"
-                    android:textSize="13sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -142,22 +104,12 @@
 
                 <TextView
                     android:id="@+id/text_value5"
-                    android:layout_width="43dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="end"
                     android:text="66"
                     android:textColor="#ffa72dfe"
                     android:textSize="13sp" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="14dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:text="@string/playfun_gift_bag_more_text4"
-                    android:textColor="#ff828282"
-                    android:textSize="13sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -171,22 +123,12 @@
 
                 <TextView
                     android:id="@+id/text_value6"
-                    android:layout_width="43dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="end"
                     android:text="38"
                     android:textColor="#ffa72dfe"
                     android:textSize="13sp" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="14dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:text="@string/playfun_gift_bag_more_text5"
-                    android:textColor="#ff828282"
-                    android:textSize="13sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -200,22 +142,12 @@
 
                 <TextView
                     android:id="@+id/text_value7"
-                    android:layout_width="43dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="end"
                     android:text="10"
                     android:textColor="#ffa72dfe"
                     android:textSize="13sp" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="14dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:text="@string/playfun_gift_bag_more_text6"
-                    android:textColor="#ff828282"
-                    android:textSize="13sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -229,22 +161,12 @@
 
                 <TextView
                     android:id="@+id/text_value8"
-                    android:layout_width="43dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="end"
                     android:text="1"
                     android:textColor="#ffa72dfe"
                     android:textSize="13sp" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="14dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:text="@string/playfun_gift_bag_more_text7"
-                    android:textColor="#ff828282"
-                    android:textSize="13sp" />
             </LinearLayout>
         </LinearLayout>
 
