@@ -25,6 +25,8 @@ public class SystemConfigEntity {
     private SystemRoleMoneyConfigEntity womanReal;
     @SerializedName("woman_vip")
     private SystemRoleMoneyConfigEntity womanVip;
+    @SerializedName("delete_account")
+    private int deleteAccount;
     private SystemConfigContentEntity content;
 
     //会话列表限制数量
@@ -33,6 +35,14 @@ public class SystemConfigEntity {
     //默认区号
     @SerializedName("region_code")
     private String regionCode;
+
+    public int getDeleteAccount() {
+        return deleteAccount;
+    }
+
+    public void setDeleteAccount(int deleteAccount) {
+        this.deleteAccount = deleteAccount;
+    }
 
     public String getRegionCode() {
         return regionCode;

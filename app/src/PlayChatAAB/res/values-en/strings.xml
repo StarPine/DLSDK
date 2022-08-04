@@ -149,7 +149,7 @@
     <string name="mine_fragment_invitation_code_title">Claim a VIP for free</string>
     <string name="task_sign_day_ed">Today</string>
     <string name="task_sign_day">%s days</string>
-    <string name="task_sign_day3">Treasure chests</string>
+    <string name="task_sign_day3">Treasure</string>
     <string name="task_sign_day7">Mystery Award</string>
     <string name="server_exception">Server exception</string>
     <string name="radio_daily_atendance_day_text">Successful check-in, +10 points</string>
