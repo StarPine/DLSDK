@@ -168,7 +168,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="25dp"
                 android:layout_alignParentBottom="true"
-                android:src="@drawable/call_video_gif" />
+                android:src="@drawable/logo_call_video" />
         </RelativeLayout>
 
         <ImageView

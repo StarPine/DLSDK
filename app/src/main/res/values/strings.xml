@@ -948,7 +948,7 @@
     <string name="playfun_blocked_each_other">They\'ve been blocked and you can\'t view their Page content</string>
     <string name="playfun_accost_same_sex">Can\'t talk to the same sex</string>
     <string name="playfun_name_number_too_long2">Can\'t exceed 10 words</string>
-    <string name="playfun_mine_vip_hint">PlayFun Privileges</string>
+    <string name="playfun_mine_vip_hint">VIP Privileges</string>
     <string name="playfun_vipsubscribe_item_vip_txt_currency">$</string>
     <string name="playfun_version_latest">Already the latest version!</string>
     <string name="playfun_mine_setting_desc">Invisible and hidden</string>

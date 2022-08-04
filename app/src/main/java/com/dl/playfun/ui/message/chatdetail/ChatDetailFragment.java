@@ -251,10 +251,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
 
     public void initCallVideoHint() {
         defBottomMarginHeight = dp2px(getContext(), 30);
-        Glide.with(getContext()).asGif().load(R.drawable.call_video_gif)
-                .error(R.drawable.call_video_gif)
-                .placeholder(R.drawable.call_video_gif)
-                .into(binding.gifCallVideo);
         if (mChatInfo != null && mChatInfo.getId() != null) {
             List<String> userList = new ArrayList<>();
             userList.add(mChatInfo.getId());
