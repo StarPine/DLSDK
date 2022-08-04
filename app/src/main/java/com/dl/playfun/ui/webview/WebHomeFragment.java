@@ -1,11 +1,14 @@
 package com.dl.playfun.ui.webview;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +19,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -25,12 +30,18 @@ import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
+import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.ActivityWebHomePlayfunBinding;
+import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.ui.base.BaseFragment;
+import com.dl.playfun.ui.message.chatdetail.ChatDetailFragment;
+import com.dl.playfun.ui.mine.wallet.recharge.RechargeActivity;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.utils.ChatUtils;
 import com.dl.playfun.widget.action.StatusAction;
 import com.dl.playfun.widget.action.StatusLayout;
+import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
+import com.dl.playfun.widget.dialog.TraceDialog;
 import com.google.gson.Gson;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
@@ -136,7 +147,49 @@ public class WebHomeFragment extends BaseFragment<ActivityWebHomePlayfunBinding,
     @Override
     public void initViewObservable() {
         super.initViewObservable();
+        //对方忙线
+        viewModel.webUC.otherBusy.observe(this, o -> {
+            TraceDialog.getInstance(getContext())
+                    .chooseType(TraceDialog.TypeEnum.CENTER)
+                    .setTitle(StringUtils.getString(R.string.playfun_other_busy_title))
+                    .setContent(StringUtils.getString(R.string.playfun_other_busy_text))
+                    .setConfirmText(StringUtils.getString(R.string.playfun_mine_trace_delike_confirm))
+                    .setConfirmOnlick(new TraceDialog.ConfirmOnclick() {
+                        @Override
+                        public void confirm(Dialog dialog) {
+
+                            dialog.dismiss();
+                        }
+                    }).TraceVipDialog().show();
+        });
+        viewModel.webUC.sendDialogViewEvent.observe(this, event -> {
+            AppContext.instance().logEvent(AppsFlyerEvent.Top_up);
+            CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(mActivity);
+            coinRechargeFragmentView.setClickListener(new CoinRechargeSheetView.ClickListener() {
+                @Override
+                public void toGooglePlayView(GoodsEntity goodsEntity) {
+                    Intent intent = new Intent(mActivity, RechargeActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("Goods_info", goodsEntity);
+                    intent.putExtras(bundle);
+                    toGooglePlayIntent.launch(intent);
+                }
+            });
+            coinRechargeFragmentView.show();
+        });
     }
+
+    //跳转谷歌支付act
+    ActivityResultLauncher<Intent> toGooglePlayIntent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        Log.e("进入支付页面回调","=========");
+        if (result.getData() != null) {
+            Intent intentData = result.getData();
+            GoodsEntity goodsEntity = (GoodsEntity) intentData.getSerializableExtra("goodsEntity");
+            if(goodsEntity!=null){
+                Log.e("支付成功","===============");
+            }
+        }
+    });
 
     @Override
     public StatusLayout getStatusLayout() {
@@ -285,6 +338,11 @@ public class WebHomeFragment extends BaseFragment<ActivityWebHomePlayfunBinding,
         @JavascriptInterface
         public void startIMChatView(String toIMUserId,String userId,String userName){
             ChatUtils.chatUser(toIMUserId,Integer.parseInt(userId), userName, viewModel);
+        }
+        //返回国际化语言
+        @JavascriptInterface
+        public String getMultilingualFlag(){
+            return mContext.getString(R.string.playfun_local_language);
         }
 
 
