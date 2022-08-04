@@ -636,10 +636,10 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
     }
 
     public void verifyGoddessTips(Integer userId) {
-//        Boolean sendSuccess = model.readVerifyGoddessTipsUser(model.readUserData().getId() + "_" + userId);
-//        if (sendSuccess.booleanValue()) {
-//            return;
-//        }
+        Boolean sendSuccess = model.readVerifyGoddessTipsUser(model.readUserData().getId() + "_" + userId);
+        if (sendSuccess.booleanValue()) {
+            return;
+        }
         model.verifyGoddessTips(userId)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
