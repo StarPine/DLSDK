@@ -52,9 +52,8 @@ public class RechargeViewModel extends BaseViewModel<AppRepository> {
     public ObservableField<Boolean> isGooglepay = new ObservableField<>(false);
     public ObservableField<GoodsEntity> goodsEntity = new ObservableField<>();
     public String orderNumber = null;
-    private final Integer pay_good_day = 7;
     public SingleLiveEvent<String> clickPay = new SingleLiveEvent();
-    public SingleLiveEvent<Void> finsh = new SingleLiveEvent();
+    public SingleLiveEvent<GoodsEntity> finsh = new SingleLiveEvent();
 
     /**
      * 选择水晶支付
@@ -119,22 +118,6 @@ public class RechargeViewModel extends BaseViewModel<AppRepository> {
      * @param event
      */
     public void paySuccessNotify(String packageName, List<String> productId, String token, Integer event) {
-        if (event.intValue() == BillingClient.BillingResponseCode.OK) {
-            UserDataEntity userDataEntity = model.readUserData();
-            userDataEntity.setIsVip(1);
-            model.saveUserData(userDataEntity);
-            SystemConfigEntity systemConfigEntity = model.readSystemConfig();
-            SystemRoleMoneyConfigEntity sysManUserConfigEntity = systemConfigEntity.getManUser();
-            sysManUserConfigEntity.setSendMessagesNumber(-1);
-            systemConfigEntity.setManUser(sysManUserConfigEntity);
-            SystemRoleMoneyConfigEntity sysManRealConfigEntity = systemConfigEntity.getManReal();
-            sysManRealConfigEntity.setSendMessagesNumber(-1);
-            systemConfigEntity.setManReal(sysManRealConfigEntity);
-            SystemRoleMoneyConfigEntity sysManVipConfigEntity = systemConfigEntity.getManVip();
-            sysManVipConfigEntity.setSendMessagesNumber(-1);
-            systemConfigEntity.setManVip(sysManVipConfigEntity);
-            model.saveSystemConfig(systemConfigEntity);
-        }
         model.paySuccessNotify(packageName, orderNumber, productId, token, 2, event)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
@@ -146,7 +129,7 @@ public class RechargeViewModel extends BaseViewModel<AppRepository> {
                     public void onSuccess(BaseResponse response) {
                         dismissHUD();
                         ToastUtils.showShort(StringUtils.getString(R.string.playfun_pay_success));
-                        finsh.call();
+                        finsh.postValue(goodsEntity.get());
                     }
 
                     @Override

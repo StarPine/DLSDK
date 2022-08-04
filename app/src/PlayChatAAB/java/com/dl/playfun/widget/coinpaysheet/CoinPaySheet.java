@@ -82,6 +82,10 @@ public class CoinPaySheet {
 
     public interface CoinPayDialogListener {
         void onPaySuccess(CoinPaySheet sheet, String orderNo, Integer payPrice);
+
+        default void toGooglePlayView() {
+
+        }
     }
 
     public interface CoinRedPackagePayDialogListener {
@@ -278,15 +282,14 @@ public class CoinPaySheet {
                 payOrder();
             }
         }
-
+        //调集充值按钮
         private void showRecharge() {
             this.dismiss();
             CoinRechargeSheetView coinRechargeSheetView = new CoinRechargeSheetView(mActivity);
             coinRechargeSheetView.show();
             //
-            loadBalance();//刷新钻石
+            //loadBalance();//刷新钻石
             // payorder
-            AppContext.instance().logEvent(AppsFlyerEvent.success_diamond_top_up);
         }
 
         private void loadBalance() {

@@ -1,9 +1,11 @@
 package com.dl.playfun.ui.mine.wallet.recharge;
 
+import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.android.billingclient.api.BillingClient;
@@ -88,7 +90,12 @@ public class RechargeActivity extends BaseActivity<ActivityRechargeBinding, Rech
             pay(payCode);
         });
 
-        viewModel.finsh.observe(this, Void -> finish());
+        viewModel.finsh.observe(this, goodsEntity -> {
+            Intent intent = new Intent();
+            intent.putExtra("goodsEntity",goodsEntity);
+            setResult(909,intent);
+            finish();
+        });
 
         this.billingClientLifecycle.PAYMENT_SUCCESS.observe(this, billingPurchasesState -> {
             Log.e("BillingClientLifecycle","支付购买成功回调");

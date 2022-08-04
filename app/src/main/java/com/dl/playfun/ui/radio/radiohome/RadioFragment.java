@@ -11,11 +11,14 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.Observer;
@@ -32,18 +35,18 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.FragmentRadioBinding;
 import com.dl.playfun.entity.ConfigItemEntity;
+import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.entity.RadioFilterItemEntity;
 import com.dl.playfun.helper.DialogHelper;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseRefreshFragment;
 import com.dl.playfun.ui.dialog.CityChooseDialog;
-import com.dl.playfun.ui.dialog.MyEvaluateDialog;
 import com.dl.playfun.ui.mine.broadcast.mytrends.TrendItemViewModel;
+import com.dl.playfun.ui.mine.wallet.recharge.RechargeActivity;
 import com.dl.playfun.ui.userdetail.report.ReportUserFragment;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.PictureSelectorUtil;
 import com.dl.playfun.viewadapter.CustomRefreshHeader;
-import com.dl.playfun.widget.coinrechargesheet.CoinRechargeFragmentView;
 import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 import com.dl.playfun.widget.dialog.MMAlertDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
@@ -421,15 +424,35 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
     //支付弹窗
     private void googleCoinValueBox() {
         AppContext.instance().logEvent(AppsFlyerEvent.Top_up);
-//        CoinRechargeSheetView coinRechargeSheetView = new CoinRechargeSheetView(mActivity);
-//        coinRechargeSheetView.show();
-        CoinRechargeFragmentView coinRechargeFragmentView = new CoinRechargeFragmentView(mActivity);
-        coinRechargeFragmentView.show(getChildFragmentManager(),CoinRechargeFragmentView.class.getCanonicalName());
+        CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(mActivity);
+        coinRechargeFragmentView.setClickListener(new CoinRechargeSheetView.ClickListener() {
+            @Override
+            public void toGooglePlayView(GoodsEntity goodsEntity) {
+                Intent intent = new Intent(mActivity, RechargeActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("Goods_info", goodsEntity);
+                intent.putExtras(bundle);
+                toGooglePlayIntent.launch(intent);
+            }
+        });
+        coinRechargeFragmentView.show();
     }
 
     @Override
     public void onEnterAnimationEnd(Bundle savedInstanceState) {
         super.onEnterAnimationEnd(savedInstanceState);
     }
+
+    //跳转谷歌支付act
+    ActivityResultLauncher<Intent> toGooglePlayIntent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        Log.e("进入支付页面回调","=========");
+        if (result.getData() != null) {
+            Intent intentData = result.getData();
+            GoodsEntity goodsEntity = (GoodsEntity) intentData.getSerializableExtra("goodsEntity");
+            if(goodsEntity!=null){
+                Log.e("支付成功","===============");
+            }
+        }
+    });
 
 }

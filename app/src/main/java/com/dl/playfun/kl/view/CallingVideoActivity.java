@@ -26,6 +26,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -43,15 +45,18 @@ import com.dl.playfun.entity.CallingInviteInfo;
 import com.dl.playfun.entity.CoinExchangePriceInfo;
 import com.dl.playfun.entity.CrystalDetailsConfigEntity;
 import com.dl.playfun.entity.GiftBagEntity;
+import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.event.CallChatingHangupEvent;
 import com.dl.playfun.kl.viewmodel.VideoCallViewModel;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocaleManager;
+import com.dl.playfun.ui.mine.wallet.recharge.RechargeActivity;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.utils.ToastCenterUtils;
+import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
 import com.dl.playfun.widget.dialog.MessageDetailDialog;
 import com.dl.playfun.widget.dialog.TraceDialog;
@@ -212,6 +217,19 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
             callingInviteInfo = new Gson().fromJson(userData, CallingInviteInfo.class);
         }
     }
+
+    //跳转谷歌支付act
+    ActivityResultLauncher<Intent> toGooglePlayIntent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        Log.e("进入支付页面回调","=========");
+        if (result.getData() != null) {
+            Intent intentData = result.getData();
+            GoodsEntity goodsEntity = (GoodsEntity) intentData.getSerializableExtra("goodsEntity");
+            if(goodsEntity!=null){
+                Log.e("支付成功","===============");
+                viewModel.getCallingStatus(roomId);
+            }
+        }
+    });
 
     @Override
     public void initData() {
@@ -395,23 +413,35 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         viewModel.uc.sendUserGiftError.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean isGiftSend) {
-
-                GameCoinExchargeSheetView coinRechargeSheetView = new GameCoinExchargeSheetView(CallingVideoActivity.this);
-                coinRechargeSheetView.setCallMedia(true);
-                coinRechargeSheetView.setMaleBalance(viewModel.maleBalanceMoney);
-                coinRechargeSheetView.show();
-                coinRechargeSheetView.setCoinRechargeSheetViewListener(new GameCoinExchargeSheetView.CoinRechargeSheetViewListener() {
+//
+//                GameCoinExchargeSheetView coinRechargeSheetView = new GameCoinExchargeSheetView(CallingVideoActivity.this);
+//                coinRechargeSheetView.setCallMedia(true);
+//                coinRechargeSheetView.setMaleBalance(viewModel.maleBalanceMoney);
+//                coinRechargeSheetView.show();
+//                coinRechargeSheetView.setCoinRechargeSheetViewListener(new GameCoinExchargeSheetView.CoinRechargeSheetViewListener() {
+//                    @Override
+//                    public void onPaySuccess(GameCoinExchargeSheetView sheetView, CoinExchangePriceInfo sel_goodsEntity) {
+//                        sheetView.dismiss();
+//                        viewModel.getCallingStatus(viewModel.roomId);
+//                    }
+//
+//                    @Override
+//                    public void onPayFailed(GameCoinExchargeSheetView sheetView, String msg) {
+//                        sheetView.dismiss();
+//                    }
+//                });
+                CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(CallingVideoActivity.this);
+                coinRechargeFragmentView.setClickListener(new CoinRechargeSheetView.ClickListener() {
                     @Override
-                    public void onPaySuccess(GameCoinExchargeSheetView sheetView, CoinExchangePriceInfo sel_goodsEntity) {
-                        sheetView.dismiss();
-                        viewModel.getCallingStatus(viewModel.roomId);
-                    }
-
-                    @Override
-                    public void onPayFailed(GameCoinExchargeSheetView sheetView, String msg) {
-                        sheetView.dismiss();
+                    public void toGooglePlayView(GoodsEntity goodsEntity) {
+                        Intent intent = new Intent(CallingVideoActivity.this, RechargeActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("Goods_info", goodsEntity);
+                        intent.putExtras(bundle);
+                        toGooglePlayIntent.launch(intent);
                     }
                 });
+                coinRechargeFragmentView.show();
             }
         });
         //发送礼物弹窗

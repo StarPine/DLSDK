@@ -1,10 +1,14 @@
 package com.dl.playfun.ui.userdetail.photobrowse;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -13,8 +17,11 @@ import com.dl.playfun.R;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.databinding.FragmentPhotoBrowseBinding;
 import com.dl.playfun.entity.AlbumPhotoEntity;
+import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.ui.base.BaseFragment;
+import com.dl.playfun.ui.mine.wallet.recharge.RechargeActivity;
 import com.dl.playfun.widget.coinpaysheet.CoinPaySheet;
+import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 
 import java.util.ArrayList;
@@ -114,20 +121,69 @@ public class PhotoBrowseFragment extends BaseFragment<FragmentPhotoBrowseBinding
     }
 
     private void payReaPackagePhoto(int photoId) {
-        new CoinPaySheet.Builder(mActivity).setPayParams(4, photoId, getString(R.string.playfun_red_package_photo), false, (sheet, orderNo, payPrice) -> {
-            sheet.dismiss();
-            ToastUtils.showShort(R.string.playfun_pay_success);
-            viewModel.payRedPackageSuccess(photoId);
+        new CoinPaySheet.Builder(mActivity).setPayParams(4, photoId, getString(R.string.playfun_red_package_photo), false, new CoinPaySheet.CoinPayDialogListener() {
+            @Override
+            public void onPaySuccess(CoinPaySheet sheet, String orderNo, Integer payPrice) {
+                sheet.dismiss();
+                ToastUtils.showShort(R.string.playfun_pay_success);
+                viewModel.payRedPackageSuccess(photoId);
+            }
+            @Override
+            public void toGooglePlayView() {
+                CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(mActivity);
+                coinRechargeFragmentView.setClickListener(new CoinRechargeSheetView.ClickListener() {
+                    @Override
+                    public void toGooglePlayView(GoodsEntity goodsEntity) {
+                        Intent intent = new Intent(mActivity, RechargeActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("Goods_info", goodsEntity);
+                        intent.putExtras(bundle);
+                        toGooglePlayIntent.launch(intent);
+                    }
+                });
+                coinRechargeFragmentView.show();
+            }
         }).build().show();
     }
 
     private void payReaPackageVideo(int photoId) {
-        new CoinPaySheet.Builder(mActivity).setPayParams(5, photoId, getString(R.string.playfun_red_package_video), false, (sheet, orderNo, payPrice) -> {
-            sheet.dismiss();
-            ToastUtils.showShort(R.string.playfun_pay_success);
-            viewModel.payRedPackageSuccess(photoId);
+        new CoinPaySheet.Builder(mActivity).setPayParams(5, photoId, getString(R.string.playfun_red_package_video), false, new CoinPaySheet.CoinPayDialogListener() {
+            @Override
+            public void onPaySuccess(CoinPaySheet sheet, String orderNo, Integer payPrice) {
+                sheet.dismiss();
+                ToastUtils.showShort(R.string.playfun_pay_success);
+                viewModel.payRedPackageSuccess(photoId);
+            }
+            @Override
+            public void toGooglePlayView() {
+                CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(mActivity);
+                coinRechargeFragmentView.setClickListener(new CoinRechargeSheetView.ClickListener() {
+                    @Override
+                    public void toGooglePlayView(GoodsEntity goodsEntity) {
+                        Intent intent = new Intent(mActivity, RechargeActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("Goods_info", goodsEntity);
+                        intent.putExtras(bundle);
+                        toGooglePlayIntent.launch(intent);
+                    }
+                });
+                coinRechargeFragmentView.show();
+            }
         }).build().show();
     }
+
+    //跳转谷歌支付act
+    ActivityResultLauncher<Intent> toGooglePlayIntent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        Log.e("进入支付页面回调","=========");
+        if (result.getData() != null) {
+            Intent intentData = result.getData();
+            GoodsEntity goodsEntity = (GoodsEntity) intentData.getSerializableExtra("goodsEntity");
+            if(goodsEntity!=null){
+                ToastUtils.showShort(R.string.playfun_pay_success);
+                //viewModel.payRedPackageSuccess(photoId);
+            }
+        }
+    });
 
     @Override
     public void onDestroy() {
