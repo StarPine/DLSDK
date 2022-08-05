@@ -973,7 +973,7 @@
     <string name="playfun_mine_setting_account_pwd_hint1">Enter password</string>
     <string name="playfun_mine_setting_account_pwd_hint2">Enter password again</string>
     <string name="playfun_mine_setting_account_pwd">Account password</string>
-    <string name="notepad_hint">Write down the characteristics of the other party to help you recall what the other party has talked</string>
+    <string name="notepad_hint">Record everything about her/him</string>
     <string name="save">Save</string>
     <string name="notepad_word_count_format">%s/200</string>
     <string name="notepad_word_count">0/200</string>
