@@ -348,17 +348,8 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                 giftBagDialog.setGiftOnClickListener(new GiftBagDialog.GiftOnClickListener() {
                     @Override
                     public void sendGiftClick(Dialog dialog, int number, GiftBagEntity.giftEntity giftEntity) {
+                        dialog.dismiss();
                         AppContext.instance().logEvent(AppsFlyerEvent.voicecall_send_gift);
-                        if (viewModel.userCall) {
-                            //男生情况下。钻石减去送礼物的价格少于0==余额不足。不允许发送
-                            if (viewModel.maleBalanceMoney - (giftEntity.getMoney().intValue() * number) < 0) {
-                                AppContext.instance().logEvent(AppsFlyerEvent.voicecall_gift_Ins_topup);
-                                dialog.dismiss();
-                                ToastCenterUtils.showToast(R.string.playfun_dialog_exchange_integral_total_text1);
-                                viewModel.uc.sendUserGiftError.postValue(true);
-                                return;
-                            }
-                        }
                         viewModel.sendUserGift(dialog, giftEntity, viewModel.leftUserInfoField.get().getId(), number);
                     }
 

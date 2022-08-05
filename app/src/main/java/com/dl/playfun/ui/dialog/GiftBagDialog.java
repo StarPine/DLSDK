@@ -355,9 +355,6 @@ public class GiftBagDialog extends BaseDialog {
                             btn_stored.setText(R.string.playfun_gift_bag_text1);
                         }
                         int totalCoin = giftBagEntity.getTotalCoin().intValue();
-                        if (isDark) {
-                            totalCoin = maleBalance;
-                        }
                         balance_value.setText(String.valueOf(totalCoin >= 0 ? totalCoin : 0));
                         //礼物列表实现
                         List<GiftBagEntity.giftEntity> listGifEntity = giftBagEntity.getGift();

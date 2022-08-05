@@ -1199,6 +1199,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         giftBagDialog.setGiftOnClickListener(new GiftBagDialog.GiftOnClickListener() {
             @Override
             public void sendGiftClick(Dialog dialog, int number, GiftBagEntity.giftEntity giftEntity) {
+                dialog.dismiss();
                 AppContext.instance().logEvent(AppsFlyerEvent.im_send_gifts);
                 viewModel.sendUserGift(dialog, giftEntity, getTaUserIdIM(), number);
             }

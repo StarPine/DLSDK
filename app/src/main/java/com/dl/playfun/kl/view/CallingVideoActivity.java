@@ -455,17 +455,8 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                 giftBagDialog.setGiftOnClickListener(new GiftBagDialog.GiftOnClickListener() {
                     @Override
                     public void sendGiftClick(Dialog dialog, int number, GiftBagEntity.giftEntity giftEntity) {
+                        dialog.dismiss();
                         AppContext.instance().logEvent(AppsFlyerEvent.videocall_send_gift);
-                        if (viewModel.isMale) {
-                            //男生情况下。钻石减去送礼物的价格少于0==余额不足。不允许发送
-                            if (viewModel.maleBalanceMoney - (giftEntity.getMoney().intValue() * number) < 0) {
-                                dialog.dismiss();
-                                AppContext.instance().logEvent(AppsFlyerEvent.videocall_gift_Insu_topup);
-                                ToastCenterUtils.showToast(R.string.playfun_dialog_exchange_integral_total_text1);
-                                viewModel.uc.sendUserGiftError.postValue(true);
-                                return;
-                            }
-                        }
                         viewModel.sendUserGift(dialog, giftEntity, viewModel.callingVideoInviteInfoField.get().getId(), number);
                     }
 
