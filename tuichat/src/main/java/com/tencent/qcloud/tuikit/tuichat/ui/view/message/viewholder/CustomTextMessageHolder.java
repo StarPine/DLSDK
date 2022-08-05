@@ -114,7 +114,7 @@ public class CustomTextMessageHolder extends TextMessageHolder {
         hideTimeView();
         initServerDataAndView(extra);
         LinearLayout.LayoutParams customHintTextLayoutParams = (LinearLayout.LayoutParams) customTipText.getLayoutParams();
-        if (!msg.isSelf()) {
+        if (MessageRecyclerView.sex) {
             customHintTextLayoutParams.gravity = Gravity.END;
             customHintTextLayoutParams.rightMargin = dip2px(itemView.getContext(), 62);
         } else {
