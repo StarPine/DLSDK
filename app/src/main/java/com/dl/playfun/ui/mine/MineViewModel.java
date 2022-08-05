@@ -159,7 +159,7 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
         try {
             ApiConfigManagerEntity apiConfigManagerEntity = ConfigManager.getInstance().getAppRepository().readApiConfigManagerEntity();
             if(apiConfigManagerEntity!=null && apiConfigManagerEntity.getPlayFunWebUrl()!=null){
-                Bundle bundle = InviteWebDetailFragment.getStartBundle(apiConfigManagerEntity.getPlayChatWebUrl() + userInfoEntity.get().getInviteUrl(), userInfoEntity.get().getCode());
+                Bundle bundle = InviteWebDetailFragment.getStartBundle(apiConfigManagerEntity.getPlayChatApiUrl() + userInfoEntity.get().getInviteUrl(), userInfoEntity.get().getCode());
                 start(InviteWebDetailFragment.class.getCanonicalName(), bundle);
             }
         } catch (Exception e) {
