@@ -104,6 +104,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:visibility="@{viewModel.getTipMoneyShowFlag?View.VISIBLE:View.GONE}"
                 android:layout_width="match_parent"
                 android:layout_height="124dp">
 
