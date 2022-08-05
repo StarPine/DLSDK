@@ -343,7 +343,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
         msgContentLinear.setVisibility(View.VISIBLE);
 
         // clear isReadText status
-        isReadText.setTextColor(isReadText.getResources().getColor(R.color.text_gray1));
+//        isReadText.setTextColor(isReadText.getResources().getColor(R.color.text_gray1));
         isReadText.setOnClickListener(null);
 
         if (isForwardMode || isReplyDetailMode) {
@@ -497,20 +497,17 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
             if (msg.isPeerRead()) {
                 //DL add
                 isReadText.setBackgroundResource(R.drawable.custom_read_backdrop);
-
                 isReadText.setText(R.string.has_read);
             } else {
                 //DL add
                 isReadText.setBackgroundResource(R.drawable.custom_unread_backdrop);
-
                 isReadText.setText(R.string.unread);
-                isReadText.setTextColor(isReadText.getResources().getColor(TUIThemeManager.getAttrResId(isReadText.getContext(), R.attr.chat_read_receipt_text_color)));
-                isReadText.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startShowUnread(msg);
-                    }
-                });
+//                isReadText.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        startShowUnread(msg);
+//                    }
+//                });
             }
         }
     }

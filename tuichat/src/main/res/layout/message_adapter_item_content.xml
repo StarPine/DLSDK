@@ -127,7 +127,9 @@
                 android:layout_gravity="bottom"
                 android:layout_marginRight="6dp"
                 android:layout_marginBottom="2.88dp"
-                android:textColor="@color/text_gray1"
+                android:textColor="@color/white"
+                android:paddingRight="4dp"
+                android:paddingLeft="4dp"
                 android:textSize="11sp"
                 tools:text="read" />
 
