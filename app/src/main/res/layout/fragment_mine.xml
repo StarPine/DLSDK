@@ -207,8 +207,9 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="21dp"
                                     android:layout_marginEnd="6dp"
+                                    android:visibility="@{StringUtils.isEmpty(viewModel.userInfoEntity.constellation)?View.GONE:View.VISIBLE}"
                                     android:text="@{viewModel.userInfoEntity.constellation}"
-                                    tools:text="21岁" />
+                                    tools:text="星座" />
 
                                 <TextView
                                     style="@style/MineTagPrimary"
