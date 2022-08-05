@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name_release">PlayChat</string>
     <string name="playfun_local_language">en-US</string>
     <string name="playfun_local_language_val">en</string>
     <string name="playfun_title_home">Home</string>

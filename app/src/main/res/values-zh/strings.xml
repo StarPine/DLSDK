@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name_release">聊玩</string>
     <string name="playfun_local_language">zh-TW</string>
     <string name="playfun_local_language_val">zh</string>
     <string name="playfun_title_home">首頁</string>
