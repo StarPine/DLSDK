@@ -23,8 +23,8 @@
 
         <ImageView
             android:id="@+id/title_logo"
-            android:layout_width="186dp"
-            android:layout_height="84dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerInParent="true"
             android:layout_marginTop="80dp"
