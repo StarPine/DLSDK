@@ -665,7 +665,7 @@ public interface HttpDataSource {
      * @parame [appId, callingType, fromUserId, toUserId, currentUserId]
      * @Date 2021/12/13
      */
-    Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(Integer callingType, String fromUserId, String toUserId);
+    Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(Integer callingType, String fromUserId, String toUserId, int callingSource);
 
     /**
      * @return io.reactivex.Observable<com.dl.play.chat.entity.CallingInviteInfo>

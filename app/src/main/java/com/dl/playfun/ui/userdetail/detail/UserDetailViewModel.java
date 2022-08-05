@@ -877,7 +877,7 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
             //男女点击拨打视频
             AppContext.instance().logEvent(ConfigManager.getInstance().isMale() ? AppsFlyerEvent.call_video_male : AppsFlyerEvent.call_video_female);
         }
-        model.callingInviteInfo(callingType, IMUserId, toIMUserId)
+        model.callingInviteInfo(callingType, IMUserId, toIMUserId, 0)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())

@@ -34,7 +34,6 @@ import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.ActivityWebHomePlayfunBinding;
 import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.ui.base.BaseFragment;
-import com.dl.playfun.ui.message.chatdetail.ChatDetailFragment;
 import com.dl.playfun.ui.mine.wallet.recharge.RechargeActivity;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.utils.ChatUtils;
@@ -331,8 +330,8 @@ public class WebHomeFragment extends BaseFragment<ActivityWebHomePlayfunBinding,
         }
         //拨打视讯
         @JavascriptInterface
-        public void callingUserVideos(String IMUserId,String toIMUserId){
-            viewModel.getCallingInvitedInfo(2,IMUserId,toIMUserId);
+        public void callingUserVideos(String IMUserId, String toIMUserId, int callingSource) {
+            viewModel.getCallingInvitedInfo(2, IMUserId, toIMUserId, callingSource);
         }
         //进入聊天页面
         @JavascriptInterface

@@ -212,8 +212,8 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
-    public Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(Integer callingType, String fromUserId, String toUserId) {
-        return apiService.callingInviteInfo(callingType, fromUserId, toUserId);
+    public Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(Integer callingType, String fromUserId, String toUserId, int callingSource) {
+        return apiService.callingInviteInfo(callingType, fromUserId, toUserId, callingSource);
     }
 
     @Override

@@ -782,7 +782,8 @@ public interface ApiService {
     Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(
             @Query("callingType") Integer callingType,
             @Query("inviterImId") String inviterImId,
-            @Query("receiverImId") String receiverImId
+            @Query("receiverImId") String receiverImId,
+            @Query("callingSource") Integer callingSource
     );
 
     /**

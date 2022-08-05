@@ -47,7 +47,7 @@ public class WebHomeViewModel extends BaseViewModel<AppRepository> {
     }
 
     //拨打语音、视频
-    public void getCallingInvitedInfo(int callingType, String IMUserId, String toIMUserId) {
+    public void getCallingInvitedInfo(int callingType, String IMUserId, String toIMUserId, int callingSource) {
         if(callingType==1){
             //男女点击拨打语音
             AppContext.instance().logEvent(ConfigManager.getInstance().isMale() ? AppsFlyerEvent.call_voice_male : AppsFlyerEvent.call_voice_female);
@@ -55,7 +55,7 @@ public class WebHomeViewModel extends BaseViewModel<AppRepository> {
             //男女点击拨打视频
             AppContext.instance().logEvent(ConfigManager.getInstance().isMale() ? AppsFlyerEvent.call_video_male : AppsFlyerEvent.call_video_female);
         }
-        model.callingInviteInfo(callingType, IMUserId, toIMUserId)
+        model.callingInviteInfo(callingType, IMUserId, toIMUserId, callingSource)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())

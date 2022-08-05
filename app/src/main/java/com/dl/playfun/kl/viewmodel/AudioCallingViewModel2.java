@@ -361,7 +361,7 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
     //拨打语音、视频---接听人
     public void getCallingInvitedInfo(int callingType, String fromUserId) {
         String userId = model.readUserData().getImUserId();
-        model.callingInviteInfo(callingType, fromUserId, userId)
+        model.callingInviteInfo(callingType, fromUserId, userId, 0)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())

@@ -227,8 +227,8 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
-    public Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(Integer callingType, String fromUserId, String toUserId) {
-        return mHttpDataSource.callingInviteInfo(callingType, fromUserId, toUserId);
+    public Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(Integer callingType, String fromUserId, String toUserId, int callingSource) {
+        return mHttpDataSource.callingInviteInfo(callingType, fromUserId, toUserId, callingSource);
     }
 
     @Override

@@ -324,7 +324,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
     //拨打语音、视频
     public void getCallingInvitedInfo(int callingType, String fromUserId) {
         String userId = model.readUserData().getImUserId();
-        model.callingInviteInfo(callingType, fromUserId, userId)
+        model.callingInviteInfo(callingType, fromUserId, userId, 0)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
