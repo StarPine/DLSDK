@@ -138,6 +138,10 @@ public class BaseParkItemViewModel extends MultiItemViewModel<BaseParkViewModel>
                 distance = View.VISIBLE;
             }
         }
+        String onlineStatus = getOnlineStatus();
+        if (onlineStatus == null){
+            distance = View.GONE;
+        }
         return distance;
     }
 
