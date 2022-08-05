@@ -77,7 +77,7 @@ public class NotepadViewModel extends BaseViewModel<AppRepository> {
                 .subscribe(new BaseObserver<BaseDataResponse<NoteInfoEntity>>() {
                     @Override
                     public void onSuccess(BaseDataResponse<NoteInfoEntity> response) {
-                        Toast.makeText(AppContext.instance(), R.string.save, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AppContext.instance(), R.string.save_success, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
