@@ -177,8 +177,8 @@
     <string name="custom_send_error_message_txt2">馬上獲取>></string>
     <string name="custom_message_txt1">收入+%s，真人認證後收入翻倍 去認證>></string>
     <string name="custom_message_txt1_key">去認證>></string>
-    <string name="custom_message_txt2">C+%s</string>
     <string name="custom_message_txt2_test2">C+%s，真人認證後收入翻倍 去認證>></string>
+    <string name="custom_message_txt2">C+%s</string>
     <string name="custom_message_txt3">對方餘額不足，請提示他儲值</string>
     <string name="custom_message_txt4">追蹤了</string>
     <string name="custom_message_txt5">妳</string>
@@ -192,5 +192,9 @@
     <string name="custom_message_other_busy">對方忙線中</string>
     <string name="opponent_in_game">在遊戲中</string>
     <string name="call_ended">通話結束</string>
-
+    <string name="chat_delete_msg_tip">立即刪除</string>
+    <string name="playfun_in_game">對方在遊戲中</string>
+    <string name="playfun_in_game_missed">遊戲中未接聽</string>
+    <string name="custom_message_txt8">餘額不足，請儲值</string>
+    <string name="custom_message_call_message_deatail_time_msg">結束通話，通話時長:  %02d:%02d</string>
 </resources>
