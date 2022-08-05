@@ -1,5 +1,6 @@
 package com.dl.playfun.ui.webview;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
@@ -22,8 +23,10 @@ import android.widget.ProgressBar;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
@@ -32,7 +35,9 @@ import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.ActivityWebHomePlayfunBinding;
+import com.dl.playfun.entity.CallingInviteInfo;
 import com.dl.playfun.entity.GoodsEntity;
+import com.dl.playfun.kl.Utils;
 import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.ui.mine.wallet.recharge.RechargeActivity;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
@@ -42,7 +47,9 @@ import com.dl.playfun.widget.action.StatusLayout;
 import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 import com.dl.playfun.widget.dialog.TraceDialog;
 import com.google.gson.Gson;
+import com.luck.picture.lib.permissions.PermissionChecker;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 /**
  * Author: 彭石林
@@ -333,6 +340,52 @@ public class WebHomeFragment extends BaseFragment<ActivityWebHomePlayfunBinding,
         public void callingUserVideos(String IMUserId, String toIMUserId, int callingSource) {
             viewModel.getCallingInvitedInfo(2, IMUserId, toIMUserId, callingSource);
         }
+
+        //效验当前是否拥有权限
+        @JavascriptInterface
+        public String checkPermissionsGroup(){
+            boolean flagCheck = ActivityCompat.shouldShowRequestPermissionRationale(_mActivity, Manifest.permission.RECORD_AUDIO);
+            if(ActivityCompat.shouldShowRequestPermissionRationale(_mActivity,Manifest.permission.CAMERA)){
+                flagCheck = true;
+            }
+            return String.valueOf(flagCheck);
+        }
+
+        //获取权限
+        @JavascriptInterface
+        public void requestPermissions(){
+            new RxPermissions(mActivity)
+                    .request(Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA)
+                    .subscribe(granted -> {
+                        if (granted) {
+                            webView.loadUrl("javascript:checkPermissionsSuccess()");
+                        } else {
+                            new RxPermissions(mActivity)
+                                            .request(Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA)
+                                            .subscribe(granted1 -> {
+                                                if (granted1) {
+                                                    //权限获取成功
+                                                    webView.loadUrl("javascript:checkPermissionsSuccess()");
+                                                }else{
+                                                    //权限获取失败
+                                                    webView.loadUrl("javascript:checkPermissionsFial()");
+                                                }
+                                            });
+                        }
+                    });
+        }
+        //前端掉用拨打接口逻辑、客户端直接提供跳转页面方法
+        @JavascriptInterface
+        public void toCallVideoUserView(String toIMUserId,String dataInfo) {
+            if(dataInfo!=null){
+                CallingInviteInfo callingInviteInfo = GsonUtils.fromJson(dataInfo,CallingInviteInfo.class);
+                if (callingInviteInfo != null) {
+                    Utils.tryStartCallSomeone(2, toIMUserId, callingInviteInfo.getRoomId(), new Gson().toJson(callingInviteInfo));
+                }
+            }
+        }
+
+
         //进入聊天页面
         @JavascriptInterface
         public void startIMChatView(String toIMUserId,String userId,String userName){
@@ -344,6 +397,11 @@ public class WebHomeFragment extends BaseFragment<ActivityWebHomePlayfunBinding,
             return mContext.getString(R.string.playfun_local_language);
         }
 
+        //弹出砖石购买弹窗
+        @JavascriptInterface
+        public void alertCoinStoredEvent(){
+            viewModel.webUC.sendDialogViewEvent.call();
+        }
 
     }
 
