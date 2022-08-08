@@ -155,7 +155,7 @@ android {
             if(!rootProject.ext.BuildSdkPlayfun && !rootProject.ext.BuildPlayChatRelease){
                 // 服务端接口HOST
                 buildConfigField "String", "DEFAULT_API_URL", "\"http://t-config.play-chat.net/\""
-                applicationId "com.ld.play.chat"
+                applicationId "com.test.demo.chat"
                 manifestPlaceholders = [package_name: applicationId]
                 //测试包配置
                 signingConfig signingConfigs.playChatDebug
