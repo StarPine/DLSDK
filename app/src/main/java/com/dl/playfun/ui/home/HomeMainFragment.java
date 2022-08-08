@@ -148,7 +148,11 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
             cityChooseDialog.show();
             cityChooseDialog.setCityChooseDialogListener((dialog1, itemEntity) -> {
                 if(itemEntity!=null){
-                    viewModel.cityId.set(itemEntity.getId());
+                    if(itemEntity.getId()!=null && itemEntity.getId()==-1){
+                        viewModel.cityId.set(null);
+                    }else{
+                        viewModel.cityId.set(itemEntity.getId());
+                    }
                     viewModel.regionTitle.set(itemEntity.getName());
                 }else{
                     viewModel.cityId.set(null);

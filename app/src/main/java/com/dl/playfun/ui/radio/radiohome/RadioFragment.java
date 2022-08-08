@@ -237,7 +237,12 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
             cityChooseDialog.show();
             cityChooseDialog.setCityChooseDialogListener((dialog1, itemEntity) -> {
                 if(itemEntity!=null){
-                    viewModel.cityId = itemEntity.getId();
+                    if(itemEntity.getId()!=null && itemEntity.getId()==-1){
+                        viewModel.cityId = null;
+                    }else{
+                        viewModel.cityId = itemEntity.getId();
+                    }
+
                     viewModel.regionTitle.set(itemEntity.getName());
                 }else{
                     viewModel.cityId = null;
