@@ -13,7 +13,7 @@ ext {
     //是否切成PLayFUn打包aar
     BuildSdkPlayfun = false;
     //是否 PlayChat打包(false = Debug 或 true = 正式包)成 app
-    BuildPlayChatRelease = true;
+    BuildPlayChatRelease = false;
 
     //android开发版本配置
     android = [

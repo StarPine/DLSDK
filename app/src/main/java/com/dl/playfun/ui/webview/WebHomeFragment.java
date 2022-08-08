@@ -147,6 +147,7 @@ public class WebHomeFragment extends BaseFragment<ActivityWebHomePlayfunBinding,
         //正在加载网页动画
         showLoading();
         //设置打开的页面地址
+        //webView.loadUrl("file:///android_asset/index.html");
         webView.loadUrl(webUrl);
     }
 
@@ -343,36 +344,46 @@ public class WebHomeFragment extends BaseFragment<ActivityWebHomePlayfunBinding,
 
         //效验当前是否拥有权限
         @JavascriptInterface
-        public String checkPermissionsGroup(){
-            boolean flagCheck = ActivityCompat.shouldShowRequestPermissionRationale(_mActivity, Manifest.permission.RECORD_AUDIO);
-            if(ActivityCompat.shouldShowRequestPermissionRationale(_mActivity,Manifest.permission.CAMERA)){
-                flagCheck = true;
-            }
-            return String.valueOf(flagCheck);
+        public void checkPermissionsGroup(){
+            binding.webView.postDelayed(() -> {
+                boolean flagCheck = ActivityCompat.shouldShowRequestPermissionRationale(_mActivity, Manifest.permission.RECORD_AUDIO);
+                if(ActivityCompat.shouldShowRequestPermissionRationale(_mActivity,Manifest.permission.CAMERA)){
+                    flagCheck = true;
+                }
+                if(flagCheck){
+                    webView.loadUrl("javascript:checkPermissionsSuccess()");
+                }else {
+                    //权限获取失败
+                    webView.loadUrl("javascript:checkPermissionsFial()");
+                }
+            },200);
         }
 
         //获取权限
         @JavascriptInterface
         public void requestPermissions(){
-            new RxPermissions(mActivity)
-                    .request(Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA)
-                    .subscribe(granted -> {
-                        if (granted) {
-                            webView.loadUrl("javascript:checkPermissionsSuccess()");
-                        } else {
-                            new RxPermissions(mActivity)
-                                            .request(Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA)
-                                            .subscribe(granted1 -> {
-                                                if (granted1) {
-                                                    //权限获取成功
-                                                    webView.loadUrl("javascript:checkPermissionsSuccess()");
-                                                }else{
-                                                    //权限获取失败
-                                                    webView.loadUrl("javascript:checkPermissionsFial()");
-                                                }
-                                            });
-                        }
-                    });
+            binding.webView.postDelayed(() -> {
+                new RxPermissions(mActivity)
+                        .request(Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA)
+                        .subscribe(granted -> {
+                            if (granted) {
+                                webView.loadUrl("javascript:checkPermissionsSuccess()");
+                            } else {
+                                new RxPermissions(mActivity)
+                                        .request(Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA)
+                                        .subscribe(granted1 -> {
+                                            if (granted1) {
+                                                //权限获取成功
+                                                webView.loadUrl("javascript:checkPermissionsSuccess()");
+                                            }else{
+                                                //权限获取失败
+                                                webView.loadUrl("javascript:checkPermissionsFial()");
+                                            }
+                                        });
+                            }
+                        });
+            },300);
+
         }
         //前端掉用拨打接口逻辑、客户端直接提供跳转页面方法
         @JavascriptInterface
@@ -400,7 +411,7 @@ public class WebHomeFragment extends BaseFragment<ActivityWebHomePlayfunBinding,
         //弹出砖石购买弹窗
         @JavascriptInterface
         public void alertCoinStoredEvent(){
-            viewModel.webUC.sendDialogViewEvent.call();
+            viewModel.webUC.sendDialogViewEvent.postValue(null);
         }
 
     }
