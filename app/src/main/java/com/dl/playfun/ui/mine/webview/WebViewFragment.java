@@ -423,6 +423,12 @@ public class WebViewFragment extends BaseFragment<WebviewFragmentBinding, WebVie
             return "zh-TW";
         }
 
+        //返回国际化语言
+        @JavascriptInterface
+        public String getMultilingualFlag(){
+            return mContext.getString(R.string.playfun_local_language);
+        }
+
         @JavascriptInterface
         public void back() {
             //ApiUitl.taskTop = true;
