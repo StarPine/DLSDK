@@ -587,7 +587,7 @@
     <string name="playfun_upgrade_vip">Улучшиться до VIP</string>
     <string name="playfun_end_time">Истекает %s</string>
     <string name="playfun_x_count">%s</string>
-    <string name="playfun_dialog_agree_content">Халло, приветствую в PlayFun.Прежде чем завести новых друзей, хочу вам предупредить  1) соблюдать "Правила пользования площадкой"  и "Правила поста вещения" При нарушении этих правил (например, порно, вульгар), PlayFun имеет право наложить ограничение по Вашему аккаунту, вплоть до замораживания аккаунта  2) В ходе работы на площадке, при необходимости получить помощи либо отзываться, просьба в личном центре связаться со специалистом клиентской поддержки.</string>
+    <string name="playfun_dialog_agree_content">Халло, приветствую в PlayChat.Прежде чем завести новых друзей, хочу вам предупредить  1) соблюдать "Правила пользования площадкой"  и "Правила поста вещения" При нарушении этих правил (например, порно, вульгар), PlayChat имеет право наложить ограничение по Вашему аккаунту, вплоть до замораживания аккаунта  2) В ходе работы на площадке, при необходимости получить помощи либо отзываться, просьба в личном центре связаться со специалистом клиентской поддержки.</string>
     <string name="playfun_recharge_coin_success">Пополнено успешно</string>
     <string name="playfun_recharge_coin_success2">Конвертировать?</string>
     <string name="playfun_age_and_constellation">%s</string>
@@ -695,8 +695,8 @@
 
     <string name="playfun_please_select_location">Выбрать город</string>
 
-    <string name="playfun_user_message_tag1">Присоединяйтесь к PlayFun через магазин</string>
-    <string name="playfun_user_message_tag2">Вступление в PlayFun через код приглашение</string>
+    <string name="playfun_user_message_tag1">Присоединяйтесь к PlayChat через магазин</string>
+    <string name="playfun_user_message_tag2">Вступление в PlayChat через код приглашение</string>
     <string name="playfun_alert_invite_write_title">Для обеспечения самой правдоподобной среды заведения друзей, мы будем рассматривать Ваши данные и держим их в секрете</string>
 
     <string name="playfun_dialog_coin_pay_user_detail_title">Кратность покупки</string>
@@ -947,7 +947,7 @@
     <string name="playfun_fragment_edit_profile_female">Жен.</string>
 
     <string name="playfun_chat_detail_tool_bar_title">Введите код приглашения</string>
-    <string name="playfun_homt_main_lication_title">PlayFun не может вычислить расстояние между вами и другими пользователями без включения локационного сервиса</string>
+    <string name="playfun_homt_main_lication_title">PlayChat не может вычислить расстояние между вами и другими пользователями без включения локационного сервиса</string>
     <string name="playfun_message_hint_all">Привет, прежде чем заводить новых друзей, напоминаем вам:\n
 1) Соблюдайте «Руководство использования платформы» и «Инструкции публикации трансляций», в случае нарушения (например, публикация пошлого или порнографического контента), платформа имеет право установить ограничения на использование аккаунта, вплоть до его заморозки.\n
 2) В случае возникновения каких-либо вопросов при использовании платформы, обратитесь в персональную поддержку в разделе «Контакты» за помощью или консультацией.</string>

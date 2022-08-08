@@ -218,7 +218,7 @@
     <string name="playfun_open">產品打開時</string>
     <string name="playfun_push_setting_sound">聲音</string>
     <string name="playfun_push_setting_shock">震動</string>
-    <string name="playfun_register_alert_hint">感謝你使用PlayFun。\n我們的客服團隊將對你的資料進行審核！</string>
+    <string name="playfun_register_alert_hint">感謝你使用PlayChat。\n我們的客服團隊將對你的資料進行審核！</string>
     <string name="playfun_code">驗證碼</string>
     <string name="playfun_setting_password">設定密碼</string>
     <string name="playfun_please_setting_password">請設定登入密碼</string>
@@ -452,7 +452,7 @@
     <string name="playfun_goddess_certification">女神認證</string>
     <string name="playfun_goddess_certification_auditing">女神認證（審核中）</string>
     <string name="playfun_dialog_face_recognition_title">請進行臉部辨識</string>
-    <string name="playfun_dialog_face_recognition_desc">你已重新登入，為保護你的賬號安全，請進行臉部辨識。與你的臉部數據對比通過後才可以正常使用PlayFun</string>
+    <string name="playfun_dialog_face_recognition_desc">你已重新登入，為保護你的賬號安全，請進行臉部辨識。與你的臉部數據對比通過後才可以正常使用PlayChat</string>
     <string name="playfun_dialog_face_recognition_btn_first">臉部辨識</string>
     <string name="playfun_dialog_face_recognition_btn_second">登出</string>
     <string name="playfun_dialog_face_recognition_contact_service">遇到問題，聯繫客服</string>
@@ -578,8 +578,8 @@
     <string name="playfun_upgrade_vip">升级VIP尊享特权</string>
     <string name="playfun_end_time">将于%s到期</string>
     <string name="playfun_x_count">%s</string>
-    <string name="playfun_dialog_agree_content">Hi,歡迎來到PlayFun！我們提醒您：\n
-    1） 請遵守《平臺使用規範》和《廣播發布須知》，若發布違規內容（如：色情低俗裸露內容等），PlayFun有權對賬號作出限制權限，甚至凍結賬號處理。\n
+    <string name="playfun_dialog_agree_content">Hi,歡迎來到PlayChat！我們提醒您：\n
+    1） 請遵守《平臺使用規範》和《廣播發布須知》，若發布違規內容（如：色情低俗裸露內容等），PlayChat有權對賬號作出限制權限，甚至凍結賬號處理。\n
     2） 在使用平臺過程中 ，若遇到任何問題需要幫助或者提供寶貴意見，請在個人中心—聯系客服專員，進行處理。</string>
     <string name="playfun_recharge_coin_success">儲值成功</string>
     <string name="playfun_recharge_coin_success2">兌換?</string>
@@ -677,8 +677,8 @@
     <string name="playfun_error_google_22">重新連接時連接超時</string>
     <string name="playfun_error_google_12500">升級最新的google play 服務才可以使用</string>
     <string name="playfun_please_select_location">請選擇城市</string>
-    <string name="playfun_user_message_tag1">通過商店加入 PlayFun</string>
-    <string name="playfun_user_message_tag2">通過邀請碼加入 PlayFun</string>
+    <string name="playfun_user_message_tag1">通過商店加入 PlayChat</string>
+    <string name="playfun_user_message_tag2">通過邀請碼加入 PlayChat</string>
     <string name="playfun_alert_invite_write_title">為了提供最可信的交友環境，我們將審查您的詳細信息並保密</string>
     <string name="playfun_dialog_coin_pay_user_detail_title">購買次數</string>
     <string name="playfun_reg_user_sex_error">請先選擇性別</string>
@@ -884,8 +884,8 @@
     <string name="playfun_fragment_edit_profile_gender">性別</string>
     <string name="playfun_fragment_edit_profile_male">男性</string>
     <string name="playfun_fragment_edit_profile_female">女性</string>
-    <string name="playfun_chat_detail_tool_bar_title">輸入PlayFun邀請碼</string>
-    <string name="playfun_homt_main_lication_title">PlayFun 無法在未啟用位置服務的情況下計算您與其他用戶之間的距離</string>
+    <string name="playfun_chat_detail_tool_bar_title">輸入PlayChat邀請碼</string>
+    <string name="playfun_homt_main_lication_title">PlayChat 無法在未啟用位置服務的情況下計算您與其他用戶之間的距離</string>
     <string name="playfun_message_hint_all">Hi，在結交新朋友前，我們溫馨提醒您：\n
 1） 請遵守《平臺使用規範》和《廣播發佈須知》，若發佈違規內容（如：色情低俗裸露內容等），平臺有權對帳號作出限制許可權，甚至凍結帳號處理。\n
 2） 在使用平臺過程中 ，若遇到任何問題需要幫助或者提供寶貴意見，請在個人中心—聯繫人工客服，進行處理。</string>
