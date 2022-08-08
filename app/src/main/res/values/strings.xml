@@ -218,7 +218,7 @@
     <string name="playfun_open">In-app</string>
     <string name="playfun_push_setting_sound">Sound</string>
     <string name="playfun_push_setting_shock">Vibration</string>
-    <string name="playfun_register_alert_hint">Thank you for using PlayFun.\n Our customer service team will review your profile!</string>
+    <string name="playfun_register_alert_hint">Thank you for using PlayChat.\n Our customer service team will review your profile!</string>
     <string name="playfun_code">Verification Code</string>
     <string name="playfun_setting_password">Password</string>
     <string name="playfun_please_setting_password">Enter Password</string>
@@ -580,8 +580,8 @@
     <string name="playfun_upgrade_vip">Upgrade to VIP</string>
     <string name="playfun_end_time">Expires on %s</string>
     <string name="playfun_x_count">%s</string>
-    <string name="playfun_dialog_agree_content">Hi, welcome to PlayFun. Before making new friends. We warmly inform you:\n\n
-        1. Please comply with PlayFun Use Specification and Broadcast Instructions. PlayFun reserves the right to restrict or even freeze your account if you post any illegal content (such as porn contents).\n\n
+    <string name="playfun_dialog_agree_content">Hi, welcome to PlayChat. Before making new friends. We warmly inform you:\n\n
+        1. Please comply with PlayChat Use Specification and Broadcast Instructions. PlayChat reserves the right to restrict or even freeze your account if you post any illegal content (such as porn contents).\n\n
         2. Need help? Contact us.</string>
     <string name="playfun_recharge_coin_success">Topped up successfully</string>
     <string name="playfun_recharge_coin_success2">Exchange?</string>
@@ -679,9 +679,9 @@
     <string name="playfun_error_google_22">The connection timed out while trying to reconnect.</string>
     <string name="playfun_error_google_12500">Update to the latest Google Play services to use.</string>
     <string name="playfun_please_select_location">Choose a city</string>
-    <string name="playfun_user_message_tag1">Join PlayFun via invitation code</string>
+    <string name="playfun_user_message_tag1">Join PlayChat via invitation code</string>
     <string name="playfun_user_message_tag2">To ensure the most authentic dating environment, \n we will review your profile and keep it secret.</string>
-    <string name="playfun_alert_invite_write_title">Thank you for using PlayFun.\n To ensure the most authentic dating environment, we will review your profile and keep it secret.</string>
+    <string name="playfun_alert_invite_write_title">Thank you for using PlayChat.\n To ensure the most authentic dating environment, we will review your profile and keep it secret.</string>
     <string name="playfun_dialog_coin_pay_user_detail_title">Unlock chat times</string>
     <string name="playfun_reg_user_sex_error">Choose your gender</string>
     <string name="playfun_reg_user_dating_ok">Enter the app</string>
@@ -887,8 +887,8 @@
     <string name="playfun_fragment_edit_profile_male">Male</string>
     <string name="playfun_fragment_edit_profile_female">Female</string>
     <string name="playfun_chat_detail_tool_bar_title">Enter the invitation code</string>
-    <string name="playfun_homt_main_lication_title">PlayFun can\'t calculate the distance between you and other users without enabling location services</string>
-    <string name="playfun_message_hint_all">Hello, welcome to PlayFun, before we make new friends, we remind you: \n1 Please follow the rules and guidelines of the platform, according to which PlayFun has the right to restrict access to your account and even freeze them. \n2) During the use of the platform, if you need help or valuable advice, please contact the personal customer service of the personal center. Our philosophy is Freeship Powers People! I hope you find valuable friendships and have fun on PlayFun</string>
+    <string name="playfun_homt_main_lication_title">PlayChat can\'t calculate the distance between you and other users without enabling location services</string>
+    <string name="playfun_message_hint_all">Hello, welcome to PlayChat, before we make new friends, we remind you: \n1 Please follow the rules and guidelines of the platform, according to which PlayChat has the right to restrict access to your account and even freeze them. \n2) During the use of the platform, if you need help or valuable advice, please contact the personal customer service of the personal center. Our philosophy is Freeship Powers People! I hope you find valuable friendships and have fun on PlayChat</string>
     <string name="playfun_edit_profile_weight_empty">Weight</string>
     <string name="playfun_edit_profile_height_empty">Height</string>
     <string name="playfun_edit_profile_desc_empty">Please fill in the personal profile</string>
