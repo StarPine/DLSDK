@@ -117,6 +117,10 @@ public class BannerRecyclerView extends RecyclerView {
         if( adapter.getItemCount()<=0){
             return;
         }
+        //如果存在历史adapter不为null。并且数量大雨0 则暂停轮播
+        if(getAdapter()!=null && getAdapter().getItemCount()>0){
+            mHandler.removeMessages(WHAT_AUTO_PLAY);
+        }
         super.setAdapter(adapter);
         bannerSize = adapter.getItemCount();
         mLayoutManager.setInfinite(bannerSize >= 3);
