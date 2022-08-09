@@ -1039,4 +1039,160 @@
     <string name="playfun_daily_task">每日任務</string>
     <string name="playfun_get_free_gifts">免費領好禮</string>
     <string name="playfun_user_detail_user_disable3">該賬號已註銷</string>
+
+    <string name="splash_init_tv">啟動失敗，請點擊重試</string>
+    <string name="splash_init_tv2">點擊重試</string>
+    <string name="register_title">手機號碼登入</string>
+    <string name="register_bom_title">其它登入方式</string>
+    <string name="register_bom_title2">其它登入</string>
+    <string name="agree">同意</string>
+    <string name="and">和</string>
+    <string name="terms_of_service">服務條款</string>
+    <string name="privacy_policy">隱私政策</string>
+    <string name="register_title_detail">未註冊手機號驗證後將自動登入</string>
+
+    <string name="register_error_hint">請選擇區號</string>
+
+    <string name="mobile_hint">請輸入手機號碼</string>
+    <string name="code_hint">請輸入驗證碼</string>
+    <string name="again_send">重新發送</string>
+    <string name="code_sended">驗證碼已發送</string>
+    <string name="get_userdata_defail">獲取用戶數據失敗！</string>
+
+
+    <string name="radio_daily_atendance_btn">點我簽到</string>
+    <string name="task_sign_day_title1">第1天</string>
+    <string name="task_sign_day_title2">第2天</string>
+    <string name="task_sign_day_title3">第3天</string>
+    <string name="task_sign_day_title4">第4天</string>
+    <string name="task_sign_day_title5">第5天</string>
+    <string name="task_sign_day_title6">第6天</string>
+    <string name="task_sign_day_title7">第7天</string>
+
+    <string name="task_fragment_title1">福利</string>
+    <string name="task_fragment_title">福利</string>
+    <string name="task_fragment_unfold">展開全部</string>
+    <string name="task_fragment_fold">收起</string>
+    <string name="task_fragment_error">請刷新頁面重試！</string>
+    <string name="task_fragment_error1">請刷新頁面重試！</string>
+    <string name="coin_fragment_empty">這裡什麼都沒有耶~\n%s</string>
+    <string name="coin_fragment_empty_female">妳可以通過儲值獲得鑽石喔！</string>
+    <string name="coin_fragment_empty_male">你可以通過儲值獲得鑽石喔！</string>
+    <string name="task_fragment_error2">重新加載</string>
+    <string name="task_fragment_mine_right">領獎品贏iPhone</string>
+    <string name="task_fragment_sign">簽到</string>
+    <string name="task_fragment_sign_ed">明日再來</string>
+    <string name="task_fragment_oneday">今日可領</string>
+    <string name="task_fragment_tomorrow">明日可領</string>
+    <string name="task_fragment_eject_day_left">已連續簽到</string>
+    <string name="task_fragment_eject_error">已經簽到過了，不能重復簽到</string>
+    <string name="task_fragment_eject_error1">今日簽到獎勵已領取，請明日再來</string>
+    <string name="task_fragment_male">邀請好友，VIP免費送</string>
+    <string name="task_fragment_grld">邀請好友，領20鑽石</string>
+    <string name="task_fragment_task_new1">去完善</string>
+    <string name="task_fragment_task_new2">去上傳</string>
+    <string name="task_fragment_task_new3">去邀請</string>
+    <string name="task_fragment_task_new4">去追蹤</string>
+    <string name="task_fragment_task_new5">去點贊</string>
+    <string name="task_fragment_task_new6">去解鎖</string>
+    <string name="task_fragment_task_new7">去留言</string>
+    <string name="task_fragment_task_new8">去互聯</string>
+    <string name="task_fragment_task_new9">去評價</string>
+    <string name="task_fragment_task_new10">去發佈</string>
+    <string name="task_fragment_task_new11">去認證</string>
+
+    <string name="task_fragment_gold_detail_title">積分明細</string>
+    <string name="task_fragment_gold_detail_toThe">去使用</string>
+
+    <string name="task_fragment_bonus_detail_btn">兌換</string>
+    <string name="task_fragment_bonus_detail_fen">%s積分</string>
+    <string name="task_fragment_bonus_dialog_1">立即查看</string>
+    <string name="task_fragment_bonus_dialog_2">兌換更多獎品</string>
+    <string name="task_fragment_bonus_dialog_3">免費私訊</string>
+    <string name="task_fragment_bonus_dialog_4">優先推薦</string>
+    <string name="task_fragment_bonus_dialog_5">積分不足！</string>
+    <string name="task_fragment_bonus_dialog_6">快去完成任務，領更多積分吧</string>
+    <string name="task_fragment_bonus_dialog_7">確認兌換%s</string>
+    <string name="task_fragment_bonus_dialog_8">恭喜兌換成功！</string>
+    <string name="task_fragment_bonus_dialog_9">請在“兌換紀錄”，填寫收穫地址</string>
+    <string name="task_fragment_bonus_dialog_10">免費VIP 7天後，若未取消，將以$390/月續訂</string>
+    <string name="task_fragment_bonus_dialog_11">僅限非VIP兌換</string>
+    <string name="task_fragment_bonus_dialog_12">僅限非VIP男用戶兌換</string>
+    <string name="task_fragment_bonus_dialog_13">明日再來簽到可得更多獎勵</string>
+    <string name="task_fragment_bonus_dialog_14">恭喜獲得積分翻倍獎勵</string>
+
+    <string name="task_exchange_record_fragment_title2">積分兌換區</string>
+    <string name="task_exchange_record_fragment_title">兌換紀錄</string>
+    <string name="task_exchange_record_fragment_title_help">兌換說明</string>
+
+    <string name="task_exchange_record_fragment_tab">我的商品</string>
+    <string name="task_exchange_record_fragment_tab2">待發貨</string>
+    <string name="task_exchange_record_fragment_tab3">已發貨</string>
+
+    <string name="task_exchange_record_fragment_ceckAll">全選</string>
+    <string name="task_exchange_record_fragment_btn">立即提貨</string>
+    <string name="task_exchange_record_fragment_btn1">立即發貨</string>
+    <string name="task_exchange_record_fragment_check_empty">請選擇提貨商品</string>
+    <string name="task_exchange_record_fragment_item1">兌換時間：\n%s</string>
+    <string name="task_exchange_record_fragment_hint">暫無紀錄\n趕快去做任務，領禮品吧！</string>
+
+    <string name="task_exchange_record_gold_1">收貨地址</string>
+    <string name="task_exchange_record_gold_2">使用說明</string>
+
+    <string name="address_edit_title">添加收貨地址</string>
+    <string name="address_title">收貨信息</string>
+    <string name="address_title2">填寫收貨信息</string>
+    <string name="address_title3">選擇收貨信息</string>
+    <string name="address_error">請填寫收貨地址!</string>
+    <string name="address_error1">請先選擇城市！</string>
+    <string name="address_error2">姓名不能超過8個字符</string>
+    <string name="address_error2_1">姓名不能少於1個字符</string>
+    <string name="address_error3">請輸入正確的手機號碼</string>
+    <string name="address_error4">地址不能超過100個字符</string>
+    <string name="address_name">收貨人</string>
+    <string name="address_name_hint">請填寫收貨人姓名</string>
+    <string name="address_phone">手機號碼</string>
+    <string name="address_phone_hint">請填寫收貨人手機號碼</string>
+    <string name="address_city">所在地區</string>
+    <string name="address_city_hint2">請選鄉鎮市區</string>
+    <string name="address_add_success">添加成功！</string>
+    <string name="address_edit_success">修改成功！</string>
+    <string name="address_delete_title">確認刪除？</string>
+
+    <string name="address_detail">詳細地址</string>
+    <string name="address_detail_hint">街道、樓牌號等</string>
+    <string name="address_default">設為默認地址</string>
+
+    <string name="address_list">收貨地址</string>
+    <string name="address_sub_title">恭喜提貨成功！</string>
+    <string name="address_sub_content">我們會儘快安排發貨，請耐心等待</string>
+    <string name="address_edit1">默認地址</string>
+    <string name="address_edit2">使用</string>
+    <string name="address_edit3">編輯</string>
+    <string name="address_edit4">刪除</string>
+    <string name="address_edit5">默認</string>
+
+    <!-- 状态布局 -->
+    <string name="status_layout_no_data">空空如也</string>
+    <string name="status_layout_error_request">請求出錯，點擊重試</string>
+    <string name="status_layout_error_network">網絡錯誤，點擊重試</string>
+
+    <string name="dialog_exchange_integral_title">兌換積分</string>
+    <string name="dialog_exchange_integral_content_2">積分可用於兌換iPhone、VIP、領取福袋抽筆記本等禮品</string>
+    <string name="dialog_exchange_integral_item_text1">%s鑽石兌換</string>
+    <string name="dialog_exchange_integral_btn">立即兌換</string>
+    <string name="dialog_exchange_integral_success">兌換積分成功!</string>
+    <string name="dialog_exchange_integral_total_text1">鑽石不足，請儲值鑽石</string>
+    <string name="dialog_exchange_integral_total_text2">儲值鑽石自動以1:100的比例兌換成績分</string>
+    <string name="dialog_exchange_integral_total_text3">鑽石不足，無法搭訕</string>
+
+    <string name="mine_fragment_invitation_code_title">免費領取VIP</string>
+    <string name="task_sign_day_ed">今天</string>
+    <string name="task_sign_day">%s天</string>
+    <string name="task_sign_day3">寶箱</string>
+    <string name="task_sign_day7">神秘獎</string>
+    <string name="server_exception">伺服器异常</string>
+    <string name="radio_daily_atendance_day_text">签到成功，积分+10</string>
+
+    <string name="playchat_choose_area_title">地區</string>
 </resources>

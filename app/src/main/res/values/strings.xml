@@ -1040,4 +1040,160 @@
     <string name="playfun_get_free_gifts">Get free gifts</string>
     <string name="playfun_user_detail_user_disable3">The account has cancelled</string>
 
+    <string name="splash_init_tv">Startup failed, click Retry</string>
+    <string name="splash_init_tv2">Click Retry</string>
+    <string name="register_title">Log in</string>
+    <string name="register_bom_title">Other login methods</string>
+    <string name="register_bom_title2">Other Logins</string>
+    <string name="agree">Agree</string>
+    <string name="and">and</string>
+    <string name="terms_of_service">Terms of Service</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="register_title_detail">Log in with phone number</string>
+
+    <string name="register_error_hint">Please select an area code</string>
+
+    <string name="mobile_hint">Please enter phone number</string>
+    <string name="code_hint">Enter verification code</string>
+    <string name="again_send">Resend</string>
+    <string name="code_sended">Sent</string>
+    <string name="get_userdata_defail">Failed to get user data!</string>
+
+
+    <string name="radio_daily_atendance_btn">Check in</string>
+    <string name="task_sign_day_title1">Day 1</string>
+    <string name="task_sign_day_title2">Day 2</string>
+    <string name="task_sign_day_title3">Day 3</string>
+    <string name="task_sign_day_title4">Day 4</string>
+    <string name="task_sign_day_title5">Day 5</string>
+    <string name="task_sign_day_title6">Day 6</string>
+    <string name="task_sign_day_title7">Day 7</string>
+
+    <string name="task_fragment_title1">Bonus </string>
+    <string name="task_fragment_title">Bonus </string>
+    <string name="task_fragment_unfold">Expand</string>
+    <string name="task_fragment_fold">Collapse</string>
+    <string name="task_fragment_error">Please refresh the page and try again!</string>
+    <string name="task_fragment_error1">Please refresh the page and try again!</string>
+    <string name="coin_fragment_empty">There\'s nothing here</string>
+    <string name="coin_fragment_empty_female">You can get diamonds by storing value!</string>
+    <string name="coin_fragment_empty_male">You can get diamonds by storing value!</string>
+    <string name="task_fragment_error2">Reload</string>
+    <string name="task_fragment_mine_right">Claim prizes to win iPhone</string>
+    <string name="task_fragment_sign">Check in</string>
+    <string name="task_fragment_sign_ed">Come back tomorrow</string>
+    <string name="task_fragment_oneday">Available today</string>
+    <string name="task_fragment_tomorrow">Available tomorrow</string>
+    <string name="task_fragment_eject_day_left">Continuous check-ins</string>
+    <string name="task_fragment_eject_error">You have already checked in and cannot check in again</string>
+    <string name="task_fragment_eject_error1">Today\'s check-in reward has been claimed, please come back tomorrow</string>
+    <string name="task_fragment_male">Invite friends and VIP free delivery</string>
+    <string name="task_fragment_grld">Invite friends and receive 20 diamonds</string>
+    <string name="task_fragment_task_new1">To perfect</string>
+    <string name="task_fragment_task_new2">Go upload</string>
+    <string name="task_fragment_task_new3">Go to Invite</string>
+    <string name="task_fragment_task_new4">Go tracking</string>
+    <string name="task_fragment_task_new5">Go like it</string>
+    <string name="task_fragment_task_new6">Go unlock</string>
+    <string name="task_fragment_task_new7">Go to leave a message</string>
+    <string name="task_fragment_task_new8">De-interconnect</string>
+    <string name="task_fragment_task_new9">Go rate</string>
+    <string name="task_fragment_task_new10">Go to Publish</string>
+    <string name="task_fragment_task_new11">Go to certification</string>
+
+    <string name="task_fragment_gold_detail_title">Breakdown of points</string>
+    <string name="task_fragment_gold_detail_toThe">Go and use</string>
+
+    <string name="task_fragment_bonus_detail_btn">Exchange</string>
+    <string name="task_fragment_bonus_detail_fen">%s points</string>
+    <string name="task_fragment_bonus_dialog_1">Check it out now</string>
+    <string name="task_fragment_bonus_dialog_2">Redeem more prizes</string>
+    <string name="task_fragment_bonus_dialog_3">Free private messages</string>
+    <string name="task_fragment_bonus_dialog_4">Priority recommendation</string>
+    <string name="task_fragment_bonus_dialog_5">Insufficient points!</string>
+    <string name="task_fragment_bonus_dialog_6">Complete the mission and claim more points</string>
+    <string name="task_fragment_bonus_dialog_7">Confirm to exchange of %s</string>
+    <string name="task_fragment_bonus_dialog_8">Success!</string>
+    <string name="task_fragment_bonus_dialog_9">Please fill in the "Exchange History" and fill in the harvest address</string>
+    <string name="task_fragment_bonus_dialog_10">Free VIP after 7 days, if not canceled, will renew at $390/month</string>
+    <string name="task_fragment_bonus_dialog_11">Non-VIP redemption only</string>
+    <string name="task_fragment_bonus_dialog_12">Redemption is restricted to non-VIP male users</string>
+    <string name="task_fragment_bonus_dialog_13">Check in again tomorrow to get more rewards</string>
+    <string name="task_fragment_bonus_dialog_14">Congratulations on the double points bonus</string>
+
+    <string name="task_exchange_record_fragment_title2">Points exchange area</string>
+    <string name="task_exchange_record_fragment_title">Exchange history</string>
+    <string name="task_exchange_record_fragment_title_help">Exchange instructions</string>
+
+    <string name="task_exchange_record_fragment_tab">My merchandise</string>
+    <string name="task_exchange_record_fragment_tab2">Pending shipment</string>
+    <string name="task_exchange_record_fragment_tab3">Shipped</string>
+
+    <string name="task_exchange_record_fragment_ceckAll">Select all</string>
+    <string name="task_exchange_record_fragment_btn">Immediate pickup</string>
+    <string name="task_exchange_record_fragment_btn1">Ship now</string>
+    <string name="task_exchange_record_fragment_check_empty">Please select the pickup item</string>
+    <string name="task_exchange_record_fragment_item1">Exchange time: \n%s</string>
+    <string name="task_exchange_record_fragment_hint">No record\n Hurry up and go to the task, get the gift!</string>
+
+    <string name="task_exchange_record_gold_1">Shipping address</string>
+    <string name="task_exchange_record_gold_2">Instructions for use</string>
+
+    <string name="address_edit_title">Add a shipping address</string>
+    <string name="address_title">Receipt information</string>
+    <string name="address_title2">Fill in the receipt information</string>
+    <string name="address_title3">Select Receipt Information</string>
+    <string name="address_error">Please fill in the delivery address!</string>
+    <string name="address_error1">Please choose a city first!</string>
+    <string name="address_error2">The name cannot exceed 8 characters</string>
+    <string name="address_error2_1">The name cannot be less than 1 character</string>
+    <string name="address_error3">Please enter the correct mobile phone number</string>
+    <string name="address_error4">The address cannot exceed 100 characters</string>
+    <string name="address_name">consignee</string>
+    <string name="address_name_hint">Please fill in the consignee\'s name</string>
+    <string name="address_phone">Mobile phone number</string>
+    <string name="address_phone_hint">Please fill in the consignee\'s mobile phone number</string>
+    <string name="address_city">Region</string>
+    <string name="address_city_hint2">Please choose a township or municipality</string>
+    <string name="address_add_success">Added!</string>
+    <string name="address_edit_success">Modified!</string>
+    <string name="address_delete_title">Confirm deletion?</string>
+
+    <string name="address_detail">Detailed address</string>
+    <string name="address_detail_hint">Streets, floor numbers, etc</string>
+    <string name="address_default">Set to the default address</string>
+
+    <string name="address_list">Shipping address</string>
+    <string name="address_sub_title">Congratulations on the successful pick-up!</string>
+    <string name="address_sub_content">We will arrange the shipment as soon as possible, please be patient</string>
+    <string name="address_edit1">The default address</string>
+    <string name="address_edit2">Use</string>
+    <string name="address_edit3">Edit</string>
+    <string name="address_edit4">Delete</string>
+    <string name="address_edit5">Default</string>
+
+    <!-- 状态布局 -->
+    <string name="status_layout_no_data">Empty</string>
+    <string name="status_layout_error_request">Request error, try again.</string>
+    <string name="status_layout_error_network">Intenet error, try again.</string>
+
+    <string name="dialog_exchange_integral_title">Exchange points</string>
+    <string name="dialog_exchange_integral_content_2">Points can be redeemed for iPhones, VIPs, and gifts such as lucky pocket notebooks</string>
+    <string name="dialog_exchange_integral_item_text1">%s Diamond Exchange</string>
+    <string name="dialog_exchange_integral_btn">Exchange now</string>
+    <string name="dialog_exchange_integral_success">Success!</string>
+    <string name="dialog_exchange_integral_total_text1">There are not enough diamonds, please store diamonds</string>
+    <string name="dialog_exchange_integral_total_text2">Stored Value Diamonds are automatically redeemed for Score Points at a ratio of 1:100</string>
+    <string name="dialog_exchange_integral_total_text3">There are not enough diamonds to talk to</string>
+
+    <string name="mine_fragment_invitation_code_title">Claim a VIP for free</string>
+    <string name="task_sign_day_ed">Today</string>
+    <string name="task_sign_day">%s days</string>
+    <string name="task_sign_day3">Treasure</string>
+    <string name="task_sign_day7">Mystery Award</string>
+    <string name="server_exception">Server exception</string>
+    <string name="radio_daily_atendance_day_text">Successful check-in, +10 points</string>
+
+    <string name="playchat_choose_area_title">Region</string>
+
 </resources>
