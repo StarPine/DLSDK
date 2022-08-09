@@ -450,6 +450,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
+        AppContext.isHomePage = !hidden;
         if (!hidden) {
             if (System.currentTimeMillis() - TOUCH_TIME > WAIT_TIME) {
                 //刷新任何列表数据

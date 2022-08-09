@@ -291,7 +291,6 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
     @Override
     public void onResume() {
         super.onResume();
-        AppContext.isHomePage = true;
         AppContext.isShowNotPaid = true;
     }
 
@@ -299,7 +298,6 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
     public void onPause() {
         super.onPause();
         AppContext.isShowNotPaid = false;
-        AppContext.isHomePage = false;
     }
 
     @Override
