@@ -1049,7 +1049,7 @@ public interface HttpDataSource {
      * @email 15616314565@163.com
      * Param [phone, code]
      **/
-    Observable<BaseDataResponse<UserDataEntity>> v2Login(String phone, String code, String device_code);
+    Observable<BaseDataResponse<UserDataEntity>> v2Login(String phone, String code, String device_code, String region_code);
 
     /**
      * 真人人脸图片

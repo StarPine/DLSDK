@@ -116,7 +116,7 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
             return;
         }
 
-        model.v2Login(mobile.get(), code.get(), ApiUitl.getAndroidId())
+        model.v2Login(mobile.get(), code.get(), ApiUitl.getAndroidId(),areaCode.get().getCode())
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())

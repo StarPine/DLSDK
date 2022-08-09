@@ -1277,7 +1277,7 @@ public interface ApiService {
      * Param [phone, code]
      **/
     @POST("api/v2/login")
-    Observable<BaseDataResponse<UserDataEntity>> v2Login(@Query("phone") String phone, @Query("code") String code, @Query("device_code") String device_code);
+    Observable<BaseDataResponse<UserDataEntity>> v2Login(@Query("phone") String phone, @Query("code") String code, @Query("device_code") String device_code, @Query("region_code") String region_code);
 
     /**
      * @return io.reactivex.Observable<com.dl.playfun.entity.VersionEntity>
