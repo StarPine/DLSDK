@@ -156,19 +156,11 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
     public ChatDetailViewModel(@NonNull Application application, AppRepository repository) {
         super(application, repository);
         sensitiveWords.set(model.readSensitiveWords());
-        setShowRule();
     }
 
     @Override
     public void onEnterAnimationEnd() {
         super.onEnterAnimationEnd();
-    }
-
-    /***
-     * 设置兑换规则框是否显示
-     */
-    public void setShowRule(){
-        isHideExchangeRules.set(ConfigManagerUtil.getInstance().getExchangeRulesFlag());
     }
 
     public void loadUserInfo(int userId) {

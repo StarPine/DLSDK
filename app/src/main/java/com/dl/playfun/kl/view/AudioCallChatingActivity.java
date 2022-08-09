@@ -376,10 +376,14 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         if (isMale){
             if (crystalDetailsConfig.getMaleIsShow() != 1 || isHideExchangeRules){
                 viewModel.isHideExchangeRules.set(true);
+            }else {
+                viewModel.isHideExchangeRules.set(false);
             }
         }else {
             if (crystalDetailsConfig.getFemaleIsShow() != 1 || isHideExchangeRules){
                 viewModel.isHideExchangeRules.set(true);
+            }else {
+                viewModel.isHideExchangeRules.set(false);
             }
         }
     }
