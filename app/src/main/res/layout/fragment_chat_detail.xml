@@ -86,17 +86,19 @@
                         android:visibility="@{viewModel.isTagShow?View.VISIBLE:View.GONE}" />
 
                     <ImageView
+                        android:id="@+id/iv_notepad"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
+                        android:layout_marginRight="20dp"
                         android:layout_toLeftOf="@+id/iv_setting"
                         android:src="@drawable/icon_notepad"
-                        android:layout_marginRight="20dp"
-                        binding:onClickCommand="@{viewModel.noteOnClickCommand}"
-                        />
+                        android:visibility="gone"
+                        binding:onClickCommand="@{viewModel.noteOnClickCommand}" />
 
                     <ImageView
                         android:id="@+id/iv_setting"
+                        android:visibility="gone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
@@ -197,7 +199,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="13dp"
             android:visibility="@{viewModel.isHideExchangeRules?View.GONE:View.VISIBLE}"
-            onClickCommand="@{viewModel.crystalOnClick}"
+            binding:onClickCommand="@{viewModel.crystalOnClick}"
             >
 
             <com.opensource.svgaplayer.SVGAImageView

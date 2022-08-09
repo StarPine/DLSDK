@@ -196,6 +196,8 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         //非客服账号加载用户标签和状态
         if (!mChatInfo.getId().startsWith(AppConfig.CHAT_SERVICE_USER_ID)) {
             binding.rlLayout.setVisibility(View.VISIBLE);
+            binding.ivNotepad.setVisibility(View.VISIBLE);
+            binding.ivSetting.setVisibility(View.VISIBLE);
             initCallVideoHint();
         }
     }
@@ -213,6 +215,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             viewModel.loadUserInfo(getTaUserIdIM());
             viewModel.loadTagUser(String.valueOf(getTaUserIdIM()));
             initCallVideoHint();
+            viewModel.isShoweCallingVideo.set(true);
         }else {
             viewModel.isHideExchangeRules.set(true);
             viewModel.isShoweCallingVideo.set(false);
@@ -249,7 +252,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     }
 
     public void initCallVideoHint() {
-        defBottomMarginHeight = dp2px(getContext(), 30);
+        defBottomMarginHeight = dp2px(mActivity, 30);
         if (mChatInfo != null && mChatInfo.getId() != null) {
             List<String> userList = new ArrayList<>();
             userList.add(mChatInfo.getId());
@@ -257,10 +260,13 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             V2TIMManager.getInstance().getUsersInfo(userList, new V2TIMValueCallback<List<V2TIMUserFullInfo>>() {
                 @Override
                 public void onSuccess(List<V2TIMUserFullInfo> v2TIMUserFullInfos) {
+                    if(mActivity==null || mActivity.isFinishing()){
+                        return;
+                    }
                     if (v2TIMUserFullInfos != null && !v2TIMUserFullInfos.isEmpty()) {
                         String faceUrl = v2TIMUserFullInfos.get(0).getFaceUrl();
                         if (faceUrl != null) {
-                            Glide.with(getContext()).load(faceUrl)
+                            Glide.with(mActivity).load(faceUrl)
                                     .error(R.drawable.default_avatar)
                                     .placeholder(R.drawable.default_avatar)
                                     .diskCacheStrategy(DiskCacheStrategy.ALL)

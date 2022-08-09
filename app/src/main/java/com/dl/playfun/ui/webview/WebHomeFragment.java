@@ -26,8 +26,11 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.blankj.utilcode.constant.PermissionConstants;
 import com.blankj.utilcode.util.GsonUtils;
+import com.blankj.utilcode.util.PermissionUtils;
 import com.blankj.utilcode.util.StringUtils;
+import com.blankj.utilcode.util.ToastUtils;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
@@ -50,6 +53,8 @@ import com.google.gson.Gson;
 import com.luck.picture.lib.permissions.PermissionChecker;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 import com.tbruyelle.rxpermissions2.RxPermissions;
+
+import java.util.List;
 
 /**
  * Author: 彭石林
@@ -345,7 +350,7 @@ public class WebHomeFragment extends BaseFragment<ActivityWebHomePlayfunBinding,
         //效验当前是否拥有权限
         @JavascriptInterface
         public void checkPermissionsGroup(){
-            binding.webView.postDelayed(() -> {
+            binding.webView.post(() -> {
                 boolean flagCheck = ActivityCompat.shouldShowRequestPermissionRationale(_mActivity, Manifest.permission.RECORD_AUDIO);
                 if(ActivityCompat.shouldShowRequestPermissionRationale(_mActivity,Manifest.permission.CAMERA)){
                     flagCheck = true;
@@ -356,34 +361,24 @@ public class WebHomeFragment extends BaseFragment<ActivityWebHomePlayfunBinding,
                     //权限获取失败
                     webView.loadUrl("javascript:checkPermissionsFial()");
                 }
-            },200);
+            });
         }
 
         //获取权限
+        @SuppressLint("CheckResult")
         @JavascriptInterface
         public void requestPermissions(){
-            binding.webView.postDelayed(() -> {
+            binding.webView.post(() -> {
                 new RxPermissions(mActivity)
                         .request(Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA)
                         .subscribe(granted -> {
                             if (granted) {
                                 webView.loadUrl("javascript:checkPermissionsSuccess()");
                             } else {
-                                new RxPermissions(mActivity)
-                                        .request(Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA)
-                                        .subscribe(granted1 -> {
-                                            if (granted1) {
-                                                //权限获取成功
-                                                webView.loadUrl("javascript:checkPermissionsSuccess()");
-                                            }else{
-                                                //权限获取失败
-                                                webView.loadUrl("javascript:checkPermissionsFial()");
-                                            }
-                                        });
+                                webView.loadUrl("javascript:checkPermissionsFial()");
                             }
                         });
-            },300);
-
+            });
         }
         //前端掉用拨打接口逻辑、客户端直接提供跳转页面方法
         @JavascriptInterface
@@ -396,6 +391,12 @@ public class WebHomeFragment extends BaseFragment<ActivityWebHomePlayfunBinding,
             }
         }
 
+        @JavascriptInterface
+        public void  toAndroidSettingView(){
+            if(getContext()!=null){
+                PermissionChecker.launchAppDetailsSettings(getContext());
+            }
+        }
 
         //进入聊天页面
         @JavascriptInterface
