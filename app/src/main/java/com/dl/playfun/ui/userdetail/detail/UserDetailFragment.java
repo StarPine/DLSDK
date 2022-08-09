@@ -135,7 +135,6 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
     public void onPause() {
         super.onPause();
         AppContext.isShowNotPaid = false;
-        AppContext.isHomePage = false;
     }
 
     @Override
@@ -376,7 +375,6 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
     @Override
     public void onResume() {
         super.onResume();
-        AppContext.isHomePage = true;
         AppContext.isShowNotPaid = true;
     }
 

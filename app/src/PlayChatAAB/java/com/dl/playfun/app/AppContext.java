@@ -83,7 +83,7 @@ public class AppContext extends Application {
     public static final String TAG = "AppContext";
     public static final String LOG_TAG = "AppsFlyerOneLinkSimApp";
     public static final String DL_ATTRS = "dl_attrs";
-    public static boolean isHomePage = false;
+    public static boolean isHomePage = true;
     public static boolean isCalling = false;
     public static boolean isShowNotPaid = false;
     private static AppContext instance;

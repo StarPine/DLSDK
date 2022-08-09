@@ -115,7 +115,6 @@ public class MessageMainFragment extends BaseFragment<FragmentMessageMainBinding
     @Override
     public void onResume() {
         super.onResume();
-        AppContext.isHomePage = true;
         AppContext.isShowNotPaid = true;
     }
 
@@ -123,6 +122,5 @@ public class MessageMainFragment extends BaseFragment<FragmentMessageMainBinding
     public void onPause() {
         super.onPause();
         AppContext.isShowNotPaid = false;
-        AppContext.isHomePage = false;
     }
 }
