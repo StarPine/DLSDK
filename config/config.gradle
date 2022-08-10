@@ -89,8 +89,8 @@ ext {
             "firebase-crashlytics"         : 'com.google.firebase:firebase-crashlytics',
 
             //google.gms
-            "play-services-location"       : 'com.google.android.gms:play-services-location:17.1.0',
-            "play-services-maps"           : 'com.google.android.gms:play-services-maps:17.0.0',
+            "play-services-location"       : 'com.google.android.gms:play-services-location:19.0.1',
+            "play-services-maps"           : 'com.google.android.gms:play-services-maps:18.0.2',
             "play-services-auth"           : 'com.google.android.gms:play-services-auth:19.0.0',
 
             "billingclient"                : 'com.android.billingclient:billing:4.0.0',
