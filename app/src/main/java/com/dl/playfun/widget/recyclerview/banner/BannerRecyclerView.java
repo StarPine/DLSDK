@@ -77,7 +77,7 @@ public class BannerRecyclerView extends RecyclerView {
                    // Log.e("当前向下个页面的坐标","==========="+currentIndex);
                     //修正列表再次填充时。获取的子view 不为null在执行滚动
                     try{
-                        smoothScrollToPosition(currentIndex);
+                        scrollToPosition(currentIndex);
                     }catch (Exception ignored){
 
                     }
@@ -124,8 +124,9 @@ public class BannerRecyclerView extends RecyclerView {
         super.setAdapter(adapter);
         bannerSize = adapter.getItemCount();
         mLayoutManager.setInfinite(bannerSize >= 3);
-        hasInit = true;
-        setPlaying(true);
+        currentIndex = mLayoutManager.getCurrentPosition();
+        //hasInit = true;
+        //setPlaying(true);
         addOnScrollListener(new OnScrollListener() {
 
             @Override
