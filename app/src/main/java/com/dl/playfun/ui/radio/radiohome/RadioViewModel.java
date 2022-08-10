@@ -516,17 +516,22 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
                     public void onSuccess(BaseDataResponse<AdUserBannerEntity> listBaseDataResponse) {
                         AdUserBannerEntity adUserBanner = listBaseDataResponse.getData();
                         if(adUserBanner!=null){
-                            radioItemsAdUser.clear();
                             List<AdUserItemEntity> listData = adUserBanner.getDataList();
                             if(ObjectUtils.isNotEmpty(listData)){
-                                List<RadioItemBannerVideoViewModel> listReal = new ArrayList<>();
+                                ObservableList<RadioItemBannerVideoViewModel> listReal = new ObservableArrayList<>();
                                 for (AdUserItemEntity adUserItemEntity : listData) {
                                     RadioItemBannerVideoViewModel radioItemBannerVideoViewModel = new RadioItemBannerVideoViewModel(RadioViewModel.this,adUserItemEntity);
                                     listReal.add(radioItemBannerVideoViewModel);
                                 }
                                 if(!listReal.isEmpty()){
                                     radioUC.startBannerEvent.call();
-                                    radioItemsAdUser.addAll(listReal);
+                                    if(radioItemsAdUser.size()>0){
+                                        adapterAdUser.setItems(listReal);
+                                        adapterAdUser.notifyItemRangeChanged(0,adapterAdUser.getItemCount());
+                                    }else{
+                                        radioItemsAdUser.addAll(listReal);
+                                    }
+
                                 }
                             }
                         }

@@ -86,7 +86,7 @@ public class FloatWindowService extends Service {
     private void initWindow() {
         mWindowManager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
         //设置好悬浮窗的参数
-        mWindowLayoutParams = getParams();
+        mWindowLayoutParams = getWindowParams();
         //屏幕宽度
         mScreenWidth = mWindowManager.getDefaultDisplay().getWidth();
         // 添加悬浮窗的视图
@@ -98,7 +98,7 @@ public class FloatWindowService extends Service {
         }
     }
 
-    private WindowManager.LayoutParams getParams() {
+    public WindowManager.LayoutParams getWindowParams() {
         mWindowLayoutParams = new WindowManager.LayoutParams();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             mWindowLayoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
@@ -110,7 +110,7 @@ public class FloatWindowService extends Service {
                 | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
 
         // 悬浮窗默认显示以左上角为起始坐标
-        mWindowLayoutParams.gravity = Gravity.LEFT | Gravity.TOP;
+        mWindowLayoutParams.gravity = Gravity.START | Gravity.TOP;
         //悬浮窗的开始位置，设置从左上角开始，所以屏幕左上角是x=0,y=0.
         mWindowLayoutParams.x = 0;
         mWindowLayoutParams.y = mWindowManager.getDefaultDisplay().getHeight() / 2;
