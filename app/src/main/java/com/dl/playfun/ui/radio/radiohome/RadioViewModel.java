@@ -527,7 +527,7 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
                                     radioUC.startBannerEvent.call();
                                     if(radioItemsAdUser.size()>0){
                                         adapterAdUser.setItems(listReal);
-                                        adapterAdUser.notifyItemRangeChanged(0,adapterAdUser.getItemCount());
+                                        adapterAdUser.notifyItemRangeChanged(0,adapterAdUser.getItemCount()-1);
                                     }else{
                                         radioItemsAdUser.addAll(listReal);
                                     }
