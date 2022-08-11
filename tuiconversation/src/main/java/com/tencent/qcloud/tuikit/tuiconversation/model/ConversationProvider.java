@@ -1,10 +1,12 @@
 package com.tencent.qcloud.tuikit.tuiconversation.model;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMConversationResult;
+import com.tencent.imsdk.v2.V2TIMFriendInfo;
 import com.tencent.imsdk.v2.V2TIMGroupMemberFullInfo;
 import com.tencent.imsdk.v2.V2TIMGroupMemberInfoResult;
 import com.tencent.imsdk.v2.V2TIMManager;
@@ -159,6 +161,31 @@ public class ConversationProvider {
                     urlList.add(v2TIMGroupMemberFullInfo.getFaceUrl());
                 }
                 TUIConversationUtils.callbackOnSuccess(callback, urlList);
+            }
+        });
+    }
+    /**
+    * @Desc TODO(获取好友关系列表--用户ID)
+    * @author 彭石林
+    * @parame [callBack]
+    * @return void
+    * @Date 2022/8/11
+    */
+    public void getFriendshipList( final IUIKitCallback<List<String>> callBack){
+        V2TIMManager.getFriendshipManager().getFriendList(new V2TIMValueCallback<List<V2TIMFriendInfo>>() {
+            @Override
+            public void onSuccess(List<V2TIMFriendInfo> v2TIMFriendInfos) {
+                final List<String> urlList = new ArrayList<>();
+                for (V2TIMFriendInfo v2TIMFriendInfo : v2TIMFriendInfos){
+                    urlList.add(v2TIMFriendInfo.getUserID());
+                }
+                TUIConversationUtils.callbackOnSuccess(callBack, urlList);
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                TUIConversationLog.v(TAG, "getFriendshipList getFriendList error, code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
+                TUIConversationUtils.callbackOnError(callBack, code,desc);
             }
         });
     }

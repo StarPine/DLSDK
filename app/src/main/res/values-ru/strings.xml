@@ -17,6 +17,7 @@
     <string name="playfun_tab_male_3">活躍</string>
     <string name="playfun_tab_message_1">Чат</string>
     <string name="playfun_tab_message_2">Система</string>
+    <string name="playfun_tab_message_3">Often contact</string>
     <string name="playfun_tab_wallet_1">Наличные</string>
     <string name="playfun_tab_wallet_2">Бриллианты</string>
     <string name="playfun_detail_link">Детали ></string>
@@ -201,7 +202,6 @@
     <string name="playfun_fragment_issuance_program_explain">Обнаженные и вульгарные фотографии будут заблокированы.</string>
     <string name="playfun_fragment_issuance_program_no_comment">Отключенные комментарии</string>
     <string name="playfun_fragment_message_main_setting">Уведомление</string>
-    <string name="playfun_fragment_message_main_title">Сообщения</string>
     <string name="playfun_my_program_no_show">Нет событий</string>
     <string name="playfun_my_trends_no_issuance">Запостить событие</string>
     <string name="playfun_phono_setting_reading_burn">Снимок (уничтожается через 2 секунды после просмотра)</string>
