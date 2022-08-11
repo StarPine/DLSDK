@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 
 import com.dl.playfun.app.AppConfig;
+import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.observable.RefreshLoadMoreUIChangeObservable;
 import com.dl.playfun.ui.mine.webview.WebViewFragment;
 
@@ -30,7 +31,7 @@ public abstract class BaseRefreshViewModel<M extends BaseModel> extends BaseView
     public BindingCommand shopOnClickCommand = new BindingCommand(() -> {
         try {
             Bundle bundle = new Bundle();
-            bundle.putString("link", AppConfig.WEB_BASE_URL + "shop");
+            bundle.putString("link", ((AppRepository)model).readApiConfigManagerEntity().getPlayFunWebUrl() + "/shop");
             start(WebViewFragment.class.getCanonicalName(), bundle);
         } catch (Exception e) {
             e.printStackTrace();

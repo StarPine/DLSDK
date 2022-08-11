@@ -170,7 +170,7 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
     public BindingCommand shopOnClickCommand = new BindingCommand(() -> {
         try {
             Bundle bundle = new Bundle();
-            bundle.putString("link", AppConfig.WEB_BASE_URL + "shop");
+            bundle.putString("link", model.readApiConfigManagerEntity().getPlayFunWebUrl() + "/shop");
             start(WebViewFragment.class.getCanonicalName(), bundle);
         } catch (Exception e) {
             e.printStackTrace();
