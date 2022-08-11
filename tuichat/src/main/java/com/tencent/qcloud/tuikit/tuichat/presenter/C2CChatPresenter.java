@@ -130,7 +130,7 @@ public class C2CChatPresenter extends ChatPresenter {
 
                     //新增新版相册数据
                     if (itemCount < 20 && photoBean != null){
-                        data.add(itemCount,photoBean);
+                        data.add(data.size(),photoBean);
                     }
                     TUIChatUtils.callbackOnSuccess(callback, data);
                     onMessageLoadCompleted(data, type);

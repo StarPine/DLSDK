@@ -67,7 +67,7 @@ public class WalletViewModel extends BaseViewModel<AppRepository> {
         //没有进行真人认证
         try {
             Bundle bundle = new Bundle();
-            bundle.putString("link", AppConfig.WEB_BASE_URL + "reflect");
+            bundle.putString("link", model.readApiConfigManagerEntity().getPlayFunWebUrl() + "/reflect");
             start(WebViewFragment.class.getCanonicalName(), bundle);
         } catch (Exception e) {
             e.printStackTrace();
