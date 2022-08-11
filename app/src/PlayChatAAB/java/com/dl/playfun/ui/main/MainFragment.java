@@ -2,8 +2,9 @@ package com.dl.playfun.ui.main;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.ComponentName;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,7 @@ import com.dl.playfun.entity.MqBroadcastGiftUserEntity;
 import com.dl.playfun.entity.VersionEntity;
 import com.dl.playfun.event.MainTabEvent;
 import com.dl.playfun.event.TaskListEvent;
+import com.dl.playfun.kl.view.AudioCallChatingActivity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.ui.dialog.LockDialog;
@@ -58,7 +60,6 @@ import com.tencent.qcloud.tuikit.tuiconversation.ui.view.ConversationCommonHolde
 import java.util.List;
 
 import me.goldze.mvvmhabit.bus.RxBus;
-import me.yokeyword.fragmentation.SupportFragment;
 
 /**
  * @author wulei
@@ -209,6 +210,12 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                     binding.bubbleTip.setVisibility(View.GONE);
                 }
             }
+        });
+        viewModel.uc.restartActivity.observe(this, Void -> {
+            Intent intent = new Intent(mActivity, AudioCallChatingActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            mActivity.overridePendingTransition(R.anim.anim_zoom_in, R.anim.anim_stay);
         });
         viewModel.uc.mainTab.observe(this, new Observer<MainTabEvent>() {
             @Override

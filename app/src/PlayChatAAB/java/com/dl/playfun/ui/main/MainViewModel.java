@@ -15,10 +15,7 @@ import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
-import com.dl.playfun.entity.BannerItemEntity;
 import com.dl.playfun.entity.BubbleEntity;
-import com.dl.playfun.entity.CoinWalletEntity;
-import com.dl.playfun.entity.LikeRecommendEntity;
 import com.dl.playfun.entity.MqBroadcastGiftEntity;
 import com.dl.playfun.entity.MqGiftDataEntity;
 import com.dl.playfun.entity.VersionEntity;
@@ -39,6 +36,7 @@ import com.tencent.coustom.IMGsonUtils;
 import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
+import com.dl.playfun.entity.RestartActivityEntity;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 
@@ -49,13 +47,10 @@ import java.util.Map;
 import java.util.Objects;
 
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import me.goldze.mvvmhabit.binding.command.BindingCommand;
 import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.RxUtils;
-import me.goldze.mvvmhabit.utils.ToastUtils;
 
 /**
  * @author wulei
@@ -67,7 +62,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
     public List<MqBroadcastGiftEntity> publicScreenBannerGiftEntity = new ArrayList<>();
     public boolean playing = false;
     UIChangeObservable uc = new UIChangeObservable();
-    private Disposable mSubscription, taskMainTabEventReceive, mainTabEventReceive, rewardRedDotEventReceive, BubbleTopShowEventSubscription;
+    private Disposable mSubscription, taskMainTabEventReceive, mainTabEventReceive, rewardRedDotEventReceive, BubbleTopShowEventSubscription, ResatrtActSubscription2;
 
     public MainViewModel(@NonNull Application application, AppRepository appRepository) {
         super(application, appRepository);
@@ -118,6 +113,9 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         BubbleTopShowEventSubscription = RxBus.getDefault().toObservable(BubbleTopShowEvent.class).subscribe(event -> {
             uc.bubbleTopShow.postValue(false);
         });
+        ResatrtActSubscription2 = RxBus.getDefault().toObservable(RestartActivityEntity.class).subscribe(event -> {
+            uc.restartActivity.call();
+        });
         taskMainTabEventReceive = RxBus.getDefault().toObservable(TaskMainTabEvent.class)
                 .compose(RxUtils.exceptionTransformer())
                 .compose(RxUtils.schedulersTransformer())
@@ -128,6 +126,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         RxSubscriptions.add(mainTabEventReceive);
         RxSubscriptions.add(rewardRedDotEventReceive);
         RxSubscriptions.add(BubbleTopShowEventSubscription);
+        RxSubscriptions.add(ResatrtActSubscription2);
     }
 
     @Override
@@ -138,6 +137,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         RxSubscriptions.remove(mainTabEventReceive);
         RxSubscriptions.remove(rewardRedDotEventReceive);
         RxSubscriptions.remove(BubbleTopShowEventSubscription);
+        RxSubscriptions.remove(ResatrtActSubscription2);
     }
 
     public void logout() {
@@ -387,6 +387,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
     public class UIChangeObservable {
         //气泡提示
         public SingleLiveEvent<Boolean> bubbleTopShow = new SingleLiveEvent<>();
+        public SingleLiveEvent<Void> restartActivity = new SingleLiveEvent<>();
         //        public SingleLiveEvent<Void> showAgreementDialog = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> showFaceRecognitionDialog = new SingleLiveEvent<>();
         public SingleLiveEvent<String> startFace = new SingleLiveEvent<>();
