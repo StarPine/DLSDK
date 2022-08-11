@@ -1,11 +1,11 @@
 package com.dl.playfun.utils;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,15 +13,12 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.ColorInt;
-import androidx.annotation.DrawableRes;
-import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 
 import com.blankj.utilcode.util.ColorUtils;
-import com.dl.playfun.app.AppContext;
 import com.dl.playfun.R;
+import com.dl.playfun.app.AppContext;
 
 import java.lang.ref.WeakReference;
 
@@ -196,7 +193,9 @@ public class ToastCenterUtils {
         Toast toastStart = new Toast(context);
         //获取屏幕高度
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        int height = wm.getDefaultDisplay().getHeight();
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(displayMetrics);
+        int height = displayMetrics.heightPixels;
         //Toast的Y坐标是屏幕高度的1/3，不会出现不适配的问题
         toastStart.setGravity(Gravity.TOP, 0, height / 3);
         toastStart.setDuration(Toast.LENGTH_LONG);
@@ -216,7 +215,9 @@ public class ToastCenterUtils {
         Toast toastStart = new Toast(context);
         //获取屏幕高度
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        int height = wm.getDefaultDisplay().getHeight();
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(displayMetrics);
+        int height = displayMetrics.heightPixels;
         //Toast的Y坐标是屏幕高度的1/3，不会出现不适配的问题
         toastStart.setGravity(Gravity.TOP, 0, height / 3);
         toastStart.setDuration(Toast.LENGTH_LONG);
