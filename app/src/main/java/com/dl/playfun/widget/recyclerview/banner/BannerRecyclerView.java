@@ -125,8 +125,8 @@ public class BannerRecyclerView extends RecyclerView {
         bannerSize = adapter.getItemCount();
         mLayoutManager.setInfinite(bannerSize >= 3);
         currentIndex = mLayoutManager.getCurrentPosition();
-        //hasInit = true;
-        //setPlaying(true);
+        hasInit = true;
+        setPlaying(true);
         addOnScrollListener(new OnScrollListener() {
 
             @Override

@@ -17,6 +17,7 @@
     <string name="playfun_tab_male_3">Active</string>
     <string name="playfun_tab_message_1">Chat</string>
     <string name="playfun_tab_message_2">System Messages</string>
+    <string name="playfun_tab_message_3">Often contact</string>
     <string name="playfun_tab_wallet_1">Cash</string>
     <string name="playfun_tab_wallet_2">Diamonds</string>
     <string name="playfun_detail_link">details ></string>
@@ -195,7 +196,6 @@
     <string name="playfun_fragment_issuance_program_choose_time">Select a time</string>
     <string name="playfun_fragment_issuance_program_no_comment">Disabled comments</string>
     <string name="playfun_fragment_message_main_setting">Notification</string>
-    <string name="playfun_fragment_message_main_title">Messages</string>
     <string name="playfun_my_program_no_show">No event</string>
     <string name="playfun_my_trends_no_issuance">Post an event</string>
     <string name="playfun_phono_setting_reading_burn">Snapshots (expires in 2s)</string>

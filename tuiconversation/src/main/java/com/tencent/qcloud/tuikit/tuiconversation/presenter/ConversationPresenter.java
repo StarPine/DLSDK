@@ -561,4 +561,24 @@ public class ConversationPresenter {
         }
     }
 
+    /**
+    * @Desc TODO(查询当前用户所有的好友列表)
+    * @author 彭石林
+    * @parame []
+    * @return void
+    * @Date 2022/8/11
+    */
+    public void getFriendshipList(){
+        provider.getFriendshipList(new IUIKitCallback<List<String>>() {
+            @Override
+            public void onSuccess(List<String> data) {
+                Log.e("当前查询的数据列表:","======"+data.size());
+            }
+
+            @Override
+            public void onError(int errCode, String errMsg, List<String> data) {
+            }
+        });
+    }
+
 }

@@ -147,12 +147,12 @@ android {
             // 版本名
             versionName "1.0.1-beta"
         }
-        // PlayChat台湾版配置 BuildPlayChatRelease (false = Debug 或 true = 正式包)
+        // PlayChat台湾版配置
         PlayChatAPK {
             dimension "playfun"
             resConfigs "zh","en","zh-rCN","zh-rHK","zh-rMO","zh-rSG","zh-rTW"
             // 服务端接口HOST
-            if(!rootProject.ext.BuildSdkPlayfun && !rootProject.ext.BuildPlayChatRelease){
+            if(!isReleaseBuildType()){
                 // 服务端接口HOST
                 buildConfigField "String", "DEFAULT_API_URL", "\"http://t-config.play-chat.net/\""
                 applicationId "com.test.demo.chat"
@@ -187,8 +187,7 @@ android {
                 versionCode 5
                 // 版本名
                 versionName "1.0.1-beta"
-            }
-            if(!rootProject.ext.BuildSdkPlayfun && rootProject.ext.BuildPlayChatRelease){
+            }else{
                 // 服务端接口HOST
                 buildConfigField "String", "DEFAULT_API_URL", "\"http://config.play-chat.net/\""
                 applicationId "com.ld.play.chat"
@@ -280,8 +279,17 @@ android {
     }
 }
 
-def releaseTime() {
+static def releaseTime() {
     return new Date().format("yyyy-MM-dd_HH-mm", TimeZone.getTimeZone("GMT+08:00"))
+}
+//判断当前是否是正式打包环境
+boolean isReleaseBuildType(){
+    for(String s : gradle.startParameter.taskNames) {
+        if (s.contains("Release") | s.contains("release")) {
+            return true
+        }
+    }
+    return false
 }
 
 repositories {

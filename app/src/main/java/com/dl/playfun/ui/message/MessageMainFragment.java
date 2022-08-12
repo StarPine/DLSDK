@@ -29,7 +29,7 @@ import com.dl.playfun.utils.StringUtil;
  */
 public class MessageMainFragment extends BaseFragment<FragmentMessageMainBinding, MessageMainViewModel> {
 
-    private final BaseFragment[] mFragments = new BaseFragment[1];
+    private final BaseFragment[] mFragments = new BaseFragment[2];
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -64,10 +64,10 @@ public class MessageMainFragment extends BaseFragment<FragmentMessageMainBinding
         BaseFragment firstFragment = findChildFragment(ChatMessageFragment.class);
         if (firstFragment == null) {
             mFragments[0] = new ChatMessageFragment();
-//            mFragments[1] = new SystemMessageGroupFragment();
+            mFragments[1] = new SystemMessageGroupFragment();
         } else {
             mFragments[0] = firstFragment;
-//            mFragments[1] = findChildFragment(SystemMessageGroupFragment.class);
+            mFragments[1] = findChildFragment(SystemMessageGroupFragment.class);
         }
         MessagePagerAdapter fragmentAdapter = new MessagePagerAdapter(this);
         fragmentAdapter.setFragmentList(mFragments);

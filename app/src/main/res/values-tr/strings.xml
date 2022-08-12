@@ -16,6 +16,7 @@
     <string name="playfun_tab_male_3">活躍</string>
     <string name="playfun_tab_message_1">Sohbet</string>
     <string name="playfun_tab_message_2">Resmî Mesaj</string>
+    <string name="playfun_tab_message_3">Often contact</string>
     <string name="playfun_tab_wallet_1">Nakit</string>
     <string name="playfun_tab_wallet_2">Elmas</string>
     <string name="playfun_detail_link">Ayrıntılar ></string>
@@ -195,7 +196,6 @@
     <string name="playfun_fragment_issuance_program_choose_time">Zamanı seçin</string>
     <string name="playfun_fragment_issuance_program_no_comment">Mesaj bırakmak yasak</string>
     <string name="playfun_fragment_message_main_setting">Bildirim ayarları</string>
-    <string name="playfun_fragment_message_main_title">Mesaj merkezi</string>
     <string name="playfun_my_program_no_show">Hiçbir etkinlik yayınlanmadı</string>
     <string name="playfun_my_trends_no_issuance">Etkinlik yayınla</string>
     <string name="playfun_phono_setting_reading_burn">Anlık Fotoğraf (2 saniye baktıktan sonra yakılarak yok edilir)</string>

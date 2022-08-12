@@ -17,11 +17,11 @@ ext {
 
     //android开发版本配置
     android = [
-            compileSdkVersion: 30,
+            compileSdkVersion: 31,
             buildToolsVersion: "30.0.3",
             applicationId    : "com.goldze.mvvmhabit",
             minSdkVersion    : 21,
-            targetSdkVersion : 30,
+            targetSdkVersion : 31,
             versionCode      : 1,
             versionName      : "1.0",
             sourceCompatibility : JavaVersion.VERSION_1_8,
@@ -89,8 +89,8 @@ ext {
             "firebase-crashlytics"         : 'com.google.firebase:firebase-crashlytics',
 
             //google.gms
-            "play-services-location"       : 'com.google.android.gms:play-services-location:17.1.0',
-            "play-services-maps"           : 'com.google.android.gms:play-services-maps:17.0.0',
+            "play-services-location"       : 'com.google.android.gms:play-services-location:19.0.1',
+            "play-services-maps"           : 'com.google.android.gms:play-services-maps:18.0.2',
             "play-services-auth"           : 'com.google.android.gms:play-services-auth:19.0.0',
 
             "billingclient"                : 'com.android.billingclient:billing:4.0.0',

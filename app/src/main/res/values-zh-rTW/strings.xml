@@ -17,6 +17,7 @@
     <string name="playfun_tab_male_3">活躍</string>
     <string name="playfun_tab_message_1">聊天</string>
     <string name="playfun_tab_message_2">官方訊息</string>
+    <string name="playfun_tab_message_3">常聯繫</string>
     <string name="playfun_tab_wallet_1">現金</string>
     <string name="playfun_tab_wallet_2">鑽石</string>
     <string name="playfun_detail_link">明細 ></string>
@@ -195,7 +196,6 @@
     <string name="playfun_fragment_issuance_program_choose_time">選擇時間</string>
     <string name="playfun_fragment_issuance_program_no_comment">禁止留言</string>
     <string name="playfun_fragment_message_main_setting">推送設定</string>
-    <string name="playfun_fragment_message_main_title">訊息中心</string>
     <string name="playfun_my_program_no_show">暫時沒有活動記錄</string>
     <string name="playfun_my_trends_no_issuance">暫時沒有動態記錄</string>
     <string name="playfun_phono_setting_reading_burn">快照（查看2秒後焚毀）</string>

@@ -354,6 +354,11 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
     }
 
     @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
     public int getItemCount() {
         int listSize = mDataSource.size();
         if (isForwardFragment) {

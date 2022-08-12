@@ -157,6 +157,8 @@ public class ConversationListLayout extends RecyclerView implements IConversatio
     public void loadConversation(long nextSeq) {
         if (presenter != null) {
             presenter.loadConversation(nextSeq);
+            //查询当前用户所有好友列表
+            presenter.getFriendshipList();
         }
     }
 
