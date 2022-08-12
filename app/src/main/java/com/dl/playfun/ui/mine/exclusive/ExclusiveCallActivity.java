@@ -5,17 +5,15 @@ import android.os.Bundle;
 
 import androidx.lifecycle.ViewModelProviders;
 
-import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.databinding.ActivityExclusivecallBinding;
 import com.dl.playfun.ui.base.BaseActivity;
 import com.dl.playfun.ui.dialog.ExclusiveAccostDialog;
-import com.dl.playfun.ui.message.chatdetail.ChatDetailFragment;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.widget.BasicToolbar;
-import com.dl.playfun.widget.dialog.TraceDialog;
+import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
 /**
@@ -67,25 +65,51 @@ public class ExclusiveCallActivity extends BaseActivity<ActivityExclusivecallBin
         super.initViewObservable();
         viewModel.editText.observe(this,unused -> {
             ExclusiveAccostDialog.getInstance(ExclusiveCallActivity.this)
-                    .setConfirmOnClick((dialog, content) -> {
-                        if (content.length() <= 0){
-                            ToastCenterUtils.showShort(R.string.playfun_text_accost_tips);
-                            return;
+                    .setOnClickListener(new ExclusiveAccostDialog.DialogOnClickListener() {
+                        @Override
+                        public void onConfirm(Dialog dialog, String content) {
+                            if (content.length() <= 0){
+                                ToastCenterUtils.showShort(R.string.playfun_text_accost_tips);
+                                return;
+                            }
+                            if(TUIChatUtils.isContains(content, viewModel.sensitiveWords.get())){
+                                ToastCenterUtils.showShort(R.string.playfun_text_accost_tips2);
+                                return;
+                            }
+                            dialog.dismiss();
+                            viewModel.setExclusiveAccost(viewModel.TEXT_TYPE,content,-1);
                         }
-                        if(TUIChatUtils.isContains(content, viewModel.sensitiveWords.get())){
-                            ToastCenterUtils.showShort(R.string.playfun_text_accost_tips2);
-                            return;
-                        }
-                        dialog.dismiss();
-                        viewModel.setExclusiveAccost(viewModel.TEXT_TYPE,content);
                     })
                     .editAccostContentDialog(viewModel.textContent.get())
                     .show();
         });
 
         viewModel.editAudio.observe(this,unused -> {
-
+            ExclusiveAccostDialog.getInstance(ExclusiveCallActivity.this)
+                    .setOnClickListener(new ExclusiveAccostDialog.DialogOnClickListener() {
+                        @Override
+                        public void onConfirmAudio(Dialog dialog, String content, int second) {
+                            dialog.dismiss();
+                            viewModel.setExclusiveAccost(viewModel.AUDIO_TYPE,content,second);
+                        }
+                    })
+                    .editAccostAudioDialog(viewModel.audioContent.get())
+                    .show();
         });
+
+        //播放录音
+        viewModel.playAudio.observe(this,unused -> {
+            if (AudioPlayer.getInstance().isPlaying()) {
+                AudioPlayer.getInstance().stopPlay();
+                return;
+            }
+            AudioPlayer.getInstance().startPlay(viewModel.audioContent.get(), new AudioPlayer.Callback() {
+                @Override
+                public void onCompletion(Boolean success, Boolean isOutTime) {
+                }
+            });
+        });
+
 
     }
 }

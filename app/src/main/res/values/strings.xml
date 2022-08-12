@@ -1205,5 +1205,9 @@
     <string name="playfun_text_accost_tips">請輸入搭訕語</string>
     <string name="playfun_text_accost_tips2">搭訕語含有不當內容，請重新設置</string>
     <string name="playfun_text_accost_tips3">搭訕語設置成功</string>
+    <string name="playfun_audio_accost_tips2">搭訕語音设置成功</string>
+    <string name="playfun_audio_accost_long_click">長按錄音</string>
+    <string name="playfun_audio_accost_recording">錄製中</string>
+    <string name="playfun_audio_accost_tip">15秒內</string>
 
 </resources>

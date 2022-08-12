@@ -124,7 +124,7 @@ public interface HttpDataSource {
      * @param content 内容
      * @return
      */
-    Observable<BaseDataResponse> setExclusiveAccost(Integer type, String content);
+    Observable<BaseDataResponse> setExclusiveAccost(Integer type, String content,int len);
 
     /**
      * @Desc TODO(设置视讯广场封面图)

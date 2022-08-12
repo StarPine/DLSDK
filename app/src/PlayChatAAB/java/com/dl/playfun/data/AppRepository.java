@@ -1608,8 +1608,8 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
-    public Observable<BaseDataResponse> setExclusiveAccost(Integer type, String content) {
-        return mHttpDataSource.setExclusiveAccost(type, content);
+    public Observable<BaseDataResponse> setExclusiveAccost(Integer type, String content,int len) {
+        return mHttpDataSource.setExclusiveAccost(type, content,len);
     }
 
 }

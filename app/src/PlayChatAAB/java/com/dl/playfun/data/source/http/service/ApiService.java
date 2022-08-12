@@ -143,7 +143,8 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("api/setExclusiveAccost")
     Observable<BaseDataResponse> setExclusiveAccost(@Field("type")Integer type,
-                                                    @Field("content")String content);
+                                                    @Field("content")String content,
+                                                    @Field("len")int len);
 
 
     /**

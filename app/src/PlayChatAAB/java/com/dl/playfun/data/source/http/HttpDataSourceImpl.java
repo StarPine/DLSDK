@@ -1299,8 +1299,8 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
-    public Observable<BaseDataResponse> setExclusiveAccost(Integer type, String content) {
-        return apiService.setExclusiveAccost(type, content);
+    public Observable<BaseDataResponse> setExclusiveAccost(Integer type, String content, int len) {
+        return apiService.setExclusiveAccost(type, content,len);
     }
 
 }

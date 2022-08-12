@@ -17,16 +17,16 @@ public class ExclusiveAccostInfoEntity implements Serializable {
      * type : 1
      * content : 你好13425435
      */
-    private int id;
+    private int len;
     private int type;
     private String content;
 
-    public int getId() {
-        return id;
+    public int getLen() {
+        return len;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setLen(int len) {
+        this.len = len;
     }
 
     public int getType() {

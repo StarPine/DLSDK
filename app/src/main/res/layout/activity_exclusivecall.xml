@@ -105,7 +105,7 @@
                         android:visibility="@{viewModel.textContent != null?View.VISIBLE:View.GONE}"
                         android:maxWidth="@dimen/chat_message_content_max_width"
                         tools:visibility="visible"
-                        tools:text="语"
+                        tools:text="好的搭讪语"
                         />
 
                     <LinearLayout
@@ -175,23 +175,51 @@
                         android:visibility="@{viewModel.audioContent == null?View.VISIBLE:View.GONE}"
                         app:drawableStartCompat="@drawable/icon_audio" />
 
-                    <TextView
-                        android:id="@+id/tv_audio_chat_up"
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:id="@+id/ll_audio_chat_up"
+                        android:layout_width="140dp"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/custom_right_gift_backdrop"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
                         android:layout_alignParentEnd="true"
-                        android:drawablePadding="10dp"
-                        android:padding="10dp"
-                        android:text="@string/playfun_audio_chat_up"
-                        android:textColor="@color/white"
-                        android:visibility="@{viewModel.audioContent != null?View.VISIBLE:View.GONE}"
-                        app:drawableStartCompat="@drawable/icon_audio" />
+                        android:background="@drawable/custom_right_gift_backdrop"
+                        onClickCommand="@{viewModel.audioPlayOnClick}"
+                        android:visibility="@{viewModel.audioContent != null?View.VISIBLE:View.GONE}">
+
+                        <TextView
+                            android:id="@+id/tv_audio_seconds"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toStartOf="@+id/iv_second"
+                            android:layout_centerVertical="true"
+                            android:text="@{viewModel.audioSecond}"
+                            android:textColor="@color/white" />
+
+                        <ImageView
+                            android:id="@+id/iv_second"
+                            android:layout_width="5dp"
+                            android:layout_height="3dp"
+                            android:layout_marginEnd="3dp"
+                            android:layout_marginTop="2dp"
+                            android:layout_alignTop="@+id/tv_audio_seconds"
+                            android:layout_toStartOf="@+id/iv_anim"
+                            android:src="@drawable/icon_second" />
+
+                        <ImageView
+                            android:id="@+id/iv_anim"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="10dp"
+                            android:src="@drawable/icon_anim_voiceprint" />
+
+                    </RelativeLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/tv_audio_chat_up"
+                        android:layout_below="@+id/ll_audio_chat_up"
                         android:layout_alignParentEnd="true"
                         android:layout_marginTop="5dp"
                         android:orientation="horizontal"

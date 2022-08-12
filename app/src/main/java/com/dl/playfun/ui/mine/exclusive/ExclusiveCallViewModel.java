@@ -33,12 +33,14 @@ public class ExclusiveCallViewModel extends BaseViewModel<AppRepository> {
     //回传事件
     public SingleLiveEvent<Void> editText = new SingleLiveEvent<>();
     public SingleLiveEvent<Void> editAudio = new SingleLiveEvent<>();
+    public SingleLiveEvent<Void> playAudio = new SingleLiveEvent<>();
 
     public final int TEXT_TYPE = 1;
     public final int AUDIO_TYPE = 2;
     public ObservableField<List<ExclusiveAccostInfoEntity>> accostInfoEntity = new ObservableField<>();
     public ObservableField<String> textContent = new ObservableField<>();
     public ObservableField<String> audioContent = new ObservableField<>();
+    public ObservableField<String> audioSecond = new ObservableField<>();
     public ObservableField<List<String>> sensitiveWords = new ObservableField<>();
     public int textTypeId;
     public int audioTypeId;
@@ -67,6 +69,13 @@ public class ExclusiveCallViewModel extends BaseViewModel<AppRepository> {
         editAudio.call();
     });
 
+    /**
+     * 播放录音
+     */
+    public BindingCommand audioPlayOnClick = new BindingCommand(() -> {
+        playAudio.call();
+    });
+
 
     public ExclusiveCallViewModel(@NonNull @NotNull Application application, AppRepository model) {
         super(application, model);
@@ -89,10 +98,9 @@ public class ExclusiveCallViewModel extends BaseViewModel<AppRepository> {
                                 int type = accostInfo.getType();
                                 if (type == TEXT_TYPE) {
                                     textContent.set(accostInfo.getContent());
-                                    textTypeId = accostInfo.getId();
                                 } else if (type == AUDIO_TYPE) {
                                     audioContent.set(accostInfo.getContent());
-                                    audioTypeId = accostInfo.getId();
+                                    audioSecond.set(accostInfo.getLen()+"");
                                 }
                             }
                         }
@@ -131,8 +139,8 @@ public class ExclusiveCallViewModel extends BaseViewModel<AppRepository> {
                 });
     }
 
-    public void setExclusiveAccost(Integer type, String content) {
-        model.setExclusiveAccost(type, content)
+    public void setExclusiveAccost(Integer type, String content, int second) {
+        model.setExclusiveAccost(type, content,second)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
                 .doOnSubscribe(this)
@@ -140,8 +148,15 @@ public class ExclusiveCallViewModel extends BaseViewModel<AppRepository> {
                 .subscribe(new BaseObserver<BaseDataResponse>() {
                     @Override
                     public void onSuccess(BaseDataResponse response) {
-                        textContent.set(content);
-                        ToastCenterUtils.showShort(R.string.playfun_text_accost_tips3);
+
+                        if (type == TEXT_TYPE) {
+                            textContent.set(content);
+                            ToastCenterUtils.showShort(R.string.playfun_text_accost_tips3);
+                        } else if (type == AUDIO_TYPE) {
+                            audioContent.set(content);
+                            audioSecond.set(second+"");
+                            ToastCenterUtils.showShort(R.string.playfun_audio_accost_tips2);
+                        }
                     }
 
                     @Override
