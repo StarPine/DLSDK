@@ -49,6 +49,7 @@ import com.dl.playfun.entity.EvaluateMessageEntity;
 import com.dl.playfun.entity.EvaluateObjEntity;
 import com.dl.playfun.entity.ExchangeEntity;
 import com.dl.playfun.entity.ExchangeIntegraOuterEntity;
+import com.dl.playfun.entity.ExclusiveAccostInfoEntity;
 import com.dl.playfun.entity.FaceVerifyResultEntity;
 import com.dl.playfun.entity.GameCoinBuy;
 import com.dl.playfun.entity.GameCoinWalletEntity;
@@ -1593,6 +1594,22 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     @Override
     public Observable<BaseDataResponse<NoteInfoEntity>> getNoteText(int user_id) {
         return mHttpDataSource.getNoteText(user_id);
+    }
+
+
+    @Override
+    public Observable<BaseDataResponse<List<ExclusiveAccostInfoEntity>>> getExclusiveAccost() {
+        return mHttpDataSource.getExclusiveAccost();
+    }
+
+    @Override
+    public Observable<BaseDataResponse> delExclusiveAccost(int type) {
+        return mHttpDataSource.delExclusiveAccost(type);
+    }
+
+    @Override
+    public Observable<BaseDataResponse> setExclusiveAccost(Integer type, String content) {
+        return mHttpDataSource.setExclusiveAccost(type, content);
     }
 
 }
