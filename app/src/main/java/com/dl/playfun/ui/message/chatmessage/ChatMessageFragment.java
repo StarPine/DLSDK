@@ -32,12 +32,14 @@ import com.dl.playfun.tim.TUIUtils;
 import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.ui.message.chatdetail.ChatDetailFragment;
 import com.dl.playfun.utils.AutoSizeUtils;
+import com.dl.playfun.utils.ChatUtils;
 import com.dl.playfun.widget.dialog.TraceDialog;
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMConversationListener;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
+import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.model.CustomConfigSetting;
@@ -120,19 +122,26 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
         //腾讯IM登录
         TokenEntity tokenEntity = Injection.provideDemoRepository().readLoginInfo();
         if (tokenEntity != null) {
-            TUIUtils.login(tokenEntity.getUserID(), tokenEntity.getUserSig(), new V2TIMCallback() {
-                @Override
-                public void onSuccess() {
-                    initIM();
-                    ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
-                    registerUnreadListener();
-                }
+            if(TUILogin.isUserLogined()){
+                initIM();
+                ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
+                registerUnreadListener();
+            }else{
+                TUIUtils.login(tokenEntity.getUserID(), tokenEntity.getUserSig(), new V2TIMCallback() {
+                    @Override
+                    public void onSuccess() {
+                        initIM();
+                        ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
+                        registerUnreadListener();
+                    }
 
-                @Override
-                public void onError(int code, String desc) {
-                    KLog.e("tencent im login error  errCode = " + code + ", errInfo = " + desc);
-                }
-            });
+                    @Override
+                    public void onError(int code, String desc) {
+                        KLog.e("tencent im login error  errCode = " + code + ", errInfo = " + desc);
+                    }
+                });
+            }
+
         }
     }
 
@@ -145,7 +154,7 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
         ConversationPresenter presenter = new ConversationPresenter();
         presenter.setConversationListener();
         binding.conversationLayout.setPresenter(presenter);
-        binding.conversationLayout.initDefault();
+        binding.conversationLayout.initDefault(false);
         ConversationListLayout listLayout = binding.conversationLayout.getConversationList();
         // 设置adapter item中top文字大小
         listLayout.setItemTopTextSize(16);
@@ -187,7 +196,7 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
                 //点击用户头像
                 String id = messageInfo.getId();
                 if (id.trim().contains(AppConfig.CHAT_SERVICE_USER_ID)) {
-                    startChatActivity(messageInfo,0);
+                    ChatUtils.startChatActivity(messageInfo,0,viewModel);
                 }else{
                     selectedConversationInfo = messageInfo;
                     viewModel.transUserIM(id,false);
@@ -235,7 +244,7 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
             @Override
             public void onChanged(Integer toUserId) {
                 if(selectedConversationInfo!=null){
-                    startChatActivity(selectedConversationInfo,toUserId);
+                    ChatUtils.startChatActivity(selectedConversationInfo,toUserId,viewModel);
                 }
             }
         });
@@ -273,21 +282,9 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
             if (viewModel != null) {
                 viewModel.newsBrowseNumber();
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
-    }
-
-    private void startChatActivity(ConversationInfo conversationInfo,Integer toUserId) {
-        ChatInfo chatInfo = new ChatInfo();
-        chatInfo.setType(V2TIMConversation.V2TIM_C2C);
-        chatInfo.setId(conversationInfo.getId());
-        chatInfo.setChatName(conversationInfo.getTitle());
-        AppContext.instance().logEvent(AppsFlyerEvent.IM);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(ChatDetailFragment.CHAT_INFO, chatInfo);
-        bundle.putSerializable("toUserId", toUserId);
-        startContainerActivity(ChatDetailFragment.class.getCanonicalName(), bundle);
     }
 
 }

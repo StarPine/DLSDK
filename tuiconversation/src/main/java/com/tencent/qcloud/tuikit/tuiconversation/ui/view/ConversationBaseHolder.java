@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public abstract class ConversationBaseHolder extends RecyclerView.ViewHolder {
 
-    protected View rootView;
-    protected ConversationListAdapter mAdapter;
+    public View rootView;
+    public ConversationListAdapter mAdapter;
 
     public ConversationBaseHolder(View itemView) {
         super(itemView);

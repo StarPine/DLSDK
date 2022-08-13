@@ -1,5 +1,6 @@
 package com.dl.playfun.ui.message;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +9,9 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.viewpager2.widget.ViewPager2;
 
+import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
 import com.dl.playfun.BR;
@@ -20,6 +23,7 @@ import com.dl.playfun.databinding.FragmentMessageMainBinding;
 import com.dl.playfun.entity.SystemConfigTaskEntity;
 import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.ui.message.chatmessage.ChatMessageFragment;
+import com.dl.playfun.ui.message.contact.OftenContactFragment;
 import com.dl.playfun.ui.message.systemmessagegroup.SystemMessageGroupFragment;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.StringUtil;
@@ -64,16 +68,16 @@ public class MessageMainFragment extends BaseFragment<FragmentMessageMainBinding
         BaseFragment firstFragment = findChildFragment(ChatMessageFragment.class);
         if (firstFragment == null) {
             mFragments[0] = new ChatMessageFragment();
-            mFragments[1] = new SystemMessageGroupFragment();
+            mFragments[1] = new OftenContactFragment();
         } else {
             mFragments[0] = firstFragment;
-            mFragments[1] = findChildFragment(SystemMessageGroupFragment.class);
+            mFragments[1] = findChildFragment(OftenContactFragment.class);
         }
         MessagePagerAdapter fragmentAdapter = new MessagePagerAdapter(this);
         fragmentAdapter.setFragmentList(mFragments);
 
         binding.viewPager.setUserInputEnabled(false);
-        binding.viewPager.setOffscreenPageLimit(1);
+        //binding.viewPager.setOffscreenPageLimit(0);
         binding.viewPager.setAdapter(fragmentAdapter);
         binding.viewPager.setCurrentItem(0, false);
     }
@@ -81,18 +85,15 @@ public class MessageMainFragment extends BaseFragment<FragmentMessageMainBinding
     @Override
     public void initViewObservable() {
         super.initViewObservable();
-        viewModel.tabSelectEvent.observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean flag) {
-                if (flag) {
-                    AppContext.instance().logEvent(AppsFlyerEvent.System_Messages);
-                    binding.viewPager.setCurrentItem(0, false);
-                } else {
-                    AppContext.instance().logEvent(AppsFlyerEvent.Chat);
-                    binding.viewPager.setCurrentItem(1, false);
-                }
-
+        viewModel.tabSelectEvent.observe(this, flag -> {
+            if (flag) {
+                AppContext.instance().logEvent(AppsFlyerEvent.System_Messages);
+                binding.viewPager.setCurrentItem(0, false);
+            } else {
+                AppContext.instance().logEvent(AppsFlyerEvent.Chat);
+                binding.viewPager.setCurrentItem(1, false);
             }
+
         });
     }
 

@@ -16,19 +16,26 @@ import com.tencent.qcloud.tuikit.tuiconversation.ui.interfaces.IConversationList
 import com.tencent.qcloud.tuikit.tuiconversation.ui.interfaces.IConversationListLayout;
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
 
+/**
+* @Desc TODO(聊天页面RecyclerView)
+* @author 彭石林
+* @parame
+* @return
+* @Date 2022/8/13
+*/
 public class ConversationListLayout extends RecyclerView implements IConversationListLayout {
 
     private ConversationListAdapter mAdapter;
     private ConversationPresenter presenter;
+    //好友列表
+    private boolean isFriend;
 
     public ConversationListLayout(Context context) {
-        super(context);
-        init();
+        this(context,null);
     }
 
     public ConversationListLayout(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        init();
+        this(context, attrs,0);
     }
 
     public ConversationListLayout(Context context, @Nullable AttributeSet attrs, int defStyle) {
@@ -144,6 +151,7 @@ public class ConversationListLayout extends RecyclerView implements IConversatio
                 if (CustomConfigSetting.conversationAstrictCount > 0 && mAdapter.getItemCount() >= CustomConfigSetting.conversationAstrictCount) {
                     return;
                 }
+                //上拉刷新
                 if (lastPosition == mAdapter.getItemCount() - 1 && !isLoadCompleted()) {
                     mAdapter.onLoadingStateChanged(true);
                     if (presenter != null) {
@@ -154,11 +162,12 @@ public class ConversationListLayout extends RecyclerView implements IConversatio
         }
     }
 
-    public void loadConversation(long nextSeq) {
+    public void loadConversation(long nextSeq,boolean isFriend) {
         if (presenter != null) {
-            presenter.loadConversation(nextSeq);
-            //查询当前用户所有好友列表
-            presenter.getFriendshipList();
+            //this.isFriend = isFriend;
+            //presenter.loadConversation(nextSeq);
+            //查询当前用户所有好友列表--附带查询所有会话列表数据
+            presenter.getFriendshipList(nextSeq,isFriend);
         }
     }
 

@@ -2,20 +2,18 @@ package com.tencent.qcloud.tuikit.tuiconversation.ui.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
-import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.model.CustomConfigSetting;
-import com.tencent.qcloud.tuikit.tuiconversation.ui.interfaces.IConversationLayout;
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
+import com.tencent.qcloud.tuikit.tuiconversation.ui.interfaces.IConversationLayout;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.interfaces.IConversationListAdapter;
 
 import java.util.HashMap;
@@ -55,16 +53,20 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
         mConversationList = findViewById(R.id.conversation_list);
     }
 
-    public void initDefault() {
+    public void initDefault(boolean isFriend) {
         final ConversationListAdapter adapter = new ConversationListAdapter();
         initSearchView(adapter);
         mConversationList.setAdapter((IConversationListAdapter) adapter);
         if (presenter != null) {
-            presenter.setAdapter(adapter);
+            if(isFriend){
+                presenter.setFriendshipAdapter(adapter);
+            }else{
+                presenter.setAdapter(adapter);
+            }
         }
         //可见数量大于0 才会进行拉取消息
         if (CustomConfigSetting.conversationAstrictCount > 0) {
-            mConversationList.loadConversation(0);
+            mConversationList.loadConversation(0,isFriend);
         }
     }
 

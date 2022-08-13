@@ -137,9 +137,7 @@ public class ChatMessageViewModel extends BaseViewModel<AppRepository> {
                 });
     }
 
-    public class UIChangeObservable {
-        //查询本机用户资料
-        public SingleLiveEvent<UserDataEntity> localUserDataEntity = new SingleLiveEvent<>();
+    public static class UIChangeObservable {
         public SingleLiveEvent<BrowseNumberEntity> loadBrowseNumber = new SingleLiveEvent<>();
         //跳转进入私聊页面
         public SingleLiveEvent<Integer> startChatUserView = new SingleLiveEvent<>();

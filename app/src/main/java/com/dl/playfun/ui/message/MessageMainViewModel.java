@@ -4,6 +4,7 @@ import android.app.Application;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 
 import com.dl.playfun.app.AppConfig;
@@ -37,9 +38,8 @@ import me.goldze.mvvmhabit.utils.RxUtils;
  * @author wulei
  */
 public class MessageMainViewModel extends BaseViewModel<AppRepository> {
-
+    public ObservableBoolean tabSelected = new ObservableBoolean(true);
     //顶部切换tab按键选中
-    public ObservableField<Integer> tabSelectSystemMessage = new ObservableField<>(0);
     public SingleLiveEvent<Boolean> tabSelectEvent = new SingleLiveEvent<>();
 
     public ObservableField<Integer> chatMessageCount = new ObservableField<>(0);
@@ -49,36 +49,24 @@ public class MessageMainViewModel extends BaseViewModel<AppRepository> {
 
     private Disposable mSubscription, MessageCountTagSubscription,mainTabEventReceive;
 
-    public BindingCommand toTaskClickCommand = new BindingCommand(() -> {
-//        AppContext.instance().logEvent(AppsFlyerEvent.im_ad_id);
-//        //start(TaskCenterFragment.class.getCanonicalName());
-//        RxBus.getDefault().post(new TaskMainTabEvent(false,true));
-        try {
-            Bundle bundle = new Bundle();
-            if (ConfigManager.getInstance().isMale()) {
-                bundle.putString("link", AppConfig.WEB_BASE_URL + "introduction_man");
-            } else {
-                bundle.putString("link", AppConfig.WEB_BASE_URL + "introduction_woman");
-            }
-            start(WebViewFragment.class.getCanonicalName(), bundle);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    });
-
     //tab切换按键
-    public BindingCommand toLeftTabClickCommand = new BindingCommand(new BindingAction() {
-        @Override
-        public void call() {
-            int flag = tabSelectSystemMessage.get();
-            if (flag == 1) {
-                tabSelectSystemMessage.set(0);
-                tabSelectEvent.postValue(true);
-            }
+    public BindingCommand toLeftTabClickCommand = new BindingCommand(() -> {
+        boolean flag = tabSelected.get();
+        if (!flag) {
+            tabSelected.set(true);
+            tabSelectEvent.postValue(true);
         }
     });
     //tab切换按键
-    public BindingCommand toRightTabClickCommand = new BindingCommand(new BindingAction() {
+    public BindingCommand toRightTabClickCommand = new BindingCommand(() -> {
+        boolean flag = tabSelected.get();
+        if (flag) {
+            tabSelected.set(false);
+            tabSelectEvent.postValue(false);
+        }
+    });
+    //tab切换按键
+    public BindingCommand toMessageTabClickCommand = new BindingCommand(new BindingAction() {
         @Override
         public void call() {
             start(SystemMessageGroupFragment.class.getCanonicalName());
@@ -111,13 +99,19 @@ public class MessageMainViewModel extends BaseViewModel<AppRepository> {
                 });
         mainTabEventReceive = RxBus.getDefault().toObservable(MainTabEvent.class).subscribe(event -> {
             if (event.getTabName().equals("message")){
-                int flag = tabSelectSystemMessage.get();
-                if (flag == 1) {
-                    tabSelectSystemMessage.set(0);
+                boolean flag = tabSelected.get();
+                if (flag) {
+                    tabSelected.set(false);
+                    tabSelectEvent.postValue(false);
+                }else{
+                    tabSelected.set(true);
                     tabSelectEvent.postValue(true);
                 }
             }
         });
+        RxSubscriptions.add(mSubscription);
+        RxSubscriptions.add(MessageCountTagSubscription);
+        RxSubscriptions.add(mainTabEventReceive);
 
     }
 
@@ -125,6 +119,7 @@ public class MessageMainViewModel extends BaseViewModel<AppRepository> {
     public void removeRxBus() {
         super.removeRxBus();
         RxSubscriptions.remove(mSubscription);
+        RxSubscriptions.remove(MessageCountTagSubscription);
         RxSubscriptions.remove(mainTabEventReceive);
     }
 

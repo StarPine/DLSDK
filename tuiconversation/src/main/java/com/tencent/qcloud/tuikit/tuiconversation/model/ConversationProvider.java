@@ -11,6 +11,7 @@ import com.tencent.imsdk.v2.V2TIMGroupMemberFullInfo;
 import com.tencent.imsdk.v2.V2TIMGroupMemberInfoResult;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
+import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
@@ -171,13 +172,14 @@ public class ConversationProvider {
     * @return void
     * @Date 2022/8/11
     */
-    public void getFriendshipList( final IUIKitCallback<List<String>> callBack){
+    public void getFriendShipList( final IUIKitCallback<List<String>> callBack){
         V2TIMManager.getFriendshipManager().getFriendList(new V2TIMValueCallback<List<V2TIMFriendInfo>>() {
             @Override
             public void onSuccess(List<V2TIMFriendInfo> v2TIMFriendInfos) {
                 final List<String> urlList = new ArrayList<>();
                 for (V2TIMFriendInfo v2TIMFriendInfo : v2TIMFriendInfos){
-                    urlList.add(v2TIMFriendInfo.getUserID());
+                    String userId = TUIConstants.TUIConversation.CONVERSATION_C2C_PREFIX + v2TIMFriendInfo.getUserID() ;
+                    urlList.add(userId);
                 }
                 TUIConversationUtils.callbackOnSuccess(callBack, urlList);
             }
@@ -186,6 +188,29 @@ public class ConversationProvider {
             public void onError(int code, String desc) {
                 TUIConversationLog.v(TAG, "getFriendshipList getFriendList error, code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
                 TUIConversationUtils.callbackOnError(callBack, code,desc);
+            }
+        });
+    }
+    /**
+    * @Desc TODO(根据好友Id列表获取会话列表)
+    * @author 彭石林
+    * @parame [friendList, callBack]
+    * @return void
+    * @Date 2022/8/12
+    */
+    public void getFriendShipConversationList(final List<String> friendList, final IUIKitCallback<List<ConversationInfo>> callBack){
+        V2TIMManager.getConversationManager().getConversationList(friendList, new V2TIMValueCallback<List<V2TIMConversation>>() {
+
+            @Override
+            public void onSuccess(List<V2TIMConversation> v2TIMConversations) {
+                List<ConversationInfo> conversationInfoList = ConversationUtils.convertV2TIMConversationList(v2TIMConversations);
+                TUIConversationUtils.callbackOnSuccess(callBack, conversationInfoList);
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                TUIConversationLog.v(TAG, "loadConversation getConversationList error, code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
+                TUIConversationUtils.callbackOnError(callBack, TAG, code, desc);
             }
         });
     }

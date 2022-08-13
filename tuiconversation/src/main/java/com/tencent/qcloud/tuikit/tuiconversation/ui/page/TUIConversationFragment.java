@@ -61,7 +61,7 @@ public class TUIConversationFragment extends BaseFragment {
         mConversationLayout.setPresenter(presenter);
 
         // 会话列表面板的默认UI和交互初始化
-        mConversationLayout.initDefault();
+        mConversationLayout.initDefault(false);
         // 通过API设置ConversataonLayout各种属性的样例，开发者可以打开注释，体验效果
 //        ConversationLayoutSetting.customizeConversation(mConversationLayout);
         mConversationLayout.getConversationList().setOnItemClickListener(new ConversationListLayout.OnItemClickListener() {
