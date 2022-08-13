@@ -132,8 +132,9 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
                             public void onCompleted(@Nullable JSONObject jsonObject, @Nullable GraphResponse graphResponse) {
                                 try {
                                     OverseasUserEntity overseasUserEntity = new OverseasUserEntity();
-                                    overseasUserEntity.setEmail(jsonObject.getString("email"));
-
+                                    if(!jsonObject.isNull("email")){
+                                        overseasUserEntity.setEmail(jsonObject.getString("email"));
+                                    }
                                     Profile profile = Profile.getCurrentProfile();
                                     String phoneUrl = null;
                                     if (profile != null) {
@@ -143,9 +144,13 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
                                             phoneUrl = uriFacebook.toString();
                                         }
                                     }
+                                    String token_for_business = null;
+                                    if(!jsonObject.isNull("token_for_business")){
+                                        token_for_business = jsonObject.getString("token_for_business");
+                                    }
                                     overseasUserEntity.setPhoto(phoneUrl);
                                     AppConfig.overseasUserEntity = overseasUserEntity;
-                                    viewModel.authLogin(loginResult.getAccessToken().getUserId(), "facebook", overseasUserEntity.getEmail(), null, null, jsonObject.getString("token_for_business"));
+                                    viewModel.authLogin(loginResult.getAccessToken().getUserId(), "facebook", overseasUserEntity.getEmail(), null, null, token_for_business);
                                     AppContext.instance().logEvent(AppsFlyerEvent.LOG_IN_WITH_FACEBOOK);
                                 } catch (Exception e) {
                                     Log.e("获取facebook关键资料", "异常原因: " + e.getMessage());
