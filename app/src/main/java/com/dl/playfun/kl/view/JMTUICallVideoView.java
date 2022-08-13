@@ -76,31 +76,28 @@ public class JMTUICallVideoView extends BaseTUICallView {
     //断网总时间
     int disconnectTime = 0;
 
-    public JMTUICallVideoView(Context context, TUICalling.Role role, String[] userIDs, String sponsorID, String groupID, boolean isFromGroup) {
+    public JMTUICallVideoView(Context context, TUICalling.Role role, String[] userIDs, String sponsorID, String groupID, boolean isFromGroup,VideoLayoutFactory videoLayoutFactory) {
         super(context, role, TUICalling.Type.VIDEO, userIDs, sponsorID, groupID, isFromGroup);
+        mLayoutManagerTrtc.initVideoFactory(videoLayoutFactory);
     }
 
-    public JMTUICallVideoView(Context context, TUICalling.Role role, String[] userIDs, String sponsorID, String groupID, boolean isFromGroup, int roomId) {
+    public JMTUICallVideoView(Context context, TUICalling.Role role, String[] userIDs, String sponsorID, String groupID, boolean isFromGroup, int roomId,VideoLayoutFactory videoLayoutFactory) {
 
-        this(context, role, userIDs, sponsorID, groupID, isFromGroup);
+        this(context, role, userIDs, sponsorID, groupID, isFromGroup,videoLayoutFactory);
         this.roomId = roomId;
 
     }
 
     @Override
     protected void initView() {
-
         LayoutInflater.from(mContext).inflate(R.layout.jm_trtccalling_videocall_activity_call_main, this);
         mLayoutManagerTrtc = findViewById(R.id.trtc_layout_manager);
-        mLayoutManagerTrtc.initVideoFactory(new VideoLayoutFactory(mContext));
-
         mInvitingGroup = findViewById(R.id.group_inviting);
         mImgContainerLl = findViewById(R.id.ll_img_container);
         mTimeTv = findViewById(R.id.tv_time);
-
+        mShadeSponsor = findViewById(R.id.shade_sponsor);
 //        mSwitchCameraImg = findViewById(R.id.switch_camera);
 
-        mShadeSponsor = findViewById(R.id.shade_sponsor);
     }
 
     @Override
@@ -546,6 +543,7 @@ public class JMTUICallVideoView extends BaseTUICallView {
      * 展示通话中的界面
      */
     public void showCallingView() {
+        super.showCallingView();
         //1. 蒙版消失
         visibleSponsorGroup(false);
         //2. 底部状态栏
@@ -698,11 +696,8 @@ public class JMTUICallVideoView extends BaseTUICallView {
     }
 
     public void switchVideoView() {
-        //todo 临时方案
         mLayoutManagerTrtc.switchVideoView();
     }
-
-
 
     /**
      * @return void

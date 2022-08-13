@@ -5,14 +5,14 @@ import android.view.View;
 public interface TUICalling {
     /* 呼叫类型 */
     enum Type {
-        AUDIO,
-        VIDEO
+        AUDIO,      //语音
+        VIDEO       //视频
     }
 
     /* 角色 */
     enum Role {
-        CALL,
-        CALLED
+        CALL,       //呼叫方
+        CALLED      //被叫方
     }
 
     enum Event {

@@ -3,6 +3,7 @@ package com.dl.playfun.kl.view;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
+import android.app.ActivityManager;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -43,6 +44,7 @@ import com.dl.playfun.databinding.ActivityCallAudioChatingBinding;
 import com.dl.playfun.entity.CrystalDetailsConfigEntity;
 import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.entity.GoodsEntity;
+import com.dl.playfun.entity.ShowFloatWindowEntity;
 import com.dl.playfun.event.CallChatingHangupEvent;
 import com.dl.playfun.kl.Utils;
 import com.dl.playfun.kl.viewmodel.AudioCallChatingViewModel;
@@ -53,7 +55,6 @@ import com.dl.playfun.ui.mine.wallet.recharge.RechargeActivity;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.StringUtil;
-import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 import com.dl.playfun.widget.dialog.MessageDetailDialog;
 import com.dl.playfun.widget.dialog.TraceDialog;
@@ -64,30 +65,38 @@ import com.opensource.svgaplayer.SVGAParser;
 import com.opensource.svgaplayer.SVGASoundManager;
 import com.opensource.svgaplayer.SVGAVideoEntity;
 import com.tencent.coustom.GiftEntity;
+import com.tencent.liteav.trtccalling.TUICalling;
+import com.tencent.liteav.trtccalling.model.util.PermissionUtil;
+import com.tencent.liteav.trtccalling.ui.base.Status;
+import com.dl.playfun.entity.RestartActivityEntity;
+import com.tencent.liteav.trtccalling.ui.floatwindow.FloatWindowService;
 import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import me.goldze.mvvmhabit.base.BaseActivity;
 import me.goldze.mvvmhabit.bus.RxBus;
+import me.goldze.mvvmhabit.utils.ToastUtils;
 import me.tatarka.bindingcollectionadapter2.BR;
 
 public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChatingBinding, AudioCallChatingViewModel> implements Ifinish {
 
     private String fromUserId;
     private String toUserId;
-    private Integer mRole;
+    private TUICalling.Role mRole;
     private Integer roomId;
     private Context mContext;
     //是否拨打人
     private boolean userCall = false;
-
+    //音频悬浮框
+    private AudioFloatCallView   mFloatView;
 
     private int mTimeCount;
     //每个10秒+1
@@ -132,6 +141,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
     @Override
     protected void onResume() {
         super.onResume();
+        FloatWindowService.stopService(this);
         AppContext.isCalling = true;
         ImmersionBarUtils.setupStatusBar(this, false, true);
     }
@@ -167,13 +177,14 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
         //屏幕常亮
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        Status.mCallStatus = Status.CALL_STATUS.ACCEPT;
         SVGASoundManager.INSTANCE.init();
         SVGAParser.Companion.shareParser().init(this);
         mContext = this;
         Intent intent = getIntent();
         fromUserId = intent.getStringExtra("fromUserId");
         toUserId = intent.getStringExtra("toUserId");
-        mRole = intent.getIntExtra("mRole", 0);
+        mRole = (TUICalling.Role) intent.getSerializableExtra("mRole");
         roomId = intent.getIntExtra("roomId", 0);
         userCall = intent.getBooleanExtra("userCall", false);
     }
@@ -191,8 +202,75 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         viewModel.getCallingInfo(roomId, fromUserId, toUserId);
     }
 
+
+    //开启悬浮窗
+    private void startFloatService() {
+        if (isFinishing() || isDestroyed()) {
+            return;
+        }
+        if (Status.mIsShowFloatWindow) {
+            return;
+        }
+        if (PermissionUtil.hasPermission(this)) {
+            mFloatView = createFloatView();
+            FloatWindowService.startFloatService(this, mFloatView);
+            RxBus.getDefault().post(new ShowFloatWindowEntity(true));
+        }
+    }
+
+    //创建悬浮窗视图
+    private AudioFloatCallView createFloatView() {
+        String[] userIds = new String[]{toUserId};
+        return new AudioFloatCallView(this, mRole, TUICalling.Type.AUDIO, userIds, fromUserId,
+                null, false,viewModel.leftUserInfoField.get().getAvatar(),mTimeCount) {
+            @Override
+            protected void finish() {
+                super.finish();
+                AudioCallChatingActivity.this.finish();
+                RxBus.getDefault().post(new ShowFloatWindowEntity(false));
+            }
+
+            @Override
+            public void restartActivity() {
+                if (isBackground(AudioCallChatingActivity.this)){
+                    restartAudioActivity();
+                }else {
+                    RxBus.getDefault().post(new RestartActivityEntity());
+                }
+            }
+        };
+    }
+
+    /**
+     * 判断程序是否在后台
+     * @param context
+     * @return
+     */
+    public static boolean isBackground(Context context) {
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
+        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
+            if (appProcess.processName.equals(context.getPackageName())) {
+                if (appProcess.importance != ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
+
+    private void restartAudioActivity(){
+        Intent intent = new Intent(this, AudioCallChatingActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        overridePendingTransition(R.anim.anim_zoom_in, R.anim.anim_stay);
+    }
+
     //跳转谷歌支付act
-    ActivityResultLauncher<Intent> toGooglePlayIntent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+    ActivityResultLauncher<Intent> toGooglePlayIntent = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
         Log.e("进入支付页面回调","=========");
         if (result.getData() != null) {
             Intent intentData = result.getData();
@@ -207,6 +285,15 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
     @Override
     public void initViewObservable() {
         super.initViewObservable();
+        binding.ivMinimize.setOnClickListener(v -> {
+            if (!PermissionUtil.hasPermission(getApplicationContext())) {
+                ToastUtils.showLong(getString(com.tencent.liteav.trtccalling.R.string.trtccalling_float_permission));
+                return;
+            }
+            moveTaskToBack(true);
+            overridePendingTransition(0, R.anim.anim_zoom_out);
+            startFloatService();
+        });
         //公屏消息滚动到底部
         viewModel.uc.scrollToEnd.observe(this, new Observer<Void>() {
             @Override

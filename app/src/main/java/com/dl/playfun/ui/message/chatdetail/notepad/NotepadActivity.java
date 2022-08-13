@@ -4,16 +4,14 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 
-import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.databinding.ActivityNotepadBinding;
-import com.dl.playfun.kl.viewmodel.AudioCallingViewModel2;
+import com.dl.playfun.ui.base.BaseActivity;
 import com.dl.playfun.widget.BasicToolbar;
 
-import me.goldze.mvvmhabit.base.BaseActivity;
 import me.tatarka.bindingcollectionadapter2.BR;
 
 /**

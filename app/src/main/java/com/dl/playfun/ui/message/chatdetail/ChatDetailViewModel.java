@@ -33,6 +33,7 @@ import com.dl.playfun.entity.MallWithdrawTipsInfoEntity;
 import com.dl.playfun.entity.MessageRuleEntity;
 import com.dl.playfun.entity.PhotoAlbumEntity;
 import com.dl.playfun.entity.PriceConfigEntity;
+import com.dl.playfun.entity.ShowFloatWindowEntity;
 import com.dl.playfun.entity.StatusEntity;
 import com.dl.playfun.entity.TagEntity;
 import com.dl.playfun.entity.TaskRewardReceiveEntity;
@@ -111,6 +112,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
     private Disposable messageGiftNewEventSubscriber;
     private Disposable CallChatingHangupSubscriber;
     private Disposable InsufficientBalanceSubscriber;
+    private Disposable ShowFloatWindowEntitySubscriber;
     //礼物消息防抖
     private String lastClickFunName;
     private long lastClickTime;
@@ -868,16 +870,21 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
         InsufficientBalanceSubscriber = RxBus.getDefault().toObservable(InsufficientBalanceEvent.class).subscribe(event -> {
             uc.sendDialogViewEvent.call();
         });
+        ShowFloatWindowEntitySubscriber = RxBus.getDefault().toObservable(ShowFloatWindowEntity.class).subscribe(event -> {
+            isShoweCallingVideo.set(!event.isShow);
+        });
 
 
         //将订阅者加入管理站
         RxSubscriptions.add(messageGiftNewEventSubscriber);
+        RxSubscriptions.add(ShowFloatWindowEntitySubscriber);
     }
 
     @Override
     public void removeRxBus() {
         super.removeRxBus();
         RxSubscriptions.remove(messageGiftNewEventSubscriber);
+        RxSubscriptions.remove(ShowFloatWindowEntitySubscriber);
     }
 
     public class UIChangeObservable {

@@ -35,7 +35,7 @@
                 android:layout_marginTop="42dp"
                 android:layout_marginRight="14dp"
                 android:onClick="@{viewModel.closeOnclick}"
-                android:src="@drawable/call_close" />
+                android:src="@drawable/icon_call_close" />
 
             <com.dl.playfun.widget.image.CircleImageView
                 android:layout_width="173dp"

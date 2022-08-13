@@ -78,6 +78,8 @@ import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.liteav.trtccalling.TUICalling;
 import com.tencent.liteav.trtccalling.model.TRTCCalling;
 import com.tencent.liteav.trtccalling.model.util.TUICallingConstants;
+import com.tencent.liteav.trtccalling.ui.base.VideoLayoutFactory;
+import com.tencent.liteav.trtccalling.ui.floatwindow.FloatCallView;
 import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
 
 import org.jetbrains.annotations.NotNull;
@@ -103,6 +105,10 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
     private FURenderer mFURenderer;
     private final boolean isFuEffect = true;
 
+    //视频悬浮框
+    private FloatCallView mFloatView;
+    private VideoLayoutFactory mVideoFactory;
+
     private Context mContext;
 
     private JMTUICallVideoView mCallView;
@@ -116,7 +122,6 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
     private String toId;
     private Integer roomId;
     private TUICalling.Role role;
-
     private String[] userIds;
 
     private int mTimeCount;
@@ -246,9 +251,10 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
 
         mContainerView = findViewById(R.id.container);
         mJMView = findViewById(R.id.jm_view);
+        mVideoFactory = new VideoLayoutFactory(this);
         LogUtils.i("callingInviteInfo: "+callingInviteInfo);
         if (callingInviteInfo != null) {
-            mCallView = new JMTUICallVideoView(this, role, userIds, callUserId, null, false, callingInviteInfo.getRoomId()) {
+            mCallView = new JMTUICallVideoView(this, role, userIds, callUserId, null, false, callingInviteInfo.getRoomId(),mVideoFactory) {
                 @Override
                 public void finish() {
                     super.finish();
@@ -261,7 +267,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                 }
             };
         } else {
-            mCallView = new JMTUICallVideoView(this, role, userIds, callUserId, null, false) {
+            mCallView = new JMTUICallVideoView(this, role, userIds, callUserId, null, false,mVideoFactory) {
                 @Override
                 public void finish() {
                     super.finish();

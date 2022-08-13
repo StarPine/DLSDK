@@ -98,6 +98,7 @@ import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
+import com.tencent.liteav.trtccalling.ui.base.Status;
 import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomImageMessageBean;
@@ -215,7 +216,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             viewModel.loadUserInfo(getTaUserIdIM());
             viewModel.loadTagUser(String.valueOf(getTaUserIdIM()));
             initCallVideoHint();
-            viewModel.isShoweCallingVideo.set(true);
+            viewModel.isShoweCallingVideo.set(!Status.mIsShowFloatWindow);
         }else {
             viewModel.isHideExchangeRules.set(true);
             viewModel.isShoweCallingVideo.set(false);

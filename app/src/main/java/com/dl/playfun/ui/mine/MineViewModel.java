@@ -36,6 +36,7 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
 import com.dl.playfun.ui.mine.audio.TapeAudioFragment;
 import com.dl.playfun.ui.mine.broadcast.BroadcastFragment;
+import com.dl.playfun.ui.mine.exclusive.ExclusiveCallActivity;
 import com.dl.playfun.ui.mine.invitewebdetail.InviteWebDetailFragment;
 import com.dl.playfun.ui.mine.level.LevelEquityFragment;
 import com.dl.playfun.ui.mine.likelist.LikeListFragment;
@@ -231,6 +232,10 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
     UIChangeObservable uc = new UIChangeObservable();
     //我的评价按钮的点击事件
     public BindingCommand evaluateOnClickCommand = new BindingCommand(() -> getMyEvaluate());
+    //专属招呼
+    public BindingCommand exclusiveOnClickCommand = new BindingCommand(() -> {
+        startActivity(ExclusiveCallActivity.class);
+    });
     //点击我的头像
     public BindingCommand avatarOnClickCommand = new BindingCommand(() -> uc.clickAvatar.call());
     //紅包照片

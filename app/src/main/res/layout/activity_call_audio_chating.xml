@@ -44,14 +44,25 @@
 
         <ImageView
             android:id="@+id/iv_close"
-            android:layout_width="19dp"
-            android:layout_height="19dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:layout_marginTop="42dp"
             android:layout_marginRight="14dp"
             android:onClick="@{viewModel.closeOnclick}"
-            android:src="@drawable/call_close" />
+            android:src="@drawable/icon_call_close" />
+
+        <ImageView
+            android:id="@+id/iv_minimize"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_toLeftOf="@id/iv_close"
+            android:layout_alignBottom="@+id/iv_close"
+            android:layout_marginTop="42dp"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/icon_minimize" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

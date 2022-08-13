@@ -42,6 +42,7 @@ import com.dl.playfun.entity.EvaluateEntity;
 import com.dl.playfun.entity.EvaluateMessageEntity;
 import com.dl.playfun.entity.ExchangeEntity;
 import com.dl.playfun.entity.ExchangeIntegraOuterEntity;
+import com.dl.playfun.entity.ExclusiveAccostInfoEntity;
 import com.dl.playfun.entity.FaceVerifyResultEntity;
 import com.dl.playfun.entity.GameCoinBuy;
 import com.dl.playfun.entity.GameCoinWalletEntity;
@@ -118,6 +119,33 @@ import retrofit2.http.Query;
  */
 
 public interface ApiService {
+
+    /**
+     * 获取专属搭讪
+     * @return
+     */
+    @GET("api/getExclusiveAccost")
+    Observable<BaseDataResponse<List<ExclusiveAccostInfoEntity>>> getExclusiveAccost();
+
+    /**
+     * 删除专属搭讪
+     * @return
+     */
+    @GET("api/delExclusiveAccost")
+    Observable<BaseDataResponse> delExclusiveAccost(@Query("type") int type);
+
+    /**
+     * 设置专属搭讪
+     * @param type 设置专属搭讪
+     * @param content 内容
+     * @return
+     */
+    @FormUrlEncoded
+    @POST("api/setExclusiveAccost")
+    Observable<BaseDataResponse> setExclusiveAccost(@Field("type")Integer type,
+                                                    @Field("content")String content,
+                                                    @Field("len")int len);
+
 
     /**
     * @Desc TODO(设置视讯广场封面图)

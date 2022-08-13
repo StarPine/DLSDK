@@ -1,6 +1,7 @@
 package com.tencent.liteav.trtccalling.ui.floatwindow;
 
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +14,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.tencent.liteav.trtccalling.R;
 import com.tencent.liteav.trtccalling.model.impl.base.TRTCLogger;
 import com.tencent.liteav.trtccalling.ui.base.BaseTUICallView;
 import com.tencent.liteav.trtccalling.ui.base.Status;
@@ -85,20 +85,21 @@ public class FloatWindowService extends Service {
      */
     private void initWindow() {
         mWindowManager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-        //设置好悬浮窗的参数
-        mWindowLayoutParams = getWindowParams();
+        mWindowManager = ((Activity)mContext).getWindowManager();
         //屏幕宽度
         mScreenWidth = mWindowManager.getDefaultDisplay().getWidth();
+        //设置好悬浮窗的参数
+        mWindowLayoutParams = getWindowParams();
         // 添加悬浮窗的视图
         TRTCLogger.i(TAG, "initWindow: mCallView = " + mCallView);
         if (null != mCallView) {
-            mCallView.setBackgroundResource(R.drawable.trtccalling_bg_floatwindow_left);
+//            mCallView.setBackgroundResource(R.drawable.trtccalling_bg_floatwindow_left);
             mWindowManager.addView(mCallView, mWindowLayoutParams);
             mCallView.setOnTouchListener(new FloatingListener());
         }
     }
 
-    public WindowManager.LayoutParams getWindowParams() {
+    private WindowManager.LayoutParams getWindowParams() {
         mWindowLayoutParams = new WindowManager.LayoutParams();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             mWindowLayoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
@@ -110,9 +111,10 @@ public class FloatWindowService extends Service {
                 | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
 
         // 悬浮窗默认显示以左上角为起始坐标
-        mWindowLayoutParams.gravity = Gravity.START | Gravity.TOP;
+        mWindowLayoutParams.gravity = Gravity.LEFT | Gravity.TOP;
         //悬浮窗的开始位置，设置从左上角开始，所以屏幕左上角是x=0,y=0.
-        mWindowLayoutParams.x = 0;
+        mCallView.measure(0,0);
+        mWindowLayoutParams.x = mScreenWidth - mCallView.getMeasuredWidth();;
         mWindowLayoutParams.y = mWindowManager.getDefaultDisplay().getHeight() / 2;
         //设置悬浮窗宽高
         mWindowLayoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
@@ -165,6 +167,7 @@ public class FloatWindowService extends Service {
                     }
                     mTouchStartX = mTouchCurrentX;
                     mTouchStartY = mTouchCurrentY;
+                    break;
                 case MotionEvent.ACTION_UP:
                     mStopX = (int) event.getRawX();
                     mStopY = (int) event.getRawY();
@@ -198,10 +201,10 @@ public class FloatWindowService extends Service {
             public void onAnimationUpdate(ValueAnimator animation) {
                 if (isLeft) {
                     mWindowLayoutParams.x = (int) (start * (1 - animation.getAnimatedFraction()));
-                    mCallView.setBackgroundResource(R.drawable.trtccalling_bg_floatwindow_left);
+//                    mCallView.setBackgroundResource(R.drawable.trtccalling_bg_floatwindow_left);
                 } else {
                     mWindowLayoutParams.x = (int) (start + (mScreenWidth - start - mWidth) * animation.getAnimatedFraction());
-                    mCallView.setBackgroundResource(R.drawable.trtccalling_bg_floatwindow_right);
+//                    mCallView.setBackgroundResource(R.drawable.trtccalling_bg_floatwindow_right);
                 }
                 calculateHeight();
                 mWindowManager.updateViewLayout(mCallView, mWindowLayoutParams);

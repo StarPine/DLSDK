@@ -403,11 +403,9 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
         Bundle bundle = new Bundle();
         bundle.putString("fromUserId", fromUserId);
         bundle.putString("toUserId", this.toUserId);
+        bundle.putSerializable("mRole", mRole);
         if (mRole == TUICalling.Role.CALL) {
-            bundle.putInt("mRole", 1);
             bundle.putBoolean("userCall",true);
-        } else {
-            bundle.putInt("mRole", 0);
         }
         bundle.putInt("roomId", roomId);
         startActivityPoP(AudioCallChatingActivity.class, bundle);

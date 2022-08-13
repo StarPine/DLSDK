@@ -5,9 +5,7 @@ import com.dl.playfun.data.source.http.response.BaseListDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.AccostEntity;
 import com.dl.playfun.entity.AdBannerEntity;
-import com.dl.playfun.entity.AdItemEntity;
 import com.dl.playfun.entity.AdUserBannerEntity;
-import com.dl.playfun.entity.AdUserItemEntity;
 import com.dl.playfun.entity.AddressEntity;
 import com.dl.playfun.entity.AlbumPhotoEntity;
 import com.dl.playfun.entity.AllConfigEntity;
@@ -41,6 +39,7 @@ import com.dl.playfun.entity.EvaluateEntity;
 import com.dl.playfun.entity.EvaluateMessageEntity;
 import com.dl.playfun.entity.ExchangeEntity;
 import com.dl.playfun.entity.ExchangeIntegraOuterEntity;
+import com.dl.playfun.entity.ExclusiveAccostInfoEntity;
 import com.dl.playfun.entity.FaceVerifyResultEntity;
 import com.dl.playfun.entity.GameCoinBuy;
 import com.dl.playfun.entity.GameCoinWalletEntity;
@@ -102,11 +101,30 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
-import retrofit2.http.PUT;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface HttpDataSource {
+
+
+    /**
+     * 获取专属搭讪
+     * @return
+     */
+    Observable<BaseDataResponse<List<ExclusiveAccostInfoEntity>>> getExclusiveAccost();
+
+    /**
+     * 删除专属搭讪
+     * @return
+     */
+    Observable<BaseDataResponse> delExclusiveAccost(int type);
+
+    /**
+     * 设置专属搭讪
+     * @param type 设置专属搭讪
+     * @param content 内容
+     * @return
+     */
+    Observable<BaseDataResponse> setExclusiveAccost(Integer type, String content,int len);
 
     /**
      * @Desc TODO(设置视讯广场封面图)

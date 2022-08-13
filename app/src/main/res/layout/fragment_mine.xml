@@ -777,6 +777,37 @@
                             style="@style/ProfileItem"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/profile_item_height"
+                            binding:onClickCommand="@{viewModel.exclusiveOnClickCommand}">
+
+                            <ImageView
+                                android:id="@+id/mine_item_exclusive_call"
+                                android:layout_width="19dp"
+                                android:layout_height="19dp"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerInParent="true"
+                                android:src="@drawable/icon_exclusive_call" />
+
+                            <TextView
+                                style="@style/ProfileItemTitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:layout_toEndOf="@+id/mine_item_exclusive_call"
+                                android:text="@string/playfun_mine_title_btn_exclusive"
+                                android:textSize="13sp" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/ic_arrow_right" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            style="@style/ProfileItem"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/profile_item_height"
                             binding:onClickCommand="@{viewModel.broadcastOnClickCommand}">
 
                             <ImageView

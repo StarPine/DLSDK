@@ -15,12 +15,6 @@
         android:background="@color/white"
         android:orientation="vertical">
 
-        <View
-            android:id="@+id/status_bar_view"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:background="@color/status_bar_color" />
-
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/top_bar"
             android:layout_width="match_parent"
