@@ -10,6 +10,8 @@ import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.entity.ExclusiveAccostInfoEntity;
+import com.dl.playfun.manager.ConfigManager;
+import com.dl.playfun.utils.FileUploadUtils;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
 
@@ -17,9 +19,15 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.RxUtils;
+import me.goldze.mvvmhabit.utils.ToastUtils;
 
 /**
  * 修改备注：我的专属招呼viewmodel
@@ -41,6 +49,7 @@ public class ExclusiveCallViewModel extends BaseViewModel<AppRepository> {
     public ObservableField<String> textContent = new ObservableField<>();
     public ObservableField<String> audioContent = new ObservableField<>();
     public ObservableField<String> audioSecond = new ObservableField<>();
+    public ObservableField<String> avatar = new ObservableField<>();
     public ObservableField<List<String>> sensitiveWords = new ObservableField<>();
     public int textTypeId;
     public int audioTypeId;
@@ -80,6 +89,7 @@ public class ExclusiveCallViewModel extends BaseViewModel<AppRepository> {
     public ExclusiveCallViewModel(@NonNull @NotNull Application application, AppRepository model) {
         super(application, model);
         sensitiveWords.set(model.readSensitiveWords());
+        avatar.set(ConfigManager.getInstance().getAvatar());
     }
 
     public void getExclusiveAccost() {
@@ -100,7 +110,7 @@ public class ExclusiveCallViewModel extends BaseViewModel<AppRepository> {
                                     textContent.set(accostInfo.getContent());
                                 } else if (type == AUDIO_TYPE) {
                                     audioContent.set(accostInfo.getContent());
-                                    audioSecond.set(accostInfo.getLen()+"");
+                                    audioSecond.set(accostInfo.getLen() + "");
                                 }
                             }
                         }
@@ -139,8 +149,42 @@ public class ExclusiveCallViewModel extends BaseViewModel<AppRepository> {
                 });
     }
 
+    //上传音频
+    public void uploadUserSoundFile(Integer type, String filePath, Integer sound_time) {
+        Observable.just(filePath)
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(this)
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribeOn(Schedulers.io())
+                .map(new Function<String, String>() {
+                    @Override
+                    public String apply(String s) throws Exception {
+                        return FileUploadUtils.ossUploadFileAudio("sound/", FileUploadUtils.FILE_TYPE_AUDIO, s, null);
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableObserver<String>() {
+                    @Override
+                    public void onNext(String fileKey) {
+                        dismissHUD();
+                        setExclusiveAccost(type, fileKey, sound_time);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        dismissHUD();
+                        ToastUtils.showShort(R.string.playfun_upload_failed);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        dismissHUD();
+                    }
+                });
+    }
+
     public void setExclusiveAccost(Integer type, String content, int second) {
-        model.setExclusiveAccost(type, content,second)
+        model.setExclusiveAccost(type, content, second)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
                 .doOnSubscribe(this)
@@ -154,7 +198,7 @@ public class ExclusiveCallViewModel extends BaseViewModel<AppRepository> {
                             ToastCenterUtils.showShort(R.string.playfun_text_accost_tips3);
                         } else if (type == AUDIO_TYPE) {
                             audioContent.set(content);
-                            audioSecond.set(second+"");
+                            audioSecond.set(second + "");
                             ToastCenterUtils.showShort(R.string.playfun_audio_accost_tips2);
                         }
                     }

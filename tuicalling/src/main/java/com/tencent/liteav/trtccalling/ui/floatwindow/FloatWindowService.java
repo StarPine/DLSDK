@@ -14,7 +14,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.tencent.liteav.trtccalling.R;
 import com.tencent.liteav.trtccalling.model.impl.base.TRTCLogger;
 import com.tencent.liteav.trtccalling.ui.base.BaseTUICallView;
 import com.tencent.liteav.trtccalling.ui.base.Status;
@@ -90,7 +89,7 @@ public class FloatWindowService extends Service {
         //屏幕宽度
         mScreenWidth = mWindowManager.getDefaultDisplay().getWidth();
         //设置好悬浮窗的参数
-        mWindowLayoutParams = getParams();
+        mWindowLayoutParams = getWindowParams();
         // 添加悬浮窗的视图
         TRTCLogger.i(TAG, "initWindow: mCallView = " + mCallView);
         if (null != mCallView) {
@@ -100,7 +99,7 @@ public class FloatWindowService extends Service {
         }
     }
 
-    private WindowManager.LayoutParams getParams() {
+    private WindowManager.LayoutParams getWindowParams() {
         mWindowLayoutParams = new WindowManager.LayoutParams();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             mWindowLayoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;

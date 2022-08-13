@@ -11,6 +11,7 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.databinding.ActivityExclusivecallBinding;
 import com.dl.playfun.ui.base.BaseActivity;
 import com.dl.playfun.ui.dialog.ExclusiveAccostDialog;
+import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.widget.BasicToolbar;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
@@ -63,34 +64,34 @@ public class ExclusiveCallActivity extends BaseActivity<ActivityExclusivecallBin
     @Override
     public void initViewObservable() {
         super.initViewObservable();
-        viewModel.editText.observe(this,unused -> {
+        viewModel.editText.observe(this, unused -> {
             ExclusiveAccostDialog.getInstance(ExclusiveCallActivity.this)
                     .setOnClickListener(new ExclusiveAccostDialog.DialogOnClickListener() {
                         @Override
                         public void onConfirm(Dialog dialog, String content) {
-                            if (content.length() <= 0){
+                            if (content.length() <= 0) {
                                 ToastCenterUtils.showShort(R.string.playfun_text_accost_tips);
                                 return;
                             }
-                            if(TUIChatUtils.isContains(content, viewModel.sensitiveWords.get())){
+                            if (TUIChatUtils.isContains(content, viewModel.sensitiveWords.get())) {
                                 ToastCenterUtils.showShort(R.string.playfun_text_accost_tips2);
                                 return;
                             }
                             dialog.dismiss();
-                            viewModel.setExclusiveAccost(viewModel.TEXT_TYPE,content,-1);
+                            viewModel.setExclusiveAccost(viewModel.TEXT_TYPE, content, -1);
                         }
                     })
                     .editAccostContentDialog(viewModel.textContent.get())
                     .show();
         });
 
-        viewModel.editAudio.observe(this,unused -> {
+        viewModel.editAudio.observe(this, unused -> {
             ExclusiveAccostDialog.getInstance(ExclusiveCallActivity.this)
                     .setOnClickListener(new ExclusiveAccostDialog.DialogOnClickListener() {
                         @Override
                         public void onConfirmAudio(Dialog dialog, String content, int second) {
                             dialog.dismiss();
-                            viewModel.setExclusiveAccost(viewModel.AUDIO_TYPE,content,second);
+                            viewModel.uploadUserSoundFile(viewModel.AUDIO_TYPE, content, second);
                         }
                     })
                     .editAccostAudioDialog(viewModel.audioContent.get())
@@ -98,12 +99,12 @@ public class ExclusiveCallActivity extends BaseActivity<ActivityExclusivecallBin
         });
 
         //播放录音
-        viewModel.playAudio.observe(this,unused -> {
+        viewModel.playAudio.observe(this, unused -> {
             if (AudioPlayer.getInstance().isPlaying()) {
                 AudioPlayer.getInstance().stopPlay();
                 return;
             }
-            AudioPlayer.getInstance().startPlay(viewModel.audioContent.get(), new AudioPlayer.Callback() {
+            AudioPlayer.getInstance().startPlay(StringUtil.getFullAudioUrl(viewModel.audioContent.get()), new AudioPlayer.Callback() {
                 @Override
                 public void onCompletion(Boolean success, Boolean isOutTime) {
                 }

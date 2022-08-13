@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:binding="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -10,6 +11,8 @@
             type="com.dl.playfun.ui.mine.exclusive.ExclusiveCallViewModel" />
 
         <import type="android.view.View" />
+
+        <import type="com.dl.playfun.R" />
 
     </data>
 
@@ -144,8 +147,11 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="10dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/default_avatar" />
-
+                    android:src="@drawable/default_avatar"
+                    binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
+                    binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
+                    binding:imageThumbPath="@{viewModel.avatar}"
+                    />
 
             </RelativeLayout>
 
@@ -249,7 +255,11 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="10dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/default_avatar" />
+                    android:src="@drawable/default_avatar"
+                    binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
+                    binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
+                    binding:imageThumbPath="@{viewModel.avatar}"
+                    />
 
 
             </RelativeLayout>

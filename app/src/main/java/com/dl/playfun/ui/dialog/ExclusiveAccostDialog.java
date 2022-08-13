@@ -1,5 +1,6 @@
 package com.dl.playfun.ui.dialog;
 
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
@@ -12,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -33,14 +36,13 @@ import java.io.File;
  * @Author： liaosf
  * @Date： 2022/8/12 11:26
  */
-public class ExclusiveAccostDialog{
+public class ExclusiveAccostDialog {
     private static volatile ExclusiveAccostDialog INSTANCE;
     private Context mContext;
     private ExclusiveAccostDialog.DialogOnClickListener onClickListener;
     private int startTime = 0;
     private CountDownTimer downTimer;
     private String playPath = null;
-    private int playgDuration = 0;
     private boolean deleteFlag = false;
 
     public static ExclusiveAccostDialog getInstance(Context context) {
@@ -87,11 +89,11 @@ public class ExclusiveAccostDialog{
         TextView wordCount = contentView.findViewById(R.id.tv_word_count);
         EditText edAccostText = contentView.findViewById(R.id.et_accost);
         ImageView close = contentView.findViewById(R.id.iv_close);
-        if (!TextUtils.isEmpty(content)){
+        if (!TextUtils.isEmpty(content)) {
             edAccostText.setText(content);
-            wordCount.setText(String.format(mContext.getString(R.string.playfun_text_accost_number_of_fonts),edAccostText.getText().length()+""));
-        }else {
-            wordCount.setText(String.format(mContext.getString(R.string.playfun_text_accost_number_of_fonts),"0"));
+            wordCount.setText(String.format(mContext.getString(R.string.playfun_text_accost_number_of_fonts), edAccostText.getText().length() + ""));
+        } else {
+            wordCount.setText(String.format(mContext.getString(R.string.playfun_text_accost_number_of_fonts), "0"));
 
         }
         close.setOnClickListener(v -> dialog.dismiss());
@@ -103,7 +105,7 @@ public class ExclusiveAccostDialog{
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                wordCount.setText(String.format(mContext.getString(R.string.playfun_text_accost_number_of_fonts),edAccostText.getText().length()+""));
+                wordCount.setText(String.format(mContext.getString(R.string.playfun_text_accost_number_of_fonts), edAccostText.getText().length() + ""));
             }
 
             @Override
@@ -112,8 +114,8 @@ public class ExclusiveAccostDialog{
             }
         });
         confirmBtn.setOnClickListener(v -> {
-            if (onClickListener != null){
-                onClickListener.onConfirm(dialog,edAccostText.getText().toString());
+            if (onClickListener != null) {
+                onClickListener.onConfirm(dialog, edAccostText.getText().toString());
             }
         });
         return dialog;
@@ -121,6 +123,7 @@ public class ExclusiveAccostDialog{
 
     /**
      * 编辑录音搭讪内容dialog
+     *
      * @param content
      * @return
      */
@@ -134,6 +137,7 @@ public class ExclusiveAccostDialog{
         dialog.getWindow().setGravity(Gravity.CENTER);
         dialog.getWindow().setWindowAnimations(R.style.BottomDialog_Animation);
 
+        //view初始化
         Button recording = contentView.findViewById(R.id.btn_recording);
         TextView timing = contentView.findViewById(R.id.tv_timing);
         ImageView close = contentView.findViewById(R.id.iv_close);
@@ -143,119 +147,178 @@ public class ExclusiveAccostDialog{
         ImageView ivOk = contentView.findViewById(R.id.iv_ok);
         LinearLayout llCompletiion = contentView.findViewById(R.id.ll_completion);
 
+        //事件监听
         close.setOnClickListener(v -> dialog.dismiss());
         recording.setOnTouchListener((v, event) -> {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     audioNomal.setImageDrawable(mContext.getDrawable(R.drawable.icon_anim_audio_recording));
+                    startAnimal(audioNomal);
                     recording.setBackgroundResource(R.drawable.button_purple_background2);
                     recording.setText(mContext.getString(R.string.playfun_audio_accost_recording));
                     startTime = 0;
-                    startAudioCall(timing);
+                    startRecord(timing);
                     setTimeText(timing);
-                    startAudio(timing);
+                    startTimer(timing, recording, audioPlayable, llCompletiion, audioNomal);
                     deleteFlag = false;
                     break;
                 case MotionEvent.ACTION_UP:
-                    stopAudioCall();
+                    audioNomal.clearAnimation();
+                    stopRecord();
                     if (startTime < 3) {
                         ToastUtil.toastShortMessage(StringUtils.getString(R.string.playfun_tape_audio_error_text));
                         startTime = 0;
                         deleteFlag = true;
-                        resetStatus(recording, timing, audioNomal, llCompletiion);
-                    }else {
-                        audioPlayable.setImageDrawable(mContext.getDrawable(R.drawable.icon_stop_audio));
-                        llCompletiion.setVisibility(View.VISIBLE);
-                        recording.setVisibility(View.GONE);
-                        audioPlayable.setVisibility(View.VISIBLE);
+                        resetStatus(recording, timing, audioNomal, llCompletiion, audioPlayable);
+                    } else {
+                        recordCompletion(recording, audioPlayable, llCompletiion);
                     }
-                    stopAudio();
+                    stopTimer();
                     break;
             }
             return true;
         });
         ivOk.setOnClickListener(v -> {
-            if (onClickListener != null){
-                onClickListener.onConfirmAudio(dialog,playPath,startTime);
+            if (onClickListener != null) {
+                onClickListener.onConfirmAudio(dialog, playPath, startTime);
             }
         });
         audioPlayable.setOnClickListener(v -> {
-            if (AudioPlayer.getInstance().isPlaying()) {
-                audioPlayable.setImageResource(R.drawable.icon_stop_audio);
-                AudioPlayer.getInstance().stopPlay();
-                return;
-            } else {
-                audioPlayable.setImageResource(R.drawable.icon_playing_audio);
-            }
-            AudioPlayer.getInstance().startPlay(playPath, new AudioPlayer.Callback() {
-                @Override
-                public void onCompletion(Boolean success, Boolean isOutTime) {
-                    audioPlayable.setImageResource(R.drawable.icon_stop_audio);
-                }
-            });
+            playAudio(audioPlayable);
         });
         ivReset.setOnClickListener(v -> {
-            resetStatus(recording, timing, audioNomal, llCompletiion);
+            resetStatus(recording, timing, audioNomal, llCompletiion, audioPlayable);
         });
 
         return dialog;
     }
 
-    private void resetStatus(Button recording, TextView timing, ImageView audioNomal, LinearLayout llCompletiion) {
+    /**
+     * 播放录音
+     *
+     * @param audioPlayable
+     */
+    private void playAudio(ImageView audioPlayable) {
+        if (AudioPlayer.getInstance().isPlaying()) {
+            audioPlayable.setImageResource(R.drawable.icon_stop_audio);
+            AudioPlayer.getInstance().stopPlay();
+            return;
+        } else {
+            audioPlayable.setImageResource(R.drawable.icon_playing_audio);
+        }
+        AudioPlayer.getInstance().startPlay(playPath, new AudioPlayer.Callback() {
+            @Override
+            public void onCompletion(Boolean success, Boolean isOutTime) {
+                audioPlayable.setImageResource(R.drawable.icon_stop_audio);
+            }
+        });
+    }
+
+    private void recordCompletion(Button recording, ImageView audioPlayable, LinearLayout llCompletiion) {
+        audioPlayable.setImageDrawable(mContext.getDrawable(R.drawable.icon_stop_audio));
+        llCompletiion.setVisibility(View.VISIBLE);
+        recording.setVisibility(View.GONE);
+        audioPlayable.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * 启动录制动画
+     *
+     * @param audioNomal
+     */
+    private void startAnimal(ImageView audioNomal) {
+        Animation animation = new ScaleAnimation(1.0f, 1.2f, 1.0f, 1.2f,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        animation.setRepeatMode(ValueAnimator.REVERSE);
+        animation.setRepeatCount(ValueAnimator.INFINITE);
+        animation.setDuration(300);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+        audioNomal.setAnimation(animation);
+    }
+
+    private void resetStatus(Button recording, TextView timing, ImageView audioNomal, LinearLayout llCompletiion, ImageView audioPlayable) {
         audioNomal.setImageDrawable(mContext.getDrawable(R.drawable.icon_audio_nomal));
         timing.setText(mContext.getString(R.string.playfun_audio_accost_tip));
         recording.setBackgroundResource(R.drawable.button_purple_background);
         recording.setText(mContext.getString(R.string.playfun_audio_accost_long_click));
         llCompletiion.setVisibility(View.GONE);
+        audioPlayable.setVisibility(View.GONE);
         recording.setVisibility(View.VISIBLE);
         audioNomal.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * 设置计时时间
+     *
+     * @param timing
+     */
     private void setTimeText(TextView timing) {
         timing.setText(String.format("00:%02d", startTime));
     }
 
-    public void startAudio(TextView timing){
-        /**
-         * 倒计时15秒，一次1秒
-         */
+    /**
+     * 开始计时
+     */
+    public void startTimer(TextView timing, Button recording, ImageView audioPlayable, LinearLayout llCompletiion, ImageView audioNomal) {
+        //倒计时15秒，一次1秒
         downTimer = new CountDownTimer(15 * 1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                startTime ++;
+                startTime++;
                 setTimeText(timing);
             }
 
             @Override
             public void onFinish() {
-                stopAudioCall();
-                stopAudio();
+                audioNomal.clearAnimation();
+                recordCompletion(recording, audioPlayable, llCompletiion);
+                stopRecord();
+                stopTimer();
             }
         };
         downTimer.start();
     }
 
-    public void stopAudio(){
-        if(downTimer!=null){
+    /**
+     * 停止计时
+     */
+    public void stopTimer() {
+        if (downTimer != null) {
             downTimer.cancel();
         }
     }
 
-    public void startAudioCall(TextView timing){
+    /**
+     * 开始录音
+     *
+     * @param timing
+     */
+    public void startRecord(TextView timing) {
         AudioPlayer.getInstance().startRecord(new AudioPlayer.Callback() {
             @Override
             public void onCompletion(Boolean success, Boolean isOutTime) {
-                if(deleteFlag){
+                if (deleteFlag) {
                     try {
                         File deleteFile = new File(AudioPlayer.getInstance().getPath());
                         deleteFile.delete();
-                    }catch(Exception e){
+                    } catch (Exception e) {
 
                     }
-                }else{
-                    if(success){
+                } else {
+                    if (success) {
                         playPath = AudioPlayer.getInstance().getPath();
-                        playgDuration = AudioPlayer.getInstance().getDuration();
                         setTimeText(timing);
                     }
                 }
@@ -263,7 +326,10 @@ public class ExclusiveAccostDialog{
         });
     }
 
-    public void stopAudioCall(){
+    /**
+     * 停止录音
+     */
+    public void stopRecord() {
         AudioPlayer.getInstance().stopRecord();
     }
 
@@ -276,7 +342,7 @@ public class ExclusiveAccostDialog{
 
         }
 
-        default void onConfirmAudio(Dialog dialog, String content,int second) {
+        default void onConfirmAudio(Dialog dialog, String content, int second) {
 
         }
 
