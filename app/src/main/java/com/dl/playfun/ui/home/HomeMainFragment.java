@@ -22,6 +22,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.blankj.utilcode.util.IntentUtils;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
+import com.bumptech.glide.Glide;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
@@ -77,6 +78,10 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
     public void initData() {
         super.initData();
         binding.refreshLayout.setRefreshHeader(new CustomRefreshHeader(getContext()));
+        Glide.with(getContext()).asGif().load(R.drawable.nearby_accost_tip_img)
+                .error(R.drawable.nearby_accost_tip_img)
+                .placeholder(R.drawable.nearby_accost_tip_img)
+                .into(binding.ivAccost);
         AppContext.instance().logEvent(AppsFlyerEvent.Nearby);
         citys = ConfigManager.getInstance().getAppRepository().readCityConfig();
         ConfigItemEntity nearItemEntity = new ConfigItemEntity();
