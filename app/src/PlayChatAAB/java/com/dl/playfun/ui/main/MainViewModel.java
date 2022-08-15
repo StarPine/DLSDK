@@ -1,6 +1,7 @@
 package com.dl.playfun.ui.main;
 
 import android.app.Application;
+import android.content.Intent;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -114,7 +115,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
             uc.bubbleTopShow.postValue(false);
         });
         ResatrtActSubscription2 = RxBus.getDefault().toObservable(RestartActivityEntity.class).subscribe(event -> {
-            uc.restartActivity.call();
+            uc.restartActivity.postValue(event.getIntent());
         });
         taskMainTabEventReceive = RxBus.getDefault().toObservable(TaskMainTabEvent.class)
                 .compose(RxUtils.exceptionTransformer())
@@ -387,7 +388,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
     public class UIChangeObservable {
         //气泡提示
         public SingleLiveEvent<Boolean> bubbleTopShow = new SingleLiveEvent<>();
-        public SingleLiveEvent<Void> restartActivity = new SingleLiveEvent<>();
+        public SingleLiveEvent<Intent> restartActivity = new SingleLiveEvent<>();
         //        public SingleLiveEvent<Void> showAgreementDialog = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> showFaceRecognitionDialog = new SingleLiveEvent<>();
         public SingleLiveEvent<String> startFace = new SingleLiveEvent<>();

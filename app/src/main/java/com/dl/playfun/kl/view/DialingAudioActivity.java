@@ -17,7 +17,6 @@ import com.dl.playfun.event.AudioCallingCancelEvent;
 import com.dl.playfun.kl.viewmodel.AudioCallingViewModel2;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocaleManager;
-import com.dl.playfun.utils.ChatUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.widget.dialog.TraceDialog;
 import com.google.gson.Gson;
@@ -109,6 +108,7 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
         if (userData != null) {
             callingInviteInfo = new Gson().fromJson(userData, CallingInviteInfo.class);
         }
+
     }
 
     @Override
@@ -177,6 +177,22 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
                 finish();
             }
         });
+
+        viewModel.startAudioActivity.observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer roomId) {
+                Intent intent = new Intent(DialingAudioActivity.this,AudioCallChatingActivity.class);
+                intent.putExtra("fromUserId", callUserId);
+                intent.putExtra("toUserId", toId);
+                intent.putExtra("mRole", role);
+                intent.putExtra("roomId", roomId);
+                startActivity(intent);
+                finish();
+                overridePendingTransition(R.anim.anim_zoom_in, R.anim.anim_stay);
+            }
+        });
+
+
     }
 
 

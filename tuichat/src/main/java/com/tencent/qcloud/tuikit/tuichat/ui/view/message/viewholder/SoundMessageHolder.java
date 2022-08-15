@@ -46,7 +46,7 @@ public class SoundMessageHolder extends MessageContentHolder {
     public void layoutVariableViews(final TUIMessageBean msg, final int position) {
         SoundMessageBean message = (SoundMessageBean) msg;
         if (message.isSelf()) {
-            audioPlayImage.setImageResource(R.drawable.voice_msg_playing_3);
+            audioPlayImage.setImageResource(R.drawable.voice_msg_playing_6);
             audioPlayImage.setRotation(180f);
             audioContentView.removeView(audioPlayImage);
             audioContentView.addView(audioPlayImage);
@@ -80,6 +80,15 @@ public class SoundMessageHolder extends MessageContentHolder {
             int selfTextColor = audioTimeText.getResources().getColor(selfTextColorResId);
             audioTimeText.setTextColor(selfTextColor);
         }
+        if (msg.isSelf()) {
+            if (properties.getRightChatContentFontColor() != 0) {
+                audioTimeText.setTextColor(properties.getRightChatContentFontColor());
+            }
+        } else {
+            if (properties.getLeftChatContentFontColor() != 0) {
+                audioTimeText.setTextColor(properties.getLeftChatContentFontColor());
+            }
+        }
 
         audioTimeText.setText(duration + "''");
         msgContentFrame.setOnClickListener(new View.OnClickListener() {
@@ -100,6 +109,7 @@ public class SoundMessageHolder extends MessageContentHolder {
                 audioPlayImage.setImageResource(R.drawable.play_voice_message);
                 if (message.isSelf()) {
                     audioPlayImage.setRotation(180f);
+                    audioPlayImage.setImageResource(R.drawable.play_voice_message_right);
                 }
                 final AnimationDrawable animationDrawable = (AnimationDrawable) audioPlayImage.getDrawable();
                 animationDrawable.start();
@@ -114,6 +124,7 @@ public class SoundMessageHolder extends MessageContentHolder {
                                 animationDrawable.stop();
                                 audioPlayImage.setImageResource(R.drawable.voice_msg_playing_3);
                                 if (message.isSelf()) {
+                                    audioPlayImage.setImageResource(R.drawable.voice_msg_playing_6);
                                     audioPlayImage.setRotation(180f);
                                 }
                             }

@@ -43,11 +43,10 @@
 
     <ImageView
         android:id="@+id/iv_maximize"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_alignRight="@+id/ll_float"
-        android:layout_marginRight="1dp"
-        android:layout_marginTop="1dp"
-        android:padding="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
         android:src="@drawable/icon_minimize"/>
 </RelativeLayout>
