@@ -3,14 +3,16 @@ package com.dl.playfun.kl.view;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
-import android.app.ActivityManager;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -93,8 +95,6 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
     private TUICalling.Role mRole;
     private Integer roomId;
     private Context mContext;
-    //是否拨打人
-    private boolean userCall = false;
     //音频悬浮框
     private AudioFloatCallView   mFloatView;
 
@@ -184,9 +184,9 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         Intent intent = getIntent();
         fromUserId = intent.getStringExtra("fromUserId");
         toUserId = intent.getStringExtra("toUserId");
-        mRole = (TUICalling.Role) intent.getSerializableExtra("mRole");
+        mRole = (TUICalling.Role)intent.getExtras().get("mRole");
         roomId = intent.getIntExtra("roomId", 0);
-        userCall = intent.getBooleanExtra("userCall", false);
+        mTimeCount = intent.getIntExtra("timeCount", 0);
     }
 
     @Override
@@ -198,7 +198,6 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         viewModel.roomId = roomId;
         viewModel.fromUserId = fromUserId;
         viewModel.toUserId = toUserId;
-        viewModel.userCall = userCall;
         viewModel.getCallingInfo(roomId, fromUserId, toUserId);
     }
 
@@ -222,50 +221,8 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
     private AudioFloatCallView createFloatView() {
         String[] userIds = new String[]{toUserId};
         return new AudioFloatCallView(this, mRole, TUICalling.Type.AUDIO, userIds, fromUserId,
-                null, false,viewModel.leftUserInfoField.get().getAvatar(),mTimeCount) {
-            @Override
-            protected void finish() {
-                super.finish();
-                AudioCallChatingActivity.this.finish();
-                RxBus.getDefault().post(new ShowFloatWindowEntity(false));
-            }
-
-            @Override
-            public void restartActivity() {
-                if (isBackground(AudioCallChatingActivity.this)){
-                    restartAudioActivity();
-                }else {
-                    RxBus.getDefault().post(new RestartActivityEntity());
-                }
-            }
-        };
-    }
-
-    /**
-     * 判断程序是否在后台
-     * @param context
-     * @return
-     */
-    public static boolean isBackground(Context context) {
-        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
-        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
-            if (appProcess.processName.equals(context.getPackageName())) {
-                if (appProcess.importance != ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }
-        return false;
-    }
-
-    private void restartAudioActivity(){
-        Intent intent = new Intent(this, AudioCallChatingActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        overridePendingTransition(R.anim.anim_zoom_in, R.anim.anim_stay);
+                null, false,viewModel.leftUserInfoField.get().getAvatar(),mTimeCount,roomId);
+//                null, false,"55",mTimeCount,roomId);
     }
 
     //跳转谷歌支付act
@@ -282,17 +239,32 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         }
     });
 
+    private void requestSettingCanDrawOverlays() {
+        int sdkInt = Build.VERSION.SDK_INT;
+        if (sdkInt >= Build.VERSION_CODES.O) {//8.0以上
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+            startActivityForResult(intent, 5000);
+        } else if (sdkInt >= Build.VERSION_CODES.M) {//6.0-8.0
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+            intent.setData(Uri.parse("package:" + getPackageName()));
+            startActivityForResult(intent, 5000);
+        } else {//4.4-6.0以下
+            //无需处理了
+        }
+    }
+
     @Override
     public void initViewObservable() {
         super.initViewObservable();
         binding.ivMinimize.setOnClickListener(v -> {
             if (!PermissionUtil.hasPermission(getApplicationContext())) {
+                requestSettingCanDrawOverlays();
                 ToastUtils.showLong(getString(com.tencent.liteav.trtccalling.R.string.trtccalling_float_permission));
                 return;
             }
-            moveTaskToBack(true);
-            overridePendingTransition(0, R.anim.anim_zoom_out);
             startFloatService();
+            finish();
+            overridePendingTransition(0, R.anim.anim_zoom_out);
         });
         //公屏消息滚动到底部
         viewModel.uc.scrollToEnd.observe(this, new Observer<Void>() {
@@ -452,7 +424,6 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         });
     }
 
-
     /**
      * 隐藏水晶兑换规则弹框
      */
@@ -485,7 +456,6 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
             }
         }, 1000,10000);
     }
-
 
     private void startAcceptBannersAnimotion(GiftEntity giftEntity, int account) {
         if (account > 1) {
@@ -972,7 +942,12 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         if (!FastClickUtil.isFastCallFun("AudioCallChatingActivity")) {
             RxBus.getDefault().post(new CallChatingHangupEvent());
         }
-        Utils.runOnUiThread(this::finish);
+//        Utils.runOnUiThread(this::finish);
+        runOnUiThread(() -> {
+            finish();
+            overridePendingTransition(0, R.anim.anim_nomal);
+        });
+        RxBus.getDefault().post(new ShowFloatWindowEntity(false));
     }
 
     /**

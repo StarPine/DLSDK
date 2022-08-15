@@ -1,5 +1,7 @@
 package com.dl.playfun.entity;
 
+import android.content.Intent;
+
 /**
  * @Name： PlayFun_Google
  * @Description：
@@ -8,4 +10,17 @@ package com.dl.playfun.entity;
  * 修改备注：
  */
 public class RestartActivityEntity {
+    private Intent intent;
+
+    public RestartActivityEntity(Intent intent) {
+        this.intent = intent;
+    }
+
+    public Intent getIntent() {
+        return intent;
+    }
+
+    public void setIntent(Intent intent) {
+        this.intent = intent;
+    }
 }

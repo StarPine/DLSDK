@@ -13,6 +13,7 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.TranslateAnimation;
 
 import com.tencent.liteav.trtccalling.model.impl.base.TRTCLogger;
 import com.tencent.liteav.trtccalling.ui.base.BaseTUICallView;
@@ -111,7 +112,7 @@ public class FloatWindowService extends Service {
                 | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
 
         // 悬浮窗默认显示以左上角为起始坐标
-        mWindowLayoutParams.gravity = Gravity.LEFT | Gravity.TOP;
+        mWindowLayoutParams.gravity = Gravity.START | Gravity.TOP;
         //悬浮窗的开始位置，设置从左上角开始，所以屏幕左上角是x=0,y=0.
         mCallView.measure(0,0);
         mWindowLayoutParams.x = mScreenWidth - mCallView.getMeasuredWidth();;
@@ -195,18 +196,13 @@ public class FloatWindowService extends Service {
     //悬浮窗贴边动画
     private void startScroll(int start, int end, boolean isLeft) {
         mWidth = mCallView.getWidth();
-        ValueAnimator valueAnimator = ValueAnimator.ofFloat(start, end).setDuration(300);
+        calculateHeight();
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(start - mWidth/2, end).setDuration(300);
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                if (isLeft) {
-                    mWindowLayoutParams.x = (int) (start * (1 - animation.getAnimatedFraction()));
-//                    mCallView.setBackgroundResource(R.drawable.trtccalling_bg_floatwindow_left);
-                } else {
-                    mWindowLayoutParams.x = (int) (start + (mScreenWidth - start - mWidth) * animation.getAnimatedFraction());
-//                    mCallView.setBackgroundResource(R.drawable.trtccalling_bg_floatwindow_right);
-                }
-                calculateHeight();
+                float animatedValue = (float) animation.getAnimatedValue();
+                mWindowLayoutParams.x = (int) animatedValue;
                 mWindowManager.updateViewLayout(mCallView, mWindowLayoutParams);
             }
         });

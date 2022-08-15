@@ -211,9 +211,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                 }
             }
         });
-        viewModel.uc.restartActivity.observe(this, Void -> {
-            Intent intent = new Intent(mActivity, AudioCallChatingActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        viewModel.uc.restartActivity.observe(this, intent -> {
             startActivity(intent);
             mActivity.overridePendingTransition(R.anim.anim_zoom_in, R.anim.anim_stay);
         });

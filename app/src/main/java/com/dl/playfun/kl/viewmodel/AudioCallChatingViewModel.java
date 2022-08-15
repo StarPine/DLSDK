@@ -88,8 +88,6 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     public Integer roomId;
     public String fromUserId;
     public String toUserId;
-    //是否是拨打方
-    public boolean userCall = false;
 
     //通话数据加载完成
     public boolean callInfoLoaded = false;

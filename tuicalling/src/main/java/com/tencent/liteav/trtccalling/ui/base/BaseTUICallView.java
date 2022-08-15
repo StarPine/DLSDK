@@ -376,6 +376,11 @@ public abstract class BaseTUICallView extends FrameLayout implements TRTCCalling
 
     }
 
+    @Override
+    public void onTryToReconnect() {
+
+    }
+
     //通话时长,注意UI更新需要在主线程中进行
     protected void showTimeCount(TextView view) {
         if (mTimeRunnable != null) {

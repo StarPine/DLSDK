@@ -1,9 +1,9 @@
 package com.dl.playfun.kl.viewmodel;
 
 import android.app.Application;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -20,12 +20,11 @@ import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.entity.CallingInviteInfo;
 import com.dl.playfun.entity.UserProfileInfo;
 import com.dl.playfun.event.AudioCallingCancelEvent;
+import com.dl.playfun.kl.view.Ifinish;
 import com.dl.playfun.manager.ConfigManager;
-import com.dl.playfun.utils.ChatUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.dl.playfun.R;
 import com.dl.playfun.kl.Utils;
-import com.dl.playfun.kl.view.AudioCallChatingActivity;
 import com.dl.playfun.kl.view.IViewAudioCallingWaiting;
 import com.tencent.liteav.trtccalling.TUICalling;
 import com.tencent.liteav.trtccalling.model.TRTCCalling;
@@ -43,7 +42,7 @@ import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.RxUtils;
 
-public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> implements IViewAudioCallingWaiting {
+public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> implements Ifinish {
 
     private static final int MIN_DURATION_SHOW_LOW_QUALITY = 5000; //显示网络不佳最小间隔时间
     public ObservableField<String> maleBinding = new ObservableField<>("");
@@ -54,6 +53,7 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
     protected TRTCCallingDelegate mTRTCCallingDelegate;
     //返回上一页
     public SingleLiveEvent<Void> backViewEvent = new SingleLiveEvent<>();
+    public SingleLiveEvent<Integer> startAudioActivity = new SingleLiveEvent<>();
 
     public boolean audioSuccess = false;
     public View.OnClickListener acceptOnClick = new View.OnClickListener() {
@@ -68,7 +68,7 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
             }
             mTRTCCalling.accept();
             unListen();
-            startChattingView(false);
+            startAudioActivity.postValue(roomId);
         }
     };
     protected int roomId;// 本来不需要持有这个roomId， 位置调试log，还是持有一下吧
@@ -132,7 +132,6 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
         this.toUserId = toUserId;
         this.mRole = role;
         isCallBinding.set(role == TUICalling.Role.CALL);
-        this.roomId = roomId;
         mTRTCCalling = TRTCCalling.sharedInstance(AppContext.instance());
     }
 
@@ -194,7 +193,7 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
             @Override
             public void onUserEnter(String userId) {
                 unListen();
-                startChattingView(true);
+                startAudioActivity.postValue(roomId);
             }
 
             @Override
@@ -396,19 +395,6 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
                         dismissHUD();
                     }
                 });
-    }
-
-    @Override
-    public void startChattingView(boolean userCall) {
-        Bundle bundle = new Bundle();
-        bundle.putString("fromUserId", fromUserId);
-        bundle.putString("toUserId", this.toUserId);
-        bundle.putSerializable("mRole", mRole);
-        if (mRole == TUICalling.Role.CALL) {
-            bundle.putBoolean("userCall",true);
-        }
-        bundle.putInt("roomId", roomId);
-        startActivityPoP(AudioCallChatingActivity.class, bundle);
     }
 
     @Override
