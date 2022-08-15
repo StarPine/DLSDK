@@ -13,6 +13,7 @@ import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.R;
+import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.ui.message.chatdetail.ChatDetailFragment;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.tencent.imsdk.v2.V2TIMConversation;
@@ -30,6 +31,7 @@ import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.bean.FriendApplicationBean;
 import com.tencent.qcloud.tuikit.tuicontact.model.ContactProvider;
 import com.tencent.qcloud.tuikit.tuicontact.ui.pages.FriendProfileActivity;
+import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,6 +89,25 @@ public class ChatUtils {
     */
     public static void chatUser(String ImUserId,Integer userId, String name, BaseViewModel baseViewModel) {
         chatUserView(ImUserId,userId, name, baseViewModel);
+    }
+
+    /**
+    * @Desc TODO(跳转1v1文字聊天页面)
+    * @author 彭石林
+    * @parame [conversationInfo, toUserId, baseViewModel]
+    * @return void
+    * @Date 2022/8/13
+    */
+    public static void startChatActivity(ConversationInfo conversationInfo, Integer toUserId,BaseViewModel baseViewModel) {
+        ChatInfo chatInfo = new ChatInfo();
+        chatInfo.setType(V2TIMConversation.V2TIM_C2C);
+        chatInfo.setId(conversationInfo.getId());
+        chatInfo.setChatName(conversationInfo.getTitle());
+        AppContext.instance().logEvent(AppsFlyerEvent.IM);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(ChatDetailFragment.CHAT_INFO, chatInfo);
+        bundle.putSerializable("toUserId", toUserId);
+        baseViewModel.start(ChatDetailFragment.class.getCanonicalName(), bundle);
     }
 
 }

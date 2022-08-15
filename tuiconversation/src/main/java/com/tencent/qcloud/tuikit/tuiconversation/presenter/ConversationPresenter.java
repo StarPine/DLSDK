@@ -21,6 +21,9 @@ import com.tencent.qcloud.tuikit.tuiconversation.ui.interfaces.IConversationList
 import com.tencent.qcloud.tuikit.tuiconversation.util.TUIConversationLog;
 import com.tencent.qcloud.tuikit.tuiconversation.util.TUIConversationUtils;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -39,8 +42,28 @@ public class ConversationPresenter {
     private final ConversationProvider provider;
 
     private IConversationListAdapter adapter;
-
+    //会话列表储存
     private final List<ConversationInfo> loadedConversationInfoList = new ArrayList<>();
+    //好友列表存储
+    private IConversationListAdapter friendshipAdapter;
+    //好友列表储存
+    private final List<ConversationInfo> loadedFriendshipInfoList = new ArrayList<>();
+    //好友ID存储
+    private final List<String> loadedFriendshipInfoIdList = new ArrayList<>();
+    //当前数据源是否是好友列表
+    private boolean isFriendConversation = false;
+    //好友会话最大页码 --最大会话数量
+    private int friendMaxPaging = 0;
+    //好友会话当前页吗
+    private int friendCurrentPaging = 1;
+
+    public boolean isFriendConversation() {
+        return isFriendConversation;
+    }
+
+    public void setFriendConversation(boolean friendConversation) {
+        isFriendConversation = friendConversation;
+    }
 
     private long totalUnreadCount;
 
@@ -87,11 +110,15 @@ public class ConversationPresenter {
 
             @Override
             public void onNewConversation(List<ConversationInfo> conversationList) {
+                Log.e("接收到新的消息来源",conversationList.size()+"=================");
+                isFriendConversationList(conversationList);
                 ConversationPresenter.this.onNewConversation(conversationList);
             }
 
             @Override
             public void onConversationChanged(List<ConversationInfo> conversationList) {
+                //部分会话更新
+                isFriendConversationList(conversationList);
                 ConversationPresenter.this.onConversationChanged(conversationList);
             }
 
@@ -101,6 +128,28 @@ public class ConversationPresenter {
             }
         };
         TUIConversationService.getInstance().setConversationEventListener(conversationEventListener);
+    }
+    /**
+    * @Desc TODO(效验新消息是否存在是好友列表数据)
+    * @author 彭石林
+    * @parame [conversationList]
+    * @return void
+    * @Date 2022/8/13
+    */
+    public void isFriendConversationList(List<ConversationInfo> conversationList){
+        //去重后的数据 如果已经是好友关系了。那么讲不会存在会话列表里面
+        if(!loadedFriendshipInfoIdList.isEmpty()){
+            Iterator<ConversationInfo> iterator = conversationList.iterator();
+            while(iterator.hasNext()){
+                ConversationInfo update = iterator.next();
+                if (!ConversationUtils.isNeedUpdate(update)) {
+                    //如果好友列表存在
+                    if(loadedFriendshipInfoIdList.contains(update.getConversationId()) || update.getConversationId().contains("customer")){
+                        iterator.remove();
+                    }
+                }
+            }
+        }
     }
 
     public void setAdapter(IConversationListAdapter adapter) {
@@ -117,40 +166,91 @@ public class ConversationPresenter {
         provider.loadConversation(nextSeq, GET_CONVERSATION_COUNT, new IUIKitCallback<List<ConversationInfo>>() {
             @Override
             public void onSuccess(List<ConversationInfo> conversationInfoList) {
+                isFriendConversationList(conversationInfoList);
                 onLoadConversationCompleted(conversationInfoList);
             }
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
-                if (adapter != null) {
-                    adapter.onLoadingStateChanged(false);
+                if(isFriendConversation){
+                    adapterLoadingStateChanged(friendshipAdapter);
+                }else {
+                    adapterLoadingStateChanged(adapter);
                 }
             }
         });
     }
 
+    public void adapterLoadingStateChanged(IConversationListAdapter iConversationListAdapter){
+        if(iConversationListAdapter != null){
+            iConversationListAdapter.onLoadingStateChanged(false);
+        }
+    }
+    //分页拉取会话列表数据
     public void loadMoreConversation() {
-        provider.loadMoreConversation(GET_CONVERSATION_COUNT, new IUIKitCallback<List<ConversationInfo>>() {
-            @Override
-            public void onSuccess(List<ConversationInfo> data) {
-                onLoadConversationCompleted(data);
+        if(isFriendConversation){
+            loadMoreFriendConversation();
+        }else{
+            provider.loadMoreConversation(GET_CONVERSATION_COUNT, new IUIKitCallback<List<ConversationInfo>>() {
+                @Override
+                public void onSuccess(List<ConversationInfo> data) {
+                    onLoadConversationCompleted(data);
+                }
 
+                @Override
+                public void onError(String module, int errCode, String errMsg) {
+                    adapterLoadingStateChanged(adapter);
+                }
+            });
+        }
+
+
+    }
+    //分页拉取好友会话列表数据
+    public void loadMoreFriendConversation(){
+        //当前页码==最大页码的时候
+        if (friendCurrentPaging >= friendMaxPaging){
+            adapterLoadingStateChanged(friendshipAdapter);
+            return;
+        }
+        //上次分页最大拉取数量
+        int oldFriendSize = friendCurrentPaging * GET_CONVERSATION_COUNT;
+        friendCurrentPaging++;
+        //当前需要拉取数量
+        int newFriendSize = friendCurrentPaging * GET_CONVERSATION_COUNT;
+        int getQryCount = GET_CONVERSATION_COUNT;
+        int friendshipInfoIdSize = loadedFriendshipInfoIdList.size();
+        //当前拉取数量超过 总好友数量
+        if(newFriendSize > friendshipInfoIdSize){
+            getQryCount = newFriendSize - (newFriendSize - friendshipInfoIdSize);
+        }
+        List<String> friendList = new ArrayList<>();
+        for (int i = oldFriendSize; i < getQryCount; i++){
+            friendList.add(loadedFriendshipInfoIdList.get(i));
+        }
+        provider.getFriendShipConversationList(friendList, new IUIKitCallback<List<ConversationInfo>>() {
+            @Override
+            public void onSuccess(List<ConversationInfo> dataConversationInfo) {
+                loadedFriendshipInfoList.addAll(dataConversationInfo);
+                if(friendshipAdapter!=null){
+                    friendshipAdapter.onDataSourceChanged(loadedFriendshipInfoList);
+                    friendshipAdapter.onItemRangeChanged(oldFriendSize,loadedFriendshipInfoList.size());
+                }
+                adapterLoadingStateChanged(friendshipAdapter);
             }
 
             @Override
-            public void onError(String module, int errCode, String errMsg) {
-                if (adapter != null) {
-                    adapter.onLoadingStateChanged(false);
-                }
-
+            public void onError(int errCode, String errMsg, List<ConversationInfo> data) {
             }
         });
     }
 
     private void onLoadConversationCompleted(List<ConversationInfo> conversationInfoList) {
         onNewConversation(conversationInfoList);
-        if (adapter != null) {
-            adapter.onLoadingStateChanged(false);
+        if(isFriendConversation){
+            adapterLoadingStateChanged(friendshipAdapter);
+        }else {
+            adapterLoadingStateChanged(adapter);
         }
         provider.getTotalUnreadMessageCount(new IUIKitCallback<Long>() {
             @Override
@@ -175,30 +275,36 @@ public class ConversationPresenter {
      * @param conversationInfoList 新的会话列表
      */
     public void onNewConversation(List<ConversationInfo> conversationInfoList) {
-        TUIConversationLog.i(TAG, "onNewConversation conversations:" + conversationInfoList);
-
-        ArrayList<ConversationInfo> infos = new ArrayList<>();
-        for (ConversationInfo conversationInfo : conversationInfoList) {
-            if (!ConversationUtils.isNeedUpdate(conversationInfo)) {
-                TUIConversationLog.i(TAG, "onNewConversation conversationInfo " + conversationInfo.toString());
-                if (!conversationInfo.getConversationId().contains("customer")){//推送管理员账号不展示在会话列表
-                    infos.add(conversationInfo);
-                }
-            }
-        }
-        if (infos.size() == 0) {
+        TUIConversationLog.i(TAG, "onNewConversation conversations:" + conversationInfoList.size());
+        if (conversationInfoList.size() == 0) {
             return;
         }
+        Collections.sort(conversationInfoList);
+        //判断当前是否是好友列表页面
+        if(isFriendConversation){
+            CustomNewConversationList(conversationInfoList,friendshipAdapter,loadedFriendshipInfoList);
+        }else{
+            CustomNewConversationList(conversationInfoList,adapter,loadedConversationInfoList);
+        }
 
+    }
+    /**
+    * @Desc TODO(新消息进入会话列表回调处理)
+    * @author 彭石林
+    * @parame [inflows, iAdapter, loadedConversationInfo]
+    * @return void
+    * @Date 2022/8/13
+    */
+    public void CustomNewConversationList(List<ConversationInfo> inflows,IConversationListAdapter iAdapter,List<ConversationInfo> loadedConversationInfo){
         List<ConversationInfo> exists = new ArrayList<>();
-        Iterator<ConversationInfo> iterator = infos.iterator();
+        Iterator<ConversationInfo> iterator = inflows.iterator();
         while(iterator.hasNext()) {
             ConversationInfo update = iterator.next();
-            for (int i = 0; i < loadedConversationInfoList.size(); i++) {
-                ConversationInfo cacheInfo = loadedConversationInfoList.get(i);
+            for (int i = 0; i < loadedConversationInfo.size(); i++) {
+                ConversationInfo cacheInfo = loadedConversationInfo.get(i);
                 // 去重
                 if (cacheInfo.getConversationId().equals(update.getConversationId())) {
-                    loadedConversationInfoList.set(i, update);
+                    loadedConversationInfo.set(i, update);
                     iterator.remove();
                     exists.add(update);
                     break;
@@ -207,22 +313,22 @@ public class ConversationPresenter {
         }
 
         // 对新增会话排序，避免插入 recyclerview 时错乱
-        Collections.sort(infos);
-        loadedConversationInfoList.addAll(infos);
-        if (adapter != null) {
-            Collections.sort(loadedConversationInfoList);
-            adapter.onDataSourceChanged(loadedConversationInfoList);
-            for (ConversationInfo info : infos) {
-                int index = loadedConversationInfoList.indexOf(info);
+        Collections.sort(inflows);
+        loadedConversationInfo.addAll(inflows);
+        if (iAdapter != null) {
+            Collections.sort(loadedConversationInfo);
+            iAdapter.onDataSourceChanged(loadedConversationInfo);
+            for (ConversationInfo info : inflows) {
+                int index = loadedConversationInfo.indexOf(info);
                 if (index != -1) {
-                    adapter.onItemInserted(index);
+                    iAdapter.onItemInserted(index);
                 }
             }
 
             for (ConversationInfo info : exists) {
-                int index = loadedConversationInfoList.indexOf(info);
+                int index = loadedConversationInfo.indexOf(info);
                 if (index != -1) {
-                    adapter.onItemChanged(index);
+                    iAdapter.onItemChanged(index);
                 }
             }
         }
@@ -234,44 +340,52 @@ public class ConversationPresenter {
      * @param conversationInfoList 需要刷新的会话列表
      */
     public void onConversationChanged(List<ConversationInfo> conversationInfoList) {
-        TUIConversationLog.i(TAG, "onConversationChanged conversations:" + conversationInfoList);
-
-        ArrayList<ConversationInfo> infos = new ArrayList<>();
-        for (ConversationInfo conversationInfo : conversationInfoList) {
-            if (!ConversationUtils.isNeedUpdate(conversationInfo)) {
-                TUIConversationLog.i(TAG, "onConversationChanged conversationInfo " + conversationInfo.toString());
-                infos.add(conversationInfo);
-            }
-        }
-        if (infos.size() == 0) {
+        TUIConversationLog.i(TAG, "onConversationChanged conversations:" + conversationInfoList.size());
+        if (conversationInfoList.size() == 0) {
             return;
         }
-        Collections.sort(infos);
+        Collections.sort(conversationInfoList);
+
+        //判断当前是否是好友列表页面
+        if(isFriendConversation){
+            CustomConversationChangedList(conversationInfoList,friendshipAdapter,loadedFriendshipInfoList);
+        }else{
+            CustomConversationChangedList(conversationInfoList,adapter,loadedConversationInfoList);
+        }
+    }
+    /**
+    * @Desc TODO(自定义刷新普通花卉列表 or 好友列表)
+    * @author 彭石林
+    * @parame [inflows, indexMap, iAdapter, loadedConversationInfo]
+    * @return void
+    * @Date 2022/8/13
+    */
+    private void  CustomConversationChangedList(List<ConversationInfo> inflows,IConversationListAdapter iAdapter,List<ConversationInfo> loadedConversationInfo) {
         HashMap<ConversationInfo, Integer> indexMap = new HashMap<>();
-        for (int j = 0; j < infos.size(); j++) {
-            ConversationInfo update = infos.get(j);
-            for (int i = 0; i < loadedConversationInfoList.size(); i++) {
-                ConversationInfo cacheInfo = loadedConversationInfoList.get(i);
+        for (int j = 0; j < inflows.size(); j++) {
+            ConversationInfo update = inflows.get(j);
+            for (int i = 0; i < loadedConversationInfo.size(); i++) {
+                ConversationInfo cacheInfo = loadedConversationInfo.get(i);
                 //单个会话刷新时找到老的会话数据，替换
                 if (cacheInfo.getConversationId().equals(update.getConversationId())) {
-                    loadedConversationInfoList.set(i, update);
+                    loadedConversationInfo.set(i, update);
                     indexMap.put(update, i);
                     break;
                 }
             }
         }
-        if (adapter != null) {
-            Collections.sort(loadedConversationInfoList);
-            adapter.onDataSourceChanged(loadedConversationInfoList);
+        if (iAdapter != null) {
+            Collections.sort(loadedConversationInfo);
+            iAdapter.onDataSourceChanged(loadedConversationInfo);
             int minRefreshIndex = Integer.MAX_VALUE;
             int maxRefreshIndex = Integer.MIN_VALUE;
-            for (ConversationInfo info : infos) {
+            for (ConversationInfo info : inflows) {
                 Integer oldIndexObj = indexMap.get(info);
                 if (oldIndexObj == null) {
                     continue;
                 }
                 int oldIndex = oldIndexObj;
-                int newIndex = loadedConversationInfoList.indexOf(info);
+                int newIndex = loadedConversationInfo.indexOf(info);
                 if (newIndex != -1) {
                     minRefreshIndex = Math.min(minRefreshIndex, Math.min(oldIndex, newIndex));
                     maxRefreshIndex = Math.max(maxRefreshIndex, Math.max(oldIndex, newIndex));
@@ -284,7 +398,7 @@ public class ConversationPresenter {
                 count = maxRefreshIndex - minRefreshIndex + 1;
             }
             if (count > 0 && maxRefreshIndex >= minRefreshIndex) {
-                adapter.onItemRangeChanged(minRefreshIndex, count);
+                iAdapter.onItemRangeChanged(minRefreshIndex, count);
             }
         }
     }
@@ -568,17 +682,95 @@ public class ConversationPresenter {
     * @return void
     * @Date 2022/8/11
     */
-    public void getFriendshipList(){
-        provider.getFriendshipList(new IUIKitCallback<List<String>>() {
-            @Override
-            public void onSuccess(List<String> data) {
-                Log.e("当前查询的数据列表:","======"+data.size());
-            }
+    public void getFriendshipList(long loadSize,final boolean isFriend){
+        Log.e("当前是否是好友列表查询",isFriendConversation+"======================="+isFriend);
+        synchronized (ConversationPresenter.class){
+            Log.e("进入同步锁","======================="+isFriend);
+            //说明好友列表还没有数据
+            if(isFriend){
+                if(loadedFriendshipInfoList.size() > 1){
+                    friendshipAdapter.onDataSourceChanged(loadedFriendshipInfoList);
+                    friendshipAdapter.onItemRangeChanged(0,loadedFriendshipInfoList.size());
+                }else{
+                    provider.getFriendShipList(new IUIKitCallback<List<String>>() {
+                        @Override
+                        public void onSuccess(List<String> userIdData) {
+                            Log.e("成功查询好友数量列表",isFriend+"============"+userIdData.size()+"==============="+String.valueOf(userIdData));
+                            if(!userIdData.isEmpty()){
+                                loadedFriendshipInfoIdList.addAll(userIdData);
+                                int dataSize = userIdData.size();
+                                List<String> friendList = new ArrayList<>();
+                                friendCurrentPaging = 1;
+                                //如果当前查询好友列表总数量小于 100
+                                if(dataSize < GET_CONVERSATION_COUNT){
+                                    friendMaxPaging = 1;
+                                    //不满足100条件直接添加过滤
+                                    friendList.addAll(userIdData);
+                                }else {
+                                    double friendLimit = dataSize / GET_CONVERSATION_COUNT;
+                                    //向上去整--无穷大到整数
+                                    friendMaxPaging = (int) Math.ceil(friendLimit);
+                                    //第一次默认查询100条用户会话列表
+                                    for (int i = 0; i < GET_CONVERSATION_COUNT; i++){
+                                        friendList.add(userIdData.get(i));
+                                    }
+                                }
+                                provider.getFriendShipConversationList(friendList, new IUIKitCallback<List<ConversationInfo>>() {
+                                    @Override
+                                    public void onSuccess(List<ConversationInfo> dataConversationInfo) {
+                                        loadedFriendshipInfoList.addAll(dataConversationInfo);
+                                        if(friendshipAdapter!=null){
+                                            friendshipAdapter.onDataSourceChanged(loadedFriendshipInfoList);
+                                            friendshipAdapter.onItemRangeChanged(0,loadedFriendshipInfoList.size());
+                                        }
+                                    }
 
-            @Override
-            public void onError(int errCode, String errMsg, List<String> data) {
+                                    @Override
+                                    public void onError(int errCode, String errMsg, List<ConversationInfo> data) {
+                                        Log.e("查询好友会话列表异常",isFriend+"============"+errCode+"==========="+errMsg);
+                                    }
+                                });
+                            }else{
+                                Log.e("成功查询好友数量列表",isFriend+"============"+userIdData.size()+"==============="+String.valueOf(userIdData));
+                                loadConversation(loadSize);
+                            }
+                        }
+
+                        @Override
+                        public void onError(int errCode, String errMsg, List<String> data) {
+                            loadConversation(loadSize);
+                            Log.e("查询好友数量列表失败",isFriend+"============"+errCode+"==============="+String.valueOf(errMsg));
+                        }
+                    });
+                }
+            }else{
+                Log.e("查询当前普通会话列表","====================");
+                provider.getFriendShipList(new IUIKitCallback<List<String>>() {
+                    @Override
+                    public void onSuccess(List<String> userIdData) {
+                        Log.e("成功查询好友数量列表",isFriend+"============"+userIdData.size()+"==============="+String.valueOf(userIdData));
+                        if(!userIdData.isEmpty()){
+                            loadedFriendshipInfoIdList.addAll(userIdData);
+                            loadConversation(loadSize);
+                        }else{
+                            Log.e("成功查询好友数量列表",isFriend+"============"+userIdData.size()+"==============="+String.valueOf(userIdData));
+                            loadConversation(loadSize);
+                        }
+                    }
+
+                    @Override
+                    public void onError(int errCode, String errMsg, List<String> data) {
+                        loadConversation(loadSize);
+                        Log.e("查询好友数量列表失败",isFriend+"============"+errCode+"==============="+String.valueOf(errMsg));
+                    }
+                });
             }
-        });
+        }
+        Log.e("进入释放同步锁","======================="+isFriend);
+    }
+    //设置好友列表
+    public void setFriendshipAdapter(IConversationListAdapter adapter) {
+        this.friendshipAdapter = adapter;
     }
 
 }

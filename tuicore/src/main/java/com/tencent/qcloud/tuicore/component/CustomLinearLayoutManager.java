@@ -30,8 +30,8 @@ public class CustomLinearLayoutManager extends LinearLayoutManager {
         try {
             //try catch一下
             super.onLayoutChildren(recycler, state);
-        } catch (IndexOutOfBoundsException e) {
-            Log.w("CustomLinearLayoutManager", e.getLocalizedMessage());
+        } catch (Exception e) {
+            Log.w("CustomLinearManager", e.getLocalizedMessage());
         }
 
     }

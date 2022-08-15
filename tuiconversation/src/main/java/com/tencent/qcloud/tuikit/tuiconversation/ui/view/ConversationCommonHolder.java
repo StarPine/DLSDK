@@ -39,25 +39,25 @@ import java.util.List;
 public class ConversationCommonHolder extends ConversationBaseHolder {
 
     public ConversationIconView conversationIconView;
-    protected LinearLayout leftItemLayout;
-    protected TextView titleText;
-    protected TextView messageText;
-    protected TextView timelineText;
-    protected UnreadCountTextView unreadText;
-    protected TextView atInfoText;
-    protected ImageView disturbView;
-    protected CheckBox multiSelectCheckBox;
-    protected RelativeLayout messageStatusLayout;
+    public LinearLayout leftItemLayout;
+    public TextView titleText;
+    public TextView messageText;
+    public TextView timelineText;
+    public UnreadCountTextView unreadText;
+    public TextView atInfoText;
+    public ImageView disturbView;
+    public CheckBox multiSelectCheckBox;
+    public RelativeLayout messageStatusLayout;
     public ImageView messageSending;
     public ImageView messagefailed;
     private boolean isForwardMode = false;
     public static boolean sexMale = false;
 
     //彭石林修改
-    protected final ImageView certification;
-    protected final ImageView iv_vip;
-    protected final ImageView iv_game_icon;
-    protected Context context;
+    public final ImageView certification;
+    public final ImageView iv_vip;
+    public final ImageView iv_game_icon;
+    public Context context;
 
     public ConversationCommonHolder(Context context, View itemView) {
         super(itemView);

@@ -7,7 +7,7 @@
     <data>
 
         <import type="android.view.View" />
-
+        <import type="android.graphics.Typeface" />
         <variable
             name="viewModel"
             type="com.dl.playfun.ui.message.MessageMainViewModel" />
@@ -41,76 +41,70 @@
                 app:popupTheme="@style/AppTheme.PopupOverlay">
 
                 <RelativeLayout
-                    android:id="@+id/rl_tab_message"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp">
                     <RelativeLayout
+                        android:id="@+id/rl_tab_message"
                         android:layout_width="66dp"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        binding:onClickCommand="@{viewModel.toLeftTabClickCommand}"
+                        >
                         <androidx.appcompat.widget.AppCompatTextView
                             android:layout_centerInParent="true"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/playfun_tab_message_1"
                             android:textSize="16sp"
-                            android:textColor="@color/black"
+                            binding:isBold="@{viewModel.tabSelected}"
+                            android:textColor="@{viewModel.tabSelected ? @color/play_chat_purple_1 : @color/black}"
                             />
                     </RelativeLayout>
                     <RelativeLayout
                         android:layout_toEndOf="@+id/rl_tab_message"
                         android:layout_width="66dp"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        binding:onClickCommand="@{viewModel.toRightTabClickCommand}"
+                        >
+
                         <androidx.appcompat.widget.AppCompatTextView
-                            android:layout_centerInParent="true"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
                             android:text="@string/playfun_tab_message_3"
+                            android:textColor="@{!viewModel.tabSelected ? @color/play_chat_purple_1 : @color/black}"
                             android:textSize="16sp"
-                            android:textColor="@color/black"
-                            />
-                    </RelativeLayout>
-                    <RelativeLayout
-                        android:layout_width="66dp"
-                        android:layout_height="match_parent">
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:layout_centerInParent="true"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/playfun_tab_message_1"
-                            android:textSize="16sp"
-                            android:textColor="@color/black"
-                            />
+                            binding:isBold="@{!viewModel.tabSelected}" />
                     </RelativeLayout>
 
-                    <ImageView
+                    <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/iv_notify"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_centerVertical="true"
-                        android:layout_toLeftOf="@+id/iv_notify_setting"
+                        android:layout_toStartOf="@+id/iv_notify_setting"
                         android:src="@drawable/icon_message_notify"
-                        binding:onClickCommand="@{viewModel.toRightTabClickCommand}"
+                        binding:onClickCommand="@{viewModel.toMessageTabClickCommand}"
                         />
 
-                    <ImageView
+                    <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/iv_notify_setting"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_alignParentRight="true"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_alignParentEnd="true"
                         binding:onClickCommand="@{viewModel.pushSettingOnClickCommand}"
                         android:src="@drawable/icon_setting"/>
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="16dp"
                         android:layout_marginStart="-10dp"
                         android:layout_marginTop="5dp"
-                        android:layout_toRightOf="@+id/iv_notify"
+                        android:layout_toEndOf="@+id/iv_notify"
                         android:background="@drawable/badge_background_white_border"
                         android:gravity="center"
                         android:minWidth="16dp"
@@ -118,8 +112,9 @@
                         android:paddingRight="2dp"
                         android:text="@{String.valueOf(viewModel.systemMessageCount)}"
                         android:textColor="@color/white"
-                        android:textSize="10dp"
-                        android:visibility="@{viewModel.systemMessageCount > 0 ? View.VISIBLE:View.INVISIBLE}" />
+                        android:textSize="11sp"
+                        android:visibility="@{viewModel.systemMessageCount > 0 ? View.VISIBLE:View.INVISIBLE}"
+                        tools:ignore="RelativeOverlap,SmallSp" />
                 </RelativeLayout>
             </androidx.appcompat.widget.Toolbar>
 
@@ -132,7 +127,7 @@
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/view_pager"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
 
         </RelativeLayout>
     </LinearLayout>
