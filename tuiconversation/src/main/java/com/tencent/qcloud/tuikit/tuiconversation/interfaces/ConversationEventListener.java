@@ -19,4 +19,12 @@ public interface ConversationEventListener {
     void onNewConversation(List<ConversationInfo> conversationList);
     void onConversationChanged(List<ConversationInfo> conversationList);
     void onFriendRemarkChanged(String id, String remark);
+    //删除好友
+    default void deleteConversationListEvent(List<String> conversationId) {
+
+    }
+    //删除好友
+    default void newConversationListEvent(List<String> conversationId) {
+
+    }
 }

@@ -4,12 +4,15 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.tencent.imsdk.v2.V2TIMFriendInfo;
+import com.tencent.imsdk.v2.V2TIMFriendshipListener;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuicore.util.ThreadHelper;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationService;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
@@ -56,6 +59,19 @@ public class ConversationPresenter {
     private int friendMaxPaging = 0;
     //好友会话当前页吗
     private int friendCurrentPaging = 1;
+    //自定义加载消息回调、未读数统计
+    private LoadConversationCallback loadConversationCallback;
+    //监听好友列表变更
+    //private ContactEventListener friendListListener;
+
+
+    public LoadConversationCallback getLoadConversationCallback() {
+        return loadConversationCallback;
+    }
+
+    public void setLoadConversationCallback(LoadConversationCallback loadConversationCallback) {
+        this.loadConversationCallback = loadConversationCallback;
+    }
 
     public boolean isFriendConversation() {
         return isFriendConversation;
@@ -75,7 +91,11 @@ public class ConversationPresenter {
         conversationEventListener = new ConversationEventListener() {
             @Override
             public void deleteConversation(String chatId, boolean isGroup) {
-                ConversationPresenter.this.deleteConversation(chatId, isGroup);
+                if(isFriendConversation){
+                    ConversationPresenter.this.deleteConversation(chatId, loadedFriendshipInfoList);
+                }else{
+                    ConversationPresenter.this.deleteConversation(chatId, loadedConversationInfoList);
+                }
             }
 
             @Override
@@ -85,17 +105,29 @@ public class ConversationPresenter {
 
             @Override
             public void deleteConversation(String conversationId) {
-                ConversationPresenter.this.deleteConversation(conversationId);
+                if(isFriendConversation){
+                    ConversationPresenter.this.deleteConversation(conversationId, loadedFriendshipInfoList);
+                }else{
+                    ConversationPresenter.this.deleteConversation(conversationId, loadedConversationInfoList);
+                }
             }
 
             @Override
             public void setConversationTop(String chatId, boolean isChecked, IUIKitCallback<Void> iuiKitCallBack) {
-                ConversationPresenter.this.setConversationTop(chatId, isChecked, iuiKitCallBack);
+                if(isFriendConversation){
+                    ConversationPresenter.this.setConversationTop(chatId, isChecked, iuiKitCallBack,loadedFriendshipInfoList);
+                }else{
+                    ConversationPresenter.this.setConversationTop(chatId, isChecked, iuiKitCallBack, loadedConversationInfoList);
+                }
             }
 
             @Override
             public boolean isTopConversation(String chatId) {
-                return ConversationPresenter.this.isTopConversation(chatId);
+                if(isFriendConversation){
+                    return ConversationPresenter.this.isTopConversation(chatId, loadedFriendshipInfoList);
+                }else{
+                    return ConversationPresenter.this.isTopConversation(chatId, loadedConversationInfoList);
+                }
             }
 
             @Override
@@ -110,7 +142,6 @@ public class ConversationPresenter {
 
             @Override
             public void onNewConversation(List<ConversationInfo> conversationList) {
-                Log.e("接收到新的消息来源",conversationList.size()+"=================");
                 isFriendConversationList(conversationList);
                 ConversationPresenter.this.onNewConversation(conversationList);
             }
@@ -126,8 +157,106 @@ public class ConversationPresenter {
             public void onFriendRemarkChanged(String id, String remark) {
                 ConversationPresenter.this.onFriendRemarkChanged(id, remark);
             }
+
+            @Override
+            public void deleteConversationListEvent(List<String> conversationId) {
+                ConversationPresenter.this.deleteConversationListEvent(conversationId);
+            }
+
+            @Override
+            public void newConversationListEvent(List<String> conversationId) {
+                ConversationPresenter.this.newConversationListEvent(conversationId);
+            }
         };
-        TUIConversationService.getInstance().setConversationEventListener(conversationEventListener);
+        if(isFriendConversation){
+            TUIConversationService.getInstance().setConversationFriendEventListener(conversationEventListener);
+        }else{
+            TUIConversationService.getInstance().setConversationEventListener(conversationEventListener);
+        }
+
+    }
+
+    //移除好友列表的会话
+    public void deleteConversationListEvent(List<String> conversationIdList) {
+        Log.e(TAG,isFriendConversation+"=====进入移除好友列表通知："+conversationIdList.size());
+        if(isFriendConversation){
+            ConversationPresenter.this.deleteConversationListChange(conversationIdList,friendshipAdapter,loadedFriendshipInfoList);
+        }else{
+            addNewConversation(conversationIdList,false);
+        }
+
+    }
+    //新的好友添加通知
+    public void newConversationListEvent(List<String> conversationIdList) {
+        Log.e(TAG,isFriendConversation+"=====进入新的好友添加通知："+conversationIdList.size());
+        //如果不是再好友列表。那么原有会话列表应该执行删除
+        if(!isFriendConversation){
+            ConversationPresenter.this.deleteConversationListChange(conversationIdList,adapter,loadedConversationInfoList);
+        }else{
+            addNewConversation(conversationIdList,true);
+        }
+    }
+    /**
+    * @Desc TODO(删除好友会话列表)
+    * @author 彭石林
+    * @parame [dataConversationInfoList]
+    * @return void
+    * @Date 2022/8/15
+    */
+    public void deleteConversationListChange(List<String> dataConversationInfoList,IConversationListAdapter iAdapter, List<ConversationInfo> deleteConversationList){
+        //列表执行删除
+        if(!loadedFriendshipInfoIdList.isEmpty()){
+            if(!deleteConversationList.isEmpty()){
+                int friendConversationSize = deleteConversationList.size();
+                List<ConversationInfo> removeConversationInfoList = new ArrayList<>();
+                for (String conversationLey : dataConversationInfoList) {
+                    for (int i = 0; i < friendConversationSize; i++) {
+                        ConversationInfo removeData = deleteConversationList.get(i);
+                        if(conversationLey.equals(removeData.getConversationId())){
+                            removeConversationInfoList.add(removeData);
+                            if(iAdapter!=null){
+                                iAdapter.onItemRemoved(i);
+                            }
+                        }
+                    }
+                }
+                if(!removeConversationInfoList.isEmpty()){
+                    deleteConversationList.removeAll(removeConversationInfoList);
+                }
+
+            }
+            //删除好友列表数据
+            loadedFriendshipInfoIdList.removeAll(dataConversationInfoList);
+        }
+    }
+    /**
+    * @Desc TODO(根据c2cId进行新的会话查询)
+    * @author 彭石林
+    * @parame [dataConversationInfoList, isAddConversation]
+    * @return void
+    * @Date 2022/8/15
+    */
+    public void addNewConversation(List<String> dataConversationInfoList,boolean isAddConversation){
+        Log.e(TAG,"查询指定的数据列表内容如下："+isAddConversation);
+        if(isAddConversation){
+            loadedFriendshipInfoIdList.addAll(dataConversationInfoList);
+        }else{
+            loadedFriendshipInfoIdList.removeAll(dataConversationInfoList);
+        }
+        Log.e(TAG,"查询指定的数据列表内容-开始查询："+isAddConversation);
+        provider.getFriendShipConversationList(dataConversationInfoList, new IUIKitCallback<List<ConversationInfo>>() {
+            @Override
+            public void onSuccess(List<ConversationInfo> dataConversationInfo) {
+                Log.e(TAG,"查询指定的数据列表内容-开始查询成功："+isAddConversation+"====="+dataConversationInfo.size());
+                isFriendConversationList(dataConversationInfo);
+                Log.e(TAG,"过滤后的数据为:"+dataConversationInfo.size());
+                ConversationPresenter.this.onNewConversation(dataConversationInfo);
+            }
+            @Override
+            public void onError(int errCode, String errMsg, List<ConversationInfo> data) {
+                Log.e(TAG,"查询指定的数据列表内容-开始查询异常："+isAddConversation);
+            }
+        });
     }
     /**
     * @Desc TODO(效验新消息是否存在是好友列表数据)
@@ -137,15 +266,25 @@ public class ConversationPresenter {
     * @Date 2022/8/13
     */
     public void isFriendConversationList(List<ConversationInfo> conversationList){
+        Iterator<ConversationInfo> iterator = conversationList.iterator();
         //去重后的数据 如果已经是好友关系了。那么讲不会存在会话列表里面
-        if(!loadedFriendshipInfoIdList.isEmpty()){
-            Iterator<ConversationInfo> iterator = conversationList.iterator();
-            while(iterator.hasNext()){
-                ConversationInfo update = iterator.next();
-                if (!ConversationUtils.isNeedUpdate(update)) {
-                    //如果好友列表存在
-                    if(loadedFriendshipInfoIdList.contains(update.getConversationId()) || update.getConversationId().contains("customer")){
+        while(iterator.hasNext()){
+            ConversationInfo update = iterator.next();
+            if (!ConversationUtils.isNeedUpdate(update)) {
+                if(isFriendConversation){
+                    if(!loadedFriendshipInfoIdList.isEmpty()){
+                        //如果好友列表存在
+                        if(!loadedFriendshipInfoIdList.contains(update.getConversationId())){
+                            iterator.remove();
+                        }
+                    }else{
                         iterator.remove();
+                    }
+                }else{
+                    if(!loadedFriendshipInfoIdList.isEmpty()){
+                        if(loadedFriendshipInfoIdList.contains(update.getConversationId()) || update.getConversationId().contains("customer")){
+                            iterator.remove();
+                        }
                     }
                 }
             }
@@ -172,6 +311,9 @@ public class ConversationPresenter {
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
+                if(loadConversationCallback!=null && nextSeq==0){
+                    loadConversationCallback.isConversationEmpty(true);
+                }
                 if(isFriendConversation){
                     adapterLoadingStateChanged(friendshipAdapter);
                 }else {
@@ -203,8 +345,6 @@ public class ConversationPresenter {
                 }
             });
         }
-
-
     }
     //分页拉取好友会话列表数据
     public void loadMoreFriendConversation(){
@@ -332,6 +472,7 @@ public class ConversationPresenter {
                 }
             }
         }
+        busConversationCount(loadedConversationInfo);
     }
 
     /**
@@ -453,11 +594,11 @@ public class ConversationPresenter {
      * @param id    会话ID
      * @param isTop 是否置顶
      */
-    public void setConversationTop(String id, final boolean isTop, final IUIKitCallback<Void> callBack) {
+    public void setConversationTop(String id, final boolean isTop, final IUIKitCallback<Void> callBack,List<ConversationInfo> conversationInfoList) {
         TUIConversationLog.i(TAG, "setConversationTop id:" + id + "|isTop:" + isTop);
         ConversationInfo conversation = null;
-        for (int i = 0; i < loadedConversationInfoList.size(); i++) {
-            ConversationInfo info = loadedConversationInfoList.get(i);
+        for (int i = 0; i < conversationInfoList.size(); i++) {
+            ConversationInfo info = conversationInfoList.get(i);
             if (info.getId().equals(id)) {
                 conversation = info;
                 break;
@@ -485,9 +626,9 @@ public class ConversationPresenter {
         });
     }
 
-    public boolean isTopConversation(String conversationID) {
-        for (int i = 0; i < loadedConversationInfoList.size(); i++) {
-            ConversationInfo info = loadedConversationInfoList.get(i);
+    public boolean isTopConversation(String conversationID,List<ConversationInfo> conversationInfoList) {
+        for (int i = 0; i < conversationInfoList.size(); i++) {
+            ConversationInfo info = conversationInfoList.get(i);
             if (info.getId().equals(conversationID)) {
                 return info.isTop();
             }
@@ -557,8 +698,12 @@ public class ConversationPresenter {
                             int level = v2TIMUserFullInfo.getLevel();
                             if (level == 6){
                                 needDelCount++;
-                                String conversationid = "c2c_" + v2TIMUserFullInfo.getUserID();
-                                deleteConversation(conversationid);
+                                String conversational = "c2c_" + v2TIMUserFullInfo.getUserID();
+                                if(isFriendConversation){
+                                    deleteConversation(conversational, loadedFriendshipInfoList);
+                                }else{
+                                    deleteConversation(conversational, loadedConversationInfoList);
+                                }
                             }
                         }
                         if (needDelCount == 0){
@@ -621,10 +766,10 @@ public class ConversationPresenter {
      *
      * @param id C2C：对方的 userID；Group：群 ID
      */
-    public void deleteConversation(String id, boolean isGroup) {
+    public void deleteConversation(String id, boolean isGroup,List<ConversationInfo> conversationInfoList) {
         ConversationInfo conversationInfo = null;
-        for (int i = 0; i < loadedConversationInfoList.size(); i++) {
-            ConversationInfo info = loadedConversationInfoList.get(i);
+        for (int i = 0; i < conversationInfoList.size(); i++) {
+            ConversationInfo info = conversationInfoList.get(i);
             if (isGroup == info.isGroup() && info.getId().equals(id)) {
                 conversationInfo = info;
                 break;
@@ -633,13 +778,13 @@ public class ConversationPresenter {
         deleteConversation(conversationInfo);
     }
 
-    public void deleteConversation(String conversationId) {
+    public void deleteConversation(String conversationId,List<ConversationInfo> conversationInfoList) {
         if (TextUtils.isEmpty(conversationId)) {
             return;
         }
         ConversationInfo conversationInfo = null;
-        for (int i = 0; i < loadedConversationInfoList.size(); i++) {
-            ConversationInfo info = loadedConversationInfoList.get(i);
+        for (int i = 0; i < conversationInfoList.size(); i++) {
+            ConversationInfo info = conversationInfoList.get(i);
             if (info.getConversationId().equals(conversationId)) {
                 conversationInfo = info;
                 break;
@@ -649,19 +794,37 @@ public class ConversationPresenter {
     }
 
     public void onFriendRemarkChanged(String id, String remark) {
-        for (int i = 0; i < loadedConversationInfoList.size(); i++) {
-            ConversationInfo info = loadedConversationInfoList.get(i);
-            if (info.getId().equals(id) && !info.isGroup()) {
-                String title = info.getShowName();
-                if (!TextUtils.isEmpty(remark)) {
-                    title = remark;
+        if(isFriendConversation){
+            for (int i = 0; i < loadedFriendshipInfoList.size(); i++) {
+                ConversationInfo info = loadedFriendshipInfoList.get(i);
+                if (info.getId().equals(id) && !info.isGroup()) {
+                    String title = info.getShowName();
+                    if (!TextUtils.isEmpty(remark)) {
+                        title = remark;
+                    }
+                    info.setTitle(title);
+                    friendshipAdapter.onDataSourceChanged(loadedFriendshipInfoList);
+                    if (friendshipAdapter != null) {
+                        friendshipAdapter.onItemChanged(i);
+                    }
+                    break;
                 }
-                info.setTitle(title);
-                adapter.onDataSourceChanged(loadedConversationInfoList);
-                if (adapter != null) {
-                    adapter.onItemChanged(i);
+            }
+        }else{
+            for (int i = 0; i < loadedConversationInfoList.size(); i++) {
+                ConversationInfo info = loadedConversationInfoList.get(i);
+                if (info.getId().equals(id) && !info.isGroup()) {
+                    String title = info.getShowName();
+                    if (!TextUtils.isEmpty(remark)) {
+                        title = remark;
+                    }
+                    info.setTitle(title);
+                    adapter.onDataSourceChanged(loadedConversationInfoList);
+                    if (adapter != null) {
+                        adapter.onItemChanged(i);
+                    }
+                    break;
                 }
-                break;
             }
         }
     }
@@ -718,59 +881,100 @@ public class ConversationPresenter {
                                 provider.getFriendShipConversationList(friendList, new IUIKitCallback<List<ConversationInfo>>() {
                                     @Override
                                     public void onSuccess(List<ConversationInfo> dataConversationInfo) {
-                                        loadedFriendshipInfoList.addAll(dataConversationInfo);
-                                        if(friendshipAdapter!=null){
-                                            friendshipAdapter.onDataSourceChanged(loadedFriendshipInfoList);
-                                            friendshipAdapter.onItemRangeChanged(0,loadedFriendshipInfoList.size());
+                                        if(loadConversationCallback!=null){
+                                            loadConversationCallback.isConversationEmpty(false);
                                         }
+                                        if(!dataConversationInfo.isEmpty()){
+                                            loadedFriendshipInfoList.addAll(dataConversationInfo);
+                                            if(friendshipAdapter!=null){
+                                                friendshipAdapter.onDataSourceChanged(loadedFriendshipInfoList);
+                                                friendshipAdapter.onItemRangeChanged(0,loadedFriendshipInfoList.size());
+                                            }
+                                            busConversationCount(loadedFriendshipInfoList);
+                                        }
+
                                     }
 
                                     @Override
                                     public void onError(int errCode, String errMsg, List<ConversationInfo> data) {
-                                        Log.e("查询好友会话列表异常",isFriend+"============"+errCode+"==========="+errMsg);
+                                        if(loadConversationCallback!=null){
+                                            loadConversationCallback.isConversationEmpty(true);
+                                        }
                                     }
                                 });
                             }else{
-                                Log.e("成功查询好友数量列表",isFriend+"============"+userIdData.size()+"==============="+String.valueOf(userIdData));
-                                loadConversation(loadSize);
+                                if(loadConversationCallback!=null){
+                                    loadConversationCallback.isConversationEmpty(true);
+                                }
                             }
                         }
 
                         @Override
                         public void onError(int errCode, String errMsg, List<String> data) {
+                            if(loadConversationCallback!=null){
+                                loadConversationCallback.isConversationEmpty(true);
+                            }
                             loadConversation(loadSize);
-                            Log.e("查询好友数量列表失败",isFriend+"============"+errCode+"==============="+String.valueOf(errMsg));
                         }
                     });
                 }
             }else{
-                Log.e("查询当前普通会话列表","====================");
                 provider.getFriendShipList(new IUIKitCallback<List<String>>() {
                     @Override
                     public void onSuccess(List<String> userIdData) {
-                        Log.e("成功查询好友数量列表",isFriend+"============"+userIdData.size()+"==============="+String.valueOf(userIdData));
                         if(!userIdData.isEmpty()){
                             loadedFriendshipInfoIdList.addAll(userIdData);
-                            loadConversation(loadSize);
-                        }else{
-                            Log.e("成功查询好友数量列表",isFriend+"============"+userIdData.size()+"==============="+String.valueOf(userIdData));
-                            loadConversation(loadSize);
                         }
+                        loadConversation(loadSize);
                     }
 
                     @Override
                     public void onError(int errCode, String errMsg, List<String> data) {
                         loadConversation(loadSize);
-                        Log.e("查询好友数量列表失败",isFriend+"============"+errCode+"==============="+String.valueOf(errMsg));
                     }
                 });
             }
         }
         Log.e("进入释放同步锁","======================="+isFriend);
     }
+    /**
+    * @Desc TODO(统计当前会话列表的未读数量)
+    * @author 彭石林
+    * @parame []
+    * @return void
+    * @Date 2022/8/15
+    */
+    public void busConversationCount( List<ConversationInfo> dataInfoList){
+        ThreadHelper.INST.execute(() -> {
+            int conversationSize = dataInfoList.size();
+            int totalUnreadCounts = 0;
+            for (int i = 0; i < conversationSize; i++) {
+                totalUnreadCounts += dataInfoList.get(i).getUnRead();
+            }
+            if(totalUnreadCount > 0){
+                if(loadConversationCallback!=null){
+                    loadConversationCallback.totalUnreadCount(totalUnreadCounts);
+                }
+            }
+        });
+    }
     //设置好友列表
     public void setFriendshipAdapter(IConversationListAdapter adapter) {
         this.friendshipAdapter = adapter;
+    }
+    /**
+    * @Desc TODO(自定义接口。会话列表数量、好友列表是否为空)
+    * @author 彭石林
+    * @parame
+    * @return
+    * @Date 2022/8/15
+    */
+    public interface LoadConversationCallback{
+        void totalUnreadCount(int count);
+
+        default void isConversationEmpty(boolean empty) {
+
+        }
     }
 
 }

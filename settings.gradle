@@ -13,7 +13,7 @@ include ':faceunity'
 /*IM聊天组件*/
 include ':tuicore'
 include ':tuichat'
-include ':tuicontact'
+//include ':tuicontact'
 include ':tuiconversation'
 include ':tuicalling'
 /*IM聊天组件*/

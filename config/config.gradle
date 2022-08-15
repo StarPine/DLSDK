@@ -46,7 +46,7 @@ ext {
     ]
     projectID = [
             "tuiconversation"  : "default",
-            "tuicontact"       : "default",
+           // "tuicontact"       : "default",
             "tuichat"          : "default",
             "tuicalling"       : "default",
             "tuicore"          : "default",

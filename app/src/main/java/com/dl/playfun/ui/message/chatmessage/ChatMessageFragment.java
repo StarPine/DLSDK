@@ -152,6 +152,7 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
 
     private void initIM() {
         ConversationPresenter presenter = new ConversationPresenter();
+        presenter.setFriendConversation(false);
         presenter.setConversationListener();
         binding.conversationLayout.setPresenter(presenter);
         binding.conversationLayout.initDefault(false);
