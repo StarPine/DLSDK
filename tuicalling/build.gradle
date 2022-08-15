@@ -7,8 +7,8 @@ android {
     defaultConfig {
         versionName "1.0"
         versionCode 1
-        minSdkVersion 21
-        targetSdkVersion 30
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
     }
 
     buildTypes {

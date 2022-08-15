@@ -176,7 +176,7 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
                 String id = (String) param.get(TUIConstants.TUIContact.FRIEND_ID);
                 String remark = (String) param.get(TUIConstants.TUIContact.FRIEND_REMARK);
                 conversationEventListener.onFriendRemarkChanged(id ,remark);
-                ConversationEventListener conversationFriendEventListener = getConversationFriendEventListener();
+                ConversationEventListener conversationFriendEventListener = getInstance().getConversationFriendEventListener();
                 if(conversationFriendEventListener!=null){
                     conversationFriendEventListener.onFriendRemarkChanged(id ,remark);
                 }
@@ -211,7 +211,7 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
                 if (conversationEventListener != null) {
                     List<ConversationInfo> conversationInfoList = ConversationUtils.convertV2TIMConversationList(conversationList);
                     conversationEventListener.onNewConversation(conversationInfoList);
-                    ConversationEventListener conversationFriendEventListener = getConversationFriendEventListener();
+                    ConversationEventListener conversationFriendEventListener = getInstance().getConversationFriendEventListener();
                     if(conversationFriendEventListener!=null){
                         conversationFriendEventListener.onNewConversation(conversationInfoList);
                     }
@@ -225,7 +225,7 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
                 if (conversationEventListener != null) {
                     List<ConversationInfo> conversationInfoList = ConversationUtils.convertV2TIMConversationList(conversationList);
                     conversationEventListener.onConversationChanged(conversationInfoList);
-                    ConversationEventListener conversationFriendEventListener = getConversationFriendEventListener();
+                    ConversationEventListener conversationFriendEventListener = getInstance().getConversationFriendEventListener();
                     if(conversationFriendEventListener!=null){
                         conversationFriendEventListener.onNewConversation(conversationInfoList);
                     }
@@ -237,7 +237,7 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
                 ConversationEventListener conversationEventListener = getInstance().getConversationEventListener();
                 if (conversationEventListener != null) {
                     conversationEventListener.updateTotalUnreadMessageCount(totalUnreadCount);
-                    ConversationEventListener conversationFriendEventListener = getConversationFriendEventListener();
+                    ConversationEventListener conversationFriendEventListener = getInstance().getConversationFriendEventListener();
                     if(conversationFriendEventListener!=null){
                         conversationFriendEventListener.updateTotalUnreadMessageCount(totalUnreadCount);
                     }

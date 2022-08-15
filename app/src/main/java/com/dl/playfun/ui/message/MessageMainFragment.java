@@ -71,13 +71,18 @@ public class MessageMainFragment extends BaseFragment<FragmentMessageMainBinding
             mFragments[1] = new OftenContactFragment();
         } else {
             mFragments[0] = firstFragment;
-            mFragments[1] = findChildFragment(OftenContactFragment.class);
+            if(findChildFragment(OftenContactFragment.class)!=null){
+                mFragments[1] = findChildFragment(OftenContactFragment.class);
+            }else{
+                mFragments[1] = new OftenContactFragment();
+            }
+
         }
         MessagePagerAdapter fragmentAdapter = new MessagePagerAdapter(this);
         fragmentAdapter.setFragmentList(mFragments);
 
         binding.viewPager.setUserInputEnabled(false);
-        //binding.viewPager.setOffscreenPageLimit(0);
+        //binding.viewPager.setOffscreenPageLimit(1);
         binding.viewPager.setAdapter(fragmentAdapter);
         binding.viewPager.setCurrentItem(0, false);
     }

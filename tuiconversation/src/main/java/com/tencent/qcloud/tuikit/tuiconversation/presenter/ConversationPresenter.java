@@ -40,7 +40,6 @@ public class ConversationPresenter {
     private int needDelCount = 0;//需要删除个数
     private boolean isDelBanCovversation = false;//删除封号会话
 
-    ConversationEventListener conversationEventListener;
 
     private final ConversationProvider provider;
 
@@ -88,7 +87,7 @@ public class ConversationPresenter {
     }
 
     public void setConversationListener() {
-        conversationEventListener = new ConversationEventListener() {
+        ConversationEventListener conversationEventListener = new ConversationEventListener() {
             @Override
             public void deleteConversation(String chatId, boolean isGroup) {
                 if(isFriendConversation){
@@ -148,8 +147,10 @@ public class ConversationPresenter {
 
             @Override
             public void onConversationChanged(List<ConversationInfo> conversationList) {
+                Log.e(TAG,isFriendConversation+"当前会话更新："+conversationList.size()+"==========="+conversationList.toString());
                 //部分会话更新
                 isFriendConversationList(conversationList);
+                Log.e(TAG,isFriendConversation+"当前会话更新2："+conversationList.size()+"==========="+conversationList.toString());
                 ConversationPresenter.this.onConversationChanged(conversationList);
             }
 
@@ -169,8 +170,10 @@ public class ConversationPresenter {
             }
         };
         if(isFriendConversation){
+            Log.e(TAG, "当前注册回调===================="+ true);
             TUIConversationService.getInstance().setConversationFriendEventListener(conversationEventListener);
         }else{
+            Log.e(TAG, "当前注册回调===================="+ false);
             TUIConversationService.getInstance().setConversationEventListener(conversationEventListener);
         }
 
@@ -237,24 +240,19 @@ public class ConversationPresenter {
     * @Date 2022/8/15
     */
     public void addNewConversation(List<String> dataConversationInfoList,boolean isAddConversation){
-        Log.e(TAG,"查询指定的数据列表内容如下："+isAddConversation);
         if(isAddConversation){
             loadedFriendshipInfoIdList.addAll(dataConversationInfoList);
         }else{
             loadedFriendshipInfoIdList.removeAll(dataConversationInfoList);
         }
-        Log.e(TAG,"查询指定的数据列表内容-开始查询："+isAddConversation);
         provider.getFriendShipConversationList(dataConversationInfoList, new IUIKitCallback<List<ConversationInfo>>() {
             @Override
             public void onSuccess(List<ConversationInfo> dataConversationInfo) {
-                Log.e(TAG,"查询指定的数据列表内容-开始查询成功："+isAddConversation+"====="+dataConversationInfo.size());
                 isFriendConversationList(dataConversationInfo);
-                Log.e(TAG,"过滤后的数据为:"+dataConversationInfo.size());
                 ConversationPresenter.this.onNewConversation(dataConversationInfo);
             }
             @Override
             public void onError(int errCode, String errMsg, List<ConversationInfo> data) {
-                Log.e(TAG,"查询指定的数据列表内容-开始查询异常："+isAddConversation);
             }
         });
     }
@@ -275,9 +273,12 @@ public class ConversationPresenter {
                     if(!loadedFriendshipInfoIdList.isEmpty()){
                         //如果好友列表存在
                         if(!loadedFriendshipInfoIdList.contains(update.getConversationId())){
+                            Log.e(TAG,"好友列表删除元素1："+update.toString());
+                            Log.e(TAG,"好友列表删除元素1："+loadedFriendshipInfoIdList.toString());
                             iterator.remove();
                         }
                     }else{
+                        Log.e(TAG,"好友列表删除元素："+update.toString());
                         iterator.remove();
                     }
                 }else{
@@ -646,20 +647,22 @@ public class ConversationPresenter {
         if (conversation == null) {
             return;
         }
+        List<ConversationInfo> currentList = isFriendConversation ? loadedFriendshipInfoList : loadedConversationInfoList;
+        IConversationListAdapter currentAdapter = isFriendConversation ? friendshipAdapter : adapter;
         provider.deleteConversation(conversation.getConversationId(), new IUIKitCallback<Void>() {
             @Override
             public void onSuccess(Void data) {
-                int index = loadedConversationInfoList.indexOf(conversation);
-                boolean isRemove = loadedConversationInfoList.remove(conversation);
-                if (adapter != null && isRemove && index != -1) {
+                int index = currentList.indexOf(conversation);
+                boolean isRemove = currentList.remove(conversation);
+                if (currentAdapter != null && isRemove && index != -1) {
                     if (isDelBanCovversation){
                         needDelCount--;
                     }
-                    adapter.onItemRemoved(index);
+                    currentAdapter.onItemRemoved(index);
                 }
                 if (needDelCount == 0){
                     isDelBanCovversation = false;
-                    ((ConversationListAdapter)adapter).banConversationDel();
+                    ((ConversationListAdapter)currentAdapter).banConversationDel();
                 }
             }
 
@@ -668,7 +671,7 @@ public class ConversationPresenter {
                 needDelCount--;
                 if (needDelCount == 0){
                     isDelBanCovversation = false;
-                    ((ConversationListAdapter)adapter).banConversationDel();
+                    ((ConversationListAdapter)currentAdapter).banConversationDel();
                 }
             }
         });
