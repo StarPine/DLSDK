@@ -1,7 +1,10 @@
 package com.dl.playfun.ui.mine.exclusive;
 
+import android.animation.ValueAnimator;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 
 import androidx.lifecycle.ViewModelProviders;
 
@@ -104,9 +107,16 @@ public class ExclusiveCallActivity extends BaseActivity<ActivityExclusivecallBin
                 AudioPlayer.getInstance().stopPlay();
                 return;
             }
+            Animation animation = new ScaleAnimation(0.8f,1.0f,0.8f,1.0f,
+                    Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f);
+            animation.setRepeatMode(ValueAnimator.REVERSE);
+            animation.setRepeatCount(ValueAnimator.INFINITE);
+            animation.setDuration(300);
+            binding.ivAnim.startAnimation(animation);
             AudioPlayer.getInstance().startPlay(StringUtil.getFullAudioUrl(viewModel.audioContent.get()), new AudioPlayer.Callback() {
                 @Override
                 public void onCompletion(Boolean success, Boolean isOutTime) {
+                    binding.ivAnim.clearAnimation();
                 }
             });
         });
