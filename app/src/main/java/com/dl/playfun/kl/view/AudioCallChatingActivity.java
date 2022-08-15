@@ -90,8 +90,8 @@ import me.tatarka.bindingcollectionadapter2.BR;
 
 public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChatingBinding, AudioCallChatingViewModel> implements Ifinish {
 
-    private String fromUserId;
-    private String toUserId;
+    private String inviterImId;//邀請人id
+    private String receiverImId;//接收人id
     private TUICalling.Role mRole;
     private Integer roomId;
     private Context mContext;
@@ -182,8 +182,8 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         SVGAParser.Companion.shareParser().init(this);
         mContext = this;
         Intent intent = getIntent();
-        fromUserId = intent.getStringExtra("fromUserId");
-        toUserId = intent.getStringExtra("toUserId");
+        inviterImId = intent.getStringExtra("fromUserId");
+        receiverImId = intent.getStringExtra("toUserId");
         mRole = (TUICalling.Role)intent.getExtras().get("mRole");
         roomId = intent.getIntExtra("roomId", 0);
         mTimeCount = intent.getIntExtra("timeCount", 0);
@@ -196,9 +196,9 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         giftEffects = binding.giftEffects;
         viewModel.init(this);
         viewModel.roomId = roomId;
-        viewModel.fromUserId = fromUserId;
-        viewModel.toUserId = toUserId;
-        viewModel.getCallingInfo(roomId, fromUserId, toUserId);
+        viewModel.fromUserId = inviterImId;
+        viewModel.toUserId = receiverImId;
+        viewModel.getCallingInfo(roomId, inviterImId, receiverImId);
     }
 
 
@@ -219,10 +219,9 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
 
     //创建悬浮窗视图
     private AudioFloatCallView createFloatView() {
-        String[] userIds = new String[]{toUserId};
-        return new AudioFloatCallView(this, mRole, TUICalling.Type.AUDIO, userIds, fromUserId,
+        String[] userIds = new String[]{receiverImId};
+        return new AudioFloatCallView(this, mRole, TUICalling.Type.AUDIO, userIds, inviterImId,
                 null, false,viewModel.leftUserInfoField.get().getAvatar(),mTimeCount,roomId);
-//                null, false,"55",mTimeCount,roomId);
     }
 
     //跳转谷歌支付act
@@ -239,15 +238,16 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         }
     });
 
+
     private void requestSettingCanDrawOverlays() {
         int sdkInt = Build.VERSION.SDK_INT;
         if (sdkInt >= Build.VERSION_CODES.O) {//8.0以上
-            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
-            startActivityForResult(intent, 5000);
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
+            startActivity(intent);
         } else if (sdkInt >= Build.VERSION_CODES.M) {//6.0-8.0
-            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
             intent.setData(Uri.parse("package:" + getPackageName()));
-            startActivityForResult(intent, 5000);
+            startActivity(intent);
         } else {//4.4-6.0以下
             //无需处理了
         }

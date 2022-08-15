@@ -108,8 +108,8 @@ public class AudioFloatCallView extends BaseTUICallView {
                 if (!isRestart) {
                     isRestart = true;
                     Intent intent = new Intent(mContext, AudioCallChatingActivity.class);
-                    intent.putExtra("fromUserId", mUserIDs[0]);
-                    intent.putExtra("toUserId", mSponsorID);
+                    intent.putExtra("fromUserId", mSponsorID);
+                    intent.putExtra("toUserId", mUserIDs[0]);
                     intent.putExtra("mRole", mRole);
                     intent.putExtra("roomId", roomId);
                     intent.putExtra("timeCount", mTimeCount);

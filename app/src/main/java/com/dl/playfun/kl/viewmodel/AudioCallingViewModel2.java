@@ -71,7 +71,7 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
             startAudioActivity.postValue(roomId);
         }
     };
-    protected int roomId;// 本来不需要持有这个roomId， 位置调试log，还是持有一下吧
+    protected int roomId;
     private String fromUserId;
     private String toUserId;
     private TUICalling.Role mRole;
