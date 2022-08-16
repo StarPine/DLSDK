@@ -106,8 +106,12 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
         setContentLayoutVisibility(true);
         //清除旧视图，避免数据加载错乱
         msgContentFrame.setVisibility(View.VISIBLE);
-        msgContentReservFrame.removeAllViews();
-        customJsonMsgContentFrame.removeAllViews();
+        if (msgContentReservFrame != null){
+            msgContentReservFrame.removeAllViews();
+        }
+        if (customJsonMsgContentFrame != null){
+            customJsonMsgContentFrame.removeAllViews();
+        }
         Log.i("starpine","========="+msg.getV2TIMMessage());
         //显示收益相关消息
         showProfitView(msg);
@@ -145,6 +149,7 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
      * @param msg
      */
     private void showProfitView(TUIMessageBean msg) {
+        if (profitTip == null)return;
         profitTip.setVisibility(View.GONE);
         String loginUser = V2TIMManager.getInstance().getLoginUser();
         String cloudCustomData = msg.getV2TIMMessage().getCloudCustomData();
