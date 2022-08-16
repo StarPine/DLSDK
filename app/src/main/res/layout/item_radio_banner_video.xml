@@ -22,18 +22,19 @@
             android:layout_marginTop="5dp"
             android:layout_width="170dp"
             android:layout_height="200dp">
+
             <com.dl.playfun.widget.roundedimageview.RoundedImageView
                 android:id="@+id/img_user_avatar"
-                binding:onClickCommand="@{viewModel.itemClick}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_alignParentBottom="true"
                 android:scaleType="centerCrop"
-                app:riv_corner_radius="10dp"
                 android:src="@drawable/radio_dating_img_default"
+                app:riv_corner_radius="10dp"
                 binding:imageErrorPlaceholderRes="@{R.drawable.img_pc_default_load}"
                 binding:imagePath='@{viewModel.adUserItemEntity.avatar}'
                 binding:imagePlaceholderRes="@{R.drawable.img_pc_default_load}"
+                binding:onClickCommand="@{viewModel.itemClick}"
                 binding:resizeH="@{200}"
                 binding:resizeW="@{170}" />
             <RelativeLayout

@@ -1194,6 +1194,8 @@
     <string name="server_exception">Server exception</string>
     <string name="radio_daily_atendance_day_text">Successful check-in, +10 points</string>
 
+
+    <string name="playfun_contact_empty_text">暫無常聯繫，快去聊天吧</string>
     <string name="playchat_choose_area_title">Region</string>
     <string name="playfun_mine_title_btn_exclusive">專屬招呼</string>
     <string name="playfun_mine_title_my_exclusive">我的專屬招呼</string>

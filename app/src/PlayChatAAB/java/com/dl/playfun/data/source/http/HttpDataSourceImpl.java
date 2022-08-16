@@ -1290,6 +1290,16 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
+    public Observable<BaseResponse> friendAddFrequent(RequestBody requestBody) {
+        return apiService.friendAddFrequent(requestBody);
+    }
+
+    @Override
+    public Observable<BaseResponse> friendDeleteFrequent(RequestBody requestBody) {
+        return apiService.friendDeleteFrequent(requestBody);
+    }
+
+    @Override
     public Observable<BaseDataResponse<List<ExclusiveAccostInfoEntity>>> getExclusiveAccost() {
         return apiService.getExclusiveAccost();
     }

@@ -37,7 +37,6 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
 
 
     private WeakReference<ConversationEventListener> conversationEventListener;
-    private WeakReference<ConversationEventListener> conversationFriendEventListener;
 
     @Override
     public void init(Context context) {
@@ -71,7 +70,6 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
         Bundle result = new Bundle();
 
         ConversationEventListener conversationEventListener = getInstance().getConversationEventListener();
-        ConversationEventListener conversationFriendEventListener = getInstance().getConversationFriendEventListener();
         if (conversationEventListener == null) {
             TUIConversationLog.e(TAG, "execute " + method + " failed , conversationEvent listener is null");
             return result;
@@ -106,9 +104,6 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
         } else if (TextUtils.equals(TUIConstants.TUIConversation.METHOD_DELETE_CONVERSATION, method)) {
             String conversationId = (String) param.get(TUIConstants.TUIConversation.CONVERSATION_ID);
             conversationEventListener.deleteConversation(conversationId);
-            if(conversationFriendEventListener!=null){
-                conversationFriendEventListener.deleteConversation(conversationId);
-            }
         }
         return result;
     }
@@ -120,13 +115,9 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
                     || TextUtils.equals(subKey, TUIConstants.TUIGroup.EVENT_SUB_KEY_GROUP_DISMISS)
                     || TextUtils.equals(subKey, TUIConstants.TUIGroup.EVENT_SUB_KEY_GROUP_RECYCLE)) {
                 ConversationEventListener eventListener = getConversationEventListener();
-                ConversationEventListener conversationFriendEventListener = getConversationFriendEventListener();
                 String groupId = null;
                 if (param != null) {
                     groupId = (String) getOrDefault(param.get(TUIConstants.TUIGroup.GROUP_ID), "");
-                }
-                if(conversationFriendEventListener != null){
-                    conversationFriendEventListener.deleteConversation(groupId,true);
                 }
                 if (eventListener != null) {
                     eventListener.deleteConversation(groupId, true);
@@ -143,12 +134,8 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
                 for (String id : memberList) {
                     if (TextUtils.equals(id, TUILogin.getLoginUser())) {
                         ConversationEventListener eventListener = getConversationEventListener();
-                        ConversationEventListener conversationFriendEventListener = getConversationFriendEventListener();
                         if (eventListener != null) {
                             eventListener.deleteConversation(groupId, true);
-                        }
-                        if (conversationFriendEventListener != null) {
-                            conversationFriendEventListener.deleteConversation(groupId, true);
                         }
                         break;
                     }
@@ -156,10 +143,6 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
             } else if (TextUtils.equals(subKey, TUIConstants.TUIGroup.EVENT_SUB_KEY_CLEAR_MESSAGE)) {
                 String groupId = (String) getOrDefault(param.get(TUIConstants.TUIGroup.GROUP_ID), "");
                 ConversationEventListener eventListener = getConversationEventListener();
-                ConversationEventListener conversationFriendEventListener = getConversationFriendEventListener();
-                if (conversationFriendEventListener != null) {
-                    conversationFriendEventListener.clearConversationMessage(groupId, true);
-                }
                 if (eventListener != null) {
                     eventListener.clearConversationMessage(groupId, true);
                 }
@@ -176,10 +159,6 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
                 String id = (String) param.get(TUIConstants.TUIContact.FRIEND_ID);
                 String remark = (String) param.get(TUIConstants.TUIContact.FRIEND_REMARK);
                 conversationEventListener.onFriendRemarkChanged(id ,remark);
-                ConversationEventListener conversationFriendEventListener = getInstance().getConversationFriendEventListener();
-                if(conversationFriendEventListener!=null){
-                    conversationFriendEventListener.onFriendRemarkChanged(id ,remark);
-                }
             }
         }
     }
@@ -211,10 +190,6 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
                 if (conversationEventListener != null) {
                     List<ConversationInfo> conversationInfoList = ConversationUtils.convertV2TIMConversationList(conversationList);
                     conversationEventListener.onNewConversation(conversationInfoList);
-                    ConversationEventListener conversationFriendEventListener = getInstance().getConversationFriendEventListener();
-                    if(conversationFriendEventListener!=null){
-                        conversationFriendEventListener.onNewConversation(conversationInfoList);
-                    }
                 }
 
             }
@@ -225,10 +200,6 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
                 if (conversationEventListener != null) {
                     List<ConversationInfo> conversationInfoList = ConversationUtils.convertV2TIMConversationList(conversationList);
                     conversationEventListener.onConversationChanged(conversationInfoList);
-                    ConversationEventListener conversationFriendEventListener = getInstance().getConversationFriendEventListener();
-                    if(conversationFriendEventListener!=null){
-                        conversationFriendEventListener.onNewConversation(conversationInfoList);
-                    }
                 }
             }
 
@@ -237,10 +208,6 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
                 ConversationEventListener conversationEventListener = getInstance().getConversationEventListener();
                 if (conversationEventListener != null) {
                     conversationEventListener.updateTotalUnreadMessageCount(totalUnreadCount);
-                    ConversationEventListener conversationFriendEventListener = getInstance().getConversationFriendEventListener();
-                    if(conversationFriendEventListener!=null){
-                        conversationFriendEventListener.updateTotalUnreadMessageCount(totalUnreadCount);
-                    }
                 }
                 HashMap<String, Object> param = new HashMap<>();
                 param.put(TUIConstants.TUIConversation.TOTAL_UNREAD_COUNT, totalUnreadCount);
@@ -265,12 +232,8 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
                         urlList.add(userId);
                     }
                     ConversationEventListener eventListener = getConversationEventListener();
-                    ConversationEventListener conversationFriendEventListener = getConversationFriendEventListener();
                     if(eventListener!=null){
                         eventListener.newConversationListEvent(urlList);
-                    }
-                    if(conversationFriendEventListener!=null){
-                        conversationFriendEventListener.newConversationListEvent(urlList);
                     }
                 }
             }
@@ -294,12 +257,8 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
                         removeInfoList.add(userId);
                     }
                     ConversationEventListener eventListener = getConversationEventListener();
-                    ConversationEventListener conversationFriendEventListener = getConversationFriendEventListener();
                     if(eventListener!=null){
                         eventListener.newConversationListEvent(removeInfoList);
-                    }
-                    if(conversationFriendEventListener!=null){
-                        conversationFriendEventListener.newConversationListEvent(removeInfoList);
                     }
                 }
             }
@@ -323,20 +282,9 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
         this.conversationEventListener = new WeakReference<>(conversationManagerKit);
     }
 
-    public void setConversationFriendEventListener(ConversationEventListener conversationManagerKitFriend){
-        this.conversationFriendEventListener = new WeakReference<>(conversationManagerKitFriend);
-    }
-
     public ConversationEventListener getConversationEventListener() {
         if (conversationEventListener != null) {
             return conversationEventListener.get();
-        }
-        return null;
-    }
-
-    public ConversationEventListener getConversationFriendEventListener() {
-        if (conversationFriendEventListener != null) {
-            return conversationFriendEventListener.get();
         }
         return null;
     }

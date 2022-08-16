@@ -101,7 +101,7 @@
                                 android:visibility="@{viewModel.radioItemsAdUser.empty ? View.GONE : View.VISIBLE}"
                                 app:autoPlaying="true"
                                 app:centerScale="1.15"
-                                app:itemSpace="30"
+                                app:itemSpace="10"
                                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
                                 app:moveSpeed="1.8"
                                 binding:adapter="@{viewModel.adapterAdUser}"

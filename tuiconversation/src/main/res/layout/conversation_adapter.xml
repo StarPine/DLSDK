@@ -139,6 +139,7 @@
             android:paddingLeft="2dp"
             android:paddingRight="2dp"
             android:textColor="@color/white"
+            tools:text="99+"
             android:textSize="10dp" />
         <TextView
             android:id="@+id/conversation_at_msg"

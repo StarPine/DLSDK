@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -605,6 +606,22 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
 
         View view = getLayoutInflater().inflate(R.layout.pop_chat_more_menu, null);
         PopupWindow mPop = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        //常联系
+        TextView tvContact = view.findViewById(R.id.tv_contact);
+        if(viewModel.isContactsEnabled.get()){
+            Drawable drawable = getResources().getDrawable(R.drawable.img_contact_normal);
+            Log.e("当前drawable",String.valueOf(drawable==null)+"===================");
+            tvContact.setCompoundDrawables(drawable,null,null,null );
+        }else{
+            Drawable drawable = getResources().getDrawable(R.drawable.img_contact_checked);
+            Log.e("当前drawable",String.valueOf(drawable==null)+"===================");
+            tvContact.setCompoundDrawablesRelative(drawable,null,null,null );
+        }
+        tvContact.setOnClickListener(v->{
+            String otherImUserId = mChatInfo ==null ? null : mChatInfo.getId();
+            viewModel.friendAddFrequent(viewModel.isContactsEnabled.get(),otherImUserId,getTaUserIdIM());
+            mPop.dismiss();
+        });
         TextView menuTrack = view.findViewById(R.id.tv_menu_track);
         menuTrack.setText(viewModel.menuTrack.get());
         menuTrack.setOnClickListener(v -> {

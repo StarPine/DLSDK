@@ -1,27 +1,22 @@
 package com.dl.playfun.ui.message;
 
 import android.app.Application;
-import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 
-import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.entity.MessageGroupEntity;
 import com.dl.playfun.event.MainTabEvent;
+import com.dl.playfun.event.MessageCountChangeContactEvent;
 import com.dl.playfun.event.MessageCountChangeEvent;
 import com.dl.playfun.event.MessageCountChangeTagEvent;
 import com.dl.playfun.event.SystemMessageCountChangeEvent;
-import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.message.pushsetting.PushSettingFragment;
 import com.dl.playfun.ui.message.systemmessagegroup.SystemMessageGroupFragment;
-import com.dl.playfun.ui.message.systemmessagegroup.SystemMessageGroupItemViewModel;
-import com.dl.playfun.ui.message.systemmessagegroup.SystemMessageGroupViewModel;
-import com.dl.playfun.ui.mine.webview.WebViewFragment;
 import com.dl.playfun.viewmodel.BaseViewModel;
 
 import java.util.List;
@@ -43,11 +38,12 @@ public class MessageMainViewModel extends BaseViewModel<AppRepository> {
     public SingleLiveEvent<Boolean> tabSelectEvent = new SingleLiveEvent<>();
 
     public ObservableField<Integer> chatMessageCount = new ObservableField<>(0);
+    public ObservableField<Integer> chatMessageContactCount = new ObservableField<>(0);
     public ObservableField<Integer> systemMessageCount = new ObservableField<>(0);
     //推送设置按钮的点击事件
     public BindingCommand pushSettingOnClickCommand = new BindingCommand(() -> start(PushSettingFragment.class.getCanonicalName()));
 
-    private Disposable mSubscription, MessageCountTagSubscription,mainTabEventReceive;
+    private Disposable mSubscription, MessageCountTagSubscription,mainTabEventReceive,MessageCountContactSubscription;
 
     //tab切换按键
     public BindingCommand toLeftTabClickCommand = new BindingCommand(() -> {
@@ -109,9 +105,14 @@ public class MessageMainViewModel extends BaseViewModel<AppRepository> {
                 }
             }
         });
+        MessageCountContactSubscription = RxBus.getDefault().toObservable(MessageCountChangeContactEvent.class).subscribe(event -> {
+            chatMessageContactCount.set(event.getTextContactCount());
+            notifyMessageCountChange();
+        });
         RxSubscriptions.add(mSubscription);
         RxSubscriptions.add(MessageCountTagSubscription);
         RxSubscriptions.add(mainTabEventReceive);
+        RxSubscriptions.add(MessageCountContactSubscription);
 
     }
 
@@ -121,6 +122,7 @@ public class MessageMainViewModel extends BaseViewModel<AppRepository> {
         RxSubscriptions.remove(mSubscription);
         RxSubscriptions.remove(MessageCountTagSubscription);
         RxSubscriptions.remove(mainTabEventReceive);
+        RxSubscriptions.remove(MessageCountContactSubscription);
     }
 
     public void loadDatas() {
@@ -144,11 +146,23 @@ public class MessageMainViewModel extends BaseViewModel<AppRepository> {
     }
 
     private void notifyMessageCountChange() {
-        RxBus.getDefault().post(new MessageCountChangeEvent(chatMessageCount.get()));
+        Integer chatMessageNum = chatMessageCount.get();
+        if(chatMessageNum==null){
+            chatMessageNum = 0;
+        }
+        Integer systemMessageNum = systemMessageCount.get();
+        if(systemMessageNum==null){
+            systemMessageNum = 0;
+        }
+        Integer chatMessageContactNum = chatMessageContactCount.get();
+        if(chatMessageContactNum==null){
+            chatMessageContactNum = 0;
+        }
+        int sumCount = chatMessageNum + systemMessageNum + chatMessageContactNum;
+        RxBus.getDefault().post(new MessageCountChangeEvent(sumCount));
     }
 
     public String addString(Integer integer) {
-
         String s = String.valueOf(integer);
         if (integer > 99) {
             s = "99+";

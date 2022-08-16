@@ -120,6 +120,26 @@ import retrofit2.http.Query;
  */
 
 public interface ApiService {
+    /**
+    * @Desc TODO(添加常联系人)
+    * @author 彭石林
+    * @parame [requestBody]
+    * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
+    * @Date 2022/8/16
+    */
+    @Headers("Content-Type: application/json")
+    @POST("calling/tim/friendAddFrequent")
+    Observable<BaseResponse> friendAddFrequent(@Body RequestBody requestBody);
+    /**
+     * @Desc TODO(添加常联系人)
+     * @author 彭石林
+     * @parame [requestBody]
+     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
+     * @Date 2022/8/16
+     */
+    @Headers("Content-Type: application/json")
+    @POST("calling/tim/friendDeleteFrequent")
+    Observable<BaseResponse> friendDeleteFrequent(@Body RequestBody requestBody);
 
     /**
      * 获取专属搭讪
