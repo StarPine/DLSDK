@@ -92,6 +92,7 @@ import com.dl.playfun.entity.UserInfoEntity;
 import com.dl.playfun.entity.UserProfitPageEntity;
 import com.dl.playfun.entity.UserRemarkEntity;
 import com.dl.playfun.entity.VersionEntity;
+import com.dl.playfun.entity.VipInfoEntity;
 import com.dl.playfun.entity.VipPackageItemEntity;
 
 import java.util.List;
@@ -1933,7 +1934,7 @@ public interface ApiService {
      * @return
      */
     @GET("api/goods")
-    Observable<BaseDataResponse<List<VipPackageItemEntity>>> vipPackages(
+    Observable<BaseDataResponse<VipInfoEntity>> vipPackages(
             @Query("type") String type);
 
 
