@@ -109,7 +109,7 @@ public class OftenContactFragment extends BaseFragment<FragmentOftenContactBindi
                 }
             }
         });
-        presenter.setConversationListener();
+        presenter.initIMListener();
         binding.conversationLayoutContact.setPresenter(presenter);
         binding.conversationLayoutContact.initDefault(true);
         ConversationListLayout listLayout = binding.conversationLayoutContact.getConversationList();

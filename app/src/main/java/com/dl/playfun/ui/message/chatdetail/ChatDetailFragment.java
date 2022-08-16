@@ -605,6 +605,11 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
 
         View view = getLayoutInflater().inflate(R.layout.pop_chat_more_menu, null);
         PopupWindow mPop = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        //常联系
+        TextView tvContact = view.findViewById(R.id.tv_contact);
+        tvContact.setOnClickListener(v->{
+            mPop.dismiss();
+        });
         TextView menuTrack = view.findViewById(R.id.tv_menu_track);
         menuTrack.setText(viewModel.menuTrack.get());
         menuTrack.setOnClickListener(v -> {

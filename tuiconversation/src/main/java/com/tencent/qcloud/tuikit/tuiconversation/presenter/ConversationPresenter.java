@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.tencent.imsdk.v2.V2TIMConversation;
+import com.tencent.imsdk.v2.V2TIMConversationListener;
 import com.tencent.imsdk.v2.V2TIMFriendInfo;
 import com.tencent.imsdk.v2.V2TIMFriendshipListener;
 import com.tencent.imsdk.v2.V2TIMManager;
@@ -84,6 +86,94 @@ public class ConversationPresenter {
 
     public ConversationPresenter() {
         provider = new ConversationProvider();
+    }
+
+    public void initIMListener() {
+        V2TIMManager.getConversationManager().addConversationListener(new V2TIMConversationListener() {
+
+            @Override
+            public void onNewConversation(List<V2TIMConversation> conversationList) {
+                if (!conversationList.isEmpty()) {
+                    List<ConversationInfo> conversationInfoList = ConversationUtils.convertV2TIMConversationList(conversationList);
+                    isFriendConversationList(conversationInfoList);
+                    ConversationPresenter.this.onNewConversation(conversationInfoList);
+                }
+
+            }
+
+            @Override
+            public void onConversationChanged(List<V2TIMConversation> conversationList) {
+                if (!conversationList.isEmpty()) {
+                    List<ConversationInfo> conversationInfoList = ConversationUtils.convertV2TIMConversationList(conversationList);
+                    isFriendConversationList(conversationInfoList);
+                    ConversationPresenter.this.onNewConversation(conversationInfoList);
+                }
+            }
+
+            @Override
+            public void onTotalUnreadMessageCountChanged(long totalUnreadCount) {
+                ConversationPresenter.this.updateTotalUnreadMessageCount(totalUnreadCount);
+                HashMap<String, Object> param = new HashMap<>();
+                param.put(TUIConstants.TUIConversation.TOTAL_UNREAD_COUNT, totalUnreadCount);
+                TUICore.notifyEvent(TUIConstants.TUIConversation.EVENT_UNREAD, TUIConstants.TUIConversation.EVENT_SUB_KEY_UNREAD_CHANGED, param);
+            }
+        });
+        //添加关系链监听器
+        V2TIMManager.getFriendshipManager().addFriendListener(new V2TIMFriendshipListener() {
+            /**
+             * @Desc TODO(好友新增通知)
+             * @author 彭石林
+             * @parame [users]
+             * @Date 2022/8/15
+             */
+            @Override
+            public void onFriendListAdded(List<V2TIMFriendInfo> v2TIMFriendInfos) {
+                Log.e("当前注册添加好友通知",v2TIMFriendInfos.size()+"=================="+v2TIMFriendInfos);
+                if(!v2TIMFriendInfos.isEmpty()){
+                    final List<String> urlList = new ArrayList<>();
+                    for (V2TIMFriendInfo v2TIMFriendInfo : v2TIMFriendInfos){
+                        String userId = TUIConstants.TUIConversation.CONVERSATION_C2C_PREFIX + v2TIMFriendInfo.getUserID() ;
+                        urlList.add(userId);
+                    }
+                    newConversationListEvent(urlList);
+                }
+            }
+
+            /**
+             * @Desc (
+             * 好友删除通知 ， ， 两种情况会收到这个回调 ：
+             *自己删除好友 （ 单向和双向删除都会收到回调 ）
+             *好友把自己删除 （ 双向删除会收到 ）)
+             * @author 彭石林
+             * @parame [userList]
+             * @Date 2022/8/15
+             */
+            @Override
+            public void onFriendListDeleted(List<String> userList) {
+                Log.e("当前注册删除好友通知","=================="+userList);
+                if(!userList.isEmpty()){
+                    List<String> removeInfoList = new ArrayList<>();
+                    for (String infoData : userList){
+                        String userId = TUIConstants.TUIConversation.CONVERSATION_C2C_PREFIX + infoData ;
+                        removeInfoList.add(userId);
+                    }
+                    ConversationPresenter.this.newConversationListEvent(removeInfoList);
+                }
+            }
+            /**
+             * @Desc(
+             * 黑名单删除通知
+             * )
+             * @author 彭石林
+             * @parame [userList]
+             * @return void
+             * @Date 2022/8/15
+             */
+            @Override
+            public void onBlackListDeleted(List<String> userList) {
+
+            }
+        });
     }
 
     public void setConversationListener() {
@@ -169,14 +259,7 @@ public class ConversationPresenter {
                 ConversationPresenter.this.newConversationListEvent(conversationId);
             }
         };
-        if(isFriendConversation){
-            Log.e(TAG, "当前注册回调===================="+ true);
-            TUIConversationService.getInstance().setConversationFriendEventListener(conversationEventListener);
-        }else{
-            Log.e(TAG, "当前注册回调===================="+ false);
-            TUIConversationService.getInstance().setConversationEventListener(conversationEventListener);
-        }
-
+        TUIConversationService.getInstance().setConversationEventListener(conversationEventListener);
     }
 
     //移除好友列表的会话
@@ -889,10 +972,8 @@ public class ConversationPresenter {
                                         }
                                         if(!dataConversationInfo.isEmpty()){
                                             loadedFriendshipInfoList.addAll(dataConversationInfo);
-                                            if(friendshipAdapter!=null){
-                                                friendshipAdapter.onDataSourceChanged(loadedFriendshipInfoList);
-                                                friendshipAdapter.onItemRangeChanged(0,loadedFriendshipInfoList.size());
-                                            }
+                                            isFriendConversationList(dataConversationInfo);
+                                            ConversationPresenter.this.onNewConversation(dataConversationInfo);
                                             busConversationCount(loadedFriendshipInfoList);
                                         }
 

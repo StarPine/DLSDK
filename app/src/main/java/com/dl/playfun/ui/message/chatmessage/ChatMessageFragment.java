@@ -2,6 +2,7 @@ package com.dl.playfun.ui.message.chatmessage;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -153,7 +154,25 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
     private void initIM() {
         ConversationPresenter presenter = new ConversationPresenter();
         presenter.setFriendConversation(false);
-        presenter.setConversationListener();
+        presenter.setLoadConversationCallback(new ConversationPresenter.LoadConversationCallback() {
+            @Override
+            public void totalUnreadCount(int count) {
+                Log.e("当前会话列表回调数量",count+"=================");
+            }
+
+            @Override
+            public void isConversationEmpty(boolean empty) {
+                //好友会话列表为空
+//                if(empty) {
+//                    binding.conversationLayoutContact.setVisibility(View.GONE);
+//                    binding.ivEmpty.setVisibility(View.VISIBLE);
+//                }else{
+//                    binding.conversationLayoutContact.setVisibility(View.VISIBLE);
+//                    binding.ivEmpty.setVisibility(View.GONE);
+//                }
+            }
+        });
+        presenter.initIMListener();
         binding.conversationLayout.setPresenter(presenter);
         binding.conversationLayout.initDefault(false);
         ConversationListLayout listLayout = binding.conversationLayout.getConversationList();
@@ -186,7 +205,6 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
         binding.conversationLayout.getConversationList().setBanConversationDelListener(new ConversationListLayout.BanConversationDelListener() {
             @Override
             public void banConversationDel() {
-
                 viewModel.dismissHUD();
             }
         });
