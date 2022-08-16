@@ -96,16 +96,33 @@ import java.util.Map;
 
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
+import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface HttpDataSource {
 
-
+    /**
+     * @Desc TODO(添加常联系人)
+     * @author 彭石林
+     * @parame [requestBody]
+     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
+     * @Date 2022/8/16
+     */
+    Observable<BaseResponse> friendAddFrequent(RequestBody requestBody);
+    /**
+     * @Desc TODO(添加常联系人)
+     * @author 彭石林
+     * @parame [requestBody]
+     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
+     * @Date 2022/8/16
+     */
+    Observable<BaseResponse> friendDeleteFrequent(RequestBody requestBody);
     /**
      * 获取专属搭讪
      * @return

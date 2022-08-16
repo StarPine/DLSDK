@@ -47,35 +47,71 @@
                     android:paddingRight="10dp">
                     <RelativeLayout
                         android:id="@+id/rl_tab_message"
-                        android:layout_width="66dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         binding:onClickCommand="@{viewModel.toLeftTabClickCommand}"
                         >
                         <androidx.appcompat.widget.AppCompatTextView
-                            android:layout_centerInParent="true"
+                            android:id="@+id/tv_message_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="15dp"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerInParent="true"
                             android:text="@string/playfun_tab_message_1"
-                            android:textSize="16sp"
-                            binding:isBold="@{viewModel.tabSelected}"
                             android:textColor="@{viewModel.tabSelected ? @color/play_chat_purple_1 : @color/black}"
+                            android:textSize="16sp"
+                            binding:isBold="@{viewModel.tabSelected}" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_message_hint"
+                            android:layout_width="wrap_content"
+                            android:layout_height="16dp"
+                            android:layout_toEndOf="@+id/tv_message_text"
+                            android:background="@drawable/badge_background_white_border"
+                            android:gravity="center"
+                            android:minWidth="16dp"
+                            android:paddingStart="2dp"
+                            android:paddingEnd="2dp"
+                            android:text="@{viewModel.addString(viewModel.chatMessageCount)}"
+                            android:textColor="@color/white"
+                            android:textSize="11sp"
+                            android:visibility="@{viewModel.chatMessageCount > 0 ? View.VISIBLE:View.INVISIBLE}"
+                            tools:ignore="RelativeOverlap,SmallSp"
                             />
                     </RelativeLayout>
                     <RelativeLayout
                         android:layout_toEndOf="@+id/rl_tab_message"
-                        android:layout_width="66dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:paddingEnd="5dp"
                         binding:onClickCommand="@{viewModel.toRightTabClickCommand}"
                         >
-
                         <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_message_contact"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="15dp"
+                            android:layout_alignParentStart="true"
                             android:layout_centerInParent="true"
                             android:text="@string/playfun_tab_message_3"
                             android:textColor="@{!viewModel.tabSelected ? @color/play_chat_purple_1 : @color/black}"
                             android:textSize="16sp"
                             binding:isBold="@{!viewModel.tabSelected}" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="16dp"
+                            android:layout_toEndOf="@+id/tv_message_contact"
+                            android:background="@drawable/badge_background_white_border"
+                            android:gravity="center"
+                            android:minWidth="16dp"
+                            android:paddingStart="2dp"
+                            android:paddingEnd="2dp"
+                            android:text="@{viewModel.addString(viewModel.chatMessageContactCount)}"
+                            android:textColor="@color/white"
+                            android:textSize="11sp"
+                            android:visibility="@{viewModel.chatMessageContactCount > 0 ? View.VISIBLE:View.INVISIBLE}" />
                     </RelativeLayout>
 
                     <androidx.appcompat.widget.AppCompatImageView
@@ -110,7 +146,7 @@
                         android:minWidth="16dp"
                         android:paddingLeft="2dp"
                         android:paddingRight="2dp"
-                        android:text="@{String.valueOf(viewModel.systemMessageCount)}"
+                        android:text="@{viewModel.addString(viewModel.systemMessageCount)}"
                         android:textColor="@color/white"
                         android:textSize="11sp"
                         android:visibility="@{viewModel.systemMessageCount > 0 ? View.VISIBLE:View.INVISIBLE}"

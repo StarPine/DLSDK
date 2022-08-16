@@ -1598,6 +1598,16 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
 
 
     @Override
+    public Observable<BaseResponse> friendAddFrequent(RequestBody requestBody) {
+        return mHttpDataSource.friendAddFrequent(requestBody);
+    }
+
+    @Override
+    public Observable<BaseResponse> friendDeleteFrequent(RequestBody requestBody) {
+        return mHttpDataSource.friendDeleteFrequent(requestBody);
+    }
+
+    @Override
     public Observable<BaseDataResponse<List<ExclusiveAccostInfoEntity>>> getExclusiveAccost() {
         return mHttpDataSource.getExclusiveAccost();
     }

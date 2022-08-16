@@ -24,16 +24,9 @@ public class ConfigManager {
 
     private static ConfigManager mCacheManager;
 
-    private final List<EvaluateObjEntity> evaluateConfigs;
-
-    private final SystemConfigEntity systemConfigEntity;
 
     private static AppRepository appRepository;
 
-    private ConfigManager() {
-        evaluateConfigs = Injection.provideDemoRepository().readEvaluateConfig();
-        systemConfigEntity = Injection.provideDemoRepository().readSystemConfig();
-    }
 
     public static ConfigManager getInstance() {
         if (mCacheManager == null) {
@@ -56,19 +49,6 @@ public class ConfigManager {
         }
     }
 
-    public SystemConfigEntity getSystemConfigEntity() {
-        return systemConfigEntity;
-    }
-
-    public EvaluateObjEntity getEvaluateConfigById(int id) {
-        EvaluateObjEntity entity = null;
-        for (EvaluateObjEntity evaluateConfig : evaluateConfigs) {
-            if (evaluateConfig.getId().intValue() == id) {
-                entity = evaluateConfig;
-            }
-        }
-        return entity;
-    }
 
     /**
      * @return java.lang.String
@@ -86,12 +66,12 @@ public class ConfigManager {
     }
 
     /**
-    * @Desc TODO(获取操作API库)
-    * @author 彭石林
-    * @parame []
-    * @return com.dl.playfun.data.AppRepository
-    * @Date 2022/3/31
-    */
+     * @Desc TODO(获取操作API库)
+     * @author 彭石林
+     * @parame []
+     * @return com.dl.playfun.data.AppRepository
+     * @Date 2022/3/31
+     */
     public AppRepository getAppRepository(){
         if (appRepository == null) {
             synchronized (Object.class) {
@@ -142,12 +122,12 @@ public class ConfigManager {
     }
 
     /**
-    * @Desc TODO(获取当前用户IM id)
-    * @author 彭石林
-    * @parame []
-    * @return java.lang.String
-    * @Date 2022/4/2
-    */
+     * @Desc TODO(获取当前用户IM id)
+     * @author 彭石林
+     * @parame []
+     * @return java.lang.String
+     * @Date 2022/4/2
+     */
     public String getUserImID(){
         return  getAppRepository().readUserData().getImUserId();
     }
@@ -208,19 +188,19 @@ public class ConfigManager {
         int money = 999;
         if (isMale()) {
             if (isVip()) {
-                money = systemConfigEntity.getManVip().getImMoney();
+                money = getAppRepository().readSystemConfig().getManVip().getImMoney();
             } else if (isCertification()) {
-                money = systemConfigEntity.getManReal().getImMoney();
+                money = getAppRepository().readSystemConfig().getManReal().getImMoney();
             } else {
-                money = systemConfigEntity.getManUser().getImMoney();
+                money = getAppRepository().readSystemConfig().getManUser().getImMoney();
             }
         } else {
             if (isVip()) {
-                money = systemConfigEntity.getWomanVip().getImMoney();
+                money = getAppRepository().readSystemConfig().getWomanVip().getImMoney();
             } else if (isCertification()) {
-                money = systemConfigEntity.getWomanReal().getImMoney();
+                money = getAppRepository().readSystemConfig().getWomanReal().getImMoney();
             } else {
-                money = systemConfigEntity.getWomanUser().getImMoney();
+                money = getAppRepository().readSystemConfig().getWomanUser().getImMoney();
             }
         }
         return money;
@@ -233,23 +213,28 @@ public class ConfigManager {
      */
     public int getBurnTime() {
         int time = 3;
-        if (isMale()) {
-            if (isVip()) {
-                time = systemConfigEntity.getManVip().getImgTime();
-            } else if (isCertification()) {
-                time = systemConfigEntity.getManReal().getImgTime();
+        try{
+            if (isMale()) {
+                if (isVip()) {
+                    time = getAppRepository().readSystemConfig().getManVip().getImgTime();
+                } else if (isCertification()) {
+                    time = getAppRepository().readSystemConfig().getManReal().getImgTime();
+                } else {
+                    time = getAppRepository().readSystemConfig().getManUser().getImgTime();
+                }
             } else {
-                time = systemConfigEntity.getManUser().getImgTime();
+                if (isVip()) {
+                    time = getAppRepository().readSystemConfig().getWomanVip().getImgTime();
+                } else if (isCertification()) {
+                    time = getAppRepository().readSystemConfig().getWomanReal().getImgTime();
+                } else {
+                    time = getAppRepository().readSystemConfig().getWomanUser().getImgTime();
+                }
             }
-        } else {
-            if (isVip()) {
-                time = systemConfigEntity.getWomanVip().getImgTime();
-            } else if (isCertification()) {
-                time = systemConfigEntity.getWomanReal().getImgTime();
-            } else {
-                time = systemConfigEntity.getWomanUser().getImgTime();
-            }
+        }catch (Exception ignored){
+
         }
+
         return time;
     }
 
@@ -287,19 +272,19 @@ public class ConfigManager {
         Integer num = 0;
         if (isMale()) {
             if (isVip()) {
-                num = systemConfigEntity.getManVip().getSendMessagesNumber();
+                num = getAppRepository().readSystemConfig().getManVip().getSendMessagesNumber();
             } else if (isCertification()) {
-                num = systemConfigEntity.getManReal().getSendMessagesNumber();
+                num = getAppRepository().readSystemConfig().getManReal().getSendMessagesNumber();
             } else {
-                num = systemConfigEntity.getManUser().getSendMessagesNumber();
+                num = getAppRepository().readSystemConfig().getManUser().getSendMessagesNumber();
             }
         } else {
             if (isVip()) {
-                num = systemConfigEntity.getWomanVip().getSendMessagesNumber();
+                num = getAppRepository().readSystemConfig().getWomanVip().getSendMessagesNumber();
             } else if (isCertification()) {
-                num = systemConfigEntity.getWomanReal().getSendMessagesNumber();
+                num = getAppRepository().readSystemConfig().getWomanReal().getSendMessagesNumber();
             } else {
-                num = systemConfigEntity.getWomanUser().getSendMessagesNumber();
+                num = getAppRepository().readSystemConfig().getWomanUser().getSendMessagesNumber();
             }
         }
         return num;
@@ -314,19 +299,19 @@ public class ConfigManager {
         Integer num = 0;
         if (isMale()) {
             if (isVip()) {
-                num = systemConfigEntity.getManVip().getViewMessagesNumber();
+                num = getAppRepository().readSystemConfig().getManVip().getViewMessagesNumber();
             } else if (isCertification()) {
-                num = systemConfigEntity.getManReal().getViewMessagesNumber();
+                num = getAppRepository().readSystemConfig().getManReal().getViewMessagesNumber();
             } else {
-                num = systemConfigEntity.getManUser().getViewMessagesNumber();
+                num = getAppRepository().readSystemConfig().getManUser().getViewMessagesNumber();
             }
         } else {
             if (isVip()) {
-                num = systemConfigEntity.getWomanVip().getViewMessagesNumber();
+                num = getAppRepository().readSystemConfig().getWomanVip().getViewMessagesNumber();
             } else if (isCertification()) {
-                num = systemConfigEntity.getWomanReal().getViewMessagesNumber();
+                num = getAppRepository().readSystemConfig().getWomanReal().getViewMessagesNumber();
             } else {
-                num = systemConfigEntity.getWomanUser().getViewMessagesNumber();
+                num = getAppRepository().readSystemConfig().getWomanUser().getViewMessagesNumber();
             }
         }
         return num;
@@ -338,7 +323,7 @@ public class ConfigManager {
      * @return
      */
     public Integer getReadLineTime() {
-        Integer num = systemConfigEntity.getContent().getReadLineTime();
+        Integer num = getAppRepository().readSystemConfig().getContent().getReadLineTime();
         return num;
     }
 
@@ -348,7 +333,7 @@ public class ConfigManager {
      * @return
      */
     public Integer getGetUserHomeMoney() {
-        return systemConfigEntity.getContent().getGetUserHomeMoney();
+        return getAppRepository().readSystemConfig().getContent().getGetUserHomeMoney();
     }
 
     /**
@@ -360,19 +345,19 @@ public class ConfigManager {
         int number = 0;
         if (isMale()) {
             if (isVip()) {
-                number = systemConfigEntity.getManVip().getImNumber();
+                number = getAppRepository().readSystemConfig().getManVip().getImNumber();
             } else if (isCertification()) {
-                number = systemConfigEntity.getManReal().getImNumber();
+                number = getAppRepository().readSystemConfig().getManReal().getImNumber();
             } else {
-                number = systemConfigEntity.getManUser().getImNumber();
+                number = getAppRepository().readSystemConfig().getManUser().getImNumber();
             }
         } else {
             if (isVip()) {
-                number = systemConfigEntity.getWomanVip().getImNumber();
+                number = getAppRepository().readSystemConfig().getWomanVip().getImNumber();
             } else if (isCertification()) {
-                number = systemConfigEntity.getWomanReal().getImNumber();
+                number = getAppRepository().readSystemConfig().getWomanReal().getImNumber();
             } else {
-                number = systemConfigEntity.getWomanUser().getImNumber();
+                number = getAppRepository().readSystemConfig().getWomanUser().getImNumber();
             }
         }
         return number;
@@ -386,7 +371,7 @@ public class ConfigManager {
      * @Date 2021/8/4
      */
     public Integer GetViewUseBrowseMoney() {
-        return systemConfigEntity.getContent().getGetViewUseBrowseMoney();
+        return getAppRepository().readSystemConfig().getContent().getGetViewUseBrowseMoney();
     }
 
     /**
@@ -398,19 +383,19 @@ public class ConfigManager {
         int money = 999;
         if (isMale()) {
             if (isVip()) {
-                money = systemConfigEntity.getManVip().getNewsMoney();
+                money = getAppRepository().readSystemConfig().getManVip().getNewsMoney();
             } else if (isCertification()) {
-                money = systemConfigEntity.getManReal().getNewsMoney();
+                money = getAppRepository().readSystemConfig().getManReal().getNewsMoney();
             } else {
-                money = systemConfigEntity.getManUser().getNewsMoney();
+                money = getAppRepository().readSystemConfig().getManUser().getNewsMoney();
             }
         } else {
             if (isVip()) {
-                money = systemConfigEntity.getWomanVip().getNewsMoney();
+                money = getAppRepository().readSystemConfig().getWomanVip().getNewsMoney();
             } else if (isCertification()) {
-                money = systemConfigEntity.getWomanReal().getNewsMoney();
+                money = getAppRepository().readSystemConfig().getWomanReal().getNewsMoney();
             } else {
-                money = systemConfigEntity.getWomanUser().getNewsMoney();
+                money = getAppRepository().readSystemConfig().getWomanUser().getNewsMoney();
             }
         }
         return money;
@@ -425,19 +410,19 @@ public class ConfigManager {
         int money = 999;
         if (isMale()) {
             if (isVip()) {
-                money = systemConfigEntity.getManVip().getTopicalMoney();
+                money = getAppRepository().readSystemConfig().getManVip().getTopicalMoney();
             } else if (isCertification()) {
-                money = systemConfigEntity.getManReal().getTopicalMoney();
+                money = getAppRepository().readSystemConfig().getManReal().getTopicalMoney();
             } else {
-                money = systemConfigEntity.getManUser().getTopicalMoney();
+                money = getAppRepository().readSystemConfig().getManUser().getTopicalMoney();
             }
         } else {
             if (isVip()) {
-                money = systemConfigEntity.getWomanVip().getTopicalMoney();
+                money = getAppRepository().readSystemConfig().getWomanVip().getTopicalMoney();
             } else if (isCertification()) {
-                money = systemConfigEntity.getWomanReal().getTopicalMoney();
+                money = getAppRepository().readSystemConfig().getWomanReal().getTopicalMoney();
             } else {
-                money = systemConfigEntity.getWomanUser().getTopicalMoney();
+                money = getAppRepository().readSystemConfig().getWomanUser().getTopicalMoney();
             }
         }
         return money;
@@ -452,19 +437,19 @@ public class ConfigManager {
         int number = 0;
         if (isMale()) {
             if (isVip()) {
-                number = systemConfigEntity.getManVip().getBrowseHomeNumber();
+                number = getAppRepository().readSystemConfig().getManVip().getBrowseHomeNumber();
             } else if (isCertification()) {
-                number = systemConfigEntity.getManReal().getBrowseHomeNumber();
+                number = getAppRepository().readSystemConfig().getManReal().getBrowseHomeNumber();
             } else {
-                number = systemConfigEntity.getManUser().getBrowseHomeNumber();
+                number = getAppRepository().readSystemConfig().getManUser().getBrowseHomeNumber();
             }
         } else {
             if (isVip()) {
-                number = systemConfigEntity.getWomanVip().getBrowseHomeNumber();
+                number = getAppRepository().readSystemConfig().getWomanVip().getBrowseHomeNumber();
             } else if (isCertification()) {
-                number = systemConfigEntity.getWomanReal().getBrowseHomeNumber();
+                number = getAppRepository().readSystemConfig().getWomanReal().getBrowseHomeNumber();
             } else {
-                number = systemConfigEntity.getWomanUser().getBrowseHomeNumber();
+                number = getAppRepository().readSystemConfig().getWomanUser().getBrowseHomeNumber();
             }
         }
         return number;
@@ -472,7 +457,7 @@ public class ConfigManager {
 
     public String getUnLockAccountMoney() {
         try {
-            return systemConfigEntity.getContent().getGetAccountMoney();
+            return getAppRepository().readSystemConfig().getContent().getGetAccountMoney();
         } catch (Exception e) {
             return "";
         }
@@ -480,7 +465,7 @@ public class ConfigManager {
 
     public String getUnLockAccountMoneyVip() {
         try {
-            return systemConfigEntity.getContent().getGetAccountMoneyVip();
+            return getAppRepository().readSystemConfig().getContent().getGetAccountMoneyVip();
         } catch (Exception e) {
             return "";
         }

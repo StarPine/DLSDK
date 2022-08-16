@@ -82,7 +82,7 @@ public class MessageMainFragment extends BaseFragment<FragmentMessageMainBinding
         fragmentAdapter.setFragmentList(mFragments);
 
         binding.viewPager.setUserInputEnabled(false);
-        //binding.viewPager.setOffscreenPageLimit(1);
+        binding.viewPager.setOffscreenPageLimit(1);
         binding.viewPager.setAdapter(fragmentAdapter);
         binding.viewPager.setCurrentItem(0, false);
     }

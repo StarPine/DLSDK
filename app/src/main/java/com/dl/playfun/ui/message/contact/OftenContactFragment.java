@@ -19,6 +19,7 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.Injection;
 import com.dl.playfun.databinding.FragmentOftenContactBinding;
 import com.dl.playfun.entity.TokenEntity;
+import com.dl.playfun.event.MessageCountChangeContactEvent;
 import com.dl.playfun.manager.ThirdPushTokenMgr;
 import com.dl.playfun.tim.TUIUtils;
 import com.dl.playfun.ui.base.BaseFragment;
@@ -31,6 +32,7 @@ import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.view.ConversationListLayout;
 
+import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.utils.KLog;
 
 /**
@@ -94,7 +96,7 @@ public class OftenContactFragment extends BaseFragment<FragmentOftenContactBindi
         presenter.setLoadConversationCallback(new ConversationPresenter.LoadConversationCallback() {
             @Override
             public void totalUnreadCount(int count) {
-                Log.e("当前会话列表回调数量",count+"=================");
+                RxBus.getDefault().post(new MessageCountChangeContactEvent(count));
             }
 
             @Override
@@ -102,10 +104,10 @@ public class OftenContactFragment extends BaseFragment<FragmentOftenContactBindi
                 //好友会话列表为空
                 if(empty) {
                     binding.conversationLayoutContact.setVisibility(View.GONE);
-                    binding.ivEmpty.setVisibility(View.VISIBLE);
+                    binding.rlEmptyLayout.setVisibility(View.VISIBLE);
                 }else{
                     binding.conversationLayoutContact.setVisibility(View.VISIBLE);
-                    binding.ivEmpty.setVisibility(View.GONE);
+                    binding.rlEmptyLayout.setVisibility(View.GONE);
                 }
             }
         });
@@ -181,7 +183,7 @@ public class OftenContactFragment extends BaseFragment<FragmentOftenContactBindi
                 })
                 .convasationItemMenuDialog(messageInfo)
                 .show());
-        viewModel.startChatUserView.observe(this, (Observer<Integer>) toUserId -> {
+        viewModel.startChatUserView.observe(this, toUserId -> {
             if(selectedConversationInfo!=null){
                 ChatUtils.startChatActivity(selectedConversationInfo,toUserId,viewModel);
             }

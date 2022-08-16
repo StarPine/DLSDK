@@ -356,12 +356,9 @@ public class ConversationPresenter {
                     if(!loadedFriendshipInfoIdList.isEmpty()){
                         //如果好友列表存在
                         if(!loadedFriendshipInfoIdList.contains(update.getConversationId())){
-                            Log.e(TAG,"好友列表删除元素1："+update.toString());
-                            Log.e(TAG,"好友列表删除元素1："+loadedFriendshipInfoIdList.toString());
                             iterator.remove();
                         }
                     }else{
-                        Log.e(TAG,"好友列表删除元素："+update.toString());
                         iterator.remove();
                     }
                 }else{
@@ -971,7 +968,7 @@ public class ConversationPresenter {
                                             loadConversationCallback.isConversationEmpty(false);
                                         }
                                         if(!dataConversationInfo.isEmpty()){
-                                            loadedFriendshipInfoList.addAll(dataConversationInfo);
+                                            //loadedFriendshipInfoList.addAll(dataConversationInfo);
                                             isFriendConversationList(dataConversationInfo);
                                             ConversationPresenter.this.onNewConversation(dataConversationInfo);
                                             busConversationCount(loadedFriendshipInfoList);
@@ -995,10 +992,10 @@ public class ConversationPresenter {
 
                         @Override
                         public void onError(int errCode, String errMsg, List<String> data) {
+                            Log.e(TAG,false+"查询好友列表异常："+errCode+"============"+errMsg);
                             if(loadConversationCallback!=null){
                                 loadConversationCallback.isConversationEmpty(true);
                             }
-                            loadConversation(loadSize);
                         }
                     });
                 }
@@ -1006,6 +1003,7 @@ public class ConversationPresenter {
                 provider.getFriendShipList(new IUIKitCallback<List<String>>() {
                     @Override
                     public void onSuccess(List<String> userIdData) {
+                        Log.e(TAG,false+"查询好友列表成功："+userIdData.size()+"============");
                         if(!userIdData.isEmpty()){
                             loadedFriendshipInfoIdList.addAll(userIdData);
                         }
@@ -1014,6 +1012,7 @@ public class ConversationPresenter {
 
                     @Override
                     public void onError(int errCode, String errMsg, List<String> data) {
+                        Log.e(TAG,false+"查询好友列表异常："+errCode+"============"+errMsg);
                         loadConversation(loadSize);
                     }
                 });
@@ -1035,10 +1034,8 @@ public class ConversationPresenter {
             for (int i = 0; i < conversationSize; i++) {
                 totalUnreadCounts += dataInfoList.get(i).getUnRead();
             }
-            if(totalUnreadCount > 0){
-                if(loadConversationCallback!=null){
-                    loadConversationCallback.totalUnreadCount(totalUnreadCounts);
-                }
+            if(loadConversationCallback!=null){
+                loadConversationCallback.totalUnreadCount(totalUnreadCounts);
             }
         });
     }

@@ -87,22 +87,22 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
     @Override
     public void onDestroy() {
         super.onDestroy();
-        V2TIMManager.getConversationManager().removeConversationListener(unreadListener);
+        //V2TIMManager.getConversationManager().removeConversationListener(unreadListener);
     }
 
     private void registerUnreadListener() {
-        V2TIMManager.getConversationManager().addConversationListener(unreadListener);
-        V2TIMManager.getConversationManager().getTotalUnreadMessageCount(new V2TIMValueCallback<Long>() {
-            @Override
-            public void onSuccess(Long totalUnreadCount) {
-                RxBus.getDefault().post(new MessageCountChangeTagEvent(totalUnreadCount.intValue()));
-            }
-
-            @Override
-            public void onError(int code, String desc) {
-
-            }
-        });
+//        V2TIMManager.getConversationManager().addConversationListener(unreadListener);
+//        V2TIMManager.getConversationManager().getTotalUnreadMessageCount(new V2TIMValueCallback<Long>() {
+//            @Override
+//            public void onSuccess(Long totalUnreadCount) {
+//                RxBus.getDefault().post(new MessageCountChangeTagEvent(totalUnreadCount.intValue()));
+//            }
+//
+//            @Override
+//            public void onError(int code, String desc) {
+//
+//            }
+//        });
     }
 
     @Override
@@ -157,7 +157,7 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
         presenter.setLoadConversationCallback(new ConversationPresenter.LoadConversationCallback() {
             @Override
             public void totalUnreadCount(int count) {
-                Log.e("当前会话列表回调数量",count+"=================");
+                RxBus.getDefault().post(new MessageCountChangeTagEvent(count));
             }
 
             @Override
