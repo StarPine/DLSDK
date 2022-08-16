@@ -764,6 +764,11 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
 
     @Override
     public void onClick(View view) {
+        if (mChatLayout.getChatInfo() == null){
+            ToastUtil.toastShortMessage("數據加載異常，請從新打開界面");
+            return;
+        }
+
         TUIChatLog.i(TAG, "onClick id:" + view.getId()
                 + "|voice_input_switch:" + R.id.voice_input_switch
                 + "|face_btn:" + R.id.face_btn
