@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 
 import com.blankj.utilcode.util.GsonUtils;
@@ -84,6 +85,8 @@ import me.goldze.mvvmhabit.utils.ToastUtils;
  */
 public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
     public static final String TAG = "ChatDetailViewModel";
+    //是否是常联系
+    public ObservableBoolean isContactsEnabled = new ObservableBoolean(false);
     public ObservableField<Boolean> isTagShow = new ObservableField<>(false);
     public ObservableField<Boolean> inBlacklist = new ObservableField<>(false);
     public ObservableField<Boolean> isTrack = new ObservableField<>(false);//todo 还没根据后端进行初始化
@@ -207,6 +210,8 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                             tagEntitys.set(tagEntity);
                             isTrack.set(tagEntity.getIsCollect() == 1);
                             model.saveChatPushStatus(tagEntitys.get().getIsChatPush());
+                            Integer isContacts = tagEntity.getIsContact();
+                            isContactsEnabled.set(isContacts != null && isContacts == 1);
                         }
                     }
 
@@ -839,6 +844,47 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                     }
                 });
     }
+
+    public void friendAddFrequent(boolean typeFlag,String otherImUserId,Integer otherImUserIds){
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("friendImId", otherImUserId);
+        dataMap.put("friendImIds", otherImUserIds);
+        if(typeFlag){
+            model.friendAddFrequent(ApiUitl.getBody(GsonUtils.toJson(dataMap)))
+                    .doOnSubscribe(this)
+                    .compose(RxUtils.schedulersTransformer())
+                    .compose(RxUtils.exceptionTransformer())
+                    .doOnSubscribe(dismissHUD -> showHUD())
+                    .subscribe(new BaseObserver<BaseResponse>(){
+                        @Override
+                        public void onSuccess(BaseResponse baseResponse) {
+                            isContactsEnabled.set(!isContactsEnabled.get());
+                        }
+                        @Override
+                        public void onComplete() {
+                            dismissHUD();
+                        }
+                    });
+        }else{
+            model.friendDeleteFrequent(ApiUitl.getBody(GsonUtils.toJson(dataMap)))
+                    .doOnSubscribe(this)
+                    .compose(RxUtils.schedulersTransformer())
+                    .compose(RxUtils.exceptionTransformer())
+                    .doOnSubscribe(dismissHUD -> showHUD())
+                    .subscribe(new BaseObserver<BaseResponse>(){
+                        @Override
+                        public void onSuccess(BaseResponse baseResponse) {
+                            isContactsEnabled.set(!isContactsEnabled.get());
+                        }
+                        @Override
+                        public void onComplete() {
+                            dismissHUD();
+                        }
+                    });
+        }
+
+    }
+
 
     public void playSVGAGift(){
         if (animGiftList.size() > 0 && !animGiftPlaying){

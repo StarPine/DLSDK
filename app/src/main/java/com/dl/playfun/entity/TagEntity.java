@@ -31,6 +31,16 @@ public class TagEntity {
     @SerializedName("is_collect")
     private int isCollect;
     private Integer isChatPush;
+    //当前是否是常联系
+    private Integer isContact;
+
+    public Integer getIsContact() {
+        return isContact;
+    }
+
+    public void setIsContact(Integer isContact) {
+        this.isContact = isContact;
+    }
 
     public Integer getIsCollect() {
         return isCollect;

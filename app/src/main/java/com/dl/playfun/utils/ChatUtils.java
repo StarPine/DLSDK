@@ -53,6 +53,7 @@ public class ChatUtils {
         chatInfo.setType(V2TIMConversation.V2TIM_C2C);
         chatInfo.setId(serviceUserId);
         chatInfo.setChatName(name);
+        AppContext.instance().logEvent(AppsFlyerEvent.IM);
         Bundle bundle = new Bundle();
         bundle.putSerializable(CHAT_INFO, chatInfo);
         bundle.putInt("toUserId", userId);

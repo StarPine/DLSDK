@@ -135,7 +135,7 @@ public class ConversationPresenter {
                         String userId = TUIConstants.TUIConversation.CONVERSATION_C2C_PREFIX + v2TIMFriendInfo.getUserID() ;
                         urlList.add(userId);
                     }
-                    newConversationListEvent(urlList);
+                    ConversationPresenter.this.newConversationListEvent(urlList);
                 }
             }
 
@@ -157,7 +157,7 @@ public class ConversationPresenter {
                         String userId = TUIConstants.TUIConversation.CONVERSATION_C2C_PREFIX + infoData ;
                         removeInfoList.add(userId);
                     }
-                    ConversationPresenter.this.newConversationListEvent(removeInfoList);
+                    ConversationPresenter.this.deleteConversationListEvent(removeInfoList);
                 }
             }
             /**
@@ -291,29 +291,36 @@ public class ConversationPresenter {
     */
     public void deleteConversationListChange(List<String> dataConversationInfoList,IConversationListAdapter iAdapter, List<ConversationInfo> deleteConversationList){
         //列表执行删除
-        if(!loadedFriendshipInfoIdList.isEmpty()){
-            if(!deleteConversationList.isEmpty()){
-                int friendConversationSize = deleteConversationList.size();
-                List<ConversationInfo> removeConversationInfoList = new ArrayList<>();
-                for (String conversationLey : dataConversationInfoList) {
-                    for (int i = 0; i < friendConversationSize; i++) {
-                        ConversationInfo removeData = deleteConversationList.get(i);
-                        if(conversationLey.equals(removeData.getConversationId())){
-                            removeConversationInfoList.add(removeData);
-                            if(iAdapter!=null){
-                                iAdapter.onItemRemoved(i);
-                            }
+        if(!deleteConversationList.isEmpty()){
+            int friendConversationSize = deleteConversationList.size();
+            List<ConversationInfo> removeConversationInfoList = new ArrayList<>();
+            for (String conversationLey : dataConversationInfoList) {
+                for (int i = 0; i < friendConversationSize; i++) {
+                    ConversationInfo removeData = deleteConversationList.get(i);
+                    if(conversationLey.equals(removeData.getConversationId())){
+                        removeConversationInfoList.add(removeData);
+                        if(iAdapter!=null){
+                            iAdapter.onItemRemoved(i);
                         }
                     }
                 }
-                if(!removeConversationInfoList.isEmpty()){
-                    deleteConversationList.removeAll(removeConversationInfoList);
-                }
-
             }
+            if(!removeConversationInfoList.isEmpty()){
+                deleteConversationList.removeAll(removeConversationInfoList);
+            }
+
+        }
+        if(!loadedFriendshipInfoIdList.isEmpty()){
             //删除好友列表数据
             loadedFriendshipInfoIdList.removeAll(dataConversationInfoList);
         }
+
+        if(deleteConversationList.isEmpty()){
+            if(loadConversationCallback!=null){
+                loadConversationCallback.isConversationEmpty(true);
+            }
+        }
+        busConversationCount(deleteConversationList);
     }
     /**
     * @Desc TODO(根据c2cId进行新的会话查询)
@@ -553,6 +560,9 @@ public class ConversationPresenter {
                 }
             }
         }
+        if(loadConversationCallback!=null){
+            loadConversationCallback.isConversationEmpty(false);
+        }
         busConversationCount(loadedConversationInfo);
     }
 
@@ -576,7 +586,7 @@ public class ConversationPresenter {
         }
     }
     /**
-    * @Desc TODO(自定义刷新普通花卉列表 or 好友列表)
+    * @Desc TODO(自定义刷新普通列表 or 好友列表)
     * @author 彭石林
     * @parame [inflows, indexMap, iAdapter, loadedConversationInfo]
     * @return void
@@ -622,6 +632,9 @@ public class ConversationPresenter {
             if (count > 0 && maxRefreshIndex >= minRefreshIndex) {
                 iAdapter.onItemRangeChanged(minRefreshIndex, count);
             }
+            if(loadConversationCallback!=null){
+                loadConversationCallback.isConversationEmpty(false);
+            }
         }
     }
 
@@ -641,6 +654,7 @@ public class ConversationPresenter {
         HashMap<String, Object> param = new HashMap<>();
         param.put(TUIConstants.TUIConversation.TOTAL_UNREAD_COUNT, totalUnreadCount);
         TUICore.notifyEvent(TUIConstants.TUIConversation.EVENT_UNREAD, TUIConstants.TUIConversation.EVENT_SUB_KEY_UNREAD_CHANGED, param);
+        busConversationCount(isFriendConversation?loadedFriendshipInfoList:loadedConversationInfoList);
     }
 
     /**
@@ -744,6 +758,12 @@ public class ConversationPresenter {
                     isDelBanCovversation = false;
                     ((ConversationListAdapter)currentAdapter).banConversationDel();
                 }
+                if(currentList.isEmpty()){
+                    if(loadConversationCallback!=null){
+                        loadConversationCallback.isConversationEmpty(true);
+                    }
+                }
+                busConversationCount(isFriendConversation?loadedFriendshipInfoList:loadedConversationInfoList);
             }
 
             @Override

@@ -101,13 +101,21 @@ public class OftenContactFragment extends BaseFragment<FragmentOftenContactBindi
 
             @Override
             public void isConversationEmpty(boolean empty) {
-                //好友会话列表为空
+                //好友会话列表为空  这里切换成主线程进行改变页面状态
                 if(empty) {
-                    binding.conversationLayoutContact.setVisibility(View.GONE);
-                    binding.rlEmptyLayout.setVisibility(View.VISIBLE);
+                    if(binding.conversationLayoutContact.getVisibility()!=View.GONE){
+                        binding.conversationLayoutContact.post(()->{
+                            binding.conversationLayoutContact.setVisibility(View.GONE);
+                            binding.rlEmptyLayout.setVisibility(View.VISIBLE);
+                        });
+                    }
                 }else{
-                    binding.conversationLayoutContact.setVisibility(View.VISIBLE);
-                    binding.rlEmptyLayout.setVisibility(View.GONE);
+                    if(binding.conversationLayoutContact.getVisibility()!=View.VISIBLE){
+                        binding.conversationLayoutContact.post(()->{
+                            binding.conversationLayoutContact.setVisibility(View.VISIBLE);
+                            binding.rlEmptyLayout.setVisibility(View.GONE);
+                        });
+                    }
                 }
             }
         });
