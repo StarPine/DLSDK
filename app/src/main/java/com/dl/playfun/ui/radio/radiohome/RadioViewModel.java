@@ -329,7 +329,7 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
 
     public void getArea() {//地区
         List<ConfigItemEntity> cityConfig = model.readCityConfig();
-        if (ObjectUtils.isEmpty(userDataEntity) || ObjectUtils.isEmpty(cityConfig) || ObjectUtils.isEmpty(userDataEntity.get().getCityId())) {
+        if (ObjectUtils.isEmpty(userDataEntity) || ObjectUtils.isEmpty(cityConfig) || ObjectUtils.isEmpty(userDataEntity.get()) || ObjectUtils.isEmpty(userDataEntity.get().getCityId())) {
             return ;
         }
         for (int i = 0; i < cityConfig.size(); i++) {

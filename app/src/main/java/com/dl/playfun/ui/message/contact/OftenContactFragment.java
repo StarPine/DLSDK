@@ -2,6 +2,7 @@ package com.dl.playfun.ui.message.contact;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,7 +71,6 @@ public class OftenContactFragment extends BaseFragment<FragmentOftenContactBindi
         if (tokenEntity != null) {
             if(TUILogin.isUserLogined()){
                 initIM();
-                ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
             }else{
                 TUIUtils.login(tokenEntity.getUserID(), tokenEntity.getUserSig(), new V2TIMCallback() {
                     @Override
@@ -91,6 +91,24 @@ public class OftenContactFragment extends BaseFragment<FragmentOftenContactBindi
     private void initIM(){
         ConversationPresenter presenter = new ConversationPresenter();
         presenter.setFriendConversation(true);
+        presenter.setLoadConversationCallback(new ConversationPresenter.LoadConversationCallback() {
+            @Override
+            public void totalUnreadCount(int count) {
+                Log.e("当前会话列表回调数量",count+"=================");
+            }
+
+            @Override
+            public void isConversationEmpty(boolean empty) {
+                //好友会话列表为空
+                if(empty) {
+                    binding.conversationLayoutContact.setVisibility(View.GONE);
+                    binding.ivEmpty.setVisibility(View.VISIBLE);
+                }else{
+                    binding.conversationLayoutContact.setVisibility(View.VISIBLE);
+                    binding.ivEmpty.setVisibility(View.GONE);
+                }
+            }
+        });
         presenter.setConversationListener();
         binding.conversationLayoutContact.setPresenter(presenter);
         binding.conversationLayoutContact.initDefault(true);
@@ -105,88 +123,73 @@ public class OftenContactFragment extends BaseFragment<FragmentOftenContactBindi
         listLayout.setItemAvatarRadius(SizeUtils.dp2px(50));
         // 设置adapter item是否不显示未读红点，默认显示
         listLayout.disableItemUnreadDot(false);
+        initConversationListener();
     }
+    public void initConversationListener(){
+        binding.conversationLayoutContact.getConversationList().setOnItemAvatarClickListener((view, position, messageInfo) -> {
+            //点击用户头像
+            String id = messageInfo.getId();
+            if(id==null){
+                return;
+            }
+            if (id.trim().contains(AppConfig.CHAT_SERVICE_USER_ID)) {
+                return;
+            }
+            viewModel.transUserIM(id,true);
+        });
 
-    @Override
-    public void initViewObservable() {
-        super.initViewObservable();
-        binding.conversationLayoutContact.getConversationList().setOnItemAvatarClickListener(new ConversationListLayout.OnItemAvatarClickListener() {
-            @Override
-            public void onItemAvatarClick(View view, int position, ConversationInfo messageInfo) {
-                //点击用户头像
-                String id = messageInfo.getId();
-                if(id==null){
-                    return;
-                }
-                if (id.trim().contains(AppConfig.CHAT_SERVICE_USER_ID)) {
-                    return;
-                }
-                viewModel.transUserIM(id,true);
+        binding.conversationLayoutContact.getConversationList().setBanConversationDelListener(() -> viewModel.dismissHUD());
+
+        binding.conversationLayoutContact.getConversationList().setOnItemClickListener((view, position, messageInfo) -> {
+            //点击用户头像
+            String id = messageInfo.getId();
+            if (id.trim().contains(AppConfig.CHAT_SERVICE_USER_ID)) {
+                ChatUtils.startChatActivity(messageInfo,0,viewModel);
+            }else{
+                selectedConversationInfo = messageInfo;
+                viewModel.transUserIM(id,false);
             }
         });
 
-        binding.conversationLayoutContact.getConversationList().setBanConversationDelListener(new ConversationListLayout.BanConversationDelListener() {
-            @Override
-            public void banConversationDel() {
+        binding.conversationLayoutContact.getConversationList().setOnItemLongClickListener((view, position, messageInfo) -> TraceDialog.getInstance(getContext())
+                .setConfirmOnlick(dialog -> {
+                    //置顶会话
+                    binding.conversationLayoutContact.setConversationTop(messageInfo,null);
 
-                viewModel.dismissHUD();
-            }
-        });
-
-        binding.conversationLayoutContact.getConversationList().setOnItemClickListener(new ConversationListLayout.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position, ConversationInfo messageInfo) {
-                //点击用户头像
-                String id = messageInfo.getId();
-                if (id.trim().contains(AppConfig.CHAT_SERVICE_USER_ID)) {
-                    ChatUtils.startChatActivity(messageInfo,0,viewModel);
-                }else{
-                    selectedConversationInfo = messageInfo;
-                    viewModel.transUserIM(id,false);
-                }
-            }
-        });
-
-        binding.conversationLayoutContact.getConversationList().setOnItemLongClickListener(new ConversationListLayout.OnItemLongClickListener() {
-            @Override
-            public void OnItemLongClick(View view, int position, ConversationInfo messageInfo) {
-
-                TraceDialog.getInstance(getContext())
-                        .setConfirmOnlick(dialog -> {
-                            //置顶会话
-                            binding.conversationLayoutContact.setConversationTop(messageInfo,null);
-
-                        })
-                        .setConfirmTwoOnlick(dialog -> {
-                            //删除会话
-                            binding.conversationLayoutContact.deleteConversation(messageInfo);
-                            binding.conversationLayoutContact.clearConversationMessage(messageInfo);
-                        })
-                        .setConfirmThreeOnlick(dialog -> {
-                            TraceDialog.getInstance(getContext())
-                                    .setTitle(getString(R.string.playfun_del_banned_account_content))
-                                    .setTitleSize(18)
-                                    .setCannelText(getString(R.string.playfun_cancel))
-                                    .setConfirmText(getString(R.string.playfun_mine_trace_delike_confirm))
-                                    .chooseType(TraceDialog.TypeEnum.CENTER)
-                                    .setConfirmOnlick(new TraceDialog.ConfirmOnclick() {
-                                        @Override
-                                        public void confirm(Dialog dialog) {
-                                            dialog.dismiss();
-                                            //删除所有封号会话
-                                            viewModel.showHUD();
-                                            binding.conversationLayoutContact.deleteAllBannedConversation();
-                                        }
-                                    }).show();
-                        })
-                        .convasationItemMenuDialog(messageInfo)
-                        .show();
-            }
-        });
+                })
+                .setConfirmTwoOnlick(dialog -> {
+                    //删除会话
+                    binding.conversationLayoutContact.deleteConversation(messageInfo);
+                    binding.conversationLayoutContact.clearConversationMessage(messageInfo);
+                })
+                .setConfirmThreeOnlick(dialog -> {
+                    TraceDialog.getInstance(getContext())
+                            .setTitle(getString(R.string.playfun_del_banned_account_content))
+                            .setTitleSize(18)
+                            .setCannelText(getString(R.string.playfun_cancel))
+                            .setConfirmText(getString(R.string.playfun_mine_trace_delike_confirm))
+                            .chooseType(TraceDialog.TypeEnum.CENTER)
+                            .setConfirmOnlick(new TraceDialog.ConfirmOnclick() {
+                                @Override
+                                public void confirm(Dialog dialog) {
+                                    dialog.dismiss();
+                                    //删除所有封号会话
+                                    viewModel.showHUD();
+                                    binding.conversationLayoutContact.deleteAllBannedConversation();
+                                }
+                            }).show();
+                })
+                .convasationItemMenuDialog(messageInfo)
+                .show());
         viewModel.startChatUserView.observe(this, (Observer<Integer>) toUserId -> {
             if(selectedConversationInfo!=null){
                 ChatUtils.startChatActivity(selectedConversationInfo,toUserId,viewModel);
             }
         });
+    }
+
+    @Override
+    public void initViewObservable() {
+
     }
 }

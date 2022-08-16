@@ -3,13 +3,17 @@ package com.tencent.qcloud.tuikit.tuiconversation;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMConversationListener;
+import com.tencent.imsdk.v2.V2TIMFriendInfo;
+import com.tencent.imsdk.v2.V2TIMFriendshipListener;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.tuichat.interfaces.C2CChatEventListener;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuicore.ServiceInitializer;
 import com.tencent.qcloud.tuicore.TUICore;
@@ -33,6 +37,7 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
 
 
     private WeakReference<ConversationEventListener> conversationEventListener;
+    private WeakReference<ConversationEventListener> conversationFriendEventListener;
 
     @Override
     public void init(Context context) {
@@ -66,6 +71,7 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
         Bundle result = new Bundle();
 
         ConversationEventListener conversationEventListener = getInstance().getConversationEventListener();
+        ConversationEventListener conversationFriendEventListener = getInstance().getConversationFriendEventListener();
         if (conversationEventListener == null) {
             TUIConversationLog.e(TAG, "execute " + method + " failed , conversationEvent listener is null");
             return result;
@@ -100,6 +106,9 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
         } else if (TextUtils.equals(TUIConstants.TUIConversation.METHOD_DELETE_CONVERSATION, method)) {
             String conversationId = (String) param.get(TUIConstants.TUIConversation.CONVERSATION_ID);
             conversationEventListener.deleteConversation(conversationId);
+            if(conversationFriendEventListener!=null){
+                conversationFriendEventListener.deleteConversation(conversationId);
+            }
         }
         return result;
     }
@@ -111,9 +120,13 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
                     || TextUtils.equals(subKey, TUIConstants.TUIGroup.EVENT_SUB_KEY_GROUP_DISMISS)
                     || TextUtils.equals(subKey, TUIConstants.TUIGroup.EVENT_SUB_KEY_GROUP_RECYCLE)) {
                 ConversationEventListener eventListener = getConversationEventListener();
+                ConversationEventListener conversationFriendEventListener = getConversationFriendEventListener();
                 String groupId = null;
                 if (param != null) {
                     groupId = (String) getOrDefault(param.get(TUIConstants.TUIGroup.GROUP_ID), "");
+                }
+                if(conversationFriendEventListener != null){
+                    conversationFriendEventListener.deleteConversation(groupId,true);
                 }
                 if (eventListener != null) {
                     eventListener.deleteConversation(groupId, true);
@@ -130,8 +143,12 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
                 for (String id : memberList) {
                     if (TextUtils.equals(id, TUILogin.getLoginUser())) {
                         ConversationEventListener eventListener = getConversationEventListener();
+                        ConversationEventListener conversationFriendEventListener = getConversationFriendEventListener();
                         if (eventListener != null) {
                             eventListener.deleteConversation(groupId, true);
+                        }
+                        if (conversationFriendEventListener != null) {
+                            conversationFriendEventListener.deleteConversation(groupId, true);
                         }
                         break;
                     }
@@ -139,6 +156,10 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
             } else if (TextUtils.equals(subKey, TUIConstants.TUIGroup.EVENT_SUB_KEY_CLEAR_MESSAGE)) {
                 String groupId = (String) getOrDefault(param.get(TUIConstants.TUIGroup.GROUP_ID), "");
                 ConversationEventListener eventListener = getConversationEventListener();
+                ConversationEventListener conversationFriendEventListener = getConversationFriendEventListener();
+                if (conversationFriendEventListener != null) {
+                    conversationFriendEventListener.clearConversationMessage(groupId, true);
+                }
                 if (eventListener != null) {
                     eventListener.clearConversationMessage(groupId, true);
                 }
@@ -155,6 +176,10 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
                 String id = (String) param.get(TUIConstants.TUIContact.FRIEND_ID);
                 String remark = (String) param.get(TUIConstants.TUIContact.FRIEND_REMARK);
                 conversationEventListener.onFriendRemarkChanged(id ,remark);
+                ConversationEventListener conversationFriendEventListener = getInstance().getConversationFriendEventListener();
+                if(conversationFriendEventListener!=null){
+                    conversationFriendEventListener.onFriendRemarkChanged(id ,remark);
+                }
             }
         }
     }
@@ -186,7 +211,12 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
                 if (conversationEventListener != null) {
                     List<ConversationInfo> conversationInfoList = ConversationUtils.convertV2TIMConversationList(conversationList);
                     conversationEventListener.onNewConversation(conversationInfoList);
+                    ConversationEventListener conversationFriendEventListener = getInstance().getConversationFriendEventListener();
+                    if(conversationFriendEventListener!=null){
+                        conversationFriendEventListener.onNewConversation(conversationInfoList);
+                    }
                 }
+
             }
 
             @Override
@@ -195,6 +225,10 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
                 if (conversationEventListener != null) {
                     List<ConversationInfo> conversationInfoList = ConversationUtils.convertV2TIMConversationList(conversationList);
                     conversationEventListener.onConversationChanged(conversationInfoList);
+                    ConversationEventListener conversationFriendEventListener = getInstance().getConversationFriendEventListener();
+                    if(conversationFriendEventListener!=null){
+                        conversationFriendEventListener.onNewConversation(conversationInfoList);
+                    }
                 }
             }
 
@@ -203,10 +237,84 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
                 ConversationEventListener conversationEventListener = getInstance().getConversationEventListener();
                 if (conversationEventListener != null) {
                     conversationEventListener.updateTotalUnreadMessageCount(totalUnreadCount);
+                    ConversationEventListener conversationFriendEventListener = getInstance().getConversationFriendEventListener();
+                    if(conversationFriendEventListener!=null){
+                        conversationFriendEventListener.updateTotalUnreadMessageCount(totalUnreadCount);
+                    }
                 }
                 HashMap<String, Object> param = new HashMap<>();
                 param.put(TUIConstants.TUIConversation.TOTAL_UNREAD_COUNT, totalUnreadCount);
                 TUICore.notifyEvent(TUIConstants.TUIConversation.EVENT_UNREAD, TUIConstants.TUIConversation.EVENT_SUB_KEY_UNREAD_CHANGED, param);
+            }
+        });
+        //添加关系链监听器
+        V2TIMManager.getFriendshipManager().addFriendListener(new V2TIMFriendshipListener() {
+            /**
+             * @Desc TODO(好友新增通知)
+             * @author 彭石林
+             * @parame [users]
+             * @Date 2022/8/15
+             */
+            @Override
+            public void onFriendListAdded(List<V2TIMFriendInfo> v2TIMFriendInfos) {
+                Log.e("当前注册添加好友通知",v2TIMFriendInfos.size()+"=================="+v2TIMFriendInfos);
+                if(!v2TIMFriendInfos.isEmpty()){
+                    final List<String> urlList = new ArrayList<>();
+                    for (V2TIMFriendInfo v2TIMFriendInfo : v2TIMFriendInfos){
+                        String userId = TUIConstants.TUIConversation.CONVERSATION_C2C_PREFIX + v2TIMFriendInfo.getUserID() ;
+                        urlList.add(userId);
+                    }
+                    ConversationEventListener eventListener = getConversationEventListener();
+                    ConversationEventListener conversationFriendEventListener = getConversationFriendEventListener();
+                    if(eventListener!=null){
+                        eventListener.newConversationListEvent(urlList);
+                    }
+                    if(conversationFriendEventListener!=null){
+                        conversationFriendEventListener.newConversationListEvent(urlList);
+                    }
+                }
+            }
+
+            /**
+             * @Desc (
+             * 好友删除通知 ， ， 两种情况会收到这个回调 ：
+             *自己删除好友 （ 单向和双向删除都会收到回调 ）
+             *好友把自己删除 （ 双向删除会收到 ）)
+             * @author 彭石林
+             * @parame [userList]
+             * @Date 2022/8/15
+             */
+            @Override
+            public void onFriendListDeleted(List<String> userList) {
+                Log.e("当前注册删除好友通知","=================="+userList);
+                if(!userList.isEmpty()){
+                    List<String> removeInfoList = new ArrayList<>();
+                    for (String infoData : userList){
+                        String userId = TUIConstants.TUIConversation.CONVERSATION_C2C_PREFIX + infoData ;
+                        removeInfoList.add(userId);
+                    }
+                    ConversationEventListener eventListener = getConversationEventListener();
+                    ConversationEventListener conversationFriendEventListener = getConversationFriendEventListener();
+                    if(eventListener!=null){
+                        eventListener.newConversationListEvent(removeInfoList);
+                    }
+                    if(conversationFriendEventListener!=null){
+                        conversationFriendEventListener.newConversationListEvent(removeInfoList);
+                    }
+                }
+            }
+            /**
+             * @Desc(
+             * 黑名单删除通知
+             * )
+             * @author 彭石林
+             * @parame [userList]
+             * @return void
+             * @Date 2022/8/15
+             */
+            @Override
+            public void onBlackListDeleted(List<String> userList) {
+
             }
         });
     }
@@ -215,9 +323,20 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
         this.conversationEventListener = new WeakReference<>(conversationManagerKit);
     }
 
+    public void setConversationFriendEventListener(ConversationEventListener conversationManagerKitFriend){
+        this.conversationFriendEventListener = new WeakReference<>(conversationManagerKitFriend);
+    }
+
     public ConversationEventListener getConversationEventListener() {
         if (conversationEventListener != null) {
             return conversationEventListener.get();
+        }
+        return null;
+    }
+
+    public ConversationEventListener getConversationFriendEventListener() {
+        if (conversationFriendEventListener != null) {
+            return conversationFriendEventListener.get();
         }
         return null;
     }

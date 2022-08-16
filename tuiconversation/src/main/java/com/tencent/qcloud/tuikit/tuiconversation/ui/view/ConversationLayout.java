@@ -24,13 +24,11 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
     private ConversationListLayout mConversationList;
     private ConversationPresenter presenter;
     public ConversationLayout(Context context) {
-        super(context);
-        init();
+        this(context,null);
     }
 
     public ConversationLayout(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
+        this(context, attrs,0);
     }
 
     public ConversationLayout(Context context, AttributeSet attrs, int defStyleAttr) {

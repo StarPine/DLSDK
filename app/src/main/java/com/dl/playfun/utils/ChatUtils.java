@@ -2,17 +2,9 @@ package com.dl.playfun.utils;
 
 import static com.dl.playfun.ui.message.chatdetail.ChatDetailFragment.CHAT_INFO;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
-import android.util.Pair;
-import android.view.View;
 
-import com.blankj.utilcode.util.StringUtils;
-import com.blankj.utilcode.util.ToastUtils;
 import com.dl.playfun.app.AppContext;
-import com.dl.playfun.R;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.ui.message.chatdetail.ChatDetailFragment;
 import com.dl.playfun.viewmodel.BaseViewModel;
@@ -20,17 +12,8 @@ import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
-import com.tencent.liteav.trtccalling.TUICalling;
-import com.tencent.liteav.trtccalling.TUICallingImpl;
-import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
-import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
-import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
-import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
-import com.tencent.qcloud.tuikit.tuicontact.bean.FriendApplicationBean;
-import com.tencent.qcloud.tuikit.tuicontact.model.ContactProvider;
-import com.tencent.qcloud.tuikit.tuicontact.ui.pages.FriendProfileActivity;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 
 import java.util.ArrayList;
@@ -42,12 +25,8 @@ import java.util.List;
 public class ChatUtils {
     public static final String TAG = "ChatUtils";
 
-    private static ContactProvider provider;
 
     public static void chatUserView(String serviceUserId, Integer userId, String name, BaseViewModel baseViewModel) {
-        if(provider==null){
-            provider = new ContactProvider();
-        }
         //待获取用户资料的用户列表
         List<String> users = new ArrayList<String>();
         users.add(serviceUserId);

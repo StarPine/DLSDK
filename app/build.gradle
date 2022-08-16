@@ -56,8 +56,8 @@ android {
         versionCode 1
         // 版本名 - 注意，这里的版本名无效，请到productFlavors中设置
         versionName "1"
-        minSdkVersion 21
-        targetSdkVersion 30
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
 
         // Maps SDK for Android 地图服务API_KEY https://developers.google.com/maps/documentation/android-sdk/get-api-key
         manifestPlaceholders = [mapsApiKey: "AIzaSyB0KW8QXuw7RNRAEeF2sUaFSWoqO0kUf_o"]
