@@ -106,7 +106,7 @@ public class ConversationPresenter {
                 if (!conversationList.isEmpty()) {
                     List<ConversationInfo> conversationInfoList = ConversationUtils.convertV2TIMConversationList(conversationList);
                     isFriendConversationList(conversationInfoList);
-                    ConversationPresenter.this.onNewConversation(conversationInfoList);
+                    ConversationPresenter.this.onConversationChanged(conversationInfoList);
                 }
             }
 
@@ -310,10 +310,15 @@ public class ConversationPresenter {
             }
 
         }
-        if(!loadedFriendshipInfoIdList.isEmpty()){
-            //删除好友列表数据
-            loadedFriendshipInfoIdList.removeAll(dataConversationInfoList);
+        if(isFriendConversation){
+            if(!loadedFriendshipInfoIdList.isEmpty()){
+                //删除好友列表数据
+                loadedFriendshipInfoIdList.removeAll(dataConversationInfoList);
+            }
+        }else{
+            loadedFriendshipInfoIdList.addAll(dataConversationInfoList);
         }
+
 
         if(deleteConversationList.isEmpty()){
             if(loadConversationCallback!=null){

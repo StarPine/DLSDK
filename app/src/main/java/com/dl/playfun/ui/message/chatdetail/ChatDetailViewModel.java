@@ -78,6 +78,7 @@ import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.RxUtils;
+import me.goldze.mvvmhabit.utils.StringUtils;
 import me.goldze.mvvmhabit.utils.ToastUtils;
 
 /**
@@ -845,11 +846,11 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                 });
     }
 
-    public void friendAddFrequent(boolean typeFlag,String otherImUserId,Integer otherImUserIds){
+    public void friendAddFrequent(boolean typeFlag,String otherImUserId,Integer friendUserId){
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("friendImId", otherImUserId);
-        dataMap.put("friendImIds", otherImUserIds);
-        if(typeFlag){
+        dataMap.put("friendUserId", friendUserId);
+        if(!typeFlag){
             model.friendAddFrequent(ApiUitl.getBody(GsonUtils.toJson(dataMap)))
                     .doOnSubscribe(this)
                     .compose(RxUtils.schedulersTransformer())
@@ -859,6 +860,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                         @Override
                         public void onSuccess(BaseResponse baseResponse) {
                             isContactsEnabled.set(!isContactsEnabled.get());
+                            ToastUtils.showShort(StringUtils.getString(R.string.playfun_contact_text1));
                         }
                         @Override
                         public void onComplete() {
@@ -875,6 +877,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                         @Override
                         public void onSuccess(BaseResponse baseResponse) {
                             isContactsEnabled.set(!isContactsEnabled.get());
+                            ToastUtils.showShort(StringUtils.getString(R.string.playfun_contact_text2));
                         }
                         @Override
                         public void onComplete() {
