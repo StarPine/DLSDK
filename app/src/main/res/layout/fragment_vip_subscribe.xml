@@ -11,6 +11,7 @@
             type="com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeViewModel" />
 
         <import type="android.view.View" />
+
         <import type="com.blankj.utilcode.util.ObjectUtils" />
 
         <import type="me.tatarka.bindingcollectionadapter2.LayoutManagers" />
@@ -20,212 +21,206 @@
         <import type="androidx.recyclerview.widget.LinearLayoutManager" />
     </data>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         tools:context="com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment">
 
-        <View
-            android:id="@+id/status_bar_view"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:background="#414557" />
-
-        <com.google.android.material.appbar.AppBarLayout
+        <LinearLayout
+            android:id="@+id/ll_vip_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#414557"
-            android:theme="@style/AppTheme.AppBarOverlay"
-            app:elevation="0dp">
+            android:orientation="vertical">
 
-            <com.dl.playfun.widget.BasicToolbar
-                android:id="@+id/basic_toolbar"
+            <View
+                android:id="@+id/status_bar_view"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/action_bar_height"
-                app:boolbar_back_image="@drawable/ic_toolbar_back_white"
-                app:toolbar_title="@string/playfun_member_subscribe_title"
-                app:toolbar_title_color="@color/white" />
+                android:layout_height="0dp"
+                android:background="@color/black_848" />
 
-        </com.google.android.material.appbar.AppBarLayout>
+            <com.google.android.material.appbar.AppBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/black_848"
+                android:theme="@style/AppTheme.AppBarOverlay"
+                app:elevation="0dp">
+
+                <com.dl.playfun.widget.BasicToolbar
+                    android:id="@+id/basic_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/action_bar_height"
+                    app:boolbar_back_image="@drawable/ic_toolbar_back_white"
+                    app:toolbar_title="@string/playfun_member_subscribe_title"
+                    app:toolbar_title_color="@color/white" />
+
+            </com.google.android.material.appbar.AppBarLayout>
+        </LinearLayout>
 
         <ScrollView
+            android:id="@+id/sl_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/vip_container_background"
+            android:layout_below="@+id/ll_vip_title"
+            android:layout_above="@+id/ll_vip_buy"
             android:fillViewport="true">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <com.youth.banner.Banner
-                    android:id="@+id/banner"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="134dp"
-                    android:layout_marginStart="18dp"
-                    android:layout_marginEnd="18dp"
-                    android:layout_marginTop="20dp"
-                    android:adjustViewBounds="true"
-                    app:banner_default_image="@drawable/img_vip_top_card"
-                    app:image_scale_type="center_crop"
-                    binding:BannerTaskAdData="@{viewModel.adItemVipEntityList}" />
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_vip_all"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom="10dp"
+                    android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/item_image1"
-                    android:layout_width="match_parent"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="31dp"
-                    android:layout_marginEnd="20dp"
-                    android:adjustViewBounds="true"
-                    android:scaleType="centerCrop"
-                    android:visibility="gone"
-                    tools:src="@drawable/img_vip_sub_title" />
-                <RelativeLayout
-                    android:paddingStart="15dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        binding:adapter="@{viewModel.adapter}"
-                        binding:itemBinding="@{viewModel.itemBinding}"
-                        binding:items="@{viewModel.observableList}"
-                        binding:layoutManager="@{LayoutManagers.linear(LinearLayoutManager.HORIZONTAL,false)}" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_marginTop="25dp"
-                    android:layout_marginStart="14dp"
-                    android:layout_marginEnd="14dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
                     <RelativeLayout
-                        android:visibility="@{viewModel.checkedVipPackageItemEntity.giveCoin>1?View.VISIBLE:View.GONE}"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="17dp"
-                        android:elevation="11dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-                        <ImageView
-                            android:src="@drawable/img_vip_sub_giving"
-                            android:layout_width="95dp"
-                            android:layout_height="28dp"/>
-                        <ImageView
-                            android:id="@+id/img_vip_coin"
-                            android:layout_marginTop="5dp"
-                            android:layout_marginStart="35dp"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/dialog_sign_gold_coins"
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"/>
+                        android:layout_width="320dp"
+                        android:layout_height="160dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@drawable/bg_vip_title_image"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/tv_vip_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="15dp"
+                            android:text="@{viewModel.vipInfoEntity.banner.title}"
+                            android:textColor="@color/coffee_11d"
+                            android:textSize="22sp"
+                            tools:text="超級鑽石VIP"
+                            />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignTop="@+id/img_vip_coin"
-                            android:layout_marginStart="2dp"
-                            android:layout_toEndOf="@+id/img_vip_coin"
-                            android:text="@{String.valueOf(viewModel.checkedVipPackageItemEntity.giveCoin)}"
-                            android:textColor="#ffffffff"
-                            android:textSize="11sp" />
+                            android:layout_below="@+id/tv_vip_title"
+                            android:layout_marginStart="15dp"
+                            android:layout_marginTop="10dp"
+                            android:visibility="@{viewModel.vipInfoEntity.isVip == 0? View.GONE :View.VISIBLE}"
+                            android:text="@{String.format(@string/play_fun_deadline_is_up,viewModel.vipInfoEntity.endTime)}"
+                            android:textColor="@color/coffee_11d"
+                            android:textSize="16sp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/tv_vip_title"
+                            android:layout_marginStart="15dp"
+                            android:layout_marginTop="10dp"
+                            android:text="未開通"
+                            android:visibility="@{viewModel.vipInfoEntity.isVip == 1? View.GONE :View.VISIBLE}"
+                            android:textColor="@color/coffee_11d"
+                            android:textSize="16sp" />
+
                     </RelativeLayout>
 
-                    <Button
-                        android:id="@+id/btn_confirm"
+
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="59dp"
-                        android:layout_marginTop="3dp"
-                        android:background="@drawable/img_vip_sub_button_bg"
-                        android:text='@string/playfun_member_subscribe_button_default'
-                        android:textColor="#42260A"
-                        android:textSize="17sp"
-                        android:paddingBottom="9dp"
-                        binding:onClickCommand="@{viewModel.confirmOnClickCommand}" />
-                </RelativeLayout>
+                        android:layout_height="wrap_content"
+                        android:paddingStart="15dp">
 
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            binding:adapter="@{viewModel.vipSubscribeAdapter}"
+                            binding:itemBinding="@{viewModel.itemVipSubscribe}"
+                            binding:items="@{viewModel.vipSubscribeList}"
+                            binding:layoutManager="@{LayoutManagers.linear(LinearLayoutManager.HORIZONTAL,false)}"
+                            tools:itemCount="3"
+                            tools:layoutManager="LinearLayoutManager"
+                            tools:listitem="@layout/item_vip_subscribe"
+                            tools:orientation="horizontal" />
+                    </RelativeLayout>
 
-                <ImageView
-                    android:id="@+id/item_image2"
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="18dp"
-                    android:layout_marginTop="42dp"
-                    android:layout_marginEnd="18dp"
-                    android:adjustViewBounds="true"
-                    android:scaleType="centerCrop"
-                    android:visibility="gone"
-                    tools:src="@drawable/img_vip_content_1" />
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal"
+                    android:background="@color/black_848"
+                    android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/item_image3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="18dp"
-                    android:layout_marginTop="32dp"
-                    android:layout_marginEnd="18dp"
-                    android:adjustViewBounds="true"
-                    android:scaleType="fitXY"
-                    android:visibility="gone"
-                    tools:src="@drawable/img_vip_content_2" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_vip_privilege"
+                        android:layout_gravity="start"
+                        android:paddingStart="15dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:text="特權"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:visibility="@{viewModel.vipPrivilegeList.size() > 0 ? View.VISIBLE :View.GONE}"
+                        />
 
-                <ImageView
-                    android:id="@+id/item_image4"
-                    android:layout_width="match_parent"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="18dp"
-                    android:layout_marginTop="52dp"
-                    android:layout_marginEnd="18dp"
-                    android:adjustViewBounds="true"
-                    android:scaleType="fitXY"
-                    android:visibility="gone"
-                    tools:src="@drawable/img_vip_content_3" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/black_558"
+                        android:paddingStart="5dp">
 
-                <ImageView
-                    android:id="@+id/item_image5"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="18dp"
-                    android:layout_marginTop="27dp"
-                    android:layout_marginEnd="18dp"
-                    android:adjustViewBounds="true"
-                    android:scaleType="fitXY"
-                    android:visibility="gone"
-                    tools:src="@drawable/img_vip_content_4" />
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rcv_privileges"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            binding:adapter="@{viewModel.vipPrivilegeAdapter}"
+                            binding:itemBinding="@{viewModel.itemVipPrivilege}"
+                            binding:items="@{viewModel.vipPrivilegeList}"
+                            binding:layoutManager="@{LayoutManagers.linear(LinearLayoutManager.VERTICAL,false)}"
+                            tools:itemCount="3"
+                            tools:layoutManager="LinearLayoutManager"
+                            tools:listitem="@layout/item_vip_privilege" />
+                    </RelativeLayout>
 
-                <ImageView
-                    android:id="@+id/item_image6"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="18dp"
-                    android:layout_marginTop="29dp"
-                    android:layout_marginEnd="20dp"
-                    android:adjustViewBounds="true"
-                    android:scaleType="fitXY"
-                    android:visibility="gone"
-                    tools:src="@drawable/img_vip_content_5" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="15dp"
+                        android:background="@color/black_558"
+                        android:text="@string/play_fun_vip_service_tips"
+                        android:textColor="@color/pseekbar_process_off"
+                        android:textSize="12sp" />
 
-                <ImageView
-                    android:id="@+id/item_image7"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="18dp"
-                    android:layout_marginTop="29dp"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginBottom="18dp"
-                    android:adjustViewBounds="true"
-                    android:scaleType="fitXY"
-                    android:visibility="gone"
-                    tools:src="@drawable/img_vip_content_6" />
+                </LinearLayout>
 
             </LinearLayout>
-
         </ScrollView>
 
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_vip_buy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/black_848"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            tools:visibility="visible">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_marginStart="50dp"
+                android:layout_marginEnd="50dp"
+                android:background="@drawable/btn_bg_vip_buy"
+                android:gravity="center"
+                android:text="@string/play_fun_buy_now"
+                android:textColor="@color/vip_buy"
+                android:textSize="@dimen/text_size_toolbar_title"
+                android:textStyle="bold"
+                binding:onClickCommand="@{viewModel.confirmOnClickCommand}"
+                />
+        </LinearLayout>
+
+    </RelativeLayout>
 </layout>

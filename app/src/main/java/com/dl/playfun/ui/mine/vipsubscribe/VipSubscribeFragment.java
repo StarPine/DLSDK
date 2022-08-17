@@ -3,7 +3,6 @@ package com.dl.playfun.ui.mine.vipsubscribe;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
@@ -87,6 +86,7 @@ public class VipSubscribeFragment extends BaseToolbarFragment<FragmentVipSubscri
     @Override
     public void initData() {
         super.initData();
+        binding.rcvPrivileges.setNestedScrollingEnabled(false);
         billingClientLifecycle = ((AppContext)mActivity.getApplication()).getBillingClientLifecycle();
         //查询商品价格
         viewModel.loadPackage();
@@ -157,36 +157,6 @@ public class VipSubscribeFragment extends BaseToolbarFragment<FragmentVipSubscri
         viewModel.uc.successBack.observe(this, aBoolean -> {
             onDestroy();
             pop();
-        });
-        viewModel.uc.loadVipImageNoEmpty.observe(this, unused -> {
-            if (!ObjectUtils.isEmpty(viewModel.$taskEntity1)) {
-                binding.itemImage1.setVisibility(View.VISIBLE);
-                setVipSubscribeImageUri(binding.itemImage1, viewModel.$taskEntity1.getImg(), R.drawable.img_vip_sub_title_default, R.drawable.img_vip_sub_title_default);
-            }
-            if (!ObjectUtils.isEmpty(viewModel.$taskEntity2)) {
-                binding.itemImage2.setVisibility(View.VISIBLE);
-                setVipSubscribeImageUri(binding.itemImage2, viewModel.$taskEntity2.getImg(), R.drawable.img_vip_sub_title_default, R.drawable.img_vip_sub_title_default);
-            }
-            if (!ObjectUtils.isEmpty(viewModel.$taskEntity3)) {
-                binding.itemImage3.setVisibility(View.VISIBLE);
-                setVipSubscribeImageUri(binding.itemImage3, viewModel.$taskEntity3.getImg(), R.drawable.img_vip_sub_back2_default, R.drawable.img_vip_sub_back2_default);
-            }
-            if (!ObjectUtils.isEmpty(viewModel.$taskEntity4)) {
-                binding.itemImage4.setVisibility(View.VISIBLE);
-                setVipSubscribeImageUri(binding.itemImage4, viewModel.$taskEntity4.getImg(), R.drawable.img_vip_sub_title_default, R.drawable.img_vip_sub_title_default);
-            }
-            if (!ObjectUtils.isEmpty(viewModel.$taskEntity5)) {
-                binding.itemImage5.setVisibility(View.VISIBLE);
-                setVipSubscribeImageUri(binding.itemImage5, viewModel.$taskEntity5.getImg(), R.drawable.img_vip_sub_back2_default, R.drawable.img_vip_sub_back2_default);
-            }
-            if (!ObjectUtils.isEmpty(viewModel.$taskEntity6)) {
-                binding.itemImage6.setVisibility(View.VISIBLE);
-                setVipSubscribeImageUri(binding.itemImage6, viewModel.$taskEntity6.getImg(), R.drawable.img_vip_sub_back2_default, R.drawable.img_vip_sub_back2_default);
-            }
-            if (!ObjectUtils.isEmpty(viewModel.$taskEntity7)) {
-                binding.itemImage7.setVisibility(View.VISIBLE);
-                setVipSubscribeImageUri(binding.itemImage7, viewModel.$taskEntity7.getImg(), R.drawable.img_vip_sub_back2_default, R.drawable.img_vip_sub_back2_default);
-            }
         });
     }
 

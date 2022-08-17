@@ -32,7 +32,7 @@ public class VipSubscribeItemViewModel extends MultiItemViewModel<VipSubscribeVi
     //条目的点击事件
     public BindingCommand itemClick = new BindingCommand(() -> {
         try {
-            int position = viewModel.observableList.indexOf(VipSubscribeItemViewModel.this);
+            int position = viewModel.vipSubscribeList.indexOf(VipSubscribeItemViewModel.this);
             viewModel.itemClick(position,itemEntity.get());
         } catch (Exception e) {
             ExceptionReportUtils.report(e);
@@ -48,10 +48,10 @@ public class VipSubscribeItemViewModel extends MultiItemViewModel<VipSubscribeVi
     //获取标题文字
     public String getTitleText(){
         VipPackageItemEntity entity = itemEntity.get();
-        if (StringUtils.isEmpty(entity.getDiscountLabel())) {
+        if (StringUtils.isEmpty(entity.getGoodsTab())) {
             return "";
         } else {
-            return entity.getDiscountLabel();
+            return entity.getGoodsTab();
         }
     }
     //控制标题是否隐藏
@@ -61,15 +61,6 @@ public class VipSubscribeItemViewModel extends MultiItemViewModel<VipSubscribeVi
             return View.VISIBLE;
         } else {
             return View.GONE;
-        }
-    }
-
-    //获取推荐弹窗标题
-    public Drawable getRecommendImg(boolean select){
-        if(select){
-            return Utils.getContext().getDrawable(R.drawable.img_vip_sub_item_recommend_select);
-        }else{
-            return Utils.getContext().getDrawable(R.drawable.img_vip_sub_item_recommend_normal);
         }
     }
     //推荐角标显示隐藏
@@ -90,12 +81,10 @@ public class VipSubscribeItemViewModel extends MultiItemViewModel<VipSubscribeVi
         return null;
     }
 
-    //获取每日价格
     public String getDayPrice() {
         VipPackageItemEntity entity = itemEntity.get();
-        if (entity != null && entity.getDayPrice() != null) {
-            String symbol = entity.getSymbol();
-            return symbol + entity.getDayPrice();
+        if (entity != null && entity.getDiscountLabel() != null) {
+            return entity.getDiscountLabel();
         }
         return null;
     }

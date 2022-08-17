@@ -103,6 +103,7 @@ import com.dl.playfun.entity.UserInfoEntity;
 import com.dl.playfun.entity.UserProfitPageEntity;
 import com.dl.playfun.entity.UserRemarkEntity;
 import com.dl.playfun.entity.VersionEntity;
+import com.dl.playfun.entity.VipInfoEntity;
 import com.dl.playfun.entity.VipPackageItemEntity;
 
 import java.util.List;
@@ -1097,7 +1098,7 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
-    public Observable<BaseDataResponse<List<VipPackageItemEntity>>> vipPackages() {
+    public Observable<BaseDataResponse<VipInfoEntity>> vipPackages() {
         return mHttpDataSource.vipPackages();
     }
 

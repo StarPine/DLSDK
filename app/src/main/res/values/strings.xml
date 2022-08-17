@@ -1213,5 +1213,8 @@
     <string name="playfun_audio_accost_long_click">長按錄音</string>
     <string name="playfun_audio_accost_recording">錄製中</string>
     <string name="playfun_audio_accost_tip">15秒內</string>
+    <string name="play_fun_deadline_is_up">期限至：\n%s</string>
+    <string name="play_fun_buy_now">立即購買</string>
+    <string name="play_fun_vip_service_tips">自動訂閱，隨時取消。\n購買訂閱的費用將從您的iTunes/Google帳戶收取，並意味著您同意我們的用戶協議及隱私政策。可以隨時在設置中管理或取消自動訂閱。</string>
 
 </resources>
