@@ -19,7 +19,9 @@ import android.widget.TextView;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
 import com.dl.playfun.R;
+import com.dl.playfun.app.GlideEngine;
 import com.dl.playfun.entity.MallWithdrawTipsInfoEntity;
+import com.dl.playfun.ui.mine.vipsubscribe.VipPrivilegeItemViewModel;
 import com.dl.playfun.utils.StringUtil;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
@@ -875,6 +877,53 @@ public class TraceDialog {
 
 
         return dialog;
+    }
+
+    /**
+     * vip挽留弹框
+     * @return
+     * @param vipPrivilegeList
+     */
+    public Dialog vipRetainDialog(List<VipPrivilegeItemViewModel> vipPrivilegeList){
+        Dialog dialog = new Dialog(context, R.style.BottomDialog);
+        View contentView = LayoutInflater.from(context).inflate(R.layout.dialog_vip_retain, null);
+        dialog.setContentView(contentView);
+        ViewGroup.LayoutParams layoutParams = contentView.getLayoutParams();
+        contentView.setLayoutParams(layoutParams);
+        dialog.getWindow().setGravity(Gravity.CENTER);
+
+        Button buy = contentView.findViewById(R.id.btn_buy);
+        TextView tv_give_up = contentView.findViewById(R.id.tv_give_up);
+        LinearLayout ll_privileges = contentView.findViewById(R.id.ll_privileges);
+        if (vipPrivilegeList != null && vipPrivilegeList.size() > 0){
+            for (int i = 0; i < vipPrivilegeList.size(); i++) {
+                if (i >= 3)break;
+                ll_privileges.addView(getPrivilegesView(vipPrivilegeList.get(i)));
+            }
+        }
+
+        buy.setOnClickListener(v -> dialog.dismiss());
+        tv_give_up.setOnClickListener(v -> {
+            if (cannelOnclick != null){
+                cannelOnclick.cannel(dialog);
+            }
+        });
+        return dialog;
+    }
+
+    private View getPrivilegesView(VipPrivilegeItemViewModel vipPrivilegeItemViewModel) {
+        View privilegesView = LayoutInflater.from(context).inflate(R.layout.item_dialog_vip_privilege, null);
+        ImageView ivPrivilegeIcon = privilegesView.findViewById(R.id.iv_privilege_icon);
+        TextView tvPrivilegeTitle = privilegesView.findViewById(R.id.tv_privilege_title);
+        TextView tvPrivilegeDesc = privilegesView.findViewById(R.id.tv__privilege_desc);
+        String desc = vipPrivilegeItemViewModel.itemEntity.get().getDesc();
+        String img = vipPrivilegeItemViewModel.itemEntity.get().getImg();
+        String title = vipPrivilegeItemViewModel.itemEntity.get().getTitle();
+        GlideEngine.createGlideEngine().loadImage(context, StringUtil.getFullThumbImageUrl(img), ivPrivilegeIcon);
+        tvPrivilegeDesc.setText(desc);
+        tvPrivilegeTitle.setText(title);
+
+        return privilegesView;
     }
 
     /**

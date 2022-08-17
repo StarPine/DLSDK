@@ -1,11 +1,20 @@
 package com.dl.playfun.ui.mine.vipsubscribe;
 
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -17,15 +26,19 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
+import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.BillingClientLifecycle;
 import com.dl.playfun.databinding.FragmentVipSubscribeBinding;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
+import com.dl.playfun.ui.mine.webdetail.WebDetailFragment;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.StringUtil;
+import com.dl.playfun.widget.BasicToolbar;
+import com.dl.playfun.widget.dialog.TraceDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +48,9 @@ import java.util.List;
  */
 public class VipSubscribeFragment extends BaseToolbarFragment<FragmentVipSubscribeBinding, VipSubscribeViewModel> {
     public static final String TAG = "VipSubscribeFragment";
+    private final String USER_AGREEMENT = "用戶協議";
+    private final String PRIVACY_POLICY = "隱私政策";
+    private boolean isFinsh = false;
 
     public BillingClientLifecycle billingClientLifecycle;
 
@@ -158,6 +174,48 @@ public class VipSubscribeFragment extends BaseToolbarFragment<FragmentVipSubscri
             onDestroy();
             pop();
         });
+        initServiceTips();
+
+    }
+
+    /**
+     * 初始化服务提示
+     */
+    private void initServiceTips() {
+        String content = (String) binding.tvVipServiceTip.getText();
+        SpannableString spannableString = new SpannableString(content);
+        setServiceTips(spannableString,binding.tvVipServiceTip, content,USER_AGREEMENT);
+        setServiceTips(spannableString, binding.tvVipServiceTip, content,PRIVACY_POLICY);
+    }
+
+    private SpannableString setServiceTips(SpannableString spannableString, TextView tvTips, String content, String key) {
+        UnderlineSpan colorSpan = new UnderlineSpan() {
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                ds.setColor(mActivity.getResources().getColor(R.color.pseekbar_process_off));//设置颜色
+//                ds.setUnderlineText(false); //去掉下划线
+            }
+        };
+        ClickableSpan clickableSpan = new ClickableSpan() {
+
+            @Override
+            public void onClick(@NonNull View widget) {
+                if (key.equals(USER_AGREEMENT)){
+                    Bundle bundle = WebDetailFragment.getStartBundle(AppConfig.TERMS_OF_SERVICE_URL);
+                    viewModel.start(WebDetailFragment.class.getCanonicalName(), bundle);
+                }else if (key.equals(PRIVACY_POLICY)){
+                    Bundle bundle = WebDetailFragment.getStartBundle(AppConfig.PRIVACY_POLICY_URL);
+                    viewModel.start(WebDetailFragment.class.getCanonicalName(), bundle);
+                }
+
+            }
+        };
+        int tips = content.indexOf(key);
+        spannableString.setSpan(clickableSpan,tips,tips + key.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        spannableString.setSpan(colorSpan, tips, tips + key.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        tvTips.setMovementMethod(LinkMovementMethod.getInstance());
+        tvTips.setText(spannableString);
+        return spannableString;
     }
 
     //进行支付
@@ -170,4 +228,24 @@ public class VipSubscribeFragment extends BaseToolbarFragment<FragmentVipSubscri
         billingClientLifecycle.querySkuDetailsLaunchBillingFlow(params,mActivity,viewModel.orderNumber);
     }
 
+    @Override
+    public boolean onBackPressedSupport() {
+        if (!isFinsh){
+            TraceDialog.getInstance(mActivity)
+                    .setCannelOnclick(dialog -> {
+                        isFinsh = true;
+                        mActivity.onBackPressed();
+                        dialog.dismiss();
+                    })
+                    .vipRetainDialog(viewModel.vipPrivilegeList)
+                    .show();
+            return true;
+        }
+        return super.onBackPressedSupport();
+    }
+
+    @Override
+    public void onBackClick(BasicToolbar toolbar) {
+        onBackPressedSupport();
+    }
 }
