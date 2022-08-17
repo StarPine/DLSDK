@@ -42,6 +42,7 @@ import com.dl.playfun.entity.CommentMessageEntity;
 import com.dl.playfun.entity.ConfigItemEntity;
 import com.dl.playfun.entity.CreateOrderEntity;
 import com.dl.playfun.entity.CrystalDetailsConfigEntity;
+import com.dl.playfun.entity.DayRewardInfoEntity;
 import com.dl.playfun.entity.EjectEntity;
 import com.dl.playfun.entity.EjectSignInEntity;
 import com.dl.playfun.entity.EvaluateEntity;
@@ -112,6 +113,7 @@ import java.util.Map;
 import io.reactivex.Observable;
 import me.goldze.mvvmhabit.base.BaseModel;
 import okhttp3.RequestBody;
+import retrofit2.http.GET;
 
 /**
  * MVVM的Model层，统一模块的数据仓库，包含网络数据和本地数据（一个应用可以有多个Repositor）
@@ -1621,6 +1623,11 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     @Override
     public Observable<BaseDataResponse> setExclusiveAccost(Integer type, String content,int len) {
         return mHttpDataSource.setExclusiveAccost(type, content,len);
+    }
+
+    @Override
+    public Observable<BaseDataResponse<DayRewardInfoEntity>> getDayReward() {
+        return mHttpDataSource.getDayReward();
     }
 
 }

@@ -121,6 +121,7 @@ public class VipSubscribeViewModel extends BaseViewModel<AppRepository> {
 
                                 if (vipPackage.getIsRecommend() == 1) {
                                     vipPackage.setSelected(true);
+                                    $vipPackageItemEntity = vipPackage;
                                     pay_good_day = vipPackage.getActualValue();
                                     checkedVipPackageItemEntity.set(vipPackage);
                                     selectedPosition.set(i);

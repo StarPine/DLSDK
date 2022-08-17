@@ -61,10 +61,20 @@ public class VipPackageItemEntity extends BaseObservable implements Serializable
     private String goodsTab;
     @SerializedName("privileges")
     private List<PrivilegesBean> privileges;
+    @SerializedName("day_give_video_card")
+    private int dayGiveVideoCard;
+    @SerializedName("day_give_num")
+    private int dayGiveNum;
+    @SerializedName("day_give_coin")
+    private int dayGiveCoin;
+    @SerializedName("video_card")
+    private int videoCard;
 
     private Boolean isSelected;
     //首充状态（H5传递）
     private Integer purchased;
+
+
 
     public Integer getPurchased() {
         return purchased;
@@ -82,6 +92,38 @@ public class VipPackageItemEntity extends BaseObservable implements Serializable
     public void setSelected(Boolean selected) {
         isSelected = selected;
         notifyPropertyChanged(BR.selected);
+    }
+
+    public int getDayGiveVideoCard() {
+        return dayGiveVideoCard;
+    }
+
+    public void setDayGiveVideoCard(int dayGiveVideoCard) {
+        this.dayGiveVideoCard = dayGiveVideoCard;
+    }
+
+    public int getDayGiveNum() {
+        return dayGiveNum;
+    }
+
+    public void setDayGiveNum(int dayGiveNum) {
+        this.dayGiveNum = dayGiveNum;
+    }
+
+    public int getDayGiveCoin() {
+        return dayGiveCoin;
+    }
+
+    public void setDayGiveCoin(int dayGiveCoin) {
+        this.dayGiveCoin = dayGiveCoin;
+    }
+
+    public int getVideoCard() {
+        return videoCard;
+    }
+
+    public void setVideoCard(int videoCard) {
+        this.videoCard = videoCard;
     }
 
     public int getId() {

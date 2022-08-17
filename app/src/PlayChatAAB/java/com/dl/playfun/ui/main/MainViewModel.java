@@ -17,6 +17,7 @@ import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.BubbleEntity;
+import com.dl.playfun.entity.DayRewardInfoEntity;
 import com.dl.playfun.entity.MqBroadcastGiftEntity;
 import com.dl.playfun.entity.MqGiftDataEntity;
 import com.dl.playfun.entity.VersionEntity;
@@ -375,6 +376,26 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                         String[] split = data.split(",");
                         List<String> config = Arrays.asList(split);
                         model.saveSensitiveWords(config);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+    }
+
+    public void getDayReward() {
+        model.getDayReward()
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .subscribe(new BaseObserver<BaseDataResponse<DayRewardInfoEntity>>() {
+
+                    @Override
+                    public void onSuccess(BaseDataResponse<DayRewardInfoEntity> baseDataResponse) {
+                        DayRewardInfoEntity data = baseDataResponse.getData();
+                        List<DayRewardInfoEntity.NowBean> now = data.getNow();
                     }
 
                     @Override

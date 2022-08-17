@@ -38,6 +38,7 @@ import com.dl.playfun.entity.CoinWalletEntity;
 import com.dl.playfun.entity.CommentMessageEntity;
 import com.dl.playfun.entity.ConfigItemEntity;
 import com.dl.playfun.entity.CreateOrderEntity;
+import com.dl.playfun.entity.DayRewardInfoEntity;
 import com.dl.playfun.entity.EjectEntity;
 import com.dl.playfun.entity.EjectSignInEntity;
 import com.dl.playfun.entity.EvaluateEntity;
@@ -1314,4 +1315,8 @@ public class HttpDataSourceImpl implements HttpDataSource {
         return apiService.setExclusiveAccost(type, content,len);
     }
 
+    @Override
+    public Observable<BaseDataResponse<DayRewardInfoEntity>> getDayReward() {
+        return apiService.getDayReward();
+    }
 }

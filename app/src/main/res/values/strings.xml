@@ -1216,5 +1216,9 @@
     <string name="play_fun_continue_to_now">繼續購買</string>
     <string name="play_fun_vip_service_tips">自動訂閱，隨時取消。\n購買訂閱的費用將從您的iTunes/Google帳戶收取，並意味著您同意我們的用戶協議及隱私政策。可以隨時在設置中管理或取消自動訂閱。</string>
     <string name="play_fun_nonactivated">未開通</string>
+    <string name="play_fun_reward">獎勵</string>
+    <string name="play_fun_reward_tips">明日登陸可得%s鑽石、 視訊卡*%s</string>
+    <string name="play_fun_reward_tips2">明日登陸可得%s鑽石</string>
+    <string name="play_fun_reward_tips3">明日登陸可得視訊卡*%s</string>
 
 </resources>

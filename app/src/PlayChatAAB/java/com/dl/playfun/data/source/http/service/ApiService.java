@@ -36,6 +36,7 @@ import com.dl.playfun.entity.CoinWalletEntity;
 import com.dl.playfun.entity.CommentMessageEntity;
 import com.dl.playfun.entity.ConfigItemEntity;
 import com.dl.playfun.entity.CreateOrderEntity;
+import com.dl.playfun.entity.DayRewardInfoEntity;
 import com.dl.playfun.entity.EjectEntity;
 import com.dl.playfun.entity.EjectSignInEntity;
 import com.dl.playfun.entity.EvaluateEntity;
@@ -147,6 +148,13 @@ public interface ApiService {
      */
     @GET("api/getExclusiveAccost")
     Observable<BaseDataResponse<List<ExclusiveAccostInfoEntity>>> getExclusiveAccost();
+
+    /**
+     * 每日奖励
+     * @return
+     */
+    @GET("api/getDayReward")
+    Observable<BaseDataResponse<DayRewardInfoEntity>> getDayReward();
 
     /**
      * 删除专属搭讪

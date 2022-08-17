@@ -2,9 +2,11 @@ package com.dl.playfun.widget.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -906,6 +908,87 @@ public class TraceDialog {
         tv_give_up.setOnClickListener(v -> {
             if (cannelOnclick != null){
                 cannelOnclick.cannel(dialog);
+            }
+        });
+        return dialog;
+    }
+
+    /***
+     * 每日奖励弹框
+     * @param isUnableEvent 是否限制外界事件
+     * @param dayGiveCoin   明天钻石奖励数量
+     * @param dayGiveVideoCard  明天视频卡奖励数量
+     * @param giveCoin  这次钻石奖励数量
+     * @param videoCard 这次视频卡奖励数量
+     * @return
+     */
+    public Dialog dayRewardDialog(boolean isUnableEvent, int dayGiveCoin, int dayGiveVideoCard, int giveCoin, int videoCard){
+        Dialog dialog = new Dialog(context, R.style.BottomDialog);
+        View contentView = LayoutInflater.from(context).inflate(R.layout.dialog_day_reward, null);
+        dialog.setContentView(contentView);
+        ViewGroup.LayoutParams layoutParams = contentView.getLayoutParams();
+        contentView.setLayoutParams(layoutParams);
+        dialog.getWindow().setGravity(Gravity.CENTER);
+        if (isUnableEvent){
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
+            dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+                @Override
+                public boolean onKey(DialogInterface dialogInterface, int keyCode, KeyEvent keyEvent) {
+                    return keyCode == KeyEvent.KEYCODE_BACK;
+                }
+            });
+        }
+
+        Button btnConfirm = contentView.findViewById(R.id.btn_confirm);
+        TextView tvContent = contentView.findViewById(R.id.tv_content);
+        LinearLayout llDoule = contentView.findViewById(R.id.ll_doule);
+        LinearLayout llDoule2 = contentView.findViewById(R.id.ll_doule2);
+        LinearLayout llSingle = contentView.findViewById(R.id.ll_single);
+        ImageView iv_single_diamond = contentView.findViewById(R.id.iv_single_diamond);
+        TextView tv_doule_diamond_number = contentView.findViewById(R.id.tv_doule_diamond_number);
+        TextView tv_doule_video_card_number = contentView.findViewById(R.id.tv_doule_video_card_number);
+        TextView tv_single_diamond_number = contentView.findViewById(R.id.tv_single_diamond_number);
+        if (giveCoin > 0 && videoCard > 0){
+            llSingle.setVisibility(View.GONE);
+            llDoule.setVisibility(View.VISIBLE);
+            llDoule2.setVisibility(View.VISIBLE);
+            tv_doule_diamond_number.setText(String.format(context.getString(R.string.playfun_coin_earnings_money_add),giveCoin+""));
+            tv_doule_video_card_number.setText(String.format(context.getString(R.string.playfun_coin_earnings_money_add),videoCard+""));
+        }
+        if (giveCoin > 0 && videoCard <= 0){
+            llSingle.setVisibility(View.VISIBLE);
+            llDoule.setVisibility(View.GONE);
+            llDoule2.setVisibility(View.GONE);
+            iv_single_diamond.setImageDrawable(context.getDrawable(R.drawable.icon_diamond));
+            tv_single_diamond_number.setText(String.format(context.getString(R.string.playfun_coin_earnings_money_add),giveCoin+""));
+        }
+        if (videoCard > 0 && giveCoin <= 0){
+            llSingle.setVisibility(View.VISIBLE);
+            llDoule.setVisibility(View.GONE);
+            llDoule2.setVisibility(View.GONE);
+            iv_single_diamond.setImageDrawable(context.getDrawable(R.drawable.icon_video_card));
+            tv_single_diamond_number.setText(String.format(context.getString(R.string.playfun_coin_earnings_money_add),videoCard+""));
+        }
+        if (dayGiveCoin > 0 && dayGiveVideoCard > 0){
+            String tip = String.format(context.getString(R.string.play_fun_reward_tips),dayGiveCoin+"",dayGiveVideoCard+"");
+            tvContent.setText(tip);
+        }
+        if (dayGiveCoin > 0 && dayGiveVideoCard <= 0){
+            String tip = String.format(context.getString(R.string.play_fun_reward_tips2),dayGiveCoin+"");
+            tvContent.setText(tip);
+        }
+        if (dayGiveVideoCard > 0 && dayGiveCoin <= 0){
+            String tip = String.format(context.getString(R.string.play_fun_reward_tips3),dayGiveVideoCard+"");
+            tvContent.setText(tip);
+        }
+        if (dayGiveCoin <= 0 && dayGiveVideoCard <= 0){
+            tvContent.setVisibility(View.GONE);
+        }
+
+        btnConfirm.setOnClickListener(v -> {
+            if (confirmOnclick != null){
+                confirmOnclick.confirm(dialog);
             }
         });
         return dialog;

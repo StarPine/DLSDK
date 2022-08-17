@@ -33,6 +33,7 @@ import com.dl.playfun.entity.CoinWalletEntity;
 import com.dl.playfun.entity.CommentMessageEntity;
 import com.dl.playfun.entity.ConfigItemEntity;
 import com.dl.playfun.entity.CreateOrderEntity;
+import com.dl.playfun.entity.DayRewardInfoEntity;
 import com.dl.playfun.entity.EjectEntity;
 import com.dl.playfun.entity.EjectSignInEntity;
 import com.dl.playfun.entity.EvaluateEntity;
@@ -143,6 +144,13 @@ public interface HttpDataSource {
      * @return
      */
     Observable<BaseDataResponse> setExclusiveAccost(Integer type, String content,int len);
+
+    /**
+     * 每日奖励
+     * @return
+     */
+    Observable<BaseDataResponse<DayRewardInfoEntity>> getDayReward();
+
 
     /**
      * @Desc TODO(设置视讯广场封面图)
