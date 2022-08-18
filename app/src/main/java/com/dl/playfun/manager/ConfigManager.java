@@ -25,9 +25,6 @@ public class ConfigManager {
     private static ConfigManager mCacheManager;
 
 
-    private static AppRepository appRepository;
-
-
     public static ConfigManager getInstance() {
         if (mCacheManager == null) {
             synchronized (ConfigManager.class) {
@@ -65,6 +62,10 @@ public class ConfigManager {
         return String.valueOf(userDataEntity.getId());
     }
 
+    private static final class AppRepositoryHolder {
+        static final AppRepository appRepository = Injection.provideDemoRepository();
+    }
+
     /**
      * @Desc TODO(获取操作API库)
      * @author 彭石林
@@ -73,14 +74,7 @@ public class ConfigManager {
      * @Date 2022/3/31
      */
     public AppRepository getAppRepository(){
-        if (appRepository == null) {
-            synchronized (Object.class) {
-                if (appRepository == null) {
-                    appRepository = Injection.provideDemoRepository();
-                }
-            }
-        }
-        return appRepository;
+        return AppRepositoryHolder.appRepository;
     }
 
     //位置是否是空的
