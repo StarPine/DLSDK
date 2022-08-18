@@ -134,7 +134,6 @@
 
         <activity
             android:name=".ui.MainContainerActivity"
-            android:launchMode="singleTask"
             android:requestLegacyExternalStorage="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"

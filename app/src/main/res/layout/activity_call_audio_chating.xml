@@ -57,10 +57,10 @@
             android:id="@+id/iv_minimize"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:layout_toLeftOf="@id/iv_close"
             android:layout_alignBottom="@+id/iv_close"
             android:layout_marginTop="42dp"
             android:layout_marginRight="15dp"
+            android:layout_toLeftOf="@id/iv_close"
             android:src="@drawable/icon_minimize" />
 
         <TextView

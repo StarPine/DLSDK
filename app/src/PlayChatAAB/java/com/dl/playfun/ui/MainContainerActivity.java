@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -76,6 +77,7 @@ public class MainContainerActivity extends MySupportActivity {
     protected void onRestart() {
         super.onRestart();
         LocaleManager.setLocal(this);
+        isLaunchMain();
     }
 
     @Override
@@ -272,9 +274,23 @@ public class MainContainerActivity extends MySupportActivity {
         }
     }
 
+    public void isLaunchMain() {
+        if (!isTaskRoot()) {
+            Intent intent = getIntent();
+            // 如果当前 Activity 是通过桌面图标启动进入的
+            if (intent != null && intent.hasCategory(Intent.CATEGORY_LAUNCHER)
+                    && Intent.ACTION_MAIN.equals(intent.getAction())) {
+                // 对当前 Activity 执行销毁操作，避免重复实例化入口
+                finish();
+                return;
+            }
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
+        isLaunchMain();
         try{
             AppContext.instance().mFirebaseAnalytics.setCurrentScreen(this, "Screen Name", this.getClass().getSimpleName());
             //页面处于可见状态最后依次连接时间
