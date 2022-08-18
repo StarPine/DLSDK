@@ -67,6 +67,8 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
     public boolean playing = false;
     public int giveCoin = 0;
     public int videoCard = 0;
+    public int chatCardNum = 0;
+    public int assostCardNum = 0;
     public int nextGiveCoin = 0;
     public int nextVideoCard = 0;
     public String dayRewardKey = "";
@@ -110,10 +112,13 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         getSensitiveWords();
 
         //每日奖励
-        setDayFlag();
+        setDayFlag("day");
         String value = model.readKeyValue(dayRewardKey);
         if (value == null){
             getDayReward();
+        }
+        if (AppConfig.isRegister){
+            getRegisterReward();
         }
     }
 
@@ -378,12 +383,12 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         }
     }
 
-    public void setDayFlag() {
+    public void setDayFlag(String key) {
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         String format = formatter.format(date);
         String userId = ConfigManager.getInstance().getUserImID();
-        dayRewardKey = format + userId;
+        dayRewardKey = key + format + userId;
     }
 
     public void getSensitiveWords() {
@@ -408,6 +413,9 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
 
     }
 
+    /**
+     * 每日奖励
+     */
     public void getDayReward() {
         model.getDayReward()
                 .compose(RxUtils.schedulersTransformer())
@@ -442,6 +450,41 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
 
     }
 
+    /**
+     * 注册奖励
+     */
+    public void getRegisterReward() {
+        model.getRegisterReward()
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .subscribe(new BaseObserver<BaseDataResponse<DayRewardInfoEntity>>() {
+
+                    @Override
+                    public void onSuccess(BaseDataResponse<DayRewardInfoEntity> baseDataResponse) {
+                        DayRewardInfoEntity dayRewardInfoEntity = baseDataResponse.getData();
+                        if (dayRewardInfoEntity == null){
+                            return;
+                        }
+                        List<DayRewardInfoEntity.NowBean> now = dayRewardInfoEntity.getNow();
+                        for (DayRewardInfoEntity.NowBean nowBean : now) {
+                            String type = nowBean.getType();
+                            if (type.equals("accost_card")){
+                                assostCardNum = nowBean.getNum();
+                            }else if (type.equals("chat_card")){
+                                chatCardNum = nowBean.getNum();
+                            }
+                        }
+                        uc.showRegisterRewardDialog.call();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+    }
+
     public class UIChangeObservable {
         //气泡提示
         public SingleLiveEvent<Boolean> bubbleTopShow = new SingleLiveEvent<>();
@@ -450,6 +493,8 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<Void> showFaceRecognitionDialog = new SingleLiveEvent<>();
         //每日奖励弹框
         public SingleLiveEvent<Void> showDayRewardDialog = new SingleLiveEvent<>();
+        //注册奖励
+        public SingleLiveEvent<Void> showRegisterRewardDialog = new SingleLiveEvent<>();
         public SingleLiveEvent<String> startFace = new SingleLiveEvent<>();
         public SingleLiveEvent<Integer> allMessageCountChange = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> lockDialog = new SingleLiveEvent<>();

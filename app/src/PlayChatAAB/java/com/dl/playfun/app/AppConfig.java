@@ -8,6 +8,7 @@ import com.dl.playfun.entity.OverseasUserEntity;
  * @author wulei
  */
 public class AppConfig {
+    public static boolean isRegister = false;
     //是否开启日志打印
     public static final boolean isDebug = BuildConfig.DEBUG;
     /**

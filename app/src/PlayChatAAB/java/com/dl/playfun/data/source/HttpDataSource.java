@@ -153,6 +153,13 @@ public interface HttpDataSource {
 
 
     /**
+     * 注册奖励
+     * @return
+     */
+    Observable<BaseDataResponse<DayRewardInfoEntity>> getRegisterReward();
+
+
+    /**
      * @Desc TODO(设置视讯广场封面图)
      * @author 彭石林
      * @parame []

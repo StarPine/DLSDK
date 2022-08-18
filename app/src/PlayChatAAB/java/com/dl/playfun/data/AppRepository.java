@@ -1630,4 +1630,9 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
         return mHttpDataSource.getDayReward();
     }
 
+    @Override
+    public Observable<BaseDataResponse<DayRewardInfoEntity>> getRegisterReward() {
+        return mHttpDataSource.getRegisterReward();
+    }
+
 }

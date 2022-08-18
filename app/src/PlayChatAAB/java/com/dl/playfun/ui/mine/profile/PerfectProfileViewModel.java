@@ -9,6 +9,7 @@ import com.appsflyer.AppsFlyerLib;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.R;
+import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.data.AppRepository;
@@ -142,6 +143,7 @@ public class PerfectProfileViewModel extends BaseViewModel<AppRepository> {
                     @Override
                     public void onSuccess(BaseResponse baseResponse) {
                         dismissHUD();
+                        AppConfig.isRegister = true;
                         model.clearChannelAF();
                         uc.showAlertHint.call();
                     }

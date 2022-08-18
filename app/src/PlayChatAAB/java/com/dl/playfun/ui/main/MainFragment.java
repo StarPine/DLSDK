@@ -144,6 +144,10 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         viewModel.uc.showDayRewardDialog.observe(this,s -> {
             showRewardDialog();
         });
+        //注册奖励
+        viewModel.uc.showRegisterRewardDialog.observe(this,s -> {
+            showRegisterRewardDialog();
+        });
         //主页公屏礼物
         viewModel.uc.giftBanner.observe(this,mqttMessageEntity -> {
             MqBroadcastGiftUserEntity leftUser = mqttMessageEntity.getFromUser();
@@ -371,6 +375,22 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                         viewModel.nextVideoCard,
                         viewModel.giveCoin,
                         viewModel.videoCard)
+                .show();
+    }
+
+    private void showRegisterRewardDialog() {
+        if (viewModel.chatCardNum <= 0 && viewModel.assostCardNum <= 0){
+            return;
+        }
+        TraceDialog.getInstance(mActivity)
+                .setTitle(getString(R.string.play_fun_reward_title))
+                .setFirstRewardId(R.drawable.icon_say_hi_card)
+                .setSecondRewardId(R.drawable.icon_chat_card)
+                .setConfirmOnlick(dialog -> {
+                    AppConfig.isRegister = false;
+                    dialog.dismiss();
+                })
+                .registerRewardDialog(true, viewModel.assostCardNum, viewModel.chatCardNum)
                 .show();
     }
 

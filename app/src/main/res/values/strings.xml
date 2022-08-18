@@ -1222,5 +1222,7 @@
     <string name="play_fun_reward_tips">明日登陸可得%s鑽石、 視訊卡*%s</string>
     <string name="play_fun_reward_tips2">明日登陸可得%s鑽石</string>
     <string name="play_fun_reward_tips3">明日登陸可得視訊卡*%s</string>
+    <string name="play_fun_reward_tips4">獲得聊天道具\n助力你結識更多有趣的人</string>
+    <string name="play_fun_reward_title">註冊獎勵</string>
 
 </resources>

@@ -1319,4 +1319,9 @@ public class HttpDataSourceImpl implements HttpDataSource {
     public Observable<BaseDataResponse<DayRewardInfoEntity>> getDayReward() {
         return apiService.getDayReward();
     }
+
+    @Override
+    public Observable<BaseDataResponse<DayRewardInfoEntity>> getRegisterReward() {
+        return apiService.getRegisterReward();
+    }
 }

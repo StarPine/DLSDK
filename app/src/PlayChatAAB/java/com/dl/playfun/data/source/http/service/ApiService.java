@@ -157,6 +157,13 @@ public interface ApiService {
     Observable<BaseDataResponse<DayRewardInfoEntity>> getDayReward();
 
     /**
+     * 注册奖励
+     * @return
+     */
+    @GET("api/getRegisterReward")
+    Observable<BaseDataResponse<DayRewardInfoEntity>> getRegisterReward();
+
+    /**
      * 删除专属搭讪
      * @return
      */
