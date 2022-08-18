@@ -610,12 +610,17 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         TextView tvContact = view.findViewById(R.id.tv_contact);
         if(viewModel.isContactsEnabled.get()){
             Drawable drawable = getResources().getDrawable(R.drawable.img_contact_normal);
-            Log.e("当前drawable",String.valueOf(drawable==null)+"===================");
-            tvContact.setCompoundDrawables(drawable,null,null,null );
+            if(drawable != null){
+                drawable.setBounds(0,0,dp2px(mActivity,24f),dp2px(getContext(),24f));
+                tvContact.setCompoundDrawables(drawable,null,null,null );
+            }
         }else{
             Drawable drawable = getResources().getDrawable(R.drawable.img_contact_checked);
-            Log.e("当前drawable",String.valueOf(drawable==null)+"===================");
-            tvContact.setCompoundDrawablesRelative(drawable,null,null,null );
+            if(drawable != null){
+                drawable.setBounds(0,0,dp2px(mActivity,24f),dp2px(getContext(),24f));
+                tvContact.setCompoundDrawablesRelative(drawable,null,null,null );
+            }
+
         }
         tvContact.setOnClickListener(v->{
             String otherImUserId = mChatInfo ==null ? null : mChatInfo.getId();

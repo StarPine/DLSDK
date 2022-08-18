@@ -1196,6 +1196,8 @@
 
 
     <string name="playfun_contact_empty_text">暫無常聯繫，快去聊天吧</string>
+    <string name="playfun_contact_text1">設置常聯繫成功</string>
+    <string name="playfun_contact_text2">已取消常聯繫</string>
     <string name="playchat_choose_area_title">Region</string>
     <string name="playfun_mine_title_btn_exclusive">專屬招呼</string>
     <string name="playfun_mine_title_my_exclusive">我的專屬招呼</string>

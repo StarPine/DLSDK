@@ -150,15 +150,15 @@ public class MessageMainViewModel extends BaseViewModel<AppRepository> {
         if(chatMessageNum==null){
             chatMessageNum = 0;
         }
-        Integer systemMessageNum = systemMessageCount.get();
-        if(systemMessageNum==null){
-            systemMessageNum = 0;
-        }
+//        Integer systemMessageNum = systemMessageCount.get();
+//        if(systemMessageNum==null){
+//            systemMessageNum = 0;
+//        }
         Integer chatMessageContactNum = chatMessageContactCount.get();
         if(chatMessageContactNum==null){
             chatMessageContactNum = 0;
         }
-        int sumCount = chatMessageNum + systemMessageNum + chatMessageContactNum;
+        int sumCount = chatMessageNum + chatMessageContactNum;
         RxBus.getDefault().post(new MessageCountChangeEvent(sumCount));
     }
 

@@ -17,5 +17,5 @@ aabResGuard {
     ]
     enableFilterStrings = false // 过滤器字符串的切换
     unusedStringPath = file("unused.txt").toPath() // 此文件中的字符串将被过滤
-    languageWhiteList = ["en", "zh","ru"] // 保留 en,en-xx,zh,zh-xx 等。删除其他。
+    languageWhiteList = ["zh","en","zh-rCN","zh-rHK","zh-rMO","zh-rSG","zh-rTW"] // 保留 en,en-xx,zh,zh-xx 等。删除其他。
 }
