@@ -49,6 +49,7 @@ import com.google.gson.Gson;
 import com.dl.playfun.R;
 import com.dl.playfun.ui.userdetail.userdynamic.UserDynamicFragment;
 import com.dl.playfun.ui.viewmodel.BaseTheirPhotoAlbumViewModel;
+import com.tencent.qcloud.tuicore.Status;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -141,6 +142,10 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
      * 点击拨打视频语音
      */
     public BindingCommand socialAccountOnClickCommand = new BindingCommand(() -> {
+        if (Status.mIsShowFloatWindow){
+            ToastUtils.showShort(R.string.audio_in_call);
+            return;
+        }
         if (detailEntity.get() == null) {
             return;
         }

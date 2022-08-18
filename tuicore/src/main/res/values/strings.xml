@@ -25,5 +25,6 @@
     <string name="custom_gift_right_title">got a gift</string>
     <string name="custom_gift_left_title">gift</string>
     <string name="text_message2">Reply to get income.</string>
+    <string name="audio_in_call">语音通話中，無法使用此功能</string>
 
 </resources>

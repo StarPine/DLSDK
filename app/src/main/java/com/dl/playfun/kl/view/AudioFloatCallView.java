@@ -17,8 +17,8 @@ import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.widget.image.CircleImageView;
 import com.tencent.liteav.trtccalling.TUICalling;
 import com.tencent.liteav.trtccalling.ui.base.BaseTUICallView;
-import com.tencent.liteav.trtccalling.ui.base.Status;
 import com.tencent.liteav.trtccalling.ui.floatwindow.FloatWindowService;
+import com.tencent.qcloud.tuicore.Status;
 
 import java.util.List;
 

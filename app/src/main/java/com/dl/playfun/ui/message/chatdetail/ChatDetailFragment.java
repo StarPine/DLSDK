@@ -99,7 +99,7 @@ import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
-import com.tencent.liteav.trtccalling.ui.base.Status;
+import com.tencent.qcloud.tuicore.Status;
 import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomImageMessageBean;
@@ -1250,6 +1250,10 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
 
     @Override
     public void onClickCallPlayUser() {//点击调用拨打通话
+        if (Status.mIsShowFloatWindow){
+            me.goldze.mvvmhabit.utils.ToastUtils.showShort(com.tencent.qcloud.tuikit.tuichat.R.string.audio_in_call);
+            return;
+        }
         if (viewModel.tagEntitys.get() != null) {
             if (viewModel.tagEntitys.get().getBlacklistStatus() == 1 || viewModel.tagEntitys.get().getBlacklistStatus() == 3) {
                 Toast.makeText(mActivity, R.string.playfun_chat_detail_pull_black_other, Toast.LENGTH_SHORT).show();

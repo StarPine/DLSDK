@@ -33,6 +33,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.tencent.qcloud.tuicore.Status;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
@@ -71,6 +72,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import me.goldze.mvvmhabit.utils.ToastUtils;
 
 /**
  * 聊天界面，底部发送图片、拍照、摄像、文件面板
@@ -328,6 +331,12 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
 
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (Status.mIsShowFloatWindow){
+                    if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+                        ToastUtils.showShort(R.string.audio_in_call);
+                    }
+                    return false;
+                }
                 TUIChatLog.i(TAG, "mSendAudioButton onTouch action:" + motionEvent.getAction());
                 PermissionHelper.requestPermission(PermissionHelper.PERMISSION_MICROPHONE, new PermissionHelper.PermissionCallback() {
                     @Override
