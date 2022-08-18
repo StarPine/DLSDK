@@ -42,8 +42,10 @@ import com.dl.playfun.entity.RestartActivityEntity;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -63,6 +65,11 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
     public ObservableField<Boolean> isHaveRewards = new ObservableField<>(false);
     public List<MqBroadcastGiftEntity> publicScreenBannerGiftEntity = new ArrayList<>();
     public boolean playing = false;
+    public int giveCoin = 0;
+    public int videoCard = 0;
+    public int nextGiveCoin = 0;
+    public int nextVideoCard = 0;
+    public String dayRewardKey = "";
     UIChangeObservable uc = new UIChangeObservable();
     private Disposable mSubscription, taskMainTabEventReceive, mainTabEventReceive, rewardRedDotEventReceive, BubbleTopShowEventSubscription, ResatrtActSubscription2;
 
@@ -101,6 +108,13 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         sendInviteCode();
         //加载屏蔽字数据
         getSensitiveWords();
+
+        //每日奖励
+        setDayFlag();
+        String value = model.readKeyValue(dayRewardKey);
+        if (value == null){
+            getDayReward();
+        }
     }
 
     @Override
@@ -364,6 +378,14 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         }
     }
 
+    public void setDayFlag() {
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        String format = formatter.format(date);
+        String userId = ConfigManager.getInstance().getUserImID();
+        dayRewardKey = format + userId;
+    }
+
     public void getSensitiveWords() {
         model.getSensitiveWords()
                 .compose(RxUtils.schedulersTransformer())
@@ -394,8 +416,22 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
 
                     @Override
                     public void onSuccess(BaseDataResponse<DayRewardInfoEntity> baseDataResponse) {
-                        DayRewardInfoEntity data = baseDataResponse.getData();
-                        List<DayRewardInfoEntity.NowBean> now = data.getNow();
+                        DayRewardInfoEntity dayRewardInfoEntity = baseDataResponse.getData();
+                        if (dayRewardInfoEntity == null){
+                            return;
+                        }
+                        nextGiveCoin = dayRewardInfoEntity.getNext();
+                        nextVideoCard = dayRewardInfoEntity.getNextCard();
+                        List<DayRewardInfoEntity.NowBean> now = dayRewardInfoEntity.getNow();
+                        for (DayRewardInfoEntity.NowBean nowBean : now) {
+                            String type = nowBean.getType();
+                            if (type.equals("video_card")){
+                                videoCard = nowBean.getNum();
+                            }else if (type.equals("coin")){
+                                giveCoin = nowBean.getNum();
+                            }
+                        }
+                        uc.showDayRewardDialog.call();
                     }
 
                     @Override
@@ -412,6 +448,8 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<Intent> restartActivity = new SingleLiveEvent<>();
         //        public SingleLiveEvent<Void> showAgreementDialog = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> showFaceRecognitionDialog = new SingleLiveEvent<>();
+        //每日奖励弹框
+        public SingleLiveEvent<Void> showDayRewardDialog = new SingleLiveEvent<>();
         public SingleLiveEvent<String> startFace = new SingleLiveEvent<>();
         public SingleLiveEvent<Integer> allMessageCountChange = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> lockDialog = new SingleLiveEvent<>();

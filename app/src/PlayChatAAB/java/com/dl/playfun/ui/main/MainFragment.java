@@ -31,8 +31,11 @@ import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
+import com.dl.playfun.app.Injection;
 import com.dl.playfun.app.config.TbarCenterImgConfig;
+import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.databinding.FragmentMainBinding;
+import com.dl.playfun.entity.DayRewardInfoEntity;
 import com.dl.playfun.entity.MqBroadcastGiftEntity;
 import com.dl.playfun.entity.MqBroadcastGiftUserEntity;
 import com.dl.playfun.entity.VersionEntity;
@@ -52,11 +55,14 @@ import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.widget.dialog.MVDialog;
+import com.dl.playfun.widget.dialog.TraceDialog;
 import com.dl.playfun.widget.dialog.version.view.UpdateDialogView;
 import com.dl.playfun.widget.pageview.FragmentAdapter;
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.view.ConversationCommonHolder;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import me.goldze.mvvmhabit.bus.RxBus;
@@ -79,6 +85,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
     private ViewPager2 mainViewPager;
 
     private static final long WAIT_TIME = 3000L;
+
     private long TOUCH_TIME = 0;
 
     private AliYunMqttClientLifecycle aliYunMqttClientLifecycle;
@@ -132,6 +139,10 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         //未付费弹窗
         viewModel.uc.notPaidDialog.observe(this,s -> {
 
+        });
+        //每日奖励
+        viewModel.uc.showDayRewardDialog.observe(this,s -> {
+            showRewardDialog();
         });
         //主页公屏礼物
         viewModel.uc.giftBanner.observe(this,mqttMessageEntity -> {
@@ -340,6 +351,27 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                 }
             }
         });
+    }
+
+
+    /**
+     * 显示奖励dialog
+     */
+    private void showRewardDialog() {
+        if (viewModel.giveCoin <= 0 && viewModel.videoCard <= 0){
+            return;
+        }
+        TraceDialog.getInstance(mActivity)
+                .setConfirmOnlick(dialog -> {
+                    Injection.provideDemoRepository().putKeyValue(viewModel.dayRewardKey,"true");
+                    dialog.dismiss();
+                })
+                .dayRewardDialog(true,
+                        viewModel.nextGiveCoin,
+                        viewModel.nextVideoCard,
+                        viewModel.giveCoin,
+                        viewModel.videoCard)
+                .show();
     }
 
     private void setGiftViewBanner(MqBroadcastGiftEntity mqttMessageEntity, MqBroadcastGiftUserEntity leftUser, MqBroadcastGiftUserEntity rightUser, View streamerView) {

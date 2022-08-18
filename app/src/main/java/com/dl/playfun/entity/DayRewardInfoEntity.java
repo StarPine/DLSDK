@@ -21,6 +21,8 @@ public class DayRewardInfoEntity implements Serializable {
 
     @SerializedName("next")
     private int next;
+    @SerializedName("nextCard")
+    private int nextCard;
     @SerializedName("now")
     private List<NowBean> now;
 
@@ -34,6 +36,14 @@ public class DayRewardInfoEntity implements Serializable {
 
     public List<NowBean> getNow() {
         return now;
+    }
+
+    public int getNextCard() {
+        return nextCard;
+    }
+
+    public void setNextCard(int nextCard) {
+        this.nextCard = nextCard;
     }
 
     public void setNow(List<NowBean> now) {
