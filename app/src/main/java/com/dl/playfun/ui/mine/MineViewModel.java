@@ -105,6 +105,17 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
     public BindingCommand levelEquityOnClickCommand = new BindingCommand(() -> {
         start(LevelEquityFragment.class.getCanonicalName());
     });
+     //点击主播中心
+    public BindingCommand anchorCenterOnClickCommand = new BindingCommand(() -> {
+         try {
+             Bundle bundle = new Bundle();
+             bundle.putString("link", model.readApiConfigManagerEntity().getPlayFunWebUrl() + "/anchor");
+             start(WebViewFragment.class.getCanonicalName(), bundle);
+         } catch (Exception e) {
+             e.printStackTrace();
+         }
+    });
+
     //我喜欢的按钮的点击事件
     public BindingCommand fondOnClickCommand = new BindingCommand(() -> {
         AppContext.instance().logEvent(AppsFlyerEvent.Following);
@@ -171,7 +182,7 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
     public BindingCommand shopOnClickCommand = new BindingCommand(() -> {
         try {
             Bundle bundle = new Bundle();
-            bundle.putString("link", AppConfig.WEB_BASE_URL + "shop");
+            bundle.putString("link", model.readApiConfigManagerEntity().getPlayFunWebUrl() + "/shop");
             start(WebViewFragment.class.getCanonicalName(), bundle);
         } catch (Exception e) {
             e.printStackTrace();

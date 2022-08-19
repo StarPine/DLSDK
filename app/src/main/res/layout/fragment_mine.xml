@@ -668,6 +668,37 @@
                         </RelativeLayout>
                         <RelativeLayout
                             style="@style/ProfileItem"
+                            android:layout_marginTop="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/profile_item_height"
+                            android:visibility="@{viewModel.userInfoEntity.anchor == 0?View.GONE:View.VISIBLE}"
+                            binding:onClickCommand="@{viewModel.anchorCenterOnClickCommand}">
+
+                            <ImageView
+                                android:id="@+id/mine_item_anchor_center"
+                                android:layout_width="19dp"
+                                android:layout_height="19dp"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerInParent="true"
+                                android:src="@drawable/icon_anchor_center" />
+
+                            <TextView
+                                style="@style/ProfileItemTitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:layout_toEndOf="@+id/mine_item_anchor_center"
+                                android:text="@string/play_fun_mine_title_anchor_center"
+                                android:textSize="13sp" />
+
+                            <TextView
+                                style="@style/ProfileItemSubTitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            style="@style/ProfileItem"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/profile_item_height"
                             binding:onClickCommand="@{viewModel.tapeAudioOnClickCommand}">
@@ -777,6 +808,7 @@
                             style="@style/ProfileItem"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/profile_item_height"
+                            android:visibility="@{viewModel.userInfoEntity.isAnchor == 0?View.GONE:View.VISIBLE}"
                             binding:onClickCommand="@{viewModel.exclusiveOnClickCommand}">
 
                             <ImageView

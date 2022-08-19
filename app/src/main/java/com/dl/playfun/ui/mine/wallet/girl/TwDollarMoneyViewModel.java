@@ -86,7 +86,7 @@ public class TwDollarMoneyViewModel extends BaseViewModel<AppRepository> {
         public void call() {
             try {
                 Bundle bundle = new Bundle();
-                bundle.putString("link", AppConfig.WEB_BASE_URL + "profit");
+                bundle.putString("link", model.readApiConfigManagerEntity().getPlayFunWebUrl() + "/profit");
                 start(WebViewFragment.class.getCanonicalName(), bundle);
             } catch (Exception e) {
                 e.printStackTrace();
