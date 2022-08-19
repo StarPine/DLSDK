@@ -640,6 +640,7 @@ public class ConversationPresenter {
             if(loadConversationCallback!=null){
                 loadConversationCallback.isConversationEmpty(false);
             }
+            busConversationCount(loadedConversationInfo);
         }
     }
 
@@ -996,7 +997,6 @@ public class ConversationPresenter {
                                             //loadedFriendshipInfoList.addAll(dataConversationInfo);
                                             isFriendConversationList(dataConversationInfo);
                                             ConversationPresenter.this.onNewConversation(dataConversationInfo);
-                                            busConversationCount(loadedFriendshipInfoList);
                                         }
 
                                     }
