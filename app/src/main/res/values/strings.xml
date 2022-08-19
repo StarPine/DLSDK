@@ -1195,10 +1195,10 @@
     <string name="radio_daily_atendance_day_text">Successful check-in, +10 points</string>
 
 
+    <string name="playchat_choose_area_title">Region</string>
     <string name="playfun_contact_empty_text">暫無常聯繫，快去聊天吧</string>
     <string name="playfun_contact_text1">設置常聯繫成功</string>
     <string name="playfun_contact_text2">已取消常聯繫</string>
-    <string name="playchat_choose_area_title">Region</string>
     <string name="playfun_mine_title_btn_exclusive">專屬招呼</string>
     <string name="playfun_mine_title_my_exclusive">我的專屬招呼</string>
     <string name="playfun_my_exclusive_tips_content">1、搭訕語+甜美的聲音是完美的招呼組合\n2、一天可進行一次搭訕語、語音招呼的修改</string>
@@ -1225,5 +1225,6 @@
     <string name="play_fun_reward_tips4">獲得聊天道具\n助力你結識更多有趣的人</string>
     <string name="play_fun_reward_title">註冊獎勵</string>
     <string name="play_fun_mine_title_anchor_center">主播中心</string>
+    <string name="play_fun_float_permission">please open "Display over other apps" permission</string>
 
 </resources>

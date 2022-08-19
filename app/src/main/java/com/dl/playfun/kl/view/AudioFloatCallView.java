@@ -4,20 +4,22 @@ package com.dl.playfun.kl.view;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.GsonUtils;
 import com.bumptech.glide.Glide;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.Injection;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
+import com.dl.playfun.entity.AudioCallingBarrageEntity;
 import com.dl.playfun.entity.CallingStatusEntity;
 import com.dl.playfun.entity.RestartActivityEntity;
-import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.widget.image.CircleImageView;
 import com.tencent.liteav.trtccalling.TUICalling;
@@ -25,6 +27,7 @@ import com.tencent.liteav.trtccalling.ui.base.BaseTUICallView;
 import com.tencent.liteav.trtccalling.ui.floatwindow.FloatWindowService;
 import com.tencent.qcloud.tuicore.Status;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import me.goldze.mvvmhabit.bus.RxBus;
@@ -37,16 +40,16 @@ public class AudioFloatCallView extends BaseTUICallView {
     private TextView mTextViewTimeCount;
     private boolean isRestart = false;
     private Integer roomId = 0;
+    private ArrayList<AudioCallingBarrageEntity> audioCallChatingItemViewModelList;
 
 
     public AudioFloatCallView(Context context, TUICalling.Role role, TUICalling.Type type, String[] userIDs,
-                              String sponsorID, String groupID, boolean isFromGroup, String avatar, int timeCount, Integer roomId) {
+                              String sponsorID, String groupID, boolean isFromGroup, String avatar, int timeCount, Integer roomId, ArrayList<AudioCallingBarrageEntity> audioCallChatingItemViewModelList) {
         super(context, role, type, userIDs, sponsorID, groupID, isFromGroup);
-        initData(avatar, timeCount, roomId);
+        initData(avatar, timeCount, roomId,audioCallChatingItemViewModelList);
     }
 
-    private void initData(String avatar, int timeCount, Integer roomId) {
-//        GlideEngine.createGlideEngine().loadImage(getContext(), StringUtil.getFullThumbImageUrl(avatar), ivAvatar);
+    private void initData(String avatar, int timeCount, Integer roomId, ArrayList<AudioCallingBarrageEntity> audioCallChatingItemViewModelList) {
         Glide.with(AppContext.instance())
                 .load(StringUtil.getFullImageUrl(avatar))
                 .error(R.drawable.default_avatar) //异常时候显示的图片
@@ -54,6 +57,7 @@ public class AudioFloatCallView extends BaseTUICallView {
                 .fallback(R.drawable.default_avatar) //url为空的时候,显示的图片
                 .into(ivAvatar);
         this.roomId = roomId;
+        this.audioCallChatingItemViewModelList = audioCallChatingItemViewModelList;
         showTimeCount(mTextViewTimeCount, timeCount);
     }
 
@@ -111,7 +115,7 @@ public class AudioFloatCallView extends BaseTUICallView {
     }
 
     private void initListener() {
-        maximize.setOnClickListener(new OnClickListener() {
+        setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!isRestart) {
@@ -121,7 +125,9 @@ public class AudioFloatCallView extends BaseTUICallView {
                     intent.putExtra("toUserId", mUserIDs[0]);
                     intent.putExtra("mRole", mRole);
                     intent.putExtra("roomId", roomId);
-                    intent.putExtra("timeCount", mTimeCount);
+                    intent.putExtra("timeCount", ++mTimeCount);
+                    intent.putExtra("isRestart", isRestart);
+                    intent.putExtra("audioCallingBarrage", GsonUtils.toJson(audioCallChatingItemViewModelList));
                     if (isBackground(mContext)) {
                         mContext.startActivity(intent);
                     } else {

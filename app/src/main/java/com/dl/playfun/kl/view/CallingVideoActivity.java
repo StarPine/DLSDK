@@ -404,12 +404,6 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         viewModel.uc.callAudioStart.observe(this, new Observer<Void>() {
             @Override
             public void onChanged(Void unused) {
-                //进入房间提示
-                String call_message_deatail_hint = StringUtils.getString(R.string.playfun_call_message_deatail_hint);
-                SpannableString stringBuilder = new SpannableString(call_message_deatail_hint);
-                ForegroundColorSpan blueSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint));
-                stringBuilder.setSpan(blueSpan, 0, call_message_deatail_hint.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                viewModel.putRcvItemMessage(stringBuilder, null, false);
                 //开始记时
                 TimeCallMessage();
                 setTimerForCallinfo();

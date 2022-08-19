@@ -55,8 +55,8 @@
 
         <ImageView
             android:id="@+id/iv_minimize"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_alignBottom="@+id/iv_close"
             android:layout_marginTop="42dp"
             android:layout_marginRight="15dp"

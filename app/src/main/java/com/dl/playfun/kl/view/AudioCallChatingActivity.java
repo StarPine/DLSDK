@@ -15,6 +15,7 @@ import android.os.Message;
 import android.provider.Settings;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Gravity;
@@ -35,6 +36,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.aliyun.svideo.common.utils.FastClickUtil;
 import com.blankj.utilcode.util.ColorUtils;
+import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -43,12 +45,13 @@ import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.ActivityCallAudioChatingBinding;
+import com.dl.playfun.entity.AudioCallingBarrageEntity;
 import com.dl.playfun.entity.CrystalDetailsConfigEntity;
 import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.entity.ShowFloatWindowEntity;
 import com.dl.playfun.event.CallChatingHangupEvent;
-import com.dl.playfun.kl.Utils;
+import com.dl.playfun.kl.viewmodel.AudioCallChatingItemViewModel;
 import com.dl.playfun.kl.viewmodel.AudioCallChatingViewModel;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocaleManager;
@@ -61,6 +64,7 @@ import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 import com.dl.playfun.widget.dialog.MessageDetailDialog;
 import com.dl.playfun.widget.dialog.TraceDialog;
 import com.dl.playfun.widget.image.CircleImageView;
+import com.google.gson.reflect.TypeToken;
 import com.opensource.svgaplayer.SVGACallback;
 import com.opensource.svgaplayer.SVGAImageView;
 import com.opensource.svgaplayer.SVGAParser;
@@ -72,11 +76,13 @@ import com.tencent.liteav.trtccalling.model.util.PermissionUtil;
 import com.tencent.liteav.trtccalling.ui.floatwindow.FloatWindowService;
 import com.tencent.qcloud.tuicore.Status;
 import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
+import com.tencent.qcloud.tuikit.tuichat.ui.view.MyImageSpan;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
@@ -89,6 +95,7 @@ import me.tatarka.bindingcollectionadapter2.BR;
 
 public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChatingBinding, AudioCallChatingViewModel> implements Ifinish {
 
+    private String barrageInfo;//弹幕数据
     private String inviterImId;//邀請人id
     private String receiverImId;//接收人id
     private TUICalling.Role mRole;
@@ -98,6 +105,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
     private AudioFloatCallView   mFloatView;
 
     private int mTimeCount;
+    private boolean isRestart;
     //每个10秒+1
     private int mTimeTen;
     private int minuteTime;
@@ -186,6 +194,9 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         mRole = (TUICalling.Role)intent.getExtras().get("mRole");
         roomId = intent.getIntExtra("roomId", 0);
         mTimeCount = intent.getIntExtra("timeCount", 0);
+        isRestart = intent.getBooleanExtra("isRestart", false);
+        barrageInfo = intent.getStringExtra("audioCallingBarrage");
+
     }
 
     @Override
@@ -193,6 +204,13 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         super.initData();
         hideExchangeRules();
         giftEffects = binding.giftEffects;
+        if (isRestart){
+            viewModel.tipSwitch.set(false);
+            viewModel.TimeCount = mTimeCount;
+            TimeCallMessage();
+            setTimerForCallinfo();
+            loadBarrageInfo();
+        }
         viewModel.init(this);
         viewModel.roomId = roomId;
         viewModel.fromUserId = inviterImId;
@@ -200,6 +218,38 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         viewModel.getCallingInfo(roomId, inviterImId, receiverImId);
     }
 
+    /**
+     * 解析弹幕数据
+     * @param json
+     * @return
+     */
+    public List<AudioCallingBarrageEntity> getAudioCallingBarrageInfo(String json) {
+        if (json == null) {
+            return new ArrayList<>();
+        } else if (json.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<AudioCallingBarrageEntity> list = GsonUtils.fromJson(json, new TypeToken<List<AudioCallingBarrageEntity>>() {
+        }.getType());
+        return list;
+    }
+
+    /**
+     * 加载弹幕数据
+     */
+    private void loadBarrageInfo() {
+        ForegroundColorSpan blueSpanWhite = new ForegroundColorSpan(ColorUtils.getColor(R.color.white));
+        List<AudioCallingBarrageEntity> audioCallingBarrageInfo = getAudioCallingBarrageInfo(barrageInfo);
+        for (AudioCallingBarrageEntity barrageEntity : audioCallingBarrageInfo) {
+            SpannableString itemtext = new SpannableString(barrageEntity.getItemText());
+            itemtext.setSpan(blueSpanWhite, 0, barrageEntity.getItemText().length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            if (barrageEntity.getItemText().startsWith("C+")){
+                itemtext.setSpan(new MyImageSpan(getApplication(),R.drawable.icon_crystal),0,1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            AudioCallChatingItemViewModel audioCallChatingItemViewModel = new AudioCallChatingItemViewModel(viewModel,itemtext , barrageEntity.getImgPath(), barrageEntity.isSendGiftBag());
+            viewModel.observableList.add(audioCallChatingItemViewModel);
+        }
+    }
 
     //开启悬浮窗
     private void startFloatService() {
@@ -223,8 +273,16 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         if (viewModel.leftUserInfoField.get() != null){
             avatar = viewModel.leftUserInfoField.get().getAvatar();
         }
+        ArrayList<AudioCallingBarrageEntity> audioCallChatingItemViewModelList = new ArrayList<>();
+        for (AudioCallChatingItemViewModel audioCallChatingItemViewModel : viewModel.observableList) {
+            SpannableString itemText = audioCallChatingItemViewModel.itemText.get();
+            String imgPath = audioCallChatingItemViewModel.imgPath.get();
+            boolean sendGiftBag = audioCallChatingItemViewModel.sendGiftBag.get();
+            AudioCallingBarrageEntity audioCallingBarrageEntity = new AudioCallingBarrageEntity(itemText.toString(),imgPath,sendGiftBag);
+            audioCallChatingItemViewModelList.add(audioCallingBarrageEntity);
+        }
         return new AudioFloatCallView(this, mRole, TUICalling.Type.AUDIO, userIds, inviterImId,
-                null, false,avatar,mTimeCount,roomId);
+                null, false,avatar,mTimeCount,roomId, audioCallChatingItemViewModelList);
     }
 
     //跳转谷歌支付act
@@ -262,7 +320,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         binding.ivMinimize.setOnClickListener(v -> {
             if (!PermissionUtil.hasPermission(getApplicationContext())) {
                 requestSettingCanDrawOverlays();
-                ToastUtils.showLong(getString(com.tencent.liteav.trtccalling.R.string.trtccalling_float_permission));
+                ToastUtils.showLong(getString(R.string.play_fun_float_permission));
                 return;
             }
             startFloatService();
@@ -353,15 +411,11 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         viewModel.uc.callAudioStart.observe(this, new Observer<Void>() {
             @Override
             public void onChanged(Void unused) {
-                //进入房间提示
-                String call_message_deatail_hint = StringUtils.getString(R.string.playfun_call_message_deatail_hint);
-                SpannableString stringBuilder = new SpannableString(call_message_deatail_hint);
-                ForegroundColorSpan blueSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint));
-                stringBuilder.setSpan(blueSpan, 0, call_message_deatail_hint.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                viewModel.putRcvItemMessage(stringBuilder, null, false);
                 //开始记时
-                TimeCallMessage();
-                setTimerForCallinfo();
+                if (!isRestart){
+                    TimeCallMessage();
+                    setTimerForCallinfo();
+                }
             }
         });
         //钻石不足充值弹窗
@@ -825,11 +879,13 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                                 if (!viewModel.girlEarningsField.get()){
                                     viewModel.girlEarningsField.set(true);
                                 }
-                                String girlEarningsTex = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt), viewModel.payeeProfits);
+                                String profit = viewModel.payeeProfits + "";
+                                String girlEarningsTex = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt), profit);
                                 SpannableString stringBuilder = new SpannableString(girlEarningsTex);
                                 ForegroundColorSpan blueSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint1));
-                                stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                stringBuilder.setSpan(blueSpan, 6, girlEarningsTex.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                int index = girlEarningsTex.indexOf(profit);
+                                stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, girlEarningsTex.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                stringBuilder.setSpan(blueSpan, index, index + profit.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                 viewModel.girlEarningsText.set(stringBuilder);
                             }
 
