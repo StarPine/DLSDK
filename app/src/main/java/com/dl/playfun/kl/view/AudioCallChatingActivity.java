@@ -1,11 +1,14 @@
 package com.dl.playfun.kl.view;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
@@ -31,6 +34,7 @@ import android.widget.TextView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -59,6 +63,7 @@ import com.dl.playfun.ui.dialog.GiftBagDialog;
 import com.dl.playfun.ui.mine.wallet.recharge.RechargeActivity;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
+import com.dl.playfun.utils.MiuiUtils;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 import com.dl.playfun.widget.dialog.MessageDetailDialog;
@@ -318,7 +323,8 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
     public void initViewObservable() {
         super.initViewObservable();
         binding.ivMinimize.setOnClickListener(v -> {
-            if (!PermissionUtil.hasPermission(getApplicationContext())) {
+//            if (!PermissionUtil.hasPermission(getApplicationContext())) {
+            if (!MiuiUtils.checkFloatWindowPermission(this)) {
                 requestSettingCanDrawOverlays();
                 ToastUtils.showLong(getString(R.string.play_fun_float_permission));
                 return;
