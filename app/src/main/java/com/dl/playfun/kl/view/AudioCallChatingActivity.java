@@ -219,8 +219,12 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
     //创建悬浮窗视图
     private AudioFloatCallView createFloatView() {
         String[] userIds = new String[]{receiverImId};
+        String avatar ="";
+        if (viewModel.leftUserInfoField.get() != null){
+            avatar = viewModel.leftUserInfoField.get().getAvatar();
+        }
         return new AudioFloatCallView(this, mRole, TUICalling.Type.AUDIO, userIds, inviterImId,
-                null, false,viewModel.leftUserInfoField.get().getAvatar(),mTimeCount,roomId);
+                null, false,avatar,mTimeCount,roomId);
     }
 
     //跳转谷歌支付act
@@ -787,7 +791,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                 viewModel.TimeCount++;
                 viewModel.timeTextField.set(mContext.getString(R.string.playfun_call_message_deatail_time_msg, mTimeCount / 60, mTimeCount % 60));
                 if (mTimeCount>=5){viewModel.tipSwitch.set(false);}
-                if (mTimeCount % 30 == 0){
+                if (mTimeCount % 10 == 0){
                     viewModel.getRoomStatus(roomId);
                 }
                 if (!viewModel.sayHiEntityHidden.get() && mTimeCount % 10 == 0) {

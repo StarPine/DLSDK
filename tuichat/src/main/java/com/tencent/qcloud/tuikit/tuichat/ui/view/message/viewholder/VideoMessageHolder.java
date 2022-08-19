@@ -12,6 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.tencent.qcloud.tuicore.Status;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tuicore.util.DateTimeUtil;
@@ -28,6 +29,8 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import me.goldze.mvvmhabit.utils.ToastUtils;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
@@ -137,6 +140,10 @@ public class VideoMessageHolder extends MessageContentHolder {
             msgContentFrame.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (Status.mIsShowFloatWindow){
+                        ToastUtils.showShort(R.string.audio_in_call);
+                        return;
+                    }
                     if (onItemClickListener != null) {
                         onItemClickListener.onMessageClick(v, position, msg);
                     }

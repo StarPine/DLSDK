@@ -29,6 +29,7 @@ import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.databinding.FragentTapeAudioBinding;
 import com.tbruyelle.rxpermissions2.RxPermissions;
+import com.tencent.qcloud.tuicore.Status;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 
@@ -36,6 +37,7 @@ import java.io.File;
 import java.math.BigDecimal;
 
 import me.goldze.mvvmhabit.bus.RxBus;
+import me.goldze.mvvmhabit.utils.ToastUtils;
 
 /**
  * Author: 彭石林
@@ -117,6 +119,12 @@ public class TapeAudioFragment extends BaseFragment<FragentTapeAudioBinding,Tape
         binding.circleRecordSurfaceView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                if (Status.mIsShowFloatWindow){
+                    if (event.getAction() == MotionEvent.ACTION_DOWN){
+                        ToastUtils.showShort(R.string.audio_in_call);
+                    }
+                    return false;
+                }
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         startTime = 0;

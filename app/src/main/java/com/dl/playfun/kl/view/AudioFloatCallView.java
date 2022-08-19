@@ -12,7 +12,12 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
+import com.dl.playfun.app.Injection;
+import com.dl.playfun.data.source.http.observer.BaseObserver;
+import com.dl.playfun.data.source.http.response.BaseDataResponse;
+import com.dl.playfun.entity.CallingStatusEntity;
 import com.dl.playfun.entity.RestartActivityEntity;
+import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.widget.image.CircleImageView;
 import com.tencent.liteav.trtccalling.TUICalling;
@@ -23,6 +28,7 @@ import com.tencent.qcloud.tuicore.Status;
 import java.util.List;
 
 import me.goldze.mvvmhabit.bus.RxBus;
+import me.goldze.mvvmhabit.utils.RxUtils;
 
 public class AudioFloatCallView extends BaseTUICallView {
     private static final String TAG = "AudioFloatCallView";
@@ -47,8 +53,8 @@ public class AudioFloatCallView extends BaseTUICallView {
                 .placeholder(R.drawable.default_avatar) //加载成功前显示的图片
                 .fallback(R.drawable.default_avatar) //url为空的时候,显示的图片
                 .into(ivAvatar);
-        showTimeCount(mTextViewTimeCount, timeCount);
         this.roomId = roomId;
+        showTimeCount(mTextViewTimeCount, timeCount);
     }
 
     @Override
@@ -84,6 +90,9 @@ public class AudioFloatCallView extends BaseTUICallView {
             @Override
             public void run() {
                 mTimeCount++;
+                if (mTimeCount %10 ==0){
+                    getRoomStatus(roomId);
+                }
                 Status.mBeginTime = mTimeCount;
                 if (null != view) {
                     runOnUiThread(new Runnable() {
@@ -143,6 +152,23 @@ public class AudioFloatCallView extends BaseTUICallView {
             }
         }
         return false;
+    }
+
+    //获取房间状态
+    public void getRoomStatus(Integer roomId) {
+        Injection.provideDemoRepository().getRoomStatus(roomId)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .subscribe(new BaseObserver<BaseDataResponse<CallingStatusEntity>>() {
+                    @Override
+                    public void onSuccess(BaseDataResponse<CallingStatusEntity> response) {
+                        CallingStatusEntity data = response.getData();
+                        Integer roomStatus = data.getRoomStatus();
+                        if (roomStatus != null && roomStatus != 101) {
+                            onCallEnd();
+                        }
+                    }
+                });
     }
 
     @Override
