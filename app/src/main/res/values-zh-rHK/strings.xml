@@ -1195,4 +1195,5 @@
     <string name="radio_daily_atendance_day_text">签到成功，积分+10</string>
 
     <string name="playchat_choose_area_title">地區</string>
+    <string name="playfun_coinpusher_hint_title">歡樂推幣機</string>
 </resources>

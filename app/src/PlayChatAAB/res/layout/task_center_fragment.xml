@@ -207,8 +207,8 @@
                                                     android:scaleType="fitXY" />
 
                                                 <ImageView
-                                                    android:layout_width="13dp"
-                                                    android:layout_height="13dp"
+                                                    android:layout_width="5dp"
+                                                    android:layout_height="16dp"
                                                     android:layout_gravity="center"
                                                     android:background="@drawable/ic_task_add" />
                                             </FrameLayout>

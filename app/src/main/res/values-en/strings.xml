@@ -1195,5 +1195,6 @@
     <string name="radio_daily_atendance_day_text">Successful check-in, +10 points</string>
 
     <string name="playchat_choose_area_title">Region</string>
+    <string name="playfun_coinpusher_hint_title">歡樂推幣機</string>
 
 </resources>

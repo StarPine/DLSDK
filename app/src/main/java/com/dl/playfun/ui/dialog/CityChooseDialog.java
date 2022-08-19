@@ -1,7 +1,6 @@
 package com.dl.playfun.ui.dialog;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;

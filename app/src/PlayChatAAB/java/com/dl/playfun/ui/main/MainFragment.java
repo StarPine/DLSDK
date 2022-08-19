@@ -44,6 +44,7 @@ import com.dl.playfun.event.TaskListEvent;
 import com.dl.playfun.kl.view.AudioCallChatingActivity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseFragment;
+import com.dl.playfun.ui.coinpusher.CoinpusherDialog;
 import com.dl.playfun.ui.dialog.LockDialog;
 import com.dl.playfun.ui.home.HomeMainFragment;
 import com.dl.playfun.ui.home.accost.HomeAccostDialog;
@@ -128,6 +129,8 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
     @Override
     public void initViewObservable() {
         super.initViewObservable();
+        CoinpusherDialog coinpusherDialog = new CoinpusherDialog(getContext());
+        coinpusherDialog.show();
         AppContext.instance().logEvent(AppsFlyerEvent.main_open);
 //        aliYunMqttClientLifecycle.broadcastGiftEvent.observe(this, new Observer<MqBroadcastGiftEntity>() {
 //            @Override
