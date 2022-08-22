@@ -86,6 +86,8 @@
     <color name="yellow_714">#FFA714</color>
     <color name="yellow_dad">#FCDDAD</color>
     <color name="yellow_a44">#8E6A44</color>
+    <color name="yellow_e4a">#FFEE4A</color>
+    <color name="yellow_600">#FFB600</color>
     <color name="coffee_11d">#C4611D</color>
 
     <color name="dating_content">#FFECECEC</color>
@@ -122,4 +124,7 @@
     <color name="red_yin1">#F8EEFF</color>
     <color name="white_yin1">#908fa6</color>
     <color name="partTranslucent">#39000000</color>
+
+    <color name="playfun_shape_radius_start_color">#6D62F8</color>
+    <color name="playfun_shape_radius_end_color">#BE63FF</color>
 </resources>

@@ -1188,5 +1188,6 @@
 
     <string name="playchat_choose_area_title">Region</string>
     <string name="playfun_coinpusher_hint_title">歡樂推幣機</string>
+    <string name="playfun_coinpusher_text_30">您30s內沒有投幣，已自動退出</string>
 </resources>
 

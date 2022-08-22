@@ -26,7 +26,9 @@ public class CustomDrawableBindingAdapter {
             "drawable_radius_leftBottom",
             "drawable_radius_rightBottom",
             "drawable_gradient_startColor",
-            "drawable_gradient_endColor"
+            "drawable_gradient_endColor",
+            "drawable_stroke_width",
+            "drawable_stroke_color"
     }, requireAll = false)
     public static void generateDrawable(View view,
                                         Integer drawable_color,
@@ -36,7 +38,9 @@ public class CustomDrawableBindingAdapter {
                                         Integer drawable_radius_leftBottom,
                                         Integer drawable_radius_rightBottom,
                                         Integer drawable_gradient_startColor,
-                                        Integer drawable_gradient_endColor
+                                        Integer drawable_gradient_endColor,
+                                        Integer drawable_stroke_width,
+                                        Integer drawable_stroke_color
     ) {
         final Context mContext = view.getContext();
         GradientDrawable roundRect = new GradientDrawable();
@@ -71,6 +75,10 @@ public class CustomDrawableBindingAdapter {
         //单独设置矩形的圆角弧度
         if (drawable_cornersRadius != null) {
             roundRect.setCornerRadius(dip2px(mContext, drawable_cornersRadius));
+        }
+        //设置外框
+        if(drawable_stroke_width !=null && drawable_stroke_color!=null){
+            roundRect.setStroke((int) dip2px(mContext, drawable_stroke_width),drawable_stroke_color);
         }
         if (drawable_color != null) {
             roundRect.setColor(drawable_color);

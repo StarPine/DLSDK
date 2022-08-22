@@ -21,7 +21,7 @@ import com.dl.playfun.ui.base.BaseDialog;
  */
 public class CoinpusherDialog  extends BaseDialog {
     private DialogCoinpusherListBinding binding;
-    private Context mContext;
+    private final Context mContext;
 
     public CoinpusherDialog(Context context) {
         super(context);
