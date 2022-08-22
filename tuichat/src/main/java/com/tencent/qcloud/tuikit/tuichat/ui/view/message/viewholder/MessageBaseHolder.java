@@ -112,7 +112,6 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
         if (customJsonMsgContentFrame != null){
             customJsonMsgContentFrame.removeAllViews();
         }
-        Log.i("starpine","========="+msg.getV2TIMMessage());
         //显示收益相关消息
         showProfitView(msg);
 

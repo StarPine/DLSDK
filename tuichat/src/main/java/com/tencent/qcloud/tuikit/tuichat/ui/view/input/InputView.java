@@ -402,12 +402,15 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         mTextInput.setOnMentionInputListener(new TIMMentionEditText.OnMentionInputListener() {
             @Override
             public void onMentionCharacterInput(String tag) {
-                if ((tag.equals(TIMMentionEditText.TIM_MENTION_TAG) || tag.equals(TIMMentionEditText.TIM_MENTION_TAG_FULL))
-                        && TUIChatUtils.isGroupChat(mChatLayout.getChatInfo().getType())) {
-                    if (mStartActivityListener != null) {
-                        mStartActivityListener.onStartGroupMemberSelectActivity();
+                if(mChatLayout.getChatInfo()!=null){
+                    if ((tag.equals(TIMMentionEditText.TIM_MENTION_TAG) || tag.equals(TIMMentionEditText.TIM_MENTION_TAG_FULL))
+                            && TUIChatUtils.isGroupChat(mChatLayout.getChatInfo().getType())) {
+                        if (mStartActivityListener != null) {
+                            mStartActivityListener.onStartGroupMemberSelectActivity();
+                        }
                     }
                 }
+
             }
         });
 
@@ -834,7 +837,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                         mMessageHandler.sendMessage(ChatMessageBuilder.buildTextMessage(mTextInput.getText().toString().trim()));
                     } else {
                         if (isReplyModel && replyPreviewBean != null) {
-                            if (TUIChatUtils.isGroupChat(mChatLayout.getChatInfo().getType()) && !mTextInput.getMentionIdList().isEmpty()) {
+                            if (mChatLayout.getChatInfo()!=null && TUIChatUtils.isGroupChat(mChatLayout.getChatInfo().getType()) && !mTextInput.getMentionIdList().isEmpty()) {
                                 List<String> atUserList = new ArrayList<>(mTextInput.getMentionIdList());
                                 mMessageHandler.sendMessage(ChatMessageBuilder.buildAtReplyMessage(mTextInput.getText().toString().trim(), atUserList, replyPreviewBean));
                             } else {
@@ -843,7 +846,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                             }
                             exitReply();
                         } else {
-                            if (TUIChatUtils.isGroupChat(mChatLayout.getChatInfo().getType()) && !mTextInput.getMentionIdList().isEmpty()) {
+                            if (mChatLayout.getChatInfo()!=null && TUIChatUtils.isGroupChat(mChatLayout.getChatInfo().getType()) && !mTextInput.getMentionIdList().isEmpty()) {
                                 //发送时通过获取输入框匹配上@的昵称list，去从map中获取ID list。
                                 List<String> atUserList = new ArrayList<>(mTextInput.getMentionIdList());
                                 if (atUserList.isEmpty()) {

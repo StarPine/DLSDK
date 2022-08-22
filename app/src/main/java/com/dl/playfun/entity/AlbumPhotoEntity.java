@@ -205,7 +205,7 @@ public class AlbumPhotoEntity extends BaseObservable implements Parcelable {
         dest.writeValue(this.verificationType);
         dest.writeValue(this.isPay);
         dest.writeString(this.msgId);
-        dest.writeInt(this.isCallCover);
+        dest.writeInt(this.isCallCover==null?0:this.isCallCover);
         dest.writeValue(this.isLocalUpdate);
     }
 }

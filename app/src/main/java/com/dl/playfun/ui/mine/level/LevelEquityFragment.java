@@ -76,11 +76,9 @@ public class LevelEquityFragment extends BaseFragment<FragmentLevelEquityBinding
             @Override
             public void onStateChanged(AppBarLayout appBarLayout, State state) {
                 if (state == State.EXPANDED) {
-                    Log.e("进入展开", "=================");
                     //展开状态
                     binding.toolBarTitleView.setVisibility(View.GONE);
                 } else if (state == State.COLLAPSED) {
-                    Log.e("进入折叠状态", "=================");
                     //折叠状态
                     binding.toolBarTitleView.setVisibility(View.VISIBLE);
                 }
