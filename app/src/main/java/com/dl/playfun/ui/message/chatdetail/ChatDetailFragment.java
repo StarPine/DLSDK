@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -608,19 +609,11 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         PopupWindow mPop = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         //常联系
         TextView tvContact = view.findViewById(R.id.tv_contact);
+        ImageView imgContact = view.findViewById(R.id.img_contact);
         if(viewModel.isContactsEnabled.get()){
-            Drawable drawable = getResources().getDrawable(R.drawable.img_contact_checked);
-            if(drawable != null){
-                drawable.setBounds(0,0,dp2px(mActivity,24f),dp2px(getContext(),24f));
-                tvContact.setCompoundDrawables(drawable,null,null,null );
-            }
+            imgContact.setImageResource(R.drawable.img_contact_checked);
         }else{
-            Drawable drawable = getResources().getDrawable(R.drawable.img_contact_normal);
-            if(drawable != null){
-                drawable.setBounds(0,0,dp2px(mActivity,24f),dp2px(getContext(),24f));
-                tvContact.setCompoundDrawablesRelative(drawable,null,null,null );
-            }
-
+            imgContact.setImageResource(R.drawable.img_contact_normal);
         }
         tvContact.setOnClickListener(v->{
             String otherImUserId = mChatInfo ==null ? null : mChatInfo.getId();
@@ -629,7 +622,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         });
         TextView menuTrack = view.findViewById(R.id.tv_menu_track);
         menuTrack.setText(viewModel.menuTrack.get());
-        menuTrack.setOnClickListener(v -> {
+        view.findViewById(R.id.ll_menu_track).setOnClickListener(v -> {
             if (viewModel.isTrack.get()) {
                 viewModel.delLike(userId);
             } else {
@@ -639,7 +632,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         });
         TextView menuBlockade = view.findViewById(R.id.tv_menu_blockade);
         menuBlockade.setText(viewModel.menuBlockade.get());
-        menuBlockade.setOnClickListener(v -> {
+        view.findViewById(R.id.ll_menu_blockade).setOnClickListener(v -> {
 
             if (viewModel.inBlacklist.get()) {
                 viewModel.delBlackList(userId);
@@ -655,7 +648,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             }
             mPop.dismiss();
         });
-        view.findViewById(R.id.tv_menu_report).setOnClickListener(v -> {
+        view.findViewById(R.id.ll_menu_report).setOnClickListener(v -> {
             Bundle bundle = ReportUserFragment.getStartBundle("home", userId);
             ReportUserFragment reportUserFragment = new ReportUserFragment();
             reportUserFragment.setArguments(bundle);
