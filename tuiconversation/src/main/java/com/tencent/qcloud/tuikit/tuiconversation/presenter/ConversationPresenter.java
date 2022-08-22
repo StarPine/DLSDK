@@ -955,9 +955,7 @@ public class ConversationPresenter {
     * @Date 2022/8/11
     */
     public void getFriendshipList(long loadSize,final boolean isFriend){
-        Log.e("当前是否是好友列表查询",isFriendConversation+"======================="+isFriend);
         synchronized (ConversationPresenter.class){
-            Log.e("进入同步锁","======================="+isFriend);
             //说明好友列表还没有数据
             if(isFriend){
                 if(loadedFriendshipInfoList.size() > 1){
@@ -967,7 +965,6 @@ public class ConversationPresenter {
                     provider.getFriendShipList(new IUIKitCallback<List<String>>() {
                         @Override
                         public void onSuccess(List<String> userIdData) {
-                            Log.e("成功查询好友数量列表",isFriend+"============"+userIdData.size()+"==============="+String.valueOf(userIdData));
                             if(!userIdData.isEmpty()){
                                 loadedFriendshipInfoIdList.addAll(userIdData);
                                 int dataSize = userIdData.size();
@@ -1028,7 +1025,6 @@ public class ConversationPresenter {
                 provider.getFriendShipList(new IUIKitCallback<List<String>>() {
                     @Override
                     public void onSuccess(List<String> userIdData) {
-                        Log.e(TAG,false+"查询好友列表成功："+userIdData.size()+"============");
                         if(!userIdData.isEmpty()){
                             loadedFriendshipInfoIdList.addAll(userIdData);
                         }
@@ -1037,13 +1033,11 @@ public class ConversationPresenter {
 
                     @Override
                     public void onError(int errCode, String errMsg, List<String> data) {
-                        Log.e(TAG,false+"查询好友列表异常："+errCode+"============"+errMsg);
                         loadConversation(loadSize);
                     }
                 });
             }
         }
-        Log.e("进入释放同步锁","======================="+isFriend);
     }
     /**
     * @Desc TODO(统计当前会话列表的未读数量)

@@ -22,12 +22,13 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="90dp">
+
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/img_bar_background"
                 android:layout_width="match_parent"
                 android:layout_height="90dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/img_main_bar_backdrop" />
+                android:src="@drawable/img_main_bar_backdrop_msg" />
             <View
                 android:id="@+id/status_bar_view"
                 android:layout_width="match_parent"
