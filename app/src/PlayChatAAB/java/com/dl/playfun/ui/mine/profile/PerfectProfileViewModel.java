@@ -143,7 +143,10 @@ public class PerfectProfileViewModel extends BaseViewModel<AppRepository> {
                     @Override
                     public void onSuccess(BaseResponse baseResponse) {
                         dismissHUD();
-                        AppConfig.isRegister = true;
+                        //男性才有注册奖励
+                        if (UserSex.get() == 1){
+                            AppConfig.isRegister = true;
+                        }
                         model.clearChannelAF();
                         uc.showAlertHint.call();
                     }

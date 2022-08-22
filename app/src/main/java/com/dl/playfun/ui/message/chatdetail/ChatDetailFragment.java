@@ -1152,6 +1152,10 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         MessageDetailDialog.CheckImgViewFile(mActivity, true, new MessageDetailDialog.AudioCallHintOnClickListener() {
             @Override
             public void check1OnClick() {
+                if (Status.mIsShowFloatWindow){
+                    me.goldze.mvvmhabit.utils.ToastUtils.showShort(R.string.audio_in_call);
+                    return;
+                }
                 //选择视频
                 onVideoActionClick();
             }

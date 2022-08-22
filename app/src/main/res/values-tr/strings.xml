@@ -837,7 +837,7 @@
     <string name="playfun_message_deatail_call_audio">Sesli arama</string>
     <string name="playfun_message_deatail_call_video">Görüntülü arama</string>
     <string name="playfun_call_message_deatail_hint">Özel 1v1 sohbete hoş geldiniz</string>
-    <string name="playfun_call_message_deatail_time_msg">Çağrı süresi %02d:%02d</string>
+    <string name="playfun_call_message_deatail_time_msg">Çağrı süresi %02d:%02d:%02d</string>
     <string name="playfun_call_message_deatail_girl_txt">%s arama geliri elde edildi</string>
     <string name="playfun_call_message_deatail_girl_txt1">gönder</string>
     <string name="playfun_call_message_deatail_girl_txt2">siz</string>

@@ -1,9 +1,12 @@
 package com.dl.playfun.ui.dialog;
 
+import android.Manifest;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -21,10 +24,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.fragment.app.FragmentActivity;
+
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.R;
+import com.dl.playfun.widget.dialog.MMAlertDialog;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
+import com.tencent.qcloud.tuikit.tuichat.util.PermissionHelper;
+import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 import java.io.File;
 
@@ -150,32 +160,44 @@ public class ExclusiveAccostDialog {
         //事件监听
         close.setOnClickListener(v -> dialog.dismiss());
         recording.setOnTouchListener((v, event) -> {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    audioNomal.setImageDrawable(mContext.getDrawable(R.drawable.icon_anim_audio_recording));
-                    startAnimal(audioNomal);
-                    recording.setBackgroundResource(R.drawable.button_purple_background2);
-                    recording.setText(mContext.getString(R.string.playfun_audio_accost_recording));
-                    startTime = 0;
-                    startRecord(timing);
-                    setTimeText(timing);
-                    startTimer(timing, recording, audioPlayable, llCompletiion, audioNomal);
-                    deleteFlag = false;
-                    break;
-                case MotionEvent.ACTION_UP:
-                    audioNomal.clearAnimation();
-                    stopRecord();
-                    if (startTime < 3) {
-                        ToastUtil.toastShortMessage(StringUtils.getString(R.string.playfun_tape_audio_error_text));
-                        startTime = 0;
-                        deleteFlag = true;
-                        resetStatus(recording, timing, audioNomal, llCompletiion, audioPlayable);
-                    } else {
-                        recordCompletion(recording, audioPlayable, llCompletiion);
-                    }
-                    stopTimer();
-                    break;
+            try {
+                new RxPermissions((FragmentActivity) mContext)
+                        .request(Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA)
+                        .subscribe(granted -> {
+                            if (granted) {
+                                switch (event.getAction()) {
+                                    case MotionEvent.ACTION_DOWN:
+                                        audioNomal.setImageDrawable(mContext.getDrawable(R.drawable.icon_anim_audio_recording));
+                                        startAnimal(audioNomal);
+                                        recording.setBackgroundResource(R.drawable.button_purple_background2);
+                                        recording.setText(mContext.getString(R.string.playfun_audio_accost_recording));
+                                        startTime = 0;
+                                        startRecord(timing);
+                                        setTimeText(timing);
+                                        startTimer(timing, recording, audioPlayable, llCompletiion, audioNomal);
+                                        deleteFlag = false;
+                                        break;
+                                    case MotionEvent.ACTION_UP:
+                                        audioNomal.clearAnimation();
+                                        stopRecord();
+                                        if (startTime < 1) {
+                                            ToastUtil.toastShortMessage(StringUtils.getString(R.string.playfun_audio_tips_text_one));
+                                            startTime = 0;
+                                            deleteFlag = true;
+                                            resetStatus(recording, timing, audioNomal, llCompletiion, audioPlayable);
+                                        } else {
+                                            recordCompletion(recording, audioPlayable, llCompletiion);
+                                        }
+                                        stopTimer();
+                                        break;
+                                }
+                            } else {
+                            }
+                        });
+            } catch (Exception e) {
+
             }
+
             return true;
         });
         ivOk.setOnClickListener(v -> {

@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -930,22 +931,32 @@ public class TraceDialog {
      * @param isUnableEvent 是否限制外界事件
      * @param dayGiveCoin   明天钻石奖励数量
      * @param dayGiveVideoCard  明天视频卡奖励数量
-     * @param giveCoin  这次钻石奖励数量
-     * @param videoCard 这次视频卡奖励数量
+     * @param fristRewardNum  第一个奖励数量
+     * @param secondRewardNum 第二个奖励数量
      * @return
      */
-    public Dialog dayRewardDialog(boolean isUnableEvent, int dayGiveCoin, int dayGiveVideoCard, int giveCoin, int videoCard) {
+    public Dialog dayRewardDialog(boolean isUnableEvent, int dayGiveCoin, int dayGiveVideoCard, int fristRewardNum, int secondRewardNum) {
         String content = null;
+        String fristRewardTips = null;
+        String secondRewardTips = null;
         if (dayGiveCoin > 0 && dayGiveVideoCard > 0) {
-            content = String.format(context.getString(R.string.play_fun_reward_tips), dayGiveCoin + "", dayGiveVideoCard + "");
+            content = String.format(context.getString(R.string.playfun_reward_tips), dayGiveCoin + "", dayGiveVideoCard + "");
         }
         if (dayGiveCoin > 0 && dayGiveVideoCard <= 0) {
-            content = String.format(context.getString(R.string.play_fun_reward_tips2), dayGiveCoin + "");
+            content = String.format(context.getString(R.string.playfun_reward_tips2), dayGiveCoin + "");
         }
         if (dayGiveVideoCard > 0 && dayGiveCoin <= 0) {
-            content = String.format(context.getString(R.string.play_fun_reward_tips3), dayGiveVideoCard + "");
+            content = String.format(context.getString(R.string.playfun_reward_tips3), dayGiveVideoCard + "");
         }
-        return rewardDialog(isUnableEvent, giveCoin, videoCard, content);
+        if (fristRewardNum > 0 || secondRewardNum > 0) {
+            if (fristRewardNum > 0){
+                fristRewardTips = String.format(context.getString(R.string.playfun_coin_earnings_money_add), fristRewardNum + "");
+            }
+            if (secondRewardNum > 0){
+                secondRewardTips = String.format(context.getString(R.string.playfun_coin_earnings_money_add), secondRewardNum + "");
+            }
+        }
+        return rewardDialog(isUnableEvent, fristRewardTips, secondRewardTips, content);
     }
 
     /**
@@ -957,20 +968,22 @@ public class TraceDialog {
      * @return
      */
     public Dialog registerRewardDialog(boolean isUnableEvent, int fristRewardNum, int secondRewardNum) {
-        String contentTip = context.getString(R.string.play_fun_reward_tips4);
-        return rewardDialog(isUnableEvent, fristRewardNum, secondRewardNum, contentTip);
+        String contentTip = context.getString(R.string.playfun_reward_tips4);
+        String fristRewardTips = context.getString(R.string.playfun_reward_card_tips) + fristRewardNum;
+        String secondRewardTips = context.getString(R.string.playfun_reward_card_tips2) + secondRewardNum;
+        return rewardDialog(isUnableEvent, fristRewardTips, secondRewardTips, contentTip);
     }
 
     /**
      * 奖励弹框
      *
      * @param isUnableEvent
-     * @param fristRewardNum
-     * @param secondRewardNum
+     * @param fristRewardTips
+     * @param secondRewardTips
      * @param contentTip
      * @return
      */
-    public Dialog rewardDialog(boolean isUnableEvent, int fristRewardNum, int secondRewardNum, String contentTip) {
+    public Dialog rewardDialog(boolean isUnableEvent, String fristRewardTips, String secondRewardTips, String contentTip) {
         Dialog dialog = new Dialog(context, R.style.BottomDialog);
         View contentView = LayoutInflater.from(context).inflate(R.layout.dialog_day_reward, null);
         dialog.setContentView(contentView);
@@ -1001,7 +1014,7 @@ public class TraceDialog {
         TextView tv_doule_video_card_number = contentView.findViewById(R.id.tv_doule_video_card_number);
         TextView tv_single_diamond_number = contentView.findViewById(R.id.tv_single_diamond_number);
 
-        if (titleString != null) {
+        if (!TextUtils.isEmpty(titleString)) {
             tvTitle.setText(titleString);
         }
         if (firstRewardId != 0){
@@ -1010,28 +1023,26 @@ public class TraceDialog {
         if (secondRewardId != 0){
             iv_doule_second_reward.setImageDrawable(context.getDrawable(secondRewardId));
         }
-        if (fristRewardNum > 0 && secondRewardNum > 0) {
+        if (fristRewardTips != null && secondRewardTips != null){
             llSingle.setVisibility(View.GONE);
             llDoule.setVisibility(View.VISIBLE);
             llDoule2.setVisibility(View.VISIBLE);
-            tv_doule_diamond_number.setText(String.format(context.getString(R.string.playfun_coin_earnings_money_add), fristRewardNum + ""));
-            tv_doule_video_card_number.setText(String.format(context.getString(R.string.playfun_coin_earnings_money_add), secondRewardNum + ""));
-        }
-        if (fristRewardNum > 0 && secondRewardNum <= 0) {
+            tv_doule_diamond_number.setText(fristRewardTips);
+            tv_doule_video_card_number.setText(secondRewardTips);
+        }else {
             llSingle.setVisibility(View.VISIBLE);
             llDoule.setVisibility(View.GONE);
             llDoule2.setVisibility(View.GONE);
-            iv_single_diamond.setImageDrawable(context.getDrawable(R.drawable.icon_diamond));
-            tv_single_diamond_number.setText(String.format(context.getString(R.string.playfun_coin_earnings_money_add), fristRewardNum + ""));
-        }
-        if (secondRewardNum > 0 && fristRewardNum <= 0) {
-            llSingle.setVisibility(View.VISIBLE);
-            llDoule.setVisibility(View.GONE);
-            llDoule2.setVisibility(View.GONE);
-            iv_single_diamond.setImageDrawable(context.getDrawable(R.drawable.icon_video_card));
-            tv_single_diamond_number.setText(String.format(context.getString(R.string.playfun_coin_earnings_money_add), secondRewardNum + ""));
-        }
+            if (fristRewardTips != null){
+                iv_single_diamond.setImageDrawable(context.getDrawable(R.drawable.icon_diamond));
+                tv_single_diamond_number.setText( fristRewardTips);
+            }
+            if (secondRewardTips != null){
+                iv_single_diamond.setImageDrawable(context.getDrawable(R.drawable.icon_video_card));
+                tv_single_diamond_number.setText(secondRewardTips);
+            }
 
+        }
         if (contentTip == null) {
             tvContent.setVisibility(View.GONE);
         } else {

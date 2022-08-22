@@ -14,6 +14,7 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.utils.FileUploadUtils;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
+import com.tencent.qcloud.tuicore.Status;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -75,6 +76,10 @@ public class ExclusiveCallViewModel extends BaseViewModel<AppRepository> {
      * 编辑语音搭讪语
      */
     public BindingCommand editAudioAccostOnClick = new BindingCommand(() -> {
+        if (Status.mIsShowFloatWindow){
+            ToastUtils.showShort(R.string.audio_in_call);
+            return;
+        }
         editAudio.call();
     });
 
@@ -82,6 +87,10 @@ public class ExclusiveCallViewModel extends BaseViewModel<AppRepository> {
      * 播放录音
      */
     public BindingCommand audioPlayOnClick = new BindingCommand(() -> {
+        if (Status.mIsShowFloatWindow){
+            ToastUtils.showShort(R.string.audio_in_call);
+            return;
+        }
         playAudio.call();
     });
 

@@ -887,7 +887,7 @@
     <string name="playfun_message_deatail_call_video">Видеозвонок</string>
 
     <string name="playfun_call_message_deatail_hint">Добро пожаловать в приватный чат 1 на 1</string>
-    <string name="playfun_call_message_deatail_time_msg">Время чата %02d:%02d</string>
+    <string name="playfun_call_message_deatail_time_msg">Время чата %02d:%02d:%02d</string>
     <string name="playfun_call_message_deatail_girl_txt">Получить доход от звонков: %s ₽</string>
     <string name="playfun_call_message_deatail_girl_txt1">отправлять</string>
     <string name="playfun_call_message_deatail_girl_txt2">вам</string>

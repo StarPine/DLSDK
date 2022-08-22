@@ -1,14 +1,11 @@
 package com.dl.playfun.kl.view;
 
-import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
@@ -34,7 +31,6 @@ import android.widget.TextView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -326,7 +322,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
 //            if (!PermissionUtil.hasPermission(getApplicationContext())) {
             if (!MiuiUtils.checkFloatWindowPermission(this)) {
                 requestSettingCanDrawOverlays();
-                ToastUtils.showLong(getString(R.string.play_fun_float_permission));
+                ToastUtils.showLong(getString(R.string.playfun_float_permission));
                 return;
             }
             startFloatService();
@@ -849,7 +845,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
             public void run() {
                 mTimeCount++;
                 viewModel.TimeCount++;
-                viewModel.timeTextField.set(mContext.getString(R.string.playfun_call_message_deatail_time_msg, mTimeCount / 60, mTimeCount % 60));
+                viewModel.timeTextField.set(mContext.getString(R.string.playfun_call_message_deatail_time_msg, mTimeCount/3600, mTimeCount / 60, mTimeCount % 60));
                 if (mTimeCount>=5){viewModel.tipSwitch.set(false);}
                 if (mTimeCount % 10 == 0){
                     viewModel.getRoomStatus(roomId);

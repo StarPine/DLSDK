@@ -53,6 +53,7 @@ import com.google.gson.Gson;
 import com.luck.picture.lib.permissions.PermissionChecker;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 import com.tbruyelle.rxpermissions2.RxPermissions;
+import com.tencent.qcloud.tuicore.Status;
 
 import java.util.List;
 
@@ -344,6 +345,10 @@ public class WebHomeFragment extends BaseFragment<ActivityWebHomePlayfunBinding,
         //拨打视讯
         @JavascriptInterface
         public void callingUserVideos(String IMUserId, String toIMUserId, int callingSource) {
+            if (Status.mIsShowFloatWindow){
+                ToastUtils.showShort(R.string.audio_in_call);
+                return;
+            }
             viewModel.getCallingInvitedInfo(2, IMUserId, toIMUserId, callingSource);
         }
 
@@ -383,6 +388,10 @@ public class WebHomeFragment extends BaseFragment<ActivityWebHomePlayfunBinding,
         //前端掉用拨打接口逻辑、客户端直接提供跳转页面方法
         @JavascriptInterface
         public void toCallVideoUserView(String toIMUserId,String dataInfo) {
+            if (Status.mIsShowFloatWindow){
+                ToastUtils.showShort(R.string.audio_in_call);
+                return;
+            }
             if(dataInfo!=null){
                 CallingInviteInfo callingInviteInfo = GsonUtils.fromJson(dataInfo,CallingInviteInfo.class);
                 if (callingInviteInfo != null) {

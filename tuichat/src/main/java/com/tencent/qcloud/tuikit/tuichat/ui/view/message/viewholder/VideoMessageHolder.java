@@ -155,6 +155,10 @@ public class VideoMessageHolder extends MessageContentHolder {
         msgContentFrame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (Status.mIsShowFloatWindow){
+                    ToastUtils.showShort(R.string.audio_in_call);
+                    return;
+                }
                 Intent intent = new Intent(TUIChatService.getAppContext(), ImageVideoScanActivity.class);
                 intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
                 if (isForwardMode) {

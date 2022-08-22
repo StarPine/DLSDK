@@ -688,7 +688,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
                                 android:layout_toEndOf="@+id/mine_item_anchor_center"
-                                android:text="@string/play_fun_mine_title_anchor_center"
+                                android:text="@string/playfun_mine_title_anchor_center"
                                 android:textSize="13sp" />
 
                             <TextView

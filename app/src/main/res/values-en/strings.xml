@@ -836,7 +836,7 @@
     <string name="playfun_message_deatail_call_audio">Voice call</string>
     <string name="playfun_message_deatail_call_video">Video call</string>
     <string name="playfun_call_message_deatail_hint">Welcome to private 1v1 chat</string>
-    <string name="playfun_call_message_deatail_time_msg">Chat time %02d:%02d</string>
+    <string name="playfun_call_message_deatail_time_msg">Chat time %02d:%02d:%02d</string>
     <string name="playfun_call_message_deatail_girl_txt">Get chatting income %s</string>
     <string name="playfun_call_message_deatail_girl_txt1">send to</string>
     <string name="playfun_call_message_deatail_girl_txt2">you</string>
