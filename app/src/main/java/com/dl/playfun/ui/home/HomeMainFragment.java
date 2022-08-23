@@ -213,18 +213,7 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
             @Override
             public void onChanged(Void unused) {
                 AppContext.instance().logEvent(AppsFlyerEvent.Top_up);
-                CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(mActivity);
-                coinRechargeFragmentView.setClickListener(new CoinRechargeSheetView.ClickListener() {
-                    @Override
-                    public void toGooglePlayView(GoodsEntity goodsEntity) {
-                        Intent intent = new Intent(mActivity, RechargeActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("Goods_info", goodsEntity);
-                        intent.putExtras(bundle);
-                        toGooglePlayIntent.launch(intent);
-                    }
-                });
-                coinRechargeFragmentView.show();
+                toRecharge();
             }
         });
         //播放搭讪动画
@@ -255,18 +244,14 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
             }
         });
     }
-    //跳转谷歌支付act
-    ActivityResultLauncher<Intent> toGooglePlayIntent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-        Log.e("进入支付页面回调","=========");
-        if (result.getData() != null) {
-            Intent intentData = result.getData();
-            GoodsEntity goodsEntity = (GoodsEntity) intentData.getSerializableExtra("goodsEntity");
-            if(goodsEntity!=null){
-                Log.e("支付成功","===============");
-            }
-        }
-    });
 
+    /**
+     * 去充值
+     */
+    private void toRecharge() {
+        CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(mActivity);
+        coinRechargeFragmentView.show();
+    }
 
     @SuppressLint("MissingPermission")
     private void startLocation() {

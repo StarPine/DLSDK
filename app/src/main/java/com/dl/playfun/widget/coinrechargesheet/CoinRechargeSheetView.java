@@ -2,13 +2,9 @@ package com.dl.playfun.widget.coinrechargesheet;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Bundle;
-import android.text.method.KeyListener;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +13,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -37,19 +30,15 @@ import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
-import com.dl.playfun.entity.CoinWalletEntity;
 import com.dl.playfun.entity.CreateOrderEntity;
 import com.dl.playfun.entity.DiamondInfoEntity;
 import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.ui.base.BasePopupWindow;
 import com.dl.playfun.ui.dialog.adapter.CoinRechargeAdapter;
-import com.dl.playfun.ui.mine.wallet.recharge.RechargeActivity;
 import com.dl.playfun.widget.dialog.TraceDialog;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.inject.Inject;
 
 import me.goldze.mvvmhabit.utils.RxUtils;
 import me.goldze.mvvmhabit.utils.ToastUtils;
@@ -249,6 +238,9 @@ public class CoinRechargeSheetView extends BasePopupWindow implements View.OnCli
         TraceDialog.getInstance(mActivity)
                 .setTitle(mActivity.getString(R.string.playfun_recharge_success))
                 .setConfirmOnlick(dialog -> {
+                    if (clickListener != null){
+                        clickListener.paySuccess(currGoodsInfo);
+                    }
                     isFinsh = true;
                     dialog.dismiss();
                     dismiss();
@@ -375,7 +367,7 @@ public class CoinRechargeSheetView extends BasePopupWindow implements View.OnCli
 
     public interface ClickListener {
         //跳转去谷歌支付页面
-        default void toGooglePlayView(GoodsEntity goodsEntity) {
+        default void paySuccess(GoodsEntity goodsEntity) {
 
         }
     }

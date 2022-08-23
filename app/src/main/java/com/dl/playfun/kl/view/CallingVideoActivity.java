@@ -223,18 +223,19 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         }
     }
 
-    //跳转谷歌支付act
-    ActivityResultLauncher<Intent> toGooglePlayIntent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-        Log.e("进入支付页面回调","=========");
-        if (result.getData() != null) {
-            Intent intentData = result.getData();
-            GoodsEntity goodsEntity = (GoodsEntity) intentData.getSerializableExtra("goodsEntity");
-            if(goodsEntity!=null){
-                Log.e("支付成功","===============");
+    /**
+     * 去充值
+     */
+    private void toRecharge() {
+        CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(this);
+        coinRechargeFragmentView.setClickListener(new CoinRechargeSheetView.ClickListener() {
+            @Override
+            public void paySuccess(GoodsEntity goodsEntity) {
                 viewModel.getCallingStatus(roomId);
             }
-        }
-    });
+        });
+        coinRechargeFragmentView.show();
+    }
 
     @Override
     public void initData() {
@@ -430,18 +431,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
 //                        sheetView.dismiss();
 //                    }
 //                });
-                CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(CallingVideoActivity.this);
-                coinRechargeFragmentView.setClickListener(new CoinRechargeSheetView.ClickListener() {
-                    @Override
-                    public void toGooglePlayView(GoodsEntity goodsEntity) {
-                        Intent intent = new Intent(CallingVideoActivity.this, RechargeActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("Goods_info", goodsEntity);
-                        intent.putExtras(bundle);
-                        toGooglePlayIntent.launch(intent);
-                    }
-                });
-                coinRechargeFragmentView.show();
+                toRecharge();
             }
         });
         //发送礼物弹窗

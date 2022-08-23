@@ -286,21 +286,6 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                 null, false,avatar,mTimeCount,roomId, audioCallChatingItemViewModelList);
     }
 
-    //跳转谷歌支付act
-    ActivityResultLauncher<Intent> toGooglePlayIntent = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(), result -> {
-        Log.e("进入支付页面回调","=========");
-        if (result.getData() != null) {
-            Intent intentData = result.getData();
-            GoodsEntity goodsEntity = (GoodsEntity) intentData.getSerializableExtra("goodsEntity");
-            if(goodsEntity!=null){
-                Log.e("支付成功","===============");
-                viewModel.getCallingStatus(roomId);
-            }
-        }
-    });
-
-
     private void requestSettingCanDrawOverlays() {
         int sdkInt = Build.VERSION.SDK_INT;
         if (sdkInt >= Build.VERSION_CODES.O) {//8.0以上
@@ -425,18 +410,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
 
             @Override
             public void onChanged(Boolean isGiftSend) {
-                CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(AudioCallChatingActivity.this);
-                coinRechargeFragmentView.setClickListener(new CoinRechargeSheetView.ClickListener() {
-                    @Override
-                    public void toGooglePlayView(GoodsEntity goodsEntity) {
-                        Intent intent = new Intent(AudioCallChatingActivity.this, RechargeActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("Goods_info", goodsEntity);
-                        intent.putExtras(bundle);
-                        toGooglePlayIntent.launch(intent);
-                    }
-                });
-                coinRechargeFragmentView.show();
+                toRecharge();
 //                GameCoinExchargeSheetView coinRechargeSheetView = new GameCoinExchargeSheetView(AudioCallChatingActivity.this);
 //                coinRechargeSheetView.setCallMedia(true);
 //                coinRechargeSheetView.setMaleBalance(viewModel.maleBalanceMoney);
@@ -481,6 +455,20 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                 giftBagDialog.show();
             }
         });
+    }
+
+    /**
+     * 去充值
+     */
+    private void toRecharge() {
+        CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(this);
+        coinRechargeFragmentView.setClickListener(new CoinRechargeSheetView.ClickListener() {
+            @Override
+            public void paySuccess(GoodsEntity goodsEntity) {
+                viewModel.getCallingStatus(roomId);
+            }
+        });
+        coinRechargeFragmentView.show();
     }
 
     /**
@@ -588,6 +576,8 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
             streamerView.startAnimation(animation);
         }
     }
+
+
 
     private void startAcceptHeadAnimotion(GiftEntity giftEntity) {
         ImageView giftImageTrans = new ImageView(mContext);

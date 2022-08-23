@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -654,18 +653,7 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
                         }
                         @Override
                         public void toGooglePlayView() {
-                            CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(mActivity);
-                            coinRechargeFragmentView.setClickListener(new CoinRechargeSheetView.ClickListener() {
-                                @Override
-                                public void toGooglePlayView(GoodsEntity goodsEntity) {
-                                    Intent intent = new Intent(mActivity, RechargeActivity.class);
-                                    Bundle bundle = new Bundle();
-                                    bundle.putSerializable("Goods_info", goodsEntity);
-                                    intent.putExtras(bundle);
-                                    toGooglePlayIntent.launch(intent);
-                                }
-                            });
-                            coinRechargeFragmentView.show();
+                            toRecharge();
                         }
 
                     }).build().show();
@@ -691,18 +679,7 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
 
                             @Override
                             public void toGooglePlayView() {
-                                CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(mActivity);
-                                coinRechargeFragmentView.setClickListener(new CoinRechargeSheetView.ClickListener() {
-                                    @Override
-                                    public void toGooglePlayView(GoodsEntity goodsEntity) {
-                                        Intent intent = new Intent(mActivity, RechargeActivity.class);
-                                        Bundle bundle = new Bundle();
-                                        bundle.putSerializable("Goods_info", goodsEntity);
-                                        intent.putExtras(bundle);
-                                        toGooglePlayIntent.launch(intent);
-                                    }
-                                });
-                                coinRechargeFragmentView.show();
+                                toRecharge();
                             }
                         }).build().show();
                     })
@@ -722,6 +699,14 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
                     .chooseType(MVDialog.TypeEnum.CENTER)
                     .show();
         }
+    }
+
+    /**
+     * 去充值
+     */
+    private void toRecharge() {
+        CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(mActivity);
+        coinRechargeFragmentView.show();
     }
 
     private boolean isVip() {
@@ -771,31 +756,9 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
     }
 
     private void googleCoinValueBox() {
-        CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(mActivity);
-        coinRechargeFragmentView.setClickListener(new CoinRechargeSheetView.ClickListener() {
-            @Override
-            public void toGooglePlayView(GoodsEntity goodsEntity) {
-                Intent intent = new Intent(mActivity, RechargeActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("Goods_info", goodsEntity);
-                intent.putExtras(bundle);
-                toGooglePlayIntent.launch(intent);
-            }
-        });
-        coinRechargeFragmentView.show();
+        toRecharge();
     }
 
-    //跳转谷歌支付act
-    ActivityResultLauncher<Intent> toGooglePlayIntent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-        Log.e("进入支付页面回调","=========");
-        if (result.getData() != null) {
-            Intent intentData = result.getData();
-            GoodsEntity goodsEntity = (GoodsEntity) intentData.getSerializableExtra("goodsEntity");
-            if(goodsEntity!=null){
-                Log.e("支付成功","===============");
-            }
-        }
-    });
     //弹出钻石充值
     private void dialogRechargeShow() {
         ApiConfigManagerEntity apiConfigManagerEntity = ConfigManager.getInstance().getAppRepository().readApiConfigManagerEntity();

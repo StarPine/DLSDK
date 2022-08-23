@@ -95,19 +95,6 @@ public class WalletFragment extends BaseToolbarFragment<FragmentWalletBinding, W
         if (v.getId() == R.id.btn_exchange_game_coin) {
             Intent intent = new Intent(mActivity, DiamondRechargeActivity.class);
             startActivity(intent);
-//            AppContext.instance().logEvent(AppsFlyerEvent.Top_up);
-//            CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(mActivity);
-//            coinRechargeFragmentView.setClickListener(new CoinRechargeSheetView.ClickListener() {
-//                @Override
-//                public void toGooglePlayView(GoodsEntity goodsEntity) {
-//                    Intent intent = new Intent(mActivity, RechargeActivity.class);
-//                    Bundle bundle = new Bundle();
-//                    bundle.putSerializable("Goods_info", goodsEntity);
-//                    intent.putExtras(bundle);
-//                    toGooglePlayIntent.launch(intent);
-//                }
-//            });
-//            coinRechargeFragmentView.show();
         }else if(R.id.btn_game_coin_topup == v.getId()){
             CoinExchargeItegralPayDialog coinRechargeSheetView = new CoinExchargeItegralPayDialog(getContext(),mActivity);
             coinRechargeSheetView.show();
