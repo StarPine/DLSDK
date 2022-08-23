@@ -3,6 +3,7 @@ package com.dl.playfun.ui.mine.wallet.diamond.recharge;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 
 import androidx.lifecycle.ViewModelProviders;
 
@@ -156,6 +157,11 @@ public class DiamondRechargeActivity extends BaseActivity<ActivityDiamondRecharg
                 })
                 .dayRewardDialog(true, viewModel.selectedGoodsEntity.get().getDayGiveCoin(), 0, totalReward,0)
                 .show();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        return super.onKeyDown(keyCode, event);
     }
 
     //进行支付

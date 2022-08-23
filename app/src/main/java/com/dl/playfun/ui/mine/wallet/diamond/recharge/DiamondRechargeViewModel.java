@@ -140,7 +140,6 @@ public class DiamondRechargeViewModel extends BaseViewModel<AppRepository> {
                 });
     }
 
-
     public boolean isMale() {
         return ConfigManager.getInstance().isMale();
     }

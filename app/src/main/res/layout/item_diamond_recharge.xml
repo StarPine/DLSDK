@@ -17,6 +17,7 @@
     </data>
 
     <RelativeLayout
+        android:id="@+id/rl_layout"
         android:layout_width="match_parent"
         android:layout_height="110dp"
         android:layout_marginBottom="10dp"
@@ -25,6 +26,7 @@
         tools:background="@drawable/bg_diamond_recharge_item_nomal">
 
         <TextView
+            android:id="@+id/tv_flag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -54,6 +56,7 @@
                 android:src="@drawable/icon_diamond_head" />
 
             <TextView
+                android:id="@+id/tv_total_revenue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
@@ -65,6 +68,7 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/tv_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/tv_recharge_tips"
@@ -76,20 +80,20 @@
             android:textColor="@{viewModel.itemEntity.isRecommend == 1?@color/yellow_544:@color/pseekbar_process}"
             android:textSize="@dimen/alivc_common_font_20"
             android:textStyle="bold"
-            tools:textColor="@color/pseekbar_process"
-            tools:text="$9999" />
+            tools:text="$9999"
+            tools:textColor="@color/pseekbar_process" />
 
         <TextView
             android:id="@+id/tv_recharge_tips"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+            android:layout_marginBottom="1dp"
             android:background="@drawable/bg_diamond_recharge_item_child"
             android:padding="7dp"
             android:paddingStart="10dp"
-            android:layout_marginBottom="1dp"
-            android:layout_marginRight="1dp"
-            android:layout_marginLeft="1dp"
             android:text="@{viewModel.itemEntity.goodsDesc}"
             android:textColor="@color/pseekbar_process"
             android:textSize="10.67sp"
@@ -104,7 +108,6 @@
             android:background="@drawable/bg_frame_checked"
             android:visibility="@{viewModel.itemEntity.getSelected ? View.VISIBLE : View.GONE}"
             tools:visibility="gone" />
-
 
     </RelativeLayout>
 

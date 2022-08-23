@@ -69,7 +69,7 @@ public class GoodsEntity extends BaseObservable implements Serializable {
     @SerializedName("give_coin_title")
     private String giveCoinTitle;
 
-    private Boolean isSelected;
+    private boolean isSelected;
 
     @SerializedName("day_give_video_card")
     private int dayGiveVideoCard;
@@ -123,11 +123,11 @@ public class GoodsEntity extends BaseObservable implements Serializable {
     }
 
     @Bindable
-    public Boolean getSelected() {
+    public boolean getSelected() {
         return isSelected;
     }
 
-    public void setSelected(Boolean selected) {
+    public void setSelected(boolean selected) {
         isSelected = selected;
         notifyPropertyChanged(BR.selected);
     }

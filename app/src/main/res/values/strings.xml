@@ -1236,5 +1236,7 @@
     <string name="playfun_diamond_choose_a_plan">選擇套餐</string>
     <string name="playfun_retain_think_again">再想想</string>
     <string name="playfun_recharge_retain_tip">儲值有優惠，確定要錯過嗎？</string>
+    <string name="playfun_diamonds_recharge_title">鑽石儲值</string>
+    <string name="playfun_btn_now_buy">立即儲值</string>
 
 </resources>
