@@ -34,6 +34,7 @@ import com.dl.playfun.entity.CheckNicknameEntity;
 import com.dl.playfun.entity.ChooseAreaEntity;
 import com.dl.playfun.entity.CityAllEntity;
 import com.dl.playfun.entity.CoinExchangeBoxInfo;
+import com.dl.playfun.entity.CoinPusherConverInfoEntity;
 import com.dl.playfun.entity.CoinWalletEntity;
 import com.dl.playfun.entity.CommentMessageEntity;
 import com.dl.playfun.entity.ConfigItemEntity;
@@ -1288,6 +1289,11 @@ public class HttpDataSourceImpl implements HttpDataSource {
     @Override
     public Observable<BaseDataResponse<NoteInfoEntity>> getNoteText(int user_id) {
         return apiService.getNoteText(user_id);
+    }
+
+    @Override
+    public Observable<BaseDataResponse<CoinPusherConverInfoEntity>> qryCoinPusherConverList() {
+        return apiService.qryCoinPusherConverList();
     }
 
     @Override

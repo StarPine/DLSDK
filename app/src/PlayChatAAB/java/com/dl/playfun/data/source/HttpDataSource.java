@@ -29,6 +29,7 @@ import com.dl.playfun.entity.CheckNicknameEntity;
 import com.dl.playfun.entity.ChooseAreaEntity;
 import com.dl.playfun.entity.CityAllEntity;
 import com.dl.playfun.entity.CoinExchangeBoxInfo;
+import com.dl.playfun.entity.CoinPusherConverInfoEntity;
 import com.dl.playfun.entity.CoinWalletEntity;
 import com.dl.playfun.entity.CommentMessageEntity;
 import com.dl.playfun.entity.ConfigItemEntity;
@@ -109,6 +110,14 @@ import retrofit2.http.Query;
 
 public interface HttpDataSource {
 
+    /**
+     * @Desc TODO(推币机-兑换列表)
+     * @author 彭石林
+     * @parame []
+     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse<com.dl.playfun.entity.CoinPusherConverInfoEntity>>
+     * @Date 2022/8/23
+     */
+    Observable<BaseDataResponse<CoinPusherConverInfoEntity>> qryCoinPusherConverList();
     /**
      * @Desc TODO(添加常联系人)
      * @author 彭石林

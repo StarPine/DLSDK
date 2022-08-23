@@ -1224,5 +1224,7 @@
     <string name="play_fun_reward_tips3">明日登陸可得視訊卡*%s</string>
     <string name="playfun_coinpusher_hint_title">歡樂推幣機</string>
     <string name="playfun_coinpusher_text_30">您30s內沒有投幣，已自動退出</string>
+    <string name="playfun_purchase_text">購買</string>
+    <string name="playfun_capsule_tab">寶盒</string>
 
 </resources>

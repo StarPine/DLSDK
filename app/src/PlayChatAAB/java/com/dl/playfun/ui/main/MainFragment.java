@@ -2,8 +2,6 @@ package com.dl.playfun.ui.main;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.content.ComponentName;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,18 +31,16 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.Injection;
 import com.dl.playfun.app.config.TbarCenterImgConfig;
-import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.databinding.FragmentMainBinding;
-import com.dl.playfun.entity.DayRewardInfoEntity;
 import com.dl.playfun.entity.MqBroadcastGiftEntity;
 import com.dl.playfun.entity.MqBroadcastGiftUserEntity;
 import com.dl.playfun.entity.VersionEntity;
 import com.dl.playfun.event.MainTabEvent;
 import com.dl.playfun.event.TaskListEvent;
-import com.dl.playfun.kl.view.AudioCallChatingActivity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseFragment;
-import com.dl.playfun.ui.coinpusher.CoinpusherDialog;
+import com.dl.playfun.ui.coinpusher.CoinPusherConvertDialog;
+import com.dl.playfun.ui.coinpusher.CoinPusherRoomListDialog;
 import com.dl.playfun.ui.dialog.LockDialog;
 import com.dl.playfun.ui.home.HomeMainFragment;
 import com.dl.playfun.ui.home.accost.HomeAccostDialog;
@@ -62,8 +58,6 @@ import com.dl.playfun.widget.pageview.FragmentAdapter;
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.view.ConversationCommonHolder;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import me.goldze.mvvmhabit.bus.RxBus;
@@ -129,7 +123,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
     @Override
     public void initViewObservable() {
         super.initViewObservable();
-        CoinpusherDialog coinpusherDialog = new CoinpusherDialog(getContext());
+        CoinPusherConvertDialog coinpusherDialog = new CoinPusherConvertDialog(mActivity);
         coinpusherDialog.show();
         AppContext.instance().logEvent(AppsFlyerEvent.main_open);
 //        aliYunMqttClientLifecycle.broadcastGiftEvent.observe(this, new Observer<MqBroadcastGiftEntity>() {

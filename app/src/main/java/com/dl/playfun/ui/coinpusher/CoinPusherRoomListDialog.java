@@ -19,11 +19,11 @@ import com.dl.playfun.ui.base.BaseDialog;
  * Time: 2022/8/19 11:16
  * Description: 推币机弹窗选择页面
  */
-public class CoinpusherDialog  extends BaseDialog {
+public class CoinPusherRoomListDialog extends BaseDialog {
     private DialogCoinpusherListBinding binding;
     private final Context mContext;
 
-    public CoinpusherDialog(Context context) {
+    public CoinPusherRoomListDialog(Context context) {
         super(context);
         this.mContext = context;
         initView();

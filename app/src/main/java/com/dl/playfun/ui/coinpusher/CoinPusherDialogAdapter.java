@@ -17,7 +17,7 @@ import com.dl.playfun.databinding.DialogCoinpusherHintBinding;
  * Time: 2022/8/22 15:58
  * Description: This is CoinpusherDialogAdapter
  */
-public class CoinpusherDialogAdapter {
+public class CoinPusherDialogAdapter {
     /**
     * @Desc TODO(没有投币提示30自动关闭)
     * @author 彭石林
