@@ -926,6 +926,27 @@ public class TraceDialog {
         return dialog;
     }
 
+    /**
+     * 钻石充值挽留弹框
+     * @return
+     */
+    public Dialog rechargeRetainDialog() {
+        Dialog dialog = new Dialog(context, R.style.BottomDialog);
+        View contentView = LayoutInflater.from(context).inflate(R.layout.dialog_recharge_retain, null);
+        dialog.setContentView(contentView);
+        ViewGroup.LayoutParams layoutParams = contentView.getLayoutParams();
+        contentView.setLayoutParams(layoutParams);
+        dialog.getWindow().setGravity(Gravity.CENTER);
+        Button again = contentView.findViewById(R.id.btn_again);
+        Button confirm = contentView.findViewById(R.id.btn_confirm);
+        again.setOnClickListener(v -> dialog.dismiss());
+        confirm.setOnClickListener(v -> {
+            if (confirmOnclick != null){
+                confirmOnclick.confirm(dialog);
+            }
+        });
+        return dialog;
+    }
     /***
      * 每日奖励弹框
      * @param isUnableEvent 是否限制外界事件

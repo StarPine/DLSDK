@@ -11,6 +11,10 @@ import java.io.Serializable;
 public class GoodsEntity extends BaseObservable implements Serializable {
 
     /**
+     * day_give_video_card : 0
+     * day_give_num : 0
+     * day_give_coin : 0
+     * video_card : 0
      * id : 104
      * goods_name : x2,800
      * google_goods_id : tw.com.dl.gl.pettycoon.1006
@@ -66,6 +70,57 @@ public class GoodsEntity extends BaseObservable implements Serializable {
     private String giveCoinTitle;
 
     private Boolean isSelected;
+
+    @SerializedName("day_give_video_card")
+    private int dayGiveVideoCard;
+    @SerializedName("day_give_num")
+    private int dayGiveNum;
+    @SerializedName("day_give_coin")
+    private int dayGiveCoin;
+    @SerializedName("video_card")
+    private int videoCard;
+    @SerializedName("gold_price")
+    private int goldPrice;
+
+    public int getGoldPrice() {
+        return goldPrice;
+    }
+
+    public void setGoldPrice(int goldPrice) {
+        this.goldPrice = goldPrice;
+    }
+
+    public int getDayGiveVideoCard() {
+        return dayGiveVideoCard;
+    }
+
+    public void setDayGiveVideoCard(int dayGiveVideoCard) {
+        this.dayGiveVideoCard = dayGiveVideoCard;
+    }
+
+    public int getDayGiveNum() {
+        return dayGiveNum;
+    }
+
+    public void setDayGiveNum(int dayGiveNum) {
+        this.dayGiveNum = dayGiveNum;
+    }
+
+    public int getDayGiveCoin() {
+        return dayGiveCoin;
+    }
+
+    public void setDayGiveCoin(int dayGiveCoin) {
+        this.dayGiveCoin = dayGiveCoin;
+    }
+
+    public int getVideoCard() {
+        return videoCard;
+    }
+
+    public void setVideoCard(int videoCard) {
+        this.videoCard = videoCard;
+    }
 
     @Bindable
     public Boolean getSelected() {

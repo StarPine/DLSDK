@@ -162,6 +162,20 @@
         <item name="android:textSize">@dimen/text_size_big</item>
     </style>
 
+    <style name="ButtonPrimaryNomal" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:outlineSpotShadowColor" tools:targetApi="p">#FF5593</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:paddingStart">5dp</item>
+        <item name="android:paddingEnd">5dp</item>
+        <item name="android:elevation">12dp</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/purple_text</item>
+        <item name="android:background">@drawable/btn_stroke_nomal</item>
+        <item name="android:textSize">@dimen/text_size_big</item>
+    </style>
+
     <style name="ButtonDoingTsak" parent="Widget.AppCompat.Button.Borderless">
         <item name="android:outlineSpotShadowColor" tools:targetApi="p">@color/white</item>
         <item name="android:paddingLeft">5dp</item>

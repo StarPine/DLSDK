@@ -1234,5 +1234,7 @@
     <string name="playfun_diamond_detail_item_flag2">超值VIP</string>
     <string name="playfun_diamond_my_diamond">我的鑽石</string>
     <string name="playfun_diamond_choose_a_plan">選擇套餐</string>
+    <string name="playfun_retain_think_again">再想想</string>
+    <string name="playfun_recharge_retain_tip">儲值有優惠，確定要錯過嗎？</string>
 
 </resources>

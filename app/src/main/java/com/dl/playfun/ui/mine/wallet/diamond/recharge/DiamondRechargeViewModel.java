@@ -1,7 +1,6 @@
 package com.dl.playfun.ui.mine.wallet.diamond.recharge;
 
 import android.app.Application;
-import android.icu.text.UFormat;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableArrayList;
@@ -52,7 +51,7 @@ public class DiamondRechargeViewModel extends BaseViewModel<AppRepository> {
     public String orderNumber = null;
     public int selectedPosition = -1;
     public SingleLiveEvent<String> payOnClick = new SingleLiveEvent();
-    public SingleLiveEvent<GoodsEntity> finsh = new SingleLiveEvent();
+    public SingleLiveEvent<GoodsEntity> paySuccess = new SingleLiveEvent();
 
 
     /**
@@ -78,7 +77,7 @@ public class DiamondRechargeViewModel extends BaseViewModel<AppRepository> {
 
 
     public void createOrder() {
-        if (selectedPosition < 0){
+        if (selectedPosition < 0) {
             ToastUtils.showShort(R.string.playfun_please_choose_top_up_package);
             return;
         }
@@ -126,7 +125,7 @@ public class DiamondRechargeViewModel extends BaseViewModel<AppRepository> {
                     public void onSuccess(BaseResponse response) {
                         dismissHUD();
                         ToastUtils.showShort(StringUtils.getString(R.string.playfun_pay_success));
-                        finsh.postValue(selectedGoodsEntity.get());
+                        paySuccess.postValue(selectedGoodsEntity.get());
                     }
 
                     @Override
@@ -142,25 +141,28 @@ public class DiamondRechargeViewModel extends BaseViewModel<AppRepository> {
     }
 
 
-    public boolean isMale(){
+    public boolean isMale() {
         return ConfigManager.getInstance().isMale();
     }
 
-    public String getTotalCoin(DiamondInfoEntity diamondInfoEntity){
+    public String getTotalCoin(DiamondInfoEntity diamondInfoEntity) {
         String total = "";
-        if (diamondInfoEntity == null){
+        if (diamondInfoEntity == null) {
             return total;
         }
         int totalCoin = diamondInfoEntity.getTotalCoin();
-        if (totalCoin > 999999){
-            total = "999999+";
-        }else {
-            total = totalCoin+"";
+        if (totalCoin > 9999999) {
+            total = "9999999+";
+        } else {
+            total = totalCoin + "";
         }
         return total;
     }
 
-    public void rechargeList() {
+    /**
+     * 获取钻石充值套餐
+     */
+    public void getRechargeList() {
         model.goods()
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
@@ -172,7 +174,7 @@ public class DiamondRechargeViewModel extends BaseViewModel<AppRepository> {
                         diamondInfo.set(infoEntity);
                         List<GoodsEntity> data = infoEntity.getList();
                         for (GoodsEntity goodsEntity : data) {
-                            DiamondRechargeItemViewModel itemViewModel = new DiamondRechargeItemViewModel(DiamondRechargeViewModel.this,goodsEntity);
+                            DiamondRechargeItemViewModel itemViewModel = new DiamondRechargeItemViewModel(DiamondRechargeViewModel.this, goodsEntity);
                             diamondRechargeList.add(itemViewModel);
                         }
                     }

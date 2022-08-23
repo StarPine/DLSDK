@@ -19,6 +19,7 @@ import com.dl.playfun.databinding.ActivityDiamondRechargeBinding;
 import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.ui.base.BaseActivity;
 import com.dl.playfun.widget.BasicToolbar;
+import com.dl.playfun.widget.dialog.TraceDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,7 @@ public class DiamondRechargeActivity extends BaseActivity<ActivityDiamondRecharg
 
 
     private BillingClientLifecycle billingClientLifecycle;
-    private GoodsEntity goodsEntity;
+    private boolean isFinsh = false;
 
     @Override
     public int initContentView(Bundle savedInstanceState) {
@@ -69,10 +70,9 @@ public class DiamondRechargeActivity extends BaseActivity<ActivityDiamondRecharg
             //查询并消耗本地历史订单类型： INAPP 支付购买  SUBS订阅
             billingClientLifecycle.queryAndConsumePurchase(BillingClient.SkuType.INAPP);
         }
-        viewModel.rechargeList();
+        viewModel.getRechargeList();
         binding.rcvDiamondRecharge.setNestedScrollingEnabled(false);
         binding.basicToolbar.setToolbarListener(this);
-//        viewModel.goodsEntity.set(goodsEntity);
     }
 
     @Override
@@ -84,11 +84,8 @@ public class DiamondRechargeActivity extends BaseActivity<ActivityDiamondRecharg
             pay(payCode);
         });
 
-        viewModel.finsh.observe(this, goodsEntity -> {
-            Intent intent = new Intent();
-            intent.putExtra("goodsEntity",goodsEntity);
-            setResult(909,intent);
-            finish();
+        viewModel.paySuccess.observe(this, goodsEntity -> {
+            showRewardDialog();
         });
 
         this.billingClientLifecycle.PAYMENT_SUCCESS.observe(this, billingPurchasesState -> {
@@ -143,6 +140,24 @@ public class DiamondRechargeActivity extends BaseActivity<ActivityDiamondRecharg
         });
     }
 
+
+    /**
+     * 显示奖励dialog
+     */
+    private void showRewardDialog() {
+        //give_coin+actual_value+gold_price
+        GoodsEntity goodsEntity = viewModel.selectedGoodsEntity.get();
+        int totalReward = goodsEntity.getGiveCoin() + goodsEntity.getActualValue() + goodsEntity.getGoldPrice();
+        TraceDialog.getInstance(this)
+                .setTitle(getString(R.string.playfun_recharge_success))
+                .setConfirmOnlick(dialog -> {
+                    dialog.dismiss();
+                    finish();
+                })
+                .dayRewardDialog(true, viewModel.selectedGoodsEntity.get().getDayGiveCoin(), 0, totalReward,0)
+                .show();
+    }
+
     //进行支付
     private void pay(String payCode) {
         List<String> skuList = new ArrayList<>();
@@ -153,8 +168,25 @@ public class DiamondRechargeActivity extends BaseActivity<ActivityDiamondRecharg
     }
 
     @Override
+    public void onBackPressed() {
+        if (!isFinsh) {
+            TraceDialog.getInstance(this)
+                    .setConfirmOnlick(dialog -> {
+                        isFinsh = true;
+                        dialog.dismiss();
+                        finish();
+                    })
+                    .rechargeRetainDialog()
+                    .show();
+            return;
+        }
+
+        super.onBackPressed();
+    }
+
+    @Override
     public void onBackClick(BasicToolbar toolbar) {
-        this.finish();
+        onBackPressed();
     }
 }
 

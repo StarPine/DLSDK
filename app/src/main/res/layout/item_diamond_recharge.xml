@@ -88,6 +88,8 @@
             android:padding="7dp"
             android:paddingStart="10dp"
             android:layout_marginBottom="1dp"
+            android:layout_marginRight="1dp"
+            android:layout_marginLeft="1dp"
             android:text="@{viewModel.itemEntity.goodsDesc}"
             android:textColor="@color/pseekbar_process"
             android:textSize="10.67sp"
