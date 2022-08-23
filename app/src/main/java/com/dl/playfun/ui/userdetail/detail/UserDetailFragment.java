@@ -388,9 +388,13 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
 //                if(flagShow){
 //                    return;
 //                }
-            if ((viewModel.detailEntity.get().getMoreNumber() != null && viewModel.detailEntity.get().getMoreNumber() <= 0) || !viewModel.detailEntity.get().isBrowse()) {
-                getUserdetailUnlock();
+            if(viewModel.detailEntity.get()!=null){
+                Integer moreNumber = viewModel.detailEntity.get().getMoreNumber();
+                if ((moreNumber != null && moreNumber <= 0) || !viewModel.detailEntity.get().isBrowse()) {
+                    getUserdetailUnlock();
+                }
             }
+
 
             // }
         } else {

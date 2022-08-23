@@ -1,32 +1,23 @@
 package com.dl.playfun.ui.message;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.viewpager2.widget.ViewPager2;
 
-import com.blankj.utilcode.util.ColorUtils;
-import com.blankj.utilcode.util.StringUtils;
-import com.bumptech.glide.Glide;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.FragmentMessageMainBinding;
-import com.dl.playfun.entity.SystemConfigTaskEntity;
 import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.ui.message.chatmessage.ChatMessageFragment;
 import com.dl.playfun.ui.message.contact.OftenContactFragment;
-import com.dl.playfun.ui.message.systemmessagegroup.SystemMessageGroupFragment;
 import com.dl.playfun.utils.AutoSizeUtils;
-import com.dl.playfun.utils.StringUtil;
 
 /**
  * @author wulei
@@ -70,7 +61,7 @@ public class MessageMainFragment extends BaseFragment<FragmentMessageMainBinding
             mFragments[0] = new ChatMessageFragment();
             mFragments[1] = new OftenContactFragment();
         } else {
-            mFragments[0] = firstFragment;
+            mFragments[0] = new ChatMessageFragment();
             if(findChildFragment(OftenContactFragment.class)!=null){
                 mFragments[1] = findChildFragment(OftenContactFragment.class);
             }else{
@@ -84,6 +75,8 @@ public class MessageMainFragment extends BaseFragment<FragmentMessageMainBinding
         binding.viewPager.setUserInputEnabled(false);
         binding.viewPager.setOffscreenPageLimit(1);
         binding.viewPager.setAdapter(fragmentAdapter);
+        //取消保存页面--未知BUG
+        binding.viewPager.setSaveEnabled(false);
         binding.viewPager.setCurrentItem(0, false);
     }
 

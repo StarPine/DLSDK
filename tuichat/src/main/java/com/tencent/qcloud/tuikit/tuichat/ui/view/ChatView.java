@@ -1139,7 +1139,10 @@ public class ChatView extends LinearLayout  implements IChatLayout {
         getTitleBar().getMiddleTitle().removeCallbacks(mTypingRunnable);
         AudioPlayer.getInstance().stopRecord();
         AudioPlayer.getInstance().stopPlay();
-        presenter.markMessageAsRead(mChatInfo);
+        if(presenter!=null){
+            presenter.markMessageAsRead(mChatInfo);
+        }
+
     }
 
     @Override

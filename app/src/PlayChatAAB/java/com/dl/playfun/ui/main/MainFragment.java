@@ -580,7 +580,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
 
             // 这里我们需要拿到mFragments的引用
             mFragments[FIRST] = firstFragment;
-            mFragments[SECOND] = findChildFragment(HomeMainFragment.class);
+            mFragments[SECOND] = findChildFragment(RadioFragment.class);
             mFragments[THIRD] = findChildFragment(TaskMainFragment.class);
             mFragments[FOURTH] = findChildFragment(MessageMainFragment.class);
             mFragments[FIFTH] = findChildFragment(MineFragment.class);
@@ -602,6 +602,8 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         mainViewPager.setUserInputEnabled(false);
         // 设置缓存数量 避免销毁重建
         mainViewPager.setOffscreenPageLimit(5);
+        //取消保存页面--未知BUG
+        mainViewPager.setSaveEnabled(false);
         mainViewPager.setAdapter(fragmentAdapter);
         mainViewPager.setCurrentItem(0, false);
 
