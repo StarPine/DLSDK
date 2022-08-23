@@ -160,7 +160,7 @@
                     android:paddingRight="2dp"
                     android:textColor="@color/white"
                     android:textSize="10sp"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/navigation_message_img"
