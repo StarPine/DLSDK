@@ -481,11 +481,10 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
 //        aliYunMqttClientLifecycle = ((AppContext)mActivity.getApplication()).getBillingClientLifecycle();
 //        getLifecycle().addObserver(aliYunMqttClientLifecycle);
         initView();
-        try{
-            ConversationCommonHolder.sexMale = ConfigManager.getInstance().isMale();
-        }catch (Exception exception){
-
-        }
+        boolean sexFlag = ConfigManager.getInstance().isMale();
+        ConversationCommonHolder.sexMale = sexFlag;
+        binding.navigationMineImgLottie.setAnimation(sexFlag ? R.raw.lottie_navigation_mine_male : R.raw.lottie_navigation_mine_fmale);
+        binding.navigationMineImg.setImageResource(sexFlag ? R.drawable.tab_mine_male_image : R.drawable.tab_mine_female_normal);
 
 
     }
@@ -652,7 +651,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                 binding.navigationMineImg.setVisibility(View.INVISIBLE);
                 binding.navigationMineImgLottie.setVisibility(View.VISIBLE);
                 binding.navigationMineImgLottie.playAnimation();
-                if (viewModel.uc.gender.get()) {
+                if (ConfigManager.getInstance().isMale()) {
                     binding.navigationMineImg.setImageResource(R.drawable.tab_mine_male_checked);
                 } else {
                     binding.navigationMineImg.setImageResource(R.drawable.tab_mine_female_checked);
@@ -679,7 +678,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         } else if (id == R.id.navigation_message_img) { //讯息页面
             binding.navigationMessageImg.setImageResource(R.drawable.tab_message_normal);
         } else if (id == R.id.navigation_mine_img) { //我的页面
-            if (viewModel.uc.gender.get()) {
+            if (ConfigManager.getInstance().isMale()) {
                 binding.navigationMineImg.setImageResource(R.drawable.tab_mine_male_image);
             } else {
                 binding.navigationMineImg.setImageResource(R.drawable.tab_mine_female_normal);

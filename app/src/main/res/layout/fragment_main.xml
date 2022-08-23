@@ -211,7 +211,7 @@
                     android:visibility="gone"
                     app:lottie_autoPlay="false"
                     app:lottie_loop="false"
-                    app:lottie_rawRes="@raw/lottie_navigation_mine" />
+                    app:lottie_rawRes="@raw/lottie_navigation_mine_male" />
             </RelativeLayout>
         </LinearLayout>
         <ImageView
