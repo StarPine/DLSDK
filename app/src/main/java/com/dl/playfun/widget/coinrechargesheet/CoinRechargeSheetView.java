@@ -134,7 +134,6 @@ public class CoinRechargeSheetView extends BasePopupWindow implements View.OnCli
 
         this.billingClientLifecycle.PAYMENT_FAIL.observe(this, billingPurchasesState -> {
             Log.e("BillingClientLifecycle","支付购买失败回调");
-            showRewardDialog();
             ToastUtils.showShort(StringUtils.getString(R.string.playfun_pay_fail));
             switch (billingPurchasesState.getBillingFlowNode()){
                 //查询商品阶段-->异常
