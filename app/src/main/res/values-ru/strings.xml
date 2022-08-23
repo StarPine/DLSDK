@@ -1115,10 +1115,10 @@
 
     <string name="task_exchange_record_fragment_title2">Points exchange area</string>
     <string name="task_exchange_record_fragment_title">Exchange history</string>
-    <string name="task_exchange_record_fragment_title_help">Exchange instructions</string>
+    <string name="task_exchange_record_fragment_title_help">Illustration</string>
 
-    <string name="task_exchange_record_fragment_tab">My merchandise</string>
-    <string name="task_exchange_record_fragment_tab2">Pending shipment</string>
+    <string name="task_exchange_record_fragment_tab">Goods</string>
+    <string name="task_exchange_record_fragment_tab2">To be shipped</string>
     <string name="task_exchange_record_fragment_tab3">Shipped</string>
 
     <string name="task_exchange_record_fragment_ceckAll">Select all</string>

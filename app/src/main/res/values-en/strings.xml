@@ -128,9 +128,9 @@
     <string name="playfun_fragment_certification_female_title">Real Person Verification</string>
     <string name="playfun_fragment_certification_content">100% bonus increasing for real person verified users.</string>
     <string name="playfun_fragment_certification_tip">You can not withdraw money without real person verification</string>
-    <string name="playfun_fragment_certification_female_poster">Post events for free</string>
+    <string name="playfun_fragment_certification_female_poster">Double income</string>
     <string name="playfun_fragment_certification_female_comment_man">Comment for free</string>
-    <string name="playfun_fragment_certification_female_chat_man">Chat for free</string>
+    <string name="playfun_fragment_certification_female_chat_man">Withdrawals</string>
     <string name="playfun_fragment_certification_female_sing_man">Sign up for men\'s events</string>
     <string name="playfun_fragment_certification_female_read_phone">Paid Photos</string>
     <string name="playfun_fragment_certification_female_charge_phone">Paid Album</string>
@@ -526,7 +526,7 @@
     <string name="playfun_setting_new_password">Set new password</string>
     <string name="playfun_cancel_lock_design">Cancel the unlock pattern</string>
     <string name="playfun_you_have_signed_up">Signed up</string>
-    <string name="playfun_coin_balance">Diamond balance</string>
+    <string name="playfun_coin_balance">Diamonds</string>
     <string name="playfun_x_coin">%s</string>
     <string name="playfun_pay_success">Successfully paid</string>
     <string name="playfun_dialog_title_apply_withdraw">Withdraw</string>
@@ -1123,10 +1123,10 @@
 
     <string name="task_exchange_record_fragment_title2">Points exchange area</string>
     <string name="task_exchange_record_fragment_title">Exchange history</string>
-    <string name="task_exchange_record_fragment_title_help">Exchange instructions</string>
+    <string name="task_exchange_record_fragment_title_help">Illustration</string>
 
-    <string name="task_exchange_record_fragment_tab">My merchandise</string>
-    <string name="task_exchange_record_fragment_tab2">Pending shipment</string>
+    <string name="task_exchange_record_fragment_tab">Goods</string>
+    <string name="task_exchange_record_fragment_tab2">To be shipped</string>
     <string name="task_exchange_record_fragment_tab3">Shipped</string>
 
     <string name="task_exchange_record_fragment_ceckAll">Select all</string>

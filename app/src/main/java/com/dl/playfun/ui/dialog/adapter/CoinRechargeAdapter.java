@@ -59,7 +59,7 @@ public class CoinRechargeAdapter extends RecyclerView.Adapter<CoinRechargeAdapte
         holder.good_name.setText(goodsEntity.getSymbol() + goodsEntity.getSalePrice());
         holder.good_lable.setText(goodsEntity.getDiscountLabel());
         //是否推荐
-        if (goodsEntity.getIsRecommend() != null && goodsEntity.getIsRecommend() == 1) {
+        if (goodsEntity.getIsRecommend() == 1) {
             holder.layout1.setBackgroundResource(R.drawable.coin_recharge_img_custom_backop);
             holder.first_layout.setBackgroundResource(R.drawable.coin_recharge_img_custom_title);
             holder.good_text.setTextColor(ColorUtils.getColor(R.color.white));
@@ -76,8 +76,8 @@ public class CoinRechargeAdapter extends RecyclerView.Adapter<CoinRechargeAdapte
             holder.btn_sub.setBackgroundResource(R.drawable.coin_recharge_img_btn);
             holder.good_name.setTextColor(ColorUtils.getColor(R.color.white));
         }
-        if (goodsEntity.getIsFirst() != null && goodsEntity.getIsFirst() == 1) { //是否首冲
-            holder.good_lable.setText(goodsEntity.getFirstText());
+        if (goodsEntity.getLimit() == 1) { //是否首冲
+            holder.good_lable.setText("goodsEntity.getFirstText()");
             holder.first_layout.setVisibility(View.VISIBLE);
         } else {
             holder.first_layout.setVisibility(View.GONE);

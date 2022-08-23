@@ -162,7 +162,7 @@ public class ExclusiveAccostDialog {
         recording.setOnTouchListener((v, event) -> {
             try {
                 new RxPermissions((FragmentActivity) mContext)
-                        .request(Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA)
+                        .request(Manifest.permission.RECORD_AUDIO)
                         .subscribe(granted -> {
                             if (granted) {
                                 switch (event.getAction()) {

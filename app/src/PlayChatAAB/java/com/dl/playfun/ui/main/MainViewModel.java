@@ -11,6 +11,7 @@ import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
+import com.dl.playfun.app.Injection;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
@@ -439,6 +440,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                                 giveCoin = nowBean.getNum();
                             }
                         }
+                        model.putKeyValue(dayRewardKey,"true");
                         uc.showDayRewardDialog.call();
                     }
 

@@ -37,6 +37,7 @@ import com.dl.playfun.entity.CommentMessageEntity;
 import com.dl.playfun.entity.ConfigItemEntity;
 import com.dl.playfun.entity.CreateOrderEntity;
 import com.dl.playfun.entity.DayRewardInfoEntity;
+import com.dl.playfun.entity.DiamondInfoEntity;
 import com.dl.playfun.entity.EjectEntity;
 import com.dl.playfun.entity.EjectSignInEntity;
 import com.dl.playfun.entity.EvaluateEntity;
@@ -1958,7 +1959,7 @@ public interface ApiService {
      * @return
      */
     @GET("api/goods")
-    Observable<BaseDataResponse<List<GoodsEntity>>> goods(
+    Observable<BaseDataResponse<DiamondInfoEntity>> goods(
             @Query("type") String type);
 
 

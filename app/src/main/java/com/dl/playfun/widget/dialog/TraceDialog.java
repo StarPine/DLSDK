@@ -1050,6 +1050,9 @@ public class TraceDialog {
         }
 
         btnConfirm.setOnClickListener(v -> {
+            firstRewardId = 0;
+            secondRewardId = 0;
+            titleString = "";
             if (confirmOnclick != null) {
                 confirmOnclick.confirm(dialog);
             }

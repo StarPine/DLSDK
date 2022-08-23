@@ -360,7 +360,6 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         }
         TraceDialog.getInstance(mActivity)
                 .setConfirmOnlick(dialog -> {
-                    Injection.provideDemoRepository().putKeyValue(viewModel.dayRewardKey,"true");
                     dialog.dismiss();
                 })
                 .dayRewardDialog(true,
