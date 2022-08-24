@@ -60,7 +60,7 @@ public class CoinPusherRoomInfoEntity {
         }
     }
 
-    private static class DeviceInfo{
+    public static class DeviceInfo{
         private int id;
         //房间名
         private String nickname;

@@ -35,6 +35,7 @@ public class CoinPusherRoomListDialog extends BaseDialog {
     private DialogCoinpusherListBinding binding;
     private final Context mContext;
     private CoinPusherRoomTagAdapter coinPusherRoomTagAdapter;
+    private CoinPusherRoomListAdapter coinPusherRoomListAdapter;
 
     public CoinPusherRoomListDialog(Activity activity) {
         super(activity);
@@ -57,8 +58,8 @@ public class CoinPusherRoomListDialog extends BaseDialog {
         //表格布局
         LayoutManagers.LayoutManagerFactory layoutManagerFactory = LayoutManagers.grid(2);
         binding.rcvContent.setLayoutManager(layoutManagerFactory.create(binding.rcvContent));
-        //coinPusherCapsuleAdapter = new CoinPusherCapsuleAdapter();
-       // binding.rcvContent.setAdapter(coinPusherCapsuleAdapter);
+        coinPusherRoomListAdapter = new CoinPusherRoomListAdapter();
+        binding.rcvContent.setAdapter(coinPusherRoomListAdapter);
     }
 
     public void show() {
