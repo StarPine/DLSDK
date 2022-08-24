@@ -81,19 +81,33 @@
                         android:background="@drawable/ic_task_add" />
                 </FrameLayout>
             </RelativeLayout>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rcv_title"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
                 android:layout_below="@+id/rl_coin"
                 android:layout_marginTop="20dp"
-                android:layout_width="match_parent"
-                android:layout_height="35dp"/>
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                tools:itemCount="4"
+                tools:orientation="horizontal"
+                tools:layoutManager="LinearLayoutManager"
+                tools:listitem="@layout/item_coinpusher_room_tag"
+                />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rcv_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_below="@+id/rcv_title"
                 android:layout_marginTop="20dp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                tools:itemCount="4"
+                tools:spanCount="2"
+                tools:orientation="horizontal"
+                tools:layoutManager="GridLayoutManager"
+                tools:listitem="@layout/item_coinpusher_room_list"
+                />
         </RelativeLayout>
     </LinearLayout>
 

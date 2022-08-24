@@ -1,5 +1,6 @@
 package com.dl.playfun.ui.coinpusher;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.Gravity;
@@ -8,11 +9,22 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.blankj.utilcode.util.ObjectUtils;
 import com.dl.playfun.R;
+import com.dl.playfun.data.source.http.observer.BaseObserver;
+import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.databinding.DialogCityChooseBinding;
 import com.dl.playfun.databinding.DialogCoinpusherListBinding;
+import com.dl.playfun.entity.CoinPusherRoomInfoEntity;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseDialog;
+
+import java.util.List;
+
+import me.goldze.mvvmhabit.binding.viewadapter.recyclerview.LayoutManagers;
+import me.goldze.mvvmhabit.utils.RxUtils;
 
 /**
  * Author: 彭石林
@@ -22,11 +34,14 @@ import com.dl.playfun.ui.base.BaseDialog;
 public class CoinPusherRoomListDialog extends BaseDialog {
     private DialogCoinpusherListBinding binding;
     private final Context mContext;
+    private CoinPusherRoomTagAdapter coinPusherRoomTagAdapter;
 
-    public CoinPusherRoomListDialog(Context context) {
-        super(context);
-        this.mContext = context;
+    public CoinPusherRoomListDialog(Activity activity) {
+        super(activity);
+        this.mContext = activity;
+        super.setMActivity(activity);
         initView();
+        loadData();
     }
 
     private void initView() {
@@ -34,6 +49,16 @@ public class CoinPusherRoomListDialog extends BaseDialog {
         binding = DataBindingUtil.inflate(inflater, R.layout.dialog_coinpusher_list, null, false);
         //支持LiveData绑定xml，数据改变，UI自动会更新
         binding.setLifecycleOwner(this);
+        // 设备等级分类
+        LayoutManagers.LayoutManagerFactory rcvTitleLayoutManager= LayoutManagers.linear(LinearLayoutManager.HORIZONTAL,false);
+        binding.rcvTitle.setLayoutManager(rcvTitleLayoutManager.create(binding.rcvTitle));
+        coinPusherRoomTagAdapter = new CoinPusherRoomTagAdapter();
+        binding.rcvTitle.setAdapter(coinPusherRoomTagAdapter);
+        //表格布局
+        LayoutManagers.LayoutManagerFactory layoutManagerFactory = LayoutManagers.grid(2);
+        binding.rcvContent.setLayoutManager(layoutManagerFactory.create(binding.rcvContent));
+        //coinPusherCapsuleAdapter = new CoinPusherCapsuleAdapter();
+       // binding.rcvContent.setAdapter(coinPusherCapsuleAdapter);
     }
 
     public void show() {
@@ -54,5 +79,39 @@ public class CoinPusherRoomListDialog extends BaseDialog {
     @Override
     public void dismiss() {
         super.dismiss();
+    }
+
+
+    @Override
+    public void showHud() {
+        super.showHud();
+    }
+
+    @Override
+    public void dismissHud() {
+        super.dismissHud();
+    }
+
+    public void loadData() {
+        ConfigManager.getInstance().getAppRepository().qryCoinPusherRoomList()
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(dispose -> showHud())
+                .subscribe(new BaseObserver<BaseDataResponse<CoinPusherRoomInfoEntity>>() {
+                    @Override
+                    public void onSuccess(BaseDataResponse<CoinPusherRoomInfoEntity> coinPusherRoomInfoEntityResponse) {
+                        CoinPusherRoomInfoEntity coinPusherRoomInfoEntity = coinPusherRoomInfoEntityResponse.getData();
+                        List<CoinPusherRoomInfoEntity.DeviceTag> deviceTagList = coinPusherRoomInfoEntity.getTypeArr();
+                        if(ObjectUtils.isNotEmpty(deviceTagList)){
+                            coinPusherRoomTagAdapter.setItemData(deviceTagList);
+                        }
+                    }
+                    @Override
+                    public void onComplete() {
+                        dismissHud();
+                    }
+                });
+
     }
 }

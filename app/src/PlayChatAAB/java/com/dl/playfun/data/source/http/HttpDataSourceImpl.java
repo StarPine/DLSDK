@@ -35,6 +35,7 @@ import com.dl.playfun.entity.ChooseAreaEntity;
 import com.dl.playfun.entity.CityAllEntity;
 import com.dl.playfun.entity.CoinExchangeBoxInfo;
 import com.dl.playfun.entity.CoinPusherConverInfoEntity;
+import com.dl.playfun.entity.CoinPusherRoomInfoEntity;
 import com.dl.playfun.entity.CoinWalletEntity;
 import com.dl.playfun.entity.CommentMessageEntity;
 import com.dl.playfun.entity.ConfigItemEntity;
@@ -1289,6 +1290,36 @@ public class HttpDataSourceImpl implements HttpDataSource {
     @Override
     public Observable<BaseDataResponse<NoteInfoEntity>> getNoteText(int user_id) {
         return apiService.getNoteText(user_id);
+    }
+
+    @Override
+    public Observable<BaseResponse> playingCoinPusherClose(Integer roomId) {
+        return apiService.playingCoinPusherClose(roomId);
+    }
+
+    @Override
+    public Observable<BaseResponse> playingCoinPusherAct(Integer roomId) {
+        return apiService.playingCoinPusherAct(roomId);
+    }
+
+    @Override
+    public Observable<BaseResponse> playingCoinPusherThrowCoin(Integer roomId) {
+        return apiService.playingCoinPusherThrowCoin(roomId);
+    }
+
+    @Override
+    public Observable<BaseResponse> convertCoinPusherGoldsCoin(Integer amount,Integer type) {
+        return apiService.convertCoinPusherGoldsCoin(amount, type);
+    }
+
+    @Override
+    public Observable<BaseResponse> convertCoinPusherDiamonds(Integer amount) {
+        return apiService.convertCoinPusherDiamonds(amount);
+    }
+
+    @Override
+    public Observable<BaseDataResponse<CoinPusherRoomInfoEntity>> qryCoinPusherRoomList() {
+        return apiService.qryCoinPusherRoomList();
     }
 
     @Override

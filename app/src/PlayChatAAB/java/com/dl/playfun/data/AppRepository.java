@@ -11,9 +11,7 @@ import com.dl.playfun.data.source.http.response.BaseListDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.AccostEntity;
 import com.dl.playfun.entity.AdBannerEntity;
-import com.dl.playfun.entity.AdItemEntity;
 import com.dl.playfun.entity.AdUserBannerEntity;
-import com.dl.playfun.entity.AdUserItemEntity;
 import com.dl.playfun.entity.AddressEntity;
 import com.dl.playfun.entity.AlbumPhotoEntity;
 import com.dl.playfun.entity.AllConfigEntity;
@@ -38,6 +36,7 @@ import com.dl.playfun.entity.ChooseAreaEntity;
 import com.dl.playfun.entity.CityAllEntity;
 import com.dl.playfun.entity.CoinExchangeBoxInfo;
 import com.dl.playfun.entity.CoinPusherConverInfoEntity;
+import com.dl.playfun.entity.CoinPusherRoomInfoEntity;
 import com.dl.playfun.entity.CoinWalletEntity;
 import com.dl.playfun.entity.CommentMessageEntity;
 import com.dl.playfun.entity.ConfigItemEntity;
@@ -106,7 +105,6 @@ import com.dl.playfun.entity.UserProfitPageEntity;
 import com.dl.playfun.entity.UserRemarkEntity;
 import com.dl.playfun.entity.VersionEntity;
 import com.dl.playfun.entity.VipInfoEntity;
-import com.dl.playfun.entity.VipPackageItemEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -114,7 +112,6 @@ import java.util.Map;
 import io.reactivex.Observable;
 import me.goldze.mvvmhabit.base.BaseModel;
 import okhttp3.RequestBody;
-import retrofit2.http.GET;
 
 /**
  * MVVM的Model层，统一模块的数据仓库，包含网络数据和本地数据（一个应用可以有多个Repositor）
@@ -1600,6 +1597,36 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
         return mHttpDataSource.getNoteText(user_id);
     }
 
+
+    @Override
+    public Observable<BaseResponse> playingCoinPusherClose(Integer roomId) {
+        return mHttpDataSource.playingCoinPusherClose(roomId);
+    }
+
+    @Override
+    public Observable<BaseResponse> playingCoinPusherAct(Integer roomId) {
+        return mHttpDataSource.playingCoinPusherAct(roomId);
+    }
+
+    @Override
+    public Observable<BaseResponse> playingCoinPusherThrowCoin(Integer roomId) {
+        return mHttpDataSource.playingCoinPusherThrowCoin(roomId);
+    }
+
+    @Override
+    public Observable<BaseResponse> convertCoinPusherGoldsCoin(Integer amount, Integer type) {
+        return mHttpDataSource.convertCoinPusherGoldsCoin(amount, type);
+    }
+
+    @Override
+    public Observable<BaseResponse> convertCoinPusherDiamonds(Integer amount) {
+        return mHttpDataSource.convertCoinPusherDiamonds(amount);
+    }
+
+    @Override
+    public Observable<BaseDataResponse<CoinPusherRoomInfoEntity>> qryCoinPusherRoomList() {
+        return mHttpDataSource.qryCoinPusherRoomList();
+    }
 
     @Override
     public Observable<BaseDataResponse<CoinPusherConverInfoEntity>> qryCoinPusherConverList() {

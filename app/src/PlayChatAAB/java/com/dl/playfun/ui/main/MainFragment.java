@@ -123,7 +123,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
     @Override
     public void initViewObservable() {
         super.initViewObservable();
-        CoinPusherConvertDialog coinpusherDialog = new CoinPusherConvertDialog(mActivity);
+        CoinPusherRoomListDialog coinpusherDialog = new CoinPusherRoomListDialog(mActivity);
         coinpusherDialog.show();
         AppContext.instance().logEvent(AppsFlyerEvent.main_open);
 //        aliYunMqttClientLifecycle.broadcastGiftEvent.observe(this, new Observer<MqBroadcastGiftEntity>() {

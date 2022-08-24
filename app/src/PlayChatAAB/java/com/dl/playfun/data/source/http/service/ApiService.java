@@ -33,6 +33,7 @@ import com.dl.playfun.entity.ChooseAreaEntity;
 import com.dl.playfun.entity.CityAllEntity;
 import com.dl.playfun.entity.CoinExchangeBoxInfo;
 import com.dl.playfun.entity.CoinPusherConverInfoEntity;
+import com.dl.playfun.entity.CoinPusherRoomInfoEntity;
 import com.dl.playfun.entity.CoinWalletEntity;
 import com.dl.playfun.entity.CommentMessageEntity;
 import com.dl.playfun.entity.ConfigItemEntity;
@@ -122,7 +123,68 @@ import retrofit2.http.Query;
  */
 
 public interface ApiService {
-
+    /**
+    * @Desc TODO(推币机-结束游戏)
+    * @author 彭石林
+    * @parame [roomId]
+    * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
+    * @Date 2022/8/24
+    */
+    @POST("api/iscan/end")
+    @FormUrlEncoded
+    Observable<BaseResponse> playingCoinPusherClose(@Field("roomId")Integer roomId);
+    /**
+    * @Desc TODO(推币机-操作雨刷)
+    * @author 彭石林
+    * @parame [roomId]
+    * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
+    * @Date 2022/8/24
+    */
+    @POST("api/iscan/act")
+    @FormUrlEncoded
+    Observable<BaseResponse> playingCoinPusherAct(@Field("roomId")Integer roomId);
+    /**
+    * @Desc TODO(推币机-投币)
+    * @author 彭石林
+    * @parame []
+    * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
+    * @Date 2022/8/24
+    */
+    @FormUrlEncoded
+    @POST("api/iscan/throwCoin")
+    Observable<BaseResponse> playingCoinPusherThrowCoin(@Field("roomId")Integer roomId);
+    /**
+    * @Desc TODO(推币机-钻石兑金币)
+    * @author 彭石林
+    * @parame [
+     * amount	是	int	兑换值
+     * type	是	int	兑换类型 1金币 2钻石 3搭讪卡
+     * ]
+    * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
+    * @Date 2022/8/24
+    */
+    @FormUrlEncoded
+    @POST("api/iscan/goldCoin")
+    Observable<BaseResponse> convertCoinPusherGoldsCoin(@Field("amount")Integer amount,@Field("type") Integer type);
+    /**
+    * @Desc TODO(推币机-兑换钻石)
+    * @author 彭石林
+    * @parame []
+    * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
+    * @Date 2022/8/24
+    */
+    @POST("api/iscan/diamonds")
+    @FormUrlEncoded
+    Observable<BaseResponse> convertCoinPusherDiamonds(@Field("amount") Integer amount);
+    /**
+    * @Desc TODO(推币机-设备列表)
+    * @author 彭石林
+    * @parame []
+    * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse<com.dl.playfun.entity.CoinPusherRoomInfoEntity>>
+    * @Date 2022/8/24
+    */
+    @GET("api/iscan")
+    Observable<BaseDataResponse<CoinPusherRoomInfoEntity>> qryCoinPusherRoomList();
     /**
     * @Desc TODO(推币机-兑换列表)
     * @author 彭石林

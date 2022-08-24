@@ -1191,5 +1191,7 @@
     <string name="playfun_coinpusher_text_30">您30s內沒有投幣，已自動退出</string>
     <string name="playfun_purchase_text">購買</string>
     <string name="playfun_capsule_tab">寶盒</string>
+    <string name="playfun_coinpusher_text_1">熱玩</string>
+    <string name="playfun_coinpusher_text_2">空閒</string>
 </resources>
 
