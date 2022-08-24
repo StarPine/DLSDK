@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,8 +21,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.lifecycle.Observer;
@@ -47,7 +44,6 @@ import com.dl.playfun.entity.ApiConfigManagerEntity;
 import com.dl.playfun.entity.CrystalDetailsConfigEntity;
 import com.dl.playfun.entity.EvaluateItemEntity;
 import com.dl.playfun.entity.GiftBagEntity;
-import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.entity.LocalMessageIMEntity;
 import com.dl.playfun.entity.MessageRuleEntity;
 import com.dl.playfun.entity.PhotoAlbumEntity;
@@ -66,8 +62,6 @@ import com.dl.playfun.ui.message.sendcoinredpackage.SendCoinRedPackageFragment;
 import com.dl.playfun.ui.mine.myphotoalbum.MyPhotoAlbumFragment;
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
 import com.dl.playfun.ui.mine.wallet.girl.TwDollarMoneyFragment;
-import com.dl.playfun.ui.mine.wallet.recharge.RechargeActivity;
-import com.dl.playfun.ui.mine.webview.WebViewFragment;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.ui.userdetail.report.ReportUserFragment;
 import com.dl.playfun.utils.ApiUitl;
@@ -79,7 +73,6 @@ import com.dl.playfun.utils.PictureSelectorUtil;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.utils.Utils;
 import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
-import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
 import com.dl.playfun.widget.dialog.MMAlertDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.dl.playfun.widget.dialog.MessageDetailDialog;
@@ -1128,16 +1121,8 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     }
 
     //支付框样式选择
-    private void paySelectionboxChoose(boolean b) {
-        if (ConfigManager.getInstance().isMale()) {
-            if (ConfigManager.getInstance().isVip()) {
-                googleCoinValueBox(b);
-            } else {
-                dialogRechargeShow(b);
-            }
-        } else {
-            googleCoinValueBox(b);
-        }
+    private void paySelectionboxChoose(boolean isSendGift) {
+        showLoaclRecharge(isSendGift);
     }
 
     @Override
@@ -1352,7 +1337,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     }
 
     //弹出钻石充值
-    private void dialogRechargeShow(boolean isGiftSend) {
+    private void showWebRecharge(boolean isGiftSend) {
         if (!isGiftSend) {
             AppContext.instance().logEvent(AppsFlyerEvent.im_topup);
         }
@@ -1380,7 +1365,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                 public void moreRechargeDiamond(Dialog dialog) {
                     dialog.dismiss();
                     if(mActivity!=null && !mActivity.isFinishing()){
-                        mActivity.runOnUiThread(() -> googleCoinValueBox(false));
+                        mActivity.runOnUiThread(() -> showLoaclRecharge(false));
                     }
                 }
 
@@ -1389,11 +1374,11 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                 }
             }).noticeDialog().show();
         }else{
-            googleCoinValueBox(false);
+            showLoaclRecharge(false);
         }
     }
 
-    private void googleCoinValueBox(boolean isGiftSend) {
+    private void showLoaclRecharge(boolean isGiftSend) {
         if (!isGiftSend) {
             AppContext.instance().logEvent(AppsFlyerEvent.im_topup);
         }

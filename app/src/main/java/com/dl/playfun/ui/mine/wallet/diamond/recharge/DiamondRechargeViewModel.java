@@ -11,6 +11,7 @@ import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
+import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
@@ -70,7 +71,7 @@ public class DiamondRechargeViewModel extends BaseViewModel<AppRepository> {
             itemViewModel.itemEntity.get().setSelected(false);
         }
         selectedGoodsEntity.set(goodsEntity);
-        AppContext.instance().logEvent("Recharge_" + (position + 1));
+        AppContext.instance().logEvent(AppsFlyerEvent.Top_up + (position + 1));
         diamondRechargeList.get(position).itemEntity.get().setSelected(true);
         selectedPosition = position;
     }
