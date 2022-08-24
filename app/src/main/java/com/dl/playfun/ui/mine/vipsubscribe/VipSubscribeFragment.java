@@ -245,7 +245,7 @@ public class VipSubscribeFragment extends BaseToolbarFragment<FragmentVipSubscri
             TraceDialog.getInstance(mActivity)
                     .setCannelOnclick(dialog -> {
                         isFinsh = true;
-                        pop();
+                        mActivity.onBackPressed();
                         dialog.dismiss();
                     })
                     .vipRetainDialog(viewModel.vipPrivilegeList)

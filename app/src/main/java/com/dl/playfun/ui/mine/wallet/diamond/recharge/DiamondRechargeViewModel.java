@@ -11,6 +11,7 @@ import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
+import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
@@ -20,12 +21,15 @@ import com.dl.playfun.entity.CreateOrderEntity;
 import com.dl.playfun.entity.DiamondInfoEntity;
 import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.manager.ConfigManager;
+import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
+import com.dl.playfun.ui.mine.wallet.coin.CoinFragment;
 import com.dl.playfun.viewmodel.BaseViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import me.goldze.mvvmhabit.binding.command.BindingAction;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.RxUtils;
@@ -53,12 +57,31 @@ public class DiamondRechargeViewModel extends BaseViewModel<AppRepository> {
     public SingleLiveEvent<String> payOnClick = new SingleLiveEvent();
     public SingleLiveEvent<GoodsEntity> paySuccess = new SingleLiveEvent();
 
-
     /**
      * 确认支付
      */
     public BindingCommand confirmPayOnClick = new BindingCommand(() -> {
         createOrder();
+    });
+
+    /**
+     * 跳转会员中心
+     */
+    public BindingCommand toVipCenter = new BindingCommand(() -> {
+        if (diamondInfo.get().getIsVip() == 0 && isMale()){
+            AppContext.instance().logEvent(AppsFlyerEvent.VIP_Center);
+            start(VipSubscribeFragment.class.getCanonicalName());
+        }
+    });
+
+    /**
+     * 跳转到钻石明细界面
+     */
+    public BindingCommand clickCoinMoneyView = new BindingCommand(new BindingAction() {
+        @Override
+        public void call() {
+            start(CoinFragment.class.getCanonicalName());
+        }
     });
 
     public DiamondRechargeViewModel(@NonNull @NotNull Application application, AppRepository model) {
@@ -70,7 +93,7 @@ public class DiamondRechargeViewModel extends BaseViewModel<AppRepository> {
             itemViewModel.itemEntity.get().setSelected(false);
         }
         selectedGoodsEntity.set(goodsEntity);
-        AppContext.instance().logEvent("Recharge_" + (position + 1));
+        AppContext.instance().logEvent(AppsFlyerEvent.Top_up + (position + 1));
         diamondRechargeList.get(position).itemEntity.get().setSelected(true);
         selectedPosition = position;
     }
@@ -172,10 +195,25 @@ public class DiamondRechargeViewModel extends BaseViewModel<AppRepository> {
                         DiamondInfoEntity infoEntity = response.getData();
                         diamondInfo.set(infoEntity);
                         List<GoodsEntity> data = infoEntity.getList();
+                        if (data == null || data.size() <= 0){
+                            return;
+                        }
                         for (GoodsEntity goodsEntity : data) {
                             DiamondRechargeItemViewModel itemViewModel = new DiamondRechargeItemViewModel(DiamondRechargeViewModel.this, goodsEntity);
                             diamondRechargeList.add(itemViewModel);
                         }
+                        //默认选中第一个钻石套餐
+                        int type = data.get(0).getType();
+                        if (type == 2 && data.size() > 1){
+                            data.get(1).setSelected(true);
+                            selectedGoodsEntity.set(data.get(1));
+                            selectedPosition = 1;
+                        }else {
+                            data.get(0).setSelected(true);
+                            selectedGoodsEntity.set(data.get(0));
+                            selectedPosition = 0;
+                        }
+
                     }
 
                     @Override

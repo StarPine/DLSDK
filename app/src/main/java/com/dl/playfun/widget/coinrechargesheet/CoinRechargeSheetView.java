@@ -220,6 +220,20 @@ public class CoinRechargeSheetView extends BasePopupWindow implements View.OnCli
                     public void onSuccess(BaseDataResponse<DiamondInfoEntity> response) {
                         mGoodsList = response.getData().getList();
                         adapter.setData(mGoodsList);
+                        if (mGoodsList == null || mGoodsList.size() <= 0){
+                            return;
+                        }
+
+                        //默认选中第一个钻石套餐
+                        int type = mGoodsList.get(0).getType();
+                        if (type == 2 && mGoodsList.size() > 1){
+                            mGoodsList.get(1).setSelected(true);
+                            currGoodsInfo = mGoodsList.get(1);
+                        }else {
+                            mGoodsList.get(0).setSelected(true);
+                            currGoodsInfo = mGoodsList.get(0);
+                        }
+
                     }
 
                     @Override
@@ -306,7 +320,11 @@ public class CoinRechargeSheetView extends BasePopupWindow implements View.OnCli
         List<String> skuList = new ArrayList<>();
         skuList.add(payCode);
         SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
-        params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP);
+        if (currGoodsInfo.getType() == 2){
+            params.setSkusList(skuList).setType(BillingClient.SkuType.SUBS);
+        }else {
+            params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP);
+        }
         billingClientLifecycle.querySkuDetailsLaunchBillingFlow(params,mActivity,orderNumber);
     }
 
