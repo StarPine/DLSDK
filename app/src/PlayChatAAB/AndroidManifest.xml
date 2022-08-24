@@ -167,6 +167,13 @@
         </activity>
 
         <activity
+            android:name=".ui.base.OtherFragmentActivity"
+            android:requestLegacyExternalStorage="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan|adjustResize|stateHidden"
+            android:exported="true"/>
+        <activity
             android:name="com.dl.playfun.kl.view.CallingVideoActivity"
             android:launchMode="singleTop"
             android:exported="true"

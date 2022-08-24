@@ -1,6 +1,7 @@
 package com.dl.playfun.ui.base;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.Observer;
 
 import com.dl.playfun.R;
+import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.gyf.immersionbar.ImmersionBar;
 import com.kaopiz.kprogresshud.KProgressHUD;
@@ -74,6 +76,22 @@ public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseVie
                 dismissHud();
             }
         });
+
+        viewModel.getMuc().startFragmentEvent.observe(this, new Observer<Map<String, Object>>() {
+            @Override
+            public void onChanged(Map<String, Object> params) {
+                String canonicalName = (String) params.get(BaseViewModel.ParameterField.FRAGMENT_NAME);
+                Bundle bundle = (Bundle) params.get(BaseViewModel.ParameterField.BUNDLE);
+                startOtherActivity(canonicalName, bundle);
+            }
+        });
+    }
+
+    protected void startOtherActivity(String canonicalName, Bundle bundle) {
+        Intent intent = new Intent(this, OtherFragmentActivity.class);
+        intent.putExtra(BaseViewModel.ParameterField.FRAGMENT_NAME,canonicalName);
+        intent.putExtra(BaseViewModel.ParameterField.BUNDLE,canonicalName);
+        startActivity(intent);
     }
 
     public void showHud() {

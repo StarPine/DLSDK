@@ -220,6 +220,12 @@ public class CoinRechargeSheetView extends BasePopupWindow implements View.OnCli
                     public void onSuccess(BaseDataResponse<DiamondInfoEntity> response) {
                         mGoodsList = response.getData().getList();
                         adapter.setData(mGoodsList);
+                        if (mGoodsList == null || mGoodsList.size() <= 0){
+                            return;
+                        }
+                        //默认选中第一个
+                        mGoodsList.get(0).setSelected(true);
+                        currGoodsInfo = mGoodsList.get(0);
                     }
 
                     @Override

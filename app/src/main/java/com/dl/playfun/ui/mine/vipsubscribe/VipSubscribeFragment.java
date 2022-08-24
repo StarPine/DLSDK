@@ -139,7 +139,6 @@ public class VipSubscribeFragment extends BaseToolbarFragment<FragmentVipSubscri
             }
         });
         this.billingClientLifecycle.PAYMENT_FAIL.observe(this, billingPurchasesState -> {
-            showRewardDialog();
             Log.e("BillingClientLifecycle", "支付购买失败回调");
             switch (billingPurchasesState.getBillingFlowNode()) {
                 //查询商品阶段-->异常
@@ -246,7 +245,7 @@ public class VipSubscribeFragment extends BaseToolbarFragment<FragmentVipSubscri
             TraceDialog.getInstance(mActivity)
                     .setCannelOnclick(dialog -> {
                         isFinsh = true;
-                        pop();
+                        mActivity.onBackPressed();
                         dialog.dismiss();
                     })
                     .vipRetainDialog(viewModel.vipPrivilegeList)
