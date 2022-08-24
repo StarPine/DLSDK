@@ -157,7 +157,8 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
         presenter.setLoadConversationCallback(new ConversationPresenter.LoadConversationCallback() {
             @Override
             public void totalUnreadCount(int count) {
-                RxBus.getDefault().post(new MessageCountChangeTagEvent(count));
+                binding.conversationLayout.post(() -> RxBus.getDefault().post(new MessageCountChangeTagEvent(count)));
+
             }
 
             @Override
