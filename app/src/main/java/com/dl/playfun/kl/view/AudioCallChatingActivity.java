@@ -46,6 +46,7 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.ActivityCallAudioChatingBinding;
 import com.dl.playfun.entity.AudioCallingBarrageEntity;
+import com.dl.playfun.entity.CallingInfoEntity;
 import com.dl.playfun.entity.CrystalDetailsConfigEntity;
 import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.entity.GoodsEntity;
@@ -253,26 +254,29 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
     }
 
     //开启悬浮窗
-    private void startFloatService() {
+    private boolean startFloatService() {
         if (isFinishing() || isDestroyed()) {
-            return;
+            return true;
         }
         if (Status.mIsShowFloatWindow) {
-            return;
+            return true;
         }
         if (PermissionUtil.hasPermission(this)) {
             mFloatView = createFloatView();
+            if (mFloatView == null){
+                return true;
+            }
             FloatWindowService.startFloatService(this, mFloatView);
             RxBus.getDefault().post(new ShowFloatWindowEntity(true));
         }
+        return false;
     }
 
     //创建悬浮窗视图
     private AudioFloatCallView createFloatView() {
         String[] userIds = new String[]{receiverImId};
-        String avatar ="";
-        if (viewModel.leftUserInfoField.get() != null){
-            avatar = viewModel.leftUserInfoField.get().getAvatar();
+        if (viewModel.leftUserInfoField.get() == null){
+            return null;
         }
         ArrayList<AudioCallingBarrageEntity> audioCallChatingItemViewModelList = new ArrayList<>();
         for (AudioCallChatingItemViewModel audioCallChatingItemViewModel : viewModel.observableList) {
@@ -283,7 +287,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
             audioCallChatingItemViewModelList.add(audioCallingBarrageEntity);
         }
         return new AudioFloatCallView(this, mRole, TUICalling.Type.AUDIO, userIds, inviterImId,
-                null, false,avatar,mTimeCount,roomId, audioCallChatingItemViewModelList);
+                null, false,viewModel.leftUserInfoField.get(),mTimeCount,roomId, audioCallChatingItemViewModelList);
     }
 
     private void requestSettingCanDrawOverlays() {
@@ -310,9 +314,11 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                 ToastUtils.showLong(getString(R.string.playfun_float_permission));
                 return;
             }
-            startFloatService();
-            finish();
-            overridePendingTransition(0, R.anim.anim_zoom_out);
+            boolean isError = startFloatService();
+            if (!isError){
+                finish();
+                overridePendingTransition(0, R.anim.anim_zoom_out);
+            }
         });
         //公屏消息滚动到底部
         viewModel.uc.scrollToEnd.observe(this, new Observer<Void>() {
