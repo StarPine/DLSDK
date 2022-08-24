@@ -167,6 +167,30 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         //startWithPopTo(LoginFragment.class.getCanonicalName(), MainFragment.class.getCanonicalName(), true);
     }
 
+    //检测新的版本
+    public void versionOnClickCommand() {
+        model.detectionVersion("Android").compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(this)
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseDataResponse<VersionEntity>>() {
+                    @Override
+                    public void onSuccess(BaseDataResponse<VersionEntity> versionEntityBaseDataResponse) {
+                        dismissHUD();
+                        VersionEntity versionEntity = versionEntityBaseDataResponse.getData();
+                        if (versionEntity != null) {
+                            uc.versionEntitySingl.postValue(versionEntity);
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        dismissHUD();
+                    }
+                });
+    }
+
     //显示公告
     public void showAnnouncemnet() {
         try {

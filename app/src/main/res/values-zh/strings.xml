@@ -1226,4 +1226,15 @@
     <string name="playfun_mine_title_anchor_center">主播中心</string>
     <string name="playfun_float_permission">请打开“显示在其他应用程序”权限</string>
     <string name="playfun_audio_tips_text_one">錄音少於1s</string>
+    <string name="playfun_reward_card_tips">搭訕卡*</string>
+    <string name="playfun_reward_card_tips2">聊天卡*</string>
+    <string name="playfun_diamond_detail_title">明細</string>
+    <string name="playfun_diamond_detail_item_flag">首充</string>
+    <string name="playfun_diamond_detail_item_flag2">超值VIP</string>
+    <string name="playfun_diamond_my_diamond">我的鑽石</string>
+    <string name="playfun_diamond_choose_a_plan">選擇套餐</string>
+    <string name="playfun_retain_think_again">再想想</string>
+    <string name="playfun_recharge_retain_tip">儲值有優惠，確定要錯過嗎？</string>
+    <string name="playfun_diamonds_recharge_title">鑽石儲值</string>
+    <string name="playfun_btn_now_buy">立即儲值</string>
 </resources>

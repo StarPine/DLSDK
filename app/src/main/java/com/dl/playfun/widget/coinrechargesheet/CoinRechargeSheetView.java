@@ -258,7 +258,11 @@ public class CoinRechargeSheetView extends BasePopupWindow implements View.OnCli
                     dialog.dismiss();
                     dismiss();
                 })
-                .dayRewardDialog(true, currGoodsInfo.getDayGiveCoin(), 0, totalReward,0)
+                .dayRewardDialog(true,
+                        currGoodsInfo.getDayGiveCoin(),
+                        currGoodsInfo.getDayGiveVideoCard(),
+                        totalReward,
+                        currGoodsInfo.getVideoCard())
                 .show();
     }
 

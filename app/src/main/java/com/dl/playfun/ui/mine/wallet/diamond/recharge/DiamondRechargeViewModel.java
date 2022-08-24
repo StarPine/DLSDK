@@ -189,6 +189,7 @@ public class DiamondRechargeViewModel extends BaseViewModel<AppRepository> {
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
                 .subscribe(new BaseObserver<BaseDataResponse<DiamondInfoEntity>>() {
                     @Override
                     public void onSuccess(BaseDataResponse<DiamondInfoEntity> response) {
@@ -218,6 +219,7 @@ public class DiamondRechargeViewModel extends BaseViewModel<AppRepository> {
 
                     @Override
                     public void onComplete() {
+                        dismissHUD();
                     }
                 });
     }

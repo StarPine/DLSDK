@@ -1238,5 +1238,6 @@
     <string name="playfun_recharge_retain_tip">儲值有優惠，確定要錯過嗎？</string>
     <string name="playfun_diamonds_recharge_title">鑽石儲值</string>
     <string name="playfun_btn_now_buy">立即儲值</string>
+    <string name="playfun_max_vaule">9999999+</string>
 
 </resources>

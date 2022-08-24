@@ -121,6 +121,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
     @Override
     public void initViewObservable() {
         super.initViewObservable();
+        viewModel.versionOnClickCommand();
         AppContext.instance().logEvent(AppsFlyerEvent.main_open);
 //        aliYunMqttClientLifecycle.broadcastGiftEvent.observe(this, new Observer<MqBroadcastGiftEntity>() {
 //            @Override

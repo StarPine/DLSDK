@@ -149,7 +149,6 @@ public class DiamondRechargeActivity extends BaseActivity<ActivityDiamondRecharg
      * 显示奖励dialog
      */
     private void showRewardDialog() {
-        //give_coin+actual_value+gold_price
         GoodsEntity goodsEntity = viewModel.selectedGoodsEntity.get();
         int totalReward = goodsEntity.getGiveCoin() + goodsEntity.getActualValue() + goodsEntity.getGoldPrice();
         TraceDialog.getInstance(this)
@@ -158,7 +157,11 @@ public class DiamondRechargeActivity extends BaseActivity<ActivityDiamondRecharg
                     dialog.dismiss();
                     finish();
                 })
-                .dayRewardDialog(true, viewModel.selectedGoodsEntity.get().getDayGiveCoin(), 0, totalReward,0)
+                .dayRewardDialog(true,
+                        viewModel.selectedGoodsEntity.get().getDayGiveCoin(),
+                        viewModel.selectedGoodsEntity.get().getDayGiveVideoCard(),
+                        totalReward,
+                        viewModel.selectedGoodsEntity.get().getVideoCard())
                 .show();
     }
 
