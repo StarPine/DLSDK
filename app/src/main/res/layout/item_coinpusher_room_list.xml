@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:binding="http://schemas.android.com/apk/res-auto">
+    xmlns:binding="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
@@ -10,6 +12,10 @@
     </data>
 
     <RelativeLayout
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
         binding:drawable_color="@{@color/white}"
         binding:drawable_cornersRadius="@{15}"
         android:layout_width="163dp"
@@ -19,20 +25,63 @@
         android:shadowDy="4"
         >
         <androidx.appcompat.widget.AppCompatTextView
-            binding:drawable_color="@{itemEntity.status == 1 ?@color/red_9 : @color/green_14E29A}"
+            android:elevation="11dp"
+            binding:drawable_color="@{itemEntity.status == 1 ? @color/red_9 : @color/green_14E29A}"
             binding:drawable_cornersRadius="@{15}"
+            android:includeFontPadding="false"
+            android:gravity="center"
             android:layout_width="90dp"
             android:layout_height="24dp"
-            android:text="@string/playfun_coinpusher_text_2"
+            android:text="@{itemEntity.status == 1 ? @string/playfun_coinpusher_text_1 : @string/playfun_coinpusher_text_2}"
             android:textColor="@color/white"
             android:textSize="14sp"
+            tools:text="@string/playfun_coinpusher_text_1"
+            tools:background="@color/red_9"
             />
-        <androidx.appcompat.widget.AppCompatImageView
+        <com.dl.playfun.widget.roundedimageview.RoundedImageView
+            android:id="@+id/img_icon"
+            android:src="@drawable/radio_dating_img_default"
+            app:riv_corner_radius="10dp"
             android:layout_width="match_parent"
             android:layout_height="158dp"
             binding:imagePath="@{itemEntity.icon}"
             binding:imageErrorPlaceholderRes="@{R.drawable.default_load_img_purl}"
             binding:imagePlaceholderRes="@{R.drawable.default_load_img_purl}"
             />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/icon_name"
+            android:includeFontPadding="false"
+            android:layout_below="@+id/img_icon"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="9dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="G1"
+            android:text="@{itemEntity.nickname}"
+            android:textColor="#ff333333"
+            android:textSize="14sp"
+            />
+        <LinearLayout
+            android:layout_marginTop="5dp"
+            android:layout_alignStart="@+id/icon_name"
+            android:layout_below="@+id/icon_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/img_start"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/img_coinpusher_currency" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:includeFontPadding="false"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{String.format(@string/playfun_coinpusher_text_3,itemEntity.money)}"
+                tools:text="@string/playfun_coinpusher_text_3"
+                />
+        </LinearLayout>
+
     </RelativeLayout>
 </layout>

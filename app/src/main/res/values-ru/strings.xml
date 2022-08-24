@@ -1193,5 +1193,6 @@
     <string name="playfun_capsule_tab">寶盒</string>
     <string name="playfun_coinpusher_text_1">熱玩</string>
     <string name="playfun_coinpusher_text_2">空閒</string>
+    <string name="playfun_coinpusher_text_3">%s/次</string>
 </resources>
 

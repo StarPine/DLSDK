@@ -154,7 +154,7 @@
                     android:layout_marginRight="29dp"
                     android:background="@drawable/btn_crystal_exchange_bg"
                     android:text="@string/playfun_txt_exchange_apply_game_coin"
-                    android:textColor="#FF1579"
+                    android:textColor="@color/pseekbar_process"
                     android:textSize="12sp"
                     binding:onClickCommand="@{viewModel.withdrawonClickCommand}" />
             </RelativeLayout>
