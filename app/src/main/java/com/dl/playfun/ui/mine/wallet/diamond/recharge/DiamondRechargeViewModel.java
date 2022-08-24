@@ -202,10 +202,18 @@ public class DiamondRechargeViewModel extends BaseViewModel<AppRepository> {
                             DiamondRechargeItemViewModel itemViewModel = new DiamondRechargeItemViewModel(DiamondRechargeViewModel.this, goodsEntity);
                             diamondRechargeList.add(itemViewModel);
                         }
-                        //默认选中第一个
-                        data.get(0).setSelected(true);
-                        selectedGoodsEntity.set(data.get(0));
-                        selectedPosition = 0;
+                        //默认选中第一个钻石套餐
+                        int type = data.get(0).getType();
+                        if (type == 2 && data.size() > 1){
+                            data.get(1).setSelected(true);
+                            selectedGoodsEntity.set(data.get(1));
+                            selectedPosition = 1;
+                        }else {
+                            data.get(0).setSelected(true);
+                            selectedGoodsEntity.set(data.get(0));
+                            selectedPosition = 0;
+                        }
+
                     }
 
                     @Override

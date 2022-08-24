@@ -129,6 +129,7 @@ public class DiamondRechargeActivity extends BaseActivity<ActivityDiamondRecharg
                     break;
             }
         });
+
         //查询消耗本地历史订单
         this.billingClientLifecycle.PurchaseHistory.observe(this,billingPurchasesState -> {
             Log.e("BillingClientLifecycle","查询本地历史订单。没有消耗确认的商品");
@@ -171,7 +172,11 @@ public class DiamondRechargeActivity extends BaseActivity<ActivityDiamondRecharg
         List<String> skuList = new ArrayList<>();
         skuList.add(payCode);
         SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
-        params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP);
+        if (viewModel.selectedGoodsEntity.get().getType() == 2){
+            params.setSkusList(skuList).setType(BillingClient.SkuType.SUBS);
+        }else {
+            params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP);
+        }
         billingClientLifecycle.querySkuDetailsLaunchBillingFlow(params,this,viewModel.orderNumber);
     }
 
