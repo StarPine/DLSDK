@@ -336,13 +336,6 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                                 String data = (String) map_data.get("data");
                                 if (StringUtil.isJSON2(data)) {
                                     switch (type) {
-                                        case "message_pushGreet"://今日搭訕
-                                            if (AppContext.isHomePage){
-                                                if(!FastCallFunUtil.getInstance().isFastCallFun("message_pushGreet",5000)){
-                                                    uc.clickAccountDialog.setValue("1");
-                                                }
-                                            }
-                                            break;
                                         case "message_pushPay"://未支付儲值鑽石
                                             if (AppContext.isShowNotPaid){
                                                 if(!FastCallFunUtil.getInstance().isFastCallFun("message_pushPay",5000)){

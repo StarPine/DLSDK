@@ -281,12 +281,14 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
     @Override
     public void onResume() {
         super.onResume();
+        AppContext.isHomePage = true;
         AppContext.isShowNotPaid = true;
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        AppContext.isHomePage = false;
         AppContext.isShowNotPaid = false;
     }
 

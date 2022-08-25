@@ -3,6 +3,9 @@ package com.dl.playfun.ui.main;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +22,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.aliyun.svideo.common.utils.ScreenUtils;
+import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -392,8 +396,15 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         TextView leftUserName = streamerView.findViewById(R.id.left_user_name);
         leftUserName.setText(leftUser.getNickname());
         ImageView leftUserIcon = streamerView.findViewById(R.id.left_user_icon);
+        ImageView ivGift = streamerView.findViewById(R.id.iv_gift);
         broadcastGiftImg(leftUser,leftUserIcon);
-
+        Glide.with(getContext())
+                .asBitmap()
+                .load(StringUtil.getFullImageUrl(mqttMessageEntity.getImagePath()))
+                .error(R.drawable.radio_program_list_content)
+                .placeholder(R.drawable.radio_program_list_content)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(ivGift);
         Glide.with(getContext())
                 .asBitmap()
                 .load(StringUtil.getFullImageUrl(leftUser.getAvatar()))
@@ -417,13 +428,24 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(rightUserImg);
         rightUserImg.setOnClickListener(v -> {
+            if (rightUser.getImId().equals(ConfigManager.getInstance().getUserImID())){
+                return;
+            }
             Bundle bundle = UserDetailFragment.getStartBundle(rightUser.getId());
             viewModel.start(UserDetailFragment.class.getCanonicalName(), bundle);
         });
         broadcastGiftImg(rightUser,rightUserIcon);
 
         TextView giftTitle = streamerView.findViewById(R.id.gift_title);
-        giftTitle.setText(mqttMessageEntity.getGiftName());
+
+        String tips = mActivity.getString(R.string.playfun_send_tips);
+        String detail = tips + "[" + mqttMessageEntity.getGiftName() + "]";
+        SpannableString stringBuilder = new SpannableString(detail);
+        ForegroundColorSpan blueSpanWhite = new ForegroundColorSpan(ColorUtils.getColor(R.color.white));
+        ForegroundColorSpan blueSpanYellow = new ForegroundColorSpan(ColorUtils.getColor(R.color.yellow_617));
+        stringBuilder.setSpan(blueSpanWhite, 0, detail.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        stringBuilder.setSpan(blueSpanYellow, tips.length(), detail.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        giftTitle.setText(stringBuilder);
         ImageView giftNumImg = streamerView.findViewById(R.id.gift_count);
         int account = mqttMessageEntity.getAmount();
         setGiftNumImg(giftNumImg, account);
@@ -499,7 +521,6 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        AppContext.isHomePage = !hidden;
         if (!hidden) {
             if (System.currentTimeMillis() - TOUCH_TIME > WAIT_TIME) {
                 //刷新任何列表数据
