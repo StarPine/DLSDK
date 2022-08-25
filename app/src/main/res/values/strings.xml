@@ -1226,18 +1226,18 @@
     <string name="playfun_reward_title">Sign up bonus</string>
     <string name="playfun_mine_title_anchor_center">Anchor Center</string>
     <string name="playfun_float_permission">please open "Display over other apps" permission</string>
-    <string name="playfun_audio_tips_text_one">錄音少於1s</string>
-    <string name="playfun_reward_card_tips">搭訕卡*</string>
-    <string name="playfun_reward_card_tips2">聊天卡*</string>
-    <string name="playfun_diamond_detail_title">明細</string>
-    <string name="playfun_diamond_detail_item_flag">首充</string>
-    <string name="playfun_diamond_detail_item_flag2">超值VIP</string>
-    <string name="playfun_diamond_my_diamond">我的鑽石</string>
-    <string name="playfun_diamond_choose_a_plan">選擇套餐</string>
-    <string name="playfun_retain_think_again">再想想</string>
-    <string name="playfun_recharge_retain_tip">儲值有優惠，確定要錯過嗎？</string>
-    <string name="playfun_diamonds_recharge_title">鑽石儲值</string>
-    <string name="playfun_btn_now_buy">立即儲值</string>
+    <string name="playfun_audio_tips_text_one">Recording less than 1s</string>
+    <string name="playfun_reward_card_tips">Greeting card*</string>
+    <string name="playfun_reward_card_tips2">Chat card*</string>
+    <string name="playfun_diamond_detail_title">Details</string>
+    <string name="playfun_diamond_detail_item_flag">First charge</string>
+    <string name="playfun_diamond_detail_item_flag2">VIP</string>
+    <string name="playfun_diamond_my_diamond">Diamonds</string>
+    <string name="playfun_diamond_choose_a_plan">Select a Package</string>
+    <string name="playfun_retain_think_again">Think again</string>
+    <string name="playfun_recharge_retain_tip">There is a discount on stored value, are you sure to miss it?</string>
+    <string name="playfun_diamonds_recharge_title">Top up diamonds</string>
+    <string name="playfun_btn_now_buy">Top up now</string>
     <string name="playfun_max_vaule">9999999+</string>
 
 </resources>

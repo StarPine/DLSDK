@@ -1194,6 +1194,50 @@
     <string name="server_exception">Server exception</string>
     <string name="radio_daily_atendance_day_text">Successful check-in, +10 points</string>
 
+
     <string name="playchat_choose_area_title">Region</string>
+    <string name="playfun_contact_empty_text">There is no regular contact, let\'s chat!</string>
+    <string name="playfun_contact_text1">Set up frequent contact success</string>
+    <string name="playfun_contact_text2">Frequent contact cancelled</string>
+    <string name="playfun_mine_title_btn_exclusive">Exclusive greeting</string>
+    <string name="playfun_mine_title_my_exclusive">Exclusive greeting</string>
+    <string name="playfun_my_exclusive_tips_content">1. Greeting text and sweet voice is a perfect greeting combination\n2. You can modify greeting words and voice greetings once a day</string>
+    <string name="playfun_text_chat_up">Greeting</string>
+    <string name="playfun_audio_chat_up">Voice greeting</string>
+    <string name="playfun_text_chat_up_hint">Good conversations are more likely to get a reply</string>
+    <string name="playfun_text_accost_number_of_fonts">%s/40</string>
+    <string name="playfun_text_accost_tips">Please enter</string>
+    <string name="playfun_text_accost_tips2">The greeting word contain inappropriate content, please reset</string>
+    <string name="playfun_text_accost_tips3">Greeting words set successfully</string>
+    <string name="playfun_audio_accost_tips2">Greeting voice set successfully</string>
+    <string name="playfun_audio_accost_long_click">Press to record</string>
+    <string name="playfun_audio_accost_recording">Recording</string>
+    <string name="playfun_audio_accost_tip">Within 15 seconds</string>
+    <string name="playfun_deadline_is_up">Deadline until:\n%s</string>
+    <string name="playfun_buy_now">Buy now</string>
+    <string name="playfun_continue_to_now">Continue to buy</string>
+    <string name="playfun_vip_service_tips">Automatic subscription, cancel anytime. \nPurchasing a subscription will be charged to your iTunes/Google account and signifies your agreement to our User Agreement and Privacy Policy. Automatic subscriptions can be managed or cancelled at any time in the settings.</string>
+    <string name="playfun_nonactivated">Nonactivated</string>
+    <string name="playfun_reward">award</string>
+    <string name="playfun_reward_tips">Log in tomorrow to get %s diamonds, video card*%s</string>
+    <string name="playfun_reward_tips2">Log in tomorrow to get %s diamonds</string>
+    <string name="playfun_reward_tips3">Log in tomorrow to get a video card*%s</string>
+    <string name="playfun_reward_tips4">Get chat props\nhelp you meet more interesting people</string>
+    <string name="playfun_reward_title">Sign up bonus</string>
+    <string name="playfun_mine_title_anchor_center">Anchor Center</string>
+    <string name="playfun_float_permission">please open "Display over other apps" permission</string>
+    <string name="playfun_audio_tips_text_one">Recording less than 1s</string>
+    <string name="playfun_reward_card_tips">Greeting card*</string>
+    <string name="playfun_reward_card_tips2">Chat card*</string>
+    <string name="playfun_diamond_detail_title">Details</string>
+    <string name="playfun_diamond_detail_item_flag">First charge</string>
+    <string name="playfun_diamond_detail_item_flag2">VIP</string>
+    <string name="playfun_diamond_my_diamond">Diamonds</string>
+    <string name="playfun_diamond_choose_a_plan">Select a Package</string>
+    <string name="playfun_retain_think_again">Think again</string>
+    <string name="playfun_recharge_retain_tip">There is a discount on stored value, are you sure to miss it?</string>
+    <string name="playfun_diamonds_recharge_title">Top up diamonds</string>
+    <string name="playfun_btn_now_buy">Top up now</string>
+    <string name="playfun_max_vaule">9999999+</string>
 
 </resources>
