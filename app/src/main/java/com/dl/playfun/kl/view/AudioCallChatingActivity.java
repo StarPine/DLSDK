@@ -261,7 +261,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         if (Status.mIsShowFloatWindow) {
             return true;
         }
-        if (PermissionUtil.hasPermission(this)) {
+        if (MiuiUtils.checkFloatWindowPermission(this)) {
             mFloatView = createFloatView();
             if (mFloatView == null){
                 return true;
@@ -308,7 +308,6 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
     public void initViewObservable() {
         super.initViewObservable();
         binding.ivMinimize.setOnClickListener(v -> {
-//            if (!PermissionUtil.hasPermission(getApplicationContext())) {
             if (!MiuiUtils.checkFloatWindowPermission(this)) {
                 requestSettingCanDrawOverlays();
                 ToastUtils.showLong(getString(R.string.playfun_float_permission));

@@ -161,6 +161,10 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
      * 語音通話
      */
     public BindingCommand connMicOnClickCommand = new BindingCommand(() -> {
+        if (Status.mIsShowFloatWindow){
+            ToastUtils.showShort(R.string.audio_in_call);
+            return;
+        }
         if (detailEntity.get() == null) {
             return;
         }
