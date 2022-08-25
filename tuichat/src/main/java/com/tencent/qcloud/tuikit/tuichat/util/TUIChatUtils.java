@@ -23,7 +23,7 @@ import static com.tencent.qcloud.tuicore.TUIConstants.TUIConversation.CONVERSATI
 
 public class TUIChatUtils {
 
-    public static final String IMAGE_BASE_URL = "https://img.joy-mask.com/";
+    public static final String IMAGE_BASE_URL = "https://img.play-chat.net/";
 
     public static <T> void callbackOnError(IUIKitCallback<T> callBack, String module, int errCode, String desc) {
         if (callBack != null) {

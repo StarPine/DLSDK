@@ -8,5 +8,5 @@ package com.tencent.qcloud.tuikit.tuiconversation.util;
  */
 public class StringUtil {
 
-    public static final String IMAGE_BASE_URL = "https://img.joy-mask.com/";
+    public static final String IMAGE_BASE_URL = "https://img.play-chat.net/";
 }
