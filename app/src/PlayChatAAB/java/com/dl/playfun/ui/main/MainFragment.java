@@ -39,6 +39,7 @@ import com.dl.playfun.databinding.FragmentMainBinding;
 import com.dl.playfun.entity.MqBroadcastGiftEntity;
 import com.dl.playfun.entity.MqBroadcastGiftUserEntity;
 import com.dl.playfun.entity.VersionEntity;
+import com.dl.playfun.event.DailyAccostEvent;
 import com.dl.playfun.event.MainTabEvent;
 import com.dl.playfun.event.TaskListEvent;
 import com.dl.playfun.manager.ConfigManager;
@@ -184,31 +185,6 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
             viewModel.playing = true;
         });
 
-        //搭讪弹窗-今日缘分
-        viewModel.uc.clickAccountDialog.observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(String isShow) {
-                HomeAccostDialog homeAccostDialog = new HomeAccostDialog(getContext());
-                homeAccostDialog.setIncomplete(isShow);
-                homeAccostDialog.setDialogAccostClicksListener(new HomeAccostDialog.DialogAccostClicksListener() {
-                    @Override
-                    public void onSubmitClick(HomeAccostDialog dialog, List<Integer> listData) {
-                        dialog.dismiss();
-                        viewModel.putAccostList(listData);
-                    }
-
-                    @Override
-                    public void onCancelClick(HomeAccostDialog dialog) {
-                        AppContext.instance().logEvent(AppsFlyerEvent.accost_close);
-                        dialog.dismiss();
-                    }
-                });
-                homeAccostDialog.show();
-                if (isShow.equals("1")){
-                    viewModel.pushGreet(1);
-                }
-            }
-        });
         //气泡提示
         viewModel.uc.bubbleTopShow.observe(this, new Observer<Boolean>() {
             @Override
@@ -254,16 +230,35 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                     @Override
                     public void run() {
                         if (versionEntity.getVersion_code().intValue() <= AppConfig.VERSION_CODE.intValue()) {
-                            //ToastUtils.showShort(R.string.version_latest);
-                            viewModel.showAnnouncemnet();
+                            //注册奖励
+                            if (AppConfig.isRegister){
+                                viewModel.getRegisterReward();
+                            }else {
+                                if (!viewModel.isShowedReward){
+                                    viewModel.getDayReward();
+                                }else {
+                                    RxBus.getDefault().post(new DailyAccostEvent());
+                                }
+                            }
+
                         } else {
                             boolean isUpdate = versionEntity.getIs_update().intValue() == 1;
                             UpdateDialogView.getInstance(mActivity)
-                                    .getUpdateDialogView(versionEntity.getVersion_name(), versionEntity.getContent(), versionEntity.getUrl(), isUpdate, "playchat", versionEntity.getLinkUrl())
+                                    .getUpdateDialogView(versionEntity.getVersion_name(),
+                                            versionEntity.getContent(),
+                                            versionEntity.getUrl(), isUpdate, "playchat", versionEntity.getLinkUrl())
                                     .setConfirmOnlick(new UpdateDialogView.CancelOnclick() {
                                         @Override
                                         public void cancel() {
-                                            viewModel.showAnnouncemnet();
+                                            if (AppConfig.isRegister){
+                                                viewModel.getRegisterReward();
+                                            }else {
+                                                if (!viewModel.isShowedReward){
+                                                    viewModel.getDayReward();
+                                                }else {
+                                                    RxBus.getDefault().post(new DailyAccostEvent());
+                                                }
+                                            }
                                         }
                                     })
                                     .show();
@@ -361,6 +356,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
      */
     private void showRewardDialog() {
         if (viewModel.giveCoin <= 0 && viewModel.videoCard <= 0){
+            RxBus.getDefault().post(new DailyAccostEvent());
             return;
         }
         TraceDialog.getInstance(mActivity)
@@ -377,6 +373,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
 
     private void showRegisterRewardDialog() {
         if (viewModel.chatCardNum <= 0 && viewModel.assostCardNum <= 0){
+            RxBus.getDefault().post(new DailyAccostEvent());
             return;
         }
         TraceDialog.getInstance(mActivity)

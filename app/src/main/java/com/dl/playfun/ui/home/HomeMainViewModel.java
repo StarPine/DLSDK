@@ -27,11 +27,14 @@ import com.dl.playfun.entity.ParkItemEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.AddBlackListEvent;
 import com.dl.playfun.event.CityChangeEvent;
+import com.dl.playfun.event.DailyAccostEvent;
 import com.dl.playfun.event.LoadEvent;
 import com.dl.playfun.event.LocationChangeEvent;
 import com.dl.playfun.ui.home.search.SearchFragment;
 import com.dl.playfun.ui.viewmodel.BaseParkItemViewModel;
 import com.dl.playfun.ui.viewmodel.BaseParkViewModel;
+import com.dl.playfun.utils.LogUtils;
+import com.dl.playfun.utils.StringUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,7 +69,6 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
     //位置选择文字
     public ObservableField<String> regionTitle = new ObservableField<>(StringUtils.getString(R.string.playfun_tab_female_1));
 
-    public ObservableField<Boolean> showLocationAlert = new ObservableField<>(false);
     //推荐用户弹窗
     public ObservableField<Integer> cityId = new ObservableField<>();
     public ObservableField<Boolean> gender = new ObservableField<>();//false:女 ，true: 男
@@ -85,9 +87,12 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
     private Disposable mSubscription;
     private Disposable mLocationSubscription;
     private Disposable mCitySubscription;
+    private Disposable dailyAccostSubscription;
     private Disposable mAddBlackListSubscription;
 
     public int lastTabClickIdx = -1;
+    public String accostKey = "";
+    public boolean isShowedAccost = true;//今日是否显示过奖励
 
 
     public Integer userSex = null;
@@ -181,9 +186,17 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
         }
         initGenderTab();
         list_chooseCityItem.addAll(model.readCityConfig());
+        //一键搭讪
+        accostKey =  StringUtil.getDailyFlag("dailyAccost");
+        String value = model.readKeyValue(accostKey);
+        if (value == null){
+            isShowedAccost = false;
+        }else {
+            isShowedAccost = true;
+        }
     }
 
-    public void titleRcvItemClick(int idx,int checkType) {
+    public void titleRcvItemClick(int idx, int checkType) {
         if (observableListTab.isEmpty()) {
             return;
         }
@@ -246,6 +259,13 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
                 .subscribe(cityChangeEvent -> {
                     startRefresh();
                 });
+        dailyAccostSubscription = RxBus.getDefault().toObservable(DailyAccostEvent.class)
+                .subscribe(cityChangeEvent -> {
+                    if (!isShowedAccost){
+                        model.readKeyValue(accostKey);
+                        uc.clickAccountDialog.setValue("0");
+                    }
+                });
         mAddBlackListSubscription = RxBus.getDefault().toObservable(AddBlackListEvent.class)
                 .subscribe(cityChangeEvent -> {
                     startRefresh();
@@ -255,6 +275,7 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
         RxSubscriptions.add(mLocationSubscription);
         RxSubscriptions.add(mCitySubscription);
         RxSubscriptions.add(mAddBlackListSubscription);
+        RxSubscriptions.add(dailyAccostSubscription);
 
     }
 
@@ -265,6 +286,7 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
         RxSubscriptions.remove(mLocationSubscription);
         RxSubscriptions.remove(mCitySubscription);
         RxSubscriptions.remove(mAddBlackListSubscription);
+        RxSubscriptions.remove(dailyAccostSubscription);
     }
 
 

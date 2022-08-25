@@ -109,7 +109,7 @@ public class CustomTextMessageHolder extends TextMessageHolder {
         mRightView.setVisibility(View.GONE);
     }
 
-    //fixme 收益相关 兼容旧的收益消息
+    //done 收益相关 兼容旧的收益消息
     private void setChatEarningsItemView(String extra, TUIMessageBean msg) {
         hideTimeView();
         initServerDataAndView(extra);
@@ -141,7 +141,7 @@ public class CustomTextMessageHolder extends TextMessageHolder {
         initServerDataAndView(extra);
         if (customIMTextEntity != null) {
 
-            //fixme 系统提示
+            //done 系统提示
             if (!TextUtils.isEmpty(customIMTextEntity.getContent())) {
 
                 String likeText = "一鍵追蹤她，不再失聯噢 已追蹤";
@@ -191,7 +191,7 @@ public class CustomTextMessageHolder extends TextMessageHolder {
                 if (price == null){
                     price = "0";
                 }
-                //fixme 通话结束时间
+                //done 通话结束时间
                 if (totalSeconds > 0 && callingType > 0) {
                     showWithAvatarView(msg.isSelf());
                     setBackColor(msg);
@@ -200,7 +200,7 @@ public class CustomTextMessageHolder extends TextMessageHolder {
                             .getString(R.string.custom_message_call_message_deatail_time_msg, totalSeconds/3600, totalSeconds / 60, totalSeconds % 60));
                 }
 
-                //fixme 余额不足和收益提示
+                //done 余额不足和收益提示
                 if (customIMTextEntity.getIsRemindPay() == 1
                         && Double.parseDouble(price) <= 0 ) {
                     tipView = View.inflate(appContext, R.layout.custom_not_sufficient_view, null);

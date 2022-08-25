@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.R;
+import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.widget.dialog.MVDialog;
 
@@ -122,8 +123,6 @@ public class UpdateDialogView {
             @Override
             public void onClick(View view) {
                 hide();
-                if (cancelOnclick != null)
-                    cancelOnclick.cancel();
             }
         });
         if (isUpdate) {
@@ -174,7 +173,10 @@ public class UpdateDialogView {
                 new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
         dialog.setFeatureDrawableAlpha(Window.FEATURE_OPTIONS_PANEL, 0);
-
+        dialog.setOnDismissListener(dialog1 -> {
+            if (cancelOnclick != null)
+                cancelOnclick.cancel();
+        });
         return INSTANCE;
     }
 
