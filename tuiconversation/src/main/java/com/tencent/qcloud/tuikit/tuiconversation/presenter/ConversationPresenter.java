@@ -128,7 +128,6 @@ public class ConversationPresenter {
              */
             @Override
             public void onFriendListAdded(List<V2TIMFriendInfo> v2TIMFriendInfos) {
-                Log.e("当前注册添加好友通知",v2TIMFriendInfos.size()+"=================="+v2TIMFriendInfos);
                 if(!v2TIMFriendInfos.isEmpty()){
                     final List<String> urlList = new ArrayList<>();
                     for (V2TIMFriendInfo v2TIMFriendInfo : v2TIMFriendInfos){
@@ -150,7 +149,6 @@ public class ConversationPresenter {
              */
             @Override
             public void onFriendListDeleted(List<String> userList) {
-                Log.e("当前注册删除好友通知","=================="+userList);
                 if(!userList.isEmpty()){
                     List<String> removeInfoList = new ArrayList<>();
                     for (String infoData : userList){
@@ -237,10 +235,8 @@ public class ConversationPresenter {
 
             @Override
             public void onConversationChanged(List<ConversationInfo> conversationList) {
-                Log.e(TAG,isFriendConversation+"当前会话更新："+conversationList.size()+"==========="+conversationList.toString());
                 //部分会话更新
                 isFriendConversationList(conversationList);
-                Log.e(TAG,isFriendConversation+"当前会话更新2："+conversationList.size()+"==========="+conversationList.toString());
                 ConversationPresenter.this.onConversationChanged(conversationList);
             }
 
@@ -264,7 +260,6 @@ public class ConversationPresenter {
 
     //移除好友列表的会话
     public void deleteConversationListEvent(List<String> conversationIdList) {
-        Log.e(TAG,isFriendConversation+"=====进入移除好友列表通知："+conversationIdList.size());
         if(isFriendConversation){
             ConversationPresenter.this.deleteConversationListChange(conversationIdList,friendshipAdapter,loadedFriendshipInfoList);
         }else{
@@ -274,7 +269,6 @@ public class ConversationPresenter {
     }
     //新的好友添加通知
     public void newConversationListEvent(List<String> conversationIdList) {
-        Log.e(TAG,isFriendConversation+"=====进入新的好友添加通知："+conversationIdList.size());
         //如果不是再好友列表。那么原有会话列表应该执行删除
         if(!isFriendConversation){
             ConversationPresenter.this.deleteConversationListChange(conversationIdList,adapter,loadedConversationInfoList);
@@ -825,7 +819,7 @@ public class ConversationPresenter {
             @Override
             public void onError(int code, String desc){
                 //错误码 code 和错误描述 desc，可用于定位请求失败原因
-                Log.e("获取用户信息失败", "getUsersProfile failed: " + code + " desc");
+                Log.e(TAG, "getUsersProfile failed: " + code + " desc");
                 ToastUtil.toastLongMessage(code + " " + desc);
             }
         });
@@ -1014,7 +1008,6 @@ public class ConversationPresenter {
 
                         @Override
                         public void onError(int errCode, String errMsg, List<String> data) {
-                            Log.e(TAG,false+"查询好友列表异常："+errCode+"============"+errMsg);
                             if(loadConversationCallback!=null){
                                 loadConversationCallback.isConversationEmpty(true);
                             }
