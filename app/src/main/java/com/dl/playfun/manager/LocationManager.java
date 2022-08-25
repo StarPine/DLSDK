@@ -169,7 +169,6 @@ public class LocationManager {
                         Address address = addresses.get(0);
 //                        ToastUtils.showShort(String.format("%s-%s-%s", address.getAdminArea(), address.getSubAdminArea(), address.getLocality()));
                         if (listener != null) {
-                            Log.e("详细地址：", address.toString());
                             listener.onGeocoderSuccess(address.getAdminArea(), address.getSubAdminArea(), address.getLocality());
                         }
                     } else {

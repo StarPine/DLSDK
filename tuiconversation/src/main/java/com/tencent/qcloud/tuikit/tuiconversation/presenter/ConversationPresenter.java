@@ -353,6 +353,9 @@ public class ConversationPresenter {
     * @Date 2022/8/13
     */
     public void isFriendConversationList(List<ConversationInfo> conversationList){
+        if(conversationList==null){
+            return;
+        }
         Iterator<ConversationInfo> iterator = conversationList.iterator();
         //去重后的数据 如果已经是好友关系了。那么讲不会存在会话列表里面
         while(iterator.hasNext()){
@@ -401,11 +404,7 @@ public class ConversationPresenter {
                 if(loadConversationCallback!=null && nextSeq==0){
                     loadConversationCallback.isConversationEmpty(true);
                 }
-                if(isFriendConversation){
-                    adapterLoadingStateChanged(friendshipAdapter);
-                }else {
-                    adapterLoadingStateChanged(adapter);
-                }
+                adapterLoadingStateChanged(adapter);
             }
         });
     }
@@ -423,6 +422,7 @@ public class ConversationPresenter {
             provider.loadMoreConversation(GET_CONVERSATION_COUNT, new IUIKitCallback<List<ConversationInfo>>() {
                 @Override
                 public void onSuccess(List<ConversationInfo> data) {
+                    isFriendConversationList(data);
                     onLoadConversationCompleted(data);
                 }
 
@@ -436,7 +436,7 @@ public class ConversationPresenter {
     //分页拉取好友会话列表数据
     public void loadMoreFriendConversation(){
         //当前页码==最大页码的时候
-        if (friendCurrentPaging >= friendMaxPaging){
+        if (friendCurrentPaging > friendMaxPaging){
             adapterLoadingStateChanged(friendshipAdapter);
             return;
         }
@@ -468,15 +468,14 @@ public class ConversationPresenter {
 
             @Override
             public void onError(int errCode, String errMsg, List<ConversationInfo> data) {
+                adapterLoadingStateChanged(friendshipAdapter);
             }
         });
     }
 
     private void onLoadConversationCompleted(List<ConversationInfo> conversationInfoList) {
         onNewConversation(conversationInfoList);
-        if(isFriendConversation){
-            adapterLoadingStateChanged(friendshipAdapter);
-        }else {
+        if(!isFriendConversation){
             adapterLoadingStateChanged(adapter);
         }
         provider.getTotalUnreadMessageCount(new IUIKitCallback<Long>() {
@@ -495,6 +494,10 @@ public class ConversationPresenter {
 
     public boolean isLoadFinished() {
         return provider.isLoadFinished();
+    }
+
+    public boolean isFriendLoadFinished() {
+        return (friendCurrentPaging > friendMaxPaging);
     }
 
     /**
