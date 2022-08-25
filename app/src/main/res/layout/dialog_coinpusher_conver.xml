@@ -71,7 +71,7 @@
                 android:layout_below="@+id/ll_tab"
                 android:layout_marginTop="10dp"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rcv_capsule"
@@ -94,56 +94,69 @@
                     android:textColor="#ff333333"
                     android:textSize="11sp" />
             </LinearLayout>
-            <LinearLayout
+
+            <RelativeLayout
                 android:id="@+id/ll_conver_layout"
-                android:layout_marginTop="10dp"
-                android:layout_below="@+id/ll_tab"
-                android:orientation="vertical"
-                android:visibility="visible"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_below="@+id/ll_tab"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
                 <TextView
-                    android:layout_marginTop="30dp"
                     android:id="@+id/tv_conver_title"
-                    android:includeFontPadding="false"
-                    android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
                     android:text="1枚金幣可兌換10鑽石"
                     android:textColor="#ff333333"
-                    android:textSize="18sp"
-                    />
+                    android:textSize="18sp" />
+
                 <TextView
                     android:id="@+id/tv_conver_detail"
-                    android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_conver_title"
                     android:layout_marginTop="14dp"
+                    android:gravity="center"
                     android:text=""
                     android:textColor="#ff9896b4"
-                    android:textSize="14sp"
-                    />
+                    android:textSize="14sp" />
+
                 <androidx.recyclerview.widget.RecyclerView
-                    android:layout_marginTop="28dp"
+                    android:id="@+id/rcv_convert"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_above="@+id/tv_sub_convert"
+                    android:layout_below="@+id/tv_conver_detail"
+                    android:layout_centerInParent="true"
                     android:layout_marginStart="5dp"
+                    android:layout_marginTop="28dp"
                     android:layout_marginEnd="5dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="78dp"/>
+                    tools:itemCount="4"
+                    tools:layoutManager="GridLayoutManager"
+                    tools:listitem="@layout/item_coinpusher_conver_detail"
+                    tools:spanCount="2" />
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_sub_convert"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="41dp"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginEnd="41dp"
+                    android:layout_marginBottom="20dp"
                     android:background="@drawable/selecter_coinpusher_btn"
                     android:enabled="true"
                     android:gravity="center"
-                    android:layout_marginTop="40dp"
-                    android:layout_marginStart="41dp"
-                    android:layout_marginEnd="41dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
                     android:text="@string/playfun_exchange_success_toast"
                     android:textColor="@color/gray_light"
-                    android:textSize="15sp"
-                    />
-            </LinearLayout>
+                    android:textSize="15sp" />
+            </RelativeLayout>
 
         </RelativeLayout>
     </FrameLayout>

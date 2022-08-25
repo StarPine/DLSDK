@@ -8,7 +8,7 @@
                 android:height="9dp" />
             <stroke
                 android:width="2dp"
-                android:color="#F1F2F9" />
+                android:color="@color/pseekbar_process_off2" />
         </shape>
     </item>
 </layer-list>

@@ -118,7 +118,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/agree"
-                android:textColor="#F1F2F9"
+                android:textColor="@color/pseekbar_process_off2"
                 android:textSize="@dimen/text_size_middle2" />
 
             <TextView
@@ -134,7 +134,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/and"
-                android:textColor="#F1F2F9"
+                android:textColor="@color/pseekbar_process_off2"
                 android:textSize="@dimen/text_size_middle2" />
 
             <TextView

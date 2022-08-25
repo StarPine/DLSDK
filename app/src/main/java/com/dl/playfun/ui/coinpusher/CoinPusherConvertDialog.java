@@ -19,6 +19,7 @@ import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.R;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
+import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.databinding.DialogCoinpusherConverBinding;
 import com.dl.playfun.entity.CoinPusherConverInfoEntity;
 import com.dl.playfun.manager.ConfigManager;
@@ -38,8 +39,13 @@ public class CoinPusherConvertDialog  extends BaseDialog {
     private DialogCoinpusherConverBinding binding;
     //宝盒适配器
     private CoinPusherCapsuleAdapter coinPusherCapsuleAdapter;
+    //金币兑换砖石
+    private CoinPusherConvertAdapter coinPusherConvertAdapter;
 
     private ItemConvertListener itemConvertListener;
+
+    //金币对换砖石
+    private int SEL_CONVERT_INDEX = -1;
 
     public ItemConvertListener getItemConvertListener() {
         return itemConvertListener;
@@ -73,6 +79,11 @@ public class CoinPusherConvertDialog  extends BaseDialog {
         binding.rcvCapsule.setLayoutManager(layoutManagerFactory.create(binding.rcvCapsule));
         coinPusherCapsuleAdapter = new CoinPusherCapsuleAdapter();
         binding.rcvCapsule.setAdapter(coinPusherCapsuleAdapter);
+
+        binding.rcvConvert.setLayoutManager(layoutManagerFactory.create(binding.rcvConvert));
+        coinPusherConvertAdapter = new CoinPusherConvertAdapter();
+        binding.rcvConvert.setAdapter(coinPusherConvertAdapter);
+
     }
     //点击事件初始化
     private void onClickListener(){
@@ -105,6 +116,7 @@ public class CoinPusherConvertDialog  extends BaseDialog {
                 //购买成功数据相加
                 totalMoney += value;
                 tvTotalMoneyRefresh();
+                coinPusherConvertAdapter.setMaxValuerSelect(totalMoney);
                 if(getItemConvertListener()!=null){
                     getItemConvertListener().convertSuccess(totalMoney);
                 }
@@ -112,6 +124,16 @@ public class CoinPusherConvertDialog  extends BaseDialog {
             });
             pusherConvertCapsuleDialog.show();
         });
+        coinPusherConvertAdapter.setOnItemClickListener(position -> {
+                if(SEL_COIN_PUSHER_CAPSULE!=position){
+                    coinPusherCapsuleAdapter.setDefaultSelect(position);
+                    SEL_COIN_PUSHER_CAPSULE = position;
+                    if(totalMoney >= coinPusherConvertAdapter.getItemData(position).getValue()){
+                        binding.tvSubConvert.setEnabled(false);
+                    }
+                }
+        });
+        binding.tvSubConvert.setOnClickListener(v -> convertCoinPusherDiamonds(coinPusherConvertAdapter.getItemData(SEL_COIN_PUSHER_CAPSULE).getValue()));
     }
 
     public void show() {
@@ -152,6 +174,10 @@ public class CoinPusherConvertDialog  extends BaseDialog {
                                 binding.tvCapsuleHint.setText(coinPusherConvertInfo.getGoldTips());
                                 tvTotalMoneyRefresh();
                             }
+                            //金币兑换砖石
+                            if(ObjectUtils.isNotEmpty(coinPusherConvertInfo.getDiamondsList())){
+                                coinPusherConvertAdapter.setItemData(coinPusherConvertInfo.getDiamondsList(),totalMoney);
+                            }
                         }
                     }
                     @Override
@@ -176,6 +202,26 @@ public class CoinPusherConvertDialog  extends BaseDialog {
         String val = totalMoney > 99999 ? totalMoney+"+" : totalMoney+"";
         String format = String.format(StringUtils.getString(R.string.playfun_coinpusher_text_4),val);
         binding.tvConverDetail.setText(Html.fromHtml(format));
+    }
+
+    private void convertCoinPusherDiamonds(final Integer money){
+        ConfigManager.getInstance().getAppRepository().convertCoinPusherDiamonds(money)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHud())
+                .subscribe(new BaseObserver<BaseResponse>(){
+                    @Override
+                    public void onSuccess(BaseResponse baseResponse) {
+                        totalMoney -= money;
+                        coinPusherConvertAdapter.setMaxValuerSelect(totalMoney);
+                        tvTotalMoneyRefresh();
+                    }
+                    @Override
+                    public void onComplete() {
+                        dismissHud();
+                    }
+                });
     }
 
     public interface ItemConvertListener{
