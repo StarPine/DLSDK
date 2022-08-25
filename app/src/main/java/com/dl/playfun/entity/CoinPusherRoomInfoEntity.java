@@ -8,18 +8,8 @@ import java.util.List;
  * Description: 推币机房间列表
  */
 public class CoinPusherRoomInfoEntity {
-    //金币余额
-    private int totalGold;
     //设备列表
     private List<DeviceInfo> list;
-
-    public int getTotalGold() {
-        return totalGold;
-    }
-
-    public void setTotalGold(int totalGold) {
-        this.totalGold = totalGold;
-    }
 
     public List<DeviceInfo> getList() {
         return list;

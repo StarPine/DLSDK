@@ -39,6 +39,16 @@ public class CoinPusherConvertDialog  extends BaseDialog {
     //宝盒适配器
     private CoinPusherCapsuleAdapter coinPusherCapsuleAdapter;
 
+    private ItemConvertListener itemConvertListener;
+
+    public ItemConvertListener getItemConvertListener() {
+        return itemConvertListener;
+    }
+
+    public void setItemConvertListener(ItemConvertListener itemConvertListener) {
+        this.itemConvertListener = itemConvertListener;
+    }
+
     //当前用户金币余额
     private int totalMoney = 0;
 
@@ -89,15 +99,18 @@ public class CoinPusherConvertDialog  extends BaseDialog {
             if(SEL_COIN_PUSHER_CAPSULE!=position){
                 coinPusherCapsuleAdapter.setDefaultSelect(position);
                 SEL_COIN_PUSHER_CAPSULE = position;
-                CoinPusherConvertCapsuleDialog pusherConvertCapsuleDialog = new CoinPusherConvertCapsuleDialog(getMActivity(),coinPusherCapsuleAdapter.getItemData(position).getItem());
-                pusherConvertCapsuleDialog.setItemConvertListener(value -> {
-                    //购买成功数据相加
-                    totalMoney += value;
-                    tvTotalMoneyRefresh();
-                    pusherConvertCapsuleDialog.dismiss();
-                });
-                pusherConvertCapsuleDialog.show();
             }
+            CoinPusherConvertCapsuleDialog pusherConvertCapsuleDialog = new CoinPusherConvertCapsuleDialog(getMActivity(),coinPusherCapsuleAdapter.getItemData(SEL_COIN_PUSHER_CAPSULE).getItem());
+            pusherConvertCapsuleDialog.setItemConvertListener(value -> {
+                //购买成功数据相加
+                totalMoney += value;
+                tvTotalMoneyRefresh();
+                if(getItemConvertListener()!=null){
+                    getItemConvertListener().convertSuccess(totalMoney);
+                }
+                pusherConvertCapsuleDialog.dismiss();
+            });
+            pusherConvertCapsuleDialog.show();
         });
     }
 
@@ -135,7 +148,7 @@ public class CoinPusherConvertDialog  extends BaseDialog {
                             //给宝盒列表数据-展示
                             if(ObjectUtils.isNotEmpty(coinPusherConvertInfo.getGoldCoinList())){
                                 coinPusherCapsuleAdapter.setItemData(coinPusherConvertInfo.getGoldCoinList());
-                                totalMoney += coinPusherConvertInfo.getTotalGold();
+                                totalMoney = coinPusherConvertInfo.getTotalGold();
                                 binding.tvCapsuleHint.setText(coinPusherConvertInfo.getGoldTips());
                                 tvTotalMoneyRefresh();
                             }
@@ -163,5 +176,9 @@ public class CoinPusherConvertDialog  extends BaseDialog {
         String val = totalMoney > 99999 ? totalMoney+"+" : totalMoney+"";
         String format = String.format(StringUtils.getString(R.string.playfun_coinpusher_text_4),val);
         binding.tvConverDetail.setText(Html.fromHtml(format));
+    }
+
+    public interface ItemConvertListener{
+        void convertSuccess(int money);
     }
 }

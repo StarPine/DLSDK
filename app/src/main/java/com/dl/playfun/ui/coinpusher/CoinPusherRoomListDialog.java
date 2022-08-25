@@ -87,6 +87,10 @@ public class CoinPusherRoomListDialog extends BaseDialog {
 
         binding.imgConvert.setOnClickListener(v ->{
             CoinPusherConvertDialog coinPusherConvertDialog = new CoinPusherConvertDialog(getMActivity());
+            coinPusherConvertDialog.setItemConvertListener(money -> {
+                totalMoney += money;
+                tvTotalMoneyRefresh();
+            });
             coinPusherConvertDialog.show();
         });
     }
@@ -134,6 +138,8 @@ public class CoinPusherRoomListDialog extends BaseDialog {
                          CoinPusherRoomTagInfoEntity coinPusherRoomTagInfoEntity = coinPusherRoomTagInfoEntityResponse.getData();
                          if(ObjectUtils.isNotEmpty(coinPusherRoomTagInfoEntity)){
                              List<CoinPusherRoomTagInfoEntity.DeviceTag> deviceTagList = coinPusherRoomTagInfoEntity.getTypeArr();
+                             totalMoney = coinPusherRoomTagInfoEntity.getTotalGold();
+                             tvTotalMoneyRefresh();
                              if(ObjectUtils.isNotEmpty(deviceTagList)){
                                  coinPusherRoomTagAdapter.setItemData(deviceTagList);
                                  int idx = 0;
@@ -163,8 +169,6 @@ public class CoinPusherRoomListDialog extends BaseDialog {
                     @Override
                     public void onSuccess(BaseDataResponse<CoinPusherRoomInfoEntity> coinPusherRoomInfoEntityResponse) {
                         CoinPusherRoomInfoEntity coinPusherRoomInfoEntity = coinPusherRoomInfoEntityResponse.getData();
-                        totalMoney = coinPusherRoomInfoEntity.getTotalGold();
-                        tvTotalMoneyRefresh();
                         List<CoinPusherRoomInfoEntity.DeviceInfo> deviceInfoList = coinPusherRoomInfoEntity.getList();
                         if(ObjectUtils.isNotEmpty(deviceInfoList)){
                             coinPusherRoomListAdapter.setItemData(deviceInfoList);
@@ -179,7 +183,8 @@ public class CoinPusherRoomListDialog extends BaseDialog {
     }
 
     private void tvTotalMoneyRefresh(){
-        binding.tvTotalMoney.setText(totalMoney > 99999 ? totalMoney+"+" : totalMoney+"");
+        binding.tvTotalMoney.post(() -> binding.tvTotalMoney.setText(totalMoney > 99999 ? totalMoney+"+" : totalMoney+""));
+
     }
 
     private void startRefreshDataInfo(){

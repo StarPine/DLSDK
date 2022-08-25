@@ -8,8 +8,21 @@ import java.util.List;
  * Description: This is CoinPusherRoomTagInfoEntity
  */
 public class CoinPusherRoomTagInfoEntity {
+
+    //金币余额
+    private int totalGold;
+
     //设备级别列表
     private List<DeviceTag> tagArr;
+
+
+    public int getTotalGold() {
+        return totalGold;
+    }
+
+    public void setTotalGold(int totalGold) {
+        this.totalGold = totalGold;
+    }
 
     public List<DeviceTag> getTypeArr() {
         return tagArr;
