@@ -202,7 +202,9 @@ public class FloatWindowService extends Service {
             public void onAnimationUpdate(ValueAnimator animation) {
                 float animatedValue = (float) animation.getAnimatedValue();
                 mWindowLayoutParams.x = (int) animatedValue;
-                mWindowManager.updateViewLayout(mCallView, mWindowLayoutParams);
+                if (mCallView != null){
+                    mWindowManager.updateViewLayout(mCallView, mWindowLayoutParams);
+                }
             }
         });
         valueAnimator.start();
