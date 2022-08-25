@@ -7,6 +7,9 @@
     </data>
 
     <LinearLayout
+        android:id="@+id/ll_layout"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:orientation="vertical"
         android:background="@drawable/shape_yellow_radius8_checked"
         android:layout_width="72dp"

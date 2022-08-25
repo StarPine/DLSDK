@@ -10,6 +10,8 @@ import android.view.WindowManager;
 import androidx.databinding.DataBindingUtil;
 
 import com.dl.playfun.R;
+import com.dl.playfun.databinding.DialogCoinpusherConverBinding;
+import com.dl.playfun.databinding.DialogCoinpusherConverDetailBinding;
 import com.dl.playfun.databinding.DialogCoinpusherHintBinding;
 
 /**
@@ -43,6 +45,5 @@ public class CoinPusherDialogAdapter {
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         window.setAttributes(lp);
         return dialog;
-
     }
 }

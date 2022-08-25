@@ -36,6 +36,8 @@ public class CoinPusherRoomListDialog extends BaseDialog {
     private final Context mContext;
     private CoinPusherRoomTagAdapter coinPusherRoomTagAdapter;
     private CoinPusherRoomListAdapter coinPusherRoomListAdapter;
+    //当前用户金币余额
+    private int totalMoney = 0;
 
     private int SEL_COIN_PUSHER_TAG_IDX = -1;
 
@@ -161,9 +163,8 @@ public class CoinPusherRoomListDialog extends BaseDialog {
                     @Override
                     public void onSuccess(BaseDataResponse<CoinPusherRoomInfoEntity> coinPusherRoomInfoEntityResponse) {
                         CoinPusherRoomInfoEntity coinPusherRoomInfoEntity = coinPusherRoomInfoEntityResponse.getData();
-                        int totalMoney = coinPusherRoomInfoEntity.getTotalGold();
-                        binding.tvTotalMoney.setText(totalMoney > 99999 ? totalMoney+"+" : totalMoney+"");
-
+                        totalMoney = coinPusherRoomInfoEntity.getTotalGold();
+                        tvTotalMoneyRefresh();
                         List<CoinPusherRoomInfoEntity.DeviceInfo> deviceInfoList = coinPusherRoomInfoEntity.getList();
                         if(ObjectUtils.isNotEmpty(deviceInfoList)){
                             coinPusherRoomListAdapter.setItemData(deviceInfoList);
@@ -175,6 +176,10 @@ public class CoinPusherRoomListDialog extends BaseDialog {
                         stopRefreshOrLoadMore();
                     }
                 });
+    }
+
+    private void tvTotalMoneyRefresh(){
+        binding.tvTotalMoney.setText(totalMoney > 99999 ? totalMoney+"+" : totalMoney+"");
     }
 
     private void startRefreshDataInfo(){

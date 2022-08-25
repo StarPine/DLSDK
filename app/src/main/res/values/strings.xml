@@ -1230,4 +1230,6 @@
     <string name="playfun_coinpusher_text_2">空閒</string>
     <string name="playfun_coinpusher_text_3">%s/次</string>
 
+    <string name="playfun_coinpusher_text_4"><![CDATA[已有金幣<font color=\'#FF1579\' size=\'24\'>%s</font>]]></string>
+
 </resources>

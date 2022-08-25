@@ -17,16 +17,16 @@
             binding:drawable_radius_rightTop="@{20}"
             android:layout_width="match_parent"
             android:layout_height="401dp">
+
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/img_close"
-                android:elevation="1dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="15dp"
-                android:layout_alignParentEnd="true"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/radio_publish_close"
-                />
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="15dp"
+                android:elevation="1dp"
+                android:src="@drawable/radio_publish_close" />
             <LinearLayout
                 android:id="@+id/ll_tab"
                 android:layout_marginTop="24dp"
@@ -63,56 +63,43 @@
                     android:textSize="18sp"
                     />
             </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/ll_capsule_layout"
-                android:layout_marginTop="10dp"
-                android:layout_below="@+id/ll_tab"
-                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="visible"
-                >
+                android:layout_below="@+id/ll_tab"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rcv_capsule"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="178dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
                     tools:itemCount="4"
                     tools:layoutManager="GridLayoutManager"
                     tools:listitem="@layout/item_coinpusher_capsule"
-                    tools:spanCount="2"
-                    />
+                    tools:spanCount="2" />
 
                 <TextView
                     android:id="@+id/tv_capsule_hint"
-                    android:includeFontPadding="false"
-                    android:layout_marginTop="20dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
                     android:gravity="center"
+                    android:includeFontPadding="false"
                     android:textColor="#ff333333"
-                    android:textSize="11sp"
-                    />
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:background="@drawable/img_coinpusher_btn"
-                    android:gravity="center"
-                    android:layout_marginTop="40dp"
-                    android:layout_marginStart="41dp"
-                    android:layout_marginEnd="41dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:text="@string/playfun_purchase_text"
-                    android:textColor="#ff333333"
-                    android:textSize="15sp"
-                    />
+                    android:textSize="11sp" />
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/ll_conver_layout"
                 android:layout_marginTop="10dp"
                 android:layout_below="@+id/ll_tab"
                 android:orientation="vertical"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <TextView
@@ -132,7 +119,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="14dp"
-                    android:text="已有金幣 1000"
+                    android:text=""
                     android:textColor="#ff9896b4"
                     android:textSize="14sp"
                     />
