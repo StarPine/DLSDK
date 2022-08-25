@@ -224,6 +224,10 @@ public class HomeAccostDialog extends BaseDialog {
 
 
         btn_submit = rootView.findViewById(R.id.btn_submit);
+        Glide.with(getContext()).asGif().load(R.drawable.btn_gif_accost)
+                .error(R.drawable.btn_gif_accost)
+                .placeholder(R.drawable.btn_gif_accost)
+                .into(btn_submit);
         btn_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -352,7 +356,7 @@ public class HomeAccostDialog extends BaseDialog {
                                         } else {
                                             String time = TimeUtils.getFormatTime((int) downTime / 1000);
                                             exp_time.setText(time);
-                                            btn_submit.setImageResource(R.drawable.dialog_accos_submitt_no);
+                                            btn_submit.setImageResource(R.drawable.btn_accost_nomal);
                                             downTime();
                                         }
                                     } catch (Exception e) {
@@ -361,7 +365,7 @@ public class HomeAccostDialog extends BaseDialog {
 
                                 }
                             } else {
-                                btn_submit.setImageResource(R.drawable.dialog_accos_submitt_no);
+                                btn_submit.setImageResource(R.drawable.btn_accost_nomal);
                                 exp_time.setVisibility(View.VISIBLE);
                                 exp_time.setTextColor(ColorUtils.getColor(R.color.black));
                                 exp_time.setText(mContext.getString(R.string.playfun_text_accost_empty));
@@ -467,7 +471,7 @@ public class HomeAccostDialog extends BaseDialog {
                                     refresh_layout.setVisibility(View.GONE);
                                 }
                                 btn_submit.setEnabled(true);
-                                btn_submit.setImageResource(R.drawable.dialog_accos_submitt_no);
+                                btn_submit.setImageResource(R.drawable.btn_accost_nomal);
                                 exp_time.setVisibility(View.VISIBLE);
                                 exp_time.setTextColor(ColorUtils.getColor(R.color.black));
                                 exp_time.setText(mContext.getString(R.string.playfun_text_accost_empty2));
@@ -547,7 +551,7 @@ public class HomeAccostDialog extends BaseDialog {
             public void onTick(long millisUntilFinished) {
                 String time = TimeUtils.getFormatTime((int) millisUntilFinished / 1000);
                 String hintText = StringUtils.getString(R.string.playfun_text_accost_error3);
-                exp_time.setTextColor(ColorUtils.getColor(R.color.accost_down_time));
+                exp_time.setTextColor(ColorUtils.getColor(R.color.white));
                 exp_time.setText(time);
                 exp_time.setVisibility(View.VISIBLE);
                 //RxBus.getDefault().post(new CountDownTimerEvent((millisUntilFinished / 1000) + "s後自動拒絕"));
@@ -558,7 +562,10 @@ public class HomeAccostDialog extends BaseDialog {
                 isCountdown = false;
                 submit = true;
                 exp_time.setVisibility(View.GONE);
-                btn_submit.setImageResource(R.drawable.dialog_accost_submit);
+                Glide.with(getContext()).asGif().load(R.drawable.btn_gif_accost)
+                        .error(R.drawable.btn_gif_accost)
+                        .placeholder(R.drawable.btn_gif_accost)
+                        .into(btn_submit);
                 //RxBus.getDefault().post(new MessageTagEvent(null, false));
             }
         };
