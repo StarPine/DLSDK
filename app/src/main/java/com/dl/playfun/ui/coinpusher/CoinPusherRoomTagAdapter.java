@@ -9,9 +9,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.dl.playfun.R;
-import com.dl.playfun.entity.CoinPusherRoomInfoEntity;
+import com.dl.playfun.entity.CoinPusherRoomTagInfoEntity;
 
 import java.util.List;
 
@@ -24,14 +25,14 @@ public class CoinPusherRoomTagAdapter extends RecyclerView.Adapter<RecyclerView.
 
 
 
-    private List<CoinPusherRoomInfoEntity.DeviceTag> itemData;
+    private List<CoinPusherRoomTagInfoEntity.DeviceTag> itemData;
 
     private OnItemClickListener onItemClickListener;
 
     private int defaultItemSel = -1;
 
 
-    public void setItemData(List<CoinPusherRoomInfoEntity.DeviceTag> itemData) {
+    public void setItemData(List<CoinPusherRoomTagInfoEntity.DeviceTag> itemData) {
         this.itemData = itemData;
         notifyDataSetChanged();
     }
@@ -47,7 +48,7 @@ public class CoinPusherRoomTagAdapter extends RecyclerView.Adapter<RecyclerView.
         }
     }
 
-    public CoinPusherRoomInfoEntity.DeviceTag getItemData(int position) {
+    public CoinPusherRoomTagInfoEntity.DeviceTag getItemData(int position) {
         if(itemData != null && itemData.size() > position){
             return itemData.get(position);
         }
@@ -66,9 +67,14 @@ public class CoinPusherRoomTagAdapter extends RecyclerView.Adapter<RecyclerView.
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ItemViewHolder itemViewHolder = ((ItemViewHolder) holder);
         if (!ObjectUtils.isEmpty(itemData)) {
-            CoinPusherRoomInfoEntity.DeviceTag itemEntity = itemData.get(position);
+            CoinPusherRoomTagInfoEntity.DeviceTag itemEntity = itemData.get(position);
             if (!ObjectUtils.isEmpty(itemEntity)) {
                 itemViewHolder.tvName.setText(itemEntity.getName());
+                if(itemEntity.getIsRecommend()==1){
+                    itemViewHolder.tvName.setTextColor(ColorUtils.getColor(R.color.pseekbar_process));
+                }else{
+                    itemViewHolder.tvName.setTextColor(ColorUtils.getColor(R.color.black));
+                }
                 if(defaultItemSel!=-1){
                     if(defaultItemSel==position){
                         itemViewHolder.imgIcon.setImageResource(R.drawable.img_coinpusher_tag_checked);

@@ -50,16 +50,21 @@
                     android:layout_width="28dp"
                     android:layout_height="28dp"
                     android:src="@drawable/img_coinpusher_currency" />
+
                 <androidx.appcompat.widget.AppCompatTextView
-                    android:includeFontPadding="false"
-                    android:layout_centerInParent="true"
-                    android:layout_toEndOf="@+id/img_start"
-                    android:layout_toStartOf="@+id/img_end"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="3dp"
+                    android:id="@+id/tv_total_money"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    />
+                    android:layout_centerInParent="true"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginEnd="3dp"
+                    android:layout_toStartOf="@+id/img_end"
+                    android:layout_toEndOf="@+id/img_start"
+                    android:includeFontPadding="false"
+                    android:textColor="@color/coffee"
+                    android:textSize="14sp"
+                    android:gravity="center"
+                    tools:text="99999+" />
                 <FrameLayout
                     android:id="@+id/img_end"
                     android:layout_width="23dp"
@@ -75,6 +80,7 @@
                         binding:drawable_gradient_endColor="@{@color/playfun_shape_radius_end_color}"
                         android:scaleType="fitXY" />
                     <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/img_convert"
                         android:layout_width="16dp"
                         android:layout_height="16dp"
                         android:layout_gravity="center"
@@ -95,20 +101,26 @@
                 tools:layoutManager="LinearLayoutManager"
                 tools:listitem="@layout/item_coinpusher_room_tag"
                 />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rcv_content"
+            <com.scwang.smart.refresh.layout.SmartRefreshLayout
+                android:id="@+id/refresh_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/rcv_title"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="8dp"
-                tools:itemCount="4"
-                tools:layoutManager="GridLayoutManager"
-                tools:listitem="@layout/item_coinpusher_room_list"
-                tools:orientation="horizontal"
-                tools:spanCount="2" />
+                >
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rcv_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:itemCount="4"
+                    tools:layoutManager="GridLayoutManager"
+                    tools:listitem="@layout/item_coinpusher_room_list"
+                    tools:orientation="horizontal"
+                    tools:spanCount="2" />
+            </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+
         </RelativeLayout>
     </LinearLayout>
 

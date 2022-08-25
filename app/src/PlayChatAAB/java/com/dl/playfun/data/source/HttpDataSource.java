@@ -31,6 +31,7 @@ import com.dl.playfun.entity.CityAllEntity;
 import com.dl.playfun.entity.CoinExchangeBoxInfo;
 import com.dl.playfun.entity.CoinPusherConverInfoEntity;
 import com.dl.playfun.entity.CoinPusherRoomInfoEntity;
+import com.dl.playfun.entity.CoinPusherRoomTagInfoEntity;
 import com.dl.playfun.entity.CoinWalletEntity;
 import com.dl.playfun.entity.CommentMessageEntity;
 import com.dl.playfun.entity.ConfigItemEntity;
@@ -152,13 +153,21 @@ public interface HttpDataSource {
      */
     Observable<BaseResponse> convertCoinPusherDiamonds(Integer amount);
     /**
+     * @Desc TODO(推币机-等级列表)
+     * @author 彭石林
+     * @parame []
+     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse<com.dl.playfun.entity.CoinPusherRoomTagInfoEntity>>
+     * @Date 2022/8/24
+     */
+    Observable<BaseDataResponse<CoinPusherRoomTagInfoEntity>> qryCoinPusherRoomTagList();
+    /**
      * @Desc TODO(推币机-设备列表)
      * @author 彭石林
      * @parame []
      * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse<com.dl.playfun.entity.CoinPusherRoomInfoEntity>>
      * @Date 2022/8/24
      */
-    Observable<BaseDataResponse<CoinPusherRoomInfoEntity>> qryCoinPusherRoomList();
+    Observable<BaseDataResponse<CoinPusherRoomInfoEntity>> qryCoinPusherRoomList(Integer tagId);
 
     /**
      * @Desc TODO(推币机-兑换列表)

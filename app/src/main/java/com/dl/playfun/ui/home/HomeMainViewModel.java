@@ -399,6 +399,8 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
         //搭讪失败。充值钻石
         public SingleLiveEvent<Void> sendAccostFirstError = new SingleLiveEvent<>();
         public SingleLiveEvent<Integer> loadLoteAnime = new SingleLiveEvent<>();
+        //推币机弹窗
+        public SingleLiveEvent<Void> coinPusherRoomEvent = new SingleLiveEvent<>();
     }
 
 }

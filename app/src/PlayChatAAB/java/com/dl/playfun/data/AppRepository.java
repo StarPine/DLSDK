@@ -37,6 +37,7 @@ import com.dl.playfun.entity.CityAllEntity;
 import com.dl.playfun.entity.CoinExchangeBoxInfo;
 import com.dl.playfun.entity.CoinPusherConverInfoEntity;
 import com.dl.playfun.entity.CoinPusherRoomInfoEntity;
+import com.dl.playfun.entity.CoinPusherRoomTagInfoEntity;
 import com.dl.playfun.entity.CoinWalletEntity;
 import com.dl.playfun.entity.CommentMessageEntity;
 import com.dl.playfun.entity.ConfigItemEntity;
@@ -1624,8 +1625,13 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
-    public Observable<BaseDataResponse<CoinPusherRoomInfoEntity>> qryCoinPusherRoomList() {
-        return mHttpDataSource.qryCoinPusherRoomList();
+    public Observable<BaseDataResponse<CoinPusherRoomTagInfoEntity>> qryCoinPusherRoomTagList() {
+        return mHttpDataSource.qryCoinPusherRoomTagList();
+    }
+
+    @Override
+    public Observable<BaseDataResponse<CoinPusherRoomInfoEntity>> qryCoinPusherRoomList(Integer tagId) {
+        return mHttpDataSource.qryCoinPusherRoomList(tagId);
     }
 
     @Override

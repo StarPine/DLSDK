@@ -34,7 +34,7 @@ public class HomeMainBannerItemViewModel extends MultiItemViewModel<HomeMainView
             AdItemEntity adItemEntity = itemEntity.get();
             int typeAct = adItemEntity.getType();
             if(typeAct!=0){
-                //客户端跳转类型 1:会员中心 2：任务中心 3：天天福袋
+                //客户端跳转类型 1:会员中心 2：任务中心 3：天天福袋 4：推币机
                 switch (typeAct){
                     case 1:
                         viewModel.start(VipSubscribeFragment.class.getCanonicalName());
@@ -44,6 +44,9 @@ public class HomeMainBannerItemViewModel extends MultiItemViewModel<HomeMainView
                         break;
                     case 3:
                         RxBus.getDefault().post(new TaskMainTabEvent(true,true));
+                        break;
+                    case 4:
+                        viewModel.uc.coinPusherRoomEvent.postValue(null);
                         break;
                 }
             }else{

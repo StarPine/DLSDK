@@ -1,7 +1,6 @@
 package com.dl.playfun.ui.coinpusher;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -15,11 +14,12 @@ import com.blankj.utilcode.util.ObjectUtils;
 import com.dl.playfun.R;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
-import com.dl.playfun.databinding.DialogCityChooseBinding;
 import com.dl.playfun.databinding.DialogCoinpusherListBinding;
 import com.dl.playfun.entity.CoinPusherRoomInfoEntity;
+import com.dl.playfun.entity.CoinPusherRoomTagInfoEntity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseDialog;
+import com.dl.playfun.viewadapter.CustomRefreshHeader;
 
 import java.util.List;
 
@@ -36,6 +36,10 @@ public class CoinPusherRoomListDialog extends BaseDialog {
     private final Context mContext;
     private CoinPusherRoomTagAdapter coinPusherRoomTagAdapter;
     private CoinPusherRoomListAdapter coinPusherRoomListAdapter;
+
+    private int SEL_COIN_PUSHER_TAG_IDX = -1;
+
+    private Integer checkedTagId = null;
 
     public CoinPusherRoomListDialog(Activity activity) {
         super(activity);
@@ -54,12 +58,35 @@ public class CoinPusherRoomListDialog extends BaseDialog {
         LayoutManagers.LayoutManagerFactory rcvTitleLayoutManager= LayoutManagers.linear(LinearLayoutManager.HORIZONTAL,false);
         binding.rcvTitle.setLayoutManager(rcvTitleLayoutManager.create(binding.rcvTitle));
         coinPusherRoomTagAdapter = new CoinPusherRoomTagAdapter();
+        coinPusherRoomTagAdapter.setOnItemClickListener(position -> {
+            if(SEL_COIN_PUSHER_TAG_IDX !=-1){
+                if(SEL_COIN_PUSHER_TAG_IDX !=position){
+                    coinPusherRoomTagAdapter.setDefaultSelect(position);
+                    SEL_COIN_PUSHER_TAG_IDX = position;
+                    checkedTagId = coinPusherRoomTagAdapter.getItemData(SEL_COIN_PUSHER_TAG_IDX).getId();
+                }
+            }else{
+                SEL_COIN_PUSHER_TAG_IDX = position;
+                coinPusherRoomTagAdapter.setDefaultSelect(SEL_COIN_PUSHER_TAG_IDX);
+                checkedTagId = coinPusherRoomTagAdapter.getItemData(SEL_COIN_PUSHER_TAG_IDX).getId();
+            }
+            startRefreshDataInfo();
+        });
         binding.rcvTitle.setAdapter(coinPusherRoomTagAdapter);
         //表格布局
         LayoutManagers.LayoutManagerFactory layoutManagerFactory = LayoutManagers.grid(2);
         binding.rcvContent.setLayoutManager(layoutManagerFactory.create(binding.rcvContent));
         coinPusherRoomListAdapter = new CoinPusherRoomListAdapter();
         binding.rcvContent.setAdapter(coinPusherRoomListAdapter);
+
+        binding.refreshLayout.setRefreshHeader(new CustomRefreshHeader(getContext()));
+        binding.refreshLayout.setEnableLoadMore(true);
+        binding.refreshLayout.setOnRefreshListener(v->startRefreshDataInfo());
+
+        binding.imgConvert.setOnClickListener(v ->{
+            CoinPusherConvertDialog coinPusherConvertDialog = new CoinPusherConvertDialog(getMActivity());
+            coinPusherConvertDialog.show();
+        });
     }
 
     public void show() {
@@ -94,7 +121,38 @@ public class CoinPusherRoomListDialog extends BaseDialog {
     }
 
     public void loadData() {
-        ConfigManager.getInstance().getAppRepository().qryCoinPusherRoomList()
+        ConfigManager.getInstance().getAppRepository().qryCoinPusherRoomTagList()
+                 .doOnSubscribe(this)
+                 .compose(RxUtils.schedulersTransformer())
+                 .compose(RxUtils.exceptionTransformer())
+                 .doOnSubscribe(dispose -> showHud())
+                 .subscribe(new BaseObserver<BaseDataResponse<CoinPusherRoomTagInfoEntity>>() {
+                     @Override
+                     public void onSuccess(BaseDataResponse<CoinPusherRoomTagInfoEntity> coinPusherRoomTagInfoEntityResponse) {
+                         CoinPusherRoomTagInfoEntity coinPusherRoomTagInfoEntity = coinPusherRoomTagInfoEntityResponse.getData();
+                         if(ObjectUtils.isNotEmpty(coinPusherRoomTagInfoEntity)){
+                             List<CoinPusherRoomTagInfoEntity.DeviceTag> deviceTagList = coinPusherRoomTagInfoEntity.getTypeArr();
+                             if(ObjectUtils.isNotEmpty(deviceTagList)){
+                                 coinPusherRoomTagAdapter.setItemData(deviceTagList);
+                                 int idx = 0;
+                                 for (CoinPusherRoomTagInfoEntity.DeviceTag tagData : deviceTagList) {
+                                     if(tagData.getIsRecommend() ==1 ){
+                                         checkedTagId = tagData.getId();
+                                         break;
+                                     }
+                                     idx++;
+                                 }
+                                 coinPusherRoomTagAdapter.setDefaultSelect(idx);
+                                 startRefreshDataInfo();
+                             }
+                         }
+                     }
+                 });
+    }
+
+    private void qryCoinPusherRoomList(Integer tagId){
+        binding.refreshLayout.autoRefresh();
+        ConfigManager.getInstance().getAppRepository().qryCoinPusherRoomList(tagId)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
@@ -103,16 +161,27 @@ public class CoinPusherRoomListDialog extends BaseDialog {
                     @Override
                     public void onSuccess(BaseDataResponse<CoinPusherRoomInfoEntity> coinPusherRoomInfoEntityResponse) {
                         CoinPusherRoomInfoEntity coinPusherRoomInfoEntity = coinPusherRoomInfoEntityResponse.getData();
-                        List<CoinPusherRoomInfoEntity.DeviceTag> deviceTagList = coinPusherRoomInfoEntity.getTypeArr();
-                        if(ObjectUtils.isNotEmpty(deviceTagList)){
-                            coinPusherRoomTagAdapter.setItemData(deviceTagList);
+                        int totalMoney = coinPusherRoomInfoEntity.getTotalGold();
+                        binding.tvTotalMoney.setText(totalMoney > 99999 ? totalMoney+"+" : totalMoney+"");
+
+                        List<CoinPusherRoomInfoEntity.DeviceInfo> deviceInfoList = coinPusherRoomInfoEntity.getList();
+                        if(ObjectUtils.isNotEmpty(deviceInfoList)){
+                            coinPusherRoomListAdapter.setItemData(deviceInfoList);
                         }
                     }
                     @Override
                     public void onComplete() {
                         dismissHud();
+                        stopRefreshOrLoadMore();
                     }
                 });
+    }
 
+    private void startRefreshDataInfo(){
+        qryCoinPusherRoomList(checkedTagId);
+    }
+    private void stopRefreshOrLoadMore(){
+        //结束刷新
+        binding.refreshLayout.finishRefresh(true);
     }
 }

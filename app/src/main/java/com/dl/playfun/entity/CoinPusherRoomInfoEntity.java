@@ -10,8 +10,6 @@ import java.util.List;
 public class CoinPusherRoomInfoEntity {
     //金币余额
     private int totalGold;
-    //设备级别列表
-    private List<DeviceTag> typeArr;
     //设备列表
     private List<DeviceInfo> list;
 
@@ -23,41 +21,12 @@ public class CoinPusherRoomInfoEntity {
         this.totalGold = totalGold;
     }
 
-    public List<DeviceTag> getTypeArr() {
-        return typeArr;
-    }
-
-    public void setTypeArr(List<DeviceTag> typeArr) {
-        this.typeArr = typeArr;
-    }
-
     public List<DeviceInfo> getList() {
         return list;
     }
 
     public void setList(List<DeviceInfo> list) {
         this.list = list;
-    }
-
-    public static class DeviceTag{
-        private int id;
-        private String name;
-
-        public int getId() {
-            return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
     }
 
     public static class DeviceInfo{

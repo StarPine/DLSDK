@@ -36,6 +36,7 @@ import com.dl.playfun.kl.view.VideoPresetActivity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocationManager;
 import com.dl.playfun.ui.base.BaseRefreshFragment;
+import com.dl.playfun.ui.coinpusher.CoinPusherRoomListDialog;
 import com.dl.playfun.ui.dialog.CityChooseDialog;
 import com.dl.playfun.ui.home.accost.HomeAccostDialog;
 import com.dl.playfun.ui.mine.wallet.recharge.RechargeActivity;
@@ -145,6 +146,12 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
     @Override
     public void initViewObservable() {
         super.initViewObservable();
+        //弹出推币机
+        viewModel.uc.coinPusherRoomEvent.observe(this,unused->{
+            //弹出推币机选择弹窗
+            CoinPusherRoomListDialog coinersDialog = new CoinPusherRoomListDialog(mActivity);
+            coinersDialog.show();
+        });
         //选择城市
         viewModel.uc.clickRegion.observe(this, unused -> {
             if(cityChooseDialog==null){

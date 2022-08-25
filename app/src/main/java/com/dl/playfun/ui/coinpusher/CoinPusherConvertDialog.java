@@ -124,7 +124,6 @@ public class CoinPusherConvertDialog  extends BaseDialog {
                     @Override
                     public void onSuccess(BaseDataResponse<CoinPusherConverInfoEntity> converInfoEntityResponse) {
                         CoinPusherConverInfoEntity coinPusherConvertInfo = converInfoEntityResponse.getData();
-                        Log.e("执行推币机接口","============="+coinPusherConvertInfo.toString());
                         if(ObjectUtils.isNotEmpty(coinPusherConvertInfo)){
                             //给宝盒列表数据-展示
                             if(ObjectUtils.isNotEmpty(coinPusherConvertInfo.getGoldCoinList())){
