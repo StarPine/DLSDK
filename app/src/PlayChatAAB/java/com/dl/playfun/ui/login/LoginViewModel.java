@@ -36,6 +36,7 @@ import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,6 +45,7 @@ import io.reactivex.disposables.Disposable;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
 import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.bus.RxSubscriptions;
+import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.KLog;
 import me.goldze.mvvmhabit.utils.RxUtils;
 import me.goldze.mvvmhabit.utils.ToastUtils;
@@ -58,6 +60,8 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
     public ObservableField<ChooseAreaItemEntity> areaCode = new ObservableField<>();
     public ObservableField<String> code = new ObservableField<>();
     public ObservableField<Boolean> agree = new ObservableField<>(true);
+
+    public SingleLiveEvent<String> getCodeSuccess = new SingleLiveEvent<>();
 
 
     private Disposable ItemChooseAreaSubscription;
@@ -128,6 +132,7 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
                         UserDataEntity authLoginUserEntity = response.getData();
                         TokenEntity tokenEntity = new TokenEntity(authLoginUserEntity.getToken(),authLoginUserEntity.getUserID(),authLoginUserEntity.getUserSig(), authLoginUserEntity.getIsContract());
                         model.saveLoginInfo(tokenEntity);
+                        model.putKeyValue("areaCode",new Gson().toJson(areaCode.get()));
                         if (response.getData() != null && response.getData().getIsNewUser() != null && response.getData().getIsNewUser().intValue() == 1) {
                             AppContext.instance().logEvent(AppsFlyerEvent.register_start);
                             model.saveIsNewUser(true);
@@ -251,7 +256,6 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
     }
 
     private void reqVerifyCode() {
-
         if (TextUtils.isEmpty(mobile.get())) {
             ToastUtils.showShort(R.string.mobile_hint);
             return;
@@ -272,8 +276,8 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
                     .subscribe(new BaseObserver<BaseResponse>() {
                         @Override
                         public void onSuccess(BaseResponse baseResponse) {
-                            dismissHUD();
                             ToastUtils.showShort(R.string.code_sended);
+
                             /**
                              * 倒计时60秒，一次1秒
                              */
@@ -281,6 +285,9 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
                                 @Override
                                 public void onTick(long millisUntilFinished) {
                                     isDownTime = true;
+                                    if (millisUntilFinished / 1000 == 58){
+                                        getCodeSuccess.call();
+                                    }
                                     downTimeStr.set(StringUtils.getString(R.string.again_send) + "(" + millisUntilFinished / 1000 + "）");
                                 }
 
