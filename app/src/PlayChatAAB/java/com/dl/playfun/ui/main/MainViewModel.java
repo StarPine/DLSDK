@@ -66,6 +66,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
     public ObservableField<Boolean> isHaveRewards = new ObservableField<>(false);
     public List<MqBroadcastGiftEntity> publicScreenBannerGiftEntity = new ArrayList<>();
     public boolean playing = false;
+    public boolean isShowedReward = true;//今日是否显示过奖励
     public int giveCoin = 0;
     public int videoCard = 0;
     public int chatCardNum = 0;
@@ -116,10 +117,9 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         setDayFlag("day");
         String value = model.readKeyValue(dayRewardKey);
         if (value == null){
-            getDayReward();
-        }
-        if (AppConfig.isRegister){
-            getRegisterReward();
+            isShowedReward = false;
+        }else {
+            isShowedReward = true;
         }
     }
 
@@ -442,6 +442,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
 
                     @Override
                     public void onSuccess(BaseDataResponse<DayRewardInfoEntity> baseDataResponse) {
+                        model.putKeyValue(dayRewardKey,"true");
                         DayRewardInfoEntity dayRewardInfoEntity = baseDataResponse.getData();
                         if (dayRewardInfoEntity == null){
                             return;
@@ -457,7 +458,6 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                                 giveCoin = nowBean.getNum();
                             }
                         }
-                        model.putKeyValue(dayRewardKey,"true");
                         uc.showDayRewardDialog.call();
                     }
 

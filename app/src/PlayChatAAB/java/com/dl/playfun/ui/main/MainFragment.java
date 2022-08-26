@@ -254,8 +254,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                     @Override
                     public void run() {
                         if (versionEntity.getVersion_code().intValue() <= AppConfig.VERSION_CODE.intValue()) {
-                            //ToastUtils.showShort(R.string.version_latest);
-                            viewModel.showAnnouncemnet();
+                            dialogCallback();
                         } else {
                             boolean isUpdate = versionEntity.getIs_update().intValue() == 1;
                             UpdateDialogView.getInstance(mActivity)
@@ -263,7 +262,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                                     .setConfirmOnlick(new UpdateDialogView.CancelOnclick() {
                                         @Override
                                         public void cancel() {
-                                            viewModel.showAnnouncemnet();
+                                            dialogCallback();
                                         }
                                     })
                                     .show();
@@ -353,6 +352,17 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                 }
             }
         });
+    }
+
+    private void dialogCallback() {
+        //注册奖励
+        if (AppConfig.isRegister) {
+            viewModel.getRegisterReward();
+        } else {
+            if (!viewModel.isShowedReward) {
+                viewModel.getDayReward();
+            }
+        }
     }
 
 
