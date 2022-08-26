@@ -29,6 +29,7 @@ import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.FragmentHomeMainBinding;
+import com.dl.playfun.entity.CoinPusherRoomInfoEntity;
 import com.dl.playfun.entity.ConfigItemEntity;
 import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.event.LocationChangeEvent;
@@ -36,7 +37,8 @@ import com.dl.playfun.kl.view.VideoPresetActivity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocationManager;
 import com.dl.playfun.ui.base.BaseRefreshFragment;
-import com.dl.playfun.ui.coinpusher.CoinPusherRoomListDialog;
+import com.dl.playfun.ui.coinpusher.CoinPusherGameActivity;
+import com.dl.playfun.ui.coinpusher.dialog.CoinPusherRoomListDialog;
 import com.dl.playfun.ui.dialog.CityChooseDialog;
 import com.dl.playfun.ui.home.accost.HomeAccostDialog;
 import com.dl.playfun.ui.mine.wallet.recharge.RechargeActivity;
@@ -150,6 +152,14 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
         viewModel.uc.coinPusherRoomEvent.observe(this,unused->{
             //弹出推币机选择弹窗
             CoinPusherRoomListDialog coinersDialog = new CoinPusherRoomListDialog(mActivity);
+            coinersDialog.setDialogEventListener(itemEntity -> {
+                CoinPusherRoomInfoEntity.DeviceInfo deviceInfo = itemEntity;
+                coinersDialog.dismiss();
+                Bundle args = new Bundle();
+                args.putInt("roomId",deviceInfo.getId());
+                Intent intent = new Intent(mActivity, CoinPusherGameActivity.class);
+                startActivity(intent,args);
+            });
             coinersDialog.show();
         });
         //选择城市

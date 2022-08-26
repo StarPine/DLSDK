@@ -35,6 +35,7 @@ import com.dl.playfun.entity.ChooseAreaEntity;
 import com.dl.playfun.entity.CityAllEntity;
 import com.dl.playfun.entity.CoinExchangeBoxInfo;
 import com.dl.playfun.entity.CoinPusherConverInfoEntity;
+import com.dl.playfun.entity.CoinPusherRoomHistoryEntity;
 import com.dl.playfun.entity.CoinPusherRoomInfoEntity;
 import com.dl.playfun.entity.CoinPusherRoomTagInfoEntity;
 import com.dl.playfun.entity.CoinWalletEntity;
@@ -1294,6 +1295,11 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
+    public Observable<BaseDataResponse<List<CoinPusherRoomHistoryEntity>>> qryCoinPusherRoomHistory(Integer roomId) {
+        return apiService.qryCoinPusherRoomHistory(roomId);
+    }
+
+    @Override
     public Observable<BaseResponse> playingCoinPusherClose(Integer roomId) {
         return apiService.playingCoinPusherClose(roomId);
     }
@@ -1309,13 +1315,13 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
-    public Observable<BaseResponse> convertCoinPusherGoldsCoin(Integer amount,Integer type) {
-        return apiService.convertCoinPusherGoldsCoin(amount, type);
+    public Observable<BaseResponse> convertCoinPusherGoldsCoin(Integer id,Integer type) {
+        return apiService.convertCoinPusherGoldsCoin(id, type);
     }
 
     @Override
-    public Observable<BaseResponse> convertCoinPusherDiamonds(Integer amount) {
-        return apiService.convertCoinPusherDiamonds(amount);
+    public Observable<BaseResponse> convertCoinPusherDiamonds(Integer id) {
+        return apiService.convertCoinPusherDiamonds(id);
     }
 
     @Override

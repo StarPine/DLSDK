@@ -30,6 +30,7 @@ import com.dl.playfun.entity.ChooseAreaEntity;
 import com.dl.playfun.entity.CityAllEntity;
 import com.dl.playfun.entity.CoinExchangeBoxInfo;
 import com.dl.playfun.entity.CoinPusherConverInfoEntity;
+import com.dl.playfun.entity.CoinPusherRoomHistoryEntity;
 import com.dl.playfun.entity.CoinPusherRoomInfoEntity;
 import com.dl.playfun.entity.CoinPusherRoomTagInfoEntity;
 import com.dl.playfun.entity.CoinWalletEntity;
@@ -110,6 +111,14 @@ import retrofit2.http.Query;
 public interface HttpDataSource {
 
     /**
+     * @Desc TODO()
+     * @author 彭石林
+     * @parame []
+     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse<java.util.List<com.dl.playfun.entity.CoinPusherRoomHistoryEntity>>>
+     * @Date 2022/8/26
+     */
+    Observable<BaseDataResponse<List<CoinPusherRoomHistoryEntity>>> qryCoinPusherRoomHistory(Integer roomId);
+    /**
      * @Desc TODO(推币机-结束游戏)
      * @author 彭石林
      * @parame [roomId]
@@ -143,7 +152,7 @@ public interface HttpDataSource {
      * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
      * @Date 2022/8/24
      */
-    Observable<BaseResponse> convertCoinPusherGoldsCoin(Integer amount,Integer type);
+    Observable<BaseResponse> convertCoinPusherGoldsCoin(Integer id,Integer type);
     /**
      * @Desc TODO(推币机-兑换钻石)
      * @author 彭石林
@@ -151,7 +160,7 @@ public interface HttpDataSource {
      * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
      * @Date 2022/8/24
      */
-    Observable<BaseResponse> convertCoinPusherDiamonds(Integer amount);
+    Observable<BaseResponse> convertCoinPusherDiamonds(Integer id);
     /**
      * @Desc TODO(推币机-等级列表)
      * @author 彭石林

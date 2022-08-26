@@ -28,17 +28,17 @@
                 android:layout_marginEnd="15dp"
                 android:elevation="1dp"
                 android:src="@drawable/radio_publish_close" />
+
             <TextView
                 android:id="@+id/tv_title"
-                android:includeFontPadding="false"
-                android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:gravity="center"
+                android:includeFontPadding="false"
                 android:text="寶盒獎勵任選其一"
                 android:textColor="#ff42435e"
-                android:textSize="18sp"
-                />
+                android:textSize="18sp" />
             <TextView
                 android:includeFontPadding="false"
                 android:layout_marginTop="10dp"

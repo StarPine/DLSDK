@@ -60,11 +60,11 @@
                     android:layout_marginEnd="3dp"
                     android:layout_toStartOf="@+id/img_end"
                     android:layout_toEndOf="@+id/img_start"
+                    android:gravity="center"
                     android:includeFontPadding="false"
+                    android:text="0"
                     android:textColor="@color/coffee"
                     android:textSize="14sp"
-                    android:gravity="center"
-                    android:text="0"
                     tools:text="99999+" />
                 <FrameLayout
                     android:id="@+id/img_end"

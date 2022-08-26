@@ -73,17 +73,6 @@
                 android:orientation="vertical"
                 android:visibility="visible">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rcv_capsule"
-                    android:layout_width="match_parent"
-                    android:layout_height="178dp"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp"
-                    tools:itemCount="4"
-                    tools:layoutManager="GridLayoutManager"
-                    tools:listitem="@layout/item_coinpusher_capsule"
-                    tools:spanCount="2" />
-
                 <TextView
                     android:id="@+id/tv_capsule_hint"
                     android:layout_width="match_parent"
@@ -93,6 +82,17 @@
                     android:includeFontPadding="false"
                     android:textColor="#ff333333"
                     android:textSize="11sp" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_marginTop="30dp"
+                    android:id="@+id/rcv_capsule"
+                    android:layout_width="match_parent"
+                    android:layout_height="178dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    tools:itemCount="4"
+                    tools:layoutManager="GridLayoutManager"
+                    tools:listitem="@layout/item_coinpusher_capsule"
+                    tools:spanCount="2" />
             </LinearLayout>
 
             <RelativeLayout
@@ -151,7 +151,7 @@
                     android:layout_marginEnd="41dp"
                     android:layout_marginBottom="20dp"
                     android:background="@drawable/selecter_coinpusher_btn"
-                    android:enabled="true"
+                    android:enabled="false"
                     android:gravity="center"
                     android:text="@string/playfun_exchange_success_toast"
                     android:textColor="@color/gray_light"

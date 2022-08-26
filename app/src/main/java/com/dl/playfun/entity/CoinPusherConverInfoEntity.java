@@ -102,6 +102,8 @@ public class CoinPusherConverInfoEntity {
         }
 
         public class GoldCoinItem {
+            //id
+            private int id;
             //明细
             private String name;
             //明细图片
@@ -110,6 +112,14 @@ public class CoinPusherConverInfoEntity {
             private int value;
             //明细类型
             private int type;
+
+            public int getId() {
+                return id;
+            }
+
+            public void setId(int id) {
+                this.id = id;
+            }
 
             public String getName() {
                 return name;
@@ -142,16 +152,6 @@ public class CoinPusherConverInfoEntity {
             public void setType(int type) {
                 this.type = type;
             }
-        }
-
-        @Override
-        public String toString() {
-            return "GoldCoinInfo{" +
-                    "name='" + name + '\'' +
-                    ", icon='" + icon + '\'' +
-                    ", coin=" + coin +
-                    ", item=" + item +
-                    '}';
         }
     }
     //金币对话钻石

@@ -43,11 +43,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="158dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/radio_dating_img_default"
+                android:src="@drawable/img_pc_default_load"
                 app:riv_corner_radius="10dp"
-                binding:imageErrorPlaceholderRes="@{R.drawable.radio_dating_img_default}"
+                binding:imageErrorPlaceholderRes="@{R.drawable.img_pc_default_load}"
                 binding:imagePath="@{itemEntity.icon}"
-                binding:imagePlaceholderRes="@{R.drawable.radio_dating_img_default}" />
+                binding:imagePlaceholderRes="@{R.drawable.img_pc_default_load}" />
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/icon_name"
                 android:includeFontPadding="false"

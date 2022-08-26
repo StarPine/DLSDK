@@ -33,6 +33,7 @@ import com.dl.playfun.entity.ChooseAreaEntity;
 import com.dl.playfun.entity.CityAllEntity;
 import com.dl.playfun.entity.CoinExchangeBoxInfo;
 import com.dl.playfun.entity.CoinPusherConverInfoEntity;
+import com.dl.playfun.entity.CoinPusherRoomHistoryEntity;
 import com.dl.playfun.entity.CoinPusherRoomInfoEntity;
 import com.dl.playfun.entity.CoinPusherRoomTagInfoEntity;
 import com.dl.playfun.entity.CoinWalletEntity;
@@ -124,6 +125,16 @@ import retrofit2.http.Query;
  */
 
 public interface ApiService {
+    
+    /**
+    * @Desc TODO(推币机-历史记录)
+    * @author 彭石林
+    * @parame []
+    * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse<java.util.List<com.dl.playfun.entity.CoinPusherRoomHistoryEntity>>>
+    * @Date 2022/8/26
+    */
+    @GET("api/iscan/history")
+    Observable<BaseDataResponse<List<CoinPusherRoomHistoryEntity>>> qryCoinPusherRoomHistory(@Query("roomId")Integer roomId);
     /**
     * @Desc TODO(推币机-结束游戏)
     * @author 彭石林
@@ -166,7 +177,7 @@ public interface ApiService {
     */
     @FormUrlEncoded
     @POST("api/iscan/goldCoin")
-    Observable<BaseResponse> convertCoinPusherGoldsCoin(@Field("amount")Integer amount,@Field("type") Integer type);
+    Observable<BaseResponse> convertCoinPusherGoldsCoin(@Field("id")Integer id,@Field("type") Integer type);
     /**
     * @Desc TODO(推币机-兑换钻石)
     * @author 彭石林
@@ -176,7 +187,7 @@ public interface ApiService {
     */
     @POST("api/iscan/diamonds")
     @FormUrlEncoded
-    Observable<BaseResponse> convertCoinPusherDiamonds(@Field("amount") Integer amount);
+    Observable<BaseResponse> convertCoinPusherDiamonds(@Field("id") Integer id);
     /**
     * @Desc TODO(推币机-等级列表)
     * @author 彭石林

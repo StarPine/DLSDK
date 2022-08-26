@@ -7,19 +7,19 @@
     android:layout_marginTop="10dp"
     android:layout_marginStart="10dp"
     tools:background="@drawable/shape_yellow_radius8_checked">
+
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/img_icon"
         android:layout_width="79dp"
         android:layout_height="79dp"
-        android:src="@drawable/error_img_banner"
         android:scaleType="fitXY"
-        />
+        android:src="@drawable/img_pc_default_load" />
     <TextView
         android:id="@+id/tv_name"
+        android:layout_alignParentEnd="true"
         android:includeFontPadding="false"
         android:layout_marginTop="20dp"
-        android:layout_marginStart="17dp"
-        android:layout_toEndOf="@+id/img_icon"
+        android:layout_marginEnd="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="初級寶盒"
@@ -28,10 +28,10 @@
         />
     <LinearLayout
         android:orientation="horizontal"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp"
         android:layout_marginTop="10dp"
         android:layout_below="@+id/tv_name"
-        android:layout_toEndOf="@+id/img_icon"
-        android:layout_marginStart="11dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
