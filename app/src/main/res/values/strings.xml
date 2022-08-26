@@ -17,7 +17,7 @@
     <string name="playfun_tab_male_3">Active</string>
     <string name="playfun_tab_message_1">Chat</string>
     <string name="playfun_tab_message_2">System Messages</string>
-    <string name="playfun_tab_message_3">Often contact</string>
+    <string name="playfun_tab_message_3">Contact</string>
     <string name="playfun_tab_wallet_1">Cash</string>
     <string name="playfun_tab_wallet_2">Diamonds</string>
     <string name="playfun_detail_link">details ></string>
@@ -379,7 +379,7 @@
     <string name="playfun_mine_upload_first_pic">Upload my first photo</string>
     <string name="playfun_mine_upload_first_pic_sub">Upload photos to attract %s.</string>
     <string name="playfun_exit_app">Back again to exit the app</string>
-    <string name="playfun_pull_black_shield_both_sides">Block (both sides)</string>
+    <string name="playfun_pull_black_shield_both_sides">Block</string>
     <string name="playfun_remove_black_shield_both_sides">Unlock</string>
     <string name="playfun_no_information_cant_comment">Unable to send a impression before chat.</string>
     <string name="playfun_no_information_cant_comment_him">Can not evaluate before chatting further.</string>
@@ -1196,7 +1196,7 @@
 
 
     <string name="playchat_choose_area_title">Region</string>
-    <string name="playfun_contact_empty_text">There is no regular contact, let\'s chat!</string>
+    <string name="playfun_contact_empty_text">There is no frequent contact, let\'s chat!</string>
     <string name="playfun_contact_text1">Set up frequent contact success</string>
     <string name="playfun_contact_text2">Frequent contact cancelled</string>
     <string name="playfun_mine_title_btn_exclusive">Exclusive greeting</string>
