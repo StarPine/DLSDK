@@ -82,11 +82,11 @@ public class HomeAccostDialog extends BaseDialog {
 
     private LinearLayout itemEntityLayout1, itemEntityLayout2, itemEntityLayout3, itemEntityLayout4, itemEntityLayout5, itemEntityLayout6;
     private ImageView iv_dialog_close;//关闭按钮
-    private ImageView btn_submit,incomplete,iv_accost_match;//提交按钮
+    private ImageView btn_submit;//提交按钮
     private TextView exp_time;//提示
     private DialogAccostClicksListener dialogAccostClicksListener;
     //换一批
-    private RelativeLayout refresh_layout;
+    private LinearLayout refresh_layout;
 
     private TextView changeText;
 
@@ -101,16 +101,6 @@ public class HomeAccostDialog extends BaseDialog {
         this.dialogAccostClicksListener = listener;
     }
 
-    public void setIncomplete(String isShow){
-        if (isShow.equals("1")){
-            incomplete.setVisibility(View.GONE);
-            iv_accost_match.setVisibility(View.VISIBLE);
-        }else {
-            iv_accost_match.setVisibility(View.GONE);
-            incomplete.setVisibility(View.VISIBLE);
-        }
-    }
-
     private void initView() {
         //读取本地冷却时间
         changeDownTime = readKeyValue(ConfigManager.getInstance().getAppRepository().readUserData().getId() + "_homeAccost");
@@ -119,8 +109,6 @@ public class HomeAccostDialog extends BaseDialog {
         rootView = inflater.inflate(R.layout.dialog_home_accost_list, null);
         exp_time = rootView.findViewById(R.id.exp_time);
         changeText = rootView.findViewById(R.id.change_text);
-        incomplete = rootView.findViewById(R.id.iv_accost_incomplete);
-        iv_accost_match = rootView.findViewById(R.id.iv_accost_match);
         itemEntityLayout1 = rootView.findViewById(R.id.item_entity_layout1);
         itemEntityLayout2 = rootView.findViewById(R.id.item_entity_layout2);
         itemEntityLayout3 = rootView.findViewById(R.id.item_entity_layout3);

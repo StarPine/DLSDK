@@ -155,7 +155,6 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
             @Override
             public void onChanged(String isShow) {
                 HomeAccostDialog homeAccostDialog = new HomeAccostDialog(getContext());
-                homeAccostDialog.setIncomplete(isShow);
                 homeAccostDialog.setDialogAccostClicksListener(new HomeAccostDialog.DialogAccostClicksListener() {
                     @Override
                     public void onSubmitClick(HomeAccostDialog dialog, List<Integer> listData) {
