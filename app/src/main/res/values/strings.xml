@@ -1240,5 +1240,9 @@
     <string name="playfun_btn_now_buy">Top up now</string>
     <string name="playfun_max_vaule">9999999+</string>
     <string name="playfun_send_tips">send</string>
+    <string name="playfun_perfect_tips">建議上傳本人真實照片</string>
+    <string name="playfun_perfect_tips_age">年齡</string>
+    <string name="playfun_perfect_age">18歲</string>
+    <string name="playfun_perfect_code_hint">邀請碼（選填）</string>
 
 </resources>

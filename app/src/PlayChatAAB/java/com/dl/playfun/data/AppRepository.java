@@ -1632,6 +1632,11 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
+    public Observable<BaseDataResponse> getRandName() {
+        return mHttpDataSource.getRandName();
+    }
+
+    @Override
     public Observable<BaseDataResponse<DayRewardInfoEntity>> getRegisterReward() {
         return mHttpDataSource.getRegisterReward();
     }

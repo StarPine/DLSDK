@@ -152,6 +152,12 @@ public interface HttpDataSource {
      */
     Observable<BaseDataResponse<DayRewardInfoEntity>> getDayReward();
 
+    /**
+     * 获取昵称
+     * @return
+     */
+    Observable<BaseDataResponse> getRandName();
+
 
     /**
      * 注册奖励
