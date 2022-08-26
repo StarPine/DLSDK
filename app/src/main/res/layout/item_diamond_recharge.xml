@@ -23,7 +23,7 @@
         android:layout_marginBottom="10dp"
         android:background="@{viewModel.itemEntity.isRecommend == 1?@drawable/bg_diamond_recharge_item_recommend:@drawable/bg_diamond_recharge_item_nomal}"
         binding:onClickCommand="@{viewModel.itemClick}"
-        tools:background="@drawable/bg_diamond_recharge_item_nomal">
+        tools:background="@drawable/bg_diamond_recharge_item_recommend2">
 
         <TextView
             android:id="@+id/tv_flag"
