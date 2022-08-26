@@ -10,6 +10,7 @@ import com.dl.playfun.entity.OverseasUserEntity;
 public class AppConfig {
     public static boolean isOpenDialog = false;
     public static boolean isRegister = false;
+    public static boolean isRegisterAccost = false;
     //是否开启日志打印
     public static final boolean isDebug = BuildConfig.DEBUG;
     /**

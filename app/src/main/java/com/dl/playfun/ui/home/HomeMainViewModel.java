@@ -12,6 +12,7 @@ import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
+import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.data.AppRepository;
@@ -24,12 +25,14 @@ import com.dl.playfun.entity.AdBannerEntity;
 import com.dl.playfun.entity.AdItemEntity;
 import com.dl.playfun.entity.ConfigItemEntity;
 import com.dl.playfun.entity.ParkItemEntity;
+import com.dl.playfun.entity.SystemConfigEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.AddBlackListEvent;
 import com.dl.playfun.event.CityChangeEvent;
 import com.dl.playfun.event.DailyAccostEvent;
 import com.dl.playfun.event.LoadEvent;
 import com.dl.playfun.event.LocationChangeEvent;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.home.search.SearchFragment;
 import com.dl.playfun.ui.viewmodel.BaseParkItemViewModel;
 import com.dl.playfun.ui.viewmodel.BaseParkViewModel;
@@ -261,10 +264,31 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
                 });
         dailyAccostSubscription = RxBus.getDefault().toObservable(DailyAccostEvent.class)
                 .subscribe(cityChangeEvent -> {
-                    if (!isShowedAccost){
-                        model.readKeyValue(accostKey);
-                        uc.clickAccountDialog.setValue("0");
+                    boolean isMale = ConfigManager.getInstance().isMale();
+                    SystemConfigEntity systemConfig = model.readSystemConfig();
+                    if (AppConfig.isRegisterAccost) {
+                        AppConfig.isRegisterAccost = false;
+                        if (isMale){
+                            if (systemConfig.getRegisterMaleAccost() == 1){
+                                showDailyAccost();
+                            }
+                        }else {
+                            if (systemConfig.getRegisterFemaleAccost() == 1){
+                                showDailyAccost();
+                            }
+                        }
+                    }else {
+                        if (isMale){
+                            if (systemConfig.getMaleAccost() == 1){
+                                showDailyAccost();
+                            }
+                        }else {
+                            if (systemConfig.getFemaleAccost() == 1){
+                                showDailyAccost();
+                            }
+                        }
                     }
+
                 });
         mAddBlackListSubscription = RxBus.getDefault().toObservable(AddBlackListEvent.class)
                 .subscribe(cityChangeEvent -> {
@@ -277,6 +301,13 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
         RxSubscriptions.add(mAddBlackListSubscription);
         RxSubscriptions.add(dailyAccostSubscription);
 
+    }
+
+    private void showDailyAccost() {
+        if (!isShowedAccost) {
+            model.putKeyValue(accostKey, "true");
+            uc.clickAccountDialog.setValue("0");
+        }
     }
 
     @Override

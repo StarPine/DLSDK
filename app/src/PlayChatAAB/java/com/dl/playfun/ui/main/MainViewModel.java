@@ -22,6 +22,7 @@ import com.dl.playfun.entity.MqBroadcastGiftEntity;
 import com.dl.playfun.entity.MqGiftDataEntity;
 import com.dl.playfun.entity.VersionEntity;
 import com.dl.playfun.event.BubbleTopShowEvent;
+import com.dl.playfun.event.DailyAccostEvent;
 import com.dl.playfun.event.MainTabEvent;
 import com.dl.playfun.event.MessageCountChangeEvent;
 import com.dl.playfun.event.MessageGiftNewEvent;
@@ -433,6 +434,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                         model.putKeyValue(dayRewardKey,"true");
                         DayRewardInfoEntity dayRewardInfoEntity = baseDataResponse.getData();
                         if (dayRewardInfoEntity == null){
+                            RxBus.getDefault().post(new DailyAccostEvent());
                             return;
                         }
                         nextGiveCoin = dayRewardInfoEntity.getNext();
@@ -470,6 +472,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                     public void onSuccess(BaseDataResponse<DayRewardInfoEntity> baseDataResponse) {
                         DayRewardInfoEntity dayRewardInfoEntity = baseDataResponse.getData();
                         if (dayRewardInfoEntity == null){
+                            RxBus.getDefault().post(new DailyAccostEvent());
                             return;
                         }
                         List<DayRewardInfoEntity.NowBean> now = dayRewardInfoEntity.getNow();

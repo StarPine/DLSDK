@@ -35,9 +35,11 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.Injection;
 import com.dl.playfun.app.config.TbarCenterImgConfig;
+import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.databinding.FragmentMainBinding;
 import com.dl.playfun.entity.MqBroadcastGiftEntity;
 import com.dl.playfun.entity.MqBroadcastGiftUserEntity;
+import com.dl.playfun.entity.SystemConfigEntity;
 import com.dl.playfun.entity.VersionEntity;
 import com.dl.playfun.event.DailyAccostEvent;
 import com.dl.playfun.event.MainTabEvent;
@@ -200,6 +202,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                 }
             }
         });
+
         viewModel.uc.restartActivity.observe(this, intent -> {
             startActivity(intent);
             mActivity.overridePendingTransition(R.anim.anim_zoom_in, R.anim.anim_stay);
@@ -230,16 +233,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                     @Override
                     public void run() {
                         if (versionEntity.getVersion_code().intValue() <= AppConfig.VERSION_CODE.intValue()) {
-                            //注册奖励
-                            if (AppConfig.isRegister){
-                                viewModel.getRegisterReward();
-                            }else {
-                                if (!viewModel.isShowedReward){
-                                    viewModel.getDayReward();
-                                }else {
-                                    RxBus.getDefault().post(new DailyAccostEvent());
-                                }
-                            }
+                            dialogCallback();
 
                         } else {
                             boolean isUpdate = versionEntity.getIs_update().intValue() == 1;
@@ -250,15 +244,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                                     .setConfirmOnlick(new UpdateDialogView.CancelOnclick() {
                                         @Override
                                         public void cancel() {
-                                            if (AppConfig.isRegister){
-                                                viewModel.getRegisterReward();
-                                            }else {
-                                                if (!viewModel.isShowedReward){
-                                                    viewModel.getDayReward();
-                                                }else {
-                                                    RxBus.getDefault().post(new DailyAccostEvent());
-                                                }
-                                            }
+                                            dialogCallback();
                                         }
                                     })
                                     .show();
@@ -348,6 +334,20 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                 }
             }
         });
+    }
+
+    private void dialogCallback() {
+        //注册奖励
+        if (AppConfig.isRegister) {
+            AppConfig.isRegisterAccost = true;
+            viewModel.getRegisterReward();
+        } else {
+            if (!viewModel.isShowedReward) {
+                viewModel.getDayReward();
+            } else {
+                RxBus.getDefault().post(new DailyAccostEvent());
+            }
+        }
     }
 
 
