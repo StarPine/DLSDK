@@ -66,6 +66,8 @@ public class AppConfig {
 
     //临时存放第三方登录用户信息。用来注册默认读取
     public static OverseasUserEntity overseasUserEntity = null;
+    //记录推币机离开页面没有投币的状态展示弹窗
+    public static boolean CoinPusherGameNotPushed = false;
     /**
      * 服务条款url
      */

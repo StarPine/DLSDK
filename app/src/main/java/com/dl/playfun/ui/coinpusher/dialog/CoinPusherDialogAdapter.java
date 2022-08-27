@@ -34,7 +34,7 @@ public class CoinPusherDialogAdapter {
         Dialog dialog = new Dialog(mContext);
         dialog.setCancelable(true);
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        DialogCoinpusherHintBinding binding = DataBindingUtil.inflate(inflater, R.layout.dialog_coinpusher_list, null, false);
+        DialogCoinpusherHintBinding binding = DataBindingUtil.inflate(inflater, R.layout.dialog_coinpusher_hint, null, false);
         binding.tvSub.setOnClickListener(v -> dialog.dismiss());
         //设置背景透明,去四个角
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
@@ -47,6 +47,7 @@ public class CoinPusherDialogAdapter {
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;   //设置宽度充满屏幕
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         window.setAttributes(lp);
+        dialog.show();
         return dialog;
     }
     /**

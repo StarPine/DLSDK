@@ -25,6 +25,7 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocaleManager;
 import com.dl.playfun.tim.TUIUtils;
 import com.dl.playfun.ui.base.MySupportActivity;
+import com.dl.playfun.ui.coinpusher.dialog.CoinPusherDialogAdapter;
 import com.dl.playfun.ui.login.LoginFragment;
 import com.dl.playfun.ui.main.MainFragment;
 import com.dl.playfun.ui.splash.SplashFragment;
@@ -291,6 +292,11 @@ public class MainContainerActivity extends MySupportActivity {
     public void onResume() {
         super.onResume();
         isLaunchMain();
+        //30秒没有投币提示
+        if(AppConfig.CoinPusherGameNotPushed){
+            AppConfig.CoinPusherGameNotPushed = false;
+            CoinPusherDialogAdapter.getDialogCoinPusherHint(this);
+        }
         try{
             AppContext.instance().mFirebaseAnalytics.setCurrentScreen(this, "Screen Name", this.getClass().getSimpleName());
             //页面处于可见状态最后依次连接时间

@@ -9,12 +9,15 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
+import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.databinding.ActivityCoinpusherGameBinding;
@@ -26,6 +29,7 @@ import com.dl.playfun.ui.coinpusher.dialog.CoinPusherGameHistoryDialog;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.TimeUtils;
+import com.dl.playfun.utils.ToastCenterUtils;
 import com.tencent.liteav.trtccalling.ui.floatwindow.FloatWindowService;
 import com.wangsu.libwswebrtc.WsWebRTCObserver;
 import com.wangsu.libwswebrtc.WsWebRTCParameters;
@@ -48,6 +52,13 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
 
     private Dialog dialogCoinPusherHelp = null;
 
+    //倒计时30秒
+    private final long downTimeMillisInFuture = 20 * 1000;
+    //倒计时剩余多少时间提示
+    private final long downTimeMillisHint = 10 * 1000;
+    //提示状态标识
+    private boolean downTimeMillisHintFlag = false;
+
     private Integer roomId;
 
     @Override
@@ -60,7 +71,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
 
      */
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
         if(newConfig!=null){
             LocaleManager.setLocal(this);
         }
@@ -216,40 +227,63 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
             }
             return false;
         });
-
-        gameInit();
+        //gameInit();
+        //开始倒计时
+        downTime();
     }
 
     @Override
     public void initViewObservable() {
         super.initViewObservable();
+        viewModel.gameUI.resetDownTimeEvent.observe(this, unused -> {
+            //取消倒计时
+            cancelDownTimer();
+            //重新开始倒计时
+            downTime();
+        });
     }
 
     @Override
     public  void onDestroy() {
         viewModel.playingCoinPusherClose(viewModel.roomId);
-        //暂停播放。释放资源
-        binding.WebRtcSurfaceView.stop();
-        binding.WebRtcSurfaceView.uninitilize();
+        try {
+            //暂停播放。释放资源
+            binding.WebRtcSurfaceView.stop();
+            binding.WebRtcSurfaceView.uninitilize();
+        }catch (Exception ignored) {
+
+        }
         super.onDestroy();
     }
 
     //倒计时开始
     private void downTime() {
-
-        /**
-         * 倒计时30秒 一次1秒
-         */
-        downTimer = new CountDownTimer(30*1000, 1000) {
+        downTimer = new CountDownTimer(downTimeMillisInFuture, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
+                if(!downTimeMillisHintFlag){
+                    if(millisUntilFinished <= downTimeMillisHint){
+                        downTimeMillisHintFlag = true;
+                        ToastCenterUtils.showShort(String.format(StringUtils.getString(R.string.playfun_coinpusher_text_downtime),millisUntilFinished/1000));
+                    }
+                }
+
             }
 
             @Override
             public void onFinish() {
+                AppConfig.CoinPusherGameNotPushed = true;
                 finish();
             }
         };
         downTimer.start();
+    }
+    //取消倒计时
+    private void cancelDownTimer() {
+        downTimeMillisHintFlag = false;
+        if(downTimer!=null){
+            downTimer.cancel();
+            downTimer = null;
+        }
     }
 }

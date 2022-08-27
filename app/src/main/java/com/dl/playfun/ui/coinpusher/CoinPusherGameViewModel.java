@@ -11,6 +11,7 @@ import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.viewmodel.BaseViewModel;
 
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
+import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.RxUtils;
 
 /**
@@ -20,6 +21,7 @@ import me.goldze.mvvmhabit.utils.RxUtils;
  */
 public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
 
+    public UIChangeObservable gameUI = new UIChangeObservable();
     public ObservableInt totalMoney = new ObservableInt(0);
     public Integer roomId;
 
@@ -88,6 +90,11 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
 
     public String tvTotalMoneyRefresh(int moneyNum){
         return moneyNum > 99999 ? moneyNum+"+" : moneyNum+"";
+    }
+
+    public static class UIChangeObservable{
+        //重置倒计时
+        public SingleLiveEvent<Void> resetDownTimeEvent = new SingleLiveEvent<>();
     }
 
 }
