@@ -155,7 +155,8 @@ public class DiamondRechargeActivity extends BaseActivity<ActivityDiamondRecharg
                 .setTitle(getString(R.string.playfun_recharge_success))
                 .setConfirmOnlick(dialog -> {
                     dialog.dismiss();
-                    finish();
+                    isFinsh = true;
+                    viewModel.getRechargeList();
                 })
                 .dayRewardDialog(true,
                         viewModel.selectedGoodsEntity.get().getDayGiveCoin(),

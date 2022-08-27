@@ -68,6 +68,9 @@ public class DiamondRechargeViewModel extends BaseViewModel<AppRepository> {
      * 跳转会员中心
      */
     public BindingCommand toVipCenter = new BindingCommand(() -> {
+        if (diamondInfo.get()== null) {
+            return;
+        }
         if (diamondInfo.get().getIsVip() == 0 && isMale()){
             AppContext.instance().logEvent(AppsFlyerEvent.VIP_Center);
             start(VipSubscribeFragment.class.getCanonicalName());
@@ -193,6 +196,7 @@ public class DiamondRechargeViewModel extends BaseViewModel<AppRepository> {
                 .subscribe(new BaseObserver<BaseDataResponse<DiamondInfoEntity>>() {
                     @Override
                     public void onSuccess(BaseDataResponse<DiamondInfoEntity> response) {
+                        diamondRechargeList.clear();
                         DiamondInfoEntity infoEntity = response.getData();
                         diamondInfo.set(infoEntity);
                         List<GoodsEntity> data = infoEntity.getList();
