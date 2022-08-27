@@ -12,6 +12,7 @@
 
     <string name="cancel">Cancel</string>
     <string name="sure">Confirm</string>
+    <string name="group_apply_click_handle">Tap to Process</string>
     <string name="core_permission_dialog_title">Authorization Request</string>
     <string name="core_permission_dialog_positive_setting_text">Settings</string>
 
@@ -25,6 +26,6 @@
     <string name="custom_gift_right_title">got a gift</string>
     <string name="custom_gift_left_title">gift</string>
     <string name="text_message2">Reply to get income.</string>
-    <string name="audio_in_call">语音通話中，無法使用此功能</string>
+    <string name="audio_in_call">During a voice call, this feature cannot be used</string>
 
 </resources>

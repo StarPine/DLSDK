@@ -39,7 +39,7 @@
                 android:layout_marginTop="26dp"
                 android:background="@mipmap/share_get_input"
                 android:gravity="center"
-                android:hint="邀請碼（選填）"
+                android:hint="@string/playfun_code_tips"
                 android:maxLength="6"
                 android:textColor="#90919F" />
 

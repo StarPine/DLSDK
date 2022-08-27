@@ -1239,5 +1239,6 @@
     <string name="playfun_btn_now_buy">立即儲值</string>
     <string name="playfun_max_vaule">9999999+</string>
     <string name="playfun_send_tips">送出</string>
+    <string name="playfun_code_tips">邀請碼（選填）</string>
 
 </resources>

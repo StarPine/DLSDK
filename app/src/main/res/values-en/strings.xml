@@ -1239,5 +1239,6 @@
     <string name="playfun_diamonds_recharge_title">Top up diamonds</string>
     <string name="playfun_btn_now_buy">Top up now</string>
     <string name="playfun_max_vaule">9999999+</string>
+    <string name="playfun_code_tips">Invitation code (optional)</string>
 
 </resources>

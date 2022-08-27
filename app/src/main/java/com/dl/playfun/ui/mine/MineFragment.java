@@ -54,6 +54,7 @@ import com.dl.playfun.widget.dialog.MVDialog;
 import com.google.android.material.appbar.AppBarLayout;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.listener.OnResultCallbackListener;
+import com.tencent.qcloud.tuicore.Status;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 
 import java.util.ArrayList;
@@ -156,6 +157,10 @@ public class MineFragment extends BaseRefreshFragment<FragmentMineBinding, MineV
         binding.audioStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (Status.mIsShowFloatWindow){
+                    ToastUtils.showShort(R.string.audio_in_call);
+                    return;
+                }
                 UserInfoEntity userInfoEntity = viewModel.userInfoEntity.get();
                 if(userInfoEntity!=null && !StringUtils.isEmpty(userInfoEntity.getSound()) ){
                     binding.audioStop.setImageResource(R.drawable.mine_audio_stop_img);

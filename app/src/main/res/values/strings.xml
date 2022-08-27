@@ -1240,5 +1240,6 @@
     <string name="playfun_btn_now_buy">Top up now</string>
     <string name="playfun_max_vaule">9999999+</string>
     <string name="playfun_send_tips">send</string>
+    <string name="playfun_code_tips">Invitation code (optional)</string>
 
 </resources>
