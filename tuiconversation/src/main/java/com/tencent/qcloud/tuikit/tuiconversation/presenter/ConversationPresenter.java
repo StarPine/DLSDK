@@ -562,7 +562,7 @@ public class ConversationPresenter {
                 }
             }
         }
-        if(loadConversationCallback!=null){
+        if(loadConversationCallback!=null && !loadedConversationInfo.isEmpty()){
             loadConversationCallback.isConversationEmpty(false);
         }
         busConversationCount(loadedConversationInfo);
@@ -634,7 +634,7 @@ public class ConversationPresenter {
             if (count > 0 && maxRefreshIndex >= minRefreshIndex) {
                 iAdapter.onItemRangeChanged(minRefreshIndex, count);
             }
-            if(loadConversationCallback!=null){
+            if(loadConversationCallback!=null && !loadedConversationInfo.isEmpty()){
                 loadConversationCallback.isConversationEmpty(false);
             }
             busConversationCount(loadedConversationInfo);
@@ -984,9 +984,6 @@ public class ConversationPresenter {
                                 provider.getFriendShipConversationList(friendList, new IUIKitCallback<List<ConversationInfo>>() {
                                     @Override
                                     public void onSuccess(List<ConversationInfo> dataConversationInfo) {
-                                        if(loadConversationCallback!=null){
-                                            loadConversationCallback.isConversationEmpty(false);
-                                        }
                                         if(!dataConversationInfo.isEmpty()){
                                             //loadedFriendshipInfoList.addAll(dataConversationInfo);
                                             isFriendConversationList(dataConversationInfo);
