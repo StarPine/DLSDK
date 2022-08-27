@@ -1243,6 +1243,8 @@
     <string name="playfun_code_tips">Invitation code (optional)</string>
     <string name="playfun_user_agreement_tips">User Agreement</string>
     <string name="playfun_privacy_policy_tips">Privacy Policy</string>
+    <string name="playfun_vip_ratain_title">Sure to give up VIP privileges?</string>
+    <string name="playfun_vip_retain_give_up">Give up</string>
 
 
 </resources>

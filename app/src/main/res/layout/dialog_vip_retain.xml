@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="120dp"
-            android:text="確認放棄會員專享權益嗎？"
+            android:text="@string/playfun_vip_ratain_title"
             android:textColor="@color/coffee_11d"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -57,7 +57,7 @@
             android:layout_below="@+id/btn_buy"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="15dp"
-            android:text="放棄"
+            android:text="@string/playfun_vip_retain_give_up"
             android:textColor="@color/yellow_a44"
             android:textSize="16sp" />
 

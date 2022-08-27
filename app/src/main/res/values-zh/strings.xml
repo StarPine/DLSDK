@@ -1242,4 +1242,6 @@
     <string name="playfun_code_tips">邀請碼（選填）</string>
     <string name="playfun_user_agreement_tips">用戶協議</string>
     <string name="playfun_privacy_policy_tips">隱私政策</string>
+    <string name="playfun_vip_ratain_title">確認放棄會員專享權益嗎？</string>
+    <string name="playfun_vip_retain_give_up">放棄</string>
 </resources>

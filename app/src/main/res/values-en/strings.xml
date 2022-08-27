@@ -1196,7 +1196,7 @@
 
 
     <string name="playchat_choose_area_title">Region</string>
-    <string name="playfun_contact_empty_text">There is no regular contact, let\'s chat!</string>
+    <string name="playfun_contact_empty_text">There is no frequent contact, let\'s chat!</string>
     <string name="playfun_contact_text1">Set up frequent contact success</string>
     <string name="playfun_contact_text2">Frequent contact cancelled</string>
     <string name="playfun_mine_title_btn_exclusive">Exclusive greeting</string>
@@ -1239,8 +1239,12 @@
     <string name="playfun_diamonds_recharge_title">Top up diamonds</string>
     <string name="playfun_btn_now_buy">Top up now</string>
     <string name="playfun_max_vaule">9999999+</string>
+    <string name="playfun_send_tips">send</string>
     <string name="playfun_code_tips">Invitation code (optional)</string>
     <string name="playfun_user_agreement_tips">User Agreement</string>
     <string name="playfun_privacy_policy_tips">Privacy Policy</string>
+    <string name="playfun_vip_ratain_title">Sure to give up VIP privileges?</string>
+    <string name="playfun_vip_retain_give_up">Give up</string>
+
 
 </resources>
