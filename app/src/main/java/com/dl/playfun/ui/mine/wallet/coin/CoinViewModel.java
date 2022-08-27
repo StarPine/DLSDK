@@ -59,12 +59,13 @@ public class CoinViewModel extends BaseRefreshViewModel<AppRepository> {
 
     public CoinViewModel(@NonNull Application application, AppRepository repository) {
         super(application, repository);
+        startRefresh();
+
     }
 
     @Override
     public void onEnterAnimationEnd() {
         super.onEnterAnimationEnd();
-        startRefresh();
     }
 
     @Override

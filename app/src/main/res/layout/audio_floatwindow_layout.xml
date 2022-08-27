@@ -48,5 +48,5 @@
         android:layout_alignRight="@+id/ll_float"
         android:layout_marginTop="5dp"
         android:layout_marginRight="5dp"
-        android:src="@drawable/icon_minimize" />
+        android:src="@drawable/icon_maximize" />
 </RelativeLayout>

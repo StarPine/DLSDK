@@ -160,7 +160,7 @@
                     android:paddingRight="2dp"
                     android:textColor="@color/white"
                     android:textSize="10sp"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/navigation_message_img"
@@ -211,7 +211,7 @@
                     android:visibility="gone"
                     app:lottie_autoPlay="false"
                     app:lottie_loop="false"
-                    app:lottie_rawRes="@raw/lottie_navigation_mine" />
+                    app:lottie_rawRes="@raw/lottie_navigation_mine_male" />
             </RelativeLayout>
         </LinearLayout>
         <ImageView

@@ -26,6 +26,7 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
 import com.dl.playfun.ui.certification.certificationmale.CertificationMaleFragment;
+import com.dl.playfun.ui.mine.wallet.diamond.recharge.DiamondRechargeActivity;
 import com.dl.playfun.ui.mine.wallet.recharge.RechargeActivity;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralPayDialog;
@@ -92,19 +93,8 @@ public class WalletFragment extends BaseToolbarFragment<FragmentWalletBinding, W
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_exchange_game_coin) {
-            AppContext.instance().logEvent(AppsFlyerEvent.Top_up);
-            CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(mActivity);
-            coinRechargeFragmentView.setClickListener(new CoinRechargeSheetView.ClickListener() {
-                @Override
-                public void toGooglePlayView(GoodsEntity goodsEntity) {
-                    Intent intent = new Intent(mActivity, RechargeActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("Goods_info", goodsEntity);
-                    intent.putExtras(bundle);
-                    toGooglePlayIntent.launch(intent);
-                }
-            });
-            coinRechargeFragmentView.show();
+            Intent intent = new Intent(mActivity, DiamondRechargeActivity.class);
+            startActivity(intent);
         }else if(R.id.btn_game_coin_topup == v.getId()){
             CoinExchargeItegralPayDialog coinRechargeSheetView = new CoinExchargeItegralPayDialog(getContext(),mActivity);
             coinRechargeSheetView.show();

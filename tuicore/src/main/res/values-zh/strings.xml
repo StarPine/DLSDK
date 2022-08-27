@@ -26,5 +26,7 @@
     <string name="custom_gift_right_title">收到禮物</string>
     <string name="custom_gift_left_title">禮物</string>
     <string name="text_message2">回復對方即可得到收入喔！</string>
+    <string name="audio_in_call">語音通話中，無法使用此功能</string>
+
 
 </resources>

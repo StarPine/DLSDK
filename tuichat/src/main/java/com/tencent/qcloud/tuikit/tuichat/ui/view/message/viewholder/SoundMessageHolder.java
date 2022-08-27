@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.tencent.qcloud.tuicore.Status;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
@@ -19,6 +20,8 @@ import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 import java.io.File;
+
+import me.goldze.mvvmhabit.utils.ToastUtils;
 
 public class SoundMessageHolder extends MessageContentHolder {
 
@@ -94,6 +97,10 @@ public class SoundMessageHolder extends MessageContentHolder {
         msgContentFrame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (Status.mIsShowFloatWindow){
+                    ToastUtils.showShort(R.string.audio_in_call);
+                    return;
+                }
                 if (AudioPlayer.getInstance().isPlaying()) {
                     AudioPlayer.getInstance().stopPlay();
                     // 同一语音消息，停止播放，不同语音消息，重新播放

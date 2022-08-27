@@ -470,7 +470,7 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
         this.mIsLoading = isLoading;
         notifyItemChanged(getItemCount() - 1);
         //滚动到顶部
-        mRecycleView.scrollToTop();
+        //mRecycleView.scrollToTop();
     }
 
     @Override

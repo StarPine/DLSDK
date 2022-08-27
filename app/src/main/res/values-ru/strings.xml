@@ -17,7 +17,7 @@
     <string name="playfun_tab_male_3">活躍</string>
     <string name="playfun_tab_message_1">Чат</string>
     <string name="playfun_tab_message_2">Система</string>
-    <string name="playfun_tab_message_3">Often contact</string>
+    <string name="playfun_tab_message_3">Contact</string>
     <string name="playfun_tab_wallet_1">Наличные</string>
     <string name="playfun_tab_wallet_2">Бриллианты</string>
     <string name="playfun_detail_link">Детали ></string>
@@ -887,7 +887,7 @@
     <string name="playfun_message_deatail_call_video">Видеозвонок</string>
 
     <string name="playfun_call_message_deatail_hint">Добро пожаловать в приватный чат 1 на 1</string>
-    <string name="playfun_call_message_deatail_time_msg">Время чата %02d:%02d</string>
+    <string name="playfun_call_message_deatail_time_msg">Время чата %02d:%02d:%02d</string>
     <string name="playfun_call_message_deatail_girl_txt">Получить доход от звонков: %s ₽</string>
     <string name="playfun_call_message_deatail_girl_txt1">отправлять</string>
     <string name="playfun_call_message_deatail_girl_txt2">вам</string>
@@ -1115,10 +1115,10 @@
 
     <string name="task_exchange_record_fragment_title2">Points exchange area</string>
     <string name="task_exchange_record_fragment_title">Exchange history</string>
-    <string name="task_exchange_record_fragment_title_help">Exchange instructions</string>
+    <string name="task_exchange_record_fragment_title_help">Illustration</string>
 
-    <string name="task_exchange_record_fragment_tab">My merchandise</string>
-    <string name="task_exchange_record_fragment_tab2">Pending shipment</string>
+    <string name="task_exchange_record_fragment_tab">Goods</string>
+    <string name="task_exchange_record_fragment_tab2">To be shipped</string>
     <string name="task_exchange_record_fragment_tab3">Shipped</string>
 
     <string name="task_exchange_record_fragment_ceckAll">Select all</string>

@@ -17,7 +17,7 @@
     <string name="playfun_tab_male_3">Active</string>
     <string name="playfun_tab_message_1">Chat</string>
     <string name="playfun_tab_message_2">System Messages</string>
-    <string name="playfun_tab_message_3">Often contact</string>
+    <string name="playfun_tab_message_3">Contact</string>
     <string name="playfun_tab_wallet_1">Cash</string>
     <string name="playfun_tab_wallet_2">Diamonds</string>
     <string name="playfun_detail_link">details ></string>
@@ -128,9 +128,9 @@
     <string name="playfun_fragment_certification_female_title">Real Person Verification</string>
     <string name="playfun_fragment_certification_content">100% bonus increasing for real person verified users.</string>
     <string name="playfun_fragment_certification_tip">You can not withdraw money without real person verification</string>
-    <string name="playfun_fragment_certification_female_poster">Post events for free</string>
+    <string name="playfun_fragment_certification_female_poster">Double income</string>
     <string name="playfun_fragment_certification_female_comment_man">Comment for free</string>
-    <string name="playfun_fragment_certification_female_chat_man">Chat for free</string>
+    <string name="playfun_fragment_certification_female_chat_man">Withdrawals</string>
     <string name="playfun_fragment_certification_female_sing_man">Sign up for men\'s events</string>
     <string name="playfun_fragment_certification_female_read_phone">Paid Photos</string>
     <string name="playfun_fragment_certification_female_charge_phone">Paid Album</string>
@@ -379,7 +379,7 @@
     <string name="playfun_mine_upload_first_pic">Upload my first photo</string>
     <string name="playfun_mine_upload_first_pic_sub">Upload photos to attract %s.</string>
     <string name="playfun_exit_app">Back again to exit the app</string>
-    <string name="playfun_pull_black_shield_both_sides">Block (both sides)</string>
+    <string name="playfun_pull_black_shield_both_sides">Block</string>
     <string name="playfun_remove_black_shield_both_sides">Unlock</string>
     <string name="playfun_no_information_cant_comment">Unable to send a impression before chat.</string>
     <string name="playfun_no_information_cant_comment_him">Can not evaluate before chatting further.</string>
@@ -526,7 +526,7 @@
     <string name="playfun_setting_new_password">Set new password</string>
     <string name="playfun_cancel_lock_design">Cancel the unlock pattern</string>
     <string name="playfun_you_have_signed_up">Signed up</string>
-    <string name="playfun_coin_balance">Diamond balance</string>
+    <string name="playfun_coin_balance">Diamonds</string>
     <string name="playfun_x_coin">%s</string>
     <string name="playfun_pay_success">Successfully paid</string>
     <string name="playfun_dialog_title_apply_withdraw">Withdraw</string>
@@ -836,7 +836,7 @@
     <string name="playfun_message_deatail_call_audio">Voice call</string>
     <string name="playfun_message_deatail_call_video">Video call</string>
     <string name="playfun_call_message_deatail_hint">Welcome to private 1v1 chat</string>
-    <string name="playfun_call_message_deatail_time_msg">Chat time %02d:%02d</string>
+    <string name="playfun_call_message_deatail_time_msg">Chat time %02d:%02d:%02d</string>
     <string name="playfun_call_message_deatail_girl_txt">Get chatting income %s</string>
     <string name="playfun_call_message_deatail_girl_txt1">send to</string>
     <string name="playfun_call_message_deatail_girl_txt2">you</string>
@@ -1123,10 +1123,10 @@
 
     <string name="task_exchange_record_fragment_title2">Points exchange area</string>
     <string name="task_exchange_record_fragment_title">Exchange history</string>
-    <string name="task_exchange_record_fragment_title_help">Exchange instructions</string>
+    <string name="task_exchange_record_fragment_title_help">Illustration</string>
 
-    <string name="task_exchange_record_fragment_tab">My merchandise</string>
-    <string name="task_exchange_record_fragment_tab2">Pending shipment</string>
+    <string name="task_exchange_record_fragment_tab">Goods</string>
+    <string name="task_exchange_record_fragment_tab2">To be shipped</string>
     <string name="task_exchange_record_fragment_tab3">Shipped</string>
 
     <string name="task_exchange_record_fragment_ceckAll">Select all</string>
@@ -1195,33 +1195,17 @@
     <string name="radio_daily_atendance_day_text">Successful check-in, +10 points</string>
 
 
-    <string name="playfun_contact_empty_text">暫無常聯繫，快去聊天吧</string>
-    <string name="playfun_contact_text1">設置常聯繫成功</string>
-    <string name="playfun_contact_text2">已取消常聯繫</string>
     <string name="playchat_choose_area_title">Region</string>
-    <string name="playfun_mine_title_btn_exclusive">專屬招呼</string>
-    <string name="playfun_mine_title_my_exclusive">我的專屬招呼</string>
-    <string name="playfun_my_exclusive_tips_content">1、搭訕語+甜美的聲音是完美的招呼組合\n2、一天可進行一次搭訕語、語音招呼的修改</string>
-    <string name="playfun_text_chat_up">搭訕語</string>
-    <string name="playfun_audio_chat_up">語音招呼</string>
-    <string name="playfun_text_chat_up_hint">好的搭訕語更能獲得回復</string>
+    <string name="playfun_contact_empty_text">There is no frequent contact, let\'s chat!</string>
+    <string name="playfun_contact_text1">Set up frequent contact success</string>
+    <string name="playfun_contact_text2">Frequent contact cancelled</string>
+    <string name="playfun_mine_title_btn_exclusive">Exclusive greeting</string>
+    <string name="playfun_mine_title_my_exclusive">Exclusive greeting</string>
+    <string name="playfun_my_exclusive_tips_content">1. Greeting text and sweet voice is a perfect greeting combination\n2. You can modify greeting words and voice greetings once a day</string>
+    <string name="playfun_text_chat_up">Greeting</string>
+    <string name="playfun_audio_chat_up">Voice greeting</string>
+    <string name="playfun_text_chat_up_hint">Good conversations are more likely to get a reply</string>
     <string name="playfun_text_accost_number_of_fonts">%s/40</string>
-    <string name="playfun_text_accost_tips">請輸入搭訕語</string>
-    <string name="playfun_text_accost_tips2">搭訕語含有不當內容，請重新設置</string>
-    <string name="playfun_text_accost_tips3">搭訕語設置成功</string>
-    <string name="playfun_audio_accost_tips2">搭訕語音设置成功</string>
-    <string name="playfun_audio_accost_long_click">長按錄音</string>
-    <string name="playfun_audio_accost_recording">錄製中</string>
-    <string name="playfun_audio_accost_tip">15秒內</string>
-    <string name="play_fun_deadline_is_up">期限至：\n%s</string>
-    <string name="play_fun_buy_now">立即購買</string>
-    <string name="play_fun_continue_to_now">繼續購買</string>
-    <string name="play_fun_vip_service_tips">自動訂閱，隨時取消。\n購買訂閱的費用將從您的iTunes/Google帳戶收取，並意味著您同意我們的用戶協議及隱私政策。可以隨時在設置中管理或取消自動訂閱。</string>
-    <string name="play_fun_nonactivated">未開通</string>
-    <string name="play_fun_reward">獎勵</string>
-    <string name="play_fun_reward_tips">明日登陸可得%s鑽石、 視訊卡*%s</string>
-    <string name="play_fun_reward_tips2">明日登陸可得%s鑽石</string>
-    <string name="play_fun_reward_tips3">明日登陸可得視訊卡*%s</string>
     <string name="playfun_coinpusher_hint_title">歡樂推幣機</string>
     <string name="playfun_coinpusher_text_30">您30s內沒有投幣，已自動退出</string>
     <string name="playfun_purchase_text">購買</string>
@@ -1233,5 +1217,43 @@
     <string name="playfun_coinpusher_text_4"><![CDATA[已有金幣<font color=\'#FF1579\' size=\'24\'>%s</font>]]></string>
 
     <string name="playfun_coinpusher_text_downtime">將在%ss後退出遊戲，請投幣續時</string>
+    <string name="playfun_text_accost_tips">Please enter</string>
+    <string name="playfun_text_accost_tips2">The greeting word contain inappropriate content, please reset</string>
+    <string name="playfun_text_accost_tips3">Greeting words set successfully</string>
+    <string name="playfun_audio_accost_tips2">Greeting voice set successfully</string>
+    <string name="playfun_audio_accost_long_click">Press to record</string>
+    <string name="playfun_audio_accost_recording">Recording</string>
+    <string name="playfun_audio_accost_tip">Within 15 seconds</string>
+    <string name="playfun_deadline_is_up">Deadline until:\n%s</string>
+    <string name="playfun_buy_now">Buy now</string>
+    <string name="playfun_continue_to_now">Continue to buy</string>
+    <string name="playfun_vip_service_tips">Automatic subscription, cancel anytime. \nPurchasing a subscription will be charged to your iTunes/Google account and signifies your agreement to our User Agreement and Privacy Policy. Automatic subscriptions can be managed or cancelled at any time in the settings.</string>
+    <string name="playfun_nonactivated">Nonactivated</string>
+    <string name="playfun_reward">award</string>
+    <string name="playfun_reward_tips">Log in tomorrow to get %s diamonds, video card*%s</string>
+    <string name="playfun_reward_tips2">Log in tomorrow to get %s diamonds</string>
+    <string name="playfun_reward_tips3">Log in tomorrow to get a video card*%s</string>
+    <string name="playfun_reward_tips4">Get chat props\nhelp you meet more interesting people</string>
+    <string name="playfun_reward_title">Sign up bonus</string>
+    <string name="playfun_mine_title_anchor_center">Anchor Center</string>
+    <string name="playfun_float_permission">please open "Display over other apps" permission</string>
+    <string name="playfun_audio_tips_text_one">Recording less than 1s</string>
+    <string name="playfun_reward_card_tips">Greeting card*</string>
+    <string name="playfun_reward_card_tips2">Chat card*</string>
+    <string name="playfun_diamond_detail_title">Details</string>
+    <string name="playfun_diamond_detail_item_flag">First charge</string>
+    <string name="playfun_diamond_detail_item_flag2">VIP</string>
+    <string name="playfun_diamond_my_diamond">Diamonds</string>
+    <string name="playfun_diamond_choose_a_plan">Select a Package</string>
+    <string name="playfun_retain_think_again">Think again</string>
+    <string name="playfun_recharge_retain_tip">There is a discount on stored value, are you sure to miss it?</string>
+    <string name="playfun_diamonds_recharge_title">Top up diamonds</string>
+    <string name="playfun_btn_now_buy">Top up now</string>
+    <string name="playfun_max_vaule">9999999+</string>
+    <string name="playfun_send_tips">send</string>
+    <string name="playfun_code_tips">Invitation code (optional)</string>
+    <string name="playfun_user_agreement_tips">User Agreement</string>
+    <string name="playfun_privacy_policy_tips">Privacy Policy</string>
+
 
 </resources>

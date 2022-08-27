@@ -47,7 +47,7 @@
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="12dp"
             android:background="@drawable/button_background_bug"
-            android:text="@string/play_fun_continue_to_now"
+            android:text="@string/playfun_continue_to_now"
             android:textColor="@color/yellow_dad" />
 
         <TextView

@@ -33,6 +33,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.tencent.qcloud.tuicore.Status;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
@@ -71,6 +72,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import me.goldze.mvvmhabit.utils.ToastUtils;
 
 /**
  * 聊天界面，底部发送图片、拍照、摄像、文件面板
@@ -328,6 +331,12 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
 
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (Status.mIsShowFloatWindow){
+                    if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+                        ToastUtils.showShort(R.string.audio_in_call);
+                    }
+                    return false;
+                }
                 TUIChatLog.i(TAG, "mSendAudioButton onTouch action:" + motionEvent.getAction());
                 PermissionHelper.requestPermission(PermissionHelper.PERMISSION_MICROPHONE, new PermissionHelper.PermissionCallback() {
                     @Override
@@ -393,12 +402,15 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         mTextInput.setOnMentionInputListener(new TIMMentionEditText.OnMentionInputListener() {
             @Override
             public void onMentionCharacterInput(String tag) {
-                if ((tag.equals(TIMMentionEditText.TIM_MENTION_TAG) || tag.equals(TIMMentionEditText.TIM_MENTION_TAG_FULL))
-                        && TUIChatUtils.isGroupChat(mChatLayout.getChatInfo().getType())) {
-                    if (mStartActivityListener != null) {
-                        mStartActivityListener.onStartGroupMemberSelectActivity();
+                if(mChatLayout.getChatInfo()!=null){
+                    if ((tag.equals(TIMMentionEditText.TIM_MENTION_TAG) || tag.equals(TIMMentionEditText.TIM_MENTION_TAG_FULL))
+                            && TUIChatUtils.isGroupChat(mChatLayout.getChatInfo().getType())) {
+                        if (mStartActivityListener != null) {
+                            mStartActivityListener.onStartGroupMemberSelectActivity();
+                        }
                     }
                 }
+
             }
         });
 
@@ -825,7 +837,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                         mMessageHandler.sendMessage(ChatMessageBuilder.buildTextMessage(mTextInput.getText().toString().trim()));
                     } else {
                         if (isReplyModel && replyPreviewBean != null) {
-                            if (TUIChatUtils.isGroupChat(mChatLayout.getChatInfo().getType()) && !mTextInput.getMentionIdList().isEmpty()) {
+                            if (mChatLayout.getChatInfo()!=null && TUIChatUtils.isGroupChat(mChatLayout.getChatInfo().getType()) && !mTextInput.getMentionIdList().isEmpty()) {
                                 List<String> atUserList = new ArrayList<>(mTextInput.getMentionIdList());
                                 mMessageHandler.sendMessage(ChatMessageBuilder.buildAtReplyMessage(mTextInput.getText().toString().trim(), atUserList, replyPreviewBean));
                             } else {
@@ -834,7 +846,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                             }
                             exitReply();
                         } else {
-                            if (TUIChatUtils.isGroupChat(mChatLayout.getChatInfo().getType()) && !mTextInput.getMentionIdList().isEmpty()) {
+                            if (mChatLayout.getChatInfo()!=null && TUIChatUtils.isGroupChat(mChatLayout.getChatInfo().getType()) && !mTextInput.getMentionIdList().isEmpty()) {
                                 //发送时通过获取输入框匹配上@的昵称list，去从map中获取ID list。
                                 List<String> atUserList = new ArrayList<>(mTextInput.getMentionIdList());
                                 if (atUserList.isEmpty()) {

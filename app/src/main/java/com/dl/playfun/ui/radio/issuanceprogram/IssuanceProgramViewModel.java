@@ -36,6 +36,7 @@ import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
+import com.tencent.qcloud.tuicore.Status;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -101,7 +102,10 @@ public class IssuanceProgramViewModel extends BaseViewModel<AppRepository> {
     public BindingCommand toClipImageVideoView = new BindingCommand(new BindingAction() {
         @Override
         public void call() {
-            //start(ClipImageVideoFragmentCopy.class.getCanonicalName());
+            if (Status.mIsShowFloatWindow){
+                ToastUtils.showShort(R.string.audio_in_call);
+                return;
+            }
             uc.startVideoActivity.call();
         }
     });

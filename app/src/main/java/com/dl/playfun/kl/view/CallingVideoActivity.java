@@ -223,18 +223,19 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         }
     }
 
-    //跳转谷歌支付act
-    ActivityResultLauncher<Intent> toGooglePlayIntent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-        Log.e("进入支付页面回调","=========");
-        if (result.getData() != null) {
-            Intent intentData = result.getData();
-            GoodsEntity goodsEntity = (GoodsEntity) intentData.getSerializableExtra("goodsEntity");
-            if(goodsEntity!=null){
-                Log.e("支付成功","===============");
+    /**
+     * 去充值
+     */
+    private void toRecharge() {
+        CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(this);
+        coinRechargeFragmentView.setClickListener(new CoinRechargeSheetView.ClickListener() {
+            @Override
+            public void paySuccess(GoodsEntity goodsEntity) {
                 viewModel.getCallingStatus(roomId);
             }
-        }
-    });
+        });
+        coinRechargeFragmentView.show();
+    }
 
     @Override
     public void initData() {
@@ -404,12 +405,6 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         viewModel.uc.callAudioStart.observe(this, new Observer<Void>() {
             @Override
             public void onChanged(Void unused) {
-                //进入房间提示
-                String call_message_deatail_hint = StringUtils.getString(R.string.playfun_call_message_deatail_hint);
-                SpannableString stringBuilder = new SpannableString(call_message_deatail_hint);
-                ForegroundColorSpan blueSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint));
-                stringBuilder.setSpan(blueSpan, 0, call_message_deatail_hint.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                viewModel.putRcvItemMessage(stringBuilder, null, false);
                 //开始记时
                 TimeCallMessage();
                 setTimerForCallinfo();
@@ -436,18 +431,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
 //                        sheetView.dismiss();
 //                    }
 //                });
-                CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(CallingVideoActivity.this);
-                coinRechargeFragmentView.setClickListener(new CoinRechargeSheetView.ClickListener() {
-                    @Override
-                    public void toGooglePlayView(GoodsEntity goodsEntity) {
-                        Intent intent = new Intent(CallingVideoActivity.this, RechargeActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("Goods_info", goodsEntity);
-                        intent.putExtras(bundle);
-                        toGooglePlayIntent.launch(intent);
-                    }
-                });
-                coinRechargeFragmentView.show();
+                toRecharge();
             }
         });
         //发送礼物弹窗
@@ -901,7 +885,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
             public void run() {
                 mTimeCount++;
                 viewModel.TimeCount++;
-                viewModel.timeTextField.set(mContext.getString(R.string.playfun_call_message_deatail_time_msg, mTimeCount / 60, mTimeCount % 60));
+                viewModel.timeTextField.set(mContext.getString(R.string.playfun_call_message_deatail_time_msg, mTimeCount/3600, mTimeCount / 60, mTimeCount % 60));
                 if (mTimeCount>=5){viewModel.tipSwitch.set(false);}
                 if (!viewModel.sayHiEntityHidden.get() && mTimeCount % 10 == 0) {
                     //没10秒更新一次破冰文案

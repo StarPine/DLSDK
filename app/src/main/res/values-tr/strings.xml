@@ -16,7 +16,7 @@
     <string name="playfun_tab_male_3">活躍</string>
     <string name="playfun_tab_message_1">Sohbet</string>
     <string name="playfun_tab_message_2">Resmî Mesaj</string>
-    <string name="playfun_tab_message_3">Often contact</string>
+    <string name="playfun_tab_message_3">Contact</string>
     <string name="playfun_tab_wallet_1">Nakit</string>
     <string name="playfun_tab_wallet_2">Elmas</string>
     <string name="playfun_detail_link">Ayrıntılar ></string>
@@ -837,7 +837,7 @@
     <string name="playfun_message_deatail_call_audio">Sesli arama</string>
     <string name="playfun_message_deatail_call_video">Görüntülü arama</string>
     <string name="playfun_call_message_deatail_hint">Özel 1v1 sohbete hoş geldiniz</string>
-    <string name="playfun_call_message_deatail_time_msg">Çağrı süresi %02d:%02d</string>
+    <string name="playfun_call_message_deatail_time_msg">Çağrı süresi %02d:%02d:%02d</string>
     <string name="playfun_call_message_deatail_girl_txt">%s arama geliri elde edildi</string>
     <string name="playfun_call_message_deatail_girl_txt1">gönder</string>
     <string name="playfun_call_message_deatail_girl_txt2">siz</string>
@@ -1057,10 +1057,10 @@
 
     <string name="task_exchange_record_fragment_title2">Points exchange area</string>
     <string name="task_exchange_record_fragment_title">Exchange history</string>
-    <string name="task_exchange_record_fragment_title_help">Exchange instructions</string>
+    <string name="task_exchange_record_fragment_title_help">Illustration</string>
 
-    <string name="task_exchange_record_fragment_tab">My merchandise</string>
-    <string name="task_exchange_record_fragment_tab2">Pending shipment</string>
+    <string name="task_exchange_record_fragment_tab">Goods</string>
+    <string name="task_exchange_record_fragment_tab2">To be shipped</string>
     <string name="task_exchange_record_fragment_tab3">Shipped</string>
 
     <string name="task_exchange_record_fragment_ceckAll">Select all</string>

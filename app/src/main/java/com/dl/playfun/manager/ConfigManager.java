@@ -132,7 +132,13 @@ public class ConfigManager {
      * @return
      */
     public boolean isMale() {
-        return getAppRepository().readUserData().getSex() == 1;
+        boolean isMale = false;
+        try {
+            isMale = getAppRepository().readUserData().getSex() == 1;
+        }catch(Exception ignored){
+
+        }
+        return isMale;
     }
 
     /**

@@ -20,9 +20,9 @@ import com.tencent.liteav.trtccalling.model.impl.base.TRTCLogger;
 import com.tencent.liteav.trtccalling.model.util.TUICallingConstants;
 import com.tencent.liteav.trtccalling.ui.base.BaseCallActivity;
 import com.tencent.liteav.trtccalling.ui.base.BaseTUICallView;
-import com.tencent.liteav.trtccalling.ui.base.Status;
 import com.tencent.liteav.trtccalling.ui.base.VideoLayoutFactory;
 import com.tencent.liteav.trtccalling.ui.videocall.videolayout.TRTCVideoLayout;
+import com.tencent.qcloud.tuicore.Status;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.rtmp.ui.TXCloudVideoView;
 

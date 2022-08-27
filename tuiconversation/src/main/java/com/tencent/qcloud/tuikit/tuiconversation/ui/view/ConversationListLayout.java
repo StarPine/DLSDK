@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
@@ -151,20 +152,22 @@ public class ConversationListLayout extends RecyclerView implements IConversatio
                 if (CustomConfigSetting.conversationAstrictCount > 0 && mAdapter.getItemCount() >= CustomConfigSetting.conversationAstrictCount) {
                     return;
                 }
+                boolean loadFlag = isFriend ? isFriendCompleted() : isLoadCompleted();
                 //上拉刷新
-                if (lastPosition == mAdapter.getItemCount() - 1 && !isLoadCompleted()) {
+                if (lastPosition == mAdapter.getItemCount() - 1 && !loadFlag) {
                     mAdapter.onLoadingStateChanged(true);
                     if (presenter != null) {
                         presenter.loadMoreConversation();
                     }
                 }
+
             }
         }
     }
 
     public void loadConversation(long nextSeq,boolean isFriend) {
         if (presenter != null) {
-            //this.isFriend = isFriend;
+            this.isFriend = isFriend;
             //presenter.loadConversation(nextSeq);
             //查询当前用户所有好友列表--附带查询所有会话列表数据
             presenter.getFriendshipList(nextSeq,isFriend);
@@ -187,6 +190,15 @@ public class ConversationListLayout extends RecyclerView implements IConversatio
         }
         return false;
     }
+
+    boolean isFriendCompleted(){
+        if (presenter != null) {
+            return presenter.isFriendLoadFinished();
+        }
+        return false;
+    }
+
+
 
     //彭石林新增。会话列表头像点击
     public interface OnItemAvatarClickListener{

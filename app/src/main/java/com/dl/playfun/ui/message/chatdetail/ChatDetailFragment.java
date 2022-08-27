@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,13 +15,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.lifecycle.Observer;
@@ -46,7 +44,6 @@ import com.dl.playfun.entity.ApiConfigManagerEntity;
 import com.dl.playfun.entity.CrystalDetailsConfigEntity;
 import com.dl.playfun.entity.EvaluateItemEntity;
 import com.dl.playfun.entity.GiftBagEntity;
-import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.entity.LocalMessageIMEntity;
 import com.dl.playfun.entity.MessageRuleEntity;
 import com.dl.playfun.entity.PhotoAlbumEntity;
@@ -65,8 +62,6 @@ import com.dl.playfun.ui.message.sendcoinredpackage.SendCoinRedPackageFragment;
 import com.dl.playfun.ui.mine.myphotoalbum.MyPhotoAlbumFragment;
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
 import com.dl.playfun.ui.mine.wallet.girl.TwDollarMoneyFragment;
-import com.dl.playfun.ui.mine.wallet.recharge.RechargeActivity;
-import com.dl.playfun.ui.mine.webview.WebViewFragment;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.ui.userdetail.report.ReportUserFragment;
 import com.dl.playfun.utils.ApiUitl;
@@ -78,7 +73,6 @@ import com.dl.playfun.utils.PictureSelectorUtil;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.utils.Utils;
 import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
-import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
 import com.dl.playfun.widget.dialog.MMAlertDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.dl.playfun.widget.dialog.MessageDetailDialog;
@@ -99,7 +93,7 @@ import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
-import com.tencent.liteav.trtccalling.ui.base.Status;
+import com.tencent.qcloud.tuicore.Status;
 import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomImageMessageBean;
@@ -608,19 +602,11 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         PopupWindow mPop = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         //常联系
         TextView tvContact = view.findViewById(R.id.tv_contact);
+        ImageView imgContact = view.findViewById(R.id.img_contact);
         if(viewModel.isContactsEnabled.get()){
-            Drawable drawable = getResources().getDrawable(R.drawable.img_contact_checked);
-            if(drawable != null){
-                drawable.setBounds(0,0,dp2px(mActivity,24f),dp2px(getContext(),24f));
-                tvContact.setCompoundDrawables(drawable,null,null,null );
-            }
+            imgContact.setImageResource(R.drawable.img_contact_checked);
         }else{
-            Drawable drawable = getResources().getDrawable(R.drawable.img_contact_normal);
-            if(drawable != null){
-                drawable.setBounds(0,0,dp2px(mActivity,24f),dp2px(getContext(),24f));
-                tvContact.setCompoundDrawablesRelative(drawable,null,null,null );
-            }
-
+            imgContact.setImageResource(R.drawable.img_contact_normal);
         }
         tvContact.setOnClickListener(v->{
             String otherImUserId = mChatInfo ==null ? null : mChatInfo.getId();
@@ -629,7 +615,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         });
         TextView menuTrack = view.findViewById(R.id.tv_menu_track);
         menuTrack.setText(viewModel.menuTrack.get());
-        menuTrack.setOnClickListener(v -> {
+        view.findViewById(R.id.ll_menu_track).setOnClickListener(v -> {
             if (viewModel.isTrack.get()) {
                 viewModel.delLike(userId);
             } else {
@@ -639,7 +625,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         });
         TextView menuBlockade = view.findViewById(R.id.tv_menu_blockade);
         menuBlockade.setText(viewModel.menuBlockade.get());
-        menuBlockade.setOnClickListener(v -> {
+        view.findViewById(R.id.ll_menu_blockade).setOnClickListener(v -> {
 
             if (viewModel.inBlacklist.get()) {
                 viewModel.delBlackList(userId);
@@ -655,7 +641,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             }
             mPop.dismiss();
         });
-        view.findViewById(R.id.tv_menu_report).setOnClickListener(v -> {
+        view.findViewById(R.id.ll_menu_report).setOnClickListener(v -> {
             Bundle bundle = ReportUserFragment.getStartBundle("home", userId);
             ReportUserFragment reportUserFragment = new ReportUserFragment();
             reportUserFragment.setArguments(bundle);
@@ -1135,16 +1121,8 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     }
 
     //支付框样式选择
-    private void paySelectionboxChoose(boolean b) {
-        if (ConfigManager.getInstance().isMale()) {
-            if (ConfigManager.getInstance().isVip()) {
-                googleCoinValueBox(b);
-            } else {
-                dialogRechargeShow(b);
-            }
-        } else {
-            googleCoinValueBox(b);
-        }
+    private void paySelectionboxChoose(boolean isSendGift) {
+        showLoaclRecharge(isSendGift);
     }
 
     @Override
@@ -1152,6 +1130,10 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         MessageDetailDialog.CheckImgViewFile(mActivity, true, new MessageDetailDialog.AudioCallHintOnClickListener() {
             @Override
             public void check1OnClick() {
+                if (Status.mIsShowFloatWindow){
+                    me.goldze.mvvmhabit.utils.ToastUtils.showShort(R.string.audio_in_call);
+                    return;
+                }
                 //选择视频
                 onVideoActionClick();
             }
@@ -1250,6 +1232,10 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
 
     @Override
     public void onClickCallPlayUser() {//点击调用拨打通话
+        if (Status.mIsShowFloatWindow){
+            me.goldze.mvvmhabit.utils.ToastUtils.showShort(com.tencent.qcloud.tuikit.tuichat.R.string.audio_in_call);
+            return;
+        }
         if (viewModel.tagEntitys.get() != null) {
             if (viewModel.tagEntitys.get().getBlacklistStatus() == 1 || viewModel.tagEntitys.get().getBlacklistStatus() == 3) {
                 Toast.makeText(mActivity, R.string.playfun_chat_detail_pull_black_other, Toast.LENGTH_SHORT).show();
@@ -1351,7 +1337,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     }
 
     //弹出钻石充值
-    private void dialogRechargeShow(boolean isGiftSend) {
+    private void showWebRecharge(boolean isGiftSend) {
         if (!isGiftSend) {
             AppContext.instance().logEvent(AppsFlyerEvent.im_topup);
         }
@@ -1379,7 +1365,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                 public void moreRechargeDiamond(Dialog dialog) {
                     dialog.dismiss();
                     if(mActivity!=null && !mActivity.isFinishing()){
-                        mActivity.runOnUiThread(() -> googleCoinValueBox(false));
+                        mActivity.runOnUiThread(() -> showLoaclRecharge(false));
                     }
                 }
 
@@ -1388,40 +1374,18 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                 }
             }).noticeDialog().show();
         }else{
-            googleCoinValueBox(false);
+            showLoaclRecharge(false);
         }
     }
 
-    private void googleCoinValueBox(boolean isGiftSend) {
+    private void showLoaclRecharge(boolean isGiftSend) {
         if (!isGiftSend) {
             AppContext.instance().logEvent(AppsFlyerEvent.im_topup);
         }
         AppContext.instance().logEvent(AppsFlyerEvent.Top_up);
         CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(mActivity);
-        coinRechargeFragmentView.setClickListener(new CoinRechargeSheetView.ClickListener() {
-            @Override
-            public void toGooglePlayView(GoodsEntity goodsEntity) {
-                Intent intent = new Intent(mActivity, RechargeActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("Goods_info", goodsEntity);
-                intent.putExtras(bundle);
-                toGooglePlayIntent.launch(intent);
-            }
-        });
         coinRechargeFragmentView.show();
     }
-
-    //跳转谷歌支付act
-    ActivityResultLauncher<Intent> toGooglePlayIntent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-        Log.e("进入支付页面回调","=========");
-        if (result.getData() != null) {
-            Intent intentData = result.getData();
-            GoodsEntity goodsEntity = (GoodsEntity) intentData.getSerializableExtra("goodsEntity");
-            if(goodsEntity!=null){
-                Log.e("支付成功","===============");
-            }
-        }
-    });
 
     @Override
     public void sendOnClickCallbackOk(InputView.MessageHandler messageHandler, TUIMessageBean messageInfo) {

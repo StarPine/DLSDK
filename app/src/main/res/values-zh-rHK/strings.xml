@@ -128,9 +128,9 @@
     <string name="playfun_fragment_certification_female_title">真人認證</string>
     <string name="playfun_fragment_certification_content">真人認證後收入增加100%</string>
     <string name="playfun_fragment_certification_tip">提領需經過真人認證！</string>
-    <string name="playfun_fragment_certification_female_poster">免費發活動</string>
+    <string name="playfun_fragment_certification_female_poster">收入翻倍</string>
     <string name="playfun_fragment_certification_female_comment_man">留言男士活動</string>
-    <string name="playfun_fragment_certification_female_chat_man">私訊男士</string>
+    <string name="playfun_fragment_certification_female_chat_man">兌換資格</string>
     <string name="playfun_fragment_certification_female_sing_man">報名男士活動</string>
     <string name="playfun_fragment_certification_female_read_phone">紅包照片</string>
     <string name="playfun_fragment_certification_female_charge_phone">收費相冊</string>
@@ -834,7 +834,7 @@
     <string name="playfun_message_deatail_call_audio">語音通話</string>
     <string name="playfun_message_deatail_call_video">視訊通話</string>
     <string name="playfun_call_message_deatail_hint">歡迎進入私密1V1聊天</string>
-    <string name="playfun_call_message_deatail_time_msg">通話時長 %02d:%02d</string>
+    <string name="playfun_call_message_deatail_time_msg">通話時長 %02d:%02d:%02d</string>
     <string name="playfun_call_message_deatail_girl_txt">已獲得%s水晶</string>
     <string name="playfun_call_message_deatail_girl_txt1">送給</string>
     <string name="playfun_call_message_deatail_girl_txt2">妳</string>

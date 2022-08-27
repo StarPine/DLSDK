@@ -48,8 +48,8 @@ import java.util.List;
  */
 public class VipSubscribeFragment extends BaseToolbarFragment<FragmentVipSubscribeBinding, VipSubscribeViewModel> {
     public static final String TAG = "VipSubscribeFragment";
-    private final String USER_AGREEMENT = "用戶協議";
-    private final String PRIVACY_POLICY = "隱私政策";
+    private String USER_AGREEMENT = "用戶協議";
+    private String PRIVACY_POLICY = "隱私政策";
     private boolean isFinsh = false;
 
     public BillingClientLifecycle billingClientLifecycle;
@@ -195,6 +195,8 @@ public class VipSubscribeFragment extends BaseToolbarFragment<FragmentVipSubscri
     private void initServiceTips() {
         String content = (String) binding.tvVipServiceTip.getText();
         SpannableString spannableString = new SpannableString(content);
+        USER_AGREEMENT = getString(R.string.playfun_user_agreement_tips);
+        PRIVACY_POLICY = getString(R.string.playfun_privacy_policy_tips);
         setServiceTips(spannableString, binding.tvVipServiceTip, content, USER_AGREEMENT);
         setServiceTips(spannableString, binding.tvVipServiceTip, content, PRIVACY_POLICY);
     }
@@ -245,7 +247,7 @@ public class VipSubscribeFragment extends BaseToolbarFragment<FragmentVipSubscri
             TraceDialog.getInstance(mActivity)
                     .setCannelOnclick(dialog -> {
                         isFinsh = true;
-                        pop();
+                        mActivity.onBackPressed();
                         dialog.dismiss();
                     })
                     .vipRetainDialog(viewModel.vipPrivilegeList)

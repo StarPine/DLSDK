@@ -73,10 +73,10 @@ public class PermissionHelper {
         };
         if (!TextUtils.isEmpty(permission)) {
             PermissionRequester.permission(permission)
-                    .reason(reason)
-                    .reasonTitle(reasonTitle)
-                    .reasonIcon(permissionIcon)
-                    .deniedAlert(deniedAlert)
+//                    .reason(reason)
+//                    .reasonTitle(reasonTitle)
+//                    .reasonIcon(permissionIcon)
+//                    .deniedAlert(deniedAlert)
                     .callback(simpleCallback)
                     .request();
         }

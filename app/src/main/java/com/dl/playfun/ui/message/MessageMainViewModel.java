@@ -82,33 +82,49 @@ public class MessageMainViewModel extends BaseViewModel<AppRepository> {
     public void registerRxBus() {
         super.registerRxBus();
         mSubscription = RxBus.getDefault().toObservable(SystemMessageCountChangeEvent.class)
+                .compose(RxUtils.schedulersTransformer())
                 .subscribe(systemMessageCountChangeEvent -> {
-                    systemMessageCount.set(systemMessageCountChangeEvent.getCount());
-                    notifyMessageCountChange();
-                });
-        MessageCountTagSubscription = RxBus.getDefault().toObservable(MessageCountChangeTagEvent.class)
-                .subscribe(messageCountChangeTagEvent -> {
-                    if (messageCountChangeTagEvent.getTextCount() != null) {
-                        chatMessageCount.set(messageCountChangeTagEvent.getTextCount());
+                    SystemMessageCountChangeEvent systemMessageCountChangeEvent1 = (SystemMessageCountChangeEvent) systemMessageCountChangeEvent;
+                    if(systemMessageCountChangeEvent1!=null){
+                        systemMessageCount.set(systemMessageCountChangeEvent1.getCount());
                         notifyMessageCountChange();
                     }
                 });
-        mainTabEventReceive = RxBus.getDefault().toObservable(MainTabEvent.class).subscribe(event -> {
-            if (event.getTabName().equals("message")){
-                boolean flag = tabSelected.get();
-                if (flag) {
-                    tabSelected.set(false);
-                    tabSelectEvent.postValue(false);
-                }else{
-                    tabSelected.set(true);
-                    tabSelectEvent.postValue(true);
-                }
-            }
+        MessageCountTagSubscription = RxBus.getDefault().toObservable(MessageCountChangeTagEvent.class)
+                .compose(RxUtils.schedulersTransformer())
+                .subscribe(messageCountChangeTagEvent -> {
+                    MessageCountChangeTagEvent messageCountChangeTagEvent1 = (MessageCountChangeTagEvent)messageCountChangeTagEvent;
+                    if (messageCountChangeTagEvent1!=null && messageCountChangeTagEvent1.getTextCount() != null) {
+                        chatMessageCount.set(messageCountChangeTagEvent1.getTextCount());
+                        notifyMessageCountChange();
+                    }
+                });
+        mainTabEventReceive = RxBus.getDefault().toObservable(MainTabEvent.class)
+                .compose(RxUtils.schedulersTransformer())
+                .subscribe(event -> {
+                    MainTabEvent mainTabEvent = (MainTabEvent) event;
+                    if(mainTabEvent!=null){
+                        if (mainTabEvent.getTabName().equals("message")){
+                            boolean flag = tabSelected.get();
+                            if (flag) {
+                                tabSelected.set(false);
+                                tabSelectEvent.postValue(false);
+                            }else{
+                                tabSelected.set(true);
+                                tabSelectEvent.postValue(true);
+                            }
+                        }
+                    }
         });
-        MessageCountContactSubscription = RxBus.getDefault().toObservable(MessageCountChangeContactEvent.class).subscribe(event -> {
-            chatMessageContactCount.set(event.getTextContactCount());
-            notifyMessageCountChange();
-        });
+        MessageCountContactSubscription = RxBus.getDefault().toObservable(MessageCountChangeContactEvent.class)
+                .compose(RxUtils.schedulersTransformer())
+                .subscribe(event -> {
+                    MessageCountChangeContactEvent messageCountChangeContactEvent = (MessageCountChangeContactEvent) event;
+                    if(messageCountChangeContactEvent!=null){
+                        chatMessageContactCount.set(messageCountChangeContactEvent.getTextContactCount());
+                        notifyMessageCountChange();
+                    }
+                });
         RxSubscriptions.add(mSubscription);
         RxSubscriptions.add(MessageCountTagSubscription);
         RxSubscriptions.add(mainTabEventReceive);

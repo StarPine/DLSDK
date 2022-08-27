@@ -464,7 +464,6 @@ public class WebViewDialog extends BaseDialog {
         @JavascriptInterface
         public String getToken() {
             String token = Injection.provideDemoRepository().readLoginInfo().getToken();
-            Log.e("当前给H5token",token);
             return token;
         }
 

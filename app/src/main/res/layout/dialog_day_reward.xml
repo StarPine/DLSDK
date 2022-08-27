@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="@string/play_fun_reward"
+            android:text="@string/playfun_reward"
             android:textAlignment="center"
             android:textColor="@color/balck_35e"
             android:textSize="17sp"
@@ -75,7 +75,7 @@
                 tools:visibility="visible">
 
                 <ImageView
-                    android:id="@+id/iv_doule_diamond"
+                    android:id="@+id/iv_doule_frist_reward"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:src="@drawable/icon_diamond" />
@@ -101,7 +101,7 @@
                 tools:visibility="visible">
 
                 <ImageView
-                    android:id="@+id/iv_doule_video_card"
+                    android:id="@+id/iv_doule_second_reward"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:src="@drawable/icon_video_card" />
@@ -129,7 +129,7 @@
             android:textAlignment="center"
             android:textColor="@color/gray_middle"
             android:textSize="13sp"
-            tools:text="@string/play_fun_reward_tips"
+            tools:text="@string/playfun_reward_tips"
             tools:visibility="visible" />
 
         <Button

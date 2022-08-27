@@ -96,7 +96,7 @@ public class OftenContactFragment extends BaseFragment<FragmentOftenContactBindi
         presenter.setLoadConversationCallback(new ConversationPresenter.LoadConversationCallback() {
             @Override
             public void totalUnreadCount(int count) {
-                RxBus.getDefault().post(new MessageCountChangeContactEvent(count));
+                binding.conversationLayoutContact.post(()-> RxBus.getDefault().post(new MessageCountChangeContactEvent(count)));
             }
 
             @Override

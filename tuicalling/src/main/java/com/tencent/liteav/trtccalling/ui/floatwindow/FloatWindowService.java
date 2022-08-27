@@ -13,11 +13,10 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.TranslateAnimation;
 
 import com.tencent.liteav.trtccalling.model.impl.base.TRTCLogger;
 import com.tencent.liteav.trtccalling.ui.base.BaseTUICallView;
-import com.tencent.liteav.trtccalling.ui.base.Status;
+import com.tencent.qcloud.tuicore.Status;
 
 /**
  * TUICalling组件悬浮窗服务
@@ -86,7 +85,6 @@ public class FloatWindowService extends Service {
      */
     private void initWindow() {
         mWindowManager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-        mWindowManager = ((Activity)mContext).getWindowManager();
         //屏幕宽度
         mScreenWidth = mWindowManager.getDefaultDisplay().getWidth();
         //设置好悬浮窗的参数
@@ -107,15 +105,17 @@ public class FloatWindowService extends Service {
         } else {
             mWindowLayoutParams.type = WindowManager.LayoutParams.TYPE_PHONE;
         }
-        mWindowLayoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-                | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
+        mWindowLayoutParams.flags |= WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
+        mWindowLayoutParams.flags |= WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+        mWindowLayoutParams.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
+        mWindowLayoutParams.flags |= WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+        mWindowLayoutParams.flags |= WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR;
 
         // 悬浮窗默认显示以左上角为起始坐标
         mWindowLayoutParams.gravity = Gravity.START | Gravity.TOP;
         //悬浮窗的开始位置，设置从左上角开始，所以屏幕左上角是x=0,y=0.
         mCallView.measure(0,0);
-        mWindowLayoutParams.x = mScreenWidth - mCallView.getMeasuredWidth();;
+        mWindowLayoutParams.x = mScreenWidth - mCallView.getMeasuredWidth();
         mWindowLayoutParams.y = mWindowManager.getDefaultDisplay().getHeight() / 2;
         //设置悬浮窗宽高
         mWindowLayoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
@@ -203,7 +203,9 @@ public class FloatWindowService extends Service {
             public void onAnimationUpdate(ValueAnimator animation) {
                 float animatedValue = (float) animation.getAnimatedValue();
                 mWindowLayoutParams.x = (int) animatedValue;
-                mWindowManager.updateViewLayout(mCallView, mWindowLayoutParams);
+                if (mCallView != null){
+                    mWindowManager.updateViewLayout(mCallView, mWindowLayoutParams);
+                }
             }
         });
         valueAnimator.start();

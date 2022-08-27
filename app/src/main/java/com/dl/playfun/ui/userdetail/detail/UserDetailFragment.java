@@ -63,6 +63,7 @@ import com.dl.playfun.widget.emptyview.EmptyState;
 import com.google.android.material.appbar.AppBarLayout;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.listener.OnResultCallbackListener;
+import com.tencent.qcloud.tuicore.Status;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 
 import java.util.ArrayList;
@@ -386,9 +387,13 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
 //                if(flagShow){
 //                    return;
 //                }
-            if ((viewModel.detailEntity.get().getMoreNumber() != null && viewModel.detailEntity.get().getMoreNumber() <= 0) || !viewModel.detailEntity.get().isBrowse()) {
-                getUserdetailUnlock();
+            if(viewModel.detailEntity.get()!=null){
+                Integer moreNumber = viewModel.detailEntity.get().getMoreNumber();
+                if ((moreNumber != null && moreNumber <= 0) || !viewModel.detailEntity.get().isBrowse()) {
+                    getUserdetailUnlock();
+                }
             }
+
 
             // }
         } else {
@@ -554,6 +559,10 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
         binding.audioStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (Status.mIsShowFloatWindow){
+                    ToastUtils.showShort(R.string.audio_in_call);
+                    return ;
+                }
                 binding.audioStart.setImageResource(R.drawable.mine_audio_stop_img);
                 if (AudioPlayer.getInstance().isPlaying()) {
                     AudioPlayer.getInstance().stopPlay();
@@ -644,18 +653,7 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
                         }
                         @Override
                         public void toGooglePlayView() {
-                            CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(mActivity);
-                            coinRechargeFragmentView.setClickListener(new CoinRechargeSheetView.ClickListener() {
-                                @Override
-                                public void toGooglePlayView(GoodsEntity goodsEntity) {
-                                    Intent intent = new Intent(mActivity, RechargeActivity.class);
-                                    Bundle bundle = new Bundle();
-                                    bundle.putSerializable("Goods_info", goodsEntity);
-                                    intent.putExtras(bundle);
-                                    toGooglePlayIntent.launch(intent);
-                                }
-                            });
-                            coinRechargeFragmentView.show();
+                            toRecharge();
                         }
 
                     }).build().show();
@@ -681,18 +679,7 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
 
                             @Override
                             public void toGooglePlayView() {
-                                CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(mActivity);
-                                coinRechargeFragmentView.setClickListener(new CoinRechargeSheetView.ClickListener() {
-                                    @Override
-                                    public void toGooglePlayView(GoodsEntity goodsEntity) {
-                                        Intent intent = new Intent(mActivity, RechargeActivity.class);
-                                        Bundle bundle = new Bundle();
-                                        bundle.putSerializable("Goods_info", goodsEntity);
-                                        intent.putExtras(bundle);
-                                        toGooglePlayIntent.launch(intent);
-                                    }
-                                });
-                                coinRechargeFragmentView.show();
+                                toRecharge();
                             }
                         }).build().show();
                     })
@@ -712,6 +699,14 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
                     .chooseType(MVDialog.TypeEnum.CENTER)
                     .show();
         }
+    }
+
+    /**
+     * 去充值
+     */
+    private void toRecharge() {
+        CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(mActivity);
+        coinRechargeFragmentView.show();
     }
 
     private boolean isVip() {
@@ -761,31 +756,9 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
     }
 
     private void googleCoinValueBox() {
-        CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(mActivity);
-        coinRechargeFragmentView.setClickListener(new CoinRechargeSheetView.ClickListener() {
-            @Override
-            public void toGooglePlayView(GoodsEntity goodsEntity) {
-                Intent intent = new Intent(mActivity, RechargeActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("Goods_info", goodsEntity);
-                intent.putExtras(bundle);
-                toGooglePlayIntent.launch(intent);
-            }
-        });
-        coinRechargeFragmentView.show();
+        toRecharge();
     }
 
-    //跳转谷歌支付act
-    ActivityResultLauncher<Intent> toGooglePlayIntent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-        Log.e("进入支付页面回调","=========");
-        if (result.getData() != null) {
-            Intent intentData = result.getData();
-            GoodsEntity goodsEntity = (GoodsEntity) intentData.getSerializableExtra("goodsEntity");
-            if(goodsEntity!=null){
-                Log.e("支付成功","===============");
-            }
-        }
-    });
     //弹出钻石充值
     private void dialogRechargeShow() {
         ApiConfigManagerEntity apiConfigManagerEntity = ConfigManager.getInstance().getAppRepository().readApiConfigManagerEntity();

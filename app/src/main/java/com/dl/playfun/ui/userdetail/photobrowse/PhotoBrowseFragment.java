@@ -130,18 +130,7 @@ public class PhotoBrowseFragment extends BaseFragment<FragmentPhotoBrowseBinding
             }
             @Override
             public void toGooglePlayView() {
-                CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(mActivity);
-                coinRechargeFragmentView.setClickListener(new CoinRechargeSheetView.ClickListener() {
-                    @Override
-                    public void toGooglePlayView(GoodsEntity goodsEntity) {
-                        Intent intent = new Intent(mActivity, RechargeActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("Goods_info", goodsEntity);
-                        intent.putExtras(bundle);
-                        toGooglePlayIntent.launch(intent);
-                    }
-                });
-                coinRechargeFragmentView.show();
+                toRecharge();
             }
         }).build().show();
     }
@@ -156,34 +145,18 @@ public class PhotoBrowseFragment extends BaseFragment<FragmentPhotoBrowseBinding
             }
             @Override
             public void toGooglePlayView() {
-                CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(mActivity);
-                coinRechargeFragmentView.setClickListener(new CoinRechargeSheetView.ClickListener() {
-                    @Override
-                    public void toGooglePlayView(GoodsEntity goodsEntity) {
-                        Intent intent = new Intent(mActivity, RechargeActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("Goods_info", goodsEntity);
-                        intent.putExtras(bundle);
-                        toGooglePlayIntent.launch(intent);
-                    }
-                });
-                coinRechargeFragmentView.show();
+                toRecharge();
             }
         }).build().show();
     }
 
-    //跳转谷歌支付act
-    ActivityResultLauncher<Intent> toGooglePlayIntent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-        Log.e("进入支付页面回调","=========");
-        if (result.getData() != null) {
-            Intent intentData = result.getData();
-            GoodsEntity goodsEntity = (GoodsEntity) intentData.getSerializableExtra("goodsEntity");
-            if(goodsEntity!=null){
-                ToastUtils.showShort(R.string.playfun_pay_success);
-                //viewModel.payRedPackageSuccess(photoId);
-            }
-        }
-    });
+    /**
+     * 去充值
+     */
+    private void toRecharge() {
+        CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(mActivity);
+        coinRechargeFragmentView.show();
+    }
 
     @Override
     public void onDestroy() {

@@ -21,6 +21,7 @@ import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseListDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
+import com.dl.playfun.entity.ApiConfigManagerEntity;
 import com.dl.playfun.entity.BonusGoodsEntity;
 import com.dl.playfun.entity.EjectEntity;
 import com.dl.playfun.entity.EjectSignInEntity;
@@ -144,9 +145,14 @@ public class TaskCenterViewModel extends BaseViewModel<AppRepository> {
         @Override
         public void call() {
             //Bundle bundle = WebDetailFragment.getStartBundle(AppConfig.TASK_TITLE_HELP);
-            Bundle bundle = new Bundle();
-            bundle.putString("link", "https://m.joy-mask.com/Rule_renwu2");
-            start(FukuokaViewFragment.class.getCanonicalName(), bundle);
+            ApiConfigManagerEntity apiConfigManager = model.readApiConfigManagerEntity();
+            if(apiConfigManager!=null){
+                if(!StringUtils.isEmpty(apiConfigManager.getPlayChatWebUrl())){
+                    Bundle bundle = new Bundle();
+                    bundle.putString("link", apiConfigManager.getPlayChatWebUrl()+"/Rule_renwu2");
+                    start(FukuokaViewFragment.class.getCanonicalName(), bundle);
+                }
+            }
         }
     });
     //跳转兑换记录页面

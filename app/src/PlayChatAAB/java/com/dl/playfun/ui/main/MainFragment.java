@@ -3,6 +3,9 @@ package com.dl.playfun.ui.main;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +22,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.aliyun.svideo.common.utils.ScreenUtils;
+import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -121,6 +125,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
     @Override
     public void initViewObservable() {
         super.initViewObservable();
+        viewModel.versionOnClickCommand();
         AppContext.instance().logEvent(AppsFlyerEvent.main_open);
 //        aliYunMqttClientLifecycle.broadcastGiftEvent.observe(this, new Observer<MqBroadcastGiftEntity>() {
 //            @Override
@@ -136,6 +141,10 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         //每日奖励
         viewModel.uc.showDayRewardDialog.observe(this,s -> {
             showRewardDialog();
+        });
+        //注册奖励
+        viewModel.uc.showRegisterRewardDialog.observe(this,s -> {
+            showRegisterRewardDialog();
         });
         //主页公屏礼物
         viewModel.uc.giftBanner.observe(this,mqttMessageEntity -> {
@@ -245,8 +254,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                     @Override
                     public void run() {
                         if (versionEntity.getVersion_code().intValue() <= AppConfig.VERSION_CODE.intValue()) {
-                            //ToastUtils.showShort(R.string.version_latest);
-                            viewModel.showAnnouncemnet();
+                            dialogCallback();
                         } else {
                             boolean isUpdate = versionEntity.getIs_update().intValue() == 1;
                             UpdateDialogView.getInstance(mActivity)
@@ -254,7 +262,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                                     .setConfirmOnlick(new UpdateDialogView.CancelOnclick() {
                                         @Override
                                         public void cancel() {
-                                            viewModel.showAnnouncemnet();
+                                            dialogCallback();
                                         }
                                     })
                                     .show();
@@ -346,6 +354,17 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         });
     }
 
+    private void dialogCallback() {
+        //注册奖励
+        if (AppConfig.isRegister) {
+            viewModel.getRegisterReward();
+        } else {
+            if (!viewModel.isShowedReward) {
+                viewModel.getDayReward();
+            }
+        }
+    }
+
 
     /**
      * 显示奖励dialog
@@ -356,7 +375,6 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         }
         TraceDialog.getInstance(mActivity)
                 .setConfirmOnlick(dialog -> {
-                    Injection.provideDemoRepository().putKeyValue(viewModel.dayRewardKey,"true");
                     dialog.dismiss();
                 })
                 .dayRewardDialog(true,
@@ -367,13 +385,36 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                 .show();
     }
 
+    private void showRegisterRewardDialog() {
+        if (viewModel.chatCardNum <= 0 && viewModel.assostCardNum <= 0){
+            return;
+        }
+        TraceDialog.getInstance(mActivity)
+                .setTitle(getString(R.string.playfun_reward_title))
+                .setFirstRewardId(R.drawable.icon_say_hi_card)
+                .setSecondRewardId(R.drawable.icon_chat_card)
+                .setConfirmOnlick(dialog -> {
+                    AppConfig.isRegister = false;
+                    dialog.dismiss();
+                })
+                .registerRewardDialog(true, viewModel.assostCardNum, viewModel.chatCardNum)
+                .show();
+    }
+
     private void setGiftViewBanner(MqBroadcastGiftEntity mqttMessageEntity, MqBroadcastGiftUserEntity leftUser, MqBroadcastGiftUserEntity rightUser, View streamerView) {
         ImageView leftUserImg = streamerView.findViewById(R.id.left_user_img);
         TextView leftUserName = streamerView.findViewById(R.id.left_user_name);
         leftUserName.setText(leftUser.getNickname());
         ImageView leftUserIcon = streamerView.findViewById(R.id.left_user_icon);
+        ImageView ivGift = streamerView.findViewById(R.id.iv_gift);
         broadcastGiftImg(leftUser,leftUserIcon);
-
+        Glide.with(getContext())
+                .asBitmap()
+                .load(StringUtil.getFullImageUrl(mqttMessageEntity.getImagePath()))
+                .error(R.drawable.radio_program_list_content)
+                .placeholder(R.drawable.radio_program_list_content)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(ivGift);
         Glide.with(getContext())
                 .asBitmap()
                 .load(StringUtil.getFullImageUrl(leftUser.getAvatar()))
@@ -397,13 +438,24 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(rightUserImg);
         rightUserImg.setOnClickListener(v -> {
+            if (rightUser.getImId().equals(ConfigManager.getInstance().getUserImID())){
+                return;
+            }
             Bundle bundle = UserDetailFragment.getStartBundle(rightUser.getId());
             viewModel.start(UserDetailFragment.class.getCanonicalName(), bundle);
         });
         broadcastGiftImg(rightUser,rightUserIcon);
 
         TextView giftTitle = streamerView.findViewById(R.id.gift_title);
-        giftTitle.setText(mqttMessageEntity.getGiftName());
+
+        String tips = mActivity.getString(R.string.playfun_send_tips);
+        String detail = tips + "[" + mqttMessageEntity.getGiftName() + "]";
+        SpannableString stringBuilder = new SpannableString(detail);
+        ForegroundColorSpan blueSpanWhite = new ForegroundColorSpan(ColorUtils.getColor(R.color.white));
+        ForegroundColorSpan blueSpanYellow = new ForegroundColorSpan(ColorUtils.getColor(R.color.yellow_617));
+        stringBuilder.setSpan(blueSpanWhite, 0, detail.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        stringBuilder.setSpan(blueSpanYellow, tips.length(), detail.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        giftTitle.setText(stringBuilder);
         ImageView giftNumImg = streamerView.findViewById(R.id.gift_count);
         int account = mqttMessageEntity.getAmount();
         setGiftNumImg(giftNumImg, account);
@@ -461,11 +513,10 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
 //        aliYunMqttClientLifecycle = ((AppContext)mActivity.getApplication()).getBillingClientLifecycle();
 //        getLifecycle().addObserver(aliYunMqttClientLifecycle);
         initView();
-        try{
-            ConversationCommonHolder.sexMale = ConfigManager.getInstance().isMale();
-        }catch (Exception exception){
-
-        }
+        boolean sexFlag = ConfigManager.getInstance().isMale();
+        ConversationCommonHolder.sexMale = sexFlag;
+        binding.navigationMineImgLottie.setAnimation(sexFlag ? R.raw.lottie_navigation_mine_male : R.raw.lottie_navigation_mine_fmale);
+        binding.navigationMineImg.setImageResource(sexFlag ? R.drawable.tab_mine_male_image : R.drawable.tab_mine_female_normal);
 
 
     }
@@ -480,7 +531,6 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        AppContext.isHomePage = !hidden;
         if (!hidden) {
             if (System.currentTimeMillis() - TOUCH_TIME > WAIT_TIME) {
                 //刷新任何列表数据
@@ -561,7 +611,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
 
             // 这里我们需要拿到mFragments的引用
             mFragments[FIRST] = firstFragment;
-            mFragments[SECOND] = findChildFragment(HomeMainFragment.class);
+            mFragments[SECOND] = findChildFragment(RadioFragment.class);
             mFragments[THIRD] = findChildFragment(TaskMainFragment.class);
             mFragments[FOURTH] = findChildFragment(MessageMainFragment.class);
             mFragments[FIFTH] = findChildFragment(MineFragment.class);
@@ -583,6 +633,8 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         mainViewPager.setUserInputEnabled(false);
         // 设置缓存数量 避免销毁重建
         mainViewPager.setOffscreenPageLimit(5);
+        //取消保存页面--未知BUG
+        mainViewPager.setSaveEnabled(false);
         mainViewPager.setAdapter(fragmentAdapter);
         mainViewPager.setCurrentItem(0, false);
 
@@ -630,7 +682,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                 binding.navigationMineImg.setVisibility(View.INVISIBLE);
                 binding.navigationMineImgLottie.setVisibility(View.VISIBLE);
                 binding.navigationMineImgLottie.playAnimation();
-                if (viewModel.uc.gender.get()) {
+                if (ConfigManager.getInstance().isMale()) {
                     binding.navigationMineImg.setImageResource(R.drawable.tab_mine_male_checked);
                 } else {
                     binding.navigationMineImg.setImageResource(R.drawable.tab_mine_female_checked);
@@ -657,7 +709,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         } else if (id == R.id.navigation_message_img) { //讯息页面
             binding.navigationMessageImg.setImageResource(R.drawable.tab_message_normal);
         } else if (id == R.id.navigation_mine_img) { //我的页面
-            if (viewModel.uc.gender.get()) {
+            if (ConfigManager.getInstance().isMale()) {
                 binding.navigationMineImg.setImageResource(R.drawable.tab_mine_male_image);
             } else {
                 binding.navigationMineImg.setImageResource(R.drawable.tab_mine_female_normal);

@@ -406,7 +406,7 @@ public class MessageTextHolder extends MessageContentHolder {
                                 if (properties.getChatContextFontSize() != 0) {
                                     msgBodyText.setTextSize(properties.getChatContextFontSize());
                                 }
-                                msgBodyText.setText(itemView.getContext().getString(R.string.custom_message_call_message_deatail_time_msg,totalSeconds/60,totalSeconds%60));
+                                msgBodyText.setText(itemView.getContext().getString(R.string.custom_message_call_message_deatail_time_msg,totalSeconds/3600, totalSeconds/60,totalSeconds%60));
                             }else {
                                 itemView.findViewById(R.id.custom_sufficient_view_tip).setVisibility(View.GONE);
                                 msgContentFrame.setVisibility(View.GONE);

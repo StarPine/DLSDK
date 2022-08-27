@@ -43,6 +43,7 @@ import com.dl.playfun.entity.CommentMessageEntity;
 import com.dl.playfun.entity.ConfigItemEntity;
 import com.dl.playfun.entity.CreateOrderEntity;
 import com.dl.playfun.entity.DayRewardInfoEntity;
+import com.dl.playfun.entity.DiamondInfoEntity;
 import com.dl.playfun.entity.EjectEntity;
 import com.dl.playfun.entity.EjectSignInEntity;
 import com.dl.playfun.entity.EvaluateEntity;
@@ -755,7 +756,7 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
-    public Observable<BaseDataResponse<List<GoodsEntity>>> goods() {
+    public Observable<BaseDataResponse<DiamondInfoEntity>> goods() {
         return apiService.goods("recharge");
     }
 
@@ -1367,5 +1368,10 @@ public class HttpDataSourceImpl implements HttpDataSource {
     @Override
     public Observable<BaseDataResponse<DayRewardInfoEntity>> getDayReward() {
         return apiService.getDayReward();
+    }
+
+    @Override
+    public Observable<BaseDataResponse<DayRewardInfoEntity>> getRegisterReward() {
+        return apiService.getRegisterReward();
     }
 }

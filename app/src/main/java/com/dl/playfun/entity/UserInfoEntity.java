@@ -77,6 +77,28 @@ public class UserInfoEntity extends BaseObservable {
     //是否开启等级权益 0否 1是
     @SerializedName("is_level")
     private Integer isLevel;
+    //是否开放公会主播入口 0否 1是
+    @SerializedName("anchor")
+    private int anchor;
+    //是否开放专属招呼入口 0否 1是
+    @SerializedName("isAnchor")
+    private int isAnchor;
+
+    public int getAnchor() {
+        return anchor;
+    }
+
+    public void setAnchor(int anchor) {
+        this.anchor = anchor;
+    }
+
+    public int getIsAnchor() {
+        return isAnchor;
+    }
+
+    public void setIsAnchor(int isAnchor) {
+        this.isAnchor = isAnchor;
+    }
 
     public Integer getIsLevel() {
         return isLevel;

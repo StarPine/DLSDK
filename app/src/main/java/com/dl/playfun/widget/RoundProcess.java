@@ -198,6 +198,9 @@ public class RoundProcess extends View {
         // 第二步：绘制文字
         String text = String.valueOf((int) progress);
         Rect bounds = new Rect();
+        if(mTextPaint == null){
+            setupTextPaint();
+        }
         mTextPaint.getTextBounds(text, 0, text.length(), bounds);
         canvas.drawText(text, mWidth / 2 - bounds.width() / 2, mHeight / 2 + bounds.height() / 2, mTextPaint);
 

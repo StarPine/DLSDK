@@ -18,12 +18,11 @@ import com.tencent.liteav.trtccalling.model.impl.base.TRTCLogger;
 import com.tencent.liteav.trtccalling.model.util.TUICallingConstants;
 import com.tencent.liteav.trtccalling.ui.audiocall.TUICallAudioView;
 import com.tencent.liteav.trtccalling.ui.audiocall.TUIGroupCallAudioView;
-import com.tencent.liteav.trtccalling.ui.base.BaseCallActivity;
 import com.tencent.liteav.trtccalling.ui.base.BaseTUICallView;
-import com.tencent.liteav.trtccalling.ui.base.Status;
 import com.tencent.liteav.trtccalling.ui.base.VideoLayoutFactory;
 import com.tencent.liteav.trtccalling.ui.videocall.TUICallVideoView;
 import com.tencent.liteav.trtccalling.ui.videocall.TUIGroupCallVideoView;
+import com.tencent.qcloud.tuicore.Status;
 import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
 import com.tencent.trtc.TRTCCloudDef;
 

@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.dl.playfun.manager.LocaleManager;
 import com.dl.playfun.utils.ApiUitl;
 
+import java.util.Locale;
+
 import me.yokeyword.fragmentation.ExtraTransaction;
 import me.yokeyword.fragmentation.ISupportActivity;
 import me.yokeyword.fragmentation.ISupportFragment;

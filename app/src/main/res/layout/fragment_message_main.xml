@@ -75,6 +75,14 @@
                         android:textSize="11sp"
                         android:visibility="@{viewModel.chatMessageCount > 0 ? View.VISIBLE:View.INVISIBLE}"
                         tools:ignore="RelativeOverlap,SmallSp" />
+                    <View
+                        android:visibility="@{viewModel.tabSelected ? View.VISIBLE : View.GONE}"
+                        binding:drawable_color="@{@color/purple_text}"
+                        binding:drawable_cornersRadius="@{2}"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerInParent="true"
+                        android:layout_width="19dp"
+                        android:layout_height="3dp"/>
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -110,6 +118,14 @@
                         android:textColor="@color/white"
                         android:textSize="11sp"
                         android:visibility="@{viewModel.chatMessageContactCount > 0 ? View.VISIBLE:View.INVISIBLE}" />
+                    <View
+                        android:visibility="@{!viewModel.tabSelected ? View.VISIBLE : View.GONE}"
+                        binding:drawable_color="@{@color/purple_text}"
+                        binding:drawable_cornersRadius="@{2}"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerInParent="true"
+                        android:layout_width="19dp"
+                        android:layout_height="3dp"/>
                 </RelativeLayout>
 
                 <androidx.appcompat.widget.AppCompatImageView

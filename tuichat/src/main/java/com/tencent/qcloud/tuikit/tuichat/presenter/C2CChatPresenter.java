@@ -55,6 +55,9 @@ public class C2CChatPresenter extends ChatPresenter {
 
             @Override
             public void onRecvNewMessage(TUIMessageBean message) {
+                if(message==null || message.getUserId()==null){
+                    return;
+                }
                 if (chatInfo == null || !TextUtils.equals(message.getUserId(), chatInfo.getId())) {
                     TUIChatLog.i(TAG, "receive a new message , not belong to current chat.");
                 } else {
@@ -72,6 +75,9 @@ public class C2CChatPresenter extends ChatPresenter {
 
             @Override
             public void onRecvMessageModified(TUIMessageBean messageBean) {
+                if(messageBean==null || messageBean.getUserId()==null){
+                    return;
+                }
                 if (chatInfo == null || !TextUtils.equals(messageBean.getUserId(), chatInfo.getId())) {
                     return;
                 }
@@ -130,7 +136,7 @@ public class C2CChatPresenter extends ChatPresenter {
 
                     //新增新版相册数据
                     if (itemCount < 20 && photoBean != null){
-                        data.add(itemCount,photoBean);
+                        data.add(data.size(),photoBean);
                     }
                     TUIChatUtils.callbackOnSuccess(callback, data);
                     onMessageLoadCompleted(data, type);

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
 
+import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
@@ -21,6 +22,7 @@ import me.goldze.mvvmhabit.binding.command.BindingAction;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.RxUtils;
+import me.goldze.mvvmhabit.utils.StringUtils;
 
 /**
  * @author wulei
@@ -67,7 +69,7 @@ public class WalletViewModel extends BaseViewModel<AppRepository> {
         //没有进行真人认证
         try {
             Bundle bundle = new Bundle();
-            bundle.putString("link", AppConfig.WEB_BASE_URL + "reflect");
+            bundle.putString("link", model.readApiConfigManagerEntity().getPlayFunWebUrl() + "/reflect");
             start(WebViewFragment.class.getCanonicalName(), bundle);
         } catch (Exception e) {
             e.printStackTrace();
@@ -86,7 +88,12 @@ public class WalletViewModel extends BaseViewModel<AppRepository> {
                     public void onSuccess(BaseDataResponse<GameCoinWalletEntity> coinWalletEntityBaseDataResponse) {
                         GameCoinWalletEntity gameCoinWalletEntity = coinWalletEntityBaseDataResponse.getData();
                         if(gameCoinWalletEntity!=null){
-                            totalCoin.set(String.valueOf(gameCoinWalletEntity.getTotalCoins()));
+                            int totalCoins = gameCoinWalletEntity.getTotalCoins();
+                            if (totalCoins > 9999999){
+                                totalCoin.set(StringUtils.getString(R.string.playfun_max_vaule));
+                            }else {
+                                totalCoin.set(String.valueOf(totalCoins));
+                            }
                             totalProfit.set(String.format("%.2f", gameCoinWalletEntity.getTotalProfit()));
                             coinName.set(gameCoinWalletEntity.getCurrencyName());
                             totalGameCoin.set(String.valueOf(gameCoinWalletEntity.getTotalAppCoins()));

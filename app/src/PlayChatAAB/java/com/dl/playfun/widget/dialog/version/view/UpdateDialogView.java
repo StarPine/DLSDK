@@ -122,8 +122,6 @@ public class UpdateDialogView {
             @Override
             public void onClick(View view) {
                 hide();
-                if (cancelOnclick != null)
-                    cancelOnclick.cancel();
             }
         });
         if (isUpdate) {
@@ -174,6 +172,10 @@ public class UpdateDialogView {
                 new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
         dialog.setFeatureDrawableAlpha(Window.FEATURE_OPTIONS_PANEL, 0);
+        dialog.setOnDismissListener(dialog1 -> {
+            if (cancelOnclick != null)
+                cancelOnclick.cancel();
+        });
 
         return INSTANCE;
     }

@@ -15,6 +15,7 @@ import com.dl.playfun.entity.AdUserItemEntity;
 import com.dl.playfun.ui.radio.radiohome.RadioViewModel;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.utils.StringUtil;
+import com.tencent.qcloud.tuicore.Status;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 
 import java.util.Objects;
@@ -22,6 +23,7 @@ import java.util.Objects;
 import me.goldze.mvvmhabit.base.MultiItemViewModel;
 import me.goldze.mvvmhabit.binding.command.BindingAction;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
+import me.goldze.mvvmhabit.utils.ToastUtils;
 import me.goldze.mvvmhabit.utils.Utils;
 
 /**
@@ -52,6 +54,10 @@ public class RadioItemBannerVideoViewModel extends MultiItemViewModel<RadioViewM
 
     //播放语音
     public BindingCommand  audioPlayClickCommand = new BindingCommand(() -> {
+        if (Status.mIsShowFloatWindow){
+            ToastUtils.showShort(com.tencent.qcloud.tuikit.tuichat.R.string.audio_in_call);
+            return;
+        }
         if (AudioPlayer.getInstance().isPlaying()) {
             AudioPlayer.getInstance().stopPlay();
             isPlaying.set(false);
@@ -69,7 +75,14 @@ public class RadioItemBannerVideoViewModel extends MultiItemViewModel<RadioViewM
     });
 
     //拨打视频
-    public BindingCommand callVideoClickCommand = new BindingCommand(() -> viewModel.itemClickCallVideo(adUserItemEntity.get()));
+    public BindingCommand callVideoClickCommand = new BindingCommand(() ->
+    {
+        if (Status.mIsShowFloatWindow){
+            ToastUtils.showShort(com.tencent.qcloud.tuikit.tuichat.R.string.audio_in_call);
+            return;
+        }
+        viewModel.itemClickCallVideo(adUserItemEntity.get());
+    });
 
     public Integer getSoundShow() {
         if (adUserItemEntity.get() != null && StringUtils.isEmpty(adUserItemEntity.get().getSound())) {

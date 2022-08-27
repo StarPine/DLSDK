@@ -128,7 +128,6 @@ public class ConversationPresenter {
              */
             @Override
             public void onFriendListAdded(List<V2TIMFriendInfo> v2TIMFriendInfos) {
-                Log.e("当前注册添加好友通知",v2TIMFriendInfos.size()+"=================="+v2TIMFriendInfos);
                 if(!v2TIMFriendInfos.isEmpty()){
                     final List<String> urlList = new ArrayList<>();
                     for (V2TIMFriendInfo v2TIMFriendInfo : v2TIMFriendInfos){
@@ -150,7 +149,6 @@ public class ConversationPresenter {
              */
             @Override
             public void onFriendListDeleted(List<String> userList) {
-                Log.e("当前注册删除好友通知","=================="+userList);
                 if(!userList.isEmpty()){
                     List<String> removeInfoList = new ArrayList<>();
                     for (String infoData : userList){
@@ -237,10 +235,8 @@ public class ConversationPresenter {
 
             @Override
             public void onConversationChanged(List<ConversationInfo> conversationList) {
-                Log.e(TAG,isFriendConversation+"当前会话更新："+conversationList.size()+"==========="+conversationList.toString());
                 //部分会话更新
                 isFriendConversationList(conversationList);
-                Log.e(TAG,isFriendConversation+"当前会话更新2："+conversationList.size()+"==========="+conversationList.toString());
                 ConversationPresenter.this.onConversationChanged(conversationList);
             }
 
@@ -264,7 +260,6 @@ public class ConversationPresenter {
 
     //移除好友列表的会话
     public void deleteConversationListEvent(List<String> conversationIdList) {
-        Log.e(TAG,isFriendConversation+"=====进入移除好友列表通知："+conversationIdList.size());
         if(isFriendConversation){
             ConversationPresenter.this.deleteConversationListChange(conversationIdList,friendshipAdapter,loadedFriendshipInfoList);
         }else{
@@ -274,7 +269,6 @@ public class ConversationPresenter {
     }
     //新的好友添加通知
     public void newConversationListEvent(List<String> conversationIdList) {
-        Log.e(TAG,isFriendConversation+"=====进入新的好友添加通知："+conversationIdList.size());
         //如果不是再好友列表。那么原有会话列表应该执行删除
         if(!isFriendConversation){
             ConversationPresenter.this.deleteConversationListChange(conversationIdList,adapter,loadedConversationInfoList);
@@ -359,6 +353,9 @@ public class ConversationPresenter {
     * @Date 2022/8/13
     */
     public void isFriendConversationList(List<ConversationInfo> conversationList){
+        if(conversationList==null){
+            return;
+        }
         Iterator<ConversationInfo> iterator = conversationList.iterator();
         //去重后的数据 如果已经是好友关系了。那么讲不会存在会话列表里面
         while(iterator.hasNext()){
@@ -407,11 +404,7 @@ public class ConversationPresenter {
                 if(loadConversationCallback!=null && nextSeq==0){
                     loadConversationCallback.isConversationEmpty(true);
                 }
-                if(isFriendConversation){
-                    adapterLoadingStateChanged(friendshipAdapter);
-                }else {
-                    adapterLoadingStateChanged(adapter);
-                }
+                adapterLoadingStateChanged(adapter);
             }
         });
     }
@@ -429,6 +422,7 @@ public class ConversationPresenter {
             provider.loadMoreConversation(GET_CONVERSATION_COUNT, new IUIKitCallback<List<ConversationInfo>>() {
                 @Override
                 public void onSuccess(List<ConversationInfo> data) {
+                    isFriendConversationList(data);
                     onLoadConversationCompleted(data);
                 }
 
@@ -442,7 +436,7 @@ public class ConversationPresenter {
     //分页拉取好友会话列表数据
     public void loadMoreFriendConversation(){
         //当前页码==最大页码的时候
-        if (friendCurrentPaging >= friendMaxPaging){
+        if (friendCurrentPaging > friendMaxPaging){
             adapterLoadingStateChanged(friendshipAdapter);
             return;
         }
@@ -474,15 +468,14 @@ public class ConversationPresenter {
 
             @Override
             public void onError(int errCode, String errMsg, List<ConversationInfo> data) {
+                adapterLoadingStateChanged(friendshipAdapter);
             }
         });
     }
 
     private void onLoadConversationCompleted(List<ConversationInfo> conversationInfoList) {
         onNewConversation(conversationInfoList);
-        if(isFriendConversation){
-            adapterLoadingStateChanged(friendshipAdapter);
-        }else {
+        if(!isFriendConversation){
             adapterLoadingStateChanged(adapter);
         }
         provider.getTotalUnreadMessageCount(new IUIKitCallback<Long>() {
@@ -501,6 +494,10 @@ public class ConversationPresenter {
 
     public boolean isLoadFinished() {
         return provider.isLoadFinished();
+    }
+
+    public boolean isFriendLoadFinished() {
+        return (friendCurrentPaging > friendMaxPaging);
     }
 
     /**
@@ -825,7 +822,7 @@ public class ConversationPresenter {
             @Override
             public void onError(int code, String desc){
                 //错误码 code 和错误描述 desc，可用于定位请求失败原因
-                Log.e("获取用户信息失败", "getUsersProfile failed: " + code + " desc");
+                Log.e(TAG, "getUsersProfile failed: " + code + " desc");
                 ToastUtil.toastLongMessage(code + " " + desc);
             }
         });
@@ -955,9 +952,7 @@ public class ConversationPresenter {
     * @Date 2022/8/11
     */
     public void getFriendshipList(long loadSize,final boolean isFriend){
-        Log.e("当前是否是好友列表查询",isFriendConversation+"======================="+isFriend);
         synchronized (ConversationPresenter.class){
-            Log.e("进入同步锁","======================="+isFriend);
             //说明好友列表还没有数据
             if(isFriend){
                 if(loadedFriendshipInfoList.size() > 1){
@@ -967,7 +962,6 @@ public class ConversationPresenter {
                     provider.getFriendShipList(new IUIKitCallback<List<String>>() {
                         @Override
                         public void onSuccess(List<String> userIdData) {
-                            Log.e("成功查询好友数量列表",isFriend+"============"+userIdData.size()+"==============="+String.valueOf(userIdData));
                             if(!userIdData.isEmpty()){
                                 loadedFriendshipInfoIdList.addAll(userIdData);
                                 int dataSize = userIdData.size();
@@ -1017,7 +1011,6 @@ public class ConversationPresenter {
 
                         @Override
                         public void onError(int errCode, String errMsg, List<String> data) {
-                            Log.e(TAG,false+"查询好友列表异常："+errCode+"============"+errMsg);
                             if(loadConversationCallback!=null){
                                 loadConversationCallback.isConversationEmpty(true);
                             }
@@ -1028,7 +1021,6 @@ public class ConversationPresenter {
                 provider.getFriendShipList(new IUIKitCallback<List<String>>() {
                     @Override
                     public void onSuccess(List<String> userIdData) {
-                        Log.e(TAG,false+"查询好友列表成功："+userIdData.size()+"============");
                         if(!userIdData.isEmpty()){
                             loadedFriendshipInfoIdList.addAll(userIdData);
                         }
@@ -1037,13 +1029,11 @@ public class ConversationPresenter {
 
                     @Override
                     public void onError(int errCode, String errMsg, List<String> data) {
-                        Log.e(TAG,false+"查询好友列表异常："+errCode+"============"+errMsg);
                         loadConversation(loadSize);
                     }
                 });
             }
         }
-        Log.e("进入释放同步锁","======================="+isFriend);
     }
     /**
     * @Desc TODO(统计当前会话列表的未读数量)
