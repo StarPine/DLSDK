@@ -31,7 +31,9 @@
             app:riv_corner_radius="8dip"
             binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
             binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
-            binding:imageThumbPath="@{viewModel.itemEntity.user.avatar}" />
+            binding:imageThumbPath="@{viewModel.itemEntity.user.avatar}"
+            binding:resizeH="@{50}"
+            binding:resizeW="@{50}" />
 
         <TextView
             android:id="@+id/tv_name"
@@ -47,7 +49,7 @@
 
         <ImageView
             android:id="@+id/iv_is_real"
-            android:layout_width="14dp"
+            android:layout_width="31dp"
             android:layout_height="13dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="6dp"
@@ -58,7 +60,7 @@
 
         <ImageView
             android:id="@+id/iv_goddess"
-            android:layout_width="14dp"
+            android:layout_width="31dp"
             android:layout_height="13dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="6dp"

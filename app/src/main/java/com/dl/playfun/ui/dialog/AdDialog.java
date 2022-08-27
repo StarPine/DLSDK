@@ -21,7 +21,7 @@ import com.dl.playfun.R;
  *
  * @author wulei
  */
-public class AdDialog extends BaseDialogFragment implements View.OnClickListener {
+public class AdDialog extends  BaseDialogFragment implements View.OnClickListener {
 
     private ImageView ivImage;
     private ImageView ivClose;

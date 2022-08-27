@@ -23,8 +23,31 @@ public class AllConfigEntity {
     private List<ConfigItemEntity> weight;
     private List<GameConfigEntity> game;
     private SystemConfigEntity config;
+    private CrystalDetailsConfigEntity crystalDetailsConfig;
     @SerializedName("default_home_page")
     private String defaultHomePage;
+
+    @SerializedName("is_tips")
+    private Integer isTips;
+    //动态配置http请求域名
+    @SerializedName("api_url")
+    private String apiUrl;
+
+    public CrystalDetailsConfigEntity getCrystalDetailsConfig() {
+        return crystalDetailsConfig;
+    }
+
+    public void setCrystalDetailsConfig(CrystalDetailsConfigEntity crystalDetailsConfig) {
+        this.crystalDetailsConfig = crystalDetailsConfig;
+    }
+
+    public String getApiUrl() {
+        return apiUrl;
+    }
+
+    public void setApiUrl(String apiUrl) {
+        this.apiUrl = apiUrl;
+    }
 
     //任务中心相关配置
     private SystemConfigTaskEntity task;
@@ -131,6 +154,14 @@ public class AllConfigEntity {
 
     public void setDefaultHomePage(String defaultHomePage) {
         this.defaultHomePage = defaultHomePage;
+    }
+
+    public Integer getIsTips() {
+        return isTips;
+    }
+
+    public void setIsTips(Integer isTips) {
+        this.isTips = isTips;
     }
 
     @Override

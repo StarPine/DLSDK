@@ -9,6 +9,7 @@ import com.dl.playfun.event.BadioEvent;
 import com.dl.playfun.viewmodel.BaseViewModel;
 
 import io.reactivex.disposables.Disposable;
+import me.goldze.mvvmhabit.binding.command.BindingCommand;
 import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
@@ -16,7 +17,6 @@ import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 public class BroadcastViewModel extends BaseViewModel<AppRepository> {
     UIChangeObservable uc = new UIChangeObservable();
     private Disposable badioEvent;
-
     public BroadcastViewModel(@NonNull Application application, AppRepository model) {
         super(application, model);
     }

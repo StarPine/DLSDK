@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="open_file_tips">選擇要打開此文件的應用</string>
+
+    <string name="date_year_short">年</string>
+    <string name="date_month_short">月</string>
+    <string name="date_day_short">天</string>
+    <string name="date_hour_short">時</string>
+    <string name="date_minute_short">分</string>
+    <string name="date_second_short">秒</string>
+    <string name="date_yesterday">昨天</string>
+
+    <string name="sure">確定</string>
+    <string name="cancel">取消</string>
+
+    <string name="group_apply_click_handle">點擊處理</string>
+
+    <string name="text_read_unlock">解鎖訊息>></string>
+    <string name="text_message">收到一則訊息</string>
+    <string name="im_evaluation_text1">你對Ta的印象是？</string>
+    <string name="im_evaluation_text2">更多…</string>
+    <string name="default_message_content">傳來了一則訊息！</string>
+    <string name="default_message_content2">收到一則系統訊息！</string>
+    <string name="default_message_content3">傳送了一則訊息！</string>
+
+    <string name="custom_gift_right_title">收到禮物</string>
+    <string name="custom_gift_left_title">禮物</string>
+    <string name="text_message2">回復對方即可得到收入喔！</string>
+    <string name="TUIKitErrorEnableUserStatusOnConsole">您未开启用户状态功能，请先登录控制台开启</string>
+
+</resources>

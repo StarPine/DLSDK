@@ -22,6 +22,8 @@ public class FastClickUtil {
      * activity两次点击间隔不能少于800ms
      */
     private static final int MIN_DELAY_TIME_ACTIVITY = 800;
+    //自定义点击间隔
+    private static final int MIN_DELAY_TIME_FUN = 2000;
     private static long sLastClickTime;
     private static String sLastActivitySimpleName;
 
@@ -51,6 +53,28 @@ public class FastClickUtil {
             //如果两次的activity不是同一个，不是快速点击
             isFastClick = false;
             sLastActivitySimpleName = activitySimpleName;
+        }
+        return isFastClick;
+    }
+
+    /**
+     * fix连续执行多个方法
+     * 1.设置android:launchMode="singleTop"在这个场景下并不管用
+     * 2.部分手机可能因为activity的阻塞耗时不同会导致计算的间隔超出500ms，这里定位800毫秒能处理绝大部分的手机和情况
+     * 3.通过记录activitySimpleName，避免出现用户熟练连续进入多个页面的时候需要等待
+     *
+     * @param CallFunSimpleName Activity.class.getSimpleName()
+     * @return boolean
+     */
+    public static boolean isFastCallFun(@NonNull String CallFunSimpleName) {
+
+        long currentClickTime = System.currentTimeMillis();
+        boolean isFastClick = (currentClickTime - sLastClickTime) <= MIN_DELAY_TIME_FUN;
+        sLastClickTime = currentClickTime;
+        if (!CallFunSimpleName.equals(sLastActivitySimpleName)) {
+            //如果两次的activity不是同一个，不是快速点击
+            isFastClick = false;
+            sLastActivitySimpleName = CallFunSimpleName;
         }
         return isFastClick;
     }

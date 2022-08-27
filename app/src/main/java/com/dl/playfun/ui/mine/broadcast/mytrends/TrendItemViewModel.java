@@ -1,5 +1,9 @@
 package com.dl.playfun.ui.mine.broadcast.mytrends;
 
+import static com.dl.playfun.ui.mine.broadcast.mytrends.HeadItemViewModel.Type_New;
+import static com.dl.playfun.ui.radio.radiohome.RadioViewModel.RadioRecycleType_New;
+
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 
@@ -8,6 +12,8 @@ import androidx.databinding.ObservableArrayList;
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableList;
 
+import com.dl.playfun.BR;
+import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.entity.BaseUserBeanEntity;
 import com.dl.playfun.entity.BroadcastBeanEntity;
@@ -18,16 +24,14 @@ import com.dl.playfun.entity.NewsEntity;
 import com.dl.playfun.event.ZoomInPictureEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.mine.broadcast.myall.MyAllBroadcastViewModel;
-import com.dl.playfun.utils.ExceptionReportUtils;
-import com.dl.playfun.utils.ListUtils;
-import com.dl.playfun.viewmodel.BaseViewModel;
-import com.dl.playfun.BR;
-import com.dl.playfun.R;
 import com.dl.playfun.ui.mine.broadcast.mytrends.trenddetail.TrendDetailFragment;
 import com.dl.playfun.ui.mine.broadcast.mytrends.trenddetail.TrendDetailViewModel;
 import com.dl.playfun.ui.radio.radiohome.RadioViewModel;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.ui.userdetail.userdynamic.UserDynamicViewModel;
+import com.dl.playfun.utils.ExceptionReportUtils;
+import com.dl.playfun.utils.ListUtils;
+import com.dl.playfun.viewmodel.BaseViewModel;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 
 import java.util.ArrayList;
@@ -42,9 +46,6 @@ import me.goldze.mvvmhabit.binding.command.BindingConsumer;
 import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.utils.ToastUtils;
 import me.tatarka.bindingcollectionadapter2.ItemBinding;
-
-import static com.dl.playfun.ui.mine.broadcast.mytrends.HeadItemViewModel.Type_New;
-import static com.dl.playfun.ui.radio.radiohome.RadioViewModel.RadioRecycleType_New;
 
 /**
  * @author wulei
@@ -180,7 +181,6 @@ public class TrendItemViewModel extends MultiItemViewModel<BaseViewModel> {
                 ToastUtils.showShort(R.string.playfun_comment_close);
                 return;
             }
-            int sex = AppContext.instance().appRepository.readUserData().getSex();
             if (viewModel instanceof MyTrendsViewModel) {
                 if (((MyTrendsViewModel) viewModel).userId == newsEntityObservableField.get().getUser().getId()) {
                     ToastUtils.showShort(R.string.playfun_self_ont_comment_broadcast);
@@ -261,6 +261,9 @@ public class TrendItemViewModel extends MultiItemViewModel<BaseViewModel> {
         newsEntity.setVideo(broadcastEntity.getNews().getVideo());
         newsEntity.setNewsType(broadcastEntity.getNews().getNewsType());
         newsEntity.setCommentNumber(broadcastEntity.getNews().getCommentNumber());
+        //自己IMid  对方IM id
+        newsEntity.setImUserId(broadcastEntity.getImUserId());
+        newsEntity.setImToUserId(broadcastEntity.getImToUserId());
         BaseUserBeanEntity userBean = new BaseUserBeanEntity();
         userBean.setAvatar(broadcastEntity.getAvatar());
         userBean.setId(broadcastEntity.getUserId());
@@ -372,7 +375,7 @@ public class TrendItemViewModel extends MultiItemViewModel<BaseViewModel> {
         newsEntityObservableField.get().setIsGive(1);
         newsEntityObservableField.get().getBroadcast().setGiveCount(newsEntityObservableField.get().getBroadcast().getGiveCount() + 1);
         HeadItemViewModel item = new HeadItemViewModel(viewModel, avatar, userId,
-                AppContext.instance().appRepository.readUserData().getSex(),
+                ConfigManager.getInstance().getAppRepository().readUserData().getSex(),
                 newsEntityObservableField.get().getGiveCount() - 14,
                 Type_New, newsEntityObservableField.get().getId()
         );
@@ -435,5 +438,16 @@ public class TrendItemViewModel extends MultiItemViewModel<BaseViewModel> {
         return position;
     }
 
+    public Drawable onLineColor(BroadcastEntity broadcastEntity){
+        if (broadcastEntity == null)return null;
+        if (broadcastEntity.getCallingStatus() == 0){
+            if (broadcastEntity.getIsOnline() == 1) {
+                return AppContext.instance().getResources().getDrawable(R.drawable.mine_radius3);
+            }
+        }else {
+            return AppContext.instance().getResources().getDrawable(R.drawable.mine_radius2);
+        }
+        return AppContext.instance().getResources().getDrawable(R.drawable.mine_radius2);
+    }
 
 }

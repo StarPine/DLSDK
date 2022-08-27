@@ -48,11 +48,6 @@ public class FaceVerifySuccessFragment extends BaseToolbarFragment<FragmentFaceV
         if (basicToolbar != null) {
             basicToolbar.hiddenBack(true);
         }
-        //真人认证提示
-        if (ConfigManager.getInstance().isCertification() && !ConfigManager.getInstance().isMale()) {
-
-            viewModel.ToaskSubBonus();
-        }
     }
 
     @Override
@@ -73,7 +68,7 @@ public class FaceVerifySuccessFragment extends BaseToolbarFragment<FragmentFaceV
                             })
                             .setCannelOnclick(new TraceDialog.CannelOnclick() {
                                 @Override
-                                public void confirm(Dialog dialog) {
+                                public void cannel(Dialog dialog) {
                                     dialog.dismiss();
                                 }
                             })

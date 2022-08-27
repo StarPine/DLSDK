@@ -91,4 +91,9 @@ public class EmptyTRTCCallingDelegate implements TRTCCallingDelegate {
     public void onSwitchToAudio(boolean success, String message) {
         Log.i(TAG, "onSwitchToAudio: ");
     }
+
+    @Override
+    public void onTryToReconnect() {
+        Log.i(TAG, "onTryToReconnect: ");
+    }
 }

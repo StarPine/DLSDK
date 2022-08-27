@@ -1,18 +1,18 @@
 package com.dl.playfun.ui.userdetail.detail;
 
 import android.annotation.SuppressLint;
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
+import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.Observer;
@@ -29,20 +29,23 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.Injection;
 import com.dl.playfun.databinding.FragmentUserDetailBinding;
+import com.dl.playfun.entity.ApiConfigManagerEntity;
 import com.dl.playfun.entity.EvaluateEntity;
 import com.dl.playfun.entity.EvaluateItemEntity;
 import com.dl.playfun.entity.EvaluateObjEntity;
+import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.entity.UserDetailEntity;
 import com.dl.playfun.helper.DialogHelper;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
 import com.dl.playfun.ui.dialog.CommitEvaluateDialog;
-import com.dl.playfun.ui.dialog.CopyAccountDialog;
 import com.dl.playfun.ui.dialog.MyEvaluateDialog;
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
+import com.dl.playfun.ui.mine.wallet.recharge.RechargeActivity;
 import com.dl.playfun.ui.userdetail.playnum.CoinPaySheetUserMain;
 import com.dl.playfun.ui.userdetail.report.ReportUserFragment;
+import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.ListUtils;
 import com.dl.playfun.utils.PictureSelectorUtil;
@@ -50,27 +53,29 @@ import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.widget.AppBarStateChangeListener;
 import com.dl.playfun.widget.bottomsheet.BottomSheet;
 import com.dl.playfun.widget.coinpaysheet.CoinPaySheet;
-import com.dl.playfun.widget.coinrechargesheet.GameCoinTopupSheetView;
+import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 import com.dl.playfun.widget.custom.FlowAdapter;
 import com.dl.playfun.widget.dialog.MMAlertDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
+import com.dl.playfun.widget.dialog.TraceDialog;
+import com.dl.playfun.widget.dialog.WebViewDialog;
 import com.dl.playfun.widget.emptyview.EmptyState;
 import com.google.android.material.appbar.AppBarLayout;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.listener.OnResultCallbackListener;
+import com.tencent.qcloud.tuicore.Status;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import me.goldze.mvvmhabit.utils.ToastUtils;
-import me.jessyan.autosize.internal.CustomAdapt;
 
 /**
  * @author wulei 用户详情fragment
  */
 @SuppressLint("StringFormatMatches")
-public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBinding, UserDetailViewModel> implements View.OnClickListener, CustomAdapt {
+public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBinding, UserDetailViewModel> implements View.OnClickListener {
 
     public static final String ARG_USER_DETAIL_USER_ID = "arg_user_detail_user_id";
     public static final String ARG_USER_DETAIL_MORENUMBER = "arg_user_detail_morenumber";
@@ -102,6 +107,7 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        AutoSizeUtils.applyAdapt(this.getResources());
         return R.layout.fragment_user_detail;
     }
 
@@ -117,6 +123,21 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
         return BR.viewModel;
     }
 
+    @SuppressLint("MissingSuperCall")
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (AudioPlayer.getInstance().isPlaying()) {
+            AudioPlayer.getInstance().stopPlay();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        AppContext.isShowNotPaid = false;
+    }
+
     @Override
     public UserDetailViewModel initViewModel() {
         AppViewModelFactory factory = AppViewModelFactory.getInstance(mActivity.getApplication());
@@ -128,18 +149,30 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
 
     @Override
     public void initViewObservable() {
-//        viewModel.uc.loadEvaluate.observe(this, new Observer<List<EvaluateEntity>>() {
-//            @Override
-//            public void onChanged(List<EvaluateEntity> evaluateEntities) {
-//
-//            }
-//        });
+        viewModel.uc.sendDialogViewEvent.observe(this, event -> {
+            paySelectionboxChoose();
+        });
+        //对方忙线
+        viewModel.uc.otherBusy.observe(this, o -> {
+            TraceDialog.getInstance(UserDetailFragment.this.getContext())
+                    .chooseType(TraceDialog.TypeEnum.CENTER)
+                    .setTitle(StringUtils.getString(R.string.playfun_other_busy_title))
+                    .setContent(StringUtils.getString(R.string.playfun_other_busy_text))
+                    .setConfirmText(StringUtils.getString(R.string.playfun_mine_trace_delike_confirm))
+                    .setConfirmOnlick(new TraceDialog.ConfirmOnclick() {
+                        @Override
+                        public void confirm(Dialog dialog) {
+
+                            dialog.dismiss();
+                        }
+                    }).TraceVipDialog().show();
+        });
         //监听下拉刷新完成
         viewModel.uc.finishRefreshing.observe(this, new Observer() {
             @Override
             public void onChanged(@Nullable Object o) {
                 //结束刷新
-               binding.refreshLayout.finishRefresh(100);
+                binding.refreshLayout.finishRefresh(100);
             }
         });
         viewModel.uc.evaluateItemEntityList.observe(this, new Observer<List<EvaluateItemEntity>>() {
@@ -160,31 +193,6 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
                 }
             }
         });
-        viewModel.uc.lineEvent.observe(this, new Observer<UserDetailEntity>() {
-            @Override
-            public void onChanged(UserDetailEntity detailEntity) {
-                if (StringUtil.isEmpty(detailEntity.getWeixin()) && StringUtil.isEmpty(detailEntity.getInsgram())) {
-                    binding.accountLine.setText(StringUtils.getString(R.string.playfun_no_input));
-                    return;
-                }
-                if (detailEntity.getIsUnlockAccount() != 1) {
-                    binding.accountLine.setText(StringUtils.getString(R.string.playfun_click_check_social_account));
-                    return;
-                }
-
-                if (detailEntity.getIsWeixinShow() == 1 || detailEntity.getIsUnlockAccount() == 1) {
-                    if (!StringUtils.isEmpty(detailEntity.getWeixin())) {
-                        binding.accountLine.setText("Line: " + detailEntity.getWeixin());
-                    } else if (!StringUtils.isEmpty(detailEntity.getInsgram()) && detailEntity.getIsUnlockAccount() == 1) {
-                        binding.accountLine.setText("Instagram: " + detailEntity.getInsgram());
-                    } else {
-                        binding.accountLine.setText(StringUtils.getString(R.string.playfun_no_input));
-                    }
-                } else {
-                    binding.accountLine.setText(StringUtils.getString(R.string.playfun_click_check_social_account));
-                }
-            }
-        });
         viewModel.uc.clickMore.observe(this, new Observer() {
             @Override
             public void onChanged(@Nullable Object o) {
@@ -193,8 +201,8 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
                 }
 //                String[] items = new String[]{getString(R.string.pull_black_shield_both_sides), getString(R.string.remark_user_title), getString(R.string.report_user_title)};
                 String[] items = new String[]{getString(R.string.playfun_pull_black_shield_both_sides), getString(R.string.playfun_report_user_title)};
-                if(viewModel.detailEntity.get().getCollect()){
-                    items = new String[]{getString(R.string.playfun_pull_black_shield_both_sides), getString(R.string.playfun_report_user_title),getString(R.string.playfun_cancel_zuizong)};
+                if (viewModel.detailEntity.get().getCollect()) {
+                    items = new String[]{getString(R.string.playfun_pull_black_shield_both_sides), getString(R.string.playfun_report_user_title), getString(R.string.playfun_cancel_zuizong)};
                 }
                 if (viewModel.detailEntity.get().getIsBlacklist() == 1) {
                     items[0] = getString(R.string.playfun_remove_black_shield_both_sides);
@@ -224,8 +232,8 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
                         ReportUserFragment reportUserFragment = new ReportUserFragment();
                         reportUserFragment.setArguments(bundle);
                         start(reportUserFragment);
-                    }else if(position == 2) {
-                        if(viewModel.detailEntity.get().getCollect()){//取消追踪
+                    } else if (position == 2) {
+                        if (viewModel.detailEntity.get().getCollect()) {//取消追踪
                             viewModel.collectOnClickCommand.execute();
                         }
                     }
@@ -261,7 +269,7 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
             dialog.setEvaluateDialogListener(new MyEvaluateDialog.EvaluateDialogListener() {
                 @Override
                 public void onEvaluateClick(MyEvaluateDialog dialog) {
-                    if (viewModel.canEvaluate.get()==false) {
+                    if (viewModel.canEvaluate.get() == false) {
                         ToastUtils.showShort(viewModel.detailEntity.get().isMale() ? R.string.playfun_no_information_cant_comment_him : R.string.playfun_no_information_cant_comment);
                         return;
                     }
@@ -295,7 +303,7 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
                             } else {
                                 viewModel.commitUserEvaluate(entity.getTagId(), null);
                             }
-                        }else{
+                        } else {
                             ToastUtils.showShort(R.string.playfun_user_detail_evaluation_hint2);
                         }
                     });
@@ -347,17 +355,9 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
                 vipLockAlbum(viewModel.detailEntity.get().getNickname(), count, viewModel.detailEntity.get().getAlbumPayMoney());
             }
         });
-        viewModel.uc.clickPayChat.observe(this, new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer coinPrice) {
-                payCheckChat(coinPrice);
-            }
-        });
         viewModel.uc.clickVipChat.observe(this, integer -> vipCheckChat(integer, ConfigManager.getInstance().getImMoney()));
         viewModel.uc.clickConnMic.observe(this, aVoid -> System.out.println("连麦"));
-        viewModel.uc.clickUnlockChatAccount.observe(this, coinPrice -> payUnlockChatAccount(coinPrice));
         viewModel.uc.todayCheckNumber.observe(this, integer -> DialogHelper.showCheckUserNumberDialog(UserDetailFragment.this, integer));
-        viewModel.uc.clickCheckChatAccount.observe(this, aVoid -> checkChatAccount());
 
         viewModel.uc.isAlertVipMonetyunlock.observe(this, new Observer<Void>() {
             @Override
@@ -376,7 +376,7 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
     @Override
     public void onResume() {
         super.onResume();
-
+        AppContext.isShowNotPaid = true;
     }
 
     @Override
@@ -387,9 +387,13 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
 //                if(flagShow){
 //                    return;
 //                }
-            if ((viewModel.detailEntity.get().getMoreNumber() != null && viewModel.detailEntity.get().getMoreNumber() <= 0) || !viewModel.detailEntity.get().isBrowse()) {
-                getUserdetailUnlock();
+            if(viewModel.detailEntity.get()!=null){
+                Integer moreNumber = viewModel.detailEntity.get().getMoreNumber();
+                if ((moreNumber != null && moreNumber <= 0) || !viewModel.detailEntity.get().isBrowse()) {
+                    getUserdetailUnlock();
+                }
             }
+
 
             // }
         } else {
@@ -555,6 +559,10 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
         binding.audioStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (Status.mIsShowFloatWindow){
+                    ToastUtils.showShort(R.string.audio_in_call);
+                    return ;
+                }
                 binding.audioStart.setImageResource(R.drawable.mine_audio_stop_img);
                 if (AudioPlayer.getInstance().isPlaying()) {
                     AudioPlayer.getInstance().stopPlay();
@@ -567,7 +575,7 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
                         .into(binding.audioStart);
                 AudioPlayer.getInstance().startPlay(StringUtil.getFullAudioUrl(viewModel.detailEntity.get().getSound()), new AudioPlayer.Callback() {
                     @Override
-                    public void onCompletion(Boolean success) {
+                    public void onCompletion(Boolean success, Boolean isOutTime) {
                         binding.audioStart.setImageResource(R.drawable.mine_audio_start_img);
                     }
                 });
@@ -578,9 +586,6 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
     @Override
     public void onEnterAnimationEnd(Bundle savedInstanceState) {
         super.onEnterAnimationEnd(savedInstanceState);
-        Animation animation = AnimationUtils.loadAnimation(mActivity, R.anim.social_account_tag_anim);
-        binding.detailBottomToolbar.ivSocialAccountTag.startAnimation(animation);
-
     }
 
     @Override
@@ -612,10 +617,10 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
 
     private void payLockAlbum(Integer userId, String nickName, Integer coinPrice) {
         String btn1 = "";
-        if (AppContext.instance().appRepository.readUserData().getSex() == 1) {
+        if (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == 1) {
             btn1 = getString(R.string.playfun_to_be_member_free_albums);
         } else {
-            if (AppContext.instance().appRepository.readUserData().getCertification() == 1) {
+            if (ConfigManager.getInstance().getAppRepository().readUserData().getCertification() == 1) {
                 btn1 = getString(R.string.playfun_to_be_goddess_free_albums);
             } else {
                 btn1 = getString(R.string.playfun_warn_no_certification);
@@ -626,15 +631,19 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
                 .setConfirmText(btn1)
                 .setConfirmTwoText(String.format(getString(R.string.playfun_pay_ro_unlock_diamond), coinPrice))
                 .setConfirmOnlick(dialog -> {
-                    dialog.dismiss();
-                    if (AppContext.instance().appRepository.readUserData().getSex() == 1) {
+//                    if(dialog!=null){
+//                        dialog.dismiss();
+//                    }
+                    if (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == 1) {
                         viewModel.start(VipSubscribeFragment.class.getCanonicalName());
                     } else {
                         viewModel.start(CertificationFemaleFragment.class.getCanonicalName());
                     }
                 })
                 .setConfirmTwoOnclick(dialog -> {
-                    dialog.dismiss();
+//                    if(dialog!=null){
+//                        dialog.dismiss();
+//                    }
                     new CoinPaySheet.Builder(mActivity).setPayParams(3, userId, getString(R.string.playfun_unlock_album), false, new CoinPaySheet.CoinPayDialogListener() {
                         @Override
                         public void onPaySuccess(CoinPaySheet sheet, String orderNo, Integer payPrice) {
@@ -642,14 +651,14 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
                             ToastUtils.showShort(R.string.playfun_pay_success);
                             viewModel.payLockAlbumSuccess(userId);
                         }
-
                         @Override
-                        public void onRechargeSuccess(GameCoinTopupSheetView gameCoinTopupSheetView) {
-                            // do nothing
+                        public void toGooglePlayView() {
+                            toRecharge();
                         }
+
                     }).build().show();
                 })
-                .chooseType(MVDialog.TypeEnum.CENTER)
+                .getTop2BottomDialog()
                 .show();
     }
 
@@ -660,17 +669,17 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
                     .setConfirmText(String.format(getString(R.string.playfun_pay_diamond), coinPrice))
                     .setConfirmOnlick(dialog -> {
                         dialog.dismiss();
-                        new CoinPaySheet.Builder(mActivity).setPayParams(3, userId, getString(R.string.playfun_unlock_album), false, new CoinPaySheet.CoinPayDialogListener() {
+                        new CoinPaySheet.Builder(mActivity).setPayParams(3, userId, getString(R.string.playfun_unlock_album), false, new CoinPaySheet.CoinPayDialogListener(){
+
                             @Override
                             public void onPaySuccess(CoinPaySheet sheet, String orderNo, Integer payPrice) {
-                                sheet.dismiss();
                                 ToastUtils.showShort(R.string.playfun_pay_success);
                                 viewModel.payLockAlbumSuccess(userId);
                             }
 
                             @Override
-                            public void onRechargeSuccess(GameCoinTopupSheetView gameCoinTopupSheetView) {
-                                // do nothing
+                            public void toGooglePlayView() {
+                                toRecharge();
                             }
                         }).build().show();
                     })
@@ -692,78 +701,16 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
         }
     }
 
+    /**
+     * 去充值
+     */
+    private void toRecharge() {
+        CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(mActivity);
+        coinRechargeFragmentView.show();
+    }
+
     private boolean isVip() {
-        return AppContext.instance().appRepository.readUserData().getIsVip() == 1;
-    }
-
-    private void payCheckChat(Integer coinPrice) {
-        String btn1 = "";
-        String title = "";
-        int sex = AppContext.instance().appRepository.readUserData().getSex();
-        if (sex == AppConfig.MALE) {
-            title = getString(R.string.playfun_to_chat_her);
-            btn1 = getString(R.string.playfun_to_be_member_free_chat);
-        } else {
-            title = getString(R.string.playfun_to_chat_he);
-            if (AppContext.instance().appRepository.readUserData().getCertification() == 1) {
-                btn1 = getString(R.string.playfun_to_be_goddess_free_chat);
-            } else {
-                btn1 = getString(R.string.playfun_warn_no_certification);
-            }
-        }
-        if (!isVip()) {
-            MVDialog.getInstance(UserDetailFragment.this.getContext())
-                    .setContent(title)
-                    .setConfirmText(btn1)
-                    .setConfirmTwoText(String.format(getString(R.string.playfun_paid_viewing_private_chat), coinPrice))
-                    .setConfirmOnlick(dialog -> {
-                        dialog.dismiss();
-                        if (sex == AppConfig.MALE) {
-                            viewModel.start(VipSubscribeFragment.class.getCanonicalName());
-                        } else {
-                            viewModel.start(CertificationFemaleFragment.class.getCanonicalName());
-                        }
-                    })
-                    .setConfirmTwoOnclick(dialog -> {
-                        dialog.dismiss();
-                        showCoinPaySheet(false);
-                    })
-                    .chooseType(MVDialog.TypeEnum.CENTER)
-                    .show();
-        } else {
-            MVDialog.getInstance(UserDetailFragment.this.getContext())
-                    .setContent(title)
-                    .setConfirmText(String.format(getString(R.string.playfun_paid_viewing_private_chat), coinPrice))
-                    .setConfirmTextSize(12)
-                    .setConfirmOnlick(dialog -> {
-                        dialog.dismiss();
-                        showCoinPaySheet(false);
-                    })
-                    .chooseType(MVDialog.TypeEnum.CENTER)
-                    .show();
-        }
-    }
-
-    private void showCoinPaySheet(boolean autoPay) {
-        new CoinPaySheet.Builder(mActivity).setPayParams(6, userId, getString(R.string.playfun_check_detail), autoPay, new CoinPaySheet.CoinPayDialogListener() {
-            @Override
-            public void onPaySuccess(CoinPaySheet sheet, String orderNo, Integer payPrice) {
-                sheet.dismiss();
-                ToastUtils.showShort(R.string.playfun_pay_success);
-                viewModel.chatPaySuccess();
-            }
-
-            @Override
-            public void onRechargeSuccess(GameCoinTopupSheetView gameCoinTopupSheetView) {
-                // 充值成功，再次唤起浮层，且自动支付
-                try {
-                    AppContext.runOnUIThread(gameCoinTopupSheetView::dismiss, 100);
-                    AppContext.runOnUIThread(() -> showCoinPaySheet(true), 500);
-                } catch (Throwable e) {
-                    e.printStackTrace();
-                }
-            }
-        }).build().show();
+        return ConfigManager.getInstance().getAppRepository().readUserData().getIsVip() == 1;
     }
 
     private void vipCheckChat(Integer number, Integer coinPrice) {
@@ -774,18 +721,10 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
                     .setConfirmText(String.format(getString(R.string.playfun_pay_diamond), coinPrice))
                     .setConfirmOnlick(dialog -> {
                         dialog.dismiss();
-                        new CoinPaySheet.Builder(mActivity).setPayParams(6, userId, getString(R.string.playfun_check_detail), false, new CoinPaySheet.CoinPayDialogListener() {
-                            @Override
-                            public void onPaySuccess(CoinPaySheet sheet, String orderNo, Integer payPrice) {
-                                sheet.dismiss();
-                                ToastUtils.showShort(R.string.playfun_pay_success);
-                                viewModel.chatPaySuccess();
-                            }
-
-                            @Override
-                            public void onRechargeSuccess(GameCoinTopupSheetView gameCoinTopupSheetView) {
-                                // do nothing
-                            }
+                        new CoinPaySheet.Builder(mActivity).setPayParams(6, userId, getString(R.string.playfun_check_detail), false, (sheet, orderNo, payPrice) -> {
+                            sheet.dismiss();
+                            ToastUtils.showShort(R.string.playfun_pay_success);
+                            viewModel.chatPaySuccess();
                         }).build().show();
                     })
                     .chooseType(MVDialog.TypeEnum.CENTER)
@@ -803,171 +742,60 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
         }
     }
 
-    private void payUnlockChatAccount(String coinPrice) {
-        AppContext.instance().logEvent(AppsFlyerEvent.Social_Account);
-
-        if (ConfigManager.getInstance().isVip()) {
-            MVDialog.getInstance(UserDetailFragment.this.getContext())
-                    .setTitele(getString(R.string.playfun_unlock_account_title_dialog))
-                    .setConfirmText(String.format(getString(R.string.playfun_pay_unlock), ConfigManager.getInstance().getUnLockAccountMoneyVip()))
-                    .setConfirmOnlick(new MVDialog.ConfirmOnclick() {
-                        @Override
-                        public void confirm(MVDialog dialog) {
-                            dialog.dismiss();
-                            new CoinPaySheet.Builder(mActivity).setPayParams(11, userId, getString(R.string.playfun_unlock_social_account), false, new CoinPaySheet.CoinPayDialogListener() {
-                                @Override
-                                public void onPaySuccess(CoinPaySheet sheet, String orderNo, Integer payPrice) {
-                                    sheet.dismiss();
-                                    AppContext.instance().logEvent(AppsFlyerEvent.Unlock);
-                                    ToastUtils.showShort(R.string.playfun_pay_success);
-                                    viewModel.payUnlockChatAccountSuccess(userId);
-                                    viewModel.uc.clickCheckChatAccount.call();
-                                    if (!StringUtils.isEmpty(viewModel.detailEntity.get().getWeixin())) {
-                                        binding.accountLine.setText("Line: " + viewModel.detailEntity.get().getWeixin());
-                                    } else if (!StringUtils.isEmpty(viewModel.detailEntity.get().getInsgram()) && viewModel.detailEntity.get().getIsUnlockAccount() == 1) {
-                                        binding.accountLine.setText("Instagram: " + viewModel.detailEntity.get().getInsgram());
-                                    }
-                                }
-
-                                @Override
-                                public void onRechargeSuccess(GameCoinTopupSheetView gameCoinTopupSheetView) {
-                                    // do nothing
-                                }
-                            }).build().show();
-                        }
-                    })
-                    .chooseType(MVDialog.TypeEnum.CENTER)
-                    .show();
+    //支付框样式选择
+    private void paySelectionboxChoose() {
+        if (ConfigManager.getInstance().isMale()) {
+            if (ConfigManager.getInstance().isVip()) {
+                googleCoinValueBox();
+            } else {
+                dialogRechargeShow();
+            }
         } else {
-            MVDialog.getInstance(UserDetailFragment.this.getContext())
-                    .setTitele(getString(R.string.playfun_unlock_account_title_dialog))
-                    .setConfirmText(String.format(getString(R.string.playfun_join_vip_unlock), ConfigManager.getInstance().getUnLockAccountMoneyVip()))
-                    .setConfirmTwoText(String.format(getString(R.string.playfun_no_vip_unlock), ConfigManager.getInstance().getUnLockAccountMoney()))
-                    .setConfirmOnlick(dialog -> {
-                        dialog.dismiss();
-                        AppContext.instance().logEvent(AppsFlyerEvent.Become_A_VIP);
-                        if (AppContext.instance().appRepository.readUserData().getSex() == 1) {
-                            viewModel.start(VipSubscribeFragment.class.getCanonicalName());
-                        } else {
-                            viewModel.start(CertificationFemaleFragment.class.getCanonicalName());
-                        }
-                    })
-                    .setConfirmTwoOnclick(dialog -> {
-                        dialog.dismiss();
-                        new CoinPaySheet.Builder(mActivity).setPayParams(11, userId, getString(R.string.playfun_unlock_social_account), false, new CoinPaySheet.CoinPayDialogListener() {
-                            @Override
-                            public void onPaySuccess(CoinPaySheet sheet, String orderNo, Integer payPrice) {
-                                AppContext.instance().logEvent(AppsFlyerEvent.Unlock_Now);
-                                sheet.dismiss();
-                                ToastUtils.showShort(R.string.playfun_pay_success);
-                                viewModel.payUnlockChatAccountSuccess(userId);
-                                viewModel.uc.clickCheckChatAccount.call();
-                                if (!StringUtils.isEmpty(viewModel.detailEntity.get().getWeixin())) {
-                                    binding.accountLine.setText("Line: " + viewModel.detailEntity.get().getWeixin());
-                                } else if (!StringUtils.isEmpty(viewModel.detailEntity.get().getInsgram()) && viewModel.detailEntity.get().getIsUnlockAccount() == 1) {
-                                    binding.accountLine.setText("Instagram: " + viewModel.detailEntity.get().getInsgram());
-                                }
-                            }
-
-                            @Override
-                            public void onRechargeSuccess(GameCoinTopupSheetView gameCoinTopupSheetView) {
-                                // do nothing
-                            }
-                        }).build().show();
-                    })
-                    .chooseType(MVDialog.TypeEnum.CENTER)
-                    .show();
+            googleCoinValueBox();
         }
     }
 
-    private void checkChatAccount() {
-        if (viewModel.detailEntity.get() == null) {
-            return;
-        }
-        CopyAccountDialog copyAccountDialog = null;
-        String account = null;
-        if (viewModel.detailEntity.get().getIsUnlockAccount() == 1 && viewModel.detailEntity.get().getIsWeixinShow() == 1) {
-            if (viewModel.detailEntity.get().getWeixin() != null && viewModel.detailEntity.get().getWeixin().length() > 0) {
-                account = "Line: " + viewModel.detailEntity.get().getWeixin();
-            } else if (viewModel.detailEntity.get().getInsgram() != null && viewModel.detailEntity.get().getInsgram().length() > 0) {
-                account = "Insgram: " + viewModel.detailEntity.get().getInsgram();
-            } else {
-                ToastUtils.showShort(R.string.playfun_user_detail_link_empty);
-                return;
-            }
-        }
-        copyAccountDialog = new CopyAccountDialog(account);
-        copyAccountDialog.setBtnText(getString(R.string.playfun_confirm));
-//        if (account != null) {
-//            copyAccountDialog = new CopyAccountDialog(account);
-//        } else {
-//            copyAccountDialog = new CopyAccountDialog();
-//        }
-//        copyAccountDialog.setTitle(getString(R.string.she_social_accounts));
-//        if (viewModel.detailEntity.get().getIsWeixinShow() != 1) {
-//            copyAccountDialog.setContent(getString(R.string.chat_ask_me));
-//            copyAccountDialog.setBtnText(getString(R.string.chat_she));
-//        } else {
-//            if (account == null) {
-//                copyAccountDialog.setContent(getString(R.string.unlock_account));
-//                copyAccountDialog.setBtnText(getString(R.string.immediately_unlock));
-//            } else {
-//                copyAccountDialog.setBtnText(getString(R.string.confirm));
-//            }
-//
-//        }
-        copyAccountDialog.show(getChildFragmentManager(), CopyAccountDialog.class.getCanonicalName());
-        copyAccountDialog.setCopyAccountDialogListener(new CopyAccountDialog.CopyAccountDialogListener() {
-            @Override
-            public void onCopyClick(CopyAccountDialog dialog) {
-                dialog.dismiss();
-                if (viewModel.detailEntity.get().getWeixin() != null && viewModel.detailEntity.get().getWeixin().length() > 0) {
-                    copyStr(viewModel.detailEntity.get().getWeixin());
-                } else if (viewModel.detailEntity.get().getInsgram() != null && viewModel.detailEntity.get().getInsgram().length() > 0) {
-                    copyStr(viewModel.detailEntity.get().getInsgram());
-                }
-                ToastUtils.showShort(R.string.playfun_copy_clipboard);
-            }
+    private void googleCoinValueBox() {
+        toRecharge();
+    }
 
-            @Override
-            public void onChatClick(CopyAccountDialog dialog) {
-                dialog.dismiss();
-                if (viewModel.detailEntity.get().getIsWeixinShow() != 1) {
-                    viewModel.isChat(userId, 1);
-                } else {
-                    if (dialog.getAccount() == null) {
-                        viewModel.isChat(userId, 4);
+    //弹出钻石充值
+    private void dialogRechargeShow() {
+        ApiConfigManagerEntity apiConfigManagerEntity = ConfigManager.getInstance().getAppRepository().readApiConfigManagerEntity();
+        if(apiConfigManagerEntity!=null && apiConfigManagerEntity.getPlayFunWebUrl()!=null){
+            String url = apiConfigManagerEntity.getPlayFunWebUrl() + AppConfig.PAY_RECHARGE_URL;
+            new WebViewDialog(getContext(), mActivity, url, new WebViewDialog.ConfirmOnclick() {
+                @Override
+                public void webToVipRechargeVC(Dialog dialog) {
+                    if (dialog != null) {
+                        dialog.dismiss();
+                    }
+                    viewModel.start(VipSubscribeFragment.class.getCanonicalName());
+                }
+
+                @Override
+                public void vipRechargeDiamondSuccess(Dialog dialog, Integer coinValue) {
+                    if (dialog != null) {
+                        this.cancel();
+                        dialog.dismiss();
                     }
                 }
-            }
-        });
+
+                @Override
+                public void moreRechargeDiamond(Dialog dialog) {
+                    dialog.dismiss();
+                    if(mActivity!=null && !mActivity.isFinishing()){
+                        mActivity.runOnUiThread(() -> googleCoinValueBox());
+                    }
+                }
+
+                @Override
+                public void cancel() {
+                }
+            }).noticeDialog().show();
+        }else{
+            googleCoinValueBox();
+        }
     }
 
-    protected void copyStr(String text) {
-        ClipboardManager clipboard = (ClipboardManager) mActivity.getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData clip = ClipData.newPlainText("play_fun", text);
-        clipboard.setPrimaryClip(clip);
-    }
-
-    @Override
-    public boolean isBaseOnWidth() {
-        return true;
-    }
-
-    @Override
-    public float getSizeInDp() {
-        return 360;
-    }
-
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        MobclickAgent.onPageStart(this.getClass().getSimpleName());
-//    }
-//
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//        MobclickAgent.onPageEnd(this.getClass().getSimpleName());
-//    }
 }

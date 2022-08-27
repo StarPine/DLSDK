@@ -7,9 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
 
 import com.dl.playfun.entity.BlackEntity;
-import com.dl.playfun.manager.ConfigManager;
-import com.dl.playfun.utils.ExceptionReportUtils;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
+import com.dl.playfun.utils.ExceptionReportUtils;
 
 import me.goldze.mvvmhabit.base.MultiItemViewModel;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;

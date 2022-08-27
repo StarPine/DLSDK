@@ -1,18 +1,21 @@
 package com.dl.playfun.ui.userdetail.detail;
 
 import android.app.Application;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
 
-import com.aliyun.common.utils.ToastUtil;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
+import com.dl.playfun.app.EaringlSwitchUtil;
 import com.dl.playfun.app.Injection;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.exception.RequestException;
@@ -46,6 +49,7 @@ import com.google.gson.Gson;
 import com.dl.playfun.R;
 import com.dl.playfun.ui.userdetail.userdynamic.UserDynamicFragment;
 import com.dl.playfun.ui.viewmodel.BaseTheirPhotoAlbumViewModel;
+import com.tencent.qcloud.tuicore.Status;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +74,7 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
 
     public ObservableField<Boolean> userDisable = new ObservableField<>(false);
     public ObservableField<Boolean> canEvaluate = new ObservableField<>(false);
+    public ObservableField<Boolean> showCanTrack = new ObservableField<>(false);
     public ObservableField<String> sexName = new ObservableField<>("");
     public ObservableField<String> sexNameSheAndHis = new ObservableField<>("");
     public ObservableField<String> distanceText = new ObservableField<>();
@@ -86,7 +91,7 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
     public ObservableField<String> dynamicPic2 = new ObservableField<>();
     public ObservableField<String> dynamicPic3 = new ObservableField<>();
     public ObservableField<String> dynamicPic4 = new ObservableField<>();
-
+    UIChangeObservable uc = new UIChangeObservable();
     //下拉刷新
     public BindingCommand onRefreshCommand = new BindingCommand(() -> {
         loadData();
@@ -127,44 +132,48 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
             delLike();
         }
     });
-    UIChangeObservable uc = new UIChangeObservable();
     //完成按钮的点击事件
     public BindingCommand moreOnClickCommand = new BindingCommand(() -> uc.clickMore.call());
     //评价流程
     public BindingCommand evaluateOnClickCommand = new BindingCommand(() -> {
         loadCanEvaluate();
     });
-    public BindingCommand checkChatAccountOnClickCommand = new BindingCommand(() -> {
+    /**
+     * 点击拨打视频语音
+     */
+    public BindingCommand socialAccountOnClickCommand = new BindingCommand(() -> {
+        if (Status.mIsShowFloatWindow){
+            ToastUtils.showShort(R.string.audio_in_call);
+            return;
+        }
         if (detailEntity.get() == null) {
             return;
         }
-        if (detailEntity.get().getIsUnlockAccount() != 1) {
-//            isChat(userId.get(), 4);
-            if (detailEntity.get().getIsWeixinShow() == 1) {
-                uc.clickUnlockChatAccount.postValue(ConfigManager.getInstance().getUnLockAccountMoney());
-            }
+
+        if (detailEntity.get().isConnectionMic()) {
+            //视频拨打
+            getCallingInvitedInfo(2, detailEntity.get().getImUserId(), detailEntity.get().getImToUserId());
+        } else {
+            ToastUtils.showShort(R.string.user_detail_him_disable_mic2);
         }
     });
     /**
-     * 点击社交账号
+     * 語音通話
      */
-    public BindingCommand socialAccountOnClickCommand = new BindingCommand(() -> {
-        if (StringUtil.isEmpty(detailEntity.get().getWeixin()) && StringUtil.isEmpty(detailEntity.get().getInsgram())) {
-            ToastUtils.showShort(R.string.playfun_user_detail_link_empty);
+    public BindingCommand connMicOnClickCommand = new BindingCommand(() -> {
+        if (Status.mIsShowFloatWindow){
+            ToastUtils.showShort(R.string.audio_in_call);
             return;
         }
-        if (detailEntity.get().getIsUnlockAccount() != 1) {
-            if (detailEntity.get().getIsWeixinShow() == 1) {
-                uc.clickUnlockChatAccount.postValue(ConfigManager.getInstance().getUnLockAccountMoney());
-            } else {
-                if (detailEntity.get().getSex() == 1) {
-                    ToastUtils.showShort(R.string.playfun_account_hidden_tip_male);
-                } else {
-                    ToastUtils.showShort(R.string.playfun_account_hidden_tip_female);
-                }
-            }
+        if (detailEntity.get() == null) {
+            return;
+        }
+
+        if (detailEntity.get().isConnectionMic()) {
+            //语音拨打
+            getCallingInvitedInfo(1, detailEntity.get().getImUserId(), detailEntity.get().getImToUserId());
         } else {
-            uc.clickCheckChatAccount.call();
+            ToastUtils.showShort(R.string.user_detail_him_disable_mic);
         }
     });
     //申请查看
@@ -178,26 +187,11 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
     private Disposable mPhotoStateChangeSubscription;
     private Disposable UserUpdateVipEventSub;
     private boolean isLinkMic = false;
-    public BindingCommand directChatOnClickCommand = new BindingCommand(() -> {
-        isChat(userId.get(), 1);
-    });
+    //进入私聊页面
     public BindingCommand chatOnClickCommand = new BindingCommand(() -> {
         AppContext.instance().logEvent(AppsFlyerEvent.Send_message);
-        ChatUtils.chatUser(userId.get(), detailEntity.get().getNickname(), this);
-    });
-    /**
-     * 点击连麦
-     */
-    public BindingCommand connMicOnClickCommand = new BindingCommand(() -> {
-        if (detailEntity.get() == null) {
-            return;
-        }
-
-        if (detailEntity.get().isConnectionMic()) {
-            isChat(userId.get(), 3);
-        } else {
-            ToastUtils.showShort(R.string.playfun_user_detail_him_disable_mic);
-        }
+        ChatUtils.chatUser(detailEntity.get().getImToUserId(),userId.get(), detailEntity.get().getNickname(), this);
+        //isChat(userId.get(), 1);
     });
     //申请查看相册
     public BindingCommand applyCheckAlbumOnClickCommand = new BindingCommand(() -> {
@@ -269,6 +263,17 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
         RxSubscriptions.remove(mPhotoStateChangeSubscription);
     }
 
+    public boolean personalInfoIsEmpty(UserDetailEntity userDetailEntity){
+        if (userDetailEntity != null){
+            if (TextUtils.isEmpty(userDetailEntity.getDesc())
+                    && (userDetailEntity.getWeight() == null || userDetailEntity.getWeight() <= 0)
+                    && (userDetailEntity.getHeight() == null || userDetailEntity.getHeight() <= 0)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void refreshDistance() {
         String distance = StringUtils.getString(R.string.playfun_unknown);
         if (detailEntity.get() == null) {
@@ -334,7 +339,8 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
 //                            uc.todayCheckNumber.postValue(response.getData().getMoreNumber());
 //                        }
                         detailEntity.set(response.getData());
-                        uc.lineEvent.postValue(response.getData());
+                        isShowCanTrack();
+//                        onLineDrawables();
                         if (response.getData().isBrowse()) {
                             if (response.getData().getMoreNumber() != null && response.getData().getMoreNumber().intValue() > 2) {
 
@@ -420,8 +426,9 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
                         userDisable.setCollect(true);
                         detailEntity.set(null);
                         detailEntity.set(userDisable);
+                        isShowCanTrack();
                         RxBus.getDefault().post(new LikeChangeEvent(userId.get(), true));
-                        ToastUtil.showToast(AppContext.instance(),R.string.playfun_cancel_zuizong_3);
+                        ToastUtils.showShort(R.string.playfun_cancel_zuizong_3);
                     }
 
                     @Override
@@ -455,6 +462,7 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
                             return;
                         }
                         detailEntity.get().setCollect(false);
+                        isShowCanTrack();
                         RxBus.getDefault().post(new LikeChangeEvent(userId.get(), false));
                     }
 
@@ -489,6 +497,14 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
                             return;
                         }
                         detailEntity.get().setIsBlacklist(1);
+                        if (detailEntity.get().getBlacklistStatus() == 0) {
+                            detailEntity.get().setBlacklistStatus(1);
+                        }else if (detailEntity.get().getBlacklistStatus() == 2){
+                            detailEntity.get().setBlacklistStatus(3);
+                        }
+                        if (detailEntity.get().getCollect()){
+                            delLike();
+                        }
                     }
 
                     @Override
@@ -512,6 +528,12 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
                             return;
                         }
                         detailEntity.get().setIsBlacklist(0);
+                        if (detailEntity.get().getBlacklistStatus() == 1) {
+                            detailEntity.get().setBlacklistStatus(0);
+                        }else if (detailEntity.get().getBlacklistStatus() == 3){
+                            detailEntity.get().setBlacklistStatus(2);
+                        }
+                        isShowCanTrack();
                     }
 
                     @Override
@@ -565,6 +587,30 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
                         dismissHUD();
                     }
                 });
+    }
+
+    public void isShowCanTrack() {
+        Boolean collect = detailEntity.get().getCollect();
+        Integer blacklistStatus = detailEntity.get().getBlacklistStatus();
+        if (blacklistStatus == 0 && !collect) {
+            showCanTrack.set(true);
+        } else {
+            showCanTrack.set(false);
+        }
+    }
+
+    public Drawable onLineDrawables(UserDetailEntity detailEntity) {
+        if (detailEntity == null) return null;
+        if (detailEntity.getCallingStatus() == 0) {
+            if (detailEntity.getIsOnline() == 1) {
+                return AppContext.instance().getResources().getDrawable(R.drawable.user_detail_online);
+            }
+        } else if (detailEntity.getCallingStatus() == 1) {
+            return AppContext.instance().getResources().getDrawable(R.drawable.user_detail_calling);
+        } else if (detailEntity.getCallingStatus() == 2) {
+            return AppContext.instance().getResources().getDrawable(R.drawable.user_detail_video);
+        }
+        return AppContext.instance().getResources().getDrawable(R.drawable.user_detail_online);
     }
 
     /**
@@ -639,19 +685,7 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
                 .subscribe(new BaseObserver<BaseDataResponse<IsChatEntity>>() {
                     @Override
                     public void onSuccess(BaseDataResponse<IsChatEntity> response) {
-                        if (type == 1) {//私聊他  彭石林2021-3-26修改
-                            isLinkMic = false;
-                            //判断如果是男用户，且不是VIP状态下
-                            if (response.getData().getIsChant() == 1 || (model.readUserData().getSex() == AppConfig.MALE && model.readUserData().getIsVip() == 0)) {
-                                addFriend();
-                            } else {
-                                if (response.getData().getChatNumber() > 0) {
-                                    uc.clickVipChat.postValue(response.getData().getChatNumber());
-                                } else {
-                                    uc.clickPayChat.postValue(ConfigManager.getInstance().getImMoney());
-                                }
-                            }
-                        } else if (type == 2) {
+                        if (type == 2) {
                             //查看相册
                             if (response.getData().getIsVip() == 1) {
                                 //会员查看相册
@@ -660,42 +694,7 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
                                 //非会员查看相册
                                 uc.clickPayAlbum.postValue(userId);
                             }
-                        } else if (type == 3) {
-                            //连麦
-                            isLinkMic = true;
-                            if (response.getData().getIsChant() == 1) {
-                                //d
-                                getCallingInvitedInfo(1, userId, String.format(StringUtils.getString(R.string.playfun_imsdk_user_id), userId));
-                                //ChatUtils.audioCall(String.format(StringUtils.getString(R.string.playfun_imsdk_user_id), userId), detailEntity.get().getNickname());
-                            } else {
-                                if (response.getData().getChatNumber() > 0) {
-                                    uc.clickVipChat.postValue(response.getData().getChatNumber());
-                                } else {
-                                    uc.clickPayChat.postValue(ConfigManager.getInstance().getImMoney());
-                                }
-                            }
                         }
-//                        else if (type == 4) {
-//                            //查看社交账号
-//                            if (response.getData().getIsChant() == 1) {
-//                                detailEntity.get().setChat(true);
-//                            } else {
-//                                uc.clickUnlockChatAccount.postValue(ConfigManager.getInstance().getUnLockAccountMoney());
-//                            }
-//                        }
-//                        else if (type == 5) {
-//                            //查看社交账号
-//                            if (response.getData().getIsChant() == 1) {
-//                                detailEntity.get().setChat(true);
-//                            } else {
-////                                if (model.readUserData().getIsVip() == 1) {
-////                                    uc.clickVipUnlockChatAccount.postValue(response.getData().getChatNumber() + response.getData().getPrivateNumber());
-////                                } else {
-////                                    uc.clickUnlockChatAccount.postValue(model.readSystemConfig().getImMoney());
-////                                }
-//                            }
-//                            uc.clickCheckChatAccount.call();
-//                        }
                     }
 
                     @Override
@@ -726,8 +725,6 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
                             chatPaySuccess();
                         } else if (operateType == 2) {
                             payLockAlbumSuccess(userId);
-                        } else if (operateType == 3) {
-                            payUnlockChatAccountSuccess(userId);
                         }
                     }
 
@@ -810,20 +807,6 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
     }
 
     /**
-     * 支付解鎖社交賬號成功
-     *
-     * @param userId
-     */
-    public void payUnlockChatAccountSuccess(Integer userId) {
-        if (userId.intValue() == this.userId.get().intValue()) {
-            if (detailEntity.get() == null) {
-                return;
-            }
-            detailEntity.get().setIsUnlockAccount(1);
-        }
-    }
-
-    /**
      * 解锁联系方式成功
      */
     public void chatPaySuccess() {
@@ -836,9 +819,9 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
             return;
         }
         if (isLinkMic) {
-            getCallingInvitedInfo(1, userId.get(), String.format(StringUtils.getString(R.string.playfun_imsdk_user_id), userId.get()));
+            getCallingInvitedInfo(1, detailEntity.get().getImUserId(), detailEntity.get().getImToUserId());
         } else {
-            ChatUtils.chatUser(userId.get(), detailEntity.get().getNickname(), this);
+            ChatUtils.chatUser(detailEntity.get().getImToUserId(), userId.get(), detailEntity.get().getNickname(), this);
         }
     }
 
@@ -895,9 +878,15 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
     }
 
     //拨打语音、视频
-    public void getCallingInvitedInfo(int callingType, Integer toUserId, String toImUserId) {
-        int MyUserId = model.readUserData().getId();
-        model.callingInviteInfo(callingType, MyUserId, toUserId, MyUserId)
+    public void getCallingInvitedInfo(int callingType, String IMUserId, String toIMUserId) {
+        if(callingType==1){
+            //男女点击拨打语音
+            AppContext.instance().logEvent(ConfigManager.getInstance().isMale() ? AppsFlyerEvent.call_voice_male : AppsFlyerEvent.call_voice_female);
+        }else{
+            //男女点击拨打视频
+            AppContext.instance().logEvent(ConfigManager.getInstance().isMale() ? AppsFlyerEvent.call_video_male : AppsFlyerEvent.call_video_female);
+        }
+        model.callingInviteInfo(callingType, IMUserId, toIMUserId, 0)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
@@ -905,11 +894,30 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
                 .subscribe(new BaseObserver<BaseDataResponse<CallingInviteInfo>>() {
                     @Override
                     public void onSuccess(BaseDataResponse<CallingInviteInfo> callingInviteInfoBaseDataResponse) {
+                        if (callingInviteInfoBaseDataResponse.getCode() == 2) {//對方忙線中
+                            uc.otherBusy.call();
+                            return;
+                        }
+                        if (callingInviteInfoBaseDataResponse.getCode() == 22001) {//游戏中
+                            Toast.makeText(AppContext.instance(), R.string.playfun_in_game, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         CallingInviteInfo callingInviteInfo = callingInviteInfoBaseDataResponse.getData();
                         if (callingInviteInfo != null) {
-                            Utils.tryStartCallSomeone(callingType, toImUserId, callingInviteInfo.getRoomId(), new Gson().toJson(callingInviteInfo));
+                            Utils.tryStartCallSomeone(callingType, toIMUserId, callingInviteInfo.getRoomId(), new Gson().toJson(callingInviteInfo));
                         }
                     }
+
+                    @Override
+                    public void onError(RequestException e) {
+                        super.onError(e);
+                        if (e != null) {
+                            if (e.getCode() == 1) {
+                                uc.sendDialogViewEvent.call();
+                            }
+                        }
+                    }
+
 
                     @Override
                     public void onComplete() {
@@ -931,23 +939,22 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
 
     public class UIChangeObservable {
         public SingleLiveEvent clickMore = new SingleLiveEvent<>();
+        //对方忙线
+        public SingleLiveEvent otherBusy = new SingleLiveEvent<>();
         public SingleLiveEvent<String> clickApplyCheckDetail = new SingleLiveEvent<>();
         public SingleLiveEvent<List<EvaluateEntity>> clickEvaluate = new SingleLiveEvent<>();
         public SingleLiveEvent<Integer> clickPayAlbum = new SingleLiveEvent<>();
         public SingleLiveEvent<Integer> clickVipCheckAlbum = new SingleLiveEvent<>();
-        public SingleLiveEvent<Integer> clickPayChat = new SingleLiveEvent<>();
         public SingleLiveEvent<Integer> clickVipChat = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> clickConnMic = new SingleLiveEvent<>();
-        public SingleLiveEvent<String> clickUnlockChatAccount = new SingleLiveEvent<>();
         public SingleLiveEvent<Integer> todayCheckNumber = new SingleLiveEvent<>();
-        public SingleLiveEvent<Void> clickCheckChatAccount = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> isAlertVipMonetyunlock = new SingleLiveEvent<>();
         public SingleLiveEvent VipSuccessFlag = new SingleLiveEvent();
-
-        public SingleLiveEvent<UserDetailEntity> lineEvent = new SingleLiveEvent<UserDetailEntity>();
 
         public SingleLiveEvent<List<EvaluateItemEntity>> evaluateItemEntityList = new SingleLiveEvent<List<EvaluateItemEntity>>();
         //下拉刷新完成
         public SingleLiveEvent<Void> finishRefreshing = new SingleLiveEvent<>();
+        //钻石不足。唤起充值
+        public SingleLiveEvent<Void> sendDialogViewEvent = new SingleLiveEvent<>();
     }
 }

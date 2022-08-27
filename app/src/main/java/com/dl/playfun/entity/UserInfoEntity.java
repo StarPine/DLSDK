@@ -3,8 +3,8 @@ package com.dl.playfun.entity;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
-import com.google.gson.annotations.SerializedName;
 import com.dl.playfun.BR;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * @author wulei
@@ -61,6 +61,68 @@ public class UserInfoEntity extends BaseObservable {
     //录音审核进度
     @SerializedName("sound_status")
     private Integer soundStatus;
+
+    //当前用户im id
+    @SerializedName("imId")
+    private String ImUserId;
+    //对方用户 IM iD
+    @SerializedName("toImId")
+    private String ImToUserId;
+
+    private String email;
+    //设置密码 1是0否
+    @SerializedName("is_password")
+    private Integer isPassword;
+
+    //是否开启等级权益 0否 1是
+    @SerializedName("is_level")
+    private Integer isLevel;
+    //是否开放公会主播入口 0否 1是
+    @SerializedName("anchor")
+    private int anchor;
+    //是否开放专属招呼入口 0否 1是
+    @SerializedName("isAnchor")
+    private int isAnchor;
+
+    public int getAnchor() {
+        return anchor;
+    }
+
+    public void setAnchor(int anchor) {
+        this.anchor = anchor;
+    }
+
+    public int getIsAnchor() {
+        return isAnchor;
+    }
+
+    public void setIsAnchor(int isAnchor) {
+        this.isAnchor = isAnchor;
+    }
+
+    public Integer getIsLevel() {
+        return isLevel;
+    }
+
+    public void setIsLevel(Integer isLevel) {
+        this.isLevel = isLevel;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Integer getIsPassword() {
+        return isPassword;
+    }
+
+    public void setIsPassword(Integer isPassword) {
+        this.isPassword = isPassword;
+    }
 
     public Integer getSoundStatus() {
         return soundStatus;
@@ -260,6 +322,22 @@ public class UserInfoEntity extends BaseObservable {
         this.cityId = cityId;
     }
 
+    public String getImUserId() {
+        return ImUserId;
+    }
+
+    public void setImUserId(String imUserId) {
+        ImUserId = imUserId;
+    }
+
+    public String getImToUserId() {
+        return ImToUserId;
+    }
+
+    public void setImToUserId(String imToUserId) {
+        ImToUserId = imToUserId;
+    }
+
     @Override
     public String toString() {
         return "UserInfoEntity{" +
@@ -287,6 +365,8 @@ public class UserInfoEntity extends BaseObservable {
                 ", soundTime=" + soundTime +
                 ", isSound=" + isSound +
                 ", soundStatus=" + soundStatus +
+                ", ImUserId='" + ImUserId + '\'' +
+                ", ImToUserId='" + ImToUserId + '\'' +
                 '}';
     }
 }

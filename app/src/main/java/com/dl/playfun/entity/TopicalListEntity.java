@@ -3,9 +3,9 @@ package com.dl.playfun.entity;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
+import com.dl.playfun.BR;
 import com.dl.playfun.utils.ListUtils;
 import com.google.gson.annotations.SerializedName;
-import com.dl.playfun.BR;
 
 import java.util.List;
 
@@ -74,6 +74,29 @@ public class TopicalListEntity extends BaseObservable {
 
     //内容
     private String content;
+
+    //当前用户im id
+    @SerializedName("imId")
+    private String ImUserId;
+    //对方用户 IM iD
+    @SerializedName("toImId")
+    private String ImToUserId;
+
+    public String getImUserId() {
+        return ImUserId;
+    }
+
+    public void setImUserId(String imUserId) {
+        ImUserId = imUserId;
+    }
+
+    public String getImToUserId() {
+        return ImToUserId;
+    }
+
+    public void setImToUserId(String imToUserId) {
+        ImToUserId = imToUserId;
+    }
 
     public String getContent() {
         return content;

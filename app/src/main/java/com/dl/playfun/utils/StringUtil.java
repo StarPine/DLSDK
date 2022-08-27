@@ -3,18 +3,15 @@ package com.dl.playfun.utils;
 import android.content.Context;
 
 import com.blankj.utilcode.util.StringUtils;
-import com.blankj.utilcode.util.TimeUtils;
 import com.dl.playfun.app.AppConfig;
-import com.dl.playfun.app.AppContext;
 import com.dl.playfun.R;
 import com.dl.playfun.entity.ConfigItemEntity;
 import com.dl.playfun.entity.OccupationConfigItemEntity;
+import com.google.gson.Gson;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
+import java.util.Map;
 
 public class StringUtil {
     /**
@@ -92,14 +89,9 @@ public class StringUtil {
     public static String getFullImageUrl(String imgPath) {
         if (imgPath == null) {
             return "";
-        } else if (imgPath.toLowerCase().startsWith("images/")) {
-            if (imgPath.endsWith(".mp4")) {
-                return AppConfig.IMAGE_BASE_URL + imgPath;
-            } else {
-                return AppConfig.IMAGE_BASE_URL + imgPath;
-            }
+        } else {
+            return AppConfig.IMAGE_BASE_URL + imgPath;
         }
-        return imgPath;
     }
 
     public static String getFullAudioUrl(String urlPath) {
@@ -165,23 +157,6 @@ public class StringUtil {
         return str;
     }
 
-    public static String getDayString(String time) {
-        String str = "";
-        if (time != null) {
-            long timeStamp = TimeUtils.string2Millis(time, TimeUtils.getSafeDateFormat("yyyy-MM-dd"));
-            if (Utils.isManilaApp(AppContext.instance())) {
-                Calendar calDate = Calendar.getInstance();
-                calDate.setTimeInMillis(timeStamp);
-                String dayNumberSuffix = getDayNumberSuffix(calDate.get(Calendar.DAY_OF_MONTH));
-                DateFormat dateFormat = new SimpleDateFormat("MMMM d'" + dayNumberSuffix + "'", Locale.ENGLISH);
-                str = TimeUtils.millis2String(timeStamp, dateFormat);
-            } else {
-                str = TimeUtils.millis2String(timeStamp, TimeUtils.getSafeDateFormat("M月d日"));
-            }
-        }
-        return str;
-    }
-
     public static String getDayNumberSuffix(int day) {
         if (day >= 11 && day <= 13) {
             return "th";
@@ -229,5 +204,37 @@ public class StringUtil {
         }
         return str;
     }
+
+
+    /**
+     * 判断数据是否为json类型
+     * @param str
+     * @return
+     */
+    public static boolean isJSON2(String str) {
+        boolean result = false;
+        try {
+            new Gson().fromJson(str, Map.class);
+            result = true;
+        } catch (Exception e) {
+            result = false;
+        }
+        return result;
+
+    }
+
+    public static boolean initIMInfo(TUIMessageBean info) {
+        if (info != null) {
+            String text = String.valueOf(info.getExtra());
+            if (isJSON2(text) && text.indexOf("type") != -1) {
+                Map<String, Object> map_data = new Gson().fromJson(text, Map.class);
+                return map_data != null && map_data.get("type") != null;
+            }
+        }
+        return false;
+
+    }
+
+
 
 }

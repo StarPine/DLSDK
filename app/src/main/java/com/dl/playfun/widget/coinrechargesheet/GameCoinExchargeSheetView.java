@@ -3,7 +3,6 @@ package com.dl.playfun.widget.coinrechargesheet;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Handler;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -19,10 +18,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
+import com.dl.playfun.api.AppGameConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
-import com.dl.playfun.app.Injection;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
@@ -30,6 +30,7 @@ import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.CoinExchangeBoxInfo;
 import com.dl.playfun.entity.CoinExchangePriceInfo;
 import com.dl.playfun.entity.GameCoinBuy;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.dl.playfun.R;
 import com.dl.playfun.ui.base.BasePopupWindow;
@@ -46,10 +47,6 @@ public class GameCoinExchargeSheetView extends BasePopupWindow implements View.O
     public static final String TAG = "GameCoinExchargeS...";
 
     private final AppCompatActivity mActivity;
-    private final Handler handler = new Handler();
-    private final int consumeImmediately = 0;
-    private final int consumeDelay = 1;
-    private final int selPosition = 0;
     private View mPopView;
     private RecyclerView recyclerView;
     private TextView tvGameTotal;
@@ -58,6 +55,8 @@ public class GameCoinExchargeSheetView extends BasePopupWindow implements View.O
     private ViewGroup loadingView;
     private GameCoinExchargeAdapter adapter;
     private CoinExchangeBoxInfo mBoxInfo = null;
+    //游戏货币图标
+    private ImageView imgGameCoin;
 
     private CoinRechargeSheetViewListener coinRechargeSheetViewListener;
 
@@ -108,7 +107,14 @@ public class GameCoinExchargeSheetView extends BasePopupWindow implements View.O
     private void init(Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
         mPopView = inflater.inflate(R.layout.view_coin_exchange_sheet, null);
-
+        imgGameCoin = mPopView.findViewById(R.id.img_game_coin);
+        //设置游戏货币图标。根据用户传递
+        AppGameConfig appGameConfig = ConfigManager.getInstance().getAppRepository().readGameConfigSetting();
+        if(!ObjectUtils.isEmpty(appGameConfig)){
+            if(appGameConfig.getGamePlayCoinSmallImg()!=0){
+                imgGameCoin.setImageResource(appGameConfig.getGamePlayCoinSmallImg());
+            }
+        }
         recyclerView = mPopView.findViewById(R.id.recycler_view);
         tvGameTotal = mPopView.findViewById(R.id.tv_game_coin_total);
         tvJmTotal = mPopView.findViewById(R.id.tv_jm_coin_total);
@@ -190,7 +196,7 @@ public class GameCoinExchargeSheetView extends BasePopupWindow implements View.O
 
     private void loadCoinExchangeBoxInfo() {
         loading(true);
-        Injection.provideDemoRepository()
+         ConfigManager.getInstance().getAppRepository()
                 .getCoinExchangeBoxInfo()
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
@@ -201,7 +207,7 @@ public class GameCoinExchargeSheetView extends BasePopupWindow implements View.O
                         loadingView.setVisibility(View.GONE);
                         mBoxInfo = response.getData();
                         adapter.setData(mBoxInfo.getPriceList());
-                        tvGameTotal.setText(String.valueOf(mBoxInfo.getTotalGameCoins()));
+                        tvGameTotal.setText(String.valueOf(mBoxInfo.getTotalAppCoins()));
                         int totalCoin = mBoxInfo.getTotalCoins().intValue();
                         if (isCallMedia) {
                             totalCoin = maleBalance;
@@ -229,7 +235,7 @@ public class GameCoinExchargeSheetView extends BasePopupWindow implements View.O
     public void onBuyClick(View view, int position) {
         if(mBoxInfo == null) return;
         CoinExchangePriceInfo exChangeInfo = mBoxInfo.getPriceList().get(position);
-        if(mBoxInfo.getTotalGameCoins() < exChangeInfo.getGameCoins()){
+        if(mBoxInfo.getTotalAppCoins() < exChangeInfo.getGameCoins()){
             ToastUtils.showShort(R.string.playfun_exchange_coin_not_enough_toast);
             topupGameCoins();
             return;
@@ -249,7 +255,7 @@ public class GameCoinExchargeSheetView extends BasePopupWindow implements View.O
 
     private void exchangeCoins(CoinExchangePriceInfo exChangeInfo){
         loading(true);
-        Injection.provideDemoRepository()
+         ConfigManager.getInstance().getAppRepository()
                 .exchangeCoins(exChangeInfo.getId())
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
@@ -280,11 +286,11 @@ public class GameCoinExchargeSheetView extends BasePopupWindow implements View.O
     }
 
     private void topupGameCoins(){
-        GameCoinTopupSheetView coinRechargeSheetView = new GameCoinTopupSheetView(mActivity);
+        CoinExchargeItegralPayDialog coinRechargeSheetView = new CoinExchargeItegralPayDialog(mActivity,mActivity);
         coinRechargeSheetView.show();
-        coinRechargeSheetView.setCoinRechargeSheetViewListener(new GameCoinTopupSheetView.CoinRechargeSheetViewListener() {
+        coinRechargeSheetView.setCoinRechargeSheetViewListener(new CoinExchargeItegralPayDialog.CoinRechargeSheetViewListener() {
             @Override
-            public void onPaySuccess(GameCoinTopupSheetView sheetView, GameCoinBuy sel_goodsEntity) {
+            public void onPaySuccess(CoinExchargeItegralPayDialog sheetView, GameCoinBuy sel_goodsEntity) {
                 sheetView.endGooglePlayConnect();
                 sheetView.dismiss();
                 loadCoinExchangeBoxInfo();
@@ -300,7 +306,7 @@ public class GameCoinExchargeSheetView extends BasePopupWindow implements View.O
             }
 
             @Override
-            public void onPayFailed(GameCoinTopupSheetView sheetView, String msg) {
+            public void onPayFailed(CoinExchargeItegralPayDialog sheetView, String msg) {
                 sheetView.dismiss();
                 ToastUtils.showShort(msg);
                 AppContext.instance().logEvent(AppsFlyerEvent.Failed_to_top_up);

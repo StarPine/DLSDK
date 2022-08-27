@@ -1,53 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:binding="http://schemas.android.com/apk/res-auto">
 
-    <View
-        android:id="@+id/top_view"
+    <data>
+
+    </data>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="74dp"
-        android:background="@color/transparent" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:src="@color/divider" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:background="@color/white">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view"
+        <RelativeLayout
+            binding:drawable_color="@{@color/white}"
+            binding:drawable_radius_leftTop="@{20}"
+            binding:drawable_radius_rightTop="@{20}"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/btn_confirm"
-            android:scrollbars="vertical" />
+            android:layout_height="300dp">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_above="@+id/btn_confirm"
-            android:src="@color/divider" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/btn_cancel"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="19dp"
+                android:includeFontPadding="false"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/playfun_cancel"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
 
-        <Button
-            android:id="@+id/btn_confirm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:background="#00000000"
-            android:stateListAnimator="@null"
-            android:text="@string/playfun_confirm"
-            android:textColor="@color/purple" />
-    </RelativeLayout>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_title"
+                android:layout_alignParentTop="true"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="14dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:text="@string/playfun_dialog_choose_city"
+                android:textColor="#ff282828"
+                android:textSize="17sp" />
 
-    <RelativeLayout
-        android:id="@+id/rl_overlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible" />
-</LinearLayout>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/btn_confirm"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="14dp"
+                android:layout_alignParentEnd="true"
+                android:includeFontPadding="false"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/playfun_face_detect_dialog_btn_sure"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <View
+                android:id="@+id/v_line"
+                android:layout_below="@+id/tv_title"
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:src="@color/divider" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/v_line"
+                android:scrollbars="vertical" />
+        </RelativeLayout>
+    </LinearLayout>
+</layout>

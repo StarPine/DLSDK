@@ -1,17 +1,24 @@
 package com.dl.playfun.ui.base;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.PopupWindow;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LifecycleRegistry;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
-public class BasePopupWindow extends PopupWindow implements Consumer<Disposable> {
+public class BasePopupWindow extends PopupWindow implements Consumer<Disposable>, LifecycleOwner {
 
     private CompositeDisposable mCompositeDisposable;
+    private final LifecycleRegistry mLifecycle = new LifecycleRegistry(this);
 
     public BasePopupWindow(Context context) {
         super(context);
@@ -81,6 +88,18 @@ public class BasePopupWindow extends PopupWindow implements Consumer<Disposable>
             mCompositeDisposable.clear();
         }
         super.dismiss();
+        mLifecycle.handleLifecycleEvent(Lifecycle.Event.ON_STOP);
+        mLifecycle.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY);
     }
 
+    @NonNull
+    @Override
+    public Lifecycle getLifecycle() {
+        return mLifecycle;
+    }
+
+    public void showLifecycle() {
+        mLifecycle.handleLifecycleEvent(Lifecycle.Event.ON_CREATE);
+        mLifecycle.handleLifecycleEvent(Lifecycle.Event.ON_START);
+    }
 }

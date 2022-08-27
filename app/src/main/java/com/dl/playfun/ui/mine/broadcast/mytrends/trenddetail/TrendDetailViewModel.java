@@ -72,13 +72,16 @@ public class TrendDetailViewModel extends BaseViewModel<AppRepository> {
     public BindingCommand imageClick = new BindingCommand(new BindingAction() {
         @Override
         public void call() {
-            //放大图片
-            if (!ListUtils.isEmpty(newsEntityObservableField.get().getImages())) {
-                RxBus.getDefault().post(new ZoomInPictureEvent(newsEntityObservableField.get().getImages().get(0)));
-            } else {
-                RxBus.getDefault().post(new ZoomInPictureEvent(newsEntityObservableField.get().getUser().getAvatar()));
-            }
+            try {
+                //放大图片
+                if (!ListUtils.isEmpty(newsEntityObservableField.get().getImages())) {
+                    RxBus.getDefault().post(new ZoomInPictureEvent(newsEntityObservableField.get().getImages().get(0)));
+                } else {
+                    RxBus.getDefault().post(new ZoomInPictureEvent(newsEntityObservableField.get().getUser().getAvatar()));
+                }
+            }catch (Exception ignored) {
 
+            }
         }
     });
     //更多的点击事件

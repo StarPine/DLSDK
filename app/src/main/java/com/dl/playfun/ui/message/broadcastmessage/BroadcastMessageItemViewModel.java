@@ -18,7 +18,6 @@ public class BroadcastMessageItemViewModel extends ItemViewModel<BroadcastMessag
     public BindingCommand itemClick = new BindingCommand(() -> {
         try {
             int position = viewModel.observableList.indexOf(BroadcastMessageItemViewModel.this);
-            viewModel.itemClick(position);
         } catch (Exception e) {
             ExceptionReportUtils.report(e);
         }

@@ -33,7 +33,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="14dp"
                         android:layout_marginTop="10dp"
-                        android:text="@string/playfun_dialong_coin_rechaege_top_up"
+                        android:text="@string/playfun_txt_exchange_game_coin"
                         android:textColor="@color/black"
                         android:textSize="17sp" />
 
@@ -72,13 +72,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tv_title"
+                        android:layout_marginLeft="2dp"
                         android:layout_marginTop="8dp"
                         android:layout_toRightOf="@id/img_game_coin"
-                        android:layout_marginLeft="2dp"
                         android:text="-"
                         android:textColor="#ffa92afb"
-                        android:textSize="13sp"
-                        />
+                        android:textSize="13sp" />
 
                     <ImageView
                         android:id="@+id/iv_refresh"

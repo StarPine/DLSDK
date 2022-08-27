@@ -1,5 +1,7 @@
 package com.dl.playfun.ui.home.search;
 
+import static com.blankj.utilcode.util.SnackbarUtils.dismiss;
+
 import android.app.Application;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -63,7 +65,7 @@ public class SearchViewModel extends BaseParkViewModel<AppRepository> {
         if (itemEntity == null) {//提醒充值钻石
             sendAccostFirstError.call();
         } else {
-            loadLoteAnime.postValue(position);
+            //loadLoteAnime.postValue(position);
             //跳转到聊天界面
 //            ChatUtils.chatUser(itemEntity.getId(), itemEntity.getNickname(), SearchViewModel.this);
         }
@@ -95,11 +97,7 @@ public class SearchViewModel extends BaseParkViewModel<AppRepository> {
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
                 .doOnSubscribe(this)
-                .doOnSubscribe(disposable -> {
-//                    if (page == 1) {
-//                        stateModel.setEmptyState(EmptyState.PROGRESS);
-//                    }
-                })
+                .doOnSubscribe(disposable -> showHUD())
                 .subscribe(new BaseObserver<BaseListDataResponse<ParkItemEntity>>() {
 
                     @Override
@@ -133,6 +131,7 @@ public class SearchViewModel extends BaseParkViewModel<AppRepository> {
                     @Override
                     public void onComplete() {
                         stopRefreshOrLoadMore();
+                        dismissHUD();
                     }
                 });
     }

@@ -40,6 +40,50 @@ public class BroadcastEntity {
     private TopicalBean topical;
     private NewsBean news;
 
+    @SerializedName("calling_status")
+    private int callingStatus;
+    @SerializedName("is_online")
+    private int isOnline;
+
+    //当前用户im id
+    @SerializedName("imId")
+    private String ImUserId;
+    //对方用户 IM iD
+    @SerializedName("toImId")
+    private String ImToUserId;
+
+    public String getImUserId() {
+        return ImUserId;
+    }
+
+    public void setImUserId(String imUserId) {
+        ImUserId = imUserId;
+    }
+
+    public String getImToUserId() {
+        return ImToUserId;
+    }
+
+    public void setImToUserId(String imToUserId) {
+        ImToUserId = imToUserId;
+    }
+
+    public int getCallingStatus() {
+        return callingStatus;
+    }
+
+    public void setCallingStatus(int callingStatus) {
+        this.callingStatus = callingStatus;
+    }
+
+    public int getIsOnline() {
+        return isOnline;
+    }
+
+    public void setIsOnline(int isOnline) {
+        this.isOnline = isOnline;
+    }
+
     public String getGameChannel() {
         return gameChannel;
     }

@@ -32,6 +32,7 @@ public class TraceFragment extends BaseToolbarFragment<FragmentMineTraceGirlBind
 
     String titleToobal = "";
     int sel_idx = -1;
+    private TraceFragmentTabPagerAdapter adapter;
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
@@ -70,7 +71,7 @@ public class TraceFragment extends BaseToolbarFragment<FragmentMineTraceGirlBind
         if (!StringUtils.isEmpty(titleToobal)) {
             setTitleBarTitle(titleToobal);
         }
-        TraceFragmentTabPagerAdapter adapter = new TraceFragmentTabPagerAdapter(mActivity, this.getChildFragmentManager(), 0, viewModel);
+        adapter = new TraceFragmentTabPagerAdapter(mActivity, this.getChildFragmentManager(), 0, viewModel);
         binding.viewPager.setOffscreenPageLimit(2);
         binding.viewPager.setAdapter(adapter);
         binding.tabs.setSelectedTabIndicatorHeight(0);

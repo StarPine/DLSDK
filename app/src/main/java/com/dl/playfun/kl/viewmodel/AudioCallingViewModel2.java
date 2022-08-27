@@ -1,9 +1,9 @@
 package com.dl.playfun.kl.viewmodel;
 
 import android.app.Application;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -20,16 +20,15 @@ import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.entity.CallingInviteInfo;
 import com.dl.playfun.entity.UserProfileInfo;
 import com.dl.playfun.event.AudioCallingCancelEvent;
+import com.dl.playfun.kl.view.Ifinish;
 import com.dl.playfun.manager.ConfigManager;
-import com.dl.playfun.utils.ChatUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.dl.playfun.R;
 import com.dl.playfun.kl.Utils;
-import com.dl.playfun.kl.view.AudioCallChatingActivity;
 import com.dl.playfun.kl.view.IViewAudioCallingWaiting;
+import com.tencent.liteav.trtccalling.TUICalling;
 import com.tencent.liteav.trtccalling.model.TRTCCalling;
 import com.tencent.liteav.trtccalling.model.TRTCCallingDelegate;
-import com.tencent.liteav.trtccalling.model.TUICalling;
 import com.tencent.trtc.TRTCCloudDef;
 
 import org.jetbrains.annotations.NotNull;
@@ -43,7 +42,7 @@ import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.RxUtils;
 
-public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> implements IViewAudioCallingWaiting {
+public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> implements Ifinish {
 
     private static final int MIN_DURATION_SHOW_LOW_QUALITY = 5000; //显示网络不佳最小间隔时间
     public ObservableField<String> maleBinding = new ObservableField<>("");
@@ -54,6 +53,7 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
     protected TRTCCallingDelegate mTRTCCallingDelegate;
     //返回上一页
     public SingleLiveEvent<Void> backViewEvent = new SingleLiveEvent<>();
+    public SingleLiveEvent<Integer> startAudioActivity = new SingleLiveEvent<>();
 
     public boolean audioSuccess = false;
     public View.OnClickListener acceptOnClick = new View.OnClickListener() {
@@ -62,12 +62,16 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
             if (!audioSuccess) {
                 return;
             }
+            if (isCancel){
+                finishView();
+                return;
+            }
             mTRTCCalling.accept();
             unListen();
-            startChattingView(false);
+            startAudioActivity.postValue(roomId);
         }
     };
-    protected int roomId;// 本来不需要持有这个roomId， 位置调试log，还是持有一下吧
+    protected int roomId;
     private String fromUserId;
     private String toUserId;
     private TUICalling.Role mRole;
@@ -87,6 +91,7 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
     private Disposable mSubscription;
     private long mSelfLowQualityTime;
     private long mOtherPartyLowQualityTime;
+    private boolean isCancel;
 
     public AudioCallingViewModel2(@NonNull @NotNull Application application, AppRepository model) {
         super(application, model);
@@ -127,7 +132,6 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
         this.toUserId = toUserId;
         this.mRole = role;
         isCallBinding.set(role == TUICalling.Role.CALL);
-        this.roomId = roomId;
         mTRTCCalling = TRTCCalling.sharedInstance(AppContext.instance());
     }
 
@@ -179,9 +183,17 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
             }
 
             @Override
+            public void onCallingCancel() {
+                unListen();
+                finishView();
+                Utils.show("對方取消通話");
+                isCancel = true;
+            }
+
+            @Override
             public void onUserEnter(String userId) {
                 unListen();
-                startChattingView(true);
+                startAudioActivity.postValue(roomId);
             }
 
             @Override
@@ -346,9 +358,9 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
     }
 
     //拨打语音、视频---接听人
-    public void getCallingInvitedInfo(int callingType, Integer fromUserId) {
-        int userId = model.readUserData().getId();
-        model.callingInviteInfo(callingType, fromUserId, userId, userId)
+    public void getCallingInvitedInfo(int callingType, String fromUserId) {
+        String userId = model.readUserData().getImUserId();
+        model.callingInviteInfo(callingType, fromUserId, userId, 0)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
@@ -383,21 +395,6 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
                         dismissHUD();
                     }
                 });
-    }
-
-    @Override
-    public void startChattingView(boolean userCall) {
-        Bundle bundle = new Bundle();
-        bundle.putInt("fromUserId", ChatUtils.imUserIdToSystemUserId(fromUserId));
-        bundle.putInt("toUserId", ChatUtils.imUserIdToSystemUserId(this.toUserId));
-        if (mRole == TUICalling.Role.CALL) {
-            bundle.putInt("mRole", 1);
-            bundle.putBoolean("userCall",true);
-        } else {
-            bundle.putInt("mRole", 0);
-        }
-        bundle.putInt("roomId", roomId);
-        startActivityPoP(AudioCallChatingActivity.class, bundle);
     }
 
     @Override

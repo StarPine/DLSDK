@@ -21,6 +21,7 @@ import com.dl.playfun.viewmodel.BaseRefreshViewModel;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.ui.radio.issuanceprogram.IssuanceProgramFragment;
+import com.dl.playfun.widget.emptyview.EmptyState;
 
 import io.reactivex.disposables.Disposable;
 import me.goldze.mvvmhabit.binding.command.BindingAction;
@@ -157,6 +158,10 @@ public class MyTrendsViewModel extends BaseRefreshViewModel<AppRepository> {
                     public void onSuccess(BaseResponse response) {
                         dismissHUD();
                         observableList.remove(posion);
+                        if(observableList.size()<=0){
+                            stateModel.setEmptyBroadcastCommand(StringUtils.getString(R.string.playfun_my_all_broadcast_empty), R.drawable.my_all_broadcast_empty_img, R.color.all_broadcast_empty,StringUtils.getString(R.string.playfun_task_fragment_task_new10),toProgramVIew);
+                            stateModel.setEmptyState(EmptyState.EMPTY);
+                        }
                     }
 
                     @Override

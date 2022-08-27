@@ -1,6 +1,9 @@
 package com.dl.playfun.data.source;
 
+import com.dl.playfun.api.AppGameConfig;
+import com.dl.playfun.entity.ApiConfigManagerEntity;
 import com.dl.playfun.entity.ConfigItemEntity;
+import com.dl.playfun.entity.CrystalDetailsConfigEntity;
 import com.dl.playfun.entity.EvaluateObjEntity;
 import com.dl.playfun.entity.GameConfigEntity;
 import com.dl.playfun.entity.LocalGooglePayCache;
@@ -18,6 +21,28 @@ import java.util.Map;
  * @date 2019/3/26
  */
 public interface LocalDataSource {
+    /**
+     * 保存城市配置
+     *
+     * @param configs
+     */
+    void saveCityConfigAll(List<ConfigItemEntity> configs);
+    /**
+     * 获取所有配置
+     *
+     * @return
+     */
+    List<ConfigItemEntity> readCityConfigAll();
+    //保存api配置
+    void saveApiConfigManager(ApiConfigManagerEntity apiConfigManager);
+    //读取api配置
+    ApiConfigManagerEntity readApiConfigManagerEntity();
+
+
+    //保存游戏配置
+    void saveGameConfigSetting(AppGameConfig appGameConfig);
+    //读取游戏配置
+    AppGameConfig readGameConfigSetting();
     //保存键值对
     void putKeyValue(String key, String value);
 
@@ -58,6 +83,11 @@ public interface LocalDataSource {
      * @return
      */
     String readChannelAF();
+
+    //私讯推送状态
+    Boolean readChatPushStatus();
+
+    void saveChatPushStatus(int value);
 
     /**
      * 保存邀请码到本地
@@ -229,18 +259,16 @@ public interface LocalDataSource {
     List<GameConfigEntity> readGameConfig();
 
     /**
-     * 保存节目时间配置
-     *
+     * 保存水晶兌換规则显示标记
      * @param configs
      */
-    void saveProgramTimeConfig(List<ConfigItemEntity> configs);
+    void saveCrystalDetailsConfig(CrystalDetailsConfigEntity configs);
 
     /**
-     * 获取节目时间配置
-     *
+     * 读取水晶兌換规则显示标记
      * @return
      */
-    List<ConfigItemEntity> readProgramTimeConfig();
+    CrystalDetailsConfigEntity readCrystalDetailsConfig();
 
     /**
      * 保存身高配置
@@ -269,6 +297,20 @@ public interface LocalDataSource {
      * @return
      */
     List<ConfigItemEntity> readWeightConfig();
+
+    /**
+     * 保存屏蔽關鍵字
+     *
+     * @param configs
+     */
+    void saveSensitiveWords(List<String> configs);
+
+    /**
+     * 获取屏蔽關鍵字
+     *
+     * @return
+     */
+    List<String> readSensitiveWords();
 
     /**
      * 保存举报原因配置
@@ -346,20 +388,6 @@ public interface LocalDataSource {
      * @return
      */
     List<OccupationConfigItemEntity> readOccupationConfig();
-
-    /**
-     * 保存主题配置
-     *
-     * @param configs
-     */
-    void saveThemeConfig(List<ConfigItemEntity> configs);
-
-    /**
-     * 获取主题配置
-     *
-     * @return
-     */
-    List<ConfigItemEntity> readThemeConfig();
 
     /**
      * 保存城市配置
@@ -446,18 +474,4 @@ public interface LocalDataSource {
      * @return
      */
     String readDefaultHomePageConfig();
-
-    /**
-     * 保存是否第一次进入
-     *
-     * @param isFrist
-     */
-    void saveIsFrist(Boolean isFrist);
-
-    /**
-     * 读取是否第一次进入
-     *
-     * @return
-     */
-    Boolean readIsFrist();
 }

@@ -11,11 +11,14 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.Observer;
@@ -24,33 +27,34 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.StringUtils;
+import com.dl.playfun.BR;
+import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
-import com.dl.playfun.entity.RadioTwoFilterItemEntity;
+import com.dl.playfun.databinding.FragmentRadioBinding;
+import com.dl.playfun.entity.ConfigItemEntity;
+import com.dl.playfun.entity.GoodsEntity;
+import com.dl.playfun.entity.RadioFilterItemEntity;
 import com.dl.playfun.helper.DialogHelper;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseRefreshFragment;
-import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
-import com.dl.playfun.ui.mine.broadcast.myprogram.ProgramItemViewModel;
+import com.dl.playfun.ui.dialog.CityChooseDialog;
 import com.dl.playfun.ui.mine.broadcast.mytrends.TrendItemViewModel;
-import com.dl.playfun.utils.LogUtils;
+import com.dl.playfun.ui.mine.wallet.recharge.RechargeActivity;
+import com.dl.playfun.ui.userdetail.report.ReportUserFragment;
+import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.PictureSelectorUtil;
-import com.dl.playfun.widget.RadioFilterView;
+import com.dl.playfun.viewadapter.CustomRefreshHeader;
+import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 import com.dl.playfun.widget.dialog.MMAlertDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.dl.playfun.widget.dialog.TraceDialog;
+import com.dl.playfun.widget.dropdownfilterpop.DropDownFilterPopupWindow;
 import com.google.gson.reflect.TypeToken;
-import com.luck.picture.lib.entity.LocalMedia;
-import com.luck.picture.lib.listener.OnResultCallbackListener;
-import com.dl.playfun.BR;
-import com.dl.playfun.R;
-import com.dl.playfun.databinding.FragmentRadioBinding;
-import com.dl.playfun.ui.certification.certificationmale.CertificationMaleFragment;
-import com.dl.playfun.ui.radio.issuanceprogram.IssuanceProgramFragment;
-import com.dl.playfun.ui.userdetail.report.ReportUserFragment;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
+import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 import com.zyyoona7.popup.EasyPopup;
 import com.zyyoona7.popup.XGravity;
 import com.zyyoona7.popup.YGravity;
@@ -60,27 +64,31 @@ import java.util.List;
 import java.util.Map;
 
 import me.goldze.mvvmhabit.utils.ToastUtils;
-import me.jessyan.autosize.AutoSizeCompat;
-import me.jessyan.autosize.internal.CustomAdapt;
 
 /**
  * @author wulei
  */
-public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, RadioViewModel> implements RadioFilterView.RadioFilterListener, CustomAdapt {
-    private TextView tvCreate;
+public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, RadioViewModel> {
     private Context mContext;
     private EasyPopup mCirclePop;
-    private List<RadioFilterView.RadioFilterItemEntity> sexs;
+
+    private CityChooseDialog cityChooseDialog;
+
+    private List<RadioFilterItemEntity> radioFilterListData;
+    private DropDownFilterPopupWindow radioFilterPopup;
+    private Integer radioFilterCheckIndex;
+    private List<ConfigItemEntity> citys;
+
+    private RadioFragmentLifecycle radioFragmentLifecycle;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        tvCreate = view.findViewById(R.id.tv_create);
     }
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        AutoSizeCompat.autoConvertDensityOfGlobal(RadioFragment.this.getResources());
+        AutoSizeUtils.applyAdapt(this.getResources());
         return R.layout.fragment_radio;
     }
 
@@ -93,6 +101,9 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
     public void onSupportInvisible() {
         super.onSupportInvisible();
         try {
+            if (AudioPlayer.getInstance().isPlaying()) {
+                AudioPlayer.getInstance().stopPlay();
+            }
             GSYVideoManager.releaseAllVideos();
         } catch (Exception e) {
 
@@ -117,6 +128,11 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
 
+        if(hidden){
+            if (AudioPlayer.getInstance().isPlaying()) {
+                AudioPlayer.getInstance().stopPlay();
+            }
+        }
         try {
             GSYVideoManager.releaseAllVideos();
         } catch (Exception e) {
@@ -128,36 +144,49 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
     @Override
     public void initData() {
         super.initData();
-        sexs = new ArrayList<>();
-        //sexs.add(new RadioFilterView.RadioFilterItemEntity<>(getString(R.string.any_gender), null));
-        sexs.add(new RadioFilterView.RadioFilterItemEntity<>(getString(R.string.playfun_radio_selected_zuiz),2));
-        sexs.add(new RadioFilterView.RadioFilterItemEntity<>(getString(R.string.playfun_just_look_lady), 0));
-        sexs.add(new RadioFilterView.RadioFilterItemEntity<>(getString(R.string.playfun_just_look_man), 1));
+        radioFragmentLifecycle = new RadioFragmentLifecycle();
+        //让radioFragmentLifecycle拥有View的生命周期感应
+        getLifecycle().addObserver(radioFragmentLifecycle);
+        binding.refreshLayout.setRefreshHeader(new CustomRefreshHeader(getContext()));
+        citys = ConfigManager.getInstance().getAppRepository().readCityConfig();
+        ConfigItemEntity nearItemEntity = new ConfigItemEntity();
+        nearItemEntity.setId(-1);
+        nearItemEntity.setName(getStringByResId(R.string.playfun_tab_female_1));
+        citys.add(0, nearItemEntity);
 
-        viewModel.loadGameCity();
+        radioFilterListData = new ArrayList<>();
+        radioFilterListData.add(new RadioFilterItemEntity<>(getString(R.string.playfun_radio_selected_zuiz),2));
+        radioFilterListData.add(new RadioFilterItemEntity<>(getString(R.string.playfun_just_look_lady), 0));
+        radioFilterListData.add(new RadioFilterItemEntity<>(getString(R.string.playfun_just_look_man), 1));
+        radioFilterPopup =  new DropDownFilterPopupWindow(mActivity, radioFilterListData);
+        radioFilterCheckIndex = 0;
+        radioFilterPopup.setSelectedPosition(radioFilterCheckIndex);
+        radioFilterPopup.setOnItemClickListener((popupWindow, position) -> {
+            popupWindow.dismiss();
+            RadioFilterItemEntity obj =radioFilterListData.get(position);
+            radioFilterCheckIndex = position;
+            if (obj.getData() == null) {
+                viewModel.setSexId(null);
+            } else {
+                if (((Integer) obj.getData()).intValue() == 0) {
+                    AppContext.instance().logEvent(AppsFlyerEvent.Male_Only);
+                } else {
+                    AppContext.instance().logEvent(AppsFlyerEvent.Female_Only);
+                }
+                if(((Integer)obj.getData()).intValue() == 2){//追踪的人
+                    viewModel.type = 1;//发布时间
+                    viewModel.cityId = null;
+                    viewModel.gameId = null;
+                    viewModel.setIsCollect(1);
+                    AppContext.instance().logEvent(AppsFlyerEvent.Follow_Only);
+                }else{
+                    viewModel.setSexId((Integer) obj.getData());
+                }
+                viewModel.tarckingTitle.set(obj.getName());
+            }
+        });
 
-
-        binding.radioFilterView.setRadioFilterListener(this);
-
-        viewModel.loadHttpData();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        GSYVideoManager.onPause();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        GSYVideoManager.onResume();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        GSYVideoManager.releaseAllVideos();
+        binding.refreshLayout.autoRefresh();
     }
 
     @Override
@@ -165,22 +194,63 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
         super.initViewObservable();
         AppContext.instance().logEvent(AppsFlyerEvent.Broadcast);
         mContext = this.getContext();
-        viewModel.radioUC.getRadioTwoFilterItemEntity.observe(this, new Observer<List<RadioTwoFilterItemEntity>>() {
-            @Override
-            public void onChanged(List<RadioTwoFilterItemEntity> radioTwoFilterItemEntities) {
-                List<RadioTwoFilterItemEntity> regions = new ArrayList<>();
-                List<RadioTwoFilterItemEntity.CityBean> cityBeans = new ArrayList<>();
-
-                cityBeans.add(new RadioTwoFilterItemEntity.CityBean(0, getResources().getString(R.string.playfun_text_all)));
-                regions.add(new RadioTwoFilterItemEntity(0, getResources().getString(R.string.playfun_text_all),cityBeans));
-
-                if (radioTwoFilterItemEntities != null && radioTwoFilterItemEntities.size()>0){
-                    for (RadioTwoFilterItemEntity gameCity : radioTwoFilterItemEntities) {
-                        regions.add(gameCity);
-                    }
-                }
-                binding.radioFilterView.setFilterData(sexs, regions);
+        //开始播放
+        viewModel.radioUC.startBannerEvent.observe(this, unused -> {
+            if(viewModel.radioItemsAdUser.size()>2){
+                binding.rcvAduser.setPlaying(true);
+                //binding.rcvAduser.scrollToPosition(2);
             }
+        });
+        //点击banner切换
+        viewModel.radioUC.clickBannerIdx.observe(this, integer -> {
+            binding.rcvAduser.scrollToPosition(integer);
+        });
+        //弹起充值引导
+        viewModel.radioUC.sendDialogViewEvent.observe(this, event -> {
+            googleCoinValueBox();
+        });
+        //对方忙线
+        viewModel.radioUC.otherBusy.observe(this, o -> {
+            TraceDialog.getInstance(getContext())
+                    .chooseType(TraceDialog.TypeEnum.CENTER)
+                    .setTitle(StringUtils.getString(R.string.playfun_other_busy_title))
+                    .setContent(StringUtils.getString(R.string.playfun_other_busy_text))
+                    .setConfirmText(StringUtils.getString(R.string.playfun_mine_trace_delike_confirm))
+                    .setConfirmOnlick(new TraceDialog.ConfirmOnclick() {
+                        @Override
+                        public void confirm(Dialog dialog) {
+
+                            dialog.dismiss();
+                        }
+                    }).TraceVipDialog().show();
+        });
+        //选择 追踪的人 男 女
+        viewModel.radioUC.clickTacking.observe(this, unused -> {
+            radioFilterPopup.setSelectedPosition(radioFilterCheckIndex);
+            radioFilterPopup.showAsDropDown(binding.llTracking);
+        });
+        //选择城市
+        viewModel.radioUC.clickRegion.observe(this, unused -> {
+            if(cityChooseDialog==null){
+                cityChooseDialog = new CityChooseDialog(getContext(),citys,viewModel.cityId);
+            }
+            cityChooseDialog.show();
+            cityChooseDialog.setCityChooseDialogListener((dialog1, itemEntity) -> {
+                if(itemEntity!=null){
+                    if(itemEntity.getId()!=null && itemEntity.getId()==-1){
+                        viewModel.cityId = null;
+                    }else{
+                        viewModel.cityId = itemEntity.getId();
+                    }
+
+                    viewModel.regionTitle.set(itemEntity.getName());
+                }else{
+                    viewModel.cityId = null;
+                    viewModel.regionTitle.set(StringUtils.getString(R.string.playfun_tab_female_1));
+                }
+                binding.refreshLayout.autoRefresh();
+                dialog1.dismiss();
+            });
         });
         //放大图片
         viewModel.radioUC.zoomInp.observe(this, new Observer<String>() {
@@ -190,17 +260,6 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
                         .getImageDialog(mContext,drawable).show();
             }
         });
-
-        /**
-         * 节目发布
-         */
-        viewModel.radioUC.programSubject.observe(this, new Observer() {
-            @Override
-            public void onChanged(@Nullable Object o) {
-                viewModel.start(IssuanceProgramFragment.class.getCanonicalName());
-            }
-        });
-
 
         viewModel.radioUC.clickMore.observe(this, o -> {
             Integer position = Integer.valueOf(((Map<String, String>) o).get("position"));
@@ -231,18 +290,6 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
                 } else {
                     mCirclePop.findViewById(R.id.tv_detele).setVisibility(View.GONE);
                     stop.setText(getString(R.string.playfun_report_user_title));
-                    isSelf = false;
-                }
-            } else {
-                if (viewModel.userId == ((ProgramItemViewModel) viewModel.radioItems.get(position)).topicalListEntityObservableField.get().getUserId()) {
-                    stop.setText(((ProgramItemViewModel) viewModel.radioItems.get(position)).topicalListEntityObservableField.get().getBroadcast().getIsComment() == 0 ? getString(R.string.playfun_fragment_issuance_program_no_comment) : getString(R.string.playfun_open_comment));
-                    TextView tvDetele = mCirclePop.findViewById(R.id.tv_detele);
-                    tvDetele.setText(getString(R.string.playfun_delete_program));
-                    isSelf = true;
-                } else {
-                    mCirclePop.findViewById(R.id.tv_detele).setVisibility(View.GONE);
-                    stop.setText(getString(R.string.playfun_report_user_title));
-                    isSelf = false;
                 }
             }
 
@@ -273,8 +320,6 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
                                 public void confirm(MVDialog dialog) {
                                     if (type.equals(RadioViewModel.RadioRecycleType_New)) {
                                         viewModel.deleteNews(position);
-                                    } else {
-                                        viewModel.deleteTopical(position);
                                     }
 
                                     dialog.dismiss();
@@ -299,12 +344,6 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
                     } else {
                         ToastUtils.showShort(R.string.playfun_already);
                     }
-                } else {
-                    if (((ProgramItemViewModel) viewModel.radioItems.get(position)).topicalListEntityObservableField.get().getIsGive() == 0) {
-                        viewModel.topicalGive(position);
-                    } else {
-                        ToastUtils.showShort(R.string.playfun_already);
-                    }
                 }
             }
         });
@@ -316,7 +355,7 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
                 String toUserId = ((Map<String, String>) o).get("toUseriD");
                 String type = ((Map<String, String>) o).get("type");
                 String toUserName = ((Map<String, String>) o).get("toUserName");
-                if (AppContext.instance().appRepository.readUserData().getIsVip() == 1 || (AppContext.instance().appRepository.readUserData().getSex() == AppConfig.FEMALE && AppContext.instance().appRepository.readUserData().getCertification() == 1)) {
+                if (ConfigManager.getInstance().getAppRepository().readUserData().getIsVip() == 1 || (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == AppConfig.FEMALE && ConfigManager.getInstance().getAppRepository().readUserData().getCertification() == 1)) {
                     MVDialog.getInstance(RadioFragment.this.getContext())
                             .seCommentConfirm(new MVDialog.ConfirmComment() {
                                 @Override
@@ -328,8 +367,6 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
                                     dialog.dismiss();
                                     if (type.equals(RadioViewModel.RadioRecycleType_New)) {
                                         viewModel.newsComment(Integer.valueOf(id), comment, toUserId != null ? Integer.valueOf(toUserId) : null, toUserName);
-                                    } else {
-                                        viewModel.topicalComment(Integer.valueOf(id), comment, toUserId != null ? Integer.valueOf(toUserId) : null, toUserName);
                                     }
                                 }
                             })
@@ -337,92 +374,8 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
                             .show();
                 } else {
                     DialogHelper.showNotVipCommentDialog(RadioFragment.this);
-//                    if (AppContext.instance().appRepository.readUserData().getSex() == MALE) {
-//                        DialogHelper.showNotVipCommentDialog(RadioFragment.this);
-//                    } else {
-//                    MVDialog.getInstance(RadioFragment.this.getContext())
-//                            .setTitele(getString(R.string.authentication_free_sign_up))
-//                            .setConfirmText(getString(R.string.mine_once_certification))
-//                            .chooseType(MVDialog.TypeEnum.CENTER)
-//                            .setConfirmOnlick(new MVDialog.ConfirmOnclick() {
-//                                @Override
-//                                public void confirm(MVDialog dialog) {
-//                                    if (AppContext.instance().appRepository.readUserData().getSex() == MALE) {
-//                                        viewModel.start(CertificationMaleFragment.class.getCanonicalName());
-//                                        return;
-//                                    } else if (AppContext.instance().appRepository.readUserData().getSex() == FEMALE) {
-//                                        viewModel.start(CertificationFemaleFragment.class.getCanonicalName());
-//                                        return;
-//                                    }
-//                                    com.blankj.utilcode.util.ToastUtils.showShort(R.string.sex_unknown);
-//                                    dialog.dismiss();
-//                                }
-//                            })
-//                            .chooseType(MVDialog.TypeEnum.CENTER)
-//                            .show();
-//                    }
                 }
 
-            }
-        });
-
-        viewModel.radioUC.clickSignUp.observe(this, new Observer() {
-            @Override
-            public void onChanged(Object o) {
-                MVDialog.getInstance(RadioFragment.this.getContext())
-                        .setContent(getString(R.string.playfun_end_porgram))
-                        .chooseType(MVDialog.TypeEnum.CENTER)
-                        .setConfirmOnlick(new MVDialog.ConfirmOnclick() {
-                            @Override
-                            public void confirm(MVDialog dialog) {
-                                viewModel.TopicalFinish((Integer) o);
-                                dialog.dismiss();
-                            }
-                        })
-                        .chooseType(MVDialog.TypeEnum.CENTER)
-                        .show();
-            }
-        });
-
-        viewModel.radioUC.clickCheck.observe(this, new Observer() {
-            @Override
-            public void onChanged(Object o) {
-                viewModel.initUserDate();
-                if (AppContext.instance().appRepository.readUserData().getCertification() == 1) {
-                    MVDialog.getInstance(RadioFragment.this.getContext())
-                            .setTitele(getString(R.string.playfun_report_send_photo_titile))
-                            .chooseType(MVDialog.TypeEnum.CENTER)
-                            .setConfirmOnlick(new MVDialog.ConfirmOnclick() {
-                                @Override
-                                public void confirm(MVDialog dialog) {
-                                    chooseAvatar((Integer) o);
-                                    dialog.dismiss();
-                                }
-                            })
-                            .chooseType(MVDialog.TypeEnum.CENTER)
-                            .show();
-                } else {
-                    MVDialog.getInstance(RadioFragment.this.getContext())
-                            .setTitele(getString(R.string.playfun_authentication_free_sign_up))
-                            .setConfirmText(getString(R.string.playfun_mine_once_certification))
-                            .chooseType(MVDialog.TypeEnum.CENTER)
-                            .setConfirmOnlick(new MVDialog.ConfirmOnclick() {
-                                @Override
-                                public void confirm(MVDialog dialog) {
-                                    if (AppContext.instance().appRepository.readUserData().getSex() == AppConfig.MALE) {
-                                        viewModel.start(CertificationMaleFragment.class.getCanonicalName());
-                                        return;
-                                    } else if (AppContext.instance().appRepository.readUserData().getSex() == AppConfig.FEMALE) {
-                                        viewModel.start(CertificationFemaleFragment.class.getCanonicalName());
-                                        return;
-                                    }
-                                    com.blankj.utilcode.util.ToastUtils.showShort(R.string.playfun_sex_unknown);
-                                    dialog.dismiss();
-                                }
-                            })
-                            .chooseType(MVDialog.TypeEnum.CENTER)
-                            .show();
-                }
             }
         });
         viewModel.radioUC.clickImage.observe(this, new Observer() {
@@ -473,17 +426,11 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
         }
     }
 
-    private void chooseAvatar(int position) {
-        PictureSelectorUtil.selectImage(mActivity, true, 1, new OnResultCallbackListener<LocalMedia>() {
-            @Override
-            public void onResult(List<LocalMedia> result) {
-                viewModel.imagUpload(result.get(0).getCompressPath(), position);
-            }
-
-            @Override
-            public void onCancel() {
-            }
-        });
+    //支付弹窗
+    private void googleCoinValueBox() {
+        AppContext.instance().logEvent(AppsFlyerEvent.Top_up);
+        CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(mActivity);
+        coinRechargeFragmentView.show();
     }
 
     @Override
@@ -491,68 +438,4 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
         super.onEnterAnimationEnd(savedInstanceState);
     }
 
-    @Override
-    public void onPublishTimeSelected(RadioFilterView radioFilterView, int position, RadioFilterView.RadioFilterItemEntity obj) {
-        if(viewModel.CollectFlag && viewModel.IsCollect==0){
-            if (ConfigManager.getInstance() != null && ConfigManager.getInstance().isMale()) {
-                binding.radioFilterView.sexClick(1);
-            } else {
-                binding.radioFilterView.sexClick(2);
-            }
-        }
-        viewModel.setType((Integer) obj.getData());
-        try {
-            if (((Integer) obj.getData()).intValue() == 1) {
-                AppContext.instance().logEvent(AppsFlyerEvent.Post_Time);
-            } else {
-                AppContext.instance().logEvent(AppsFlyerEvent.Dating_Time);
-            }
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public void onSexSelected(RadioFilterView radioFilterView, int position, RadioFilterView.RadioFilterItemEntity obj) {
-        if (obj.getData() == null) {
-            viewModel.setSexId(null);
-        } else {
-            if (((Integer) obj.getData()).intValue() == 0) {
-                AppContext.instance().logEvent(AppsFlyerEvent.Male_Only);
-            } else {
-                AppContext.instance().logEvent(AppsFlyerEvent.Female_Only);
-            }
-            if(((Integer)obj.getData()).intValue() == 2){//追踪的人
-                viewModel.type = 1;//发布时间
-                binding.radioFilterView.cityClick(0);
-                viewModel.cityId = null;
-                viewModel.gameId = null;
-                viewModel.setIsCollect(1);
-                AppContext.instance().logEvent(AppsFlyerEvent.Follow_Only);
-            }else{
-                viewModel.setSexId((Integer) obj.getData());
-            }
-        }
-    }
-
-    @Override
-    public void onRegionSelected(RadioFilterView radioFilterView, int position, Integer gameId,Integer cityId) {
-        if(viewModel.CollectFlag && viewModel.IsCollect==0){
-            if (ConfigManager.getInstance() != null && ConfigManager.getInstance().isMale()) {
-                binding.radioFilterView.sexClick(1);
-            } else {
-                binding.radioFilterView.sexClick(2);
-            }
-        }
-        viewModel.setCityId(gameId,cityId);
-    }
-
-    @Override
-    public boolean isBaseOnWidth() {
-        return true;
-    }
-
-    @Override
-    public float getSizeInDp() {
-        return 360;
-    }
 }

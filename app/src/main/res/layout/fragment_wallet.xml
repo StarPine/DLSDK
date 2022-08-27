@@ -9,6 +9,7 @@
         <variable
             name="viewModel"
             type="com.dl.playfun.ui.mine.wallet.WalletViewModel" />
+
         <import type="android.view.View" />
     </data>
 
@@ -34,7 +35,7 @@
                 android:id="@+id/basic_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/action_bar_height"
-                app:toolbar_title="@string/playfun_wallet_title" />
+                app:toolbar_title="@string/playfun_coin_electronic_wallet" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -76,34 +77,34 @@
                     android:src="@drawable/wallet_top_bg" />
 
                 <TextView
-                    android:layout_marginTop="9dp"
                     android:id="@+id/tv_detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="9dp"
+                    android:layout_marginRight="29dp"
                     android:text="@string/playfun_detail_link"
                     android:textColor="@color/white"
                     android:textSize="14sp"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="29dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    binding:onClickCommand="@{viewModel.clickCoinMoneyView}"/>
+                    binding:onClickCommand="@{viewModel.clickCoinMoneyView}" />
 
                 <Button
-                    android:background="@drawable/btn_exchange_gamecoin"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="29dp"
-                    android:layout_marginTop="36dp"
-                    android:text="@string/playfun_txt_exchange_game_coin"
-                    android:textSize="12sp"
-                    android:textColor="#E944C4"
                     android:id="@+id/btn_exchange_game_coin"
                     android:layout_width="106dp"
-                    android:layout_height="29dp"/>
+                    android:layout_height="29dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="36dp"
+                    android:layout_marginRight="29dp"
+                    android:background="@drawable/btn_diamond_exchange_bg"
+                    android:text="@string/playfun_txt_diamond_exchange"
+                    android:textColor="#785AFF"
+                    android:textSize="12sp" />
 
 
             </RelativeLayout>
 
             <RelativeLayout
-                android:visibility="@{viewModel.isMaleHideFlag?View.GONE:View.VISIBLE}"
+                android:visibility="@{viewModel.getTipMoneyShowFlag?View.VISIBLE:View.GONE}"
                 android:layout_width="match_parent"
                 android:layout_height="124dp">
 
@@ -132,18 +133,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="fitXY"
-                    android:src="@drawable/taiwan_dollar_backdrop_img" />
+                    android:src="@drawable/crystal_card_bg" />
 
                 <TextView
-                    android:layout_marginTop="9dp"
-                    android:text="@string/playfun_detail_link"
-                    android:textColor="#B37900"
-                    android:textSize="14sp"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="29dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    binding:onClickCommand="@{viewModel.clickGirlMoneyView}"/>
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="9dp"
+                    android:layout_marginRight="29dp"
+                    android:text="@string/playfun_detail_link"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    binding:onClickCommand="@{viewModel.clickGirlMoneyView}" />
 
                 <Button
                     android:layout_width="106dp"
@@ -151,15 +152,16 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="36dp"
                     android:layout_marginRight="29dp"
-                    android:background="@drawable/btn_drawings_apply"
-                    android:text="@string/playfun_txt_drawings_apply"
-                    android:textColor="#B37900"
+                    android:background="@drawable/btn_crystal_exchange_bg"
+                    android:text="@string/playfun_txt_exchange_apply_game_coin"
+                    android:textColor="@color/pseekbar_process"
                     android:textSize="12sp"
                     binding:onClickCommand="@{viewModel.withdrawonClickCommand}" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
+                android:visibility="gone"
                 android:layout_height="124dp">
 
                 <TextView
@@ -187,7 +189,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="fitXY"
-                    android:src="@drawable/bg_topup_gamecoin" />
+                    android:src="@drawable/taiwan_dollar_backdrop_img" />
 
 
                 <Button
@@ -197,9 +199,9 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="36dp"
                     android:layout_marginRight="29dp"
-                    android:background="@drawable/btn_game_coin_topup"
-                    android:text="@string/playfun_btn_game_coin_topup"
-                    android:textColor="#D40606"
+                    android:background="@drawable/btn_charge_is_polite_bg"
+                    android:text="@string/playfun_gift_bag_text1"
+                    android:textColor="#C28300"
                     android:textSize="12sp" />
             </RelativeLayout>
 

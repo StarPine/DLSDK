@@ -2,8 +2,12 @@ package com.dl.playfun.widget.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +22,17 @@ import android.widget.TextView;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
 import com.dl.playfun.R;
+import com.dl.playfun.app.GlideEngine;
+import com.dl.playfun.entity.MallWithdrawTipsInfoEntity;
+import com.dl.playfun.ui.mine.vipsubscribe.VipPrivilegeItemViewModel;
 import com.dl.playfun.utils.StringUtil;
+import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMUserFullInfo;
+import com.tencent.imsdk.v2.V2TIMValueCallback;
+import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Author: 彭石林
@@ -36,10 +50,14 @@ public class TraceDialog {
     private String confirmText = "";
     private String confirmTwoText = "";
     private String cannelText = "";
+    private int titleSize = 0;
+    private int firstRewardId = 0;
+    private int secondRewardId = 0;
 
 
     private ConfirmOnclick confirmOnclick;
     private ConfirmTwoOnclick confirmTwoOnclick;
+    private ConfirmThreeOnclick confirmThreeOnclick;
 
     private CannelOnclick cannelOnclick;
 
@@ -106,6 +124,8 @@ public class TraceDialog {
             this.dialog.show();
         } else if (this.CHOOSRTYPE == TypeEnum.SET_MONEY) {
             this.dialog.show();
+        }else {
+            this.dialog.show();
         }
     }
 
@@ -133,6 +153,8 @@ public class TraceDialog {
             this.dialog.dismiss();
         } else if (this.CHOOSRTYPE == TypeEnum.SET_MONEY) {
             this.dialog.dismiss();
+        }else {
+            this.dialog.dismiss();
         }
 
     }
@@ -143,13 +165,28 @@ public class TraceDialog {
      * @param titleString
      * @return
      */
-    public TraceDialog setTitele(String titleString) {
+    public TraceDialog setTitle(String titleString) {
         this.titleString = titleString;
         return INSTANCE;
     }
 
     public TraceDialog setContent(String content) {
         this.contentString = content;
+        return INSTANCE;
+    }
+
+    public TraceDialog setTitleSize(int size) {
+        this.titleSize = size;
+        return INSTANCE;
+    }
+
+    public TraceDialog setFirstRewardId(int resId) {
+        this.firstRewardId = resId;
+        return INSTANCE;
+    }
+
+    public TraceDialog setSecondRewardId(int resId) {
+        this.secondRewardId = resId;
         return INSTANCE;
     }
 
@@ -196,6 +233,13 @@ public class TraceDialog {
         return INSTANCE;
     }
 
+    public TraceDialog setConfirmThreeOnlick(ConfirmThreeOnclick confirmThreeOnclick) {
+        this.confirmThreeOnclick = confirmThreeOnclick;
+        return INSTANCE;
+    }
+
+
+
     public TraceDialog setCannelOnclick(CannelOnclick cannelOnclick) {
         this.cannelOnclick = cannelOnclick;
         return INSTANCE;
@@ -218,11 +262,14 @@ public class TraceDialog {
         TextView title = contentView.findViewById(R.id.tv_title);
         Button confirmBtn = contentView.findViewById(R.id.confirm);
         Button cannelwBtn = contentView.findViewById(R.id.cannel);
-        if (titleString.equals("")) {
+        if (StringUtils.isEmpty(titleString)) {
             title.setVisibility(View.GONE);
         } else {
             title.setVisibility(View.VISIBLE);
             title.setText(titleString);
+        }
+        if (titleSize != 0){
+            title.setTextSize(titleSize);
         }
 
         if (StringUtils.isEmpty(confirmText)) {
@@ -242,6 +289,9 @@ public class TraceDialog {
         cannelwBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (cannelOnclick != null) {
+                    cannelOnclick.cannel(bottomDialog);
+                }
                 bottomDialog.dismiss();
             }
         });
@@ -259,16 +309,149 @@ public class TraceDialog {
         return bottomDialog;
     }
 
+    /**
+     * 水晶兑换dialog
+     * @return
+     * @param data
+     */
+    public Dialog getCrystalExchange(MallWithdrawTipsInfoEntity data) {
+        Dialog bottomDialog = new Dialog(context, R.style.BottomDialog);
+        View contentView = LayoutInflater.from(context).inflate(R.layout.dialog_crystal_exchange, null);
+        bottomDialog.setContentView(contentView);
+        ViewGroup.LayoutParams layoutParams = contentView.getLayoutParams();
+        contentView.setLayoutParams(layoutParams);
+        bottomDialog.getWindow().setGravity(Gravity.CENTER);
+//        bottomDialog.getWindow().setWindowAnimations(R.style.BottomDialog_Animation);
+        Button confirmBtn = contentView.findViewById(R.id.confirm);
+        TextView title = contentView.findViewById(R.id.title);
+        TextView questionMark = contentView.findViewById(R.id.question_mark);
+        TextView questionMark2 = contentView.findViewById(R.id.question_mark2);
+        TextView price1 = contentView.findViewById(R.id.price1);
+        TextView price2 = contentView.findViewById(R.id.price2);
+        TextView crystal1 = contentView.findViewById(R.id.crystal1);
+        TextView crystal2 = contentView.findViewById(R.id.crystal2);
+        if (data != null){
+            title.setText(data.getTitle());
+            price1.setText(""+data.getGoodsList().get(0).getQuantity());
+            price2.setText(""+data.getGoodsList().get(1).getQuantity());
+            crystal1.setText(""+data.getGoodsList().get(0).getProfits());
+            crystal2.setText(""+data.getGoodsList().get(1).getProfits());
+        }
+
+        questionMark.setText("???");
+        questionMark2.setText("???");
+        confirmBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (confirmOnclick != null) {
+                    confirmOnclick.confirm(bottomDialog);
+                }
+                bottomDialog.dismiss();
+            }
+        });
+        return bottomDialog;
+    }
+
+    /**
+     * 会话列表长按menu
+     * @return
+     * @param conversationInfo
+     */
+    public Dialog convasationItemMenuDialog(ConversationInfo conversationInfo){
+        Dialog bottomDialog = new Dialog(context, R.style.BottomDialog);
+        View contentView = LayoutInflater.from(context).inflate(R.layout.dialog_conversation_item_menu, null);
+        bottomDialog.setContentView(contentView);
+        ViewGroup.LayoutParams layoutParams = contentView.getLayoutParams();
+        contentView.setLayoutParams(layoutParams);
+        bottomDialog.getWindow().setGravity(Gravity.CENTER);
+        TextView topChat = contentView.findViewById(R.id.tv_chat_top);
+        TextView delChat = contentView.findViewById(R.id.tv_del_chat);
+        TextView delBannedAccount = contentView.findViewById(R.id.tv_del_banned_account);
+        if (conversationInfo.isTop()){
+            topChat.setText(R.string.quit_chat_top);
+        }else {
+            topChat.setText(R.string.playfun_top_chat);
+        }
+        setDelBannedVisibility(conversationInfo, delBannedAccount);
+        topChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (confirmOnclick != null) {
+                    confirmOnclick.confirm(bottomDialog);
+                }
+                bottomDialog.dismiss();
+            }
+        });
+        delChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (confirmTwoOnclick != null) {
+                    confirmTwoOnclick.confirmTwo(bottomDialog);
+                }
+                bottomDialog.dismiss();
+            }
+        });
+        delBannedAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (confirmThreeOnclick != null) {
+                    confirmThreeOnclick.confirmThree(bottomDialog);
+                }
+                bottomDialog.dismiss();
+            }
+        });
+
+        return bottomDialog;
+    }
+
+    /**
+     * 设置一键删除封号账号的item可见度
+     * @param conversationInfo
+     * @param delBannedAccount
+     */
+    private void setDelBannedVisibility(ConversationInfo conversationInfo, TextView delBannedAccount) {
+        List<String> users = new ArrayList<String>();
+        users.add(conversationInfo.getId());
+        //获取用户资料
+        V2TIMManager.getInstance().getUsersInfo(users, new V2TIMValueCallback<List<V2TIMUserFullInfo>>() {
+            @Override
+            public void onSuccess(List<V2TIMUserFullInfo> v2TIMUserFullInfos) {
+                for (V2TIMUserFullInfo res : v2TIMUserFullInfos) {
+                    int level = res.getLevel();
+                    if (level == 6){
+                        delBannedAccount.setVisibility(View.VISIBLE);
+                    }else {
+                        delBannedAccount.setVisibility(View.GONE);
+                    }
+                }
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                Log.e("获取用户信息失败", "getUsersProfile failed: " + code + " desc");
+            }
+        });
+    }
+
     public Dialog TraceVipDialog() {
         Dialog bottomDialog = new Dialog(context, R.style.BottomDialog);
         View contentView = LayoutInflater.from(context).inflate(R.layout.dialog_trace_vip, null);
         bottomDialog.setContentView(contentView);
+        TextView title = contentView.findViewById(R.id.tv_title);
+        TextView tv_content = contentView.findViewById(R.id.tv_content);
         ViewGroup.LayoutParams layoutParams = contentView.getLayoutParams();
         contentView.setLayoutParams(layoutParams);
         bottomDialog.getWindow().setGravity(Gravity.CENTER);
         bottomDialog.getWindow().setWindowAnimations(R.style.BottomDialog_Animation);
 
         Button confirmBtn = contentView.findViewById(R.id.confirm);
+        if (!StringUtils.isEmpty(titleString)) {
+            title.setText(titleString);
+        }
+        if (!StringUtils.isEmpty(contentString)) {
+            tv_content.setText(contentString);
+        }
+
         if (StringUtils.isEmpty(confirmText)) {
             confirmBtn.setVisibility(View.GONE);
         } else {
@@ -335,7 +518,63 @@ public class TraceDialog {
             @Override
             public void onClick(View v) {
                 if (confirmTwoOnclick != null) {
-                    confirmTwoOnclick.confirm(bottomDialog);
+                    confirmTwoOnclick.confirmTwo(bottomDialog);
+                }
+                bottomDialog.dismiss();
+            }
+        });
+
+        return bottomDialog;
+    }
+
+    public Dialog verticalButtonDialog() {
+        Dialog bottomDialog = new Dialog(context, R.style.BottomDialog);
+        View contentView = LayoutInflater.from(context).inflate(R.layout.dialog_vertical_two_button, null);
+        bottomDialog.setContentView(contentView);
+        bottomDialog.getWindow().setGravity(Gravity.CENTER);
+        bottomDialog.getWindow().setWindowAnimations(R.style.BottomDialog_Animation);
+        TextView title = contentView.findViewById(R.id.tv_title);
+        TextView tv_content = contentView.findViewById(R.id.tv_content);
+
+        if (!StringUtils.isEmpty(titleString)) {
+            title.setText(titleString);
+        } else {
+            title.setVisibility(View.INVISIBLE);
+        }
+
+        if (!StringUtils.isEmpty(contentString)) {
+            tv_content.setText(contentString);
+        } else {
+            tv_content.setVisibility(View.GONE);
+        }
+
+        Button button_top = contentView.findViewById(R.id.button_top);
+        Button button_below = contentView.findViewById(R.id.button_below);
+
+        if (!StringUtils.isEmpty(confirmText)) {
+            button_top.setText(confirmText);
+        }
+        if (!StringUtils.isEmpty(confirmTwoText)) {
+            button_below.setText(confirmTwoText);
+        } else {
+            button_below.setVisibility(View.GONE);
+        }
+
+        button_top.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (confirmOnclick != null) {
+                    confirmOnclick.confirm(bottomDialog);
+                }
+                bottomDialog.dismiss();
+            }
+        });
+
+        button_below.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (confirmTwoOnclick != null) {
+                    confirmTwoOnclick.confirmTwo(bottomDialog);
                 }
                 bottomDialog.dismiss();
             }
@@ -393,7 +632,7 @@ public class TraceDialog {
             @Override
             public void onClick(View v) {
                 if (cannelOnclick != null) {
-                    cannelOnclick.confirm(bottomDialog);
+                    cannelOnclick.cannel(bottomDialog);
                 }
             }
         });
@@ -438,7 +677,7 @@ public class TraceDialog {
             @Override
             public void onClick(View v) {
                 if (cannelOnclick != null) {
-                    cannelOnclick.confirm(bottomDialog);
+                    cannelOnclick.cannel(bottomDialog);
                 }
                 bottomDialog.dismiss();
             }
@@ -466,7 +705,7 @@ public class TraceDialog {
             @Override
             public void onClick(View v) {
                 if (cannelOnclick != null) {
-                    cannelOnclick.confirm(bottomDialog);
+                    cannelOnclick.cannel(bottomDialog);
                 }
                 bottomDialog.dismiss();
             }
@@ -557,7 +796,7 @@ public class TraceDialog {
             @Override
             public void onClick(View v) {
                 if (cannelOnclick != null) {
-                    cannelOnclick.confirm(bottomDialog);
+                    cannelOnclick.cannel(bottomDialog);
                 } else {
                     bottomDialog.dismiss();
                 }
@@ -644,7 +883,7 @@ public class TraceDialog {
             @Override
             public void onClick(View v) {
                 if (cannelOnclick != null) {
-                    cannelOnclick.confirm(dialog);
+                    cannelOnclick.cannel(dialog);
                 } else {
                     dialog.dismiss();
                 }
@@ -653,6 +892,208 @@ public class TraceDialog {
 
 
         return dialog;
+    }
+
+    /**
+     * vip挽留弹框
+     * @return
+     * @param vipPrivilegeList
+     */
+    public Dialog vipRetainDialog(List<VipPrivilegeItemViewModel> vipPrivilegeList){
+        Dialog dialog = new Dialog(context, R.style.BottomDialog);
+        View contentView = LayoutInflater.from(context).inflate(R.layout.dialog_vip_retain, null);
+        dialog.setContentView(contentView);
+        ViewGroup.LayoutParams layoutParams = contentView.getLayoutParams();
+        contentView.setLayoutParams(layoutParams);
+        dialog.getWindow().setGravity(Gravity.CENTER);
+
+        Button buy = contentView.findViewById(R.id.btn_buy);
+        TextView tv_give_up = contentView.findViewById(R.id.tv_give_up);
+        LinearLayout ll_privileges = contentView.findViewById(R.id.ll_privileges);
+        if (vipPrivilegeList != null && vipPrivilegeList.size() > 0){
+            for (int i = 0; i < vipPrivilegeList.size(); i++) {
+                if (i >= 3)break;
+                ll_privileges.addView(getPrivilegesView(vipPrivilegeList.get(i)));
+            }
+        }
+
+        buy.setOnClickListener(v -> dialog.dismiss());
+        tv_give_up.setOnClickListener(v -> {
+            if (cannelOnclick != null){
+                cannelOnclick.cannel(dialog);
+            }
+        });
+        return dialog;
+    }
+
+    /**
+     * 钻石充值挽留弹框
+     * @return
+     */
+    public Dialog rechargeRetainDialog() {
+        Dialog dialog = new Dialog(context, R.style.BottomDialog);
+        View contentView = LayoutInflater.from(context).inflate(R.layout.dialog_recharge_retain, null);
+        dialog.setContentView(contentView);
+        ViewGroup.LayoutParams layoutParams = contentView.getLayoutParams();
+        contentView.setLayoutParams(layoutParams);
+        dialog.getWindow().setGravity(Gravity.CENTER);
+        Button again = contentView.findViewById(R.id.btn_again);
+        Button confirm = contentView.findViewById(R.id.btn_confirm);
+        again.setOnClickListener(v -> dialog.dismiss());
+        confirm.setOnClickListener(v -> {
+            if (confirmOnclick != null){
+                confirmOnclick.confirm(dialog);
+            }
+        });
+        return dialog;
+    }
+    /***
+     * 每日奖励弹框
+     * @param isUnableEvent 是否限制外界事件
+     * @param dayGiveCoin   明天钻石奖励数量
+     * @param dayGiveVideoCard  明天视频卡奖励数量
+     * @param fristRewardNum  第一个奖励数量
+     * @param secondRewardNum 第二个奖励数量
+     * @return
+     */
+    public Dialog dayRewardDialog(boolean isUnableEvent, int dayGiveCoin, int dayGiveVideoCard, int fristRewardNum, int secondRewardNum) {
+        String content = null;
+        String fristRewardTips = null;
+        String secondRewardTips = null;
+        if (dayGiveCoin > 0 && dayGiveVideoCard > 0) {
+            content = String.format(context.getString(R.string.playfun_reward_tips), dayGiveCoin + "", dayGiveVideoCard + "");
+        }
+        if (dayGiveCoin > 0 && dayGiveVideoCard <= 0) {
+            content = String.format(context.getString(R.string.playfun_reward_tips2), dayGiveCoin + "");
+        }
+        if (dayGiveVideoCard > 0 && dayGiveCoin <= 0) {
+            content = String.format(context.getString(R.string.playfun_reward_tips3), dayGiveVideoCard + "");
+        }
+        if (fristRewardNum > 0 || secondRewardNum > 0) {
+            if (fristRewardNum > 0){
+                fristRewardTips = String.format(context.getString(R.string.playfun_coin_earnings_money_add), fristRewardNum + "");
+            }
+            if (secondRewardNum > 0){
+                secondRewardTips = String.format(context.getString(R.string.playfun_coin_earnings_money_add), secondRewardNum + "");
+            }
+        }
+        return rewardDialog(isUnableEvent, fristRewardTips, secondRewardTips, content);
+    }
+
+    /**
+     * 注册奖励
+     *
+     * @param isUnableEvent
+     * @param fristRewardNum
+     * @param secondRewardNum
+     * @return
+     */
+    public Dialog registerRewardDialog(boolean isUnableEvent, int fristRewardNum, int secondRewardNum) {
+        String contentTip = context.getString(R.string.playfun_reward_tips4);
+        String fristRewardTips = context.getString(R.string.playfun_reward_card_tips) + fristRewardNum;
+        String secondRewardTips = context.getString(R.string.playfun_reward_card_tips2) + secondRewardNum;
+        return rewardDialog(isUnableEvent, fristRewardTips, secondRewardTips, contentTip);
+    }
+
+    /**
+     * 奖励弹框
+     *
+     * @param isUnableEvent
+     * @param fristRewardTips
+     * @param secondRewardTips
+     * @param contentTip
+     * @return
+     */
+    public Dialog rewardDialog(boolean isUnableEvent, String fristRewardTips, String secondRewardTips, String contentTip) {
+        Dialog dialog = new Dialog(context, R.style.BottomDialog);
+        View contentView = LayoutInflater.from(context).inflate(R.layout.dialog_day_reward, null);
+        dialog.setContentView(contentView);
+        ViewGroup.LayoutParams layoutParams = contentView.getLayoutParams();
+        contentView.setLayoutParams(layoutParams);
+        dialog.getWindow().setGravity(Gravity.CENTER);
+        if (isUnableEvent) {
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
+            dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+                @Override
+                public boolean onKey(DialogInterface dialogInterface, int keyCode, KeyEvent keyEvent) {
+                    return keyCode == KeyEvent.KEYCODE_BACK;
+                }
+            });
+        }
+
+        Button btnConfirm = contentView.findViewById(R.id.btn_confirm);
+        TextView tvTitle = contentView.findViewById(R.id.tv_title);
+        TextView tvContent = contentView.findViewById(R.id.tv_content);
+        LinearLayout llDoule = contentView.findViewById(R.id.ll_doule);
+        LinearLayout llDoule2 = contentView.findViewById(R.id.ll_doule2);
+        LinearLayout llSingle = contentView.findViewById(R.id.ll_single);
+        ImageView iv_single_diamond = contentView.findViewById(R.id.iv_single_diamond);
+        ImageView iv_doule_frist_reward = contentView.findViewById(R.id.iv_doule_frist_reward);
+        ImageView iv_doule_second_reward = contentView.findViewById(R.id.iv_doule_second_reward);
+        TextView tv_doule_diamond_number = contentView.findViewById(R.id.tv_doule_diamond_number);
+        TextView tv_doule_video_card_number = contentView.findViewById(R.id.tv_doule_video_card_number);
+        TextView tv_single_diamond_number = contentView.findViewById(R.id.tv_single_diamond_number);
+
+        if (!TextUtils.isEmpty(titleString)) {
+            tvTitle.setText(titleString);
+        }
+        if (firstRewardId != 0){
+            iv_doule_frist_reward.setImageDrawable(context.getDrawable(firstRewardId));
+        }
+        if (secondRewardId != 0){
+            iv_doule_second_reward.setImageDrawable(context.getDrawable(secondRewardId));
+        }
+        if (fristRewardTips != null && secondRewardTips != null){
+            llSingle.setVisibility(View.GONE);
+            llDoule.setVisibility(View.VISIBLE);
+            llDoule2.setVisibility(View.VISIBLE);
+            tv_doule_diamond_number.setText(fristRewardTips);
+            tv_doule_video_card_number.setText(secondRewardTips);
+        }else {
+            llSingle.setVisibility(View.VISIBLE);
+            llDoule.setVisibility(View.GONE);
+            llDoule2.setVisibility(View.GONE);
+            if (fristRewardTips != null){
+                iv_single_diamond.setImageDrawable(context.getDrawable(R.drawable.icon_diamond));
+                tv_single_diamond_number.setText( fristRewardTips);
+            }
+            if (secondRewardTips != null){
+                iv_single_diamond.setImageDrawable(context.getDrawable(R.drawable.icon_video_card));
+                tv_single_diamond_number.setText(secondRewardTips);
+            }
+
+        }
+        if (contentTip == null) {
+            tvContent.setVisibility(View.GONE);
+        } else {
+            tvContent.setText(contentTip);
+        }
+
+        btnConfirm.setOnClickListener(v -> {
+            firstRewardId = 0;
+            secondRewardId = 0;
+            titleString = "";
+            if (confirmOnclick != null) {
+                confirmOnclick.confirm(dialog);
+            }
+        });
+        return dialog;
+    }
+
+    private View getPrivilegesView(VipPrivilegeItemViewModel vipPrivilegeItemViewModel) {
+        View privilegesView = LayoutInflater.from(context).inflate(R.layout.item_dialog_vip_privilege, null);
+        ImageView ivPrivilegeIcon = privilegesView.findViewById(R.id.iv_privilege_icon);
+        TextView tvPrivilegeTitle = privilegesView.findViewById(R.id.tv_privilege_title);
+        TextView tvPrivilegeDesc = privilegesView.findViewById(R.id.tv__privilege_desc);
+        String desc = vipPrivilegeItemViewModel.itemEntity.get().getDesc();
+        String img = vipPrivilegeItemViewModel.itemEntity.get().getImg();
+        String title = vipPrivilegeItemViewModel.itemEntity.get().getTitle();
+        GlideEngine.createGlideEngine().loadImage(context, StringUtil.getFullThumbImageUrl(img), ivPrivilegeIcon);
+        tvPrivilegeDesc.setText(desc);
+        tvPrivilegeTitle.setText(title);
+
+        return privilegesView;
     }
 
     /**
@@ -695,7 +1136,7 @@ public class TraceDialog {
             @Override
             public void onClick(View v) {
                 if (cannelOnclick != null) {
-                    cannelOnclick.confirm(bottomDialog);
+                    cannelOnclick.cannel(bottomDialog);
                 } else {
                     bottomDialog.dismiss();
                 }
@@ -725,10 +1166,14 @@ public class TraceDialog {
     }
 
     public interface ConfirmTwoOnclick {
-        void confirm(Dialog dialog);
+        void confirmTwo(Dialog dialog);
+    }
+
+    public interface ConfirmThreeOnclick {
+        void confirmThree(Dialog dialog);
     }
 
     public interface CannelOnclick {
-        void confirm(Dialog dialog);
+        void cannel(Dialog dialog);
     }
 }

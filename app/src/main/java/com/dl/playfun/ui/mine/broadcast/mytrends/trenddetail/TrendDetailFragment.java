@@ -22,6 +22,7 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.entity.NewsEntity;
 import com.dl.playfun.helper.DialogHelper;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.PictureSelectorUtil;
@@ -94,6 +95,18 @@ public class TrendDetailFragment extends BaseToolbarFragment<FragmentTrendDetail
         } catch (Exception e) {
 
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        AppContext.isShowNotPaid = true;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        AppContext.isShowNotPaid = false;
     }
 
     @Override
@@ -175,7 +188,7 @@ public class TrendDetailFragment extends BaseToolbarFragment<FragmentTrendDetail
         viewModel.uc.clickComment.observe(this, new Observer() {
             @Override
             public void onChanged(Object o) {
-                if (AppContext.instance().appRepository.readUserData().getIsVip() == 1 || (AppContext.instance().appRepository.readUserData().getSex() == AppConfig.FEMALE && AppContext.instance().appRepository.readUserData().getCertification() == 1)) {
+                if (ConfigManager.getInstance().getAppRepository().readUserData().getIsVip() == 1 || (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == AppConfig.FEMALE && ConfigManager.getInstance().getAppRepository().readUserData().getCertification() == 1)) {
                     MVDialog.getInstance(TrendDetailFragment.this.getContext())
                             .seCommentConfirm(new MVDialog.ConfirmComment() {
                                 @Override

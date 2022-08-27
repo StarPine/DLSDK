@@ -25,7 +25,40 @@ public class SystemConfigEntity {
     private SystemRoleMoneyConfigEntity womanReal;
     @SerializedName("woman_vip")
     private SystemRoleMoneyConfigEntity womanVip;
+    @SerializedName("delete_account")
+    private int deleteAccount;
     private SystemConfigContentEntity content;
+
+    //会话列表限制数量
+    @SerializedName("conversation_astrict_count")
+    private Integer conversationAstrictCount;
+    //默认区号
+    @SerializedName("region_code")
+    private String regionCode;
+
+    public int getDeleteAccount() {
+        return deleteAccount;
+    }
+
+    public void setDeleteAccount(int deleteAccount) {
+        this.deleteAccount = deleteAccount;
+    }
+
+    public String getRegionCode() {
+        return regionCode;
+    }
+
+    public void setRegionCode(String regionCode) {
+        this.regionCode = regionCode;
+    }
+
+    public Integer getConversationAstrictCount() {
+        return conversationAstrictCount;
+    }
+
+    public void setConversationAstrictCount(Integer conversationAstrictCount) {
+        this.conversationAstrictCount = conversationAstrictCount;
+    }
 
     public double getCashOutServiceFee() {
         return CashOutServiceFee;

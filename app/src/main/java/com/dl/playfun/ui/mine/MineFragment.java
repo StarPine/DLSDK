@@ -4,6 +4,7 @@ import static com.dl.playfun.ui.dialog.MyEvaluateDialog.TYPE_MYSELF;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,17 +24,24 @@ import androidx.lifecycle.ViewModelProviders;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
+import com.dl.playfun.BR;
+import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.Injection;
+import com.dl.playfun.databinding.FragmentMineBinding;
 import com.dl.playfun.entity.BrowseNumberEntity;
 import com.dl.playfun.entity.EvaluateEntity;
 import com.dl.playfun.entity.EvaluateItemEntity;
 import com.dl.playfun.entity.EvaluateObjEntity;
+import com.dl.playfun.entity.UserInfoEntity;
 import com.dl.playfun.ui.base.BaseRefreshFragment;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
+import com.dl.playfun.ui.dialog.MyEvaluateDialog;
 import com.dl.playfun.ui.mine.setredpackagephoto.SetRedPackagePhotoFragment;
+import com.dl.playfun.ui.mine.setredpackagevideo.SetRedPackageVideoFragment;
+import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.PictureSelectorUtil;
 import com.dl.playfun.utils.SoftKeyBoardListener;
@@ -46,23 +54,18 @@ import com.dl.playfun.widget.dialog.MVDialog;
 import com.google.android.material.appbar.AppBarLayout;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.listener.OnResultCallbackListener;
-import com.dl.playfun.BR;
-import com.dl.playfun.R;
-import com.dl.playfun.databinding.FragmentMineBinding;
-import com.dl.playfun.ui.dialog.MyEvaluateDialog;
-import com.dl.playfun.ui.mine.setredpackagevideo.SetRedPackageVideoFragment;
+import com.tencent.qcloud.tuicore.Status;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import me.goldze.mvvmhabit.utils.ToastUtils;
-import me.jessyan.autosize.internal.CustomAdapt;
 
 /**
  * @author wulei
  */
-public class MineFragment extends BaseRefreshFragment<FragmentMineBinding, MineViewModel> implements CustomAdapt {
+public class MineFragment extends BaseRefreshFragment<FragmentMineBinding, MineViewModel> {
 
     protected InputMethodManager inputMethodManager;
     private boolean SoftKeyboardShow = false;
@@ -81,6 +84,7 @@ public class MineFragment extends BaseRefreshFragment<FragmentMineBinding, MineV
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        AutoSizeUtils.applyAdapt(this.getResources());
         return R.layout.fragment_mine;
     }
 
@@ -153,26 +157,33 @@ public class MineFragment extends BaseRefreshFragment<FragmentMineBinding, MineV
         binding.audioStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                binding.audioStop.setImageResource(R.drawable.mine_audio_stop_img);
-                if (AudioPlayer.getInstance().isPlaying()) {
-                    AudioPlayer.getInstance().stopPlay();
-                    Glide.with(MineFragment.this.getContext()).asGif().load(R.drawable.audio_waves_stop)
+                if (Status.mIsShowFloatWindow){
+                    ToastUtils.showShort(R.string.audio_in_call);
+                    return;
+                }
+                UserInfoEntity userInfoEntity = viewModel.userInfoEntity.get();
+                if(userInfoEntity!=null && !StringUtils.isEmpty(userInfoEntity.getSound()) ){
+                    binding.audioStop.setImageResource(R.drawable.mine_audio_stop_img);
+                    if (AudioPlayer.getInstance().isPlaying()) {
+                        AudioPlayer.getInstance().stopPlay();
+                        Glide.with(MineFragment.this.getContext()).asGif().load(R.drawable.audio_waves_stop)
+                                .error(R.drawable.audio_waves_stop)
+                                .placeholder(R.drawable.audio_waves_stop)
+                                .into(binding.audioWaves);
+                        return;
+                    }
+                    Glide.with(MineFragment.this.getContext()).asGif().load(R.drawable.audio_waves)
                             .error(R.drawable.audio_waves_stop)
                             .placeholder(R.drawable.audio_waves_stop)
                             .into(binding.audioWaves);
-                    return;
+                    AudioPlayer.getInstance().startPlay(StringUtil.getFullAudioUrl(userInfoEntity.getSound()), new AudioPlayer.Callback() {
+                        @Override
+                        public void onCompletion(Boolean success, Boolean isOutTime) {
+                            binding.audioStop.setImageResource(R.drawable.mine_audio_start_img);
+                            binding.audioWaves.setImageResource(R.drawable.audio_waves_stop);
+                        }
+                    });
                 }
-                Glide.with(MineFragment.this.getContext()).asGif().load(R.drawable.audio_waves)
-                        .error(R.drawable.audio_waves_stop)
-                        .placeholder(R.drawable.audio_waves_stop)
-                        .into(binding.audioWaves);
-                AudioPlayer.getInstance().startPlay(StringUtil.getFullAudioUrl(viewModel.userInfoEntity.get().getSound()), new AudioPlayer.Callback() {
-                    @Override
-                    public void onCompletion(Boolean success) {
-                        binding.audioStop.setImageResource(R.drawable.mine_audio_start_img);
-                        binding.audioWaves.setImageResource(R.drawable.audio_waves_stop);
-                    }
-                });
             }
         });
     }
@@ -182,16 +193,6 @@ public class MineFragment extends BaseRefreshFragment<FragmentMineBinding, MineV
         super.initViewObservable();
         AppContext.instance().logEvent(AppsFlyerEvent.Me);
         inputMethodManager = (InputMethodManager) this.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-//        viewModel.uc.entryLabelLableEvent.observe(this, new Observer<Void>() {
-//            @Override
-//            public void onChanged(Void unused) {
-//                JumpingBeans.with(binding.taskRightTitle)
-//                        .makeTextJump(0, binding.taskRightTitle.getText().length())
-//                        .setIsWave(true)
-//                        .setLoopDuration(1300)
-//                        .build();
-//            }
-//        });
         viewModel.uc.removeAudioAlert.observe(this, new Observer<Void>() {
             @Override
             public void onChanged(Void unused) {
@@ -487,13 +488,12 @@ public class MineFragment extends BaseRefreshFragment<FragmentMineBinding, MineV
         return spans;
     }
 
+    @SuppressLint("MissingSuperCall")
     @Override
-    public boolean isBaseOnWidth() {
-        return true;
-    }
-
-    @Override
-    public float getSizeInDp() {
-        return 360;
+    public void onDestroy() {
+        super.onDestroy();
+        if (AudioPlayer.getInstance().isPlaying()) {
+            AudioPlayer.getInstance().stopPlay();
+        }
     }
 }

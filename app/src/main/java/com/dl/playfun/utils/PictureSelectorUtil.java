@@ -32,8 +32,8 @@ public class PictureSelectorUtil {
         }
         PictureSelectionModel pictureSelectionModel = PictureSelector.create(activity)
                 .openGallery(PictureMimeType.ofImage())
-                .setLanguage(Utils.isManilaApp(activity) ? LanguageConfig.ENGLISH : LanguageConfig.TRADITIONAL_CHINESE)
                 .isCamera(showCamera)
+                .setLanguage(-1)
                 .setPictureWindowAnimationStyle(getPictureWindowAnimationStyle())// 自定义相册启动退出动画
                 .theme(R.style.picture_white_style_custom)
                 .imageEngine(GlideEngine.createGlideEngine())
@@ -58,8 +58,8 @@ public class PictureSelectorUtil {
         }
         PictureSelectionModel pictureSelectionModel = PictureSelector.create(activity)
                 .openGallery(PictureMimeType.ofImage())
-                .setLanguage(Utils.isManilaApp(activity) ? LanguageConfig.ENGLISH : LanguageConfig.TRADITIONAL_CHINESE)
                 .isCamera(showCamera)
+                .setLanguage(-1)
                 .setPictureWindowAnimationStyle(getPictureWindowAnimationStyle())// 自定义相册启动退出动画
                 .theme(R.style.picture_white_style_custom)
                 .imageEngine(GlideEngine.createGlideEngine())
@@ -80,12 +80,13 @@ public class PictureSelectorUtil {
         PictureSelector.create(activity)
                 .openGallery(PictureMimeType.ofVideo())
                 .isCamera(showCamera)
+                .setLanguage(-1)
                 .setPictureWindowAnimationStyle(getPictureWindowAnimationStyle())// 自定义相册启动退出动画
-                .setLanguage(Utils.isManilaApp(activity) ? LanguageConfig.ENGLISH : LanguageConfig.TRADITIONAL_CHINESE)
                 .imageSpanCount(IMAGE_SPAN_COUNT)
                 .theme(R.style.picture_white_style_custom)
-                .videoMaxSecond(60)
-                .recordVideoSecond(60)
+                .videoMaxSecond(20)//视频选最最大20秒
+                .videoMinSecond(3)//最小三秒
+                .recordVideoSecond(20)
                 .videoQuality(0)
                 .queryMaxFileSize(60)
                 .isPreviewVideo(true)
@@ -100,7 +101,7 @@ public class PictureSelectorUtil {
     public static void selectImageAndCrop(Activity activity, boolean showCamera, int aspectRatioX, int aspectRatioY, OnResultCallbackListener<LocalMedia> callbackListener) {
         PictureSelectionModel pictureSelectionModel = PictureSelector.create(activity)
                 .openGallery(PictureMimeType.ofImage())
-                .setLanguage(Utils.isManilaApp(activity) ? LanguageConfig.ENGLISH : LanguageConfig.TRADITIONAL_CHINESE)
+                .setLanguage(-1)
                 .theme(R.style.picture_white_style_custom)
                 .isCamera(showCamera)
                 .setPictureWindowAnimationStyle(getPictureWindowAnimationStyle())// 自定义相册启动退出动画
@@ -154,6 +155,7 @@ public class PictureSelectorUtil {
         PictureSelector.create(activity)
                 .themeStyle(R.style.picture_white_style_custom)
                 .isNotPreviewDownload(true)
+                .setLanguage(-1)
                 .setLanguage(Utils.isManilaApp(activity) ? LanguageConfig.ENGLISH : LanguageConfig.TRADITIONAL_CHINESE)
                 .imageEngine(GlideEngine.createGlideEngine())
                 .openExternalPreview(index, localMedias);

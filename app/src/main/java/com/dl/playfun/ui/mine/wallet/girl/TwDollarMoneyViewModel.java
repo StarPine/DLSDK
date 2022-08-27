@@ -21,7 +21,7 @@ import com.dl.playfun.viewmodel.BaseViewModel;
 import com.dl.playfun.widget.emptyview.EmptyState;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
-import com.dl.playfun.ui.mine.webview.FukubukuroViewFragment;
+import com.dl.playfun.ui.mine.webview.WebViewFragment;
 
 import java.util.List;
 
@@ -44,6 +44,7 @@ public class TwDollarMoneyViewModel extends BaseViewModel<AppRepository> {
     //RecyclerView多布局添加ItemBinding
     public ItemBinding<TwDollarMoneyItemViewModel> itemBinding = ItemBinding.of(BR.viewModel, R.layout.item_wallet_dollar_money);
 
+    public ObservableField<Integer> enableWithdraw = new ObservableField<>();
     public ObservableField<String> totalProfits = new ObservableField<>();
 
     public ObservableField<Boolean> isShowEmpty = new ObservableField<Boolean>(false);
@@ -70,7 +71,7 @@ public class TwDollarMoneyViewModel extends BaseViewModel<AppRepository> {
                 try {
                     Bundle bundle = new Bundle();
                     bundle.putString("link", AppConfig.WEB_BASE_URL + "reflect");
-                    start(FukubukuroViewFragment.class.getCanonicalName(), bundle);
+                    start(WebViewFragment.class.getCanonicalName(), bundle);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -85,8 +86,8 @@ public class TwDollarMoneyViewModel extends BaseViewModel<AppRepository> {
         public void call() {
             try {
                 Bundle bundle = new Bundle();
-                bundle.putString("link", AppConfig.WEB_BASE_URL + "profit");
-                start(FukubukuroViewFragment.class.getCanonicalName(), bundle);
+                bundle.putString("link", model.readApiConfigManagerEntity().getPlayFunWebUrl() + "/profit");
+                start(WebViewFragment.class.getCanonicalName(), bundle);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -128,7 +129,7 @@ public class TwDollarMoneyViewModel extends BaseViewModel<AppRepository> {
                 .subscribe(new BaseObserver<BaseDataResponse<UserProfitPageEntity>>() {
                     @Override
                     public void onSuccess(BaseDataResponse<UserProfitPageEntity> response) {
-                        totalProfits.set(String.valueOf(response.getData().getTotalProfits()));
+                        totalProfits.set(String.format("%.2f", response.getData().getTotalProfits()));
                         UserProfitPageEntity.CustomProfitList pageData = response.getData().getUserProfitList();
                     List<UserProfitPageInfoEntity> listData = pageData.getData();
                     if(!ObjectUtils.isEmpty(listData) && listData.size()>0){

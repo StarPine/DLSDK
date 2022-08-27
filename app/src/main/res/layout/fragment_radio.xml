@@ -19,246 +19,182 @@
         <import type="me.tatarka.bindingcollectionadapter2.LayoutManagers" />
 
         <import type="com.dl.playfun.widget.recyclerview.LineManagers" />
+        <import type="androidx.recyclerview.widget.LinearLayoutManager" />
     </data>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
         android:orientation="vertical"
         tools:context="com.dl.playfun.ui.radio.radiohome.RadioFragment">
 
-        <View
-            android:id="@+id/status_bar_view"
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/img_bar_background"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:background="@color/status_bar_color" />
+            android:layout_height="90dp"
+            android:elevation="10dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/img_main_bar_backdrop" />
+            <View
+                android:background="@color/transparent"
+                android:id="@+id/status_bar_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp" />
 
         <RelativeLayout
+            android:id="@+id/rl_title_layout"
             android:layout_width="match_parent"
-            android:layout_height="61dp"
-            android:background="@color/white"
-            android:orientation="horizontal">
+            android:layout_height="44dp"
+            android:layout_below="@+id/status_bar_view"
+            android:elevation="22dp">
 
-            <com.dl.playfun.widget.image.CircleImageView
-                android:id="@+id/my_user_img"
-                android:layout_width="46dp"
-                android:layout_height="46dp"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="12dp"
-                android:clickable="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/default_address_user"
-                app:riv_corner_radius="8dp"
-                binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
-                binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
-                binding:imageThumbPath="@{viewModel.userDataEntity.avatar}"
-                binding:onClickCommand="@{viewModel.headerImageOnClick}"
-                tools:ignore="MissingConstraints" />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true"
+                android:layout_marginEnd="15dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/radio_post_news"
+                binding:onClickCommand="@{viewModel.publishOnClickCommand}" />
+        </RelativeLayout>
 
-            <LinearLayout
-                android:id="@+id/radio_user_massage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_toRightOf="@+id/my_user_img"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
+        <com.scwang.smart.refresh.layout.SmartRefreshLayout
+            android:id="@+id/refresh_layout"
+            android:elevation="30dp"
+            android:layout_below="@+id/rl_title_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="50dp"
+            binding:onLoadMoreCommand="@{viewModel.onLoadMoreCommand}"
+            binding:onRefreshCommand="@{viewModel.onRefreshCommand}">
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <com.google.android.material.appbar.AppBarLayout
+                    android:id="@+id/app_bar"
+                    android:background="@color/white"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@{viewModel.userDataEntity.nickname}"
-                        android:textSize="12sp"
-                        tools:text="名字"
-                        />
-
-                    <ImageView
-                        android:layout_width="13dp"
-                        android:layout_height="13dp"
-                        android:layout_marginLeft="5dp"
-                        android:src="@drawable/ic_real_man"
-                        android:visibility="gone" />
-
-                    <ImageView
-                        android:layout_width="13dp"
-                        android:layout_height="13dp"
-                        android:layout_marginLeft="2dp"
-                        android:src="@drawable/ic_goddess"
-                        android:visibility="gone" />
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="7dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@{viewModel.area}"
-                        android:textSize="12sp"
-                        tools:text="地址"
-                        />
-
+                    app:elevation="0dp">
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_scrollFlags="scroll">
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:scaleType="fitXY"
+                                android:src="@drawable/img_main_bar_backdrop2"
+                                android:layout_width="match_parent"
+                                android:layout_height="122dp"/>
+
+                            <com.dl.playfun.widget.recyclerview.banner.BannerRecyclerView
+                                android:id="@+id/rcv_aduser"
+                                android:layout_width="match_parent"
+                                android:layout_height="270dp"
+                                android:clipChildren="false"
+                                android:overScrollMode="never"
+                                android:visibility="@{viewModel.radioItemsAdUser.empty ? View.GONE : View.VISIBLE}"
+                                app:autoPlaying="true"
+                                app:centerScale="1.15"
+                                app:itemSpace="10"
+                                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                                app:moveSpeed="1.8"
+                                binding:adapter="@{viewModel.adapterAdUser}"
+                                binding:itemBinding="@{viewModel.radioItemAdUserBinding}"
+                                binding:items="@{viewModel.radioItemsAdUser}" />
+                        </RelativeLayout>
+                            <com.youth.banner.Banner
+                                android:id="@+id/banner"
+                                android:layout_marginStart="15dp"
+                                android:layout_marginTop="20dp"
+                                android:layout_marginBottom="10dp"
+                                android:layout_marginEnd="15dp"
+                                android:layout_width="match_parent"
+                                android:layout_height="90dp"
+                                android:adjustViewBounds="true"
+                                app:banner_default_image="@drawable/img_banner_default"
+                                app:image_scale_type="fit_xy"
+                                android:visibility="@{viewModel.itemBannerShow ?View.VISIBLE:View.GONE}"
+                                binding:onBannerClickCommand="@{viewModel.onBannerClickCommand}"
+                                binding:BannerAdData="@{viewModel.itemBannerEntity}" />
+                    </LinearLayout>
+                    <RelativeLayout
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:visibility="@{viewModel.userDataEntity.age == null ? View.GONE:View.VISIBLE}"
-                        >
+                        tools:ignore="UselessParent">
 
-                        <TextView
+                        <LinearLayout
+                            binding:onClickCommand="@{viewModel.clickTackingClickCommand}"
+                            android:id="@+id/ll_tracking"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:text="|"
-                            android:textSize="12sp" />
+                            android:layout_marginStart="12dp"
+                            android:orientation="horizontal"
+                            android:padding="5dp">
 
-                        <TextView
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/tv_radio_selected_zuiz"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{viewModel.tarckingTitle}"
+                                tools:text="@string/playfun_radio_selected_zuiz"
+                                android:textColor="#ff333333"
+                                android:textSize="18sp" />
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/arrow_right_black" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:id="@+id/ll_city"
+                            android:padding="5dp"
+                            binding:onClickCommand="@{viewModel.regionOnClickCommand}"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginEnd="6dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@{@string/playfun_mine_age(viewModel.userDataEntity.age)}"
-                            android:textSize="12sp"
-                            tools:text="27岁" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="·"
-                            android:textSize="12sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@{viewModel.userDataEntity.constellation}"
-                            android:textSize="12sp"
-                            tools:text="·Лео" />
-                    </LinearLayout>
-
-                </LinearLayout>
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="20dp"
-                android:gravity="center"
-                android:orientation="vertical"
-                binding:onClickCommand="@{viewModel.moneyOnClick}">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/radio_money" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="кошелек"
-                    android:textSize="12sp" />
-
-            </LinearLayout>
-
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:background="@color/view_bar_color" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.scwang.smart.refresh.layout.SmartRefreshLayout
-                android:id="@+id/refresh_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="50dp"
-                binding:onLoadMoreCommand="@{viewModel.onLoadMoreCommand}"
-                binding:onRefreshCommand="@{viewModel.onRefreshCommand}">
-
-                <androidx.coordinatorlayout.widget.CoordinatorLayout
+                            tools:ignore="RelativeOverlap">
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/tv_city"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{viewModel.regionTitle}"
+                                tools:text="@string/playfun_tab_female_1"
+                                android:textColor="#ff333333"
+                                android:textSize="18sp"
+                                />
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/arrow_right_black"/>
+                        </LinearLayout>
+                    </RelativeLayout>
+                </com.google.android.material.appbar.AppBarLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rcv_radio"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <com.google.android.material.appbar.AppBarLayout
-                        android:id="@+id/app_bar"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:elevation="0dp">
-
-                        <com.dl.playfun.widget.RadioFilterView
-                            android:id="@+id/radio_filter_view"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
-                    </com.google.android.material.appbar.AppBarLayout>
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rcv_radio"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:overScrollMode="never"
-                        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                        binding:adapter="@{viewModel.adapter}"
-                        binding:itemBinding="@{viewModel.radioItemBinding}"
-                        binding:items="@{viewModel.radioItems}"
-                        binding:layoutManager="@{LayoutManagers.linear()}" />
-                </androidx.coordinatorlayout.widget.CoordinatorLayout>
-            </com.scwang.smart.refresh.layout.SmartRefreshLayout>
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginRight="20dp"
-                android:layout_marginBottom="71dp"
-                binding:onClickCommand="@{viewModel.publishOnClickCommand}">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:scaleType="center"
-                    android:background="@drawable/post_news1" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="8.5dp"
-                    android:scaleType="center"
-                    android:layout_centerInParent="true"
-                    android:src="@drawable/post_news2" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:scaleType="center"
-                    android:layout_centerInParent="true"
-                    android:background="@drawable/post_news3" />
-
-            </RelativeLayout>
-
-
-        </RelativeLayout>
-
-    </LinearLayout>
+                    android:layout_height="match_parent"
+                    android:overScrollMode="never"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    binding:adapter="@{viewModel.adapter}"
+                    binding:itemBinding="@{viewModel.radioItemBinding}"
+                    binding:items="@{viewModel.radioItems}"
+                    binding:layoutManager="@{LayoutManagers.linear()}" />
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+    </RelativeLayout>
 
 </layout>

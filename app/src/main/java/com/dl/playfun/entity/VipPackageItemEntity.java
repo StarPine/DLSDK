@@ -3,132 +3,127 @@ package com.dl.playfun.entity;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
-import com.google.gson.annotations.SerializedName;
 import com.dl.playfun.BR;
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
+import java.util.List;
+
 
 /**
  * @author wulei
  */
-public class VipPackageItemEntity extends BaseObservable {
+public class VipPackageItemEntity extends BaseObservable implements Serializable {
 
     /**
-     * id : 7
-     * goods_name : 半个月
-     * tag_price : 236.00
-     * price : 118.00
+     * id : 25
+     * goods_name : 1年
+     * google_goods_id : vip7190az
+     * apple_goods_id : vip7190
+     * give_coin : 144000
+     * actual_value : 365
+     * price : 239.99
+     * is_recommend : 0
+     * discount_label : 限时2.7折
+     * sale_price : 7190
+     * original_price : 原價26280
+     * day_price : 20/天
+     * symbol : $￥
+     * goods_tab : 冲1000送1W
+     * privileges : [{"title":"特权1","desc":"的32131","img":"images/3134d5f0660b975cd1de768c159f1d9f.webp"}]
      */
 
     private int id;
     @SerializedName("goods_name")
     private String goodsName;
-    @SerializedName("monthly_price")
-    private String monthlyPrice;
-    @SerializedName("pay_price")
-    private String payPrice;
-    @SerializedName("is_recommend")
-    private Integer isRecommend;
     @SerializedName("google_goods_id")
     private String googleGoodsId;
-    @SerializedName("gold_price")
-    private String goldPrice;
-    @SerializedName("gold_tag_price")
-    private String goldTagPrice;
-    private Boolean isSelected;
+    @SerializedName("apple_goods_id")
+    private String appleGoodsId;
+    @SerializedName("give_coin")
+    private int giveCoin;
     @SerializedName("actual_value")
-    private Integer actualValue;
-
-    private String price;//美元价格
+    private int actualValue;
+    private String price;
+    @SerializedName("is_recommend")
+    private Integer isRecommend;
+    @SerializedName("discount_label")
+    private String discountLabel;
+    @SerializedName("sale_price")
+    private String salePrice;
+    @SerializedName("original_price")
+    private String originalPrice;
     @SerializedName("day_price")
     private String dayPrice;
+    @SerializedName("symbol")
+    private String symbol;
+    @SerializedName("goods_tab")
+    private String goodsTab;
+    @SerializedName("privileges")
+    private List<PrivilegesBean> privileges;
+    @SerializedName("day_give_video_card")
+    private int dayGiveVideoCard;
+    @SerializedName("day_give_num")
+    private int dayGiveNum;
+    @SerializedName("day_give_coin")
+    private int dayGiveCoin;
+    @SerializedName("video_card")
+    private int videoCard;
 
-    @SerializedName("goods_label")
-    private String goodsLabel;
+    private Boolean isSelected;
+    //首充状态（H5传递）
+    private Integer purchased;
 
-    //产品图片
-    @SerializedName("pic_img")
-    private String picImg;
-    @SerializedName("select_img")
-    private String selectImg;//选中状态下的图片
 
-    @SerializedName("is_first")
-    private Integer isFirst;
-    @SerializedName("first_text")
-    private String firstText;
 
-    //赠送转世
-    @SerializedName("give_coin")
-    private Integer giveCoin;
-
-    public Integer getGiveCoin() {
-        return giveCoin;
+    public Integer getPurchased() {
+        return purchased;
     }
 
-    public void setGiveCoin(Integer giveCoin) {
-        this.giveCoin = giveCoin;
+    public void setPurchased(Integer purchased) {
+        this.purchased = purchased;
     }
 
-    public Integer getIsFirst() {
-        return isFirst;
+    @Bindable
+    public Boolean getSelected() {
+        return isSelected;
     }
 
-    public void setIsFirst(Integer isFirst) {
-        this.isFirst = isFirst;
+    public void setSelected(Boolean selected) {
+        isSelected = selected;
+        notifyPropertyChanged(BR.selected);
     }
 
-    public String getFirstText() {
-        return firstText;
+    public int getDayGiveVideoCard() {
+        return dayGiveVideoCard;
     }
 
-    public void setFirstText(String firstText) {
-        this.firstText = firstText;
+    public void setDayGiveVideoCard(int dayGiveVideoCard) {
+        this.dayGiveVideoCard = dayGiveVideoCard;
     }
 
-    public String getPicImg() {
-        return picImg;
+    public int getDayGiveNum() {
+        return dayGiveNum;
     }
 
-    public void setPicImg(String picImg) {
-        this.picImg = picImg;
+    public void setDayGiveNum(int dayGiveNum) {
+        this.dayGiveNum = dayGiveNum;
     }
 
-    public String getSelectImg() {
-        return selectImg;
+    public int getDayGiveCoin() {
+        return dayGiveCoin;
     }
 
-    public void setSelectImg(String selectImg) {
-        this.selectImg = selectImg;
+    public void setDayGiveCoin(int dayGiveCoin) {
+        this.dayGiveCoin = dayGiveCoin;
     }
 
-    public String getGoodsLabel() {
-        return goodsLabel;
+    public int getVideoCard() {
+        return videoCard;
     }
 
-    public void setGoodsLabel(String goodsLabel) {
-        this.goodsLabel = goodsLabel;
-    }
-
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
-    public Integer getActualValue() {
-        return actualValue;
-    }
-
-    public void setActualValue(Integer actualValue) {
-        this.actualValue = actualValue;
-    }
-
-    public String getDayPrice() {
-        return dayPrice;
-    }
-
-    public void setDayPrice(String dayPrice) {
-        this.dayPrice = dayPrice;
+    public void setVideoCard(int videoCard) {
+        this.videoCard = videoCard;
     }
 
     public int getId() {
@@ -147,20 +142,44 @@ public class VipPackageItemEntity extends BaseObservable {
         this.goodsName = goodsName;
     }
 
-    public String getMonthlyPrice() {
-        return monthlyPrice;
+    public String getGoogleGoodsId() {
+        return googleGoodsId;
     }
 
-    public void setMonthlyPrice(String monthlyPrice) {
-        this.monthlyPrice = monthlyPrice;
+    public void setGoogleGoodsId(String googleGoodsId) {
+        this.googleGoodsId = googleGoodsId;
     }
 
-    public String getPayPrice() {
-        return payPrice;
+    public String getAppleGoodsId() {
+        return appleGoodsId;
     }
 
-    public void setPayPrice(String payPrice) {
-        this.payPrice = payPrice;
+    public void setAppleGoodsId(String appleGoodsId) {
+        this.appleGoodsId = appleGoodsId;
+    }
+
+    public int getGiveCoin() {
+        return giveCoin;
+    }
+
+    public void setGiveCoin(int giveCoin) {
+        this.giveCoin = giveCoin;
+    }
+
+    public int getActualValue() {
+        return actualValue;
+    }
+
+    public void setActualValue(int actualValue) {
+        this.actualValue = actualValue;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
     }
 
     public Integer getIsRecommend() {
@@ -171,37 +190,98 @@ public class VipPackageItemEntity extends BaseObservable {
         this.isRecommend = isRecommend;
     }
 
-    public String getGoogleGoodsId() {
-        return googleGoodsId;
+    public String getDiscountLabel() {
+        return discountLabel;
     }
 
-    public void setGoogleGoodsId(String googleGoodsId) {
-        this.googleGoodsId = googleGoodsId;
+    public void setDiscountLabel(String discountLabel) {
+        this.discountLabel = discountLabel;
     }
 
-    public String getGoldPrice() {
-        return goldPrice;
+    public String getSalePrice() {
+        return salePrice;
     }
 
-    public void setGoldPrice(String goldPrice) {
-        this.goldPrice = goldPrice;
+    public void setSalePrice(String salePrice) {
+        this.salePrice = salePrice;
     }
 
-    public String getGoldTagPrice() {
-        return goldTagPrice;
+    public String getOriginalPrice() {
+        return originalPrice;
     }
 
-    public void setGoldTagPrice(String goldTagPrice) {
-        this.goldTagPrice = goldTagPrice;
+    public void setOriginalPrice(String originalPrice) {
+        this.originalPrice = originalPrice;
     }
 
-    @Bindable
-    public Boolean getSelected() {
-        return isSelected;
+    public String getDayPrice() {
+        return dayPrice;
     }
 
-    public void setSelected(Boolean selected) {
-        isSelected = selected;
-        notifyPropertyChanged(BR.selected);
+    public void setDayPrice(String dayPrice) {
+        this.dayPrice = dayPrice;
+    }
+
+    public String getSymbol() {
+        return symbol;
+    }
+
+    public void setSymbol(String symbol) {
+        this.symbol = symbol;
+    }
+
+    public String getGoodsTab() {
+        return goodsTab;
+    }
+
+    public void setGoodsTab(String goodsTab) {
+        this.goodsTab = goodsTab;
+    }
+
+    public List<PrivilegesBean> getPrivileges() {
+        return privileges;
+    }
+
+    public void setPrivileges(List<PrivilegesBean> privileges) {
+        this.privileges = privileges;
+    }
+
+    public static class PrivilegesBean implements Serializable {
+        /**
+         * title : 特权1
+         * desc : 的32131
+         * img : images/3134d5f0660b975cd1de768c159f1d9f.webp
+         */
+
+        @SerializedName("title")
+        private String title;
+        @SerializedName("desc")
+        private String desc;
+        @SerializedName("img")
+        private String img;
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getDesc() {
+            return desc;
+        }
+
+        public void setDesc(String desc) {
+            this.desc = desc;
+        }
+
+        public String getImg() {
+            return img;
+        }
+
+        public void setImg(String img) {
+            this.img = img;
+        }
     }
 }

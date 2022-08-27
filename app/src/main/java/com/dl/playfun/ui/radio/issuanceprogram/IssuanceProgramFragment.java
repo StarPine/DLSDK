@@ -1,14 +1,20 @@
 package com.dl.playfun.ui.radio.issuanceprogram;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -28,23 +34,26 @@ import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.FragmentIssuanceProgramBinding;
 import com.dl.playfun.entity.ConfigItemEntity;
 import com.dl.playfun.entity.DatingObjItemEntity;
+import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.entity.ThemeItemEntity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
 import com.dl.playfun.ui.certification.certificationmale.CertificationMaleFragment;
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
+import com.dl.playfun.ui.mine.wallet.recharge.RechargeActivity;
+import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.widget.coinpaysheet.CoinPaySheet;
-import com.dl.playfun.widget.coinrechargesheet.GameCoinTopupSheetView;
+import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 import com.dl.playfun.widget.dialog.MVDialog;
+import com.luck.picture.lib.permissions.PermissionChecker;
 
 import me.goldze.mvvmhabit.utils.ToastUtils;
-import me.jessyan.autosize.internal.CustomAdapt;
 
 /**
  * @author wulei
  */
-public class IssuanceProgramFragment extends BaseToolbarFragment<FragmentIssuanceProgramBinding, IssuanceProgramViewModel> implements CustomAdapt {
+public class IssuanceProgramFragment extends BaseToolbarFragment<FragmentIssuanceProgramBinding, IssuanceProgramViewModel> {
     public static final String ARG_PROGRAM_ENTITY = "arg_program_entity";
     public static final String ARG_CHOOSE_CITY = "arg_choose_city";
     public static final String ARG_ADDRESS_NAME = "arg_address_name";
@@ -93,6 +102,7 @@ public class IssuanceProgramFragment extends BaseToolbarFragment<FragmentIssuanc
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        AutoSizeUtils.applyAdapt(this.getResources());
         return R.layout.fragment_issuance_program;
     }
 
@@ -125,30 +135,42 @@ public class IssuanceProgramFragment extends BaseToolbarFragment<FragmentIssuanc
         lng = getArguments().getDouble(ARG_ADDRESS_LNG);
     }
 
+    ActivityResultLauncher<String> toPermissionIntent = registerForActivityResult(new ActivityResultContracts.RequestPermission(), result -> {
+        if (result) {
+            AliyunSnapVideoParam mCropParam = new AliyunSnapVideoParam.Builder()
+                    .setFrameRate(30)
+                    .setGop(250)
+                    .setFilterList(null)
+                    .setCropMode(VideoDisplayMode.SCALE)
+                    .setVideoQuality(VideoQuality.HD)
+                    .setVideoCodec(VideoCodecs.H264_HARDWARE)
+                    .setResolutionMode(0)
+                    .setRatioMode(1)
+                    .setCropMode(VideoDisplayMode.SCALE)
+                    .setNeedRecord(false)
+                    .setMinVideoDuration(3000)
+                    .setMaxVideoDuration(60 * 1000 * 1000)
+                    .setMinCropDuration(3000)
+                    .setSortMode(AliyunSnapVideoParam.SORT_MODE_MERGE)
+                    .build();
+            AppConfig.isCorpAliyun = true;
+            CropMediaActivity.startCropForResult(_mActivity, 2002, mCropParam);
+        } else {
+            Toast.makeText(_mActivity, R.string.picture_jurisdiction, Toast.LENGTH_SHORT).show();
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(_mActivity, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                // 只要有一个权限没有被授予, 则直接返回 false
+                PermissionChecker.launchAppDetailsSettings(getContext());
+            }
+        }
+    });
+
     @Override
     public void initViewObservable() {
         loadDatingDetail();
         viewModel.uc.startVideoActivity.observe(this, new Observer() {
             @Override
             public void onChanged(Object o) {
-                AliyunSnapVideoParam mCropParam = new AliyunSnapVideoParam.Builder()
-                        .setFrameRate(30)
-                        .setGop(250)
-                        .setFilterList(null)
-                        .setCropMode(VideoDisplayMode.SCALE)
-                        .setVideoQuality(VideoQuality.HD)
-                        .setVideoCodec(VideoCodecs.H264_HARDWARE)
-                        .setResolutionMode(0)
-                        .setRatioMode(1)
-                        .setCropMode(VideoDisplayMode.SCALE)
-                        .setNeedRecord(false)
-                        .setMinVideoDuration(3000)
-                        .setMaxVideoDuration(60 * 1000 * 1000)
-                        .setMinCropDuration(3000)
-                        .setSortMode(AliyunSnapVideoParam.SORT_MODE_MERGE)
-                        .build();
-                AppConfig.isCorpAliyun = true;
-                CropMediaActivity.startCropForResult(_mActivity, 2002, mCropParam);
+                toPermissionIntent.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
             }
         });
         viewModel.uc.checkDatingText.observe(this, new Observer<String>() {
@@ -190,7 +212,7 @@ public class IssuanceProgramFragment extends BaseToolbarFragment<FragmentIssuanc
                                     showDialog(typeDating);
                                 }
                             })
-                            .chooseType(MVDialog.TypeEnum.CENTER)
+                            .getTop2BottomDialog()
                             .show();
                 }else{
                     MVDialog.getInstance(IssuanceProgramFragment.this.getContext())
@@ -223,7 +245,7 @@ public class IssuanceProgramFragment extends BaseToolbarFragment<FragmentIssuanc
                                     showDialog(typeDating);
                                 }
                             })
-                            .chooseType(MVDialog.TypeEnum.CENTER)
+                            .getTop2BottomDialog()
                             .show();
                 }
             }
@@ -286,7 +308,7 @@ public class IssuanceProgramFragment extends BaseToolbarFragment<FragmentIssuanc
         datingObjItemEntity5.setName(StringUtils.getString(R.string.playfun_mood_item_id1));
         datingObjItemEntity5.setSelect(true);
         datingObjItemEntity5.setIconChecked(getResources().getResourceName(R.mipmap.dating_obj_mood1_img));
-
+        viewModel.$datingObjItemEntity = datingObjItemEntity5;
         DatingObjItemEntity datingObjItemEntity1 = new DatingObjItemEntity();
         datingObjItemEntity1.setType(0);
         datingObjItemEntity1.setId(2);
@@ -340,19 +362,32 @@ public class IssuanceProgramFragment extends BaseToolbarFragment<FragmentIssuanc
             titles = StringUtils.getString(R.string.playfun_send_show);
         }
 
-        new CoinPaySheet.Builder(mActivity).setPayParams(payType, AppContext.instance().appRepository.readUserData().getId(), titles, false, new CoinPaySheet.CoinPayDialogListener() {
+        new CoinPaySheet.Builder(mActivity).setPayParams(payType, ConfigManager.getInstance().getAppRepository().readUserData().getId(), titles, false, new CoinPaySheet.CoinPayDialogListener() {
             @Override
             public void onPaySuccess(CoinPaySheet sheet, String orderNo, Integer payPrice) {
                 sheet.dismiss();
                 ToastUtils.showShort(R.string.playfun_pay_success);
                 viewModel.sendConfirm();
             }
-
             @Override
-            public void onRechargeSuccess(GameCoinTopupSheetView gameCoinTopupSheetView) {
-                // do nothing
+            public void toGooglePlayView() {
+                toRecharge();
             }
         }).build().show();
+    }
+    /**
+     * 去充值
+     */
+    private void toRecharge() {
+        CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(mActivity);
+        coinRechargeFragmentView.setClickListener(new CoinRechargeSheetView.ClickListener() {
+            @Override
+            public void paySuccess(GoodsEntity goodsEntity) {
+                ToastUtils.showShort(R.string.playfun_pay_success);
+                viewModel.sendConfirm();
+            }
+        });
+        coinRechargeFragmentView.show();
     }
 
     @Override
@@ -380,13 +415,4 @@ public class IssuanceProgramFragment extends BaseToolbarFragment<FragmentIssuanc
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    @Override
-    public boolean isBaseOnWidth() {
-        return true;
-    }
-
-    @Override
-    public float getSizeInDp() {
-        return 360;
-    }
 }

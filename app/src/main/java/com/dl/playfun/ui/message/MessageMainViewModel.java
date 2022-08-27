@@ -1,21 +1,25 @@
 package com.dl.playfun.ui.message;
 
 import android.app.Application;
-import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 
-import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.data.AppRepository;
+import com.dl.playfun.data.source.http.observer.BaseObserver;
+import com.dl.playfun.data.source.http.response.BaseDataResponse;
+import com.dl.playfun.entity.MessageGroupEntity;
 import com.dl.playfun.event.MainTabEvent;
+import com.dl.playfun.event.MessageCountChangeContactEvent;
 import com.dl.playfun.event.MessageCountChangeEvent;
 import com.dl.playfun.event.MessageCountChangeTagEvent;
 import com.dl.playfun.event.SystemMessageCountChangeEvent;
-import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.message.pushsetting.PushSettingFragment;
-import com.dl.playfun.ui.mine.webview.FukubukuroViewFragment;
+import com.dl.playfun.ui.message.systemmessagegroup.SystemMessageGroupFragment;
 import com.dl.playfun.viewmodel.BaseViewModel;
+
+import java.util.List;
 
 import io.reactivex.disposables.Disposable;
 import me.goldze.mvvmhabit.binding.command.BindingAction;
@@ -23,58 +27,45 @@ import me.goldze.mvvmhabit.binding.command.BindingCommand;
 import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
+import me.goldze.mvvmhabit.utils.RxUtils;
 
 /**
  * @author wulei
  */
 public class MessageMainViewModel extends BaseViewModel<AppRepository> {
-
+    public ObservableBoolean tabSelected = new ObservableBoolean(true);
     //顶部切换tab按键选中
-    public ObservableField<Integer> tabSelectSystemMessage = new ObservableField<>(0);
     public SingleLiveEvent<Boolean> tabSelectEvent = new SingleLiveEvent<>();
 
     public ObservableField<Integer> chatMessageCount = new ObservableField<>(0);
+    public ObservableField<Integer> chatMessageContactCount = new ObservableField<>(0);
     public ObservableField<Integer> systemMessageCount = new ObservableField<>(0);
     //推送设置按钮的点击事件
     public BindingCommand pushSettingOnClickCommand = new BindingCommand(() -> start(PushSettingFragment.class.getCanonicalName()));
-    private Disposable mSubscription, MessageCountTagSubscription,mainTabEventReceive;
-    public BindingCommand toTaskClickCommand = new BindingCommand(() -> {
-//        AppContext.instance().logEvent(AppsFlyerEvent.im_ad_id);
-//        //start(TaskCenterFragment.class.getCanonicalName());
-//        RxBus.getDefault().post(new TaskMainTabEvent(false,true));
-        try {
-            Bundle bundle = new Bundle();
-            if (ConfigManager.getInstance().isMale()) {
-                bundle.putString("link", AppConfig.WEB_BASE_URL + "introduction_man");
-            } else {
-                bundle.putString("link", AppConfig.WEB_BASE_URL + "introduction_woman");
-            }
-            start(FukubukuroViewFragment.class.getCanonicalName(), bundle);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    });
+
+    private Disposable mSubscription, MessageCountTagSubscription,mainTabEventReceive,MessageCountContactSubscription;
 
     //tab切换按键
-    public BindingCommand toLeftTabClickCommand = new BindingCommand(new BindingAction() {
-        @Override
-        public void call() {
-            int flag = tabSelectSystemMessage.get();
-            if (flag == 1) {
-                tabSelectSystemMessage.set(0);
-                tabSelectEvent.postValue(true);
-            }
+    public BindingCommand toLeftTabClickCommand = new BindingCommand(() -> {
+        boolean flag = tabSelected.get();
+        if (!flag) {
+            tabSelected.set(true);
+            tabSelectEvent.postValue(true);
         }
     });
     //tab切换按键
-    public BindingCommand toRightTabClickCommand = new BindingCommand(new BindingAction() {
+    public BindingCommand toRightTabClickCommand = new BindingCommand(() -> {
+        boolean flag = tabSelected.get();
+        if (flag) {
+            tabSelected.set(false);
+            tabSelectEvent.postValue(false);
+        }
+    });
+    //tab切换按键
+    public BindingCommand toMessageTabClickCommand = new BindingCommand(new BindingAction() {
         @Override
         public void call() {
-            int flag = tabSelectSystemMessage.get();
-            if (flag == 0) {
-                tabSelectSystemMessage.set(1);
-                tabSelectEvent.postValue(false);
-            }
+            start(SystemMessageGroupFragment.class.getCanonicalName());
         }
     });
 
@@ -91,26 +82,53 @@ public class MessageMainViewModel extends BaseViewModel<AppRepository> {
     public void registerRxBus() {
         super.registerRxBus();
         mSubscription = RxBus.getDefault().toObservable(SystemMessageCountChangeEvent.class)
+                .compose(RxUtils.schedulersTransformer())
                 .subscribe(systemMessageCountChangeEvent -> {
-                    systemMessageCount.set(systemMessageCountChangeEvent.getCount());
-                    notifyMessageCountChange();
-                });
-        MessageCountTagSubscription = RxBus.getDefault().toObservable(MessageCountChangeTagEvent.class)
-                .subscribe(messageCountChangeTagEvent -> {
-                    if (messageCountChangeTagEvent.getTextCount() != null) {
-                        chatMessageCount.set(messageCountChangeTagEvent.getTextCount());
+                    SystemMessageCountChangeEvent systemMessageCountChangeEvent1 = (SystemMessageCountChangeEvent) systemMessageCountChangeEvent;
+                    if(systemMessageCountChangeEvent1!=null){
+                        systemMessageCount.set(systemMessageCountChangeEvent1.getCount());
                         notifyMessageCountChange();
                     }
                 });
-        mainTabEventReceive = RxBus.getDefault().toObservable(MainTabEvent.class).subscribe(event -> {
-            if (event.getTabName().equals("message")){
-                int flag = tabSelectSystemMessage.get();
-                if (flag == 1) {
-                    tabSelectSystemMessage.set(0);
-                    tabSelectEvent.postValue(true);
-                }
-            }
+        MessageCountTagSubscription = RxBus.getDefault().toObservable(MessageCountChangeTagEvent.class)
+                .compose(RxUtils.schedulersTransformer())
+                .subscribe(messageCountChangeTagEvent -> {
+                    MessageCountChangeTagEvent messageCountChangeTagEvent1 = (MessageCountChangeTagEvent)messageCountChangeTagEvent;
+                    if (messageCountChangeTagEvent1!=null && messageCountChangeTagEvent1.getTextCount() != null) {
+                        chatMessageCount.set(messageCountChangeTagEvent1.getTextCount());
+                        notifyMessageCountChange();
+                    }
+                });
+        mainTabEventReceive = RxBus.getDefault().toObservable(MainTabEvent.class)
+                .compose(RxUtils.schedulersTransformer())
+                .subscribe(event -> {
+                    MainTabEvent mainTabEvent = (MainTabEvent) event;
+                    if(mainTabEvent!=null){
+                        if (mainTabEvent.getTabName().equals("message")){
+                            boolean flag = tabSelected.get();
+                            if (flag) {
+                                tabSelected.set(false);
+                                tabSelectEvent.postValue(false);
+                            }else{
+                                tabSelected.set(true);
+                                tabSelectEvent.postValue(true);
+                            }
+                        }
+                    }
         });
+        MessageCountContactSubscription = RxBus.getDefault().toObservable(MessageCountChangeContactEvent.class)
+                .compose(RxUtils.schedulersTransformer())
+                .subscribe(event -> {
+                    MessageCountChangeContactEvent messageCountChangeContactEvent = (MessageCountChangeContactEvent) event;
+                    if(messageCountChangeContactEvent!=null){
+                        chatMessageContactCount.set(messageCountChangeContactEvent.getTextContactCount());
+                        notifyMessageCountChange();
+                    }
+                });
+        RxSubscriptions.add(mSubscription);
+        RxSubscriptions.add(MessageCountTagSubscription);
+        RxSubscriptions.add(mainTabEventReceive);
+        RxSubscriptions.add(MessageCountContactSubscription);
 
     }
 
@@ -118,10 +136,53 @@ public class MessageMainViewModel extends BaseViewModel<AppRepository> {
     public void removeRxBus() {
         super.removeRxBus();
         RxSubscriptions.remove(mSubscription);
+        RxSubscriptions.remove(MessageCountTagSubscription);
         RxSubscriptions.remove(mainTabEventReceive);
+        RxSubscriptions.remove(MessageCountContactSubscription);
+    }
+
+    public void loadDatas() {
+        model.getMessageList()
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .subscribe(new BaseObserver<BaseDataResponse<List<MessageGroupEntity>>>() {
+                    @Override
+                    public void onSuccess(BaseDataResponse<List<MessageGroupEntity>> response) {
+                        for (MessageGroupEntity datum : response.getData()) {
+                            systemMessageCount.set(systemMessageCount.get() + datum.getUnreadNumber());
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     private void notifyMessageCountChange() {
-        RxBus.getDefault().post(new MessageCountChangeEvent(systemMessageCount.get() + chatMessageCount.get()));
+        Integer chatMessageNum = chatMessageCount.get();
+        if(chatMessageNum==null){
+            chatMessageNum = 0;
+        }
+//        Integer systemMessageNum = systemMessageCount.get();
+//        if(systemMessageNum==null){
+//            systemMessageNum = 0;
+//        }
+        Integer chatMessageContactNum = chatMessageContactCount.get();
+        if(chatMessageContactNum==null){
+            chatMessageContactNum = 0;
+        }
+        int sumCount = chatMessageNum + chatMessageContactNum;
+        RxBus.getDefault().post(new MessageCountChangeEvent(sumCount));
+    }
+
+    public String addString(Integer integer) {
+        String s = String.valueOf(integer);
+        if (integer > 99) {
+            s = "99+";
+        }
+        return s;
     }
 }

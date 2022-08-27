@@ -7,7 +7,7 @@ package com.dl.playfun.entity;
  */
 public class CustomMessageIMTextEntity {
     private String toName;
-    private Integer userId;
+    private Integer toUserId;
 
     public String getToName() {
         return toName;
@@ -18,10 +18,10 @@ public class CustomMessageIMTextEntity {
     }
 
     public Integer getUserId() {
-        return userId;
+        return toUserId;
     }
 
     public void setUserId(Integer userId) {
-        this.userId = userId;
+        this.toUserId = userId;
     }
 }

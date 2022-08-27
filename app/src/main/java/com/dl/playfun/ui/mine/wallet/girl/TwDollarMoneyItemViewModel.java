@@ -5,6 +5,7 @@ import androidx.databinding.ObservableField;
 
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.entity.UserProfitPageInfoEntity;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.utils.ExceptionReportUtils;
 
 import java.math.BigDecimal;
@@ -30,7 +31,7 @@ public class TwDollarMoneyItemViewModel extends MultiItemViewModel<TwDollarMoney
             if (itemEntity.get().getUserId() == null || itemEntity.get().getUserId() == 0) {
                 return;
             }
-            if (itemEntity.get().getUserId() == AppContext.instance().appRepository.readUserData().getId()) {
+            if (itemEntity.get().getUserId() == ConfigManager.getInstance().getAppRepository().readUserData().getId()) {
                 return;
             }
             //新需求，取消流水点击跳转

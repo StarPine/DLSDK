@@ -8,10 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.builder.TimePickerBuilder;
@@ -23,10 +26,15 @@ import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.entity.OccupationConfigItemEntity;
+import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
+import com.dl.playfun.ui.mine.adapter.HopeAdapter;
+import com.dl.playfun.ui.view.wheelview.DlOptionsPickerBuilder;
+import com.dl.playfun.ui.view.wheelview.DlOptionsPickerView;
 import com.dl.playfun.utils.DateUtil;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.PictureSelectorUtil;
+import com.dl.playfun.utils.Utils;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.listener.OnResultCallbackListener;
@@ -34,12 +42,15 @@ import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.databinding.FragmentEditProfileBinding;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.listener.OnItemClickListener;
 /**
  * @author wulei
+ * 个人资料/个人信息
  */
 public class EditProfileFragment extends BaseToolbarFragment<FragmentEditProfileBinding, EditProfileViewModel> {
 
@@ -76,9 +87,6 @@ public class EditProfileFragment extends BaseToolbarFragment<FragmentEditProfile
     public void initData() {
         super.initData();
         AppContext.instance().logEvent(AppsFlyerEvent.Edit_Profile);
-        binding.edtNickname.setFocusable(true);
-        binding.edtNickname.setFocusableInTouchMode(true);
-        binding.edtNickname.requestFocus();
     }
 
     private void clearNicknameFocus() {
@@ -93,13 +101,6 @@ public class EditProfileFragment extends BaseToolbarFragment<FragmentEditProfile
             @Override
             public void onChanged(Void aVoid) {
                 chooseAvatar();
-                clearNicknameFocus();
-            }
-        });
-        viewModel.uc.clickCity.observe(this, new Observer() {
-            @Override
-            public void onChanged(@Nullable Object o) {
-                shouChooseCity();
                 clearNicknameFocus();
             }
         });
@@ -170,19 +171,6 @@ public class EditProfileFragment extends BaseToolbarFragment<FragmentEditProfile
         });
     }
 
-    //选择城市dialog
-    public void shouChooseCity() {
-        if (viewModel.userDataEntity.get() == null) {
-            return;
-        }
-        MVDialog.ChooseCity chooseCity = new MVDialog.ChooseCity() {
-            @Override
-            public void clickListItem(Dialog dialog, List<Integer> ids) {
-                viewModel.userDataEntity.get().setPermanentCityIds(ids);
-            }
-        };
-        MVDialog.getCityDialog(this.getContext(), viewModel.city, viewModel.userDataEntity.get().getPermanentCityIds(), chooseCity);
-    }
 
     //选择职业dialog
     public void shouChooseOccupation() {
@@ -222,17 +210,22 @@ public class EditProfileFragment extends BaseToolbarFragment<FragmentEditProfile
             return;
         }
         Calendar selectedDate = Calendar.getInstance();
-        if (viewModel.userDataEntity.get().getBirthdayCal() != null) {
-            selectedDate = viewModel.userDataEntity.get().getBirthdayCal();
+        if (viewModel.userDataEntity.get().getBirthday() != null) {
+            try {
+                selectedDate.setTime(Utils.format.parse(viewModel.userDataEntity.get().getBirthday()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
         Calendar startDate = Calendar.getInstance();
         startDate.set(1931, 0, 1);
         Calendar endDate = Calendar.getInstance();
         endDate.set(DateUtil.getYear() - 18, DateUtil.getMonth() - 1, DateUtil.getCurrentMonthDay());
         TimePickerView pvTime = new TimePickerBuilder(this.getContext(), (date, v) -> {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            viewModel.userDataEntity.get().setBirthday(calendar);
+            UserDataEntity userEntity = viewModel.userDataEntity.get();
+            userEntity.setBirthday(Utils.formatday.format(date));
+            viewModel.userDataEntity.set(userEntity);
+            viewModel.userDataEntity.notifyChange();
         })
                 .setType(new boolean[]{true, true, true, false, false, false})//分别对应年月日时分秒，默认全部显示
                 .setCancelText(getString(R.string.playfun_cancel))//取消按钮文字
@@ -254,7 +247,7 @@ public class EditProfileFragment extends BaseToolbarFragment<FragmentEditProfile
                 .setItemVisibleCount(5)//设置最大可见数目
                 .setDividerType(WheelView.DividerType.WRAP)
                 .setLineSpacingMultiplier(2.8f)
-                .setLabel(getString(R.string.playfun_year), getString(R.string.playfun_month), getString(R.string.playfun_daily), getString(R.string.playfun_hour), getString(R.string.playfun_minute), getString(R.string.playfun_second))
+                .setLabel("", "", "", "", "", "")
                 .isDialog(true)//f是否显示为对话框样式
                 .build();
         Dialog mDialog = pvTime.getDialog();
@@ -398,5 +391,4 @@ public class EditProfileFragment extends BaseToolbarFragment<FragmentEditProfile
         pvOptions.setPicker(options1Items);//一级选择器
         pvOptions.show();
     }
-
 }

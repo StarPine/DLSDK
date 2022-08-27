@@ -36,7 +36,10 @@
             app:riv_oval="true"
             binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
             binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
-            binding:imageThumbPath="@{viewModel.itemEntity.user.avatar}" />
+            binding:imageThumbPath="@{viewModel.itemEntity.user.avatar}"
+            binding:resizeH="@{48}"
+            binding:resizeW="@{48}"
+            />
 
         <TextView
             android:id="@+id/tv_content"

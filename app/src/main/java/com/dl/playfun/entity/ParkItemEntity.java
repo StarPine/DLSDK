@@ -3,10 +3,12 @@ package com.dl.playfun.entity;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
+import com.dl.playfun.BR;
 import com.dl.playfun.data.typeadapter.BooleanTypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
-import com.dl.playfun.BR;
+
+import java.util.List;
 
 /**
  * @author wulei
@@ -28,6 +30,7 @@ public class ParkItemEntity extends BaseObservable {
      * is_collect : 0
      * album_type : 1
      */
+
     private int id;
     private String nickname;
     private Integer sex;
@@ -76,6 +79,61 @@ public class ParkItemEntity extends BaseObservable {
     //是否搭讪过
     @SerializedName("is_accost")
     private Integer isAccost;
+
+    //当前用户im id
+    @SerializedName("imId")
+    private String ImUserId;
+    //对方用户 IM iD
+    @SerializedName("toImId")
+    private String ImToUserId;
+    //在线状态
+    @SerializedName("calling_status")
+    private int callingStatus;
+
+    //新版首页为做 item跟广告banner区分
+    private Integer type;
+    private List<AdItemEntity> bannerList;
+
+
+    public int getCallingStatus() {
+        return callingStatus;
+    }
+
+    public void setCallingStatus(int callingStatus) {
+        this.callingStatus = callingStatus;
+    }
+
+    public List<AdItemEntity> getBannerList() {
+        return bannerList;
+    }
+
+    public void setBannerList(List<AdItemEntity> bannerList) {
+        this.bannerList = bannerList;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public String getImUserId() {
+        return ImUserId;
+    }
+
+    public void setImUserId(String imUserId) {
+        ImUserId = imUserId;
+    }
+
+    public String getImToUserId() {
+        return ImToUserId;
+    }
+
+    public void setImToUserId(String imToUserId) {
+        ImToUserId = imToUserId;
+    }
 
     public Integer getIsAccost() {
         if (isAccost == null) {

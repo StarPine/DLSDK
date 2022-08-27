@@ -6,21 +6,23 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
 
+import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.entity.GameCoinWalletEntity;
 import com.dl.playfun.manager.ConfigManager;
-import com.dl.playfun.viewmodel.BaseViewModel;
 import com.dl.playfun.ui.mine.wallet.coin.CoinFragment;
 import com.dl.playfun.ui.mine.wallet.girl.TwDollarMoneyFragment;
-import com.dl.playfun.ui.mine.webview.FukubukuroViewFragment;
+import com.dl.playfun.ui.mine.webview.WebViewFragment;
+import com.dl.playfun.viewmodel.BaseViewModel;
 
 import me.goldze.mvvmhabit.binding.command.BindingAction;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.RxUtils;
+import me.goldze.mvvmhabit.utils.StringUtils;
 
 /**
  * @author wulei
@@ -65,41 +67,16 @@ public class WalletViewModel extends BaseViewModel<AppRepository> {
 
     public BindingCommand withdrawonClickCommand = new BindingCommand(() -> {
         //没有进行真人认证
-        if (model.readUserData().getCertification() != null && model.readUserData().getCertification().intValue() == 1) {
-            try {
-                Bundle bundle = new Bundle();
-                bundle.putString("link", AppConfig.WEB_BASE_URL + "reflect");
-                start(FukubukuroViewFragment.class.getCanonicalName(), bundle);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {//提示去认证
-            certification.call();
+        try {
+            Bundle bundle = new Bundle();
+            bundle.putString("link", model.readApiConfigManagerEntity().getPlayFunWebUrl() + "/reflect");
+            start(WebViewFragment.class.getCanonicalName(), bundle);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     });
 
     public void getUserAccount(){
-//        model.getUserAccount()
-//                .doOnSubscribe(this)
-//                .compose(RxUtils.schedulersTransformer())
-//                .compose(RxUtils.exceptionTransformer())
-//                .doOnSubscribe(disposable -> showHUD())
-//                .subscribe(new BaseObserver<BaseDataResponse<CoinWalletEntity>>(){
-//
-//                    @Override
-//                    public void onSuccess(BaseDataResponse<CoinWalletEntity> coinWalletEntityBaseDataResponse) {
-//                        CoinWalletEntity coinWalletEntity = coinWalletEntityBaseDataResponse.getData();
-//                        if(coinWalletEntity!=null){
-//                            totalCoin.set(String.valueOf(coinWalletEntity.getTotalCoin()));
-//                            totalProfit.set(String.format("%.2f", coinWalletEntity.getTotalProfit()));
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//                        dismissHUD();
-//                    }
-//                });
         model.getUserAccountPageInfo()
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
@@ -111,10 +88,15 @@ public class WalletViewModel extends BaseViewModel<AppRepository> {
                     public void onSuccess(BaseDataResponse<GameCoinWalletEntity> coinWalletEntityBaseDataResponse) {
                         GameCoinWalletEntity gameCoinWalletEntity = coinWalletEntityBaseDataResponse.getData();
                         if(gameCoinWalletEntity!=null){
-                            totalCoin.set(String.valueOf(gameCoinWalletEntity.getTotalCoins()));
+                            int totalCoins = gameCoinWalletEntity.getTotalCoins();
+                            if (totalCoins > 9999999){
+                                totalCoin.set(StringUtils.getString(R.string.playfun_max_vaule));
+                            }else {
+                                totalCoin.set(String.valueOf(totalCoins));
+                            }
                             totalProfit.set(String.format("%.2f", gameCoinWalletEntity.getTotalProfit()));
                             coinName.set(gameCoinWalletEntity.getCurrencyName());
-                            totalGameCoin.set(String.valueOf(gameCoinWalletEntity.getTotalGameCoins()));
+                            totalGameCoin.set(String.valueOf(gameCoinWalletEntity.getTotalAppCoins()));
                         }
                     }
 

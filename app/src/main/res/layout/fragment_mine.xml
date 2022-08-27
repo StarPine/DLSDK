@@ -36,41 +36,51 @@
             <RelativeLayout
                 android:id="@+id/layout_title"
                 android:layout_width="match_parent"
-                android:clickable="true"
                 android:layout_height="84dp"
                 android:background="@color/white"
+                android:clickable="true"
                 android:elevation="50dp"
                 android:visibility="gone">
 
-                <com.dl.playfun.widget.image.CircleImageView
-                    android:id="@+id/min_user_img"
-                    android:layout_width="29dp"
-                    android:layout_height="29dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginStart="118dp"
-                    android:layout_marginBottom="7dp"
-                    android:clickable="true"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/default_address_user"
-                    app:riv_corner_radius="8dp"
-                    binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
-                    binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
-                    binding:imageThumbPath="@{viewModel.userInfoEntity.avatar}" />
-
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginStart="13dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_toEndOf="@+id/min_user_img"
-                    android:ellipsize="end"
-                    android:includeFontPadding="false"
-                    android:lines="1"
-                    android:text="@{viewModel.userInfoEntity.nickname}"
-                    android:textColor="#FF333333"
-                    android:textSize="19sp"
-                    tools:text="艾希lovexi666" />
+                    android:layout_centerInParent="true"
+                    android:layout_marginBottom="7dp"
+                    android:orientation="horizontal">
+
+                    <com.dl.playfun.widget.image.CircleImageView
+                        android:id="@+id/min_user_img"
+                        android:layout_width="29dp"
+                        android:layout_height="29dp"
+                        android:clickable="true"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/default_address_user"
+                        app:riv_corner_radius="8dp"
+                        binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
+                        binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
+                        binding:imageThumbPath="@{viewModel.userInfoEntity.avatar}"
+                        binding:resizeH="@{29}"
+                        binding:resizeW="@{29}"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="13dp"
+                        android:layout_toEndOf="@+id/min_user_img"
+                        android:ellipsize="end"
+                        android:includeFontPadding="false"
+                        android:lines="1"
+                        android:text="@{viewModel.userInfoEntity.nickname}"
+                        android:textColor="#FF333333"
+                        android:textSize="19sp"
+                        tools:text="艾希lovexi666" />
+                </LinearLayout>
+
             </RelativeLayout>
 
             <com.google.android.material.appbar.AppBarLayout
@@ -109,8 +119,7 @@
                                 android:src="@drawable/default_avatar"
                                 binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
                                 binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
-                                binding:imageThumbPath="@{viewModel.userInfoEntity.avatar}"
-                                 />
+                                binding:imageThumbPath="@{viewModel.userInfoEntity.avatar}" />
 
                             <ImageView
                                 android:layout_width="match_parent"
@@ -118,8 +127,8 @@
                                 android:background="@drawable/radius_layout_mine"
                                 android:elevation="99dp"
                                 android:scaleType="fitXY"
-                                tools:src="@drawable/mine_default_back_img_male"
-                                android:src="@{viewModel.userInfoEntity.sex==1?@drawable/mine_default_back_img_male:@drawable/mine_default_back_img}" />
+                                android:src="@{viewModel.userInfoEntity.sex==1?@drawable/mine_default_back_img_male:@drawable/mine_default_back_img}"
+                                tools:src="@drawable/mine_default_back_img_male" />
                         </FrameLayout>
 
                         <RelativeLayout
@@ -141,7 +150,6 @@
                                     android:background="@drawable/circle_white" />
 
                                 <com.dl.playfun.widget.image.CircleImageView
-                                    binding:onClickCommand="@{viewModel.avatarOnClickCommand}"
                                     android:layout_width="67dp"
                                     android:layout_height="67dp"
                                     android:layout_marginStart="1dp"
@@ -153,6 +161,7 @@
                                     binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
                                     binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
                                     binding:imageThumbPath="@{viewModel.userInfoEntity.avatar}"
+                                    binding:onClickCommand="@{viewModel.avatarOnClickCommand}"
                                     tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
                             </FrameLayout>
 
@@ -192,13 +201,15 @@
                                 android:layout_marginTop="10dp"
                                 android:layout_toEndOf="@+id/me_avatar"
                                 android:orientation="horizontal">
+
                                 <TextView
                                     style="@style/MineTagPrimary"
                                     android:layout_width="wrap_content"
                                     android:layout_height="21dp"
                                     android:layout_marginEnd="6dp"
+                                    android:visibility="@{StringUtils.isEmpty(viewModel.userInfoEntity.constellation)?View.GONE:View.VISIBLE}"
                                     android:text="@{viewModel.userInfoEntity.constellation}"
-                                    tools:text="21岁" />
+                                    tools:text="星座" />
 
                                 <TextView
                                     style="@style/MineTagPrimary"
@@ -207,15 +218,17 @@
                                     android:layout_marginEnd="6dp"
                                     android:text="@{@string/playfun_mine_age(viewModel.userInfoEntity.age)}" />
                             </LinearLayout>
+
                             <TextView
-                                android:layout_marginTop="5dp"
-                                android:layout_alignStart="@+id/ll_tag_group"
-                                android:layout_below="@+id/ll_tag_group"
                                 style="@style/MineTagPrimary"
                                 android:layout_width="wrap_content"
                                 android:layout_height="21dp"
+                                android:layout_below="@+id/ll_tag_group"
+                                android:layout_alignStart="@+id/ll_tag_group"
+                                android:layout_marginTop="5dp"
                                 android:layout_marginEnd="6dp"
                                 android:text="@{SystemDictUtils.getOccupationById(safeUnbox(viewModel.userInfoEntity.occupationId))}" />
+
                             <LinearLayout
                                 android:id="@+id/list_profile_layout"
                                 android:layout_width="match_parent"
@@ -223,20 +236,20 @@
                                 android:layout_alignParentBottom="true"
                                 android:orientation="vertical">
 
-                                <RelativeLayout
+                                <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_above="@+id/vip_layout_div"
-                                    android:layout_alignParentBottom="true"
-                                    android:layout_marginStart="48dp"
-                                    android:layout_marginBottom="18dp">
+                                    android:layout_marginBottom="18dp"
+                                    android:gravity="center_horizontal"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginLeft="10dp"
+                                    >
 
                                     <RelativeLayout
                                         android:id="@+id/profile_layout"
-                                        android:layout_width="wrap_content"
+                                        android:layout_width="0dp"
+                                        android:layout_weight="1"
                                         android:layout_height="60dp"
-                                        android:layout_alignParentStart="true"
-                                        android:clickable="true"
                                         android:elevation="1dp"
                                         binding:onClickCommand="@{viewModel.editProfileOnClickCommand}">
 
@@ -244,15 +257,26 @@
                                             android:id="@+id/user_profile_img"
                                             android:layout_width="22dp"
                                             android:layout_height="22dp"
-                                            android:layout_centerInParent="true"
+                                            android:layout_centerHorizontal="true"
                                             android:layout_marginBottom="9dp"
+                                            android:layout_above="@+id/user_profile"
                                             android:src="@drawable/ic_mine_profile" />
-
+                                        <TextView
+                                            android:id="@+id/user_profile"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_centerHorizontal="true"
+                                            android:layout_alignParentBottom="true"
+                                            android:text="@string/playfun_mine_profile"
+                                            android:textColor="@color/white"
+                                            android:textSize="12dp" />
                                         <TextView
                                             android:layout_width="9dp"
                                             android:layout_height="9dp"
-                                            android:layout_marginTop="15dp"
-                                            android:layout_marginLeft="18dp"
+                                            android:layout_marginTop="-5dp"
+                                            android:layout_marginRight="-5dp"
+                                            android:layout_alignEnd="@+id/user_profile_img"
+                                            android:layout_alignTop="@+id/user_profile_img"
                                             android:background="@drawable/mine_radius"
                                             android:textColor="@color/white"
                                             android:visibility="@{viewModel.localUserDataEntity.isPerfect?View.GONE:View.VISIBLE}"
@@ -261,12 +285,10 @@
                                     </RelativeLayout>
 
                                     <RelativeLayout
-                                        android:clickable="true"
                                         android:id="@+id/mine_wallet_layout"
-                                        android:layout_width="wrap_content"
+                                        android:layout_width="0dp"
+                                        android:layout_weight="1"
                                         android:layout_height="60dp"
-                                        android:layout_marginStart="59dp"
-                                        android:layout_toEndOf="@+id/profile_layout"
                                         android:elevation="1dp"
                                         binding:onClickCommand="@{viewModel.walletOnClickCommand}">
 
@@ -275,16 +297,25 @@
                                             android:layout_height="22dp"
                                             android:layout_centerInParent="true"
                                             android:layout_marginBottom="9dp"
+                                            android:layout_above="@+id/mine_wallet"
                                             android:src="@drawable/ic_mine_wallet" />
+                                        <TextView
+                                            android:id="@+id/mine_wallet"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_alignParentBottom="true"
+                                            android:layout_centerInParent="true"
+                                            android:text="@string/playfun_mine_wallet"
+                                            android:textColor="@color/white"
+                                            android:textSize="12sp" />
                                     </RelativeLayout>
 
                                     <RelativeLayout
-                                        android:clickable="true"
                                         android:id="@+id/mine_my_likes_layout"
-                                        android:layout_width="wrap_content"
+                                        android:layout_width="0dp"
+                                        android:layout_weight="1"
                                         android:layout_height="60dp"
-                                        android:layout_marginStart="59dp"
-                                        android:layout_toEndOf="@+id/mine_wallet_layout"
+                                        android:elevation="1dp"
                                         binding:onClickCommand="@{viewModel.fondOnClickCommand}">
 
                                         <ImageView
@@ -292,17 +323,24 @@
                                             android:layout_height="22dp"
                                             android:layout_centerInParent="true"
                                             android:layout_marginBottom="9dp"
+                                            android:layout_above="@+id/mine_my_likes"
                                             android:src="@drawable/ic_mine_like" />
+                                        <TextView
+                                            android:id="@+id/mine_my_likes"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_centerHorizontal="true"
+                                            android:layout_alignParentBottom="true"
+                                            android:text="@string/playfun_mine_my_likes"
+                                            android:textColor="@color/white"
+                                            android:textSize="12sp" />
                                     </RelativeLayout>
 
                                     <RelativeLayout
-                                        android:layout_width="wrap_content"
+                                        android:layout_width="0dp"
+                                        android:layout_weight="1"
                                         android:layout_height="60dp"
-                                        android:layout_marginStart="59dp"
-                                        android:layout_toEndOf="@+id/mine_my_likes_layout"
-                                        android:clickable="true"
                                         android:elevation="1dp"
-                                        android:minWidth="60dp"
                                         binding:onClickCommand="@{viewModel.traceOnClickCommand}">
 
                                         <TextView
@@ -327,13 +365,24 @@
                                             android:id="@+id/trace_text_tv_img"
                                             android:layout_width="22dp"
                                             android:layout_height="22dp"
-                                            android:layout_alignParentStart="true"
+                                            android:layout_above="@+id/trace_text_tv"
                                             android:layout_centerInParent="true"
                                             android:layout_marginBottom="9dp"
                                             android:src="@drawable/ic_mine_visitors" />
+
+                                        <TextView
+                                            android:id="@+id/trace_text_tv"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_alignParentBottom="true"
+                                            android:layout_centerInParent="true"
+                                            android:text="@{viewModel.userInfoEntity.sex==1?@string/playfun_mine_my_visitors_man:@string/playfun_mine_my_visitors_many}"
+                                            android:textColor="@color/white"
+                                            android:textSize="12sp"
+                                            tools:hint="@string/playfun_mine_my_visitors_man" />
                                     </RelativeLayout>
 
-                                </RelativeLayout>
+                                </LinearLayout>
 
                                 <RelativeLayout
                                     android:id="@+id/vip_layout_div"
@@ -371,7 +420,7 @@
                                             android:layout_marginStart="5dp"
                                             android:layout_toEndOf="@+id/mine_vip_icon_text"
                                             android:includeFontPadding="false"
-                                            android:text="PlayFun Privileges"
+                                            android:text="@string/playfun_mine_vip_hint"
                                             android:textColor="#ff6b3f24"
                                             android:textSize="13sp" />
 
@@ -429,8 +478,7 @@
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 binding:onLoadMoreCommand="@{viewModel.onLoadMoreCommand}"
                 binding:onRefreshCommand="@{viewModel.onRefreshCommand}"
-                tools:visibility="gone"
-                >
+                tools:visibility="visible">
 
                 <androidx.core.widget.NestedScrollView
                     android:layout_width="match_parent"
@@ -448,12 +496,45 @@
                             android:layout_width="match_parent"
                             android:layout_height="11dp"
                             android:background="@color/white" />
+                        <RelativeLayout
+                            style="@style/ProfileItem"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/profile_item_height"
+                            android:visibility="gone"
+                            binding:onClickCommand="@{viewModel.shopOnClickCommand}">
+
+                            <ImageView
+                                android:id="@+id/mine_item_shop"
+                                android:layout_width="19dp"
+                                android:layout_height="19dp"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerInParent="true"
+                                android:src="@drawable/icon_shop" />
+
+                            <TextView
+                                style="@style/ProfileItemTitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:layout_toEndOf="@+id/mine_item_shop"
+                                android:text="@string/playfun_mine_shop"
+                                android:textSize="12sp" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/ic_arrow_right" />
+
+                        </RelativeLayout>
 
                         <RelativeLayout
                             style="@style/ProfileItem"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/profile_item_height"
                             binding:onClickCommand="@{viewModel.certificationOnClickCommand}">
+
                             <ImageView
                                 android:id="@+id/mine_item_1"
                                 android:layout_width="19dp"
@@ -489,7 +570,7 @@
 
                                 <ImageView
                                     android:id="@+id/iv_real_man"
-                                    android:layout_width="13dp"
+                                    android:layout_width="31dp"
                                     android:layout_height="13dp"
                                     android:layout_marginRight="8dp"
                                     android:src="@drawable/ic_real_man"
@@ -497,7 +578,7 @@
 
                                 <ImageView
                                     android:id="@+id/iv_goddess"
-                                    android:layout_width="13dp"
+                                    android:layout_width="31dp"
                                     android:layout_height="13dp"
                                     android:layout_marginRight="8dp"
                                     android:src="@drawable/ic_goddess"
@@ -506,7 +587,47 @@
                             </LinearLayout>
 
                         </RelativeLayout>
+                        <RelativeLayout
+                            style="@style/ProfileItem"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/profile_item_height"
+                            android:visibility="@{StringUtils.isEmpty(viewModel.userInfoEntity.inviteUrl) ? View.GONE:View.VISIBLE}"
+                            binding:onClickCommand="@{viewModel.invitationCodeOnClickCommand}">
 
+                            <ImageView
+                                android:id="@+id/mine_item_3"
+                                android:layout_width="19dp"
+                                android:layout_height="19dp"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerInParent="true"
+                                android:src="@mipmap/ic_mine_item_img_3" />
+                            <TextView
+                                style="@style/ProfileItemTitle"
+                                android:layout_toEndOf="@+id/mine_item_3"
+                                android:layout_marginStart="8dp"
+                                android:textSize="13sp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/playfun_mine_apply_invitation_code" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:layout_marginEnd="5dp"
+                                android:layout_toStartOf="@+id/invitation_code_right_img"
+                                android:gravity="center"
+                                android:visibility="@{viewModel.userInfoEntity.sex==1 ? View.VISIBLE:View.GONE}"
+                                android:text="@string/mine_fragment_invitation_code_title"
+                                android:textColor="@color/purple1"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:id="@+id/invitation_code_right_img"
+                                style="@style/ProfileItemSubTitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+                        </RelativeLayout>
                         <TextView
                             android:id="@+id/tv_tip"
                             style="@style/TopWarn"
@@ -515,12 +636,70 @@
                             android:text="@{viewModel.banner.text}"
                             android:visibility="@{viewModel.banner == null ? View.GONE:View.VISIBLE}"
                             binding:onClickCommand="@{viewModel.bannerOnClickCommand}" />
+                        <RelativeLayout
+                            style="@style/ProfileItem"
+                            android:layout_marginTop="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/profile_item_height"
+                            android:visibility="@{viewModel.getLevelViewShow(viewModel.userInfoEntity.isLevel)}"
+                            binding:onClickCommand="@{viewModel.levelEquityOnClickCommand}">
+
+                            <ImageView
+                                android:id="@+id/mine_item_level"
+                                android:layout_width="19dp"
+                                android:layout_height="19dp"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerInParent="true"
+                                android:src="@mipmap/ic_mine_item_img_level" />
+
+                            <TextView
+                                style="@style/ProfileItemTitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:layout_toEndOf="@+id/mine_item_level"
+                                android:text="@string/fragment_level_title"
+                                android:textSize="13sp" />
+
+                            <TextView
+                                style="@style/ProfileItemSubTitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+                        </RelativeLayout>
+                        <RelativeLayout
+                            style="@style/ProfileItem"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/profile_item_height"
+                            android:visibility="@{viewModel.userInfoEntity.anchor == 0?View.GONE:View.VISIBLE}"
+                            binding:onClickCommand="@{viewModel.anchorCenterOnClickCommand}">
+
+                            <ImageView
+                                android:id="@+id/mine_item_anchor_center"
+                                android:layout_width="19dp"
+                                android:layout_height="19dp"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerInParent="true"
+                                android:src="@drawable/icon_anchor_center" />
+
+                            <TextView
+                                style="@style/ProfileItemTitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:layout_toEndOf="@+id/mine_item_anchor_center"
+                                android:text="@string/playfun_mine_title_anchor_center"
+                                android:textSize="13sp" />
+
+                            <TextView
+                                style="@style/ProfileItemSubTitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+                        </RelativeLayout>
 
                         <RelativeLayout
                             style="@style/ProfileItem"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/profile_item_height"
-                            android:layout_marginTop="10dp"
                             binding:onClickCommand="@{viewModel.tapeAudioOnClickCommand}">
 
                             <ImageView
@@ -530,14 +709,15 @@
                                 android:layout_alignParentStart="true"
                                 android:layout_centerInParent="true"
                                 android:src="@mipmap/ic_mine_item_img_4" />
+
                             <TextView
                                 style="@style/ProfileItemTitle"
-                                android:layout_toEndOf="@+id/mine_item_4"
-                                android:layout_marginStart="8dp"
-                                android:textSize="13sp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/playfun_mine_my_adoui" />
+                                android:layout_marginStart="8dp"
+                                android:layout_toEndOf="@+id/mine_item_4"
+                                android:text="@string/playfun_mine_my_adoui"
+                                android:textSize="13sp" />
 
                             <RelativeLayout
                                 android:layout_width="159dp"
@@ -605,6 +785,7 @@
                                 android:text="@string/playfun_mine_audio_text1"
                                 android:visibility="@{viewModel.getIsSound(viewModel.userInfoEntity.isSound)}"
                                 tools:visibility="gone" />
+
                             <TextView
                                 style="@style/ProfileItemSubTitle"
                                 android:layout_width="wrap_content"
@@ -612,6 +793,7 @@
                                 android:text="@string/playfun_mine_audio_text4"
                                 android:textColor="@color/empty_list_hint"
                                 android:visibility="@{viewModel.getSoundStatusShow(viewModel.userInfoEntity.soundStatus)}" />
+
                             <TextView
                                 style="@style/ProfileItemSubTitle"
                                 android:layout_width="wrap_content"
@@ -619,6 +801,38 @@
                                 android:text="@string/playfun_mine_audio_text5"
                                 android:textColor="@color/red"
                                 android:visibility="@{viewModel.getSoundStatusShow2(viewModel.userInfoEntity.soundStatus)}" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            style="@style/ProfileItem"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/profile_item_height"
+                            android:visibility="@{viewModel.userInfoEntity.isAnchor == 0?View.GONE:View.VISIBLE}"
+                            binding:onClickCommand="@{viewModel.exclusiveOnClickCommand}">
+
+                            <ImageView
+                                android:id="@+id/mine_item_exclusive_call"
+                                android:layout_width="19dp"
+                                android:layout_height="19dp"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerInParent="true"
+                                android:src="@drawable/icon_exclusive_call" />
+
+                            <TextView
+                                style="@style/ProfileItemTitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:layout_toEndOf="@+id/mine_item_exclusive_call"
+                                android:text="@string/playfun_mine_title_btn_exclusive"
+                                android:textSize="13sp" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/ic_arrow_right" />
                         </RelativeLayout>
 
                         <RelativeLayout
@@ -634,14 +848,15 @@
                                 android:layout_alignParentStart="true"
                                 android:layout_centerInParent="true"
                                 android:src="@mipmap/ic_mine_item_img_5" />
+
                             <TextView
                                 style="@style/ProfileItemTitle"
-                                android:layout_toEndOf="@+id/mine_item_5"
-                                android:layout_marginStart="8dp"
-                                android:textSize="13sp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/playfun_mine_my_borcast" />
+                                android:layout_marginStart="8dp"
+                                android:layout_toEndOf="@+id/mine_item_5"
+                                android:text="@string/playfun_mine_my_borcast"
+                                android:textSize="13sp" />
 
                             <TextView
                                 style="@style/ProfileItemSubTitle"
@@ -662,14 +877,15 @@
                                 android:layout_alignParentStart="true"
                                 android:layout_centerInParent="true"
                                 android:src="@mipmap/ic_mine_item_img_6" />
+
                             <TextView
                                 style="@style/ProfileItemTitle"
-                                android:layout_toEndOf="@+id/mine_item_6"
-                                android:layout_marginStart="8dp"
-                                android:textSize="13sp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/playfun_mine_title_btn_my_evaluation" />
+                                android:layout_marginStart="8dp"
+                                android:layout_toEndOf="@+id/mine_item_6"
+                                android:text="@string/playfun_mine_title_btn_my_evaluation"
+                                android:textSize="13sp" />
 
                             <ImageView
                                 android:layout_width="wrap_content"
@@ -699,14 +915,15 @@
                                     android:layout_alignParentStart="true"
                                     android:layout_centerInParent="true"
                                     android:src="@mipmap/ic_mine_item_img_7" />
+
                                 <TextView
                                     style="@style/ProfileItemTitle"
-                                    android:layout_toEndOf="@+id/mine_item_7"
-                                    android:layout_marginStart="8dp"
-                                    android:textSize="13sp"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="@string/playfun_mine_my_album" />
+                                    android:layout_marginStart="8dp"
+                                    android:layout_toEndOf="@+id/mine_item_7"
+                                    android:text="@string/playfun_mine_my_album"
+                                    android:textSize="13sp" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -794,14 +1011,15 @@
                                 android:layout_alignParentStart="true"
                                 android:layout_centerInParent="true"
                                 android:src="@drawable/ic_mine_photo_setting" />
+
                             <TextView
                                 style="@style/ProfileItemTitle"
-                                android:layout_toEndOf="@+id/mine_item_8"
-                                android:layout_marginStart="8dp"
-                                android:textSize="13sp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/playfun_mine_album_privacy" />
+                                android:layout_marginStart="8dp"
+                                android:layout_toEndOf="@+id/mine_item_8"
+                                android:text="@string/playfun_mine_album_privacy"
+                                android:textSize="13sp" />
 
                             <TextView
                                 style="@style/ProfileItemSubTitle"
@@ -822,15 +1040,16 @@
                                 android:layout_alignParentStart="true"
                                 android:layout_centerInParent="true"
                                 android:src="@drawable/ic_mine_fire" />
+
                             <TextView
                                 android:id="@+id/tv_burn_title"
                                 style="@style/ProfileItemTitle"
-                                android:layout_toEndOf="@+id/mine_item_9"
-                                android:layout_marginStart="8dp"
-                                android:textSize="13sp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/playfun_mine_burn" />
+                                android:layout_marginStart="8dp"
+                                android:layout_toEndOf="@+id/mine_item_9"
+                                android:text="@string/playfun_mine_burn"
+                                android:textSize="13sp" />
 
                             <TextView
                                 android:id="@+id/tv_burn_button"
@@ -886,6 +1105,7 @@
                                 android:textSize="13sp" />
 
                         </RelativeLayout>
+
                         <RelativeLayout
                             style="@style/ProfileItem"
                             android:layout_width="match_parent"

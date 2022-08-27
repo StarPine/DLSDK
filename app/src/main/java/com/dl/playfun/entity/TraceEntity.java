@@ -3,10 +3,10 @@ package com.dl.playfun.entity;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
+import com.dl.playfun.BR;
 import com.dl.playfun.data.typeadapter.BooleanTypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
-import com.dl.playfun.BR;
 
 /**
  * Author: 彭石林

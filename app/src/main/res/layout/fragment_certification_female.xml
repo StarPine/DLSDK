@@ -268,7 +268,7 @@
                                         android:layout_height="match_parent"
                                         android:gravity="center"
                                         android:paddingLeft="50dp"
-                                        android:text="@string/playfun_fragment_certification_female_comment_man"
+                                        android:text="@string/playfun_fragment_certification_female_chat_man"
                                         android:textColor="@color/gray_light"
                                         android:textSize="@dimen/text_size_small_12" />
                                 </LinearLayout>
@@ -314,8 +314,8 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="match_parent"
                                         android:gravity="center"
-                                        android:paddingLeft="30dp"
-                                        android:text="@string/playfun_fragment_certification_female_sing_man"
+                                        android:paddingLeft="50dp"
+                                        android:text="@string/playfun_fragment_certification_female_charge_phone"
                                         android:textColor="@color/gray_light"
                                         android:textSize="@dimen/text_size_small_12" />
                                 </LinearLayout>

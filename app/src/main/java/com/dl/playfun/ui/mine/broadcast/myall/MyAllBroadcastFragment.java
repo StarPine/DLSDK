@@ -26,27 +26,25 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.StringUtils;
+import com.dl.playfun.BR;
+import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
+import com.dl.playfun.databinding.FragmentMyAllBroadcastBinding;
 import com.dl.playfun.helper.DialogHelper;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseRefreshFragment;
-import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
+import com.dl.playfun.ui.mine.broadcast.mytrends.TrendItemViewModel;
+import com.dl.playfun.ui.radio.issuanceprogram.IssuanceProgramFragment;
+import com.dl.playfun.ui.userdetail.report.ReportUserFragment;
 import com.dl.playfun.utils.PictureSelectorUtil;
 import com.dl.playfun.widget.dialog.MMAlertDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.google.gson.reflect.TypeToken;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.listener.OnResultCallbackListener;
-import com.dl.playfun.BR;
-import com.dl.playfun.R;
-import com.dl.playfun.databinding.FragmentMyAllBroadcastBinding;
-import com.dl.playfun.ui.certification.certificationmale.CertificationMaleFragment;
-import com.dl.playfun.ui.mine.broadcast.myprogram.ProgramItemViewModel;
-import com.dl.playfun.ui.mine.broadcast.mytrends.TrendItemViewModel;
-import com.dl.playfun.ui.radio.issuanceprogram.IssuanceProgramFragment;
-import com.dl.playfun.ui.userdetail.report.ReportUserFragment;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.zyyoona7.popup.EasyPopup;
 import com.zyyoona7.popup.XGravity;
@@ -201,17 +199,6 @@ public class MyAllBroadcastFragment extends BaseRefreshFragment<FragmentMyAllBro
                     stop.setText(getString(R.string.playfun_report_user_title));
                     isSelf = false;
                 }
-            } else {
-                if (viewModel.userId == ((ProgramItemViewModel) viewModel.observableList.get(position)).topicalListEntityObservableField.get().getUserId()) {
-                    stop.setText(((ProgramItemViewModel) viewModel.observableList.get(position)).topicalListEntityObservableField.get().getBroadcast().getIsComment() == 0 ? getString(R.string.playfun_fragment_issuance_program_no_comment) : getString(R.string.playfun_open_comment));
-                    TextView tvDetele = mCirclePop.findViewById(R.id.tv_detele);
-                    tvDetele.setText(getString(R.string.playfun_delete_program));
-                    isSelf = true;
-                } else {
-                    mCirclePop.findViewById(R.id.tv_detele).setVisibility(View.GONE);
-                    stop.setText(getString(R.string.playfun_report_user_title));
-                    isSelf = false;
-                }
             }
 
             boolean finalIsSelf = isSelf;
@@ -241,8 +228,6 @@ public class MyAllBroadcastFragment extends BaseRefreshFragment<FragmentMyAllBro
                                 public void confirm(MVDialog dialog) {
                                     if (type.equals(RadioRecycleType_New)) {
                                         viewModel.deleteNews(position);
-                                    } else {
-                                        viewModel.deleteTopical(position);
                                     }
                                     dialog.dismiss();
                                 }
@@ -277,12 +262,6 @@ public class MyAllBroadcastFragment extends BaseRefreshFragment<FragmentMyAllBro
                     } else {
                         ToastUtils.showShort(R.string.playfun_already);
                     }
-                } else {
-                    if (((ProgramItemViewModel) viewModel.observableList.get(position)).topicalListEntityObservableField.get().getIsGive() == 0) {
-                        viewModel.topicalGive(position);
-                    } else {
-                        ToastUtils.showShort(R.string.playfun_already);
-                    }
                 }
             }
         });
@@ -294,7 +273,7 @@ public class MyAllBroadcastFragment extends BaseRefreshFragment<FragmentMyAllBro
                 String toUserId = ((Map<String, String>) o).get("toUseriD");
                 String type = ((Map<String, String>) o).get("type");
                 String toUserName = ((Map<String, String>) o).get("toUserName");
-                if (AppContext.instance().appRepository.readUserData().getIsVip() == 1 || (AppContext.instance().appRepository.readUserData().getSex() == AppConfig.FEMALE && AppContext.instance().appRepository.readUserData().getCertification() == 1)) {
+                if (ConfigManager.getInstance().getAppRepository().readUserData().getIsVip() == 1 || (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == AppConfig.FEMALE && ConfigManager.getInstance().getAppRepository().readUserData().getCertification() == 1)) {
                     MVDialog.getInstance(MyAllBroadcastFragment.this.getContext())
                             .seCommentConfirm(new MVDialog.ConfirmComment() {
                                 @Override
@@ -306,8 +285,6 @@ public class MyAllBroadcastFragment extends BaseRefreshFragment<FragmentMyAllBro
                                     dialog.dismiss();
                                     if (type.equals(RadioRecycleType_New)) {
                                         viewModel.newsComment(Integer.valueOf(id), comment, toUserId != null ? Integer.valueOf(toUserId) : null, toUserName);
-                                    } else {
-                                        viewModel.topicalComment(Integer.valueOf(id), comment, toUserId != null ? Integer.valueOf(toUserId) : null, toUserName);
                                     }
                                 }
                             })
@@ -319,82 +296,6 @@ public class MyAllBroadcastFragment extends BaseRefreshFragment<FragmentMyAllBro
             }
         });
 
-        viewModel.uc.clickSignUp.observe(this, new Observer() {
-            @Override
-            public void onChanged(Object o) {
-                MVDialog.getInstance(MyAllBroadcastFragment.this.getContext())
-                        .setContent(getString(R.string.playfun_end_porgram))
-                        .chooseType(MVDialog.TypeEnum.CENTER)
-                        .setConfirmOnlick(new MVDialog.ConfirmOnclick() {
-                            @Override
-                            public void confirm(MVDialog dialog) {
-                                viewModel.TopicalFinish((Integer) o);
-                                dialog.dismiss();
-                            }
-                        })
-                        .chooseType(MVDialog.TypeEnum.CENTER)
-                        .show();
-            }
-        });
-
-        viewModel.uc.clickCheck.observe(this, new Observer() {
-            @Override
-            public void onChanged(Object o) {
-                viewModel.initUserDate();
-                if (AppContext.instance().appRepository.readUserData().getCertification() == 1) {
-                    MVDialog.getInstance(MyAllBroadcastFragment.this.getContext())
-                            .setTitele(getString(R.string.playfun_report_send_photo_titile))
-                            .chooseType(MVDialog.TypeEnum.CENTER)
-                            .setConfirmOnlick(new MVDialog.ConfirmOnclick() {
-                                @Override
-                                public void confirm(MVDialog dialog) {
-                                    chooseAvatar((Integer) o);
-                                    dialog.dismiss();
-                                }
-                            })
-                            .chooseType(MVDialog.TypeEnum.CENTER)
-                            .show();
-                } else {
-                    MVDialog.getInstance(MyAllBroadcastFragment.this.getContext())
-                            .setTitele(getString(R.string.playfun_authentication_free_sign_up))
-                            .setConfirmText(getString(R.string.playfun_mine_once_certification))
-                            .chooseType(MVDialog.TypeEnum.CENTER)
-                            .setConfirmOnlick(new MVDialog.ConfirmOnclick() {
-                                @Override
-                                public void confirm(MVDialog dialog) {
-                                    if (AppContext.instance().appRepository.readUserData().getSex() == AppConfig.MALE) {
-                                        viewModel.start(CertificationMaleFragment.class.getCanonicalName());
-                                        return;
-                                    } else if (AppContext.instance().appRepository.readUserData().getSex() == AppConfig.FEMALE) {
-                                        viewModel.start(CertificationFemaleFragment.class.getCanonicalName());
-                                        return;
-                                    }
-                                    com.blankj.utilcode.util.ToastUtils.showShort(R.string.playfun_sex_unknown);
-                                    dialog.dismiss();
-                                }
-                            })
-                            .chooseType(MVDialog.TypeEnum.CENTER)
-                            .show();
-                }
-            }
-        });
-        viewModel.uc.signUpSucceed.observe(this, new Observer() {
-            @Override
-            public void onChanged(Object o) {
-                MVDialog.getInstance(MyAllBroadcastFragment.this.getContext())
-                        .setContent(getString(R.string.playfun_sign_up_after_call_you))
-                        .chooseType(MVDialog.TypeEnum.CENTER)
-                        .setConfirmText(getString(R.string.playfun_roger))
-                        .setConfirmOnlick(new MVDialog.ConfirmOnclick() {
-                            @Override
-                            public void confirm(MVDialog dialog) {
-                                dialog.dismiss();
-                            }
-                        })
-                        .chooseType(MVDialog.TypeEnum.CENTER)
-                        .show();
-            }
-        });
         viewModel.uc.clickImage.observe(this, new Observer() {
             @Override
             public void onChanged(Object o) {
@@ -441,17 +342,4 @@ public class MyAllBroadcastFragment extends BaseRefreshFragment<FragmentMyAllBro
             });
         }
     }
-    private void chooseAvatar(int position) {
-        PictureSelectorUtil.selectImage(mActivity, true, 1, new OnResultCallbackListener<LocalMedia>() {
-            @Override
-            public void onResult(List<LocalMedia> result) {
-                viewModel.imagUpload(result.get(0).getCompressPath(), position);
-            }
-
-            @Override
-            public void onCancel() {
-            }
-        });
-    }
-
 }

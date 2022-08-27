@@ -15,6 +15,7 @@ public class SwipeRefreshViewAdapter {
 
     @BindingAdapter(value = {"onRefreshCommand", "onLoadMoreCommand"}, requireAll = false)
     public static void onRefreshAndLoadMoreCommand(SmartRefreshLayout layout, final BindingCommand onRefreshCommand, final BindingCommand onLoadMoreCommand) {
+
         layout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {

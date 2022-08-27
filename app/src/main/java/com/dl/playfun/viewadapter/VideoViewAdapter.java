@@ -27,12 +27,21 @@ public class VideoViewAdapter {
 
     protected static boolean isFull;
 
-    @BindingAdapter(value = {"videoUri", "videoCompletionCommand", "position"}, requireAll = false)
-    public static void setVideoUri(SampleCoverVideo videoView, String uri, BindingCommand videoCompletionCommand, int position) {
+    @BindingAdapter(value = {"videoUri", "videoCompletionCommand", "position","isLocalFile"}, requireAll = false)
+    public static void setVideoUri(SampleCoverVideo videoView, String uri, BindingCommand videoCompletionCommand, int position,Boolean isLocalFile) {
         if (videoView == null || uri == null) {
             return;
         }
-        String url = StringUtil.getFullImageUrl(uri);
+        String url = null;
+        if(isLocalFile==null){
+                url = StringUtil.getFullImageUrl(uri);
+        }else{
+            if(!isLocalFile){
+                url = StringUtil.getFullImageUrl(uri);
+            }else{
+                url = uri;
+            }
+        }
         //videoView.setUrl(url);
         // url = StringUtil.getFullAudioUrl(url);
         videoView.loadCoverImage(url, R.drawable.default_placeholder_img);
@@ -184,7 +193,6 @@ public class VideoViewAdapter {
         gsyVideoPlayer.setVideoAllCallBack(new GSYSampleCallBack() {
             @Override
             public void onClickStartIcon(String url, Object... objects) {
-                Log.e("===========","=====================");
                 super.onClickStartIcon(url, objects);
             }
 

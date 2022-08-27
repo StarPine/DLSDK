@@ -48,25 +48,29 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="80dp"
                 binding:onClickCommand="@{viewModel.avatarClick}">
+
                 <com.dl.playfun.widget.image.CircleImageView
-                    binding:onClickCommand="@{viewModel.avatarClick}"
                     android:id="@+id/user_img"
                     android:layout_width="34dp"
                     android:layout_height="34dp"
+                    binding:resizeH="@{34}"
+                    binding:resizeW="@{34}"
                     android:layout_marginStart="14dp"
                     android:layout_marginTop="24dp"
                     android:clickable="true"
+                    android:scaleType="centerCrop"
                     android:src="@drawable/default_address_user"
                     app:riv_corner_radius="8dp"
                     binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
-                    android:scaleType="centerCrop"
                     binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
                     binding:imageThumbPath="@{viewModel.newsEntityObservableField.user.avatar}"
+                    binding:onClickCommand="@{viewModel.avatarClick}"
                     tools:ignore="MissingConstraints" />
 
                 <TextView
@@ -100,7 +104,7 @@
 
                 <ImageView
                     android:id="@+id/certification"
-                    android:layout_width="14dp"
+                    android:layout_width="31dp"
                     android:layout_height="13dp"
                     android:layout_alignTop="@+id/tv_name"
                     android:layout_marginStart="7dp"
@@ -189,6 +193,7 @@
                     android:scaleType="centerCrop"
                     android:src="@drawable/radio_dating_img_default"
                     android:visibility="@{StringUtils.isEmpty(viewModel.newsEntityObservableField.video)?View.VISIBLE:View.GONE}"
+                    binding:addWaterMark="@{true}"
                     binding:imageErrorPlaceholderRes="@{R.drawable.radio_dating_img_default}"
                     binding:imagePath='@{ListUtils.isEmpty(viewModel.newsEntityObservableField.images)?viewModel.newsEntityObservableField.user.avatar:viewModel.newsEntityObservableField.images.get(0)}'
                     binding:imagePlaceholderRes="@{R.drawable.radio_dating_img_default}"

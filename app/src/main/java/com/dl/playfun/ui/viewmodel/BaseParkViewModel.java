@@ -1,11 +1,14 @@
 package com.dl.playfun.ui.viewmodel;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableArrayList;
 import androidx.databinding.ObservableList;
 
+import com.dl.playfun.BR;
+import com.dl.playfun.R;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
@@ -15,11 +18,10 @@ import com.dl.playfun.event.LikeChangeEvent;
 import com.dl.playfun.event.TaskListEvent;
 import com.dl.playfun.event.TaskTypeStatusEvent;
 import com.dl.playfun.event.UserRemarkChangeEvent;
-import com.dl.playfun.manager.PermissionManager;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.viewmodel.BaseRefreshViewModel;
-import com.dl.playfun.BR;
-import com.dl.playfun.R;
+
+import java.util.Objects;
 
 import io.reactivex.disposables.Disposable;
 import me.goldze.mvvmhabit.bus.RxBus;
@@ -36,7 +38,25 @@ public abstract class BaseParkViewModel<T extends AppRepository> extends BaseRef
 
     public BindingRecyclerViewAdapter<BaseParkItemViewModel> adapter = new BindingRecyclerViewAdapter<>();
     public ObservableList<BaseParkItemViewModel> observableList = new ObservableArrayList<>();
-    public ItemBinding<BaseParkItemViewModel> itemBinding = ItemBinding.of(BR.viewModel, R.layout.item_park);
+
+
+    public static final String ItemPark = "item_park";
+    public static final String ItemParkBanner = "item_park_banner";
+
+    public ItemBinding<BaseParkItemViewModel> itemBinding = ItemBinding.of((itemBinding, position, item) ->{
+        if(item.getItemType()==null){
+            itemBinding.set(BR.viewModel, R.layout.item_park);
+        }else{
+            String itemType = String.valueOf(item.getItemType());
+            if (itemType.equals(ItemPark)) {
+                //正常子item
+                itemBinding.set(BR.viewModel, R.layout.item_park);
+            } else if (itemType.equals(ItemParkBanner)) {
+                //广告图
+                itemBinding.set(BR.viewModel, R.layout.item_park_banner);
+            }
+        }
+    });
     private Disposable mSubscription2;
     private Disposable mLikeSubscription;
     private Disposable taskTypeStatusEvent;
@@ -53,9 +73,10 @@ public abstract class BaseParkViewModel<T extends AppRepository> extends BaseRef
 
         mSubscription2 = RxBus.getDefault().toObservable(UserRemarkChangeEvent.class)
                 .subscribe(event -> {
-                    for (BaseParkItemViewModel viewModel : observableList) {
-                        if (viewModel.itemEntity.get().getId() == event.getUserId()) {
-                            viewModel.itemEntity.get().setNickname(event.getRemarkName());
+                    for (BaseParkItemViewModel itemViewModel : observableList) {
+                        ParkItemEntity parkItemEntity =  itemViewModel.itemEntity.get();
+                        if (parkItemEntity!=null && parkItemEntity.getId()  == event.getUserId()) {
+                            itemViewModel.itemEntity.get().setNickname(event.getRemarkName());
                             break;
                         }
                     }
@@ -63,9 +84,10 @@ public abstract class BaseParkViewModel<T extends AppRepository> extends BaseRef
         mLikeSubscription = RxBus.getDefault().toObservable(LikeChangeEvent.class)
                 .subscribe(event -> {
                     if (event.getFrom() == null || event.getFrom() != this) {
-                        for (BaseParkItemViewModel viewModel : observableList) {
-                            if (viewModel.itemEntity.get().getId() == event.getUserId()) {
-                                viewModel.itemEntity.get().setCollect(event.isLike());
+                        for (BaseParkItemViewModel itemViewModel : observableList) {
+                            ParkItemEntity parkItemEntity =  itemViewModel.itemEntity.get();
+                            if (parkItemEntity!=null && parkItemEntity.getId() == event.getUserId()) {
+                                itemViewModel.itemEntity.get().setCollect(event.isLike());
                                 break;
                             }
                         }
@@ -94,16 +116,6 @@ public abstract class BaseParkViewModel<T extends AppRepository> extends BaseRef
 
     public void addLike(int position) {
         ParkItemEntity parkItemEntity = observableList.get(position).itemEntity.get();
-        if (!PermissionManager.getInstance().canCollectUser(parkItemEntity.getSex())) {
-            if (parkItemEntity.getSex() == 1) {
-                ToastUtils.showShort(R.string.playfun_men_cannot_collect_men);
-                parkItemEntity.setCollect(false);
-            } else {
-                ToastUtils.showShort(R.string.playfun_lady_cannot_collect_lady);
-                parkItemEntity.setCollect(false);
-            }
-            return;
-        }
         model.addCollect(parkItemEntity.getId())
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
@@ -174,8 +186,9 @@ public abstract class BaseParkViewModel<T extends AppRepository> extends BaseRef
                         dismissHUD();
                         ToastUtils.showShort(R.string.playfun_text_accost_success1);
                         parkItemEntity.setCollect(false);
-                        adapter.getAdapterItem(position).itemEntity.get().setIsAccost(1);
-                        adapter.notifyDataSetChanged();
+                        Objects.requireNonNull(adapter.getAdapterItem(position).itemEntity.get()).setIsAccost(1);
+                        adapter.getAdapterItem(position).accountCollect.set(true);
+                        adapter.notifyItemChanged(position);
                         AccostFirstSuccess(parkItemEntity, position);
                         //刷新任务列表状态
                         if (accostThree || dayAccost)RxBus.getDefault().post(new TaskListEvent());

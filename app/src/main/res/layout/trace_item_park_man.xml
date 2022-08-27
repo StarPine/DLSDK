@@ -37,7 +37,10 @@
             app:riv_corner_radius="8dp"
             binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
             binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
-            binding:imageThumbPath="@{viewModel.itemEntity.avatar}" />
+            binding:imageThumbPath="@{viewModel.itemEntity.avatar}"
+            binding:resizeH="@{65}"
+            binding:resizeW="@{65}"
+            />
 
         <RelativeLayout
             android:id="@+id/rl_name"
@@ -97,7 +100,7 @@
 
             <ImageView
                 android:id="@+id/iv_vip"
-                android:layout_width="14dp"
+                android:layout_width="31dp"
                 android:layout_height="13dp"
                 android:layout_marginStart="5dp"
                 android:layout_centerVertical="true"
@@ -154,8 +157,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/rl_name"
             android:layout_alignLeft="@+id/rl_name"
-            android:orientation="horizontal"
-            android:layout_marginTop="19dp">
+            android:layout_marginTop="19dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/city"
@@ -165,7 +168,7 @@
                 android:layout_gravity="center_vertical"
                 android:text="@{StringUtils.isEmpty(viewModel.itemEntity.city) ? @string/playfun_unknown_region : viewModel.itemEntity.city}"
                 android:textColor="#827692"
-                android:visibility="@{viewModel.getIsVip()?View.VISIBLE:View.GONE}"
+                android:visibility="gone"
                 tools:text="台北市" />
 
             <ImageView
@@ -177,14 +180,14 @@
             <TextView
                 android:id="@+id/tag_primary"
                 style="@style/TagPrimary"
-                android:layout_gravity="center_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
+                android:layout_gravity="center_vertical"
                 android:layout_marginLeft="7dp"
                 android:layout_toRightOf="@+id/city"
-                android:visibility="@{viewModel.itemEntity.age==null?View.GONE:View.VISIBLE}"
-                android:text='@{viewModel.itemEntity.age+""}'
+                android:text='@{viewModel.getAgeAndConstellation}'
                 android:textColor="#827692"
+                android:visibility="@{viewModel.itemEntity.age==null?View.GONE:View.VISIBLE}"
                 tools:text="17" />
         </LinearLayout>
     </RelativeLayout>

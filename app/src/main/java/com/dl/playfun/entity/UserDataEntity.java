@@ -6,7 +6,7 @@ import androidx.databinding.Bindable;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.TimeUtils;
-import com.dl.playfun.R;
+import com.dl.playfun.BR;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.data.typeadapter.BooleanTypeAdapter;
 import com.dl.playfun.utils.ApiUitl;
@@ -14,7 +14,6 @@ import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.utils.Utils;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
-import com.dl.playfun.BR;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -22,12 +21,25 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-import me.goldze.mvvmhabit.utils.ToastUtils;
-
 /**
- * @author wulei
- */
+* @Desc TODO(用户数据信息+token信息合并)
+* @author 彭石林
+* @parame 
+* @return 
+* @Date 2022/4/4
+*/
 public class UserDataEntity extends BaseObservable {
+    private String token;
+    private String userID;
+    private String userSig;
+    @SerializedName("is_contract")
+    private int isContract;
+
+    @SerializedName("is_new_user")
+    private Integer isNewUser;
+    @SerializedName("is_bind_game")
+    private Integer isBindGame;
+
 
     /**
      * id : 5
@@ -48,8 +60,8 @@ public class UserDataEntity extends BaseObservable {
     private int id;
     private String nickname;
     private String avatar;
+    @Bindable
     private String birthday;
-    private transient Calendar birthdayCal;
     @SerializedName("occupation_id")
     private Integer occupationId;
     @SerializedName("program_ids")
@@ -93,16 +105,45 @@ public class UserDataEntity extends BaseObservable {
     @SerializedName("sound_time")
     private Integer soundTime;
 
+    //当前用户im id
+    @SerializedName("imId")
+    private String ImUserId;
+
+    private String email;
+    //设置密码 1是0否
+    @SerializedName("is_password")
+    private Integer isPassword;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Integer getIsPassword() {
+        return isPassword;
+    }
+
+    public void setIsPassword(Integer isPassword) {
+        this.isPassword = isPassword;
+    }
+
+    public String getImUserId() {
+        return ImUserId;
+    }
+
+    public void setImUserId(String imUserId) {
+        ImUserId = imUserId;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
 
     public void setBirthday(String birthday) {
         this.birthday = birthday;
-    }
-
-    public void setBirthdayCal(Calendar birthdayCal) {
-        this.birthdayCal = birthdayCal;
     }
 
     public Integer getCityId() {
@@ -190,22 +231,6 @@ public class UserDataEntity extends BaseObservable {
     @Bindable
     public String getBirthday() {
         return birthday;
-    }
-
-    public void setBirthday(Calendar calendar) {
-        this.birthdayCal = calendar;
-        if (Utils.isManilaApp(AppContext.instance())) {
-            String dayNumberSuffix = StringUtil.getDayNumberSuffix(calendar.get(Calendar.DAY_OF_MONTH));
-            DateFormat dateFormat = new SimpleDateFormat("MMMM d'" + dayNumberSuffix + "',yyyy", Locale.ENGLISH);
-            this.birthday = TimeUtils.millis2String(calendar.getTimeInMillis(), dateFormat);
-        } else {
-            this.birthday = (calendar.get(Calendar.YEAR)) + "/" + (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.DAY_OF_MONTH) ;
-        }
-        notifyPropertyChanged(BR.birthday);
-    }
-
-    public Calendar getBirthdayCal() {
-        return birthdayCal;
     }
 
     @Bindable
@@ -350,13 +375,53 @@ public class UserDataEntity extends BaseObservable {
         this.inviteUrl = inviteUrl;
     }
 
-    public boolean isCompleteInfo() {
-        boolean isComplete = false;
-//        if (isInviteCode && sex != null && !StringUtils.isEmpty(birthday) && !StringUtils.isEmpty(nickname) && permanentCityIds != null && !permanentCityIds.isEmpty() && hopeObjectIds != null && !hopeObjectIds.isEmpty()) {
-        if (sex != null && !StringUtils.isEmpty(birthday) && !StringUtils.isEmpty(nickname) && permanentCityIds != null && !permanentCityIds.isEmpty() && hopeObjectIds != null && !hopeObjectIds.isEmpty()) {
-            isComplete = true;
-        }
-        return isComplete;
+
+    public Integer getIsNewUser() {
+        return isNewUser;
+    }
+
+    public void setIsNewUser(Integer isNewUser) {
+        this.isNewUser = isNewUser;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+
+    public String getUserSig() {
+        return userSig;
+    }
+
+    public void setUserSig(String userSig) {
+        this.userSig = userSig;
+    }
+
+    public int getIsContract() {
+        return isContract;
+    }
+
+    public void setIsContract(int isContract) {
+        this.isContract = isContract;
+    }
+
+    public Integer getIsBindGame() {
+        return isBindGame;
+    }
+
+    public void setIsBindGame(Integer isBindGame) {
+        this.isBindGame = isBindGame;
     }
 
     public boolean isPerfect() {
@@ -366,23 +431,12 @@ public class UserDataEntity extends BaseObservable {
         if (StringUtils.isEmpty(nickname)) {
             return false;
         }
-        if (ObjectUtils.isEmpty(permanentCityIds)) {
-            return false;
-        }
         if (ObjectUtils.isEmpty(birthday)) {
             return false;
         }
         if (ObjectUtils.isEmpty(occupationId) || occupationId.intValue() == 0) {
             return false;
         }
-        if (sex == 0 && (StringUtils.isEmpty(weixin) && StringUtils.isEmpty(insgram))) {
-            return false;
-        }
-        if (sex == 0 && (!StringUtils.isEmpty(weixin) || !StringUtils.isEmpty(insgram))) {
-            return true;
-        }
-
-        return sex != 0 || (!StringUtils.isEmpty(weixin) && !ApiUitl.isContainChinese(weixin));
-
+        return true;
     }
 }

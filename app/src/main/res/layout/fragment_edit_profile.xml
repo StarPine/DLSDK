@@ -25,7 +25,7 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:orientation="vertical"
-        tools:context="com.dl.playfun.ui.mine.profile.EditProfileFragment">
+        tools:context=".ui.mine.profile.EditProfileFragment">
 
         <View
             android:id="@+id/status_bar_view"
@@ -60,7 +60,6 @@
                         android:paddingTop="5dp"
                         android:paddingBottom="5dp"
                         android:text="@string/playfun_save"
-                        android:textSize="12sp"
                         binding:onClickCommand="@{viewModel.clickSave}" />
                 </RelativeLayout>
             </com.dl.playfun.widget.BasicToolbar>
@@ -90,43 +89,49 @@
                     android:textColor="@color/gray_light"
                     android:textSize="@dimen/text_size_42" />
 
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:background="@drawable/edittext_background"
+                    android:gravity="center_vertical"
                     android:paddingLeft="14dp"
                     android:paddingRight="14dp"
                     app:onClickCommand="@{viewModel.uploadAvatarOnClickCommand}">
 
-                    <TextView
+                    <ImageView
                         android:id="@+id/tv_tag"
-                        style="@style/EditLabel"
-                        android:layout_width="50dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="@string/playfun_fragment_edit_profile_head" />
+                        android:src="@drawable/edit_profile_avatar" />
 
                     <TextView
                         android:id="@+id/tv_tag1"
                         style="@style/EditLabel"
-                        android:layout_width="60dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_toRightOf="@+id/tv_tag"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="60dp"
                         android:text="*"
                         android:textColor="@color/purple" />
 
-                    <com.dl.playfun.widget.image.CircleImageView
-                        android:id="@+id/iv_avatar"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_centerVertical="true"
-                        android:layout_marginStart="135dp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/default_avatar"
-                        binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
-                        binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
-                        binding:imageThumbPath="@{viewModel.userDataEntity.avatar}" />
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical">
+
+                        <com.dl.playfun.widget.image.CircleImageView
+                            android:id="@+id/iv_avatar"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/default_avatar"
+                            binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
+                            binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
+                            binding:imageThumbPath="@{viewModel.userDataEntity.avatar}" />
+
+                    </LinearLayout>
+
 
                     <TextView
                         android:id="@+id/tv_uploading_head"
@@ -136,31 +141,28 @@
                         android:layout_centerVertical="true"
                         android:gravity="center"
                         android:text="@string/playfun_fragment_edit_profile_updata_head" />
-                </RelativeLayout>
+                </LinearLayout>
 
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:background="@drawable/edittext_background"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
                     android:paddingLeft="14dp"
                     android:paddingRight="14dp">
 
-                    <TextView
-                        android:id="@+id/name_tv"
-                        style="@style/EditLabel"
-                        android:layout_centerInParent="true"
-                        android:layout_alignParentStart="true"
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/playfun_fragment_edit_profile_name" />
+                        android:src="@drawable/edit_profile_nike_name" />
 
                     <TextView
-                        android:id="@+id/name_tv_hint"
-                        android:layout_toEndOf="@+id/name_tv"
                         style="@style/EditLabel"
-                        android:layout_width="60dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="60dp"
                         android:text="*"
                         android:textColor="@color/purple" />
 
@@ -169,393 +171,152 @@
                         style="@style/EditText"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
-                        android:layout_marginStart="135dp"
+                        android:hint="@string/playfun_name_number_too_long2"
                         android:inputType="text"
-                        android:maxLength="12"
+                        android:maxLength="10"
                         android:text="@={viewModel.userDataEntity.nickname}" />
-                </RelativeLayout>
+                </LinearLayout>
 
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:background="@drawable/edittext_background"
-                    android:paddingLeft="14dp"
-                    android:paddingRight="14dp">
-
-                    <TextView
-                        android:id="@+id/tv_gender"
-                        style="@style/EditLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="@string/playfun_fragment_edit_profile_gender" />
-
-                    <TextView
-                        style="@style/EditLabel"
-                        android:layout_toEndOf="@+id/tv_gender"
-                        android:layout_width="35dp"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="*"
-                        android:textColor="@color/purple" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:layout_marginStart="135dp"
-                        android:gravity="center_vertical"
-                        android:text='@{viewModel.gender}' />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:background="@drawable/edittext_background"
-                    android:paddingLeft="14dp"
-                    android:paddingRight="14dp">
-
-                    <TextView
-                        android:id="@+id/city_tv"
-                        style="@style/EditLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="@string/playfun_fragment_edit_profile_city" />
-
-                    <TextView
-                        style="@style/EditLabel"
-                        android:layout_toEndOf="@+id/city_tv"
-                        android:layout_width="35dp"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="*"
-                        android:textColor="@color/purple" />
-
-                    <TextView
-                        android:id="@+id/tv_choose_city"
-                        style="@style/EditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:layout_marginStart="135dp"
-                        android:gravity="center_vertical"
-                        android:hint="@string/playfun_much_choose"
-                        android:text='@{SystemDictUtils.getCityByIds(viewModel.userDataEntity.permanentCityIds)}'
-                        app:onClickCommand="@{viewModel.chooseCity}" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:background="@drawable/edittext_background"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingLeft="14dp"
                     android:paddingRight="14dp">
 
-                    <TextView
-                        android:id="@+id/day_tv"
-                        style="@style/EditLabel"
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="13sp"
-                        android:layout_centerVertical="true"
-                        android:text="@string/playfun_fragment_edit_profile_brithday" />
+                        android:src="@drawable/edit_profile_birthday" />
 
                     <TextView
-                        android:layout_toEndOf="@+id/day_tv"
                         style="@style/EditLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="60dp"
                         android:text="*"
                         android:textColor="@color/purple" />
 
                     <TextView
                         android:id="@+id/tv_brithday"
                         style="@style/EditText"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="48dp"
-                        android:layout_marginStart="135dp"
+                        android:layout_weight="1"
                         android:gravity="center_vertical"
                         android:hint="@string/playfun_please_choose"
                         android:text="@{viewModel.userDataEntity.birthday}"
                         app:onClickCommand="@{viewModel.chooseBirthday}" />
 
-                </RelativeLayout>
+                </LinearLayout>
 
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:background="@drawable/edittext_background"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
                     android:paddingLeft="14dp"
                     android:paddingRight="14dp">
 
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/edit_profile_profession" />
+
                     <TextView
-                        android:id="@+id/occupation_tv"
                         style="@style/EditLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:textSize="15sp"
-                        android:text="@string/playfun_fragment_edit_profile_occupation" />
-
-                    <TextView
-                        android:layout_toEndOf="@+id/occupation_tv"
-                        style="@style/EditLabel"
-                        android:layout_width="30dp"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="60dp"
                         android:text="*"
                         android:textColor="@color/purple" />
 
                     <TextView
                         style="@style/EditText"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="48dp"
-                        android:layout_marginStart="135dp"
+                        android:layout_weight="1"
                         android:gravity="center_vertical"
                         android:hint="@string/playfun_please_choose"
                         android:text='@{SystemDictUtils.getOccupationById(safeUnbox(viewModel.userDataEntity.occupationId))}'
                         app:onClickCommand="@{viewModel.chooseOccupation}" />
-                </RelativeLayout>
+                </LinearLayout>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="7dp"
+                    android:background="@color/window_background" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="16dp"
-                    android:gravity="center"
-                    android:text="@string/playfun_fragment_edit_profile_line_account"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:background="@color/status_bar_color"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:text="@string/playfun_more_information_optional"
                     android:textColor="@color/gray_middle"
-                    android:textSize="13sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="10dp"
-                    android:text="@string/playfun_fragment_edit_profile_line_account_explai"
-                    android:textColor="@color/gray_light"
-                    android:textSize="@dimen/text_size_small" />
-
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:paddingLeft="14dp"
-                    android:paddingTop="14dp"
-                    android:paddingRight="14dp">
-
-                    <RadioGroup
-                        style="@style/ButtonSecondary"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:checkedButton="@+id/rb_line"
-                        android:orientation="horizontal">
-
-                        <RadioButton
-                            android:id="@+id/rb_line"
-                            style="@style/ProfileTabItem"
-                            android:layout_width="0dp"
-                            android:layout_height="40dp"
-                            android:layout_weight="1"
-                            android:button="@null"
-                            android:checked="@={viewModel.lineChoose}"
-                            android:text="FaceBook ID" />
-
-                        <RadioButton
-                            android:id="@+id/rb_insgram"
-                            style="@style/ProfileTabItem"
-                            android:layout_width="0dp"
-                            android:layout_height="40dp"
-                            android:layout_weight="1"
-                            android:button="@null"
-                            android:checked="@={viewModel.insgramChoose}"
-                            android:text="Instagram ID" />
-                    </RadioGroup>
-                </FrameLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:background="@drawable/edittext_background"
-                    android:orientation="horizontal"
-                    android:paddingLeft="14dp"
-                    android:paddingRight="14dp"
-                    android:visibility="@{viewModel.lineChoose ? View.VISIBLE:View.GONE}">
-
-                    <TextView
-                        android:id="@+id/account_v"
-                        style="@style/EditLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="@string/playfun_line_name" />
-
-                    <TextView
-                        style="@style/EditLabel"
-                        android:layout_toEndOf="@+id/account_v"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text=" *"
-                        android:textColor="@color/purple"
-                        android:visibility="@{viewModel.userDataEntity.sex==0?View.VISIBLE:View.GONE}" />
-
-                    <EditText
-                        style="@style/EditText"
-                        android:layout_marginStart="135dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:gravity="center_vertical"
-                        android:hint="@string/playfun_edit_profile_line_input_hint"
-                        android:inputType="textVisiblePassword"
-                        android:maxLength="50"
-                        android:singleLine="true"
-                        android:text="@={viewModel.userDataEntity.weixin}" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:background="@drawable/edittext_background"
-                    android:orientation="horizontal"
-                    android:paddingLeft="14dp"
-                    android:paddingRight="14dp"
-                    android:visibility="@{viewModel.insgramChoose ? View.VISIBLE:View.GONE}">
-
-                    <TextView
-                        android:id="@+id/instagram_tv"
-                        style="@style/EditLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="@string/playfun_insgram_name" />
-
-                    <TextView
-                        style="@style/EditLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_toEndOf="@+id/instagram_tv"
-                        android:text="*"
-                        android:textColor="@color/purple"
-                        android:visibility="@{viewModel.userDataEntity.sex==0?View.VISIBLE:View.GONE}" />
-
-                    <EditText
-                        style="@style/EditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:layout_marginStart="135dp"
-                        android:gravity="center_vertical"
-                        android:hint="@string/playfun_edit_profile_insgram_input_hint"
-                        android:inputType="text"
-                        android:maxLength="50"
-                        android:singleLine="true"
-                        android:text="@={viewModel.userDataEntity.insgram}" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:background="@color/white"
-                    android:orientation="horizontal"
-                    android:paddingLeft="14dp"
-                    android:paddingRight="14dp">
-
-                    <TextView
-                        style="@style/EditLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="@string/playfun_fragment_edit_profile_line_gone"
-                        android:textSize="12sp" />
-
-                    <Switch
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:checked="@={!viewModel.userDataEntity.weixinShow}" />
-                </RelativeLayout>
-
+                    android:textSize="@dimen/text_size_42" />
 
                 <LinearLayout
-                    android:layout_marginTop="10dp"
-                    android:paddingTop="14dp"
-                    android:paddingBottom="14dp"
-                    android:background="@drawable/edittext_background"
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:gravity="center"
-                        android:text="@string/playfun_more_information_optional"
-                        android:textColor="@color/gray_middle"
-                        android:textSize="12sp" />
-                </LinearLayout>
-                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:background="@drawable/edittext_background"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingLeft="14dp"
                     android:paddingRight="14dp">
 
-                    <TextView
-                        android:id="@+id/tv_height_hint"
-                        style="@style/EditLabel"
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="@string/playfun_height" />
+                        android:layout_marginRight="65dp"
+                        android:src="@drawable/edit_profile_height" />
 
                     <TextView
                         android:id="@+id/tv_height"
                         style="@style/EditText"
-                        android:layout_marginStart="150dp"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="48dp"
+                        android:layout_weight="1"
                         android:gravity="center_vertical"
                         android:hint="@string/playfun_please_choose"
                         android:text='@{SystemDictUtils.getHeightById(viewModel.userDataEntity.height)}'
                         app:onClickCommand="@{viewModel.chooseHeight}" />
-                </RelativeLayout>
+                </LinearLayout>
 
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:background="@drawable/edittext_background"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingLeft="14dp"
                     android:paddingRight="14dp">
 
-                    <TextView
-                        android:id="@+id/tv_weight_hint"
-                        style="@style/EditLabel"
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="@string/playfun_weight" />
+                        android:layout_marginRight="65dp"
+                        android:src="@drawable/edit_profile_weight" />
 
                     <TextView
                         android:id="@+id/tv_weight"
                         style="@style/EditText"
-                        android:layout_marginStart="150dp"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="48dp"
+                        android:layout_weight="1"
                         android:gravity="center_vertical"
                         android:hint="@string/playfun_please_choose"
                         android:text='@{SystemDictUtils.getWidthById(viewModel.userDataEntity.weight)}'
                         app:onClickCommand="@{viewModel.chooseWeight}" />
-                </RelativeLayout>
+                </LinearLayout>
 
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="134dp"
                     android:background="@color/white"
@@ -563,16 +324,14 @@
                     android:paddingLeft="14dp"
                     android:paddingRight="14dp">
 
-                    <TextView
-                        android:id="@+id/remark_hint"
-                        style="@style/EditLabel"
-                        android:layout_marginTop="10dp"
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="11sp"
-                        android:text="@string/playfun_fragment_edit_profile_self_explain" />
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="65dp"
+                        android:src="@drawable/edit_profile_self" />
+
                     <RelativeLayout
-                        android:layout_marginStart="150dp"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
@@ -601,7 +360,7 @@
                             android:textColor="@color/gray"
                             android:textSize="@dimen/text_size_mini" />
                     </RelativeLayout>
-                </RelativeLayout>
+                </LinearLayout>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </LinearLayout>

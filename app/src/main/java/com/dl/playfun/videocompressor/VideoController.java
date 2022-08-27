@@ -137,6 +137,7 @@ public class VideoController {
         VideoConvertRunnable.runConversion(path, dest);
     }
 
+    @SuppressLint("WrongConstant")
     @TargetApi(16)
     private long readAndWriteTrack(MediaExtractor extractor, MP4Builder mediaMuxer, MediaCodec.BufferInfo info, long start, long end, File file, boolean isAudio) throws Exception {
         int trackIndex = selectTrack(extractor, isAudio);

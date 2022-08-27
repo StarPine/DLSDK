@@ -5,8 +5,8 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
 
-import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
+import com.dl.playfun.R;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
@@ -16,14 +16,12 @@ import com.dl.playfun.entity.OccupationConfigItemEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.AvatarChangeEvent;
 import com.dl.playfun.event.ProfileChangeEvent;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.FileUploadUtils;
-import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
-import com.dl.playfun.R;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -43,32 +41,17 @@ import me.goldze.mvvmhabit.utils.ToastUtils;
  */
 public class EditProfileViewModel extends BaseViewModel<AppRepository> {
     public ObservableField<UserDataEntity> userDataEntity = new ObservableField<>();
-    public ObservableField<Boolean> lineChoose = new ObservableField<>(true);
-    public ObservableField<Boolean> insgramChoose = new ObservableField<>(false);
     public ObservableField<String> gender = new ObservableField<>("");
-    public ObservableField<String> facebookText = new ObservableField<>("");
-    public ObservableField<String> instagramText = new ObservableField<>("");
     //    身高
     public List<ConfigItemEntity> height = new ArrayList<>();
     //    体重
     public List<ConfigItemEntity> weight = new ArrayList<>();
     //    职业
     public List<OccupationConfigItemEntity> occupation = new ArrayList<>();
-    //    城市
-    public List<ConfigItemEntity> city = new ArrayList<>();
 
     UIChangeObservable uc = new UIChangeObservable();
     public BindingCommand uploadAvatarOnClickCommand = new BindingCommand(() -> {
         uc.clickAvatar.call();
-    });
-    //    选择城市
-    public BindingCommand chooseCity = new BindingCommand(new BindingAction() {
-        @Override
-        public void call() {
-//            ToastUtils.showShort("选择城市");
-            uc.clickCity.call();
-
-        }
     });
     //    选择生日
     public BindingCommand chooseBirthday = new BindingCommand(new BindingAction() {
@@ -112,7 +95,6 @@ public class EditProfileViewModel extends BaseViewModel<AppRepository> {
         height.addAll(model.readHeightConfig());
         weight.addAll(model.readWeightConfig());
         occupation.addAll(model.readOccupationConfig());
-        city.addAll(model.readCityConfig());
 
     }
 
@@ -138,23 +120,6 @@ public class EditProfileViewModel extends BaseViewModel<AppRepository> {
                         userDataEntity.set(data);
                         if(userDataEntity.get().getSex() != null){
                             gender.set(StringUtils.getString((userDataEntity.get().getSex() == 0 ? R.string.playfun_fragment_edit_profile_male : R.string.playfun_fragment_edit_profile_female)));
-                        }
-                        String birthdayString = userDataEntity.get().getBirthday();
-                        if (!StringUtils.isEmpty(birthdayString)) {
-                            // 数据返回不为空，设置生日
-                            String[] str = birthdayString.split("-");
-                            if (str.length == 3) {
-                                Calendar calendar = Calendar.getInstance();
-                                calendar.set(Calendar.YEAR, Integer.parseInt(str[0]));
-                                calendar.set(Calendar.MONTH, Integer.parseInt(str[1]) - 1);
-                                calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(str[2]));
-                                userDataEntity.get().setBirthday(calendar);
-                            }
-                        }
-                        if (!StringUtils.isEmpty(userDataEntity.get().getWeixin())) {
-                            lineChoose.set(true);
-                        } else if (!StringUtils.isEmpty(userDataEntity.get().getInsgram())) {
-                            insgramChoose.set(true);
                         }
                     }
                 });
@@ -222,11 +187,7 @@ public class EditProfileViewModel extends BaseViewModel<AppRepository> {
             ToastUtils.showShort(R.string.playfun_name_nust);
             return;
         }
-        if (userEntity.getPermanentCityIds() == null) {
-            ToastUtils.showShort(R.string.playfun_city_nust);
-            return;
-        }
-        if (userEntity.getBirthdayCal() == null) {
+        if (userEntity.getBirthday() == null) {
             ToastUtils.showShort(R.string.playfun_brithday_must);
             return;
         }
@@ -234,60 +195,17 @@ public class EditProfileViewModel extends BaseViewModel<AppRepository> {
             ToastUtils.showShort(R.string.playfun_occupation_must);
             return;
         }
-        //女性用户进入
-        if (userEntity.getSex() == 0 ) {
-            if (StringUtils.isTrimEmpty(userEntity.getWeixin()) && StringUtils.isTrimEmpty(userEntity.getInsgram())) {
-                ToastUtils.showShort(R.string.playfun_line_must);
-                return;
-            }
 
-            if (StringUtils.isEmpty(userEntity.getInsgram())){
-                if(StringUtils.isEmpty(userEntity.getWeixin()) ){
-                    ToastUtils.showShort(R.string.playfun_line_error_hanzi);
-                    return;
-                }else{
-                    if(ApiUitl.isContainChinese(userEntity.getWeixin())){
-                        ToastUtils.showShort(R.string.playfun_line_error_hanzi);
-                        return;
-                    }
-//                    if(StringUtils.isTrimEmpty(userEntity.getInsgram())){
-//                        ToastUtils.showShort(R.string.line_error_hanzi2);
-//                        return;
-//                    }
-                }
-            }else{
-//                if(StringUtils.isEmpty(userEntity.getWeixin()) || !StringUtils.isTrimEmpty(userEntity.getWeixin())){
-//                    ToastUtils.showShort(R.string.line_error_hanzi);
-//                    return;
-//                }
-                if(!StringUtils.isTrimEmpty(userEntity.getWeixin()) && ApiUitl.isContainChinese(userEntity.getWeixin()) ){
-                    ToastUtils.showShort(R.string.playfun_line_error_hanzi);
-                    return;
-                }
-            }
-
-        }
-
-        // 保存数据
-//        String birthdayStr = userEntity.getBirthday().replace(StringUtils.getString(R.string.year), "-").replace(StringUtils.getString(R.string.month), "-").replace(StringUtils.getString(R.string.daily), "");
-//        if (userEntity.getBirthdayCal() != null) {
-//            birthdayStr = userEntity.getBirthdayCal().get(Calendar.YEAR) + "-" + (userEntity.getBirthdayCal().get(Calendar.MONTH) + 1) + "-" + userEntity.getBirthdayCal().get(Calendar.DAY_OF_MONTH);
-//        }
-        String birthdayStr = "";
-        Calendar birthdayCal = userEntity.getBirthdayCal();
-        if (birthdayCal != null) {
-            birthdayStr = birthdayCal.get(Calendar.YEAR) + "-" + (birthdayCal.get(Calendar.MONTH) + 1) + "-" + birthdayCal.get(Calendar.DAY_OF_MONTH);
-        }
         model.updateUserData(
                 userEntity.getNickname(),
                 userEntity.getPermanentCityIds(),
-                birthdayStr,
+                userEntity.getBirthday(),
                 String.valueOf(userEntity.getOccupationId()),
                 userEntity.getProgramIds(),
                 userEntity.getHopeObjectIds(),
                 userEntity.getWeixin(),
                 userEntity.getInsgram(),
-                lineChoose.get()?1:2,
+                null,
                 userEntity.isWeixinShow() ? 1 : 0,
                 userEntity.getHeight(),
                 userEntity.getWeight(),
@@ -315,9 +233,12 @@ public class EditProfileViewModel extends BaseViewModel<AppRepository> {
                 });
     }
 
+    public boolean getTipMoneyShowFlag() {
+        return ConfigManager.getInstance().getTipMoneyShowFlag();
+    }
+
     public class UIChangeObservable {
         public SingleLiveEvent<Void> clickAvatar = new SingleLiveEvent<>();
-        public SingleLiveEvent clickCity = new SingleLiveEvent<>();
         public SingleLiveEvent clickBirthday = new SingleLiveEvent<>();
         public SingleLiveEvent clickOccupation = new SingleLiveEvent<>();
         public SingleLiveEvent clickHeight = new SingleLiveEvent<>();

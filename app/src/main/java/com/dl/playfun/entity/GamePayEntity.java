@@ -2,8 +2,6 @@ package com.dl.playfun.entity;
 
 import java.util.List;
 
-import retrofit2.http.Field;
-
 /**
  * Author: 彭石林
  * Time: 2022/2/10 12:02

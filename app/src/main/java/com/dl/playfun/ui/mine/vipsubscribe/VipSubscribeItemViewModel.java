@@ -1,6 +1,8 @@
 package com.dl.playfun.ui.mine.vipsubscribe;
 
 import android.graphics.drawable.Drawable;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -30,7 +32,7 @@ public class VipSubscribeItemViewModel extends MultiItemViewModel<VipSubscribeVi
     //条目的点击事件
     public BindingCommand itemClick = new BindingCommand(() -> {
         try {
-            int position = viewModel.observableList.indexOf(VipSubscribeItemViewModel.this);
+            int position = viewModel.vipSubscribeList.indexOf(VipSubscribeItemViewModel.this);
             viewModel.itemClick(position,itemEntity.get());
         } catch (Exception e) {
             ExceptionReportUtils.report(e);
@@ -46,28 +48,19 @@ public class VipSubscribeItemViewModel extends MultiItemViewModel<VipSubscribeVi
     //获取标题文字
     public String getTitleText(){
         VipPackageItemEntity entity = itemEntity.get();
-        if(StringUtils.isEmpty(entity.getGoodsLabel())){
+        if (StringUtils.isEmpty(entity.getGoodsTab())) {
             return "";
-        }else{
-            return entity.getGoodsLabel();
+        } else {
+            return entity.getGoodsTab();
         }
     }
     //控制标题是否隐藏
     public int getTitleShow(){
         VipPackageItemEntity entity = itemEntity.get();
-        if(!StringUtils.isEmpty(entity.getGoodsLabel())){
+        if (!StringUtils.isEmpty(entity.getDiscountLabel())) {
             return View.VISIBLE;
-        }else{
+        } else {
             return View.GONE;
-        }
-    }
-
-    //获取推荐弹窗标题
-    public Drawable getRecommendImg(boolean select){
-        if(select){
-            return Utils.getContext().getDrawable(R.drawable.img_vip_sub_item_recommend_select);
-        }else{
-            return Utils.getContext().getDrawable(R.drawable.img_vip_sub_item_recommend_normal);
         }
     }
     //推荐角标显示隐藏
@@ -77,6 +70,23 @@ public class VipSubscribeItemViewModel extends MultiItemViewModel<VipSubscribeVi
             return View.VISIBLE;
         }
         return View.GONE;
+    }
+
+    //获取原价
+    public Spanned getOriginalPrice() {
+        VipPackageItemEntity entity = itemEntity.get();
+        if (entity != null && entity.getOriginalPrice() != null) {
+            return Html.fromHtml(String.format(StringUtils.getString(R.string.playfun_vip_alert_gold_tag, entity.getOriginalPrice())));
+        }
+        return null;
+    }
+
+    public String getDayPrice() {
+        VipPackageItemEntity entity = itemEntity.get();
+        if (entity != null && entity.getDiscountLabel() != null) {
+            return entity.getDiscountLabel();
+        }
+        return null;
     }
 
 }

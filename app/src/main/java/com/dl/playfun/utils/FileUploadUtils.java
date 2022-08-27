@@ -190,6 +190,52 @@ public class FileUploadUtils {
         return key;
     }
 
+    /**
+     * 自定义文件上传
+     * @param fileType 文件类型
+     * @param filePath 文件路径
+     * @param directory oss文件夹位置
+     * @param fileUploadProgressListener 上传进度回调
+     * @return
+     * @throws Exception
+     */
+    public static String ossUploadFileCustom(final int fileType,String filePath,String directory,FileUploadProgressListener fileUploadProgressListener) throws Exception{
+        if(filePath == null || directory == null){
+            return null;
+        }
+        if (fileType == FILE_TYPE_IMAGE) {
+            if (filePath.toLowerCase().endsWith(".jpg") || filePath.toLowerCase().endsWith(".jpeg") || filePath.toLowerCase().endsWith(".png")) {
+                List<File> list = Luban.with(AppContext.instance().getApplicationContext()).load(Uri.fromFile(new File(filePath))).setTargetDir(AppContext.instance().getCacheDir().getAbsolutePath()).get();
+                if (list == null || list.isEmpty()) {
+                    return null;
+                }
+                if (StringUtils.isEmpty(directory)) {
+                    directory = "";
+                }
+                filePath = list.get(0).getAbsolutePath();
+            }
+        }else{
+            throw new InstantiationException("error fileType is not ");
+        }
+        OSSClient ossClient = OSSWrapper.sharedWrapper().getClient();
+        String key = directory+"/"+getFileName(filePath);
+        // 构造上传请求。
+        PutObjectRequest put = new PutObjectRequest(AppConfig.BUCKET_NAME, key, filePath);
+
+        // 异步上传时可以设置进度回调。
+        put.setProgressCallback((request, currentSize, totalSize) -> {
+            if (fileUploadProgressListener != null) {
+                fileUploadProgressListener.fileUploadProgress((int) (((float) currentSize / (float) totalSize) * 100));
+            }
+        });
+
+        PutObjectResult putObjectResult = ossClient.putObject(put);
+        if (putObjectResult.getStatusCode() != 200) {
+            throw new ClientException("upload failed:" + putObjectResult.getStatusCode());
+        }
+        return key;
+    }
+
     private static String getFileName(String file) {
         String uuid = UUID.randomUUID().toString().replaceAll("-", "");
         return String.format("%s.%s", uuid, ext(file));

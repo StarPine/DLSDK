@@ -10,4 +10,10 @@ public class EaringlSwitchUtil {
     public static String KEY_TIPS = "profit.tips";
     //是新手引导入口开关
     public static String KEY_GUIDE = "guide.entrance";
+    //移除IM云端消息
+    public static String REMOVE_IM_MESSAGE = "removeIMMessageSwitches";
+    //钱包入口点击开关
+    public static String KEY_WALLET_ENTRANCE = "wallet.entrance";
+    //注销账号开关
+    public static String KEY_DELETE_ACCOUNT = "delete.account";
 }

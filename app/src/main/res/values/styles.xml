@@ -40,6 +40,24 @@
         <item name="android:windowExitAnimation">@anim/pop_exit_anim</item>
     </style>
 
+    <!--==================APP更新弹窗==================-->
+    <style name="UpdateAppNumberProgressBar_Red">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+
+        <item name="progress_max">100</item>
+        <item name="progress_current">0</item>
+
+        <item name="progress_unreached_color">#CCCCCC</item>
+        <item name="progress_reached_color">#e94339</item>
+
+        <item name="progress_text_size">12sp</item>
+        <item name="progress_text_color">#e94339</item>
+
+        <item name="progress_reached_bar_height">4dp</item>
+        <item name="progress_unreached_bar_height">3dp</item>
+    </style>
+
     <!--PictureSeletor Style 白色主题样式，，注意每一项都不能少-->
     <style name="picture_white_style_custom" parent="AppTheme.NoActionBar">
         <!-- Customize your theme here. -->
@@ -141,6 +159,20 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:background">@drawable/button_purple_background</item>
+        <item name="android:textSize">@dimen/text_size_big</item>
+    </style>
+
+    <style name="ButtonPrimaryNomal" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:outlineSpotShadowColor" tools:targetApi="p">#FF5593</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:paddingStart">5dp</item>
+        <item name="android:paddingEnd">5dp</item>
+        <item name="android:elevation">12dp</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/purple_text</item>
+        <item name="android:background">@drawable/btn_stroke_nomal</item>
         <item name="android:textSize">@dimen/text_size_big</item>
     </style>
 
@@ -370,4 +402,64 @@
         <item name="android:windowExitAnimation">@anim/update_app_window_out</item>
     </style>
     <!--==================APP更新弹窗==================-->
+
+    <style name="dialog_activity_style" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:background">@color/transparent</item>
+        <!--设置没有窗口标题、dialog标题等各种标题-->
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:title">@null</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:dialogTitle">@null</item>
+        <!--背景透明-->
+        <item name="android:windowIsTranslucent">true</item>
+        <!--是否有覆盖-->
+        <item name="android:windowContentOverlay">@null</item>
+        <!--是否悬浮在activity上 是否浮动-->
+        <item name="android:windowIsFloating">true</item>
+        <!--边框-->
+        <item name="android:windowFrame">@null</item>
+        <!-- 点击空白部分activity不消失 -->
+        <item name="android:windowCloseOnTouchOutside">false</item>
+        <item name="android:windowFullscreen">false</item>
+        <!--背景：透明-->
+        <item name="android:windowBackground">@color/transparent</item>
+        <!--dialog的整个屏幕的背景是否有遮障层-->
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+    <declare-styleable name="PasswordEditText">
+        <attr name="imgWidth" format="dimension"/>
+        <attr name="imgHeight" format="dimension"/>
+        <attr name="imgResOnImg" format="reference"/>
+        <attr name="imgResOffImg" format="reference"/>
+    </declare-styleable>
+    <style name="PasswordEditText" parent="android:Widget">
+    </style>
+
+    <declare-styleable name="PCustomSeekBar">
+        <attr name="thumbSrc" format="reference" />
+        <attr name="imgThumbWidth" format="dimension" />
+        <attr name="imgThumbHeight" format="dimension" />
+        <attr name="imgSpotSrc" format="reference" />
+        <attr name="imgSpotWidth" format="dimension" />
+        <attr name="imgSpotHeight" format="dimension" />
+        <attr name="imgSpotOnSrc" format="reference" />
+        <attr name="imgSpotOnWidth" format="dimension" />
+        <attr name="imgSpotOnHeight" format="dimension" />
+        <attr name="imgSpotOffSrc" format="reference" />
+    </declare-styleable>
+
+    <style name="PCustomSeekBar" parent="android:Widget"></style>
+
+    <declare-styleable name="MisterPBannerLayout">
+        <attr name="interval" format="integer" />
+        <attr name="showIndicator" format="boolean" />
+        <attr name="orientation" format="enum">
+            <enum name="horizontal" value="0"/>
+            <enum name="vertical" value="1"/>
+        </attr>
+        <attr name="autoPlaying" format="boolean"/>
+        <attr name="itemSpace" format="integer"/>
+        <attr name="centerScale" format="float"/>
+        <attr name="moveSpeed" format="float"/>
+    </declare-styleable>
 </resources>

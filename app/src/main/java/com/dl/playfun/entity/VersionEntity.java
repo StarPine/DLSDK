@@ -2,6 +2,8 @@ package com.dl.playfun.entity;
 
 import androidx.databinding.BaseObservable;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * @ClassName VersionEntity
  * @Description TODO
@@ -17,6 +19,9 @@ public class VersionEntity extends BaseObservable {
     private String url;
     private String content;
     private Integer is_update;
+    //跳转谷歌商店地址
+    @SerializedName("link")
+    private String linkUrl;
 
 
     public Integer getVersion_code() {
@@ -57,5 +62,25 @@ public class VersionEntity extends BaseObservable {
 
     public void setIs_update(Integer is_update) {
         this.is_update = is_update;
+    }
+
+    public String getLinkUrl() {
+        return linkUrl;
+    }
+
+    public void setLinkUrl(String linkUrl) {
+        this.linkUrl = linkUrl;
+    }
+
+    @Override
+    public String toString() {
+        return "VersionEntity{" +
+                "version_code=" + version_code +
+                ", version_name='" + version_name + '\'' +
+                ", url='" + url + '\'' +
+                ", content='" + content + '\'' +
+                ", is_update=" + is_update +
+                ", linkUrl='" + linkUrl + '\'' +
+                '}';
     }
 }

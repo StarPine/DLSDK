@@ -1,11 +1,19 @@
 package com.dl.playfun.ui.base;
 
+import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.MotionEvent;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.dl.playfun.manager.LocaleManager;
+import com.dl.playfun.utils.ApiUitl;
+
+import java.util.Locale;
 
 import me.yokeyword.fragmentation.ExtraTransaction;
 import me.yokeyword.fragmentation.ISupportActivity;
@@ -36,6 +44,29 @@ public class MySupportActivity extends AppCompatActivity implements ISupportActi
         return mDelegate.extraTransaction();
     }
 
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocal(newBase));
+    }
+    /**
+     * 就算你在Manifest.xml设置横竖屏切换不重走生命周期。横竖屏切换还是会走这里
+
+     */
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        if(newConfig!=null){
+            LocaleManager.setLocal(this);
+        }
+        super.onConfigurationChanged(newConfig);
+        LocaleManager.setLocal(this);
+    }
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        LocaleManager.setLocal(this);
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +84,16 @@ public class MySupportActivity extends AppCompatActivity implements ISupportActi
         mDelegate.onDestroy();
         super.onDestroy();
     }
+
+//    /**
+//     * 从写适配规则适配360dp
+//     *
+//     * @return
+//     */
+//    @Override
+//    public Resources getResources() {
+//        return ApiUitl.autoXDpi(360f, super.getResources());
+//    }
 
     /**
      * Note： return mDelegate.dispatchTouchEvent(ev) || super.dispatchTouchEvent(ev);

@@ -19,6 +19,9 @@ import com.shuyu.gsyvideoplayer.utils.Debuger;
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
+import com.tencent.qcloud.tuicore.Status;
+
+import me.goldze.mvvmhabit.utils.ToastUtils;
 
 
 /**
@@ -222,6 +225,15 @@ public class SampleCoverVideo extends StandardGSYVideoPlayer {
         setViewShowState(mBottomContainer, GONE);
         setViewShowState(mBottomProgressBar, GONE);
         setViewShowState(mStartButton, INVISIBLE);
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        if (Status.mIsShowFloatWindow){
+            ToastUtils.showShort(R.string.audio_in_call);
+            return true;
+        }
+        return super.onInterceptTouchEvent(ev);
     }
 
     @Override

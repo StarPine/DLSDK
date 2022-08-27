@@ -35,7 +35,7 @@
                 android:layout_marginTop="42dp"
                 android:layout_marginRight="14dp"
                 android:onClick="@{viewModel.closeOnclick}"
-                android:src="@drawable/call_close" />
+                android:src="@drawable/icon_call_close" />
 
             <com.dl.playfun.widget.image.CircleImageView
                 android:layout_width="173dp"
@@ -45,7 +45,9 @@
                 android:scaleType="centerCrop"
                 binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
                 binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
-                binding:imageThumbPath="@{viewModel.callingInviteInfoField.userProfileInfo.avatar}" />
+                binding:imageThumbPath="@{viewModel.callingInviteInfoField.userProfileInfo.avatar}"
+                binding:resizeH="@{90}"
+                binding:resizeW="@{90}"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -76,7 +78,7 @@
 
                     <ImageView
                         android:id="@+id/iv_goddesses"
-                        android:layout_width="14dp"
+                        android:layout_width="31dp"
                         android:layout_height="13dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="2dp"
@@ -164,7 +166,6 @@
             </LinearLayout>
 
             <TextView
-                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -180,6 +181,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:orientation="horizontal"
+                android:gravity="center_horizontal"
                 android:visibility="@{safeUnbox(viewModel.isCallBinding) ? View.VISIBLE:View.GONE}"
                 tools:visibility="gone"
                 >

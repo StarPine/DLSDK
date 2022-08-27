@@ -1,0 +1,25 @@
+<resources>
+    <string name="customactivityoncrash_error_activity_error_occurred_explanation">Произошла непредвиденная ошибка.\ Прошу прощения за причиненные неудобства.</string>
+    <string name="customactivityoncrash_error_activity_restart_app">Перезапустить приложение</string>
+    <string name="customactivityoncrash_error_activity_close_app">Закрыть приложение</string>
+    <string name="customactivityoncrash_error_activity_error_details">Сведения об ошибке</string>
+    <string name="customactivityoncrash_error_activity_error_details_title">Сведения об ошибке</string>
+    <string name="customactivityoncrash_error_activity_error_details_close">Закрывать</string>
+    <string name="customactivityoncrash_error_activity_error_details_copy">Копировать в буфер обмена</string>
+    <string name="customactivityoncrash_error_activity_error_details_copied">Скопировано в буфер обмена</string>
+    <string name="customactivityoncrash_error_activity_error_details_clipboard_label">Информация об ошибке</string>
+    <string name="error_unknown">Неизвестная ошибка</string>
+    <string name="error_unknow_host">Неизвестный хозяин</string>
+    <string name="error_socket_timeout">Перерыв</string>
+    <string name="error_connect_timeout">Перерыв</string>
+    <string name="error_ssl_exception">Исключение SSL</string>
+    <string name="error_network_error">Ошибка сети</string>
+    <string name="error_parse_error">Ошибка синтаксического анализа</string>
+    <string name="error_http_unauthorized">Неавторизованный</string>
+    <string name="error_http_forbidden">Запрос запрещен</string>
+    <string name="error_http_not_found">Ресурс не найден</string>
+    <string name="error_http_request_timeout">Перерыв запроса</string>
+    <string name="error_http_internal_server_error">Ошибка сервера</string>
+    <string name="error_http_server_unavailable">Сервер недоступен</string>
+    <string name="error_http_network_error">Ошибка сети. Пожалуйста, выйдите из приложения и войдите снова.</string>
+</resources>

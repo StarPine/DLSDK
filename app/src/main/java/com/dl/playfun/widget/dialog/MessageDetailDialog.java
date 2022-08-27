@@ -3,16 +3,21 @@ package com.dl.playfun.widget.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.StringUtils;
+import com.bumptech.glide.Glide;
 import com.dl.playfun.R;
+import com.dl.playfun.utils.StringUtil;
 
 /**
  * Author: 彭石林
@@ -20,7 +25,64 @@ import com.dl.playfun.R;
  * Description: This is MessageDetailDialog
  */
 public class MessageDetailDialog {
+    /**
+     * @return android.app.Dialog
+     * @Desc TODO(弹出选择发送视频或者图片)
+     * @author 彭石林
+     * @parame [context, touchOutside, audioCallHintOnClickListener]
+     * @Date 2022/3/1
+     */
+    public static Dialog CheckImgViewFile(Context context, boolean touchOutside, AudioCallHintOnClickListener audioCallHintOnClickListener) {
+        Dialog dialog = new Dialog(context);
+        dialog.setCanceledOnTouchOutside(touchOutside);
+        dialog.setCancelable(true);
+        View view = View.inflate(context, R.layout.dialog_check_img_video, null);
 
+        LinearLayout video_layout = view.findViewById(R.id.video_layout);
+        LinearLayout image_layout = view.findViewById(R.id.image_layout);
+        FrameLayout cancel_layout = view.findViewById(R.id.cancel_layout);
+        video_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                audioCallHintOnClickListener.check1OnClick();
+            }
+        });
+        image_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                audioCallHintOnClickListener.check2OnClick();
+            }
+        });
+        cancel_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        //设置背景透明,去四个角
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.setContentView(view);
+        //设置宽度充满屏幕
+        Window window = dialog.getWindow();
+        window.setGravity(Gravity.BOTTOM); //可设置dialog的位置
+        window.getDecorView().setPadding(0, 0, 0, 0); //消除边距
+        WindowManager.LayoutParams lp = window.getAttributes();
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;   //设置宽度充满屏幕
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        window.setAttributes(lp);
+        return dialog;
+    }
+
+    /**
+     * @return android.app.Dialog
+     * @Desc TODO(拨打语音视频唤起弹窗)
+     * @author 彭石林
+     * @parame [context, touchOutside, audioText, videoText, audioAndVideoCallOnClickListener]
+     * @Date 2022/3/1
+     */
     public static Dialog AudioAndVideoCallDialog(Context context, boolean touchOutside, String audioText, String videoText, AudioAndVideoCallOnClickListener audioAndVideoCallOnClickListener) {
         Dialog dialog = new Dialog(context);
         dialog.setCanceledOnTouchOutside(touchOutside);
@@ -204,6 +266,45 @@ public class MessageDetailDialog {
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         window.setAttributes(lp);
         return dialog;
+    }
+
+    public static Dialog getImageDialog(Context context, String imagePath) {
+        Dialog bottomDialog = new Dialog(context, R.style.ShowImageDialog);
+        View contentView = LayoutInflater.from(context).inflate(R.layout.dialog_image_view, null);
+        bottomDialog.setContentView(contentView);
+        ViewGroup.LayoutParams layoutParams = contentView.getLayoutParams();
+        contentView.setLayoutParams(layoutParams);
+        bottomDialog.getWindow().setGravity(Gravity.CENTER);
+        ImageView imageView = contentView.findViewById(R.id.imageView);
+        if (imagePath != null) {
+//            GlideEngine.createGlideEngine().loadImage(context, StringUtil.getFullImageUrl(drawable), imageView);
+            Glide.with(context)
+                    .load(StringUtil.getFullImageUrl(imagePath))
+                    .fitCenter()//防止部分账号图片被拉伸
+//                    .error(R.drawable.radio_dating_img_default) //异常时候显示的图片
+//                    .placeholder(R.drawable.radio_dating_img_default) //加载成功前显示的图片
+//                    .fallback( R.drawable.radio_dating_img_default) //url为空的时候,显示的图片
+                    .into(imageView);
+        }
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
+                bottomDialog.dismiss();
+            }
+        });
+        //设置背景透明,去四个角
+        bottomDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        //设置宽度充满屏幕
+        Window window = bottomDialog.getWindow();
+        window.setGravity(Gravity.CENTER); //可设置dialog的位置
+        window.getDecorView().setPadding(0, 0, 0, 0); //消除边距
+        window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+        WindowManager.LayoutParams lp = window.getAttributes();
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;   //设置宽度充满屏幕
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        window.setAttributes(lp);
+        return bottomDialog;
     }
 
     public interface AudioAndVideoCallOnClickListener {

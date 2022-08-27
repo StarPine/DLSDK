@@ -5,10 +5,15 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebResourceRequest;
@@ -17,59 +22,122 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
+import com.aliyun.svideo.common.utils.FastClickUtil;
+import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.SkuDetailsParams;
+import com.blankj.utilcode.util.ObjectUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.FutureTarget;
-import com.dl.playfun.app.AppContext;
-import com.google.gson.Gson;
 import com.dl.playfun.R;
+import com.dl.playfun.app.AppConfig;
+import com.dl.playfun.app.AppContext;
+import com.dl.playfun.app.AppsFlyerEvent;
+import com.dl.playfun.app.BillingClientLifecycle;
+import com.dl.playfun.app.Injection;
+import com.dl.playfun.data.source.http.exception.RequestException;
+import com.dl.playfun.data.source.http.observer.BaseObserver;
+import com.dl.playfun.data.source.http.response.BaseDataResponse;
+import com.dl.playfun.data.source.http.response.BaseResponse;
+import com.dl.playfun.entity.CreateOrderEntity;
+import com.dl.playfun.entity.VipPackageItemEntity;
+import com.dl.playfun.event.UserUpdateVipEvent;
+import com.dl.playfun.ui.base.BaseDialog;
 import com.dl.playfun.ui.webview.BrowserView;
+import com.dl.playfun.utils.Utils;
+import com.google.gson.Gson;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import me.goldze.mvvmhabit.bus.RxBus;
+import me.goldze.mvvmhabit.utils.RxUtils;
+import me.goldze.mvvmhabit.utils.ToastUtils;
 
 /**
  * Author: 彭石林
  * Time: 2021/12/22 20:03
  * Description: This is WebViewDialog
  */
-public class WebViewDialog {
-
-    private static volatile WebViewDialog INSTANCE;
-    private Context context;
+public class WebViewDialog extends BaseDialog {
+    private final static String TAG = "WebViewDialog支付";
+    private final Context context;
     private Dialog dialog;
-    private String webUrl;
-
-    private ConfirmOnclick confirmOnclick;
-
-    private WebViewDialog(Context context) {
-        this.context = context;
-    }
-
-    public static WebViewDialog getInstance(Context context) {
-        if (INSTANCE == null) {
-            synchronized (WebViewDialog.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new WebViewDialog(context);
-                }
-            }
-        } else {
-            init(context);
-        }
-        return INSTANCE;
-    }
-
+    private final String webUrl;
+    private final AppCompatActivity mActivity;
+    private final ConfirmOnclick confirmOnclick;
+    private ImageView iv_default;
+    //会员天数
+    public Integer pay_good_day = 0;
+    private volatile VipPackageItemEntity vipPackageItemEntity = new VipPackageItemEntity();
+    private String orderNumber = null;
+    //是否是购买商品 or  订阅vip
+    private boolean GooglePayInApp = false;
+    private ViewGroup loadingView;
     /**
-     * 从新初始化值
-     *
-     * @param context
+     * 谷歌支付连接
      */
-    private static void init(Context context) {
-        INSTANCE.context = context;
-        INSTANCE.confirmOnclick = null;
-        INSTANCE.webUrl = null;
+    public BillingClientLifecycle billingClientLifecycle;
+
+    public WebViewDialog(@NonNull Context context, AppCompatActivity activity, String url, ConfirmOnclick confirmOnclick) {
+        super(context);
+        this.context = context;
+        this.mActivity = activity;
+        this.webUrl = url;
+        this.confirmOnclick = confirmOnclick;
+        initGooglePay();
+    }
+
+
+    private void initGooglePay(){
+        this.billingClientLifecycle = ((AppContext)mActivity.getApplication()).getBillingClientLifecycle();
+        this.billingClientLifecycle.PAYMENT_SUCCESS.observe(this, billingPurchasesState -> {
+            Log.e("BillingClientLifecycle","支付购买成功回调");
+            switch (billingPurchasesState.getBillingFlowNode()){
+                //查询商品阶段
+                case querySkuDetails:
+                    break;
+                case launchBilling: //启动购买
+                    break;
+                case purchasesUpdated: //用户购买操作 可在此购买成功 or 取消支付
+                    break;
+                case acknowledgePurchase:  // 用户操作购买成功 --> 商家确认操作 需要手动确定收货（消耗这笔订单并且发货（给与用户购买奖励）） 否则 到达一定时间 自动退款
+                    Purchase purchase = billingPurchasesState.getPurchase();
+                    if(purchase!=null){
+                        try {
+                            AppContext.instance().logEvent(AppsFlyerEvent.Successful_top_up, vipPackageItemEntity.getPrice(), purchase);
+                        } catch (Exception e) {
+
+                        }
+                        String packageName = purchase.getPackageName();
+                        paySuccessNotify(packageName, orderNumber, purchase.getSkus(), purchase.getPurchaseToken(), 1,vipPackageItemEntity);
+                        Log.e("BillingClientLifecycle","dialog支付购买成功："+purchase.toString());
+                    }
+                    break;
+            }
+        });
+        this.billingClientLifecycle.PAYMENT_FAIL.observe(this, billingPurchasesState -> {
+            Log.e("BillingClientLifecycle","支付购买失败回调");
+            switch (billingPurchasesState.getBillingFlowNode()){
+                //查询商品阶段-->异常
+                case querySkuDetails:
+                    break;
+                case launchBilling: //启动购买-->异常
+                    break;
+                case purchasesUpdated: //用户购买操作 可在此购买成功 or 取消支付 -->异常
+                    break;
+                case acknowledgePurchase:  // 用户操作购买成功 --> 商家确认操作 需要手动确定收货（消耗这笔订单并且发货（给与用户购买奖励）） 否则 到达一定时间 自动退款 -->异常
+                    break;
+            }
+        });
     }
 
     public static byte[] syncLoad(String url, String type) {
@@ -92,21 +160,6 @@ public class WebViewDialog {
         return null;
     }
 
-    /**
-     * 设置确认按钮点击
-     *
-     * @param confirmOnclick
-     * @return
-     */
-    public WebViewDialog setConfirmOnlick(ConfirmOnclick confirmOnclick) {
-        this.confirmOnclick = confirmOnclick;
-        return INSTANCE;
-    }
-
-    public WebViewDialog setWebUrl(String webUrl) {
-        this.webUrl = webUrl;
-        return INSTANCE;
-    }
 
     public Dialog noticeDialog() {
         dialog = new Dialog(context);
@@ -115,6 +168,8 @@ public class WebViewDialog {
         View view = View.inflate(context, R.layout.alert_notice_web_view, null);
         ImageView ic_dialog_close = view.findViewById(R.id.ic_dialog_close);
         BrowserView webView = view.findViewById(R.id.web_view);
+        iv_default = view.findViewById(R.id.iv_default);
+        loadingView = view.findViewById(R.id.rl_loading);
         ic_dialog_close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -168,6 +223,7 @@ public class WebViewDialog {
         }
         webView.setGson(new Gson());
         webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        setCookie(mActivity,webUrl);
         //设置打开的页面地址
         webView.loadUrl(webUrl);
 
@@ -185,9 +241,19 @@ public class WebViewDialog {
         return dialog;
     }
 
-    public interface ConfirmOnclick {
-        void confirm(Dialog dialog);
-        void cancel();
+    public static void setCookie(Context context, String url) {
+        try {
+            CookieSyncManager.createInstance(context);
+            CookieManager cookieManager = CookieManager.getInstance();
+            cookieManager.setAcceptCookie(true);
+            cookieManager.removeSessionCookie();//移除
+            cookieManager.removeAllCookie();
+            cookieManager.setCookie(url, "local="+context.getString(R.string.playfun_local_language));
+            cookieManager.setCookie(url, "appId="+ AppConfig.APPID);
+            CookieSyncManager.getInstance().sync();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private class MyBrowserViewClient extends BrowserView.BrowserViewClient {
@@ -220,6 +286,12 @@ public class WebViewDialog {
                 }
             }
             return null;
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+            iv_default.setVisibility(View.GONE);
         }
     }
 
@@ -266,6 +338,122 @@ public class WebViewDialog {
         }
     }
 
+    //进行支付
+    private void pay(String payCode) {
+        List<String> skuList = new ArrayList<>();
+        skuList.add(payCode);
+        SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
+        params.setSkusList(skuList).setType(GooglePayInApp ? BillingClient.SkuType.SUBS : BillingClient.SkuType.INAPP);
+        billingClientLifecycle.querySkuDetailsLaunchBillingFlow(params,mActivity,orderNumber);
+    }
+
+    //创建订单
+    public void createOrder(Integer goodId, String payCode) {
+        loadingView.setVisibility(View.VISIBLE);
+        //1购买商品  2订阅商品
+        int types = GooglePayInApp == false ? 1 : 2;
+        Injection.provideDemoRepository()
+                .createOrder(goodId, types, 2, null)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .subscribe(new BaseObserver<BaseDataResponse<CreateOrderEntity>>() {
+                    @Override
+                    public void onSuccess(BaseDataResponse<CreateOrderEntity> response) {
+                        loadingView.setVisibility(View.GONE);
+                        orderNumber = response.getData().getOrderNumber();
+                        //会员天数
+                        pay_good_day = response.getData().getActual_value();
+                        pay(payCode);
+                    }
+
+                    @Override
+                    public void onError(RequestException e) {
+                        super.onError(e);
+                        loadingView.setVisibility(View.GONE);
+                    }
+                });
+    }
+
+    //支付成功上报
+    public void paySuccessNotify(String packageName, String orderNumber, List<String> productId, String token, Integer event,VipPackageItemEntity vipItemEntity) {
+        loadingView.setVisibility(View.VISIBLE);
+        Injection.provideDemoRepository()
+                .paySuccessNotify(packageName, orderNumber, productId, token, 1, event)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .subscribe(new BaseObserver<BaseResponse>() {
+                    @Override
+                    public void onSuccess(BaseResponse response) {
+                        loadingView.setVisibility(View.GONE);
+                        //dialog.dismiss();
+                        try{
+                            if(vipItemEntity==null){
+                                ToastUtils.showShort(R.string.playfun_coin_custom_text);
+                                return;
+                            }
+                            if (GooglePayInApp) {
+                                RxBus.getDefault().post(new UserUpdateVipEvent(Utils.formatday.format(Utils.addDate(new Date(), pay_good_day)), 1));
+                            } else {
+                                if (confirmOnclick != null) {
+                                    int countCoin = 0;
+                                    Integer purchased = vipItemEntity.getPurchased();
+                                    if(purchased == null){
+                                        purchased = -1;
+                                    }
+                                    //未进行首充
+                                    if (!ObjectUtils.isEmpty(purchased) && purchased.intValue() == 0) {
+                                        Integer actualValue = vipItemEntity.getActualValue();
+                                        Integer giveCoin = vipItemEntity.getGiveCoin();
+                                        if (actualValue != null) {
+                                            countCoin += actualValue.intValue();
+                                        }
+                                        if (giveCoin != null) {
+                                            countCoin += giveCoin.intValue();
+                                        }
+
+                                    } else {
+                                        countCoin = vipItemEntity.getActualValue();
+                                    }
+                                    //5秒最多发一次
+                                    if(!FastClickUtil.isFastCallFun("WebViewDialogSuccess")){
+                                        if (confirmOnclick != null) {
+                                            confirmOnclick.vipRechargeDiamondSuccess(dialog, countCoin);
+                                        }
+                                    }
+                                }
+                            }
+                        }catch (Exception e){
+                            ToastUtils.showShort(R.string.playfun_coin_custom_text);
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(RequestException e) {
+                        loadingView.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+                });
+    }
+
+    public interface  ConfirmOnclick {
+        //跳转到vip界面
+         void webToVipRechargeVC(Dialog dialog);
+
+        //更多钻石储值
+         void moreRechargeDiamond(Dialog dialog);
+
+        //充值钻石
+         void vipRechargeDiamondSuccess(Dialog dialog, Integer coinMoney);
+
+         void cancel();
+    }
+
     public class ShareJavaScriptInterface {
         Context mContext;
 
@@ -274,10 +462,54 @@ public class WebViewDialog {
         }
 
         @JavascriptInterface
+        public String getToken() {
+            String token = Injection.provideDemoRepository().readLoginInfo().getToken();
+            return token;
+        }
+
+        @JavascriptInterface
         public void webToVipRechargeVC() {
             if (confirmOnclick != null) {
-                confirmOnclick.confirm(dialog);
+                confirmOnclick.webToVipRechargeVC(dialog);
             }
         }
+
+        @JavascriptInterface
+        public void moreRechargeDiamond() {
+            if (confirmOnclick != null) {
+                confirmOnclick.moreRechargeDiamond(dialog);
+            }
+        }
+
+        @JavascriptInterface
+        public void nonVipRecharge(String data) {
+            GooglePayInApp = true;
+            //购买商品
+            //vip充值
+            vipPackageItemEntity = new Gson().fromJson(data, VipPackageItemEntity.class);
+            if(vipPackageItemEntity!=null && vipPackageItemEntity.getGoogleGoodsId()!=null){
+                String googleGoodsId = vipPackageItemEntity.getGoogleGoodsId();
+                //创建订单
+                createOrder(vipPackageItemEntity.getId(), googleGoodsId);
+            }
+        }
+
+        @JavascriptInterface
+        public void vipRechargeDiamond(String data) {
+            GooglePayInApp = false;
+            //购买商品
+            vipPackageItemEntity = new Gson().fromJson(data, VipPackageItemEntity.class);
+            if(vipPackageItemEntity!=null && vipPackageItemEntity.getGoogleGoodsId()!=null){
+                String googleGoodsId = vipPackageItemEntity.getGoogleGoodsId();
+                //创建订单
+                createOrder(vipPackageItemEntity.getId(), googleGoodsId);
+            }
+        }
+
+        @JavascriptInterface
+        public void back() {
+            dialog.dismiss();
+        }
+
     }
 }

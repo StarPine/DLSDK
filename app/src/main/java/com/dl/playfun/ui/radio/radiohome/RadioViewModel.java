@@ -1,14 +1,22 @@
 package com.dl.playfun.ui.radio.radiohome;
 
+import static com.blankj.utilcode.util.SnackbarUtils.dismiss;
+
 import android.app.Application;
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableArrayList;
+import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableList;
 
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
+import com.dl.playfun.BR;
+import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.data.AppRepository;
@@ -16,47 +24,37 @@ import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
+import com.dl.playfun.entity.AdBannerEntity;
 import com.dl.playfun.entity.AdItemEntity;
+import com.dl.playfun.entity.AdUserBannerEntity;
+import com.dl.playfun.entity.AdUserItemEntity;
 import com.dl.playfun.entity.BroadcastEntity;
 import com.dl.playfun.entity.BroadcastListEntity;
+import com.dl.playfun.entity.CallingInviteInfo;
 import com.dl.playfun.entity.ConfigItemEntity;
-import com.dl.playfun.entity.MessageTagEntity;
-import com.dl.playfun.entity.RadioTwoFilterItemEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.BadioEvent;
 import com.dl.playfun.event.LikeChangeEvent;
-import com.dl.playfun.event.MainTabEvent;
 import com.dl.playfun.event.RadioadetailEvent;
 import com.dl.playfun.event.TaskListEvent;
 import com.dl.playfun.event.TaskMainTabEvent;
 import com.dl.playfun.event.TaskTypeStatusEvent;
 import com.dl.playfun.event.ZoomInPictureEvent;
+import com.dl.playfun.kl.Utils;
 import com.dl.playfun.manager.ConfigManager;
-import com.dl.playfun.ui.mine.broadcast.myprogram.ProgramItemViewModel;
 import com.dl.playfun.ui.mine.broadcast.mytrends.TrendItemViewModel;
-import com.dl.playfun.ui.mine.wallet.WalletFragment;
-import com.dl.playfun.utils.FileUploadUtils;
-import com.dl.playfun.utils.Utils;
-import com.dl.playfun.viewmodel.BaseRefreshViewModel;
-import com.dl.playfun.BR;
-import com.dl.playfun.R;
 import com.dl.playfun.ui.radio.issuanceprogram.IssuanceProgramFragment;
+import com.dl.playfun.ui.radio.radiohome.item.RadioItemBannerVideoViewModel;
+import com.dl.playfun.ui.task.webview.FukuokaViewFragment;
+import com.dl.playfun.viewmodel.BaseRefreshViewModel;
+import com.google.gson.Gson;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
-import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
 import me.goldze.mvvmhabit.base.MultiItemViewModel;
-import me.goldze.mvvmhabit.binding.command.BindingAction;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
 import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.bus.RxSubscriptions;
@@ -71,20 +69,8 @@ import me.tatarka.bindingcollectionadapter2.OnItemBind;
  * @author wulei
  */
 public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
-    //vip充值成功回调
-    public boolean EventVipSuccess = false;
-    public static Integer SignWinningDay = -1;
     public static final String RadioRecycleType_New = "new";
-    public static final String RadioRecycleType_Topical = "topical";
     public static final String RadioRecycleType_trace = "emptyTrace";
-    private static final String TAG = "签到领取会员";
-    private final int consumeImmediately = 0;
-    private final Integer pay_good_day = 7;
-    //推荐用户弹窗
-    //推荐用户弹窗
-    public ObservableField<Boolean> isShowMessageTag = new ObservableField<>(false);
-    public ObservableField<MessageTagEntity> messageTagEntity = new ObservableField<>();
-    public ObservableField<String> countDownTimerUi = new ObservableField<>();
     public ObservableField<UserDataEntity> userDataEntity = new ObservableField<>(new UserDataEntity());
     public ObservableField<String> area = new ObservableField<>();
     public int userId;
@@ -98,7 +84,20 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
     public boolean CollectFlag = false;
     public Integer certification = null;
     public boolean collectReLoad = false;
-    public ObservableField<List<AdItemEntity>> adItemEntityObservableField = new ObservableField<>(new ArrayList<>());
+    //最后依次点击音怕播放item下标
+    public Integer lastClickAudioPlayer = -1;
+
+    //新增广告轮播类型
+    public ObservableField<List<AdItemEntity>> itemBannerEntity = new ObservableField<>();
+    public ObservableBoolean itemBannerShow = new ObservableBoolean(false);
+
+    //位置选择文字
+    public ObservableField<String> regionTitle = new ObservableField<>(StringUtils.getString(R.string.playfun_tab_female_1));
+    public ObservableField<String> tarckingTitle = new ObservableField<>(StringUtils.getString(R.string.playfun_radio_selected_zuiz));
+
+    public BindingRecyclerViewAdapter<RadioItemBannerVideoViewModel> adapterAdUser = new BindingRecyclerViewAdapter<>();
+    public ObservableList<RadioItemBannerVideoViewModel> radioItemsAdUser = new ObservableArrayList<>();
+    public ItemBinding<RadioItemBannerVideoViewModel> radioItemAdUserBinding = ItemBinding.of(BR.viewModel, R.layout.item_radio_banner_video);
 
     public BindingRecyclerViewAdapter<MultiItemViewModel> adapter = new BindingRecyclerViewAdapter<>();
     public ObservableList<MultiItemViewModel> radioItems = new ObservableArrayList<>();
@@ -110,39 +109,66 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
             if (RadioRecycleType_New.equals(itemType)) {
                 //设置new
                 itemBinding.set(BR.viewModel, R.layout.item_trend);
-            } else if (RadioRecycleType_Topical.equals(itemType)) {
-//                设置topical
-                itemBinding.set(BR.viewModel, R.layout.item_program);
             } else if (RadioRecycleType_trace.equals(itemType)) {
                 //设置看追踪列表为空
                 itemBinding.set(BR.viewModel, R.layout.item_radio_trace_empty);
             }
         }
     });
-    public BindingCommand headerImageOnClick = new BindingCommand(() -> {
-        //跳转到我的页面
-        RxBus.getDefault().post(new MainTabEvent("mine"));
-    });
-    public BindingCommand moneyOnClick = new BindingCommand(() -> {
-        //打开电子钱包
-        start(WalletFragment.class.getCanonicalName());
-    });
-
-
     /**
      * 发布按钮的点击事件
      */
     public BindingCommand publishOnClickCommand = new BindingCommand(() -> {
-        radioUC.programSubject.call();
+        start(IssuanceProgramFragment.class.getCanonicalName());
     });
-    /*谷歌支付*/
+    //选择城市
+    public BindingCommand regionOnClickCommand = new BindingCommand(() -> radioUC.clickRegion.call());
+    //选择追踪的人栏目
+    public BindingCommand clickTackingClickCommand = new BindingCommand(() -> radioUC.clickTacking.call());
+
+    //banner点击
+    public BindingCommand<Integer> onBannerClickCommand = new BindingCommand<>(index -> {
+        try {
+            AdItemEntity adItemEntity = itemBannerEntity.get().get(index);
+            if(adItemEntity!=null && adItemEntity.getLink()!=null){
+                Bundle bundle = new Bundle();
+                bundle.putString("link", adItemEntity.getLink());
+                start(FukuokaViewFragment.class.getCanonicalName(), bundle);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    });
+    //item点击切换
+    public void itemClickChangeIdx (int position){
+        radioUC.clickBannerIdx.postValue(position);
+    }
+    //item拨打视频电话
+    public void itemClickCallVideo(AdUserItemEntity adUserItemEntity){
+        //逻辑判断。有可能挤掉账号 没有下线。但是本地已经清空
+        UserDataEntity userDataEntity = model.readUserData();
+        if(userDataEntity!=null && adUserItemEntity!=null && adUserItemEntity.getToImId()!=null){
+            //视频拨打
+            getCallingInvitedInfo(2, model.readUserData().getImUserId(), adUserItemEntity.getToImId());
+        }
+
+    }
+    //音频播放
+    public void itemClickPlayAudio(int position){
+        if(lastClickAudioPlayer ==-1){
+            lastClickAudioPlayer = position;
+        }else{
+            if(lastClickAudioPlayer!=position){
+                radioItemsAdUser.get(lastClickAudioPlayer).isPlaying.set(false);
+                lastClickAudioPlayer = position;
+            }
+        }
+    }
 
     private Integer default_sex = null;
     private Disposable badioEvent;
     private Disposable radioadetailEvent;
-    private Disposable UserUpdateVipEvent, taskTypeStatusEvent;
-    private String orderNumber = null;
-    private String google_goods_id = null;
+    private Disposable taskTypeStatusEvent;
     private Disposable likeChangeEventDisposable, zoomInPictureEvent;
     private boolean isFirstComment = false;
     private boolean isFirstLike = false;
@@ -157,15 +183,6 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
         avatar = model.readUserData().getAvatar();
         certification = model.readUserData().getCertification();
     }
-
-    //跳转发布界面
-    public BindingCommand toProgramVIew = new BindingCommand(new BindingAction() {
-        @Override
-        public void call() {
-            start(IssuanceProgramFragment.class.getCanonicalName());
-        }
-    });
-
 
     @Override
     public void registerRxBus() {
@@ -189,60 +206,27 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
         radioadetailEvent = RxBus.getDefault().toObservable(RadioadetailEvent.class)
                 .subscribe(event -> {
                     for (int i = 0; i < radioItems.size(); i++) {
-                        if (event.getRadioaType().equals(RadioRecycleType_Topical)) {
-                            if (radioItems.get(i) instanceof ProgramItemViewModel) {
-                                if (((ProgramItemViewModel) radioItems.get(i)).topicalListEntityObservableField.get().getId() == event.getId()) {
-                                    switch (event.getType()) {//1:删除 2：评论关闭开启 3：报名成功 4：节目结束报名 5：评论  6：点赞
-                                        case 1:
-                                            radioItems.remove(i);
-                                            break;
-                                        case 2:
-                                            ((ProgramItemViewModel) radioItems.get(i)).topicalListEntityObservableField.get().getBroadcast().setIsComment(event.isComment);
-                                            break;
-                                        case 3:
-                                            ((ProgramItemViewModel) radioItems.get(i)).report();
-                                            break;
-                                        case 4:
-                                            ((ProgramItemViewModel) radioItems.get(i)).topicalListEntityObservableField.get().setIsEnd(1);
-                                            break;
-                                        case 5:
-                                            ((ProgramItemViewModel) radioItems.get(i)).addComment(event.getId(), event.content, event.toUserId, event.toUserName, model.readUserData().getNickname());
-                                            break;
-                                        case 6:
-                                            ((ProgramItemViewModel) radioItems.get(i)).addGiveUser();
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                }
-                            }
-                        } else {
-                            if (radioItems.get(i) instanceof TrendItemViewModel) {
-                                if (((TrendItemViewModel) radioItems.get(i)).newsEntityObservableField.get().getId() == event.getId()) {
-                                    switch (event.getType()) {//1:删除 2：评论关闭开启 3：报名 4：节目结束报名 5：评论  6：点赞
-                                        case 1:
-                                            radioItems.remove(i);
-                                            break;
-                                        case 2:
-                                            ((TrendItemViewModel) radioItems.get(i)).newsEntityObservableField.get().getBroadcast().setIsComment(event.isComment);
-                                            break;
-                                        case 5:
-                                            ((TrendItemViewModel) radioItems.get(i)).addComment(event.getId(), event.content, event.toUserId, event.toUserName, model.readUserData().getNickname());
-                                            break;
-                                        case 6:
-                                            ((TrendItemViewModel) radioItems.get(i)).addGiveUser();
-                                            break;
-                                        default:
-                                            break;
-                                    }
+                        if (radioItems.get(i) instanceof TrendItemViewModel) {
+                            if (((TrendItemViewModel) radioItems.get(i)).newsEntityObservableField.get().getId() == event.getId()) {
+                                switch (event.getType()) {//1:删除 2：评论关闭开启 3：报名 4：节目结束报名 5：评论  6：点赞
+                                    case 1:
+                                        radioItems.remove(i);
+                                        break;
+                                    case 2:
+                                        ((TrendItemViewModel) radioItems.get(i)).newsEntityObservableField.get().getBroadcast().setIsComment(event.isComment);
+                                        break;
+                                    case 5:
+                                        ((TrendItemViewModel) radioItems.get(i)).addComment(event.getId(), event.content, event.toUserId, event.toUserName, model.readUserData().getNickname());
+                                        break;
+                                    case 6:
+                                        ((TrendItemViewModel) radioItems.get(i)).addGiveUser();
+                                        break;
+                                    default:
+                                        break;
                                 }
                             }
                         }
                     }
-                });
-        UserUpdateVipEvent = RxBus.getDefault().toObservable(com.dl.playfun.event.UserUpdateVipEvent.class)
-                .subscribe(userUpdateVipEvent -> {
-                    EventVipSuccess = true;
                 });
         taskTypeStatusEvent = RxBus.getDefault().toObservable(TaskTypeStatusEvent.class)
                 .subscribe(taskTypeStatusEvent -> {
@@ -263,24 +247,6 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
         //start(TaskCenterFragment.class.getCanonicalName());
     }
 
-    private void recommendMsg(String userId, String num, long timeOut) {
-        AppContext.runOnUIThread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Map<String, String> maps = new HashMap<>();
-                    maps.put("userId", userId);
-                    maps.put("date", Utils.formatday.format(new Date()));
-                    maps.put("num", num);
-                    model.saveMessageTagUser(maps);
-                    AppContext.sUiThreadHandler.removeCallbacks(this);
-                } catch (Exception e) {
-                    AppContext.sUiThreadHandler.removeCallbacks(this);
-                }
-            }
-        }, timeOut);
-    }
-
     @Override
     public void removeRxBus() {
         super.removeRxBus();
@@ -289,12 +255,6 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
         RxSubscriptions.remove(radioadetailEvent);
         RxSubscriptions.remove(taskTypeStatusEvent);
         RxSubscriptions.remove(zoomInPictureEvent);
-    }
-
-    //初始化
-    public void loadHttpData() {
-        super.onEnterAnimationEnd();
-        loadDatas(1);
     }
 
     public void setType(Integer type) {
@@ -326,6 +286,10 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
 
     @Override
     public void loadDatas(int page) {
+        if(page == 1) {
+            getAdUserBanner();
+            getAdListBanner();
+        }
         try {
             if (IsCollect == null) {
                 if (default_sex == null) {
@@ -365,7 +329,7 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
 
     public void getArea() {//地区
         List<ConfigItemEntity> cityConfig = model.readCityConfig();
-        if (ObjectUtils.isEmpty(userDataEntity) || ObjectUtils.isEmpty(cityConfig) || ObjectUtils.isEmpty(userDataEntity.get().getCityId())) {
+        if (ObjectUtils.isEmpty(userDataEntity) || ObjectUtils.isEmpty(cityConfig) || ObjectUtils.isEmpty(userDataEntity.get()) || ObjectUtils.isEmpty(userDataEntity.get().getCityId())) {
             return ;
         }
         for (int i = 0; i < cityConfig.size(); i++) {
@@ -373,19 +337,6 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
                 area.set(cityConfig.get(i).getName());
             }
         }
-    }
-
-    public void loadGameCity() {
-        model.getGameCity()
-                .doOnSubscribe(this)
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .subscribe(new BaseObserver<BaseDataResponse<List<RadioTwoFilterItemEntity>>>() {
-                    @Override
-                    public void onSuccess(BaseDataResponse<List<RadioTwoFilterItemEntity>> listBaseDataResponse) {
-                        radioUC.getRadioTwoFilterItemEntity.setValue(listBaseDataResponse.getData());
-                    }
-                });
     }
 
     /**
@@ -452,11 +403,6 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
                                         TrendItemViewModel trendItemViewModel = new TrendItemViewModel(RadioViewModel.this, broadcastEntity);
                                         trendItemViewModel.multiItemType(RadioRecycleType_New);
                                         radioItems.add(trendItemViewModel);
-                                    } else {
-//                                节目
-                                        ProgramItemViewModel programItemViewModel = new ProgramItemViewModel(RadioViewModel.this, broadcastEntity);
-                                        programItemViewModel.multiItemType(RadioRecycleType_Topical);
-                                        radioItems.add(programItemViewModel);
                                     }
                                     if (position % 2 == 0) {
                                         if (listReal.size() > realIndex + 1) {
@@ -466,11 +412,6 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
                                                 TrendItemViewModel trendItemViewModelReal = new TrendItemViewModel(RadioViewModel.this, broadcastEntityReal);
                                                 trendItemViewModelReal.multiItemType(RadioRecycleType_New);
                                                 radioItems.add(trendItemViewModelReal);
-                                            } else {
-                                                // 节目
-                                                ProgramItemViewModel programItemViewModelReal = new ProgramItemViewModel(RadioViewModel.this, broadcastEntityReal);
-                                                programItemViewModelReal.multiItemType(RadioRecycleType_Topical);
-                                                radioItems.add(programItemViewModelReal);
                                             }
                                             realIndex++;
                                         }
@@ -483,11 +424,6 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
                                             TrendItemViewModel trendItemViewModel = new TrendItemViewModel(RadioViewModel.this, broadcastEntity);
                                             trendItemViewModel.multiItemType(RadioRecycleType_New);
                                             radioItems.add(trendItemViewModel);
-                                        } else {
-                                            //节目
-                                            ProgramItemViewModel programItemViewModel = new ProgramItemViewModel(RadioViewModel.this, broadcastEntity);
-                                            programItemViewModel.multiItemType(RadioRecycleType_Topical);
-                                            radioItems.add(programItemViewModel);
                                         }
                                     }
                                 }
@@ -500,11 +436,6 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
                                             TrendItemViewModel trendItemViewModel = new TrendItemViewModel(RadioViewModel.this, broadcastEntity);
                                             trendItemViewModel.multiItemType(RadioRecycleType_New);
                                             radioItems.add(trendItemViewModel);
-                                        } else {
-                                            //节目
-                                            ProgramItemViewModel programItemViewModel = new ProgramItemViewModel(RadioViewModel.this, broadcastEntity);
-                                            programItemViewModel.multiItemType(RadioRecycleType_Topical);
-                                            radioItems.add(programItemViewModel);
                                         }
                                     }
                                 } else {
@@ -573,7 +504,81 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
                     }
                 });
     }
+    //获取用户广告列表
+    public void getAdUserBanner(){
+        model.getUserAdList(1)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseDataResponse<AdUserBannerEntity>>(){
+                    @Override
+                    public void onSuccess(BaseDataResponse<AdUserBannerEntity> listBaseDataResponse) {
+                        AdUserBannerEntity adUserBanner = listBaseDataResponse.getData();
+                        if(adUserBanner!=null){
+                            List<AdUserItemEntity> listData = adUserBanner.getDataList();
+                            if(ObjectUtils.isNotEmpty(listData)){
+                                ObservableList<RadioItemBannerVideoViewModel> listReal = new ObservableArrayList<>();
+                                for (AdUserItemEntity adUserItemEntity : listData) {
+                                    RadioItemBannerVideoViewModel radioItemBannerVideoViewModel = new RadioItemBannerVideoViewModel(RadioViewModel.this,adUserItemEntity);
+                                    listReal.add(radioItemBannerVideoViewModel);
+                                }
+                                if(!listReal.isEmpty()){
+                                    radioUC.startBannerEvent.call();
+                                    if(radioItemsAdUser.size()>0){
+                                        adapterAdUser.setItems(listReal);
+                                        adapterAdUser.notifyItemRangeChanged(0,adapterAdUser.getItemCount()-1);
+                                    }else{
+                                        radioItemsAdUser.addAll(listReal);
+                                    }
 
+                                }
+                            }
+                        }
+                    }
+                    @Override
+                    public void onError(RequestException e) {
+                        super.onError(e);
+                        Log.e("获取用户广告列表接口","异常原因："+e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        dismissHUD();
+                    }
+                });
+    }
+
+    //获取广告列表
+    public void getAdListBanner(){
+        model.getRadioAdBannerList(2)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseDataResponse<AdBannerEntity>>(){
+                    @Override
+                    public void onSuccess(BaseDataResponse<AdBannerEntity> adBannerEntityDataResponse) {
+                        AdBannerEntity adBannerEntity = adBannerEntityDataResponse.getData();
+                        if(adBannerEntity!=null){
+                            List<AdItemEntity> listData = adBannerEntity.getDataList();
+                            if(listData!=null){
+                                itemBannerEntity.set(listData);
+                                itemBannerShow.set(true);
+                            }else{
+                                itemBannerShow.set(false);
+                            }
+                        }else{
+                            itemBannerShow.set(false);
+                        }
+                    }
+                    @Override
+                    public void onComplete() {
+                        dismiss();
+                    }
+
+                });
+    }
 
     //动态点赞
     public void newsGive(int posion) {
@@ -600,31 +605,6 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
                     }
                 });
     }
-
-    //节目点赞
-    public void topicalGive(int posion) {
-        model.TopicalGive(((ProgramItemViewModel) radioItems.get(posion)).topicalListEntityObservableField.get().getId())
-                .doOnSubscribe(this)
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseResponse>() {
-                    @Override
-                    public void onSuccess(BaseResponse response) {
-                        dismissHUD();
-                        ToastUtils.showShort(R.string.playfun_give_success);
-
-                        ((ProgramItemViewModel) radioItems.get(posion)).addGiveUser();
-                        AppContext.instance().logEvent(AppsFlyerEvent.Like);
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        dismissHUD();
-                    }
-                });
-    }
-
     //动态评论
     public void newsComment(Integer id, String content, Integer toUserId, String toUserName) {
         model.newsComment(id, content, toUserId)
@@ -680,140 +660,10 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
                 });
     }
 
-    //节目评论
-    public void topicalComment(Integer id, String content, Integer toUserId, String toUserName) {
-        model.topicalComment(id, content, toUserId)
-                .doOnSubscribe(this)
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseResponse>() {
-                    @Override
-                    public void onSuccess(BaseResponse response) {
-                        dismissHUD();
-                        ToastUtils.showShort(R.string.playfun_comment_success);
-                        for (int i = 0; i < radioItems.size(); i++) {
-                            if (radioItems.get(i) instanceof ProgramItemViewModel) {
-                                if (id == ((ProgramItemViewModel) radioItems.get(i)).topicalListEntityObservableField.get().getId()) {
-                                    AppContext.instance().logEvent(AppsFlyerEvent.Message);
-                                    ((ProgramItemViewModel) radioItems.get(i)).addComment(id, content, toUserId, toUserName, model.readUserData().getNickname());
-                                }
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onError(RequestException e) {
-                        if (e.getCode() == 10016) {
-                            ToastUtils.showShort(StringUtils.getString(R.string.playfun_comment_close));
-                            for (int i = 0; i < radioItems.size(); i++) {
-                                if (radioItems.get(i) instanceof ProgramItemViewModel) {
-                                    if (id == ((ProgramItemViewModel) radioItems.get(i)).topicalListEntityObservableField.get().getId()) {
-                                        AppContext.instance().logEvent(AppsFlyerEvent.Message);
-                                        ((ProgramItemViewModel) radioItems.get(i)).topicalListEntityObservableField.get().getBroadcast().setIsComment(1);
-                                    }
-                                }
-                            }
-                        } else {
-                            super.onError(e);
-                        }
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        dismissHUD();
-                    }
-                });
-    }
-
-    //节目结束报名
-    public void TopicalFinish(int posion) {
-        model.TopicalFinish(((ProgramItemViewModel) radioItems.get(posion)).topicalListEntityObservableField.get().getId())
-                .doOnSubscribe(this)
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseResponse>() {
-                    @Override
-                    public void onSuccess(BaseResponse response) {
-                        dismissHUD();
-                        ((ProgramItemViewModel) radioItems.get(posion)).topicalListEntityObservableField.get().setIsEnd(1);
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        dismissHUD();
-                    }
-                });
-    }
-
-    //我要报名
-    public void report(int posion, String imags) {
-        model.singUp(((ProgramItemViewModel) radioItems.get(posion)).topicalListEntityObservableField.get().getId(), imags)
-                .doOnSubscribe(this)
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseResponse>() {
-                    @Override
-                    public void onSuccess(BaseResponse response) {
-                        dismissHUD();
-                        ToastUtils.showShort(R.string.playfun_sign_up_success);
-                        ((ProgramItemViewModel) radioItems.get(posion)).report();
-                        AppContext.instance().logEvent(AppsFlyerEvent.Apply);
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        dismissHUD();
-                    }
-                });
-    }
-
-    public void imagUpload(String filePath, int posion) {
-        Observable.just(filePath)
-                .doOnSubscribe(this)
-                .compose(RxUtils.exceptionTransformer())
-                .doOnSubscribe(disposable -> showHUD())
-                .subscribeOn(Schedulers.io())
-                .map(new Function<String, String>() {
-                    @Override
-                    public String apply(String s) throws Exception {
-                        return FileUploadUtils.ossUploadFile("radio/", FileUploadUtils.FILE_TYPE_IMAGE, s);
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableObserver<String>() {
-                    @Override
-                    public void onNext(String fileKey) {
-                        dismissHUD();
-                        report(posion, fileKey);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        dismissHUD();
-                        ToastUtils.showShort(R.string.playfun_upload_failed);
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        dismissHUD();
-                    }
-                });
-    }
-
     //开启/关闭评论
     public void setComment(int posion, String type) {
-        int broadcastId;
-        int isComment;
-        if (type.equals(RadioRecycleType_Topical)) {
-            broadcastId = ((ProgramItemViewModel) radioItems.get(posion)).topicalListEntityObservableField.get().getBroadcast().getId();
-            isComment = ((ProgramItemViewModel) radioItems.get(posion)).topicalListEntityObservableField.get().getBroadcast().getIsComment();
-        } else {
-            broadcastId = ((TrendItemViewModel) radioItems.get(posion)).newsEntityObservableField.get().getBroadcast().getId();
-            isComment = ((TrendItemViewModel) radioItems.get(posion)).newsEntityObservableField.get().getBroadcast().getIsComment();
-        }
+        int broadcastId = ((TrendItemViewModel) radioItems.get(posion)).newsEntityObservableField.get().getBroadcast().getId();
+        int isComment = ((TrendItemViewModel) radioItems.get(posion)).newsEntityObservableField.get().getBroadcast().getIsComment();
         model.setComment(broadcastId,
                 isComment == 0 ? 1 : 0)
                 .doOnSubscribe(this)
@@ -824,11 +674,7 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
                     @Override
                     public void onSuccess(BaseResponse response) {
                         dismissHUD();
-                        if (type.equals(RadioRecycleType_Topical)) {
-                            ToastUtils.showShort(((ProgramItemViewModel) radioItems.get(posion)).topicalListEntityObservableField.get().getBroadcast().getIsComment() == 1 ? StringUtils.getString(R.string.playfun_open_comment_success) : StringUtils.getString(R.string.playfun_close_success));
-                            ((ProgramItemViewModel) radioItems.get(posion)).topicalListEntityObservableField.get().getBroadcast().setIsComment(
-                                    ((ProgramItemViewModel) radioItems.get(posion)).topicalListEntityObservableField.get().getBroadcast().getIsComment() == 0 ? 1 : 0);
-                        } else {
+                        if (type.equals(RadioRecycleType_New)){
                             ToastUtils.showShort(((TrendItemViewModel) radioItems.get(posion)).newsEntityObservableField.get().getBroadcast().getIsComment() == 1 ? StringUtils.getString(R.string.playfun_open_comment_success) : StringUtils.getString(R.string.playfun_close_success));
                             ((TrendItemViewModel) radioItems.get(posion)).newsEntityObservableField.get().getBroadcast().setIsComment(
                                     ((TrendItemViewModel) radioItems.get(posion)).newsEntityObservableField.get().getBroadcast().getIsComment() == 0 ? 1 : 0);
@@ -868,24 +714,47 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
                 });
     }
 
-    //删除节目
-    public void deleteTopical(int posion) {
-        model.deleteTopical(((ProgramItemViewModel) radioItems.get(posion)).topicalListEntityObservableField.get().getId())
+    //拨打语音、视频
+    public void getCallingInvitedInfo(int callingType, String IMUserId, String toIMUserId) {
+        if(callingType==1){
+            //男女点击拨打语音
+            AppContext.instance().logEvent(ConfigManager.getInstance().isMale() ? AppsFlyerEvent.call_voice_male : AppsFlyerEvent.call_voice_female);
+        }else{
+            //男女点击拨打视频
+            AppContext.instance().logEvent(ConfigManager.getInstance().isMale() ? AppsFlyerEvent.call_video_male : AppsFlyerEvent.call_video_female);
+        }
+        model.callingInviteInfo(callingType, IMUserId, toIMUserId, 0)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
                 .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseResponse>() {
+                .subscribe(new BaseObserver<BaseDataResponse<CallingInviteInfo>>() {
                     @Override
-                    public void onSuccess(BaseResponse response) {
-                        dismissHUD();
-                        radioItems.remove(posion);
-                        try {
-                            GSYVideoManager.releaseAllVideos();
-                        } catch (Exception e) {
-
+                    public void onSuccess(BaseDataResponse<CallingInviteInfo> callingInviteInfoBaseDataResponse) {
+                        if (callingInviteInfoBaseDataResponse.getCode() == 2) {//對方忙線中
+                            radioUC.otherBusy.call();
+                            return;
+                        }
+                        if (callingInviteInfoBaseDataResponse.getCode() == 22001) {//游戏中
+                            Toast.makeText(AppContext.instance(), R.string.playfun_in_game, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        CallingInviteInfo callingInviteInfo = callingInviteInfoBaseDataResponse.getData();
+                        if (callingInviteInfo != null) {
+                            Utils.tryStartCallSomeone(callingType, toIMUserId, callingInviteInfo.getRoomId(), new Gson().toJson(callingInviteInfo));
                         }
                     }
+
+                    @Override
+                    public void onError(RequestException e) {
+                        super.onError(e);
+                        if (e != null) {
+                            if (e.getCode() == 1) {
+                                radioUC.sendDialogViewEvent.call();
+                            }
+                        }
+                    }
+
 
                     @Override
                     public void onComplete() {
@@ -895,22 +764,29 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
     }
 
 
+
+
+
     public class UIChangeObservable {
         public SingleLiveEvent clickMore = new SingleLiveEvent<>();
         public SingleLiveEvent clickLike = new SingleLiveEvent<>();
         public SingleLiveEvent clickComment = new SingleLiveEvent<>();
-        public SingleLiveEvent clickSignUp = new SingleLiveEvent<>();
-        public SingleLiveEvent clickCheck = new SingleLiveEvent<>();
-        public SingleLiveEvent programSubject = new SingleLiveEvent<>();
         public SingleLiveEvent clickImage = new SingleLiveEvent<>();
-        public SingleLiveEvent<Boolean> loadLast = new SingleLiveEvent<>();
         //追踪的人消息列表清空
         public SingleLiveEvent<Boolean> emptyLayoutShow = new SingleLiveEvent<>();
         public SingleLiveEvent<String> zoomInp = new SingleLiveEvent<>();
-        public SingleLiveEvent<List<RadioTwoFilterItemEntity>> getRadioTwoFilterItemEntity = new SingleLiveEvent<>();
-
+        //选择位置
+        public SingleLiveEvent<Void> clickRegion = new SingleLiveEvent<>();
+        //选择查询条目；追踪的人、男、女
+        public SingleLiveEvent<Void> clickTacking = new SingleLiveEvent<>();
+        //对方忙线
+        public SingleLiveEvent otherBusy = new SingleLiveEvent<>();
+        //钻石不足。唤起充值
+        public SingleLiveEvent<Void> sendDialogViewEvent = new SingleLiveEvent<>();
+        //点击切换banner
+        public SingleLiveEvent<Integer> clickBannerIdx = new SingleLiveEvent<>();
+        //开始播放banner
+        public SingleLiveEvent<Void> startBannerEvent = new SingleLiveEvent<>();
     }
-    /*=====谷歌支付核心代码=====*/
-
 
 }

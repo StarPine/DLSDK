@@ -11,10 +11,12 @@ public class CustomMessageData implements Serializable {
     final static int TYPE_RED_PACKAGE = 1003;
     // 钻石红包
     final static int TYPE_COIN_RED_PACKAGE = 1004;
+    //图片消息
+    final static int TYPE_CUSTOM_IMAGE = 2001;
 
     int type = 0;
 
-    private int senderUserID;
+    private String senderUserID;
 
     private String msgId;
     private Integer id;
@@ -27,6 +29,10 @@ public class CustomMessageData implements Serializable {
     private int number;
 
     private String imgPath;
+
+    //提供给ios用
+    private float imgWidth;
+    private float imgHeight;
 
     private CustomMessageData() {
     }
@@ -57,11 +63,18 @@ public class CustomMessageData implements Serializable {
         return customMessageData;
     }
 
-    public int getSenderUserID() {
+    public static CustomMessageData genCustomMessage(String imgPath, int type_custom) {
+        CustomMessageData customMessageData = new CustomMessageData();
+        customMessageData.setType(type_custom);
+        customMessageData.setImgPath(imgPath);
+        return customMessageData;
+    }
+
+    public String getSenderUserID() {
         return senderUserID;
     }
 
-    public void setSenderUserID(int senderUserID) {
+    public void setSenderUserID(String senderUserID) {
         this.senderUserID = senderUserID;
     }
 
@@ -135,5 +148,21 @@ public class CustomMessageData implements Serializable {
 
     public void setImgPath(String imgPath) {
         this.imgPath = imgPath;
+    }
+
+    public float getImgWidth() {
+        return imgWidth;
+    }
+
+    public void setImgWidth(float imgWidth) {
+        this.imgWidth = imgWidth;
+    }
+
+    public float getImgHeight() {
+        return imgHeight;
+    }
+
+    public void setImgHeight(float imgHeight) {
+        this.imgHeight = imgHeight;
     }
 }

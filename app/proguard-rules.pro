@@ -25,12 +25,12 @@
 -packageobfuscationdictionary bt-proguard.txt
 #------------------------------------------主项目混淆规则----------------------------------------------
 #实体类不参与混淆
--keep class com.dl.play.chat.entity.** { *; }
--keep class com.dl.play.chat.widget.** { *; }
--keep class com.dl.play.chat.data.** { *; }
--keep class com.dl.play.chat.app.** { *; }
--keep class com.dl.play.chat.viewmodel.** { *; }
--keep class com.dl.play.chat.ui.** { *; }
+-keep class com.dl.playfun.entity.** { *; }
+-keep class com.dl.playfun.widget.** { *; }
+-keep class com.dl.playfun.data.** { *; }
+-keep class com.dl.playfun.app.** { *; }
+-keep class com.dl.playfun.viewmodel.** { *; }
+-keep class com.dl.playfun.ui.** { *; }
 #腾讯
 -keep class com.tencent.** { *; }
 
@@ -422,3 +422,4 @@
 -keep class com.google.**{*;}
 -keep class com.facebook.**{*;}
 -keep class com.appsflyer.**{*;}
+-keep class com.faceunity.**{*;}

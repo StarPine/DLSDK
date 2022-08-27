@@ -3,6 +3,7 @@ package com.dl.playfun.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
@@ -10,10 +11,12 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Base64;
 import android.util.Log;
 
 import com.blankj.utilcode.util.DeviceUtils;
+import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.Utils;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
@@ -30,6 +33,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -53,6 +57,7 @@ import okhttp3.RequestBody;
  * @Version 1.0
  **/
 public class ApiUitl {
+    private static List<Field> sMetricsFields;
     public static boolean isShow = false;
     public static boolean issendMessageTag = false;
     public static AddressEntity $address = null;
@@ -78,17 +83,6 @@ public class ApiUitl {
     }
 
     /**
-    * @Desc TODO(封装请求体转化为RequestBody)
-    * @author 彭石林
-    * @parame [body]
-    * @return okhttp3.RequestBody
-    * @Date 2022/1/14
-    */
-    public static RequestBody getBody(String body){
-        return RequestBody.create(MediaType.parse("application/json; charset=utf-8"),body);
-    }
-
-    /**
      * 判断字符串中是否包含中文
      *
      * @param str 待校验字符串
@@ -102,6 +96,17 @@ public class ApiUitl {
         Pattern p = Pattern.compile("[\u4e00-\u9fa5]");
         Matcher m = p.matcher(str);
         return m.find();
+    }
+
+    /**
+     * @return okhttp3.RequestBody
+     * @Desc TODO(封装请求体转化为RequestBody)
+     * @author 彭石林
+     * @parame [body]
+     * @Date 2022/1/14
+     */
+    public static RequestBody getBody(String body) {
+        return RequestBody.create(MediaType.parse("application/json; charset=utf-8"), body);
     }
 
     /**
@@ -237,22 +242,6 @@ public class ApiUitl {
         return beginTime.getTime() <= nowTime.getTime() && nowTime.getTime() <= endTime.getTime();
     }
 
-    //修改收获地址
-    public static void updateAddress(AddressEntity entity) {
-        AppContext.instance().appRepository.updateAddress(entity.getId(), entity.getContacts(), entity.getCity(), entity.getAre(), entity.getAddress(), entity.getPhone(), entity.getIsDefault())
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .subscribe(new BaseObserver<BaseResponse>() {
-                    @Override
-                    public void onSuccess(BaseResponse baseResponse) {
-                    }
-
-                    @Override
-                    public void onComplete() {
-                    }
-                });
-    }
-
     /**
      * @return java.lang.String
      * @Desc TODO(获取Assets目录下的文件)
@@ -328,14 +317,35 @@ public class ApiUitl {
                 // 插入图库
                 //MediaStore.Images.Media.insertImage(context.getContentResolver(), file.getAbsolutePath(), bitName, null);
             }
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-
         }
         // 发送广播，通知刷新图库的显示
         context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + fileName)));
+    }
+
+    /*
+     * 保存文件，文件名为当前日期
+     */
+    public static void saveBitmap(Bitmap bitmap, String fileName, SaveBitmapListener saveBitmapListener) {
+        File file;
+        file = new File(fileName);
+        if (file.exists()) {
+            file.delete();
+        }
+        FileOutputStream out;
+        try {
+            out = new FileOutputStream(file);
+            // 格式为 JPEG，照相机拍出的图片为JPEG格式的，PNG格式的不能显示在相册中
+            if (bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)) {
+                out.flush();
+                out.close();
+                saveBitmapListener.saveCallback(true);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            saveBitmapListener.saveCallback(false);
+        }
     }
 
     //获取当前时间的缩写名
@@ -345,8 +355,23 @@ public class ApiUitl {
         return sdf.format(date);
     }
 
+    /**
+     * @param ctx
+     * @return
+     */
+    public static String getDiskCacheDir(Context ctx) {
+        File filesDir = ctx.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        if (filesDir == null) {
+            return "";
+        }
+        return filesDir.getPath();
+    }
+
     public interface CallBackUploadFileNameCallback {
         void success(String fileName);
     }
 
+    public interface SaveBitmapListener {
+        void saveCallback(boolean flag);
+    }
 }

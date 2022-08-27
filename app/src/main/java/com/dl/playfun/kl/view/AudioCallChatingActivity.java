@@ -6,79 +6,108 @@ import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.aliyun.svideo.common.utils.FastClickUtil;
 import com.blankj.utilcode.util.ColorUtils;
+import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
-import com.dl.playfun.entity.CoinExchangePriceInfo;
+import com.dl.playfun.databinding.ActivityCallAudioChatingBinding;
+import com.dl.playfun.entity.AudioCallingBarrageEntity;
+import com.dl.playfun.entity.CallingInfoEntity;
+import com.dl.playfun.entity.CrystalDetailsConfigEntity;
 import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.entity.GoodsEntity;
+import com.dl.playfun.entity.ShowFloatWindowEntity;
+import com.dl.playfun.event.CallChatingHangupEvent;
+import com.dl.playfun.kl.viewmodel.AudioCallChatingItemViewModel;
 import com.dl.playfun.kl.viewmodel.AudioCallChatingViewModel;
 import com.dl.playfun.manager.ConfigManager;
-import com.dl.playfun.utils.ImmersionBarUtils;
-import com.dl.playfun.utils.LogUtils;
-import com.dl.playfun.utils.StringUtil;
-import com.dl.playfun.utils.ToastCenterUtils;
-import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
-import com.dl.playfun.widget.dialog.MessageDetailDialog;
-import com.dl.playfun.widget.image.CircleImageView;
-import com.dl.playfun.R;
-import com.dl.playfun.databinding.ActivityCallAudioChatingBinding;
-import com.dl.playfun.kl.Utils;
+import com.dl.playfun.manager.LocaleManager;
 import com.dl.playfun.ui.dialog.GiftBagDialog;
+import com.dl.playfun.ui.mine.wallet.recharge.RechargeActivity;
+import com.dl.playfun.utils.AutoSizeUtils;
+import com.dl.playfun.utils.ImmersionBarUtils;
+import com.dl.playfun.utils.MiuiUtils;
+import com.dl.playfun.utils.StringUtil;
+import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
+import com.dl.playfun.widget.dialog.MessageDetailDialog;
+import com.dl.playfun.widget.dialog.TraceDialog;
+import com.dl.playfun.widget.image.CircleImageView;
+import com.google.gson.reflect.TypeToken;
 import com.opensource.svgaplayer.SVGACallback;
 import com.opensource.svgaplayer.SVGAImageView;
 import com.opensource.svgaplayer.SVGAParser;
 import com.opensource.svgaplayer.SVGASoundManager;
 import com.opensource.svgaplayer.SVGAVideoEntity;
 import com.tencent.coustom.GiftEntity;
+import com.tencent.liteav.trtccalling.TUICalling;
+import com.tencent.liteav.trtccalling.model.util.PermissionUtil;
+import com.tencent.liteav.trtccalling.ui.floatwindow.FloatWindowService;
+import com.tencent.qcloud.tuicore.Status;
+import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
+import com.tencent.qcloud.tuikit.tuichat.ui.view.MyImageSpan;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import me.goldze.mvvmhabit.base.BaseActivity;
-import me.jessyan.autosize.internal.CustomAdapt;
+import me.goldze.mvvmhabit.bus.RxBus;
+import me.goldze.mvvmhabit.utils.ToastUtils;
 import me.tatarka.bindingcollectionadapter2.BR;
 
-public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChatingBinding, AudioCallChatingViewModel> implements CustomAdapt, Ifinish {
+public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChatingBinding, AudioCallChatingViewModel> implements Ifinish {
 
-    private Integer fromUserId;
-    private Integer toUserId;
-    private Integer mRole;
+    private String barrageInfo;//弹幕数据
+    private String inviterImId;//邀請人id
+    private String receiverImId;//接收人id
+    private TUICalling.Role mRole;
     private Integer roomId;
     private Context mContext;
-    //是否拨打人
-    private boolean userCall = false;
-
+    //音频悬浮框
+    private AudioFloatCallView   mFloatView;
 
     private int mTimeCount;
+    private boolean isRestart;
     //每个10秒+1
     private int mTimeTen;
     private int minuteTime;
@@ -93,10 +122,36 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         }
     });
     private ObjectAnimator rotation;
+    private Timer timer;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocal(newBase));
+    }
+
+    /**
+     * 就算你在Manifest.xml设置横竖屏切换不重走生命周期。横竖屏切换还是会走这里
+
+     */
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        if(newConfig!=null){
+            LocaleManager.setLocal(this);
+        }
+        super.onConfigurationChanged(newConfig);
+        LocaleManager.setLocal(this);
+    }
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        LocaleManager.setLocal(this);
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
+        FloatWindowService.stopService(this);
+        AppContext.isCalling = true;
         ImmersionBarUtils.setupStatusBar(this, false, true);
     }
 
@@ -108,6 +163,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
 
     @Override
     public int initContentView(Bundle savedInstanceState) {
+        AutoSizeUtils.applyAdapt(this.getResources());
         return R.layout.activity_call_audio_chating;
     }
 
@@ -126,32 +182,143 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
     @Override
     public void initParam() {
         super.initParam();
+        //防窥屏
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+        //屏幕常亮
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        Status.mCallStatus = Status.CALL_STATUS.ACCEPT;
         SVGASoundManager.INSTANCE.init();
         SVGAParser.Companion.shareParser().init(this);
         mContext = this;
         Intent intent = getIntent();
-        fromUserId = intent.getIntExtra("fromUserId", 0);
-        toUserId = intent.getIntExtra("toUserId", 0);
-        mRole = intent.getIntExtra("mRole", 0);
+        inviterImId = intent.getStringExtra("fromUserId");
+        receiverImId = intent.getStringExtra("toUserId");
+        mRole = (TUICalling.Role)intent.getExtras().get("mRole");
         roomId = intent.getIntExtra("roomId", 0);
-        userCall = intent.getBooleanExtra("userCall",false);
+        mTimeCount = intent.getIntExtra("timeCount", 0);
+        isRestart = intent.getBooleanExtra("isRestart", false);
+        barrageInfo = intent.getStringExtra("audioCallingBarrage");
+
     }
 
     @Override
     public void initData() {
         super.initData();
+        hideExchangeRules();
         giftEffects = binding.giftEffects;
+        if (isRestart){
+            viewModel.tipSwitch.set(false);
+            viewModel.TimeCount = mTimeCount;
+            TimeCallMessage();
+            setTimerForCallinfo();
+            loadBarrageInfo();
+        }
         viewModel.init(this);
         viewModel.roomId = roomId;
-        viewModel.fromUserId = fromUserId;
-        viewModel.toUserId = toUserId;
-        viewModel.userCall = userCall;
-        viewModel.getCallingInfo(roomId, fromUserId, toUserId);
+        viewModel.fromUserId = inviterImId;
+        viewModel.toUserId = receiverImId;
+        viewModel.getCallingInfo(roomId, inviterImId, receiverImId);
+    }
+
+    /**
+     * 解析弹幕数据
+     * @param json
+     * @return
+     */
+    public List<AudioCallingBarrageEntity> getAudioCallingBarrageInfo(String json) {
+        if (json == null) {
+            return new ArrayList<>();
+        } else if (json.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<AudioCallingBarrageEntity> list = GsonUtils.fromJson(json, new TypeToken<List<AudioCallingBarrageEntity>>() {
+        }.getType());
+        return list;
+    }
+
+    /**
+     * 加载弹幕数据
+     */
+    private void loadBarrageInfo() {
+        ForegroundColorSpan blueSpanWhite = new ForegroundColorSpan(ColorUtils.getColor(R.color.white));
+        List<AudioCallingBarrageEntity> audioCallingBarrageInfo = getAudioCallingBarrageInfo(barrageInfo);
+        for (AudioCallingBarrageEntity barrageEntity : audioCallingBarrageInfo) {
+            SpannableString itemtext = new SpannableString(barrageEntity.getItemText());
+            itemtext.setSpan(blueSpanWhite, 0, barrageEntity.getItemText().length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            if (barrageEntity.getItemText().startsWith("C+")){
+                itemtext.setSpan(new MyImageSpan(getApplication(),R.drawable.icon_crystal),0,1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            AudioCallChatingItemViewModel audioCallChatingItemViewModel = new AudioCallChatingItemViewModel(viewModel,itemtext , barrageEntity.getImgPath(), barrageEntity.isSendGiftBag());
+            viewModel.observableList.add(audioCallChatingItemViewModel);
+        }
+    }
+
+    //开启悬浮窗
+    private boolean startFloatService() {
+        if (isFinishing() || isDestroyed()) {
+            return true;
+        }
+        if (Status.mIsShowFloatWindow) {
+            return true;
+        }
+        if (MiuiUtils.checkFloatWindowPermission(this)) {
+            mFloatView = createFloatView();
+            if (mFloatView == null){
+                return true;
+            }
+            FloatWindowService.startFloatService(this, mFloatView);
+            RxBus.getDefault().post(new ShowFloatWindowEntity(true));
+        }
+        return false;
+    }
+
+    //创建悬浮窗视图
+    private AudioFloatCallView createFloatView() {
+        String[] userIds = new String[]{receiverImId};
+        if (viewModel.leftUserInfoField.get() == null){
+            return null;
+        }
+        ArrayList<AudioCallingBarrageEntity> audioCallChatingItemViewModelList = new ArrayList<>();
+        for (AudioCallChatingItemViewModel audioCallChatingItemViewModel : viewModel.observableList) {
+            SpannableString itemText = audioCallChatingItemViewModel.itemText.get();
+            String imgPath = audioCallChatingItemViewModel.imgPath.get();
+            boolean sendGiftBag = audioCallChatingItemViewModel.sendGiftBag.get();
+            AudioCallingBarrageEntity audioCallingBarrageEntity = new AudioCallingBarrageEntity(itemText.toString(),imgPath,sendGiftBag);
+            audioCallChatingItemViewModelList.add(audioCallingBarrageEntity);
+        }
+        return new AudioFloatCallView(this, mRole, TUICalling.Type.AUDIO, userIds, inviterImId,
+                null, false,viewModel.leftUserInfoField.get(),mTimeCount,roomId, audioCallChatingItemViewModelList);
+    }
+
+    private void requestSettingCanDrawOverlays() {
+        int sdkInt = Build.VERSION.SDK_INT;
+        if (sdkInt >= Build.VERSION_CODES.O) {//8.0以上
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
+            startActivity(intent);
+        } else if (sdkInt >= Build.VERSION_CODES.M) {//6.0-8.0
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
+            intent.setData(Uri.parse("package:" + getPackageName()));
+            startActivity(intent);
+        } else {//4.4-6.0以下
+            //无需处理了
+        }
     }
 
     @Override
     public void initViewObservable() {
         super.initViewObservable();
+        binding.ivMinimize.setOnClickListener(v -> {
+            if (!MiuiUtils.checkFloatWindowPermission(this)) {
+                requestSettingCanDrawOverlays();
+                ToastUtils.showLong(getString(R.string.playfun_float_permission));
+                return;
+            }
+            boolean isError = startFloatService();
+            if (!isError){
+                finish();
+                overridePendingTransition(0, R.anim.anim_zoom_out);
+            }
+        });
         //公屏消息滚动到底部
         viewModel.uc.scrollToEnd.observe(this, new Observer<Void>() {
             @Override
@@ -159,15 +326,28 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                 binding.rcvLayout.scrollToPosition(viewModel.adapter.getItemCount() - 1);
             }
         });
+        //水晶兑换规则
+        viewModel.uc.clickCrystalExchange.observe(this, data -> {
+            TraceDialog.getInstance(AudioCallChatingActivity.this)
+                    .setConfirmOnlick(new TraceDialog.ConfirmOnclick() {
+                        @Override
+                        public void confirm(Dialog dialog) {
+                            ConfigManagerUtil.getInstance().putExchangeRulesFlag(true);
+                            viewModel.isHideExchangeRules.set(true);
+                        }
+                    })
+                    .getCrystalExchange(data)
+                    .show();
+        });
 
         //破冰文案刷新動畫
         viewModel.uc.startUpSayHiAnimotor.observe(this, new Observer<Void>() {
             @Override
             public void onChanged(Void unused) {
-                if (rotation == null){
+                if (rotation == null) {
                     rotation = ObjectAnimator.ofFloat(binding.ivUpSayHi, "rotation", 0.0F, 360.0F);
                 }
-                if (!rotation.isRunning()){
+                if (!rotation.isRunning()) {
 //                    rotation.setRepeatMode(ValueAnimator.RESTART);
 //                    rotation.setRepeatCount(-1);
                     rotation.addListener(new AnimatorListenerAdapter() {
@@ -195,6 +375,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         viewModel.uc.acceptUserGift.observe(this, new Observer<GiftEntity>() {
             @Override
             public void onChanged(GiftEntity giftEntity) {
+                viewModel.getCallingStatus(roomId);
                 int account = giftEntity.getAmount();
                 //启动SVG动画
                 startAcceptSVGAnimotion(giftEntity);
@@ -222,14 +403,11 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         viewModel.uc.callAudioStart.observe(this, new Observer<Void>() {
             @Override
             public void onChanged(Void unused) {
-                //进入房间提示
-                String call_message_deatail_hint = StringUtils.getString(R.string.playfun_call_message_deatail_hint);
-                SpannableString stringBuilder = new SpannableString(call_message_deatail_hint);
-                ForegroundColorSpan blueSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint));
-                stringBuilder.setSpan(blueSpan, 0, call_message_deatail_hint.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                viewModel.putRcvItemMessage(stringBuilder, null, false);
                 //开始记时
-                TimeCallMessage();
+                if (!isRestart){
+                    TimeCallMessage();
+                    setTimerForCallinfo();
+                }
             }
         });
         //钻石不足充值弹窗
@@ -237,64 +415,38 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
 
             @Override
             public void onChanged(Boolean isGiftSend) {
-//                ChatDetailCoinRechargeSheetView coinRechargeSheetView = new ChatDetailCoinRechargeSheetView(AudioCallChatingActivity.this, null, 0, isGiftSend, true);
+                toRecharge();
+//                GameCoinExchargeSheetView coinRechargeSheetView = new GameCoinExchargeSheetView(AudioCallChatingActivity.this);
+//                coinRechargeSheetView.setCallMedia(true);
+//                coinRechargeSheetView.setMaleBalance(viewModel.maleBalanceMoney);
 //                coinRechargeSheetView.show();
-//                coinRechargeSheetView.setCoinRechargeSheetViewListener(new ChatDetailCoinRechargeSheetView.CoinRechargeSheetViewListener() {
+//                coinRechargeSheetView.setCoinRechargeSheetViewListener(new GameCoinExchargeSheetView.CoinRechargeSheetViewListener() {
 //                    @Override
-//                    public void onPaySuccess(ChatDetailCoinRechargeSheetView sheetView, GoodsEntity sel_goodsEntity) {
+//                    public void onPaySuccess(GameCoinExchargeSheetView sheetView, CoinExchangePriceInfo sel_goodsEntity) {
 //                        sheetView.dismiss();
-//                        int actualValue = sel_goodsEntity.getActualValue().intValue();
-//                        viewModel.coinBalance += actualValue;
-//                        viewModel.maleBalanceMoney += ((((viewModel.coinBalance + viewModel.unitPrice.intValue()) + actualValue) / viewModel.unitPrice.intValue()) * 60) - viewModel.TimeCount;
+//                        viewModel.getCallingStatus(roomId);
 //                    }
 //
 //                    @Override
-//                    public void onPayFailed(ChatDetailCoinRechargeSheetView sheetView, String msg) {
+//                    public void onPayFailed(GameCoinExchargeSheetView sheetView, String msg) {
 //                        sheetView.dismiss();
-//                        // do nothing
-//                        Log.e("IM充值失败", "=================");
 //                    }
 //                });
-
-                GameCoinExchargeSheetView coinRechargeSheetView = new GameCoinExchargeSheetView(AudioCallChatingActivity.this);
-                coinRechargeSheetView.setCallMedia(true);
-                coinRechargeSheetView.setMaleBalance(viewModel.coinBalance);
-                coinRechargeSheetView.show();
-                coinRechargeSheetView.setCoinRechargeSheetViewListener(new GameCoinExchargeSheetView.CoinRechargeSheetViewListener() {
-                    @Override
-                    public void onPaySuccess(GameCoinExchargeSheetView sheetView, CoinExchangePriceInfo sel_goodsEntity) {
-                        sheetView.dismiss();
-                        int actualValue = sel_goodsEntity.getCoins().intValue();
-                        viewModel.coinBalance += actualValue;
-                        viewModel.maleBalanceMoney += ((((viewModel.coinBalance + viewModel.unitPrice.intValue()) + actualValue) / viewModel.unitPrice.intValue()) * 60) - viewModel.TimeCount;
-                    }
-
-                    @Override
-                    public void onPayFailed(GameCoinExchargeSheetView sheetView, String msg) {
-                        sheetView.dismiss();
-                    }
-                });
             }
         });
         //发送礼物弹窗
         viewModel.uc.callGiftBagAlert.observe(this, new Observer<Void>() {
             @Override
             public void onChanged(Void unused) {
-                GiftBagDialog giftBagDialog = new GiftBagDialog(mContext, true, viewModel.coinBalance, viewModel.unitPriceList.size() > 1 ? 3 : 0);
+                if (viewModel.unitPriceList == null || viewModel.maleBalanceMoney == 0){
+                    return;
+                }
+                GiftBagDialog giftBagDialog = new GiftBagDialog(mContext, true, viewModel.maleBalanceMoney, viewModel.unitPriceList.size() > 1 ? 3 : 0);
                 giftBagDialog.setGiftOnClickListener(new GiftBagDialog.GiftOnClickListener() {
                     @Override
                     public void sendGiftClick(Dialog dialog, int number, GiftBagEntity.giftEntity giftEntity) {
+                        dialog.dismiss();
                         AppContext.instance().logEvent(AppsFlyerEvent.voicecall_send_gift);
-                        if (viewModel.userCall) {
-                            //男生情况下。钻石减去送礼物的价格少于0==余额不足。不允许发送
-                            if (viewModel.coinBalance - (giftEntity.getMoney().intValue() * number) < 0) {
-                                AppContext.instance().logEvent(AppsFlyerEvent.voicecall_gift_Ins_topup);
-                                dialog.dismiss();
-                                ToastCenterUtils.showToast(R.string.playfun_dialog_exchange_integral_total_text1);
-                                viewModel.uc.sendUserGiftError.postValue(true);
-                                return;
-                            }
-                        }
                         viewModel.sendUserGift(dialog, giftEntity, viewModel.leftUserInfoField.get().getId(), number);
                     }
 
@@ -308,6 +460,53 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                 giftBagDialog.show();
             }
         });
+    }
+
+    /**
+     * 去充值
+     */
+    private void toRecharge() {
+        CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(this);
+        coinRechargeFragmentView.setClickListener(new CoinRechargeSheetView.ClickListener() {
+            @Override
+            public void paySuccess(GoodsEntity goodsEntity) {
+                viewModel.getCallingStatus(roomId);
+            }
+        });
+        coinRechargeFragmentView.show();
+    }
+
+    /**
+     * 隐藏水晶兑换规则弹框
+     */
+    private void hideExchangeRules() {
+        CrystalDetailsConfigEntity crystalDetailsConfig = ConfigManager.getInstance().getAppRepository().readCrystalDetailsConfig();
+        boolean isHideExchangeRules = ConfigManagerUtil.getInstance().getExchangeRulesFlag();
+        boolean isMale = ConfigManager.getInstance().isMale();
+        if (isMale){
+            if (crystalDetailsConfig.getMaleIsShow() != 1 || isHideExchangeRules){
+                viewModel.isHideExchangeRules.set(true);
+            }else {
+                viewModel.isHideExchangeRules.set(false);
+            }
+        }else {
+            if (crystalDetailsConfig.getFemaleIsShow() != 1 || isHideExchangeRules){
+                viewModel.isHideExchangeRules.set(true);
+            }else {
+                viewModel.isHideExchangeRules.set(false);
+            }
+        }
+    }
+
+    private void setTimerForCallinfo() {
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+
+            @Override
+            public void run() {
+                viewModel.getCallingStatus(roomId);
+            }
+        }, 1000,10000);
     }
 
     private void startAcceptBannersAnimotion(GiftEntity giftEntity, int account) {
@@ -376,12 +575,14 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
             });
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             layoutParams.leftMargin = dip2px(14);
-            layoutParams.topMargin = dip2px(279);
+            layoutParams.topMargin = dip2px(249);
             streamerView.setLayoutParams(layoutParams);
             binding.mainView.addView(streamerView);
             streamerView.startAnimation(animation);
         }
     }
+
+
 
     private void startAcceptHeadAnimotion(GiftEntity giftEntity) {
         ImageView giftImageTrans = new ImageView(mContext);
@@ -526,7 +727,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
             });
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             layoutParams.leftMargin = dip2px(14);
-            layoutParams.topMargin = dip2px(279);
+            layoutParams.topMargin = dip2px(249);
             streamerView.setLayoutParams(layoutParams);
             binding.mainView.addView(streamerView);
             streamerView.startAnimation(animation);
@@ -639,111 +840,91 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
             public void run() {
                 mTimeCount++;
                 viewModel.TimeCount++;
-                viewModel.timeTextField.set(mContext.getString(R.string.playfun_call_message_deatail_time_msg, mTimeCount / 60, mTimeCount % 60));
+                viewModel.timeTextField.set(mContext.getString(R.string.playfun_call_message_deatail_time_msg, mTimeCount/3600, mTimeCount / 60, mTimeCount % 60));
+                if (mTimeCount>=5){viewModel.tipSwitch.set(false);}
+                if (mTimeCount % 10 == 0){
+                    viewModel.getRoomStatus(roomId);
+                }
                 if (!viewModel.sayHiEntityHidden.get() && mTimeCount % 10 == 0) {
                     //没10秒更新一次破冰文案
                     viewModel.getSayHiList();
                 }
-                if (viewModel.userCall) {//拨打人
-                    if (mTimeCount == 120 && !viewModel.sendGiftBagSuccess) {//两分钟
-                        String maleTextSendGift = StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt16);
-                        SpannableString itemMessageBuilder = new SpannableString(maleTextSendGift);
-                        itemMessageBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, maleTextSendGift.length() - 5, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        itemMessageBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint1)), maleTextSendGift.length() - 5, maleTextSendGift.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        //if (ConfigManager.getInstance().getTipMoneyShowFlag()) {
-                        viewModel.putRcvItemMessage(itemMessageBuilder, null, true);
-                        //}
-                    }
-                    if (!viewModel.flagMoney) {
-                        //免费聊天卡
-                        if (viewModel.unitPriceList.size() > 1 && viewModel.maleBalanceMoney == 0) {
-                            viewModel.unitPrice = viewModel.unitPriceList.get(1).getUnitPrice();
-                            viewModel.fromMinute = viewModel.unitPriceList.get(1).getFromMinute();
-                            //每秒扣费
-                            viewModel.timePrice = viewModel.unitPrice.divide(BigDecimal.valueOf(60), 2, BigDecimal.ROUND_HALF_UP);
-                            viewModel.maleBalanceMoney = (viewModel.coinBalance.intValue() / viewModel.unitPrice.intValue()) * 60;
-                            viewModel.maleBalanceMoney += 60;
-                        }
-                        if (viewModel.unitPrice.intValue() != 0) {//免费卡
-                            if (viewModel.maleBalanceMoney == 0) {
-                                viewModel.maleBalanceMoney = (viewModel.coinBalance.intValue() / viewModel.unitPrice.intValue()) * 60;
-                                viewModel.coinBalance = viewModel.coinBalance - viewModel.unitPrice.intValue();
-                                viewModel.$coinBalance += viewModel.unitPrice.intValue();
+                if (viewModel.callInfoLoaded){
+                    if (viewModel.isMale) {//男
+                        if (viewModel.totalMinutesRemaining <= viewModel.balanceNotEnoughTipsMinutes * 60) {
+                            viewModel.totalMinutesRemaining--;
+                            if (viewModel.totalMinutesRemaining < 0) {
+                                viewModel.hangup();
+                                return;
                             }
-                            if ((viewModel.maleBalanceMoney) <= viewModel.balanceNotEnoughTipsMinutes.intValue() * 60) {
-                                String minute = StringUtils.getString(R.string.playfun_minute);
-                                String textHint = (viewModel.maleBalanceMoney / 60) + minute + (viewModel.maleBalanceMoney % 60);
-                                String txt = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt14), textHint);
-                                viewModel.maleTextMoneyField.set(txt);
-//                                if (!ConfigManager.getInstance().isMale()){
-//                                    viewModel.maleTextLayoutSHow.set(true);
-//                                }
-                                viewModel.flagMoney = true;
+                            String minute = StringUtils.getString(R.string.playfun_minute);
+                            String textHint = (viewModel.totalMinutesRemaining / 60) + minute + (viewModel.totalMinutesRemaining % 60);
+                            String txt = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt14), textHint);
+                            viewModel.maleTextMoneyField.set(txt);
+                            if (!viewModel.flagMoneyNotWorth) {
+                                moneyNoWorthSwich(true);
+                            }
+
+                        }else{
+                            if (viewModel.flagMoneyNotWorth) {
+                                moneyNoWorthSwich(false);
                             }
                         }
-                    }
+                    } else {//女性
+                        if (ConfigManager.getInstance().getTipMoneyShowFlag()) {
+                            if (!viewModel.isShowCountdown.get() && viewModel.payeeProfits > 0) {//对方余额不足没有展示
+                                if (!viewModel.girlEarningsField.get()){
+                                    viewModel.girlEarningsField.set(true);
+                                }
+                                String profit = viewModel.payeeProfits + "";
+                                String girlEarningsTex = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt), profit);
+                                SpannableString stringBuilder = new SpannableString(girlEarningsTex);
+                                ForegroundColorSpan blueSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint1));
+                                int index = girlEarningsTex.indexOf(profit);
+                                stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, girlEarningsTex.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                stringBuilder.setSpan(blueSpan, index, index + profit.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                viewModel.girlEarningsText.set(stringBuilder);
+                            }
 
-                    if (viewModel.flagMoney) {
-                        viewModel.maleBalanceMoney--;
-                        String minute = StringUtils.getString(R.string.playfun_minute);
-                        String textHint = (viewModel.maleBalanceMoney / 60) + minute + (viewModel.maleBalanceMoney % 60);
-                        String txt = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt14), textHint);
-                        viewModel.maleTextMoneyField.set(txt);
-                        if (viewModel.maleBalanceMoney <= 0) {
-                            viewModel.hangup();
-                            return;
-                        }
-                    }
-
-                    if (mTimeCount == (viewModel.fromMinute * 60)) {
-                        viewModel.formSelIndex++;
-                        if (viewModel.formSelIndex == viewModel.unitPriceList.size()) {
-                            viewModel.coinBalance = viewModel.coinBalance - viewModel.unitPrice.intValue();
-                            viewModel.$coinBalance += viewModel.unitPrice.intValue();
-                        } else {
-                            viewModel.unitPrice = viewModel.unitPriceList.get(viewModel.formSelIndex).getUnitPrice();
-                            viewModel.fromMinute = viewModel.unitPriceList.get(viewModel.formSelIndex).getFromMinute();
-                            viewModel.coinBalance = viewModel.coinBalance - viewModel.unitPrice.intValue();
-                            viewModel.$coinBalance += viewModel.unitPrice.intValue();
-                        }
-                    }
-                } else {//接听人
-                    if (mTimeCount == (viewModel.fromMinute * 60)) {
-                        viewModel.formSelIndex++;
-                        if (viewModel.formSelIndex == viewModel.unitPriceList.size()) {
-                        } else {
-                            viewModel.unitPrice = viewModel.unitPriceList.get(viewModel.formSelIndex).getUnitPrice();
-                            viewModel.fromMinute = viewModel.unitPriceList.get(viewModel.formSelIndex).getFromMinute();
-                        }
-                    }
-                    if (viewModel.profitTipsIntervalSeconds != null && mTimeCount % viewModel.profitTipsIntervalSeconds == 0) {
-                        if (ConfigManager.getInstance().getTipMoneyShowFlag() && !ConfigManager.getInstance().isMale()) {
-                            viewModel.coinTotal = (viewModel.timePrice.multiply(BigDecimal.valueOf(10)));
-                            //收益提示框
-                            viewModel.girlEarningsField.set(false);
-                            mTimeTen++;
-                            String girlEarningsTex = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt), (viewModel.timePrice.multiply(BigDecimal.valueOf(mTimeTen * 10))));
-                            SpannableString stringBuilder = new SpannableString(girlEarningsTex);
-                            ForegroundColorSpan blueSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint1));
-                            stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, girlEarningsTex.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            stringBuilder.setSpan(blueSpan, girlEarningsTex.indexOf(": ")+1, girlEarningsTex.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            viewModel.girlEarningsText.set(stringBuilder);
                         }
                     }
                 }
+
                 mHandler.postDelayed(timerRunnable, 1000);
             }
         };
         mHandler.postDelayed(timerRunnable, 1000);
     }
 
+    /**
+     * 余额不足推送与显示
+     * @param isShow
+     */
+    private void moneyNoWorthSwich(boolean isShow) {
+        viewModel.flagMoneyNotWorth = isShow;
+        viewModel.maleTextLayoutSHow.set(isShow);
+        //通知女生男生这边余额不足
+            if (isShow){
+                viewModel.getTips(viewModel.leftUserInfoField.get().getId(),2,"1");
+            }else {
+                viewModel.getTips(viewModel.leftUserInfoField.get().getId(),2,"0");
+            }
+    }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        AppContext.isCalling = false;
+        //取消窥屏
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
+        //取消常亮
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         if (mHandler != null) {
             mHandler.removeCallbacks(timerRunnable);
             mHandler = null;
+        }
+        if (timer != null){
+            timer.cancel();
         }
     }
 
@@ -755,6 +936,10 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
 
     //返回按钮调用代码
     public void onBackViewCLick() {
+        if (viewModel.collected == null){
+            viewModel.hangup();
+            return;
+        }
         if (viewModel.isMale) {
             if (viewModel.collected == 1) {//已追踪
                 String title = StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt9);
@@ -809,17 +994,16 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
 
     @Override
     public void finishView() {
-        Utils.runOnUiThread(this::finish);
-    }
-
-    @Override
-    public boolean isBaseOnWidth() {
-        return true;
-    }
-
-    @Override
-    public float getSizeInDp() {
-        return 360;
+        //2秒最多发一次
+        if (!FastClickUtil.isFastCallFun("AudioCallChatingActivity")) {
+            RxBus.getDefault().post(new CallChatingHangupEvent());
+        }
+//        Utils.runOnUiThread(this::finish);
+        runOnUiThread(() -> {
+            finish();
+            overridePendingTransition(0, R.anim.anim_nomal);
+        });
+        RxBus.getDefault().post(new ShowFloatWindowEntity(false));
     }
 
     /**

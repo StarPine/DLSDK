@@ -92,6 +92,8 @@
                     binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
                     binding:imageThumbPath="@{viewModel.newsEntityObservableField.user.avatar}"
                     binding:onClickCommand="@{viewModel.avatarClick}"
+                    binding:resizeH="@{34}"
+                    binding:resizeW="@{34}"
                     tools:ignore="MissingConstraints" />
 
                 <TextView
@@ -126,7 +128,7 @@
 
                 <ImageView
                     android:id="@+id/certification"
-                    android:layout_width="14dp"
+                    android:layout_width="31dp"
                     android:layout_height="13dp"
                     android:layout_alignTop="@+id/tv_name"
                     android:layout_marginStart="7dp"

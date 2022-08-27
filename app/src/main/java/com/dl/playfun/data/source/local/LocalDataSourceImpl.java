@@ -2,9 +2,12 @@ package com.dl.playfun.data.source.local;
 
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.ObjectUtils;
+import com.dl.playfun.api.AppGameConfig;
+import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.data.source.LocalDataSource;
-import com.google.gson.reflect.TypeToken;
+import com.dl.playfun.entity.ApiConfigManagerEntity;
 import com.dl.playfun.entity.ConfigItemEntity;
+import com.dl.playfun.entity.CrystalDetailsConfigEntity;
 import com.dl.playfun.entity.EvaluateObjEntity;
 import com.dl.playfun.entity.GameConfigEntity;
 import com.dl.playfun.entity.LocalGooglePayCache;
@@ -15,6 +18,7 @@ import com.dl.playfun.entity.SystemConfigTaskEntity;
 import com.dl.playfun.entity.TokenEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.utils.StringUtil;
+import com.google.gson.reflect.TypeToken;
 import com.tencent.mmkv.MMKV;
 
 import java.util.ArrayList;
@@ -42,7 +46,10 @@ public class LocalDataSourceImpl implements LocalDataSource {
     private static final String KEY_PROGRAM_TIME_CONFIG = "key_program_time_config";
     private static final String KEY_HEIGHT_CONFIG = "key_height_config";
     private static final String KEY_WEIGHT_CONFIG = "key_weight_config";
+    private static final String KEY_IS_CHAT_PUSH = "key_is_chat_push";
+    private static final String KEY_SENSITIVE_WORDS = "key_sensitive_words";
     private static final String KEY_GAME_CONFIG = "key_game_config";
+    private static final String KEY_CRYSTAL_CONFIG = "key_crystal_config";
     private static final String KEY_REPORT_REASON_CONFIG = "key_report_reason_config";
     private static final String KEY_FAMALE_EVALUATE_CONFIG = "key_female_evaluate_config";
     private static final String KEY_MALE_EVALUATE_CONFIG = "key_male_evaluate_config";
@@ -55,9 +62,11 @@ public class LocalDataSourceImpl implements LocalDataSource {
     private static final String KEY_CHAT_MESSAGE_ISSOUND = "chat_message_isSound";
     private static final String KEY_CHAT_MESSAGE_ISSHAKE = "chat_message_isShake";
     private static final String KEY_DEFAULT_HOME_PAGE_NAME = "default_home_page_name";
+    private static final String KEY_API_CONFIG_MANAGER = "api_config_manager";
+    private static final String KEY_CITY_CONFIG_ALL = "key_city_config_all";
     private static final String KEY_IS_FIRST = "is_first";
     private volatile static LocalDataSourceImpl INSTANCE = null;
-    private final String cryptKey = "playfun@2020";
+    private final String cryptKey = "playfun@2022";
     private final MMKV kv = MMKV.mmkvWithID("cache", MMKV.SINGLE_PROCESS_MODE, cryptKey);
 
     private LocalDataSourceImpl() {
@@ -77,6 +86,26 @@ public class LocalDataSourceImpl implements LocalDataSource {
             }
         }
         return INSTANCE;
+    }
+
+    @Override
+    public void saveCityConfigAll(List<ConfigItemEntity> configs) {
+        String json = GsonUtils.toJson(configs);
+        kv.encode(KEY_CITY_CONFIG_ALL, json);
+
+    }
+
+    @Override
+    public List<ConfigItemEntity> readCityConfigAll() {
+        String json = kv.decodeString(KEY_CITY_CONFIG_ALL);
+        if (json == null) {
+            return new ArrayList<>();
+        } else if (json.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<ConfigItemEntity> list = GsonUtils.fromJson(json, new TypeToken<List<ConfigItemEntity>>() {
+        }.getType());
+        return list;
     }
 
     /**
@@ -121,6 +150,42 @@ public class LocalDataSourceImpl implements LocalDataSource {
 
     public static void destroyInstance() {
         INSTANCE = null;
+    }
+
+    @Override
+    public void saveApiConfigManager(ApiConfigManagerEntity apiConfigManager) {
+        if(ObjectUtils.isEmpty(apiConfigManager)){
+            return;
+        }
+        String json = GsonUtils.toJson(apiConfigManager);
+        kv.encode(KEY_API_CONFIG_MANAGER, json);
+    }
+
+    @Override
+    public ApiConfigManagerEntity readApiConfigManagerEntity() {
+        String json = kv.decodeString(KEY_API_CONFIG_MANAGER);
+        if (StringUtil.isEmpty(json)) {
+            return null;
+        }
+        return GsonUtils.fromJson(json, ApiConfigManagerEntity.class);
+    }
+
+    @Override
+    public void saveGameConfigSetting(AppGameConfig appGameConfig) {
+        if (ObjectUtils.isEmpty(appGameConfig)) {
+            return;
+        }
+        String json = GsonUtils.toJson(appGameConfig);
+        kv.encode(AppConfig.GAME_SOURCES_APP_CONFIG, json);
+    }
+
+    @Override
+    public AppGameConfig readGameConfigSetting() {
+        String json = kv.decodeString(AppConfig.GAME_SOURCES_APP_CONFIG);
+        if (StringUtil.isEmpty(json)) {
+            return null;
+        }
+        return GsonUtils.fromJson(json, AppGameConfig.class);
     }
 
     @Override
@@ -366,23 +431,14 @@ public class LocalDataSourceImpl implements LocalDataSource {
     }
 
     @Override
-    public void saveProgramTimeConfig(List<ConfigItemEntity> configs) {
-        String json = GsonUtils.toJson(configs);
-        boolean b = kv.encode(KEY_PROGRAM_TIME_CONFIG, json);
-        System.out.println(b);
+    public Boolean readChatPushStatus() {
+        int isChatPush = kv.decodeInt(KEY_IS_CHAT_PUSH);
+        return isChatPush == 1;
     }
 
     @Override
-    public List<ConfigItemEntity> readProgramTimeConfig() {
-        String json = kv.decodeString(KEY_PROGRAM_TIME_CONFIG);
-        if (json == null) {
-            return new ArrayList<>();
-        } else if (json.isEmpty()) {
-            return new ArrayList<>();
-        }
-        List<ConfigItemEntity> list = GsonUtils.fromJson(json, new TypeToken<List<ConfigItemEntity>>() {
-        }.getType());
-        return list;
+    public void saveChatPushStatus(int value) {
+        kv.encode(KEY_IS_CHAT_PUSH, value);
     }
 
     @Override
@@ -426,6 +482,26 @@ public class LocalDataSourceImpl implements LocalDataSource {
     }
 
     @Override
+    public List<String> readSensitiveWords() {
+        String json = kv.decodeString(KEY_SENSITIVE_WORDS);
+        if (json == null) {
+            return new ArrayList<>();
+        } else if (json.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<String> list = GsonUtils.fromJson(json, new TypeToken<List<String>>() {
+        }.getType());
+        return list;
+    }
+
+    @Override
+    public void saveSensitiveWords(List<String> configs) {
+        String json = GsonUtils.toJson(configs);
+        boolean b = kv.encode(KEY_SENSITIVE_WORDS, json);
+        System.out.println(b);
+    }
+
+    @Override
     public void saveGameConfig(List<GameConfigEntity> configs) {
         String json = GsonUtils.toJson(configs);
         boolean b = kv.encode(KEY_GAME_CONFIG, json);
@@ -443,6 +519,23 @@ public class LocalDataSourceImpl implements LocalDataSource {
         List<GameConfigEntity> list = GsonUtils.fromJson(json, new TypeToken<List<GameConfigEntity>>() {
         }.getType());
         return list;
+    }
+
+    @Override
+    public void saveCrystalDetailsConfig (CrystalDetailsConfigEntity configs) {
+        String json = GsonUtils.toJson(configs);
+        boolean b = kv.encode(KEY_CRYSTAL_CONFIG, json);
+        System.out.println(b);
+    }
+
+    @Override
+    public CrystalDetailsConfigEntity readCrystalDetailsConfig() {
+        String json = kv.decodeString(KEY_CRYSTAL_CONFIG);
+        if (json != null) {
+            CrystalDetailsConfigEntity crystalDetailsConfigEntity = GsonUtils.fromJson(json, CrystalDetailsConfigEntity.class);
+            return crystalDetailsConfigEntity;
+        }
+        return null;
     }
 
     @Override
@@ -508,7 +601,7 @@ public class LocalDataSourceImpl implements LocalDataSource {
 
     @Override
     public List<EvaluateObjEntity> readEvaluateConfig() {
-        if (readUserData() != null && readUserData().getSex() == 1) {
+        if (readUserData() != null && readUserData().getSex() != null && readUserData().getSex() == 1) {
             return readMaleEvaluateConfig();
         }
         return readFemaleEvaluateConfig();
@@ -550,26 +643,6 @@ public class LocalDataSourceImpl implements LocalDataSource {
             return new ArrayList<>();
         }
         List<OccupationConfigItemEntity> list = GsonUtils.fromJson(json, new TypeToken<List<OccupationConfigItemEntity>>() {
-        }.getType());
-        return list;
-    }
-
-    @Override
-    public void saveThemeConfig(List<ConfigItemEntity> configs) {
-        String json = GsonUtils.toJson(configs);
-        boolean b = kv.encode(KEY_THEME_CONFIG, json);
-        System.out.println(b);
-    }
-
-    @Override
-    public List<ConfigItemEntity> readThemeConfig() {
-        String json = kv.decodeString(KEY_THEME_CONFIG);
-        if (json == null) {
-            return new ArrayList<>();
-        } else if (json.isEmpty()) {
-            return new ArrayList<>();
-        }
-        List<ConfigItemEntity> list = GsonUtils.fromJson(json, new TypeToken<List<ConfigItemEntity>>() {
         }.getType());
         return list;
     }
@@ -648,17 +721,5 @@ public class LocalDataSourceImpl implements LocalDataSource {
     @Override
     public String readDefaultHomePageConfig() {
         return kv.decodeString(KEY_DEFAULT_HOME_PAGE_NAME, "home");
-    }
-
-    @Override
-    public void saveIsFrist(Boolean isFrist) {
-        boolean b = kv.encode(KEY_IS_FIRST, isFrist);
-        System.out.println(b);
-    }
-
-    @Override
-    public Boolean readIsFrist() {
-        Boolean isFrist = kv.decodeBool(KEY_IS_FIRST, true);
-        return isFrist;
     }
 }

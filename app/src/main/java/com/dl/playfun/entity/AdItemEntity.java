@@ -16,6 +16,7 @@ public class AdItemEntity {
     private String title;
     private String link;
     private String img;
+    private int type;
 
     public int getId() {
         return id;
@@ -47,5 +48,13 @@ public class AdItemEntity {
 
     public void setImg(String img) {
         this.img = img;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

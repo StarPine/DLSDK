@@ -17,20 +17,18 @@ import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.AlbumPhotoEntity;
+import com.dl.playfun.entity.ApiConfigManagerEntity;
 import com.dl.playfun.entity.BannerItemEntity;
 import com.dl.playfun.entity.BrowseNumberEntity;
 import com.dl.playfun.entity.EvaluateEntity;
-import com.dl.playfun.entity.MessageTagEntity;
 import com.dl.playfun.entity.SystemConfigTaskEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.entity.UserInfoEntity;
-import com.dl.playfun.entity.VersionEntity;
 import com.dl.playfun.event.AvatarChangeEvent;
 import com.dl.playfun.event.FaceCertificationEvent;
 import com.dl.playfun.event.MyPhotoAlbumChangeEvent;
 import com.dl.playfun.event.ProfileChangeEvent;
 import com.dl.playfun.event.RefreshUserDataEvent;
-import com.dl.playfun.event.TaskMainTabEvent;
 import com.dl.playfun.event.TraceEmptyEvent;
 import com.dl.playfun.event.VipRechargeSuccessEvent;
 import com.dl.playfun.helper.JumpHelper;
@@ -38,6 +36,9 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
 import com.dl.playfun.ui.mine.audio.TapeAudioFragment;
 import com.dl.playfun.ui.mine.broadcast.BroadcastFragment;
+import com.dl.playfun.ui.mine.exclusive.ExclusiveCallActivity;
+import com.dl.playfun.ui.mine.invitewebdetail.InviteWebDetailFragment;
+import com.dl.playfun.ui.mine.level.LevelEquityFragment;
 import com.dl.playfun.ui.mine.likelist.LikeListFragment;
 import com.dl.playfun.ui.mine.myphotoalbum.MyPhotoAlbumFragment;
 import com.dl.playfun.ui.mine.myphotoalbum.MyPhotoAlbumItemViewModel;
@@ -47,6 +48,7 @@ import com.dl.playfun.ui.mine.trace.TraceFragment;
 import com.dl.playfun.ui.mine.trace.man.TraceManFragment;
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
 import com.dl.playfun.ui.mine.wallet.WalletFragment;
+import com.dl.playfun.ui.mine.webview.WebViewFragment;
 import com.dl.playfun.utils.ChatUtils;
 import com.dl.playfun.utils.ExceptionReportUtils;
 import com.dl.playfun.utils.FileUploadUtils;
@@ -77,10 +79,6 @@ import me.goldze.mvvmhabit.utils.ToastUtils;
 public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
     //积分夺宝右侧提示
     public ObservableField<String> entryLabelLable = new ObservableField<>();
-    //推荐用户弹窗
-    public ObservableField<Boolean> isShowMessageTag = new ObservableField<>(false);
-    public ObservableField<MessageTagEntity> messageTagEntity = new ObservableField<>();
-    public ObservableField<String> countDownTimerUi = new ObservableField<>();
     //本地UserData
     public ObservableField<UserDataEntity> localUserDataEntity = new ObservableField<>();
     public ObservableField<BannerItemEntity> banner = new ObservableField<>();
@@ -100,16 +98,24 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
             start(EditProfileFragment.class.getCanonicalName()));
     //钱包按钮的点击事件
     public BindingCommand walletOnClickCommand = new BindingCommand(() -> {
-//        if (sex.get() != null && sex.get().intValue() == 1) {
-//            AppContext.instance().logEvent(AppsFlyerEvent.Wallet);
-//            start(CoinFragment.class.getCanonicalName());
-//        } else {
-//            start(WalletFragment.class.getCanonicalName());
-//        }
-        start(WalletFragment.class.getCanonicalName());
+            start(WalletFragment.class.getCanonicalName());
+    });
 
-    }
-    );
+    //点击等级权益
+    public BindingCommand levelEquityOnClickCommand = new BindingCommand(() -> {
+        start(LevelEquityFragment.class.getCanonicalName());
+    });
+     //点击主播中心
+    public BindingCommand anchorCenterOnClickCommand = new BindingCommand(() -> {
+         try {
+             Bundle bundle = new Bundle();
+             bundle.putString("link", model.readApiConfigManagerEntity().getPlayFunWebUrl() + "/anchor");
+             start(WebViewFragment.class.getCanonicalName(), bundle);
+         } catch (Exception e) {
+             e.printStackTrace();
+         }
+    });
+
     //我喜欢的按钮的点击事件
     public BindingCommand fondOnClickCommand = new BindingCommand(() -> {
         AppContext.instance().logEvent(AppsFlyerEvent.Following);
@@ -157,13 +163,32 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
         }
         ToastUtils.showShort(R.string.playfun_sex_unknown);
     });
-    //任务中心按钮的点击事件
-    public BindingCommand TaskCenterOnClickCommand = new BindingCommand(() -> {
-        if (model.readUserData().getSex() != null) {
-            //start(TaskCenterFragment.class.getCanonicalName());
-            RxBus.getDefault().post(new TaskMainTabEvent(false,true));
+    //邀请码按钮的点击事件
+    public BindingCommand invitationCodeOnClickCommand = new BindingCommand(() -> {
+        if (userInfoEntity.get() == null) {
+            return;
+        }
+        try {
+            ApiConfigManagerEntity apiConfigManagerEntity = ConfigManager.getInstance().getAppRepository().readApiConfigManagerEntity();
+            if(apiConfigManagerEntity!=null && apiConfigManagerEntity.getPlayChatApiUrl()!=null){
+                Bundle bundle = InviteWebDetailFragment.getStartBundle(apiConfigManagerEntity.getPlayChatApiUrl() + userInfoEntity.get().getInviteUrl(), userInfoEntity.get().getCode());
+                start(InviteWebDetailFragment.class.getCanonicalName(), bundle);
+            }
+        } catch (Exception e) {
+            ExceptionReportUtils.report(e);
         }
     });
+    //商店点击入口
+    public BindingCommand shopOnClickCommand = new BindingCommand(() -> {
+        try {
+            Bundle bundle = new Bundle();
+            bundle.putString("link", model.readApiConfigManagerEntity().getPlayFunWebUrl() + "/shop");
+            start(WebViewFragment.class.getCanonicalName(), bundle);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    });
+
     //会员按钮的点击事件
     public BindingCommand memberOnClickCommand = new BindingCommand(() -> {
         AppContext.instance().logEvent(AppsFlyerEvent.VIP_Center);
@@ -199,14 +224,11 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
     public BindingCommand settingOnClickCommand = new BindingCommand(() -> {
         start(MeSettingFragment.class.getCanonicalName());
     });
-    //分享按钮的点击事件
-    public BindingCommand shareOnClickCommand = new BindingCommand(() -> {
-    });
     //联系客服按钮的点击事件
     public BindingCommand serviceOnClickCommand = new BindingCommand(() -> {
         try {
             AppContext.instance().logEvent(AppsFlyerEvent.Contact_Us);
-            ChatUtils.chatUser(AppConfig.CHAT_SERVICE_USER_ID, StringUtils.getString(R.string.playfun_chat_service_name), MineViewModel.this);
+            ChatUtils.chatUser(AppConfig.CHAT_SERVICE_USER_ID_SEND, 0,StringUtils.getString(R.string.playfun_chat_service_name), MineViewModel.this);
         } catch (Exception e) {
             ExceptionReportUtils.report(e);
         }
@@ -221,6 +243,10 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
     UIChangeObservable uc = new UIChangeObservable();
     //我的评价按钮的点击事件
     public BindingCommand evaluateOnClickCommand = new BindingCommand(() -> getMyEvaluate());
+    //专属招呼
+    public BindingCommand exclusiveOnClickCommand = new BindingCommand(() -> {
+        startActivity(ExclusiveCallActivity.class);
+    });
     //点击我的头像
     public BindingCommand avatarOnClickCommand = new BindingCommand(() -> uc.clickAvatar.call());
     //紅包照片
@@ -633,14 +659,22 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
         }
     }
 
+    //是否现实等级权益入口
+    public Integer getLevelViewShow(Integer isLevel) {
+        if (userInfoEntity.get() != null) {
+            if (!ObjectUtils.isEmpty(userInfoEntity.get()) && !ObjectUtils.isEmpty(isLevel) && isLevel.intValue() == 1) {
+                return View.VISIBLE;
+            }
+        }
+        return View.GONE;
+    }
+
     public class UIChangeObservable {
         public SingleLiveEvent<List<EvaluateEntity>> clickMyEvaluate = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> clickPrivacy = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> clickAvatar = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> clickSetRedPackagePhoto = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> clickRecoverBurn = new SingleLiveEvent<>();
-        //更新版本
-        public SingleLiveEvent<VersionEntity> versionEntitySingl = new SingleLiveEvent<>();
         public SingleLiveEvent<BrowseNumberEntity> loadBrowseNumber = new SingleLiveEvent<>();
         //动画效果
         public SingleLiveEvent<Void> entryLabelLableEvent = new SingleLiveEvent<>();

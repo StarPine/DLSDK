@@ -10,11 +10,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.BindingAdapter;
 
 import com.blankj.utilcode.util.SizeUtils;
+import com.dl.playfun.BuildConfig;
 import com.dl.playfun.R;
 
 /**
@@ -28,6 +30,7 @@ public class BasicToolbar extends Toolbar implements View.OnClickListener {
     private ImageView ivBack;
     private TextView tvTitle;
     private String title;
+    private int number = 0;
 
     public BasicToolbar(Context context) {
         this(context, null);
@@ -100,6 +103,14 @@ public class BasicToolbar extends Toolbar implements View.OnClickListener {
         }
 
         ivBack.setOnClickListener(this);
+        tvTitle.setOnClickListener(v -> {
+            number++;
+            if (number > 5){
+                number = 0;
+                Toast.makeText(getContext(), "包名："+getContext().getPackageName()+"\n"+ BuildConfig.BUILD_TIME, Toast.LENGTH_LONG).show();
+
+            }
+        });
     }
 
     @Override

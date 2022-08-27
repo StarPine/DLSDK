@@ -117,4 +117,18 @@ public class GameCoinBuy {
         this.goodsLabel = goodsLabel;
     }
 
+    @Override
+    public String toString() {
+        return "GameCoinBuy{" +
+                "id=" + id +
+                ", goodsName='" + goodsName + '\'' +
+                ", googleGoodsId='" + googleGoodsId + '\'' +
+                ", appleGoodsId='" + appleGoodsId + '\'' +
+                ", goodsLabel='" + goodsLabel + '\'' +
+                ", payPrice='" + payPrice + '\'' +
+                ", price='" + price + '\'' +
+                ", actualValue=" + actualValue +
+                ", isFirst=" + isFirst +
+                '}';
+    }
 }

@@ -1,11 +1,11 @@
 package com.dl.playfun.app;
 
-import com.dl.playfun.data.source.http.service.ApiService;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.HttpDataSource;
 import com.dl.playfun.data.source.LocalDataSource;
 import com.dl.playfun.data.source.http.HttpDataSourceImpl;
 import com.dl.playfun.data.source.http.RetrofitClient;
+import com.dl.playfun.data.source.http.service.ApiService;
 import com.dl.playfun.data.source.local.LocalDataSourceImpl;
 
 /**

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    // 云通信
+    <string name="chat_top">Pin</string>
+    <string name="chat_delete">Delete Chat</string>
+    <string name="quit_chat_top">Unpin</string>
+    <string name="clear_conversation_message">Clear Messages</string>
+
+    <string name="forward_select_new_chat">Create new chat</string>
+    <string name="forward_select_from_contact">Select from contact</string>
+    <string name="titlebar_cancle">Cancel</string>
+    <string name="titlebar_close">Close</string>
+    <string name="forward_alert_title">Are you sure you want to forward?</string>
+    <string name="forward_list_label">Recent Conversations</string>
+    <string name="ui_at_all">[@All]</string>
+    <string name="ui_at_me">[Someone @ me]</string>
+    <string name="ui_at_all_me">[@All][Someone @ me]</string>
+    <string name="drafts">[Drafts]</string>
+    <string name="titlebar_mutiselect">MultiSelect</string>
+    <string name="message_num">messages</string>
+    <string name="search">Search</string>
+    <string name="add_friend">Add to Contacts</string>
+    <string name="add_group">Add Group Chat</string>
+    <string name="start_conversation">New Chat</string>
+    <string name="create_group_chat">Create Group Chat</string>
+    <string name="create_chat_room">Create Chat Room</string>
+    <string name="create_private_group">Create Discussion Group</string>
+    <string name="hint_add_user_id">Enter ID</string>
+    <string name="hint_add_wording">Enter verification message</string>
+    <string name="contact_add">Add</string>
+    <string name="user_id">ID</string>
+    <string name="add_wording">Verification Message</string>
+</resources>

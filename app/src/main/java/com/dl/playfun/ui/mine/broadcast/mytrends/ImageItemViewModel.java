@@ -4,13 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
 
 import com.blankj.utilcode.util.GsonUtils;
-import com.dl.playfun.utils.ExceptionReportUtils;
-import com.dl.playfun.viewmodel.BaseViewModel;
-import com.dl.playfun.ui.mine.broadcast.myprogram.MyprogramViewModel;
 import com.dl.playfun.ui.mine.broadcast.mytrends.trenddetail.TrendDetailViewModel;
-import com.dl.playfun.ui.program.programdetail.ProgramDetailViewModel;
 import com.dl.playfun.ui.radio.radiohome.RadioViewModel;
 import com.dl.playfun.ui.userdetail.userdynamic.UserDynamicViewModel;
+import com.dl.playfun.utils.ExceptionReportUtils;
+import com.dl.playfun.viewmodel.BaseViewModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,15 +31,11 @@ public class ImageItemViewModel extends MultiItemViewModel<BaseViewModel> {
             Map<String, String> data = new HashMap<>();
             data.put("position", String.valueOf(position));
             data.put("images", GsonUtils.toJson(images));
-            if (viewModel instanceof MyprogramViewModel) {
-                ((MyprogramViewModel) viewModel).uc.clickImage.setValue(data);
-            } else if (viewModel instanceof MyTrendsViewModel) {
+            if (viewModel instanceof MyTrendsViewModel) {
                 ((MyTrendsViewModel) viewModel).uc.clickImage.setValue(data);
             } else if (viewModel instanceof RadioViewModel) {
                 ((RadioViewModel) viewModel).radioUC.clickImage.setValue(data);
-            } else if (viewModel instanceof ProgramDetailViewModel) {
-                ((ProgramDetailViewModel) viewModel).uc.clickImage.setValue(data);
-            } else if (viewModel instanceof TrendDetailViewModel) {
+            }  else if (viewModel instanceof TrendDetailViewModel) {
                 ((TrendDetailViewModel) viewModel).uc.clickImage.setValue(data);
             } else if (viewModel instanceof UserDynamicViewModel) {
                 ((UserDynamicViewModel) viewModel).uc.clickImage.setValue(data);

@@ -1,7 +1,9 @@
 package me.goldze.mvvmhabit.base;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
@@ -36,6 +38,8 @@ public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseVie
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        getWindow().setStatusBarColor(Color.WHITE);
         //页面接受的参数方法
         initParam();
         //私有的初始化Databinding和ViewModel方法

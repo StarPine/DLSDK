@@ -27,18 +27,19 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <RelativeLayout
             android:id="@+id/jm_view"
-            tools:visibility="gone"
-            android:visibility="@{viewModel.mainVIewShow?View.GONE:View.VISIBLE}"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:visibility="@{viewModel.mainVIewShow?View.GONE:View.VISIBLE}"
+            tools:visibility="gone">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#FF270830"
-                android:visibility="@{safeUnbox(viewModel.isCalledWaitingBinding) ? View.VISIBLE : View.GONE}" />
+<!--            <View-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:background="#FF270830"-->
+<!--                android:visibility="@{safeUnbox(viewModel.isCalledWaitingBinding) ? View.VISIBLE : View.GONE}" />-->
 
             <RelativeLayout
                 android:layout_width="178dp"
@@ -57,7 +58,10 @@
                     android:scaleType="centerCrop"
                     binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
                     binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
-                    binding:imageThumbPath="@{viewModel.callingInviteInfoField.userProfileInfo.avatar}" />
+                    binding:imageThumbPath="@{viewModel.callingInviteInfoField.userProfileInfo.avatar}"
+                    binding:resizeH="@{35}"
+                    binding:resizeW="@{35}"
+                    />
 
                 <LinearLayout
                     android:id="@+id/name_layout"
@@ -82,7 +86,7 @@
                         android:textSize="12sp" />
 
                     <ImageView
-                        android:layout_width="14dp"
+                        android:layout_width="31dp"
                         android:layout_height="13dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="2dp"
@@ -137,6 +141,23 @@
                         android:textColor="#FF827692"
                         android:textSize="9sp" />
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="7dp"
+                        android:layout_marginStart="2dp"
+                        android:layout_marginEnd="2dp"
+                        android:gravity="top|center_horizontal"
+                        android:text="|"
+                        android:textColor="#CDCED1"
+                        android:textSize="7sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:includeFontPadding="false"
+                        android:text="@{SystemDictUtils.getOccupationById(safeUnbox(viewModel.callingInviteInfoField.userProfileInfo.occupationId))}"
+                        android:textColor="#FF827692"
+                        android:textSize="9sp" />
                 </LinearLayout>
             </RelativeLayout>
 
@@ -182,17 +203,16 @@
                 binding:onClickCommand="@{viewModel.switchCameraOnclick}"
                 android:src="@drawable/call_switch_camera" />
 
-                <TextView
-                    android:visibility="gone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="200dp"
-                    android:text="@{viewModel.callHintBinding}"
-                    android:textAlignment="center"
-                    android:textColor="#FFF300"
-                    android:textSize="16sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="200dp"
+                android:text="@{viewModel.callHintBinding}"
+                android:textAlignment="center"
+                android:textColor="#FFF300"
+                android:textSize="16sp" />
 
             <ImageView
                 android:layout_width="69dp"
@@ -201,9 +221,9 @@
                 android:layout_alignParentBottom="true"
                 android:layout_marginLeft="53dp"
                 android:layout_marginBottom="53dp"
-                binding:onClickCommand="@{viewModel.rejectOnclick}"
                 android:src="@drawable/call_reject"
-                android:visibility="@{viewModel.isCalledWaitingBinding ? View.VISIBLE : View.GONE}" />
+                android:visibility="@{viewModel.isCalledWaitingBinding ? View.VISIBLE : View.GONE}"
+                binding:onClickCommand="@{viewModel.rejectOnclick}" />
 
             <ImageView
                 android:layout_width="69dp"
@@ -219,11 +239,11 @@
 
         <RelativeLayout
             android:id="@+id/main_view"
-            android:visibility="@{viewModel.mainVIewShow?View.VISIBLE:View.GONE}"
-            android:elevation="50dp"
-            tools:visibility="visible"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:elevation="50dp"
+            android:visibility="@{viewModel.mainVIewShow?View.VISIBLE:View.GONE}"
+            tools:visibility="visible">
 
             <RelativeLayout
                 android:id="@+id/avatar_tip_layout"
@@ -251,7 +271,6 @@
                     android:layout_height="19dp"
                     android:layout_marginStart="9dp"
                     android:layout_marginTop="3dp"
-                    android:gravity="center_vertical"
                     android:layout_toEndOf="@+id/iv_avatars"
                     android:orientation="horizontal">
 
@@ -269,7 +288,7 @@
 
                     <ImageView
                         android:id="@+id/iv_goddesses"
-                        android:layout_width="14dp"
+                        android:layout_width="31dp"
                         android:layout_height="13dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="2dp"
@@ -305,9 +324,7 @@
                         android:includeFontPadding="false"
                         android:text="@{viewModel.callingVideoInviteInfoField.cityName}"
                         android:textColor="@color/white"
-                        android:textSize="9sp"
-                        tools:text="城市"
-                        />
+                        android:textSize="9sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -325,10 +342,25 @@
                         android:includeFontPadding="false"
                         android:text="@{viewModel.ageAndConstellation(viewModel.callingInviteInfoField)}"
                         android:textColor="@color/white"
-                        android:textSize="9sp"
-                        tools:text="29"
-                        />
+                        android:textSize="9sp" />
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="7dp"
+                        android:layout_marginStart="2dp"
+                        android:layout_marginEnd="2dp"
+                        android:gravity="top|center_horizontal"
+                        android:text="|"
+                        android:textColor="#CDCED1"
+                        android:textSize="7sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:includeFontPadding="false"
+                        android:text="@{SystemDictUtils.getOccupationById(safeUnbox(viewModel.callingVideoInviteInfoField.occupationId))}"
+                        android:textColor="@color/white"
+                        android:textSize="9sp" />
                 </LinearLayout>
 
                 <ImageView
@@ -344,19 +376,20 @@
                     binding:onClickCommand="@{viewModel.addlikeOnClickCommand}" />
             </RelativeLayout>
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/avatar_tip_layout"
                 android:layout_alignStart="@+id/avatar_tip_layout"
                 android:layout_marginTop="18dp"
-                android:paddingTop="3dp"
-                android:paddingBottom="3dp"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:textColor="@color/white"
-                android:textSize="12sp"
-                android:text="@{viewModel.timeTextField}"
                 android:background="@drawable/call_video_tip_img_backdrop3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:paddingStart="10dp"
+                android:paddingTop="3dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="3dp"
+                android:text="@{viewModel.timeTextField}"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
             <ImageView
                 android:id="@+id/img_closes"
                 android:layout_width="31dp"
@@ -365,8 +398,20 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="47dp"
                 android:layout_marginRight="17dp"
-                binding:onClickCommand="@{viewModel.closeOnclick}"
-                android:src="@drawable/call_video_close" />
+                android:src="@drawable/call_video_close"
+                binding:onClickCommand="@{viewModel.closeOnclick}" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/bg_white"
+                android:layout_below="@+id/img_closes"
+                android:text="@string/playfun_chat_detail_warn"
+                android:textSize="@dimen/text_size_middle"
+                android:textColor="@color/text_yellow"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:visibility="@{viewModel.tipSwitch?View.VISIBLE:View.GONE}"
+                android:padding="5dp"/>
 
             <ImageView
                 android:layout_width="31dp"
@@ -387,33 +432,37 @@
                 android:layout_marginEnd="14dp"
                 android:layout_marginBottom="19dp"
                 android:background="@drawable/call_audio_rect_bg"
-                android:visibility="@{viewModel.sayHiEntityHidden?View.GONE:View.VISIBLE}"
                 android:paddingLeft="8dp"
                 android:paddingTop="4dp"
-                android:paddingBottom="7dp">
+                android:paddingBottom="7dp"
+                android:visibility="@{viewModel.sayHiEntityHidden?View.GONE:View.VISIBLE}">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:text="@string/playfun_call_audio_tips"
+                    android:textColor="#FCFCFF"
+                    android:textSize="11sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
+                    android:layout_alignParentBottom="true"
                     android:text="@{viewModel.sayHiEntityField.message}"
-                    android:layout_centerVertical="true"
                     android:textColor="#FFF300"
-                    android:textSize="13sp"
-                    tools:text="dddddddddddddga"
-                    />
+                    android:textSize="13sp" />
 
                 <ImageView
-                    android:visibility="gone"
                     android:id="@+id/iv_video_up_say_hi"
                     android:layout_width="21dp"
                     android:layout_height="21dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="46dp"
-                    binding:onClickCommand="@{viewModel.upSayHiEntityOnClickCommand}"
-                    android:src="@drawable/call_audio_refresh" />
+                    android:src="@drawable/call_audio_refresh"
+                    binding:onClickCommand="@{viewModel.upSayHiEntityOnClickCommand}" />
 
                 <ImageView
                     android:layout_width="21dp"
@@ -435,58 +484,85 @@
                 binding:adapter="@{viewModel.adapter}"
                 binding:itemBinding="@{viewModel.itemBinding}"
                 binding:items="@{viewModel.observableList}"
-                binding:layoutManager="@{LayoutManagers.linear(LinearLayoutManager.VERTICAL,false)}"
-                />
+                binding:layoutManager="@{LayoutManagers.linear(LinearLayoutManager.VERTICAL,false)}" />
 
-            <TextView
-                android:layout_width="169dp"
-                android:layout_height="39dp"
+            <ImageView
+                android:layout_width="42dp"
+                android:layout_height="42dp"
                 android:layout_above="@+id/bottom_layout"
-                android:layout_alignParentEnd="true"
+                android:layout_marginLeft="15dp"
+                android:layout_marginBottom="14dp"
+                android:src="@drawable/call_video_beauty"
+                binding:onClickCommand="@{viewModel.beauty}" />
+
+            <LinearLayout
+                android:id="@+id/linear_balance_tip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/bottom_layout"
+                android:layout_alignParentRight="true"
                 android:layout_marginEnd="14dp"
                 android:layout_marginBottom="14dp"
                 android:background="@drawable/border_purple_background_white"
-                android:gravity="center"
-                android:scaleType="centerCrop"
-                android:text="@{viewModel.girlEarningsText}"
-                android:textSize="13sp"
-                android:visibility="@{viewModel.girlEarningsField?View.VISIBLE:View.GONE}" />
+                android:gravity="center_vertical"
+                android:visibility="@{viewModel.girlEarningsField?View.VISIBLE:View.GONE}"
+                android:orientation="horizontal">
 
-            <LinearLayout
+                <TextView
+                    android:id="@+id/tv_coin_not"
+                    android:layout_width="wrap_content"
+                    android:layout_height="39dp"
+                    android:gravity="center"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:scaleType="centerCrop"
+                    android:text="@{viewModel.girlEarningsText}"
+                    android:textSize="13sp"
+                    tools:text="對方餘額不足，請提醒對方充值" />
+
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginEnd="12dp"
+                    android:src="@drawable/ic_close_x"
+                    android:visibility="@{viewModel.isShowCountdown?View.VISIBLE:View.GONE}"
+                    binding:onClickCommand="@{viewModel.closeMoney2}" />
+            </LinearLayout>
+
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="39dp"
                 android:layout_above="@+id/bottom_layout"
-                android:orientation="horizontal"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:gravity="center_vertical"
                 android:layout_marginBottom="14dp"
                 android:background="@drawable/border_purple_background_white"
-                android:visibility="@{viewModel.maleTextLayoutSHow?View.VISIBLE:View.GONE}">
+                android:visibility="@{viewModel.maleTextLayoutSHow?View.VISIBLE:View.GONE}"
+                tools:visibility="gone">
 
                 <TextView
-                    android:id="@+id/tv_male_money_field"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerInParent="true"
                     android:layout_marginStart="12dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="2dp"
                     android:text="@{viewModel.maleTextMoneyField}"
                     android:textColor="#FFF1F2F9"
-                    android:textSize="13sp"
-                    tools:text="@string/playfun_cert_upload_photo_tip"
-                    />
+                    android:textSize="13sp" />
 
-                <Button
+                <TextView
                     android:layout_width="60dp"
                     android:layout_height="30dp"
+                    android:layout_centerInParent="true"
                     android:layout_marginEnd="10dp"
+                    android:layout_toStartOf="@+id/ic_close_money"
                     android:background="@drawable/btn_yellow_cicle"
+                    android:gravity="center"
                     android:text="@string/playfun_dialong_coin_rechaege_top_up"
                     android:textColor="@color/purple1"
-                    android:padding="5dp"
-                    android:textSize="8sp"
+                    android:textSize="13sp"
                     binding:onClickCommand="@{viewModel.referMoney}" />
 
                 <ImageView
@@ -498,7 +574,8 @@
                     android:layout_marginEnd="10dp"
                     android:src="@drawable/ic_close_x"
                     binding:onClickCommand="@{viewModel.closeMoney}" />
-            </LinearLayout>
+            </RelativeLayout>
+
             <LinearLayout
                 android:id="@+id/bottom_layout"
                 android:layout_width="wrap_content"
@@ -509,36 +586,78 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_marginTop="2dp"
-                    binding:stateActivated="@{viewModel.micMuteField}"
                     android:layout_width="47dp"
                     android:layout_height="47dp"
+                    android:layout_marginTop="2dp"
+                    android:src="@drawable/call_audiocall_backdrop"
                     binding:onClickCommand="@{viewModel.micMuteOnClickCommand}"
-                    android:src="@drawable/call_audiocall_backdrop" />
+                    binding:stateActivated="@{viewModel.micMuteField}" />
 
                 <ImageView
-                    binding:onClickCommand="@{viewModel.giftBagOnClickCommand}"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_marginLeft="47dp"
-                    android:src="@drawable/call_audio_gift" />
+                    android:src="@drawable/call_audio_gift"
+                    binding:onClickCommand="@{viewModel.giftBagOnClickCommand}" />
 
                 <ImageView
-                    android:layout_marginTop="2dp"
-                    binding:stateActivated="@{viewModel.handsFreeField}"
                     android:layout_width="47dp"
                     android:layout_height="47dp"
-                    binding:onClickCommand="@{viewModel.handsFreeOnClickCommand}"
                     android:layout_marginLeft="47dp"
-                    android:src="@drawable/call_audio_speaker_backdrop" />
+                    android:layout_marginTop="2dp"
+                    android:src="@drawable/call_audio_speaker_backdrop"
+                    binding:onClickCommand="@{viewModel.handsFreeOnClickCommand}"
+                    binding:stateActivated="@{viewModel.handsFreeField}" />
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="@{viewModel.isShowBeauty?View.VISIBLE:View.GONE}"
+                >
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    binding:onClickCommand="@{viewModel.beauty}" />
+
+                <com.faceunity.nama.ui.FaceUnityView
+                    android:id="@+id/fu_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/black"
+                    tools:visibility="visible"
+                    />
+            </LinearLayout>
+
+
             <com.opensource.svgaplayer.SVGAImageView
                 android:id="@+id/gift_effects"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:elevation="20dp"
                 android:visibility="gone"
-                android:layout_height="match_parent"
-                android:layout_width="match_parent"
-                app:autoPlay="true"/>
+                app:autoPlay="true" />
+
+            <FrameLayout
+                android:layout_width="36dp"
+                android:layout_height="56dp"
+                android:layout_centerInParent="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="13dp"
+                android:visibility="@{viewModel.isHideExchangeRules?View.GONE:View.VISIBLE}"
+                onClickCommand="@{viewModel.crystalOnClick}"
+                >
+
+                <com.opensource.svgaplayer.SVGAImageView
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    app:source="floating.svga"
+                    app:autoPlay="true"/>
+            </FrameLayout>
         </RelativeLayout>
+
     </RelativeLayout>
 </layout>

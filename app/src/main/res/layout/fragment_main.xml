@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <import type="com.dl.playfun.R" />
@@ -19,16 +19,16 @@
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/view_pager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_height="match_parent" />
 
         <LinearLayout
             android:id="@+id/navigation_view"
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            android:elevation="888dp"
             android:layout_alignParentBottom="true"
+            android:layout_marginBottom="0dp"
             android:background="@drawable/main_bottom_navigation_img"
+            android:elevation="888dp"
             android:orientation="horizontal">
 
             <RelativeLayout
@@ -43,23 +43,23 @@
                     android:id="@+id/navigation_home_img"
                     android:layout_width="21dp"
                     android:layout_height="21dp"
-                    android:layout_above="@+id/navigation_home_text"
                     android:layout_centerInParent="true"
                     android:layout_marginBottom="4dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/tab_home_checked" />
 
-                <TextView
-                    android:id="@+id/navigation_home_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerInParent="true"
-                    android:layout_marginBottom="5dp"
-                    android:includeFontPadding="false"
-                    android:text="@string/playfun_title_home"
-                    android:textColor="@color/black"
-                    android:textSize="9sp" />
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/navigation_home_img_lottie"
+                    android:layout_width="21dp"
+                    android:layout_height="21dp"
+                    android:layout_alignStart="@+id/navigation_home_img"
+                    android:layout_alignTop="@+id/navigation_home_img"
+                    android:elevation="11dp"
+                    android:visibility="gone"
+                    app:lottie_autoPlay="false"
+                    app:lottie_loop="false"
+                    app:lottie_rawRes="@raw/lottie_navigation_home" />
+
             </RelativeLayout>
 
             <RelativeLayout
@@ -74,23 +74,21 @@
                     android:id="@+id/navigation_radio_img"
                     android:layout_width="21dp"
                     android:layout_height="21dp"
-                    android:layout_above="@+id/navigation_radio_text"
                     android:layout_centerInParent="true"
                     android:layout_marginBottom="4dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/tab_radio_normal" />
-
-                <TextView
-                    android:id="@+id/navigation_radio_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerInParent="true"
-                    android:layout_marginBottom="5dp"
-                    android:includeFontPadding="false"
-                    android:text="@string/playfun_title_nearby"
-                    android:textColor="@color/black"
-                    android:textSize="9sp" />
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/navigation_radio_img_lottie"
+                    android:layout_alignTop="@+id/navigation_radio_img"
+                    android:layout_alignStart="@+id/navigation_radio_img"
+                    android:elevation="11dp"
+                    android:layout_width="21dp"
+                    android:layout_height="21dp"
+                    android:visibility="gone"
+                    app:lottie_autoPlay="false"
+                    app:lottie_loop="false"
+                    app:lottie_rawRes="@raw/lottie_navigation_radio" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -117,9 +115,9 @@
                     <TextView
                         android:layout_width="@dimen/red_dot"
                         android:layout_height="@dimen/red_dot"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginTop="4dp"
                         android:layout_alignParentRight="true"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginRight="5dp"
                         android:background="@drawable/shape_red_dot"
                         android:visibility="@{viewModel.isHaveRewards?View.VISIBLE:View.GONE}" />
                 </RelativeLayout>
@@ -134,7 +132,8 @@
                     android:includeFontPadding="false"
                     android:text="@string/playfun_task_fragment_title1"
                     android:textColor="@color/black"
-                    android:textSize="9sp" />
+                    android:textSize="9sp"
+                    android:visibility="invisible" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -148,42 +147,41 @@
                 <TextView
                     android:id="@+id/tv_msg_count"
                     android:layout_width="wrap_content"
-                    android:layout_height="16dp"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="42dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/navigation_message_img"
+                    android:layout_marginStart="-2dp"
+                    android:layout_marginTop="-7dp"
+                    android:layout_toEndOf="@+id/navigation_message_img"
                     android:background="@drawable/badge_background"
                     android:elevation="1dp"
                     android:gravity="center"
                     android:minWidth="16dp"
                     android:paddingLeft="2dp"
                     android:paddingRight="2dp"
-                    android:text=""
                     android:textColor="@color/white"
-                    android:textSize="10dp"
+                    android:textSize="10sp"
                     android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/navigation_message_img"
                     android:layout_width="21dp"
                     android:layout_height="21dp"
-                    android:layout_above="@+id/navigation_message_text"
                     android:layout_centerInParent="true"
                     android:layout_gravity="center_horizontal|top"
                     android:layout_marginBottom="4dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/tab_message_normal" />
-
-                <TextView
-                    android:id="@+id/navigation_message_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerInParent="true"
-                    android:layout_marginBottom="5dp"
-                    android:includeFontPadding="false"
-                    android:text="@string/playfun_title_notifications"
-                    android:textColor="@color/black"
-                    android:textSize="9sp" />
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/navigation_message_img_lottie"
+                    android:layout_alignTop="@+id/navigation_message_img"
+                    android:layout_alignStart="@+id/navigation_message_img"
+                    android:elevation="11dp"
+                    android:layout_width="21dp"
+                    android:layout_height="21dp"
+                    android:visibility="gone"
+                    app:lottie_autoPlay="false"
+                    app:lottie_loop="false"
+                    app:lottie_rawRes="@raw/lottie_navigation_message" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -199,25 +197,33 @@
                     android:id="@+id/navigation_mine_img"
                     android:layout_width="21dp"
                     android:layout_height="21dp"
-                    android:layout_above="@+id/navigation_mine_text"
                     android:layout_centerInParent="true"
                     android:layout_marginBottom="4dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/tab_mine_female_normal" />
-
-                <TextView
-                    android:id="@+id/navigation_mine_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerInParent="true"
-                    android:layout_marginBottom="5dp"
-                    android:includeFontPadding="false"
-                    android:text="@string/playfun_title_mine"
-                    android:textColor="@color/black"
-                    android:textSize="9sp" />
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/navigation_mine_img_lottie"
+                    android:layout_alignTop="@+id/navigation_mine_img"
+                    android:layout_alignStart="@+id/navigation_mine_img"
+                    android:elevation="11dp"
+                    android:layout_width="21dp"
+                    android:layout_height="21dp"
+                    android:visibility="gone"
+                    app:lottie_autoPlay="false"
+                    app:lottie_loop="false"
+                    app:lottie_rawRes="@raw/lottie_navigation_mine_male" />
             </RelativeLayout>
         </LinearLayout>
-
+        <ImageView
+            android:clickable="true"
+            android:id="@+id/bubble_tip"
+            android:layout_width="130dp"
+            android:layout_height="43dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="27dp"
+            android:layout_marginBottom="50dp"
+            android:src="@drawable/ballon_tool_tip_img"
+            android:visibility="gone" />
     </RelativeLayout>
 </layout>

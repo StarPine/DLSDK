@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/pop_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -38,20 +39,22 @@
                         />
 
                     <ImageView
+                        android:id="@+id/icon_game_coin"
                         android:layout_width="14dp"
                         android:layout_height="14dp"
-                        android:src="@drawable/icon_game_coin"
-                        android:layout_marginTop="39dp"
                         android:layout_marginLeft="14dp"
-                        />
+                        android:layout_marginTop="39dp"
+                        android:src="@drawable/icon_game_coin" />
 
                     <TextView
                         android:id="@+id/tv_balance"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="34dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="40dp"
                         android:layout_marginTop="37dp"
-                        android:text="-"
+                        android:layout_toEndOf="@+id/icon_game_coin"
+                        android:text="0"
                         android:textColor="@color/white"
                         android:textSize="13sp" />
 
@@ -65,16 +68,27 @@
                         android:padding="7dp"
                         android:src="@drawable/icon_topup_refresh" />
                 </RelativeLayout>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:background="@drawable/bg_topup_rcv"
-                    android:id="@+id/recycler_view"
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="14dp"
-                    android:paddingTop="19dp"
-                    android:paddingBottom="3dp"
-                    android:scrollbars="vertical" />
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:visibility="visible"
+                        android:background="@drawable/bg_topup_rcv"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:elevation="11dp"
+                        android:padding="14dp"
+                        android:paddingTop="19dp"
+                        android:paddingBottom="3dp"
+                        android:scrollbars="vertical"
+                        tools:itemCount="6"
+                        tools:layoutManager="LinearLayoutManager"
+                        tools:listitem="@layout/item_game_coin_topup"/>
+                </FrameLayout>
             </LinearLayout>
 
             <RelativeLayout

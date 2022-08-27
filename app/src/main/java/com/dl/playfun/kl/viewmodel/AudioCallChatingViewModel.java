@@ -19,8 +19,8 @@ import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableInt;
 import androidx.databinding.ObservableList;
 
-import com.aliyun.common.utils.ToastUtil;
 import com.blankj.utilcode.util.ColorUtils;
+import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.ToastUtils;
@@ -34,15 +34,15 @@ import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.CallingInfoEntity;
-import com.dl.playfun.entity.CustomMessageIMTextEntity;
+import com.dl.playfun.entity.CallingStatusEntity;
 import com.dl.playfun.entity.GiftBagEntity;
+import com.dl.playfun.entity.MallWithdrawTipsInfoEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.AudioCallingCancelEvent;
 import com.dl.playfun.kl.Utils;
 import com.dl.playfun.kl.view.Ifinish;
 import com.dl.playfun.manager.ConfigManager;
-import com.dl.playfun.ui.dialog.GiftBagDialog;
-import com.dl.playfun.utils.ChatUtils;
+import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
@@ -55,13 +55,14 @@ import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMMessageReceipt;
 import com.tencent.liteav.trtccalling.model.TRTCCalling;
 import com.tencent.liteav.trtccalling.model.TRTCCallingDelegate;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
-import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageInfoUtil;
+import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.ui.view.MyImageSpan;
+import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 import com.tencent.trtc.TRTCCloudDef;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -80,43 +81,42 @@ import me.tatarka.bindingcollectionadapter2.BindingRecyclerViewAdapter;
 import me.tatarka.bindingcollectionadapter2.ItemBinding;
 
 public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
+    //通话时长-秒
     public int TimeCount = 0;
     //是否发送过礼物
     public boolean sendGiftBagSuccess = false;
     public Integer roomId;
-    public Integer fromUserId;
-    public Integer toUserId;
+    public String fromUserId;
+    public String toUserId;
+
+    //通话数据加载完成
+    public boolean callInfoLoaded = false;
+    //男生钻石总余额
+    public int maleBalanceMoney = 0;
+    //男生总分钟数
+    public int totalMinutes = 0;
+    //男生剩余聊天分钟数
+    public int totalMinutesRemaining = 0;
+    //聊天收益
+    public double payeeProfits;
+    //断网总时间
+    int disconnectTime = 0;
 
     //录音文案数组坐标
     public int sayHiePosition = 0;
     public int sayHiePage = 1;
 
-    public BigDecimal coinTotal;
-    //当前用户是否是拨打人
-    public boolean userCall = false;
     //当前用户是否男性
     public boolean isMale = false;
-    //钻石余额(仅男用户)
-    public Integer coinBalance;
-    public Integer $coinBalance = 0;
-    //已经取下标数
-    public Integer formSelIndex = 0;
-    //收益从第N分钟开始
-    public Integer fromMinute;
-    //单价
-    public BigDecimal unitPrice;
-    //每秒收益
-    public BigDecimal timePrice;
     //是否已追踪0未追踪1已追踪
     public Integer collected;
-    //是否使用道具
-    public Integer useProp;
-    //余额不足提示分钟数
-    public Integer balanceNotEnoughTipsMinutes;
-    public int maleBalanceMoney = 0;
-    public boolean flagMoney = false;
-    //通话收益提示间隔秒数
-    public Integer profitTipsIntervalSeconds;
+    //余额不足临界提示分钟数
+    public int balanceNotEnoughTipsMinutes;
+    //余额不足提示标记
+    public boolean flagMoneyNotWorth = false;
+    public ObservableField<Boolean> isShowCountdown = new ObservableField(false);
+    //防录屏提示开关
+    public ObservableField<Boolean> tipSwitch = new ObservableField(true);
     //价格配置表
     public List<CallingInfoEntity.CallingUnitPriceInfo> unitPriceList;
 
@@ -124,6 +124,8 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     public ObservableField<String> timeTextField = new ObservableField<>();
     public ObservableField<CallingInfoEntity.FromUserProfile> rightUserInfoField = new ObservableField<>();
     public ObservableField<CallingInfoEntity.FromUserProfile> leftUserInfoField = new ObservableField<>();
+    //是否已经显示过兑换规则
+    public ObservableField<Boolean> isHideExchangeRules = new ObservableField<>(false);
     //男生收益框是否展示
     public ObservableBoolean maleTextLayoutSHow = new ObservableBoolean(false);
     //男性收益内容
@@ -132,6 +134,8 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     public ObservableBoolean girlEarningsField = new ObservableBoolean(false);
     //收益文字
     public ObservableField<SpannableString> girlEarningsText = new ObservableField<>();
+    public ObservableField<UserDataEntity> audioUserDataEntity = new ObservableField<>();
+    public ObservableField<CallingInfoEntity> audioCallingInfoEntity = new ObservableField<>();
     //是否已经追踪
     public ObservableInt collectedField = new ObservableInt(1);
     //是否静音
@@ -159,6 +163,15 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
             uc.sendUserGiftError.postValue(false);
         }
     });
+    /**
+     * 水晶兑换规则
+     */
+    public BindingCommand crystalOnClick = new BindingCommand(new BindingAction() {
+        @Override
+        public void call() {
+            getMallWithdrawTipsInfo(1);
+        }
+    });
 
     protected Ifinish mView;
     protected TRTCCalling mTRTCCalling;
@@ -175,6 +188,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
         @Override
         public void call() {
             AppContext.instance().logEvent(AppsFlyerEvent.voicecall_gift);
+            getCallingStatus(roomId);
             uc.callGiftBagAlert.call();
         }
     });
@@ -185,6 +199,17 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
             maleTextLayoutSHow.set(false);
         }
     });
+
+    //关闭女生界面男生余额不足提示
+    public BindingCommand closeMoney2 = new BindingCommand(new BindingAction() {
+        @Override
+        public void call() {
+            isShowCountdown.set(false);
+            girlEarningsField.set(false);
+        }
+    });
+
+
     //订阅者
     private Disposable mSubscription;
     private long mSelfLowQualityTime;
@@ -252,7 +277,12 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
 
     //发送礼物
     public void sendUserGift(Dialog dialog, GiftBagEntity.giftEntity giftEntity, Integer to_user_id, Integer amount) {
-        model.sendUserGift(giftEntity.getId(), to_user_id, amount, 2)
+        HashMap<String, Integer> map = new HashMap<>();
+        map.put("giftId", giftEntity.getId());
+        map.put("toUserId", to_user_id);
+        map.put("type", 2);
+        map.put("amount", amount);
+        model.sendUserGift(ApiUitl.getBody(GsonUtils.toJson(map)))
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
@@ -261,82 +291,10 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                     @Override
                     public void onSuccess(BaseResponse baseResponse) {
                         dismissHUD();
+                        getCallingStatus(roomId);
                         sendGiftBagSuccess = true;
 //                        dialog.dismiss();
                         String textTip = null;
-                        //礼物数量*礼物钻石
-                        int amountMoney = giftEntity.getMoney().intValue() * amount;
-                        ((GiftBagDialog) dialog).setBalanceValue(amountMoney);
-                        if (userCall) {
-                            if (TimeCount < 60) {//不满1分钟
-                                if (unitPriceList.size() > 1) {//聊天卡
-                                    //总钻石 - 每分钟花费钻石得到 多余钻石
-                                    int myMoney = coinBalance.intValue() % unitPrice.intValue();
-                                    Log.e("有聊天卡。总钻石余额为", myMoney + "=======" + coinBalance.intValue() + "=====" + unitPrice.intValue());
-                                    //剩余钻石-礼物所需钻石
-                                    int costMoney = myMoney - amountMoney;
-                                    Log.e("剩余钻石-礼物所需钻石", costMoney + "=======" + myMoney + "=====" + amountMoney);
-                                    //多余钻石-礼物所需钻石。不计算剩余时长。只扣除钻石
-                                    if (costMoney > 0) {
-                                        coinBalance -= amountMoney;
-                                        $coinBalance += amountMoney;
-                                    } else {
-                                        Log.e("扣除分钟前剩余分钟", maleBalanceMoney + "========");
-                                        //计算出剩余钻石换算成分钟
-                                        maleBalanceMoney = ((((coinBalance + unitPrice.intValue()) - amountMoney) / unitPrice.intValue()) * 60) - TimeCount;
-                                        Log.e("扣除分钟后剩余分钟", maleBalanceMoney + "========");
-                                        //扣除钻石
-                                        coinBalance -= amountMoney;
-                                        $coinBalance += amountMoney;
-                                    }
-                                    if (maleBalanceMoney < 10) {
-                                        maleBalanceMoney += 30;
-                                    }
-                                } else {//不是聊天卡
-                                    int myMoney = coinBalance.intValue() % unitPrice.intValue();
-                                    //剩余钻石-礼物所需钻石
-                                    int costMoney = myMoney - amountMoney;
-                                    //多余钻石-礼物所需钻石。不计算剩余时长。只扣除钻石
-                                    if (costMoney > 0) {
-                                        Log.e("扣除多余钻石", costMoney + "====" + coinBalance);
-                                        coinBalance -= amountMoney;
-                                        $coinBalance += amountMoney;
-                                        Log.e("剩余钻石:", coinBalance + "=====已消费钻石==" + $coinBalance + "====" + amountMoney);
-                                    } else {
-                                        Log.e("多余钻石不足消费分钟", maleBalanceMoney + "======" + coinBalance);
-                                        //计算出剩余钻石换算成分钟
-                                        maleBalanceMoney = ((((coinBalance + unitPrice.intValue()) - amountMoney) / unitPrice.intValue()) * 60) - TimeCount;
-                                        Log.e("剩余使用分钟", maleBalanceMoney + "");
-                                        //扣除钻石
-                                        coinBalance -= amountMoney;
-                                        $coinBalance += amountMoney;
-                                        Log.e("剩余使用分钟", maleBalanceMoney + "====" + coinBalance + "=====" + $coinBalance);
-                                    }
-                                    if (maleBalanceMoney < 10) {
-                                        maleBalanceMoney += 30;
-                                    }
-                                }
-                            } else {
-                                int myMoney = coinBalance.intValue() % unitPrice.intValue();
-                                //剩余钻石-礼物所需钻石
-                                int costMoney = myMoney - amountMoney;
-                                //多余钻石-礼物所需钻石。不计算剩余时长。只扣除钻石
-                                if (costMoney > 0) {
-                                    coinBalance -= amountMoney;
-                                    $coinBalance += amountMoney;
-                                } else {
-                                    Log.e("钻石余额", coinBalance + "======" + (coinBalance + unitPrice.intValue()) + "==========" + TimeCount);
-                                    //计算出剩余钻石换算成分钟
-                                    maleBalanceMoney = ((((coinBalance + unitPrice.intValue()) - amountMoney) / unitPrice.intValue()) * 60) - (TimeCount % 60);
-                                    //扣除钻石
-                                    coinBalance -= amountMoney;
-                                    $coinBalance += amountMoney;
-                                }
-                                if (maleBalanceMoney < 10) {
-                                    maleBalanceMoney += 30;
-                                }
-                            }
-                        }
 
                         if (isMale) {
                             textTip = StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt_male);
@@ -350,13 +308,8 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                         SpannableString stringBuilder = new SpannableString(textTip);
                         int nicknameIndex = textTip.indexOf(nickname);
 
-                        ForegroundColorSpan blueSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint2));
-                        ForegroundColorSpan blueSpan2 = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint2));
                         ForegroundColorSpan blueSpanWhite = new ForegroundColorSpan(ColorUtils.getColor(R.color.white));
-//                        stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 2, 4, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         stringBuilder.setSpan(blueSpanWhite, 0, textTip.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        stringBuilder.setSpan(blueSpan, 0, 3, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        stringBuilder.setSpan(blueSpan2, nicknameIndex, nicknameIndex + nickname.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         putRcvItemMessage(stringBuilder, giftEntity.getImg(), false);
                         Map<String, Object> mapData = new HashMap<>();
                         mapData.put("account", amount);
@@ -438,7 +391,29 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
 
             @Override
             public void onNetworkQuality(TRTCCloudDef.TRTCQuality localQuality, ArrayList<TRTCCloudDef.TRTCQuality> remoteQuality) {
+                //两秒回调一次
+                if (localQuality.quality == 6 || remoteQuality.isEmpty()) {
+                    disconnectTime++;
+                    if (disconnectTime > 30 || (remoteQuality.isEmpty() && disconnectTime >15)) {
+                        hangup();
+                    }
+                }else {
+                    disconnectTime  = 0;
+                }
                 updateNetworkQuality(localQuality, remoteQuality);
+            }
+
+            @Override
+            public void onTryToReconnect() {
+                getRoomStatus(roomId);
+            }
+
+            @Override
+            public void onCallingCancel() {
+                unListener();
+                mTRTCCalling.hangup();
+                mView.finishView();
+                Utils.show("對方取消通話");
             }
         };
         mTRTCCalling.addDelegate(mTRTCCallingDelegate);
@@ -536,14 +511,11 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
         V2TIMManager.getMessageManager().addAdvancedMsgListener(new V2TIMAdvancedMsgListener() {
             @Override
             public void onRecvNewMessage(V2TIMMessage msg) {//新消息提醒
-                super.onRecvNewMessage(msg);
                 if (msg != null && leftUserInfoField.get() != null) {
-                    MessageInfo info = ChatMessageInfoUtil.createMessageInfo(msg);
+                    TUIMessageBean info = ChatMessageBuilder.buildMessage(msg);
                     if (info != null) {
-                        Integer msgFromUserId = ChatUtils.imUserIdToSystemUserId(info.getFromUser());
-                        if (msgFromUserId.intValue() == leftUserInfoField.get().getId().intValue()) {
+                        if (info.getV2TIMMessage().getSender().equals(leftUserInfoField.get().getImId())) {
                             String text = String.valueOf(info.getExtra());
-
                             if (isJSON2(text) && text.indexOf("type") != -1) {//做自定义通知判断
                                 Map<String, Object> map_data = new Gson().fromJson(text, Map.class);
                                 //礼物消息
@@ -555,15 +527,23 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                                     showGiftBarrage(giftEntity);
                                     //礼物收益提示
                                     giftIncome(giftEntity);
-                                } else if (map_data != null && map_data.get("type") != null && map_data.get("type").equals("message_tracking")) {//追踪提示
-                                    CustomMessageIMTextEntity giftEntity = IMGsonUtils.fromJson(String.valueOf(map_data.get("data")), CustomMessageIMTextEntity.class);
-                                    if (giftEntity != null) {
-                                        String sexText = isMale ? StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt3) : StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt2);
-                                        String msgText = giftEntity.getToName() + StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt4) + sexText;
-                                        SpannableString stringBuilder = new SpannableString(msgText);
-                                        ForegroundColorSpan blueSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint2));
-                                        stringBuilder.setSpan(blueSpan, 0, msgText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                        putRcvItemMessage(stringBuilder, null, false);
+                                }else if (map_data != null && map_data.get("type") != null && map_data.get("type").equals("message_countdown")) {//对方余额不足
+                                    if (!isMale && ConfigManager.getInstance().getTipMoneyShowFlag()) {
+                                        String data = (String) map_data.get("data");
+                                        Map<String, Object> dataMapCountdown = new Gson().fromJson(data, Map.class);
+                                        String isShow = (String) dataMapCountdown.get("is_show");
+                                        if (isShow != null && isShow.equals("1")) {
+                                            isShowCountdown.set(true);
+                                            girlEarningsField.set(true);
+                                            String girlEarningsTex = StringUtils.getString(R.string.playfun_insufficient_balance_of_counterparty);
+                                            SpannableString stringBuilder = new SpannableString(girlEarningsTex);
+                                            stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, girlEarningsTex.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                            girlEarningsText.set(stringBuilder);
+
+                                        }else if (isShow != null && isShow.equals("0")){
+                                            isShowCountdown.set(false);
+//                                            girlEarningsField.set(false);
+                                        }
                                     }
                                 }
                             }
@@ -602,8 +582,6 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
         SpannableString stringBuilder = new SpannableString(messageText);
         ForegroundColorSpan blueSpanWhite = new ForegroundColorSpan(ColorUtils.getColor(R.color.white));
         stringBuilder.setSpan(blueSpanWhite, 0, messageText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint2)), 0, nickNameLength, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint2)), youIndex, youIndex + sexText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         putRcvItemMessage(stringBuilder, giftEntity.getImgPath(), false);
     }
 
@@ -614,15 +592,79 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
      */
     private void giftIncome(GiftEntity giftEntity) {
         double total = giftEntity.getAmount().intValue() * giftEntity.getProfitTwd().doubleValue();
-        String itemMessage = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt5), String.format("%.2f", total));
+        String itemMessage = String.format(StringUtils.getString(R.string.profit), String.format("%.2f", total));
         SpannableString itemMessageBuilder = new SpannableString(itemMessage);
-        itemMessageBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, itemMessage.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        itemMessageBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint1)), itemMessage.indexOf("+"), itemMessage.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        itemMessageBuilder.setSpan(new MyImageSpan(getApplication(),R.drawable.icon_crystal),0,1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        itemMessageBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 1, itemMessage.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         putRcvItemMessage(itemMessageBuilder, null, false);
     }
 
-    public void getCallingInfo(Integer roomId, Integer fromUserId, Integer toUserId) {
-        model.getCallingInfo(roomId, 1, fromUserId, toUserId, model.readUserData().getId())
+    public void getMallWithdrawTipsInfo(Integer channel){
+        model.getMallWithdrawTipsInfo(channel)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseDataResponse<MallWithdrawTipsInfoEntity>>() {
+                    @Override
+                    public void onSuccess(BaseDataResponse<MallWithdrawTipsInfoEntity> response) {
+                        MallWithdrawTipsInfoEntity data = response.getData();
+                        uc.clickCrystalExchange.setValue(data);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        dismissHUD();
+                    }
+                });
+    }
+
+    //获取房间状态
+    public void getRoomStatus(Integer roomId) {
+        model.getRoomStatus(roomId)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseDataResponse<CallingStatusEntity>>() {
+                    @Override
+                    public void onSuccess(BaseDataResponse<CallingStatusEntity> response) {
+                        CallingStatusEntity data = response.getData();
+                        Integer roomStatus = data.getRoomStatus();
+                        LogUtils.i("onSuccess: " + roomStatus);
+                        if (roomStatus != null && roomStatus != 101) {
+                            hangup();
+                        }
+                    }
+                });
+    }
+
+    //获取通话状态
+    public void getCallingStatus(Integer roomId) {
+        model.getCallingStatus(roomId)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseDataResponse<CallingStatusEntity>>() {
+                    @Override
+                    public void onSuccess(BaseDataResponse<CallingStatusEntity> response) {
+                        CallingStatusEntity data = response.getData();
+                        if (data != null) {
+                            maleBalanceMoney = data.getPayerCoinBalance();
+                            payeeProfits = data.getPayeeProfits().doubleValue();
+                            totalMinutes = data.getTotalMinutes() * 60;
+                            totalMinutesRemaining = totalMinutes - TimeCount;
+                            callInfoLoaded = true;
+                        }
+
+                    }
+                });
+    }
+
+
+    public void getCallingInfo(Integer roomId, String fromUserId, String toUserId) {
+        model.getCallingInfo(roomId, 1, fromUserId, toUserId)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
@@ -632,7 +674,9 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                     public void onSuccess(BaseDataResponse<CallingInfoEntity> response) {
                         CallingInfoEntity callingInviteInfo = response.getData();
                         UserDataEntity userDataEntity = model.readUserData();
-                        //uc.callAudioStart.call();
+                        audioUserDataEntity.set(userDataEntity);
+                        audioCallingInfoEntity.set(callingInviteInfo);
+
                         sayHiEntityList = callingInviteInfo.getSayHiList().getData();
                         if (sayHiEntityList.size() > 1) {
                             sayHiEntityHidden.set(false);
@@ -645,28 +689,13 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                             rightUserInfoField.set(callingInviteInfo.getToUserProfile());
                             leftUserInfoField.set(callingInviteInfo.getFromUserProfile());
                         }
-
-                        if (userCall) {
-                            coinBalance = callingInviteInfo.getCoinBalance();
-                        } else {
-                            coinBalance = callingInviteInfo.getCoinBalance();
-
-                        }
                         //是否已追踪0未追踪1已追踪
                         collected = callingInviteInfo.getCollected();
                         collectedField.set(collected);
-                        //是否使用道具
-                        useProp = callingInviteInfo.getUseProp();
                         //余额不足提示分钟数
                         balanceNotEnoughTipsMinutes = callingInviteInfo.getBalanceNotEnoughTipsMinutes();
-                        //通话收益提示间隔秒数
-                        profitTipsIntervalSeconds = callingInviteInfo.getProfitTipsIntervalSeconds();
                         //价格配置表
                         unitPriceList = callingInviteInfo.getUnitPriceList();
-                        unitPrice = unitPriceList.get(0).getUnitPrice();
-                        fromMinute = unitPriceList.get(0).getFromMinute();
-                        timePrice = unitPrice.divide(BigDecimal.valueOf(60), 2, BigDecimal.ROUND_HALF_UP);
-                        uc.callAudioStart.call();
 
                         mTRTCCalling.enableAGC(true);
                         mTRTCCalling.enableAEC(true);
@@ -676,10 +705,27 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                     @Override
                     public void onComplete() {
                         dismissHUD();
+                        uc.callAudioStart.call();
                     }
                 });
     }
 
+    public void getTips(Integer toUserId,int type,String isShowCountdown){
+        model.getTips(toUserId, type,isShowCountdown)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .subscribe(new BaseObserver<BaseDataResponse>() {
+                    @Override
+                    public void onSuccess(BaseDataResponse baseDataResponse) {
+                    }
+
+                    @Override
+                    public void onError(RequestException e) {
+
+                    }
+                });
+    }
     //获取破冰文案
     public void getSayHiList() {
         //录音文案数组坐标
@@ -725,6 +771,8 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     }
 
     public class UIChangeObservable {
+        //水晶兑换规则
+        public SingleLiveEvent<MallWithdrawTipsInfoEntity> clickCrystalExchange = new SingleLiveEvent<>();
         //接听成功
         public SingleLiveEvent<Void> callAudioStart = new SingleLiveEvent<>();
         //调用发送礼物弹窗
@@ -744,7 +792,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
 
     //追踪
     public void addLike(boolean isHangup) {
-        model.addIMCollect(leftUserInfoField.get().getId(), 1)
+        model.addCollect(leftUserInfoField.get().getId())
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
@@ -758,13 +806,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                         } else {
                             collected = 1;
                             collectedField.set(1);
-                            ToastUtil.showToast(AppContext.instance(), R.string.playfun_cancel_zuizong_3);
-                            String sexText = isMale ? StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt3) : StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt2);
-                            String msgText = sexText + StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt4) + leftUserInfoField.get().getNickname();
-                            SpannableString stringBuilder = new SpannableString(msgText);
-                            ForegroundColorSpan blueSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint2));
-                            stringBuilder.setSpan(blueSpan, 0, msgText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            putRcvItemMessage(stringBuilder, null, false);
+                            ToastUtils.showShort(R.string.playfun_cancel_zuizong_3);
                         }
                     }
 

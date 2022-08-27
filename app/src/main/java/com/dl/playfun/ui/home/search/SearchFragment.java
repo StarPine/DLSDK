@@ -2,11 +2,15 @@ package com.dl.playfun.ui.home.search;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -20,20 +24,18 @@ import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.FragmentSearchBinding;
-import com.dl.playfun.entity.CoinExchangePriceInfo;
+import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.ui.base.BaseRefreshToolbarFragment;
+import com.dl.playfun.ui.mine.wallet.recharge.RechargeActivity;
 import com.dl.playfun.utils.ImmersionBarUtils;
-import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
-
-import me.goldze.mvvmhabit.utils.ToastUtils;
-import me.jessyan.autosize.internal.CustomAdapt;
+import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 
 /**
  * 搜索
  *
  * @author wulei
  */
-public class SearchFragment extends BaseRefreshToolbarFragment<FragmentSearchBinding, SearchViewModel> implements CustomAdapt {
+public class SearchFragment extends BaseRefreshToolbarFragment<FragmentSearchBinding, SearchViewModel> {
 
     @Nullable
     @Override
@@ -62,6 +64,8 @@ public class SearchFragment extends BaseRefreshToolbarFragment<FragmentSearchBin
     @Override
     public void initData() {
         super.initData();
+        //加大rcv缓存机制。再低于500数量的的时候。不会进行复用item
+        binding.rcvLayout.setItemViewCacheSize(500);
     }
 
     @Override
@@ -78,21 +82,7 @@ public class SearchFragment extends BaseRefreshToolbarFragment<FragmentSearchBin
             @Override
             public void onChanged(Void unused) {
                 AppContext.instance().logEvent(AppsFlyerEvent.Top_up);
-                GameCoinExchargeSheetView coinRechargeSheetView = new GameCoinExchargeSheetView(mActivity);
-                coinRechargeSheetView.show();
-                coinRechargeSheetView.setCoinRechargeSheetViewListener(new GameCoinExchargeSheetView.CoinRechargeSheetViewListener() {
-                    @Override
-                    public void onPaySuccess(GameCoinExchargeSheetView sheetView, CoinExchangePriceInfo sel_goodsEntity) {
-                        sheetView.dismiss();
-                    }
-
-                    @Override
-                    public void onPayFailed(GameCoinExchargeSheetView sheetView, String msg) {
-                        sheetView.dismiss();
-                        ToastUtils.showShort(msg);
-                        AppContext.instance().logEvent(AppsFlyerEvent.Failed_to_top_up);
-                    }
-                });
+                toRecharge();
             }
         });
         //播放搭讪动画
@@ -124,13 +114,12 @@ public class SearchFragment extends BaseRefreshToolbarFragment<FragmentSearchBin
         });
     }
 
-    @Override
-    public boolean isBaseOnWidth() {
-        return true;
+    /**
+     * 去充值
+     */
+    private void toRecharge() {
+        CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(mActivity);
+        coinRechargeFragmentView.show();
     }
 
-    @Override
-    public float getSizeInDp() {
-        return 360;
-    }
 }

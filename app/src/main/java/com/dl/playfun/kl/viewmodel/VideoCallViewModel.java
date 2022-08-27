@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.graphics.drawable.Drawable;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
@@ -15,8 +16,8 @@ import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableInt;
 import androidx.databinding.ObservableList;
 
-import com.aliyun.common.utils.ToastUtil;
 import com.blankj.utilcode.util.ColorUtils;
+import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.ToastUtils;
@@ -31,14 +32,17 @@ import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.CallingInfoEntity;
 import com.dl.playfun.entity.CallingInviteInfo;
-import com.dl.playfun.entity.CustomMessageIMTextEntity;
+import com.dl.playfun.entity.CallingStatusEntity;
+import com.dl.playfun.entity.CallingVideoTryToReconnectEvent;
 import com.dl.playfun.entity.GiftBagEntity;
+import com.dl.playfun.entity.MallWithdrawTipsInfoEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.entity.UserProfileInfo;
 import com.dl.playfun.event.CallVideoUserEnterEvent;
 import com.dl.playfun.kl.view.JMTUICallVideoView;
 import com.dl.playfun.manager.ConfigManager;
-import com.dl.playfun.utils.ChatUtils;
+import com.dl.playfun.utils.ApiUitl;
+import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.google.gson.Gson;
@@ -48,14 +52,14 @@ import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMMessageReceipt;
-import com.tencent.liteav.trtccalling.model.TRTCCalling;
-import com.tencent.liteav.trtccalling.model.TUICalling;
-import com.tencent.qcloud.tuikit.tuichat.bean.MessageInfo;
-import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageInfoUtil;
+import com.tencent.liteav.trtccalling.TUICalling;
+import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.ui.view.MyImageSpan;
+import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -73,52 +77,97 @@ import me.tatarka.bindingcollectionadapter2.ItemBinding;
 
 public class VideoCallViewModel extends BaseViewModel<AppRepository> {
     public int TimeCount = 0;
+    public int roomId = 0;// 房间ID必须持有
+
     //是否发送过礼物
     public boolean sendGiftBagSuccess = false;
     public boolean isCallingInviteInfoNull = false;
+
+    public ObservableField<Boolean> isShowCountdown = new ObservableField(false);
+    public ObservableField<Boolean> isShowBeauty = new ObservableField(false);
+
+    //是否已经显示过兑换规则
+    public ObservableField<Boolean> isHideExchangeRules = new ObservableField<>(false);
 
     //录音文案数组坐标
     public int sayHiePosition = 0;
     public int sayHiePage = 1;
     //订阅者
     private Disposable userEnterSubscription;
+    private Disposable tryToReconnectSubscription;
 
-    //是否是拨打方
-    public boolean userCall = false;
     //对方用户信息
     public ObservableField<CallingInviteInfo> callingInviteInfoField = new ObservableField<>();
     public Integer $coinBalance = 0;
-    // 被叫还没接听时的遮挡层
-    public ObservableField<Boolean> isShelterShowBinding = new ObservableField<>(false);
-    public ObservableField<String> myNicknameBinding = new ObservableField<>("");
-    // 名字右边的标签
-    public ObservableField<Boolean> isLabel1ShowBinding = new ObservableField<>(false);
-    public ObservableField<Boolean> isLabel2ShowBinding = new ObservableField<>(false);
     public ObservableField<Boolean> isCalledWaitingBinding = new ObservableField<>(true);
     // 是否被叫
     public ObservableField<Boolean> isCalledBinding = new ObservableField<>(false);
-    // 未接听时的收益提示（黄色字体）
+    // 未接听时的收入提示（黄色字体）
     public ObservableField<String> callHintBinding = new ObservableField<>("");
-
     public ObservableField<Boolean> mainVIewShow = new ObservableField<>(false);
-
+    //防录屏提示开关
+    public ObservableField<Boolean> tipSwitch = new ObservableField(true);
     protected JMTUICallVideoView mCallVideoView;
-
-
-    public void hangup() {
-        mCallVideoView.hangup();
-    }
-
-    public Integer mfromUserId;
-    public Integer mtoUserId;
-
-    public BigDecimal coinTotal;
+    public String mfromUserId;
+    public String mtoUserId;
     //当前用户是否男性
     public boolean isMale = false;
-    //钻石余额(仅男用户)
-    public Integer coinBalance;
-
     public boolean videoSuccess = false;
+    private String mMyUserId;
+    private String mOtherUserId;
+    private TUICalling.Role mRole;
+    //是否是拨打方
+    public boolean userCall = false;
+    //通话数据加载完成
+    public boolean callInfoLoaded = false;
+    //男生钻石总余额
+    public int maleBalanceMoney = 0;
+    //男生总分钟数
+    public int totalMinutes = 0;
+    //男生剩余聊天分钟数
+    public int totalMinutesRemaining = 0;
+    //聊天收益
+    public double payeeProfits;
+    //断网总时间
+    int disconnectTime = 0;
+    //是否已追踪0未追踪1已追踪
+    public Integer collected;
+    //余额不足临界提示分钟数
+    public int balanceNotEnoughTipsMinutes;
+    //余额不足提示标记
+    public boolean flagMoneyNotWorth = false;
+    //价格配置表
+    public List<CallingInfoEntity.CallingUnitPriceInfo> unitPriceList;
+    //时间提示
+    public ObservableField<String> timeTextField = new ObservableField<>();
+    //对方用户信息
+    public ObservableField<CallingInfoEntity.FromUserProfile> callingVideoInviteInfoField = new ObservableField<>();
+    //男生收入框是否展示
+    public ObservableBoolean maleTextLayoutSHow = new ObservableBoolean(false);
+    //男性收入内容
+    public ObservableField<String> maleTextMoneyField = new ObservableField();
+    //女性收入弹窗是否显示
+    public ObservableBoolean girlEarningsField = new ObservableBoolean(false);
+    //收入文字
+    public ObservableField<SpannableString> girlEarningsText = new ObservableField<>();
+    //是否已经追踪
+    public ObservableInt collectedField = new ObservableInt(1);
+    //是否静音
+    public ObservableBoolean micMuteField = new ObservableBoolean(false);
+    //是否免提
+    public ObservableBoolean handsFreeField = new ObservableBoolean(false);
+    //破冰文案
+    public List<CallingInfoEntity.SayHiEntity> sayHiEntityList = new ArrayList<>();
+    //破冰文案
+    public ObservableField<CallingInfoEntity.SayHiEntity> sayHiEntityField = new ObservableField<>();
+    //破冰文案是否显示
+    public ObservableBoolean sayHiEntityHidden = new ObservableBoolean(true);
+
+    public BindingRecyclerViewAdapter<VideoCallChatingItemViewModel> adapter = new BindingRecyclerViewAdapter<>();
+    public ObservableList<VideoCallChatingItemViewModel> observableList = new ObservableArrayList<>();
+    public ItemBinding<VideoCallChatingItemViewModel> itemBinding = ItemBinding.of(BR.viewModel, R.layout.item_call_video_chating);
+    public UIChangeObservable uc = new UIChangeObservable();
+
     public BindingCommand acceptOnclick = new BindingCommand(new BindingAction() {
         @Override
         public void call() {
@@ -127,6 +176,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
             }
             mainVIewShow.set(true);
             mCallVideoView.acceptCall();
+            Log.e("接听电话按钮点击", mMyUserId + "=======" + mOtherUserId);
             //getCallingInfo(roomId, ChatUtils.imUserIdToSystemUserId(mMyUserId), ChatUtils.imUserIdToSystemUserId(mOtherUserId));
             if (mRole == TUICalling.Role.CALLED) {
                 isCalledWaitingBinding.set(false);
@@ -150,56 +200,36 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
         }
     });
 
-    //已经取下标数
-    public Integer formSelIndex = 0;
-    //收益从第N分钟开始
-    public Integer fromMinute;
-    //单价
-    public BigDecimal unitPrice;
-    //每秒收益
-    public BigDecimal timePrice;
-    //是否已追踪0未追踪1已追踪
-    public Integer collected;
-    //是否使用道具
-    public Integer useProp;
-    //余额不足提示分钟数
-    public Integer balanceNotEnoughTipsMinutes;
-    public int maleBalanceMoney;
-    public boolean flagMoney = false;
-    //通话收益提示间隔秒数
-    public Integer profitTipsIntervalSeconds;
-    //价格配置表
-    public List<CallingInfoEntity.CallingUnitPriceInfo> unitPriceList;
+    //关闭女生界面男生余额不足提示
+    public BindingCommand closeMoney2 = new BindingCommand(new BindingAction() {
+        @Override
+        public void call() {
+            isShowCountdown.set(false);
+            girlEarningsField.set(false);
+        }
+    });
 
-    //时间提示
-    public ObservableField<String> timeTextField = new ObservableField<>();
-    //对方用户信息
-    public ObservableField<CallingInfoEntity.FromUserProfile> callingVideoInviteInfoField = new ObservableField<>();
-    //男生收益框是否展示
-    public ObservableBoolean maleTextLayoutSHow = new ObservableBoolean(false);
-    //男性收益内容
-    public ObservableField<String> maleTextMoneyField = new ObservableField();
-    //女性收益弹窗是否显示
-    public ObservableBoolean girlEarningsField = new ObservableBoolean(false);
-    //收益文字
-    public ObservableField<SpannableString> girlEarningsText = new ObservableField<>();
-    //是否已经追踪
-    public ObservableInt collectedField = new ObservableInt(1);
-    //是否静音
-    public ObservableBoolean micMuteField = new ObservableBoolean(false);
-    //是否免提
-    public ObservableBoolean handsFreeField = new ObservableBoolean(false);
-    //破冰文案
-    public List<CallingInfoEntity.SayHiEntity> sayHiEntityList = new ArrayList<>();
-    //破冰文案
-    public ObservableField<CallingInfoEntity.SayHiEntity> sayHiEntityField = new ObservableField<>();
-    //破冰文案是否显示
-    public ObservableBoolean sayHiEntityHidden = new ObservableBoolean(true);
+    /**
+     * 打开美颜
+     */
+    public BindingCommand beauty = new BindingCommand(new BindingAction() {
+        @Override
+        public void call() {
+            isShowBeauty.set(!isShowBeauty.get());
+        }
+    });
 
-    public BindingRecyclerViewAdapter<VideoCallChatingItemViewModel> adapter = new BindingRecyclerViewAdapter<>();
-    public ObservableList<VideoCallChatingItemViewModel> observableList = new ObservableArrayList<>();
-    public ItemBinding<VideoCallChatingItemViewModel> itemBinding = ItemBinding.of(BR.viewModel, R.layout.item_call_video_chating);
-    public UIChangeObservable uc = new UIChangeObservable();
+
+    /**
+     * 水晶兑换规则
+     */
+    public BindingCommand crystalOnClick = new BindingCommand(new BindingAction() {
+        @Override
+        public void call() {
+            getMallWithdrawTipsInfo(1);
+        }
+    });
+
     public BindingCommand closeOnclick = new BindingCommand(new BindingAction() {
         @Override
         public void call() {
@@ -212,6 +242,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
         @Override
         public void call() {
             AppContext.instance().logEvent(AppsFlyerEvent.videocall_gift);
+            getCallingStatus(roomId);
             uc.callGiftBagAlert.call();
         }
     });
@@ -252,7 +283,6 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
             mCallVideoView.switchCamera();
         }
     });
-    protected int roomId = 0;// 房间ID必须持有
 
     public BindingCommand rejectOnclick = new BindingCommand(new BindingAction() {
         @Override
@@ -286,14 +316,15 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
             sayHiEntityHidden.set(true);
         }
     });
-    private String mMyUserId;
-    private String mOtherUserId;
-    private TUICalling.Role mRole;
+
+    public void hangup(){
+        mCallVideoView.hangup();
+    }
 
     //拨打语音、视频
-    public void getCallingInvitedInfo(int callingType, Integer fromUserId) {
-        int userId = model.readUserData().getId();
-        model.callingInviteInfo(callingType, fromUserId, userId, userId)
+    public void getCallingInvitedInfo(int callingType, String fromUserId) {
+        String userId = model.readUserData().getImUserId();
+        model.callingInviteInfo(callingType, fromUserId, userId, 0)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
@@ -332,6 +363,23 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
                 });
     }
 
+    public void getTips(Integer toUserId, int type, String isShowCountdown){
+        model.getTips(toUserId, type,isShowCountdown)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .subscribe(new BaseObserver<BaseDataResponse>() {
+                    @Override
+                    public void onSuccess(BaseDataResponse baseDataResponse) {
+                    }
+
+                    @Override
+                    public void onError(RequestException e) {
+
+                    }
+                });
+    }
+
     public VideoCallViewModel(@NonNull @NotNull Application application) {
         super(application);
     }
@@ -360,6 +408,27 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
         this.isCalledBinding.set(role == TUICalling.Role.CALLED);
         this.isCalledWaitingBinding.set(role == TUICalling.Role.CALLED);
         this.roomId = roomId;
+    }
+
+    public void getMallWithdrawTipsInfo(Integer channel){
+        model.getMallWithdrawTipsInfo(channel)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseDataResponse<MallWithdrawTipsInfoEntity>>() {
+                    @Override
+                    public void onSuccess(BaseDataResponse<MallWithdrawTipsInfoEntity> response) {
+                        MallWithdrawTipsInfoEntity data = response.getData();
+                        uc.clickCrystalExchange.setValue(data);
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        dismissHUD();
+                    }
+                });
     }
 
     public Drawable getVipGodsImg(CallingInviteInfo callingInviteInfo) {
@@ -447,13 +516,13 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
     }
 
     //通话中获取资料
-    public void getCallingInfo(Integer roomId, Integer fromUserId, Integer toUserId) {
+    public void getCallingInfo(Integer roomId, String fromUserId, String toUserId) {
         if (isCallingInviteInfoNull) {
             return;
         }
         isCallingInviteInfoNull = true;
         Log.e("通话中调用接口", "====================" + roomId + "======" + fromUserId + "==========" + toUserId);
-        model.getCallingInfo(roomId, 2, fromUserId, toUserId, model.readUserData().getId())
+        model.getCallingInfo(roomId, 2, fromUserId, toUserId)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
@@ -466,7 +535,6 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
                         CallingInfoEntity callingInviteInfo = response.getData();
                         UserDataEntity userDataEntity = model.readUserData();
                         mCallVideoView.acceptCall();
-                        uc.callAudioStart.call();
                         sayHiEntityList = callingInviteInfo.getSayHiList().getData();
                         if (sayHiEntityList.size() > 1) {
                             sayHiEntityHidden.set(false);
@@ -477,22 +545,13 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
                         } else {
                             callingVideoInviteInfoField.set(callingInviteInfo.getFromUserProfile());
                         }
-                        //钻石余额(仅男用户)
-                        coinBalance = callingInviteInfo.getCoinBalance();
                         //是否已追踪0未追踪1已追踪
                         collected = callingInviteInfo.getCollected();
                         collectedField.set(collected);
-                        //是否使用道具
-                        useProp = callingInviteInfo.getUseProp();
                         //余额不足提示分钟数
                         balanceNotEnoughTipsMinutes = callingInviteInfo.getBalanceNotEnoughTipsMinutes();
-                        //通话收益提示间隔秒数
-                        profitTipsIntervalSeconds = callingInviteInfo.getProfitTipsIntervalSeconds();
                         //价格配置表
                         unitPriceList = callingInviteInfo.getUnitPriceList();
-                        unitPrice = unitPriceList.get(0).getUnitPrice();
-                        fromMinute = unitPriceList.get(0).getFromMinute();
-                        timePrice = unitPrice.divide(BigDecimal.valueOf(60), 2, BigDecimal.ROUND_HALF_UP);
                         initIMListener();
                         mCallVideoView.enableAGC(true);
                         mCallVideoView.enableAEC(true);
@@ -507,13 +566,61 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
                     @Override
                     public void onComplete() {
                         dismissHUD();
+                        uc.callAudioStart.call();
+                    }
+                });
+    }
+
+    //获取房间状态
+    public void getRoomStatus(Integer roomId) {
+        model.getRoomStatus(roomId)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseDataResponse<CallingStatusEntity>>() {
+                    @Override
+                    public void onSuccess(BaseDataResponse<CallingStatusEntity> response) {
+                        CallingStatusEntity data = response.getData();
+                        Integer roomStatus = data.getRoomStatus();
+                        LogUtils.i("onSuccess: " + roomStatus);
+                        if (roomStatus != null && roomStatus != 101) {
+                            hangup();
+                        }
+                    }
+                });
+    }
+
+    //获取通话状态
+    public void getCallingStatus(Integer roomId) {
+        model.getCallingStatus(roomId)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseDataResponse<CallingStatusEntity>>() {
+                    @Override
+                    public void onSuccess(BaseDataResponse<CallingStatusEntity> response) {
+                        CallingStatusEntity data = response.getData();
+                        if (data != null) {
+                            maleBalanceMoney = data.getPayerCoinBalance();
+                            payeeProfits = data.getPayeeProfits().doubleValue();
+                            totalMinutes = data.getTotalMinutes() * 60;
+                            totalMinutesRemaining = totalMinutes - TimeCount;
+                            callInfoLoaded = true;
+                        }
                     }
                 });
     }
 
     //发送礼物
     public void sendUserGift(Dialog dialog, GiftBagEntity.giftEntity giftEntity, Integer to_user_id, Integer amount) {
-        model.sendUserGift(giftEntity.getId(), to_user_id, amount, 2)
+        HashMap<String, Integer> map = new HashMap<>();
+        map.put("giftId", giftEntity.getId());
+        map.put("toUserId", to_user_id);
+        map.put("type", 2);
+        map.put("amount", amount);
+        model.sendUserGift(ApiUitl.getBody(GsonUtils.toJson(map)))
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
@@ -522,82 +629,10 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
                     @Override
                     public void onSuccess(BaseResponse baseResponse) {
                         dismissHUD();
+                        getCallingStatus(roomId);
                         sendGiftBagSuccess = true;
                         dialog.dismiss();
                         String textTip = null;
-                        //礼物数量*礼物钻石
-                        int amountMoney = giftEntity.getMoney().intValue() * amount;
-                        if (userCall) {//拨打方
-                            if (TimeCount < 60) {//不满1分钟
-                                if (unitPriceList.size() > 1) {//聊天卡
-                                    //总钻石 - 每分钟花费钻石得到 多余钻石
-                                    int myMoney = coinBalance.intValue() % unitPrice.intValue();
-                                    Log.e("有聊天卡。总钻石余额为", myMoney + "=======" + coinBalance.intValue() + "=====" + unitPrice.intValue());
-                                    //剩余钻石-礼物所需钻石
-                                    int costMoney = myMoney - amountMoney;
-                                    Log.e("剩余钻石-礼物所需钻石", costMoney + "=======" + myMoney + "=====" + amountMoney);
-                                    //多余钻石-礼物所需钻石。不计算剩余时长。只扣除钻石
-                                    if (costMoney > 0) {
-                                        coinBalance -= amountMoney;
-                                        $coinBalance += amountMoney;
-                                    } else {
-                                        Log.e("扣除分钟前剩余分钟", maleBalanceMoney + "========");
-                                        //计算出剩余钻石换算成分钟
-                                        maleBalanceMoney = ((((coinBalance + unitPrice.intValue()) - amountMoney) / unitPrice.intValue()) * 60) - TimeCount;
-                                        Log.e("扣除分钟后剩余分钟", maleBalanceMoney + "========");
-                                        //扣除钻石
-                                        coinBalance -= amountMoney;
-                                        $coinBalance += amountMoney;
-                                    }
-                                    if (maleBalanceMoney < 10) {
-                                        maleBalanceMoney += 30;
-                                    }
-                                } else {//不是聊天卡
-                                    int myMoney = coinBalance.intValue() % unitPrice.intValue();
-                                    //剩余钻石-礼物所需钻石
-                                    int costMoney = myMoney - amountMoney;
-                                    //多余钻石-礼物所需钻石。不计算剩余时长。只扣除钻石
-                                    if (costMoney > 0) {
-                                        Log.e("扣除多余钻石", costMoney + "====" + coinBalance);
-                                        coinBalance -= amountMoney;
-                                        $coinBalance += amountMoney;
-                                        Log.e("剩余钻石:", coinBalance + "=====已消费钻石==" + $coinBalance + "====" + amountMoney);
-                                    } else {
-                                        Log.e("多余钻石不足消费分钟", maleBalanceMoney + "======" + coinBalance);
-                                        //计算出剩余钻石换算成分钟
-                                        maleBalanceMoney = ((((coinBalance + unitPrice.intValue()) - amountMoney) / unitPrice.intValue()) * 60) - TimeCount;
-                                        Log.e("剩余使用分钟", maleBalanceMoney + "");
-                                        //扣除钻石
-                                        coinBalance -= amountMoney;
-                                        $coinBalance += amountMoney;
-                                        Log.e("剩余使用分钟", maleBalanceMoney + "====" + coinBalance + "=====" + $coinBalance);
-                                    }
-                                    if (maleBalanceMoney < 10) {
-                                        maleBalanceMoney += 30;
-                                    }
-                                }
-                            } else {
-                                int myMoney = coinBalance.intValue() % unitPrice.intValue();
-                                //剩余钻石-礼物所需钻石
-                                int costMoney = myMoney - amountMoney;
-                                //多余钻石-礼物所需钻石。不计算剩余时长。只扣除钻石
-                                if (costMoney > 0) {
-                                    coinBalance -= amountMoney;
-                                    $coinBalance += amountMoney;
-                                } else {
-                                    Log.e("钻石余额", coinBalance + "======" + (coinBalance + unitPrice.intValue()) + "==========" + TimeCount);
-                                    //计算出剩余钻石换算成分钟
-                                    maleBalanceMoney = ((((coinBalance + unitPrice.intValue()) - amountMoney) / unitPrice.intValue()) * 60) - (TimeCount % 60);
-                                    //扣除钻石
-                                    coinBalance -= amountMoney;
-                                    $coinBalance += amountMoney;
-                                }
-                                if (maleBalanceMoney < 10) {
-                                    maleBalanceMoney += 30;
-                                }
-                            }
-                        }
-
                         if (isMale) {
                             textTip = StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt_male);
                         } else {
@@ -607,15 +642,14 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
                         textTip += " " + nickname;
                         int startLength = textTip.length();
                         textTip += " " + giftEntity.getName() + " x" + amount;
-                        int nicknameIndex = textTip.indexOf(nickname);
                         SpannableString stringBuilder = new SpannableString(textTip);
 
                         ForegroundColorSpan blueSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint2));
-                        ForegroundColorSpan blueSpan2 = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint2));
                         ForegroundColorSpan blueSpanWhite = new ForegroundColorSpan(ColorUtils.getColor(R.color.white));
-                        stringBuilder.setSpan(blueSpanWhite, 0, textTip.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        stringBuilder.setSpan(blueSpan, 0, 3, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        stringBuilder.setSpan(blueSpan2, nicknameIndex, nicknameIndex + nickname.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint2)), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 2, 4, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        stringBuilder.setSpan(blueSpan, 5, 5 + nickname.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        stringBuilder.setSpan(blueSpanWhite, startLength, textTip.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         putRcvItemMessage(stringBuilder, giftEntity.getImg(), false);
                         Map<String, Object> mapData = new HashMap<>();
                         mapData.put("account", amount);
@@ -638,7 +672,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
 
     //追踪
     public void addLike(boolean isHangup) {
-        model.addIMCollect(callingVideoInviteInfoField.get().getId(), 2)
+        model.addCollect(callingVideoInviteInfoField.get().getId())
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
@@ -652,13 +686,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
                         } else {
                             collected = 1;
                             collectedField.set(1);
-                            ToastUtil.showToast(AppContext.instance(), R.string.playfun_cancel_zuizong_3);
-                            String sexText = isMale ? StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt3) : StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt2);
-                            String msgText = sexText + StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt4) + callingVideoInviteInfoField.get().getNickname();
-                            SpannableString stringBuilder = new SpannableString(msgText);
-                            ForegroundColorSpan blueSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint2));
-                            stringBuilder.setSpan(blueSpan, 0, msgText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            putRcvItemMessage(stringBuilder, null, false);
+                            ToastUtils.showShort(R.string.playfun_cancel_zuizong_3);
                         }
                     }
 
@@ -684,12 +712,25 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
                     if (roomId != 0 && mfromUserId != null && mtoUserId != null) {
                         getCallingInfo(roomId, mfromUserId, mtoUserId);
                     } else {
-                        getCallingInfo(roomId, model.readUserData().getId(), ChatUtils.imUserIdToSystemUserId(event.getUserId()));
+                        getCallingInfo(roomId, model.readUserData().getImUserId(), event.getUserId());
                     }
-
+                });
+        tryToReconnectSubscription = RxBus.getDefault().toObservable(CallingVideoTryToReconnectEvent.class)
+                .subscribe(callingVideoTryToReconnectEvent -> {
+                    getRoomStatus(roomId);
                 });
         //将订阅者加入管理站
         RxSubscriptions.add(userEnterSubscription);
+        RxSubscriptions.add(tryToReconnectSubscription);
+    }
+
+    //移除RxBus
+    @Override
+    public void removeRxBus() {
+        super.removeRxBus();
+        //将订阅者从管理站中移除
+        RxSubscriptions.remove(userEnterSubscription);
+        RxSubscriptions.remove(tryToReconnectSubscription);
     }
 
     public static boolean isJSON2(String str) {
@@ -709,12 +750,10 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
         V2TIMManager.getMessageManager().addAdvancedMsgListener(new V2TIMAdvancedMsgListener() {
             @Override
             public void onRecvNewMessage(V2TIMMessage msg) {//新消息提醒
-                super.onRecvNewMessage(msg);
                 if (msg != null && callingVideoInviteInfoField.get() != null) {
-                    MessageInfo info = ChatMessageInfoUtil.createMessageInfo(msg);
+                    TUIMessageBean info = ChatMessageBuilder.buildMessage(msg);
                     if (info != null) {
-                        Integer msgFromUserId = ChatUtils.imUserIdToSystemUserId(info.getFromUser());
-                        if (msgFromUserId.intValue() == callingVideoInviteInfoField.get().getId().intValue()) {
+                        if (info.getV2TIMMessage().getSender().equals(callingVideoInviteInfoField.get().getImId())) {
                             Log.e("确定是聊天对象发送的消息", "==================");
                             String text = String.valueOf(info.getExtra());
                             Log.e("聊天消息体未", text);
@@ -731,15 +770,22 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
 
                                     //礼物收益提示
                                     giftIncome(giftEntity);
-                                } else if (map_data != null && map_data.get("type") != null && map_data.get("type").equals("message_tracking")) {//追踪提示
-                                    CustomMessageIMTextEntity giftEntity = IMGsonUtils.fromJson(String.valueOf(map_data.get("data")), CustomMessageIMTextEntity.class);
-                                    if (giftEntity != null) {
-                                        String sexText = isMale ? StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt3) : StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt2);
-                                        String msgText = giftEntity.getToName() + StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt4) + sexText;
-                                        SpannableString stringBuilder = new SpannableString(msgText);
-                                        ForegroundColorSpan blueSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint2));
-                                        stringBuilder.setSpan(blueSpan, 0, msgText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                        putRcvItemMessage(stringBuilder, null, false);
+                                }else if (map_data != null && map_data.get("type") != null && map_data.get("type").equals("message_countdown")) {//对方余额不足
+                                    if (!isMale && ConfigManager.getInstance().getTipMoneyShowFlag()) {
+                                        String data = (String) map_data.get("data");
+                                        Map<String, Object> dataMapCountdown = new Gson().fromJson(data, Map.class);
+                                        String isShow = (String) dataMapCountdown.get("is_show");
+                                        if (isShow != null && isShow.equals("1")) {
+                                            isShowCountdown.set(true);
+                                            girlEarningsField.set(true);
+                                            String girlEarningsTex = StringUtils.getString(R.string.playfun_insufficient_balance_of_counterparty);
+                                            SpannableString stringBuilder = new SpannableString(girlEarningsTex);
+                                            stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, girlEarningsTex.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                            girlEarningsText.set(stringBuilder);
+
+                                        }else if (isShow != null && isShow.equals("0")){
+                                        isShowCountdown.set(false);
+                                        }
                                     }
                                 }
                             }
@@ -789,10 +835,10 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
      * @param giftEntity
      */
     private void giftIncome(GiftEntity giftEntity) {
-        String itemMessage = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt5), String.format("%.2f", giftEntity.getAmount().intValue() * giftEntity.getProfitTwd().doubleValue()));
+        String itemMessage = String.format(StringUtils.getString(R.string.profit), String.format("%.2f", giftEntity.getAmount().intValue() * giftEntity.getProfitTwd().doubleValue()));
         SpannableString itemMessageBuilder = new SpannableString(itemMessage);
-        itemMessageBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, itemMessage.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        itemMessageBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint1)), itemMessage.indexOf("+"), itemMessage.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        itemMessageBuilder.setSpan(new MyImageSpan(getApplication(),R.drawable.icon_crystal),0,1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        itemMessageBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 1, itemMessage.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         putRcvItemMessage(itemMessageBuilder, null, false);
     }
 
@@ -813,18 +859,10 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<GiftEntity> acceptUserGift = new SingleLiveEvent<>();
         //关闭消息
         public SingleLiveEvent<Void> closeViewHint = new SingleLiveEvent<>();
+        public SingleLiveEvent<MallWithdrawTipsInfoEntity> clickCrystalExchange = new SingleLiveEvent<>();
         //滚动到屏幕底部
         public SingleLiveEvent<Void> scrollToEnd = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> startVideoUpSayHiAnimotor = new SingleLiveEvent<>();
     }
-
-    //移除RxBus
-    @Override
-    public void removeRxBus() {
-        super.removeRxBus();
-        //将订阅者从管理站中移除
-        RxSubscriptions.remove(userEnterSubscription);
-    }
-
 
 }

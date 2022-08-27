@@ -21,9 +21,12 @@ import com.luck.picture.lib.listener.OnResultCallbackListener;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.databinding.FragmentMyPhotoAlbumBinding;
+import com.tencent.qcloud.tuicore.Status;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import me.goldze.mvvmhabit.utils.ToastUtils;
 
 /**
  * 相册
@@ -84,6 +87,10 @@ public class MyPhotoAlbumFragment extends BaseRefreshToolbarFragment<FragmentMyP
                     if (position == 0) {
                         choosePhoto();
                     } else if (position == 1) {
+                        if (Status.mIsShowFloatWindow){
+                            ToastUtils.showShort(R.string.audio_in_call);
+                            return;
+                        }
                         chooseVideo();
                     }
                 }).setCancelButton(getString(R.string.playfun_cancel), new BottomSheet.CancelClickListener() {
@@ -119,6 +126,7 @@ public class MyPhotoAlbumFragment extends BaseRefreshToolbarFragment<FragmentMyP
                     } else {
                         break;
                     }
+                    albumPhotoEntity.setLocalUpdate(true);
                     albumPhotoList.add(albumPhotoEntity);
                 }
                 if (albumPhotoList.size() == 0) {
@@ -165,6 +173,7 @@ public class MyPhotoAlbumFragment extends BaseRefreshToolbarFragment<FragmentMyP
                     } else {
                         break;
                     }
+                    albumPhotoEntity.setLocalUpdate(true);
                     albumPhotoList.add(albumPhotoEntity);
                 }
                 if (albumPhotoList.size() == 0) {

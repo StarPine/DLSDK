@@ -7,6 +7,10 @@
     <color name="transparent">#00000000</color>
     <color name="transparentyin">#80B4B9BC</color>
     <color name="ic_default_bg_color">#33000000</color>
+    <color name="text_yellow">#FFB400</color>
+    <color name="yellow_617">#FFE617</color>
+    <color name="text_yellow2">#D3913E</color>
+    <color name="bg_white">#FFF8F3</color>
 
     <color name="window_background">#F8F8F8</color>
     <color name="container_background">#F8F8F8</color>
@@ -16,21 +20,32 @@
     <color name="divider">#DADADA</color>
     <color name="divider_f8">#F8F8F8</color>
     <color name="hud_background">#96000000</color>
+    <color name="black_558">#424558</color>
+    <color name="black_848">#353848</color>
     <color name="view_bar_color">#F8F8F8</color>
 
     <color name="gray_dark">#4F4F4F</color>
+    <color name="balck_35e">#42435E</color>
     <color name="gray_middle">#828282</color>
+    <color name="gray2">#F1F1F1</color>
+    <color name="gray3">#66F1F1F1</color>
     <color name="gray_light">#BFBFBF</color>
     <color name="text_default">#2F2F4D</color>
     <color name="text_5b">#5B5F78</color>
     <color name="text_b4">#B4B4B4</color>
 
     <color name="green">#2FCC72</color>
+    <color name="green2">#2FDDA7</color>
+    <color name="green_14E29A">#14E29A</color>
     <color name="blue">#49AAE1</color>
     <color name="blue_light">#E6F4FC</color>
     <color name="red_8">#ffff3939</color>
+    <color name="red_10">#EF5345</color>
     <color name="red_7c">#FE5E7C</color>
+    <color name="red_7d">#FF0000</color>
     <color name="red_E944C4">#E944C4</color>
+    <color name="red_9">#FF2869</color>
+
     <color name="red_light">#FBEBEE</color>
     <color name="brown">#827692</color>
     <color name="brown_light">#EEEBF5</color>
@@ -68,6 +83,17 @@
     <color name="black30">#4D000000</color>
 
     <color name="purple1">#FFA72DFE</color>
+    <color name="purple2">#8815DA</color>
+    <color name="coffee">#B95541</color>
+    <color name="coffee2">#6A2D02</color>
+    <color name="vip_buy">#ffc4611d</color>
+    <color name="yellow_544">#FFF544</color>
+    <color name="yellow_714">#FFA714</color>
+    <color name="yellow_dad">#FCDDAD</color>
+    <color name="yellow_a44">#8E6A44</color>
+    <color name="yellow_e4a">#FFEE4A</color>
+    <color name="yellow_600">#FFB600</color>
+    <color name="coffee_11d">#C4611D</color>
 
     <color name="dating_content">#FFECECEC</color>
     <color name="circle_border_z">#E146C7</color>
@@ -83,5 +109,29 @@
     <color name="call_message_deatail_hint2">#FF3DFFF0</color>
 
     <color name="accost_down_time_change">#FF333333</color>
+    <color name="purple_text">#BE63FF</color>
+    <color name="plafun_purple_text">#9F77F7</color>
+    <color name="play_chat_purple_1">#BE63FF</color>
+    <color name="play_chat_gray_2">#F4F4F4</color>
+    <color name="play_chat_gray_3">#9897B3</color>
+    <color name="common_button_disable_color">#BBBBBB</color>
+
+    <color name="pseekbar_process">#FF1579</color>
+    <color name="pseekbar_process_off">#9896B4</color>
+    <color name="pseekbar_process_off2">#F1F2F9</color>
+
+    <color name="task_money_cnt_yellow">#ffdd4a</color>
+    <color name="task_tag">#ff6859eb</color>
+    <color name="huise">#FF787995</color>
+    <color name="black31">#FF2F2F4D</color>
+    <color name="black32">#332F2F4D</color>
+    <color name="task_sign_day_text">#FFB06BA9</color>
+    <color name="red_yin1">#F8EEFF</color>
+    <color name="white_yin1">#908fa6</color>
+    <color name="partTranslucent">#39000000</color>
+
+    <color name="playfun_shape_radius_start_color">#6D62F8</color>
+    <color name="playfun_shape_radius_end_color">#BE63FF</color>
+
 
 </resources>

@@ -1,0 +1,153 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
+    defaultConfig {
+        applicationId "com.sdk.playfun.test"
+        minSdkVersion 21
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+        buildConfigField "String", "BUILD_TIME", "\"${releaseTime()}\""
+
+        // vectorDrawables.useSupportLibrary = true
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath true
+            }
+        }
+
+        ndk {
+            //设置支持的SO库架构
+            abiFilters  "armeabi-v7a", "arm64-v8a"
+        }
+
+        externalNativeBuild {
+            ndk {
+                abiFilters "armeabi-v7a", "arm64-v8a"
+            }
+        }
+        vectorDrawables.useSupportLibrary = true
+    }
+    signingConfigs {
+        release {
+            storeFile file('../../keystore/dlplayfunru.jks')
+            storePassword 'dlplayfunru'
+            keyAlias 'dlplayfunru'
+            keyPassword 'dlplayfunru'
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+        debug{
+            storeFile file('../../keystore/starpine.jks')
+            storePassword 'starpine'
+            keyAlias 'starpine'
+            keyPassword 'starpine'
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+    }
+
+    dataBinding {
+        enabled = true
+    }
+    buildTypes {
+        debug {
+            zipAlignEnabled = true //是否开启zip压缩
+            shrinkResources false //去除无用资源
+            minifyEnabled false   //是否代码混淆
+            multiDexEnabled true //防止方法数量超过65536导致错误
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+        release {
+            zipAlignEnabled = true //是否开启zip压缩
+            minifyEnabled true   //是否代码混淆
+            multiDexEnabled true //防止方法数量超过65536导致错误
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+    flavorDimensions "playfun"
+    //定义的配置 最终会在Build Variants里面呈现出来
+    productFlavors {
+        // PlayChat台湾版配置 BuildPlayChatRelease (false = Debug 或 true = 正式包)
+        PlayFunAAR {
+            dimension "playfun"
+        }
+        // 台湾版配置-Test   playFunDebug
+        PlayChatAPK {
+            dimension "playfun"
+        }
+
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
+    android.applicationVariants.all {
+        variant ->
+            variant.outputs.all {
+                //在这里修改apk文件名
+                outputFileName = "PlayFun-${variant.name}-v${variant.versionName}-${releaseTime()}.apk"
+            }
+            //删除多余的特效资源
+            variant.mergeAssetsProvider.configure {
+                doLast {
+                    delete(fileTree(dir: outputDir, includes: ['model/ai_human_processor.bundle',
+                                                               'model/ai_face_processor.bundle',
+                                                               'model/ai_human_processor_mb_fast.bundle',
+                                                               'model/ai_hand_processor.bundle',
+                                                               'model/ai_hairseg.bundle',
+                                                               'model/ai_bgseg_green.bundle',
+                                                               'graphics/controller.bundle',
+                                                               'graphics/fuzzytoonfilter.bundle',
+                                                               'graphics/fxaa.bundle',
+                                                               'graphics/controller_cpp.bundle',
+                                                               'graphics/face_makeup.bundle',
+                                                               'graphics/body_slim.bundle',
+                                                               'graphics/tongue.bundle']))
+                }
+            }
+    }
+}
+
+def releaseTime() {
+
+    return new Date().format("yyyy-MM-dd_HH-mm", TimeZone.getTimeZone("GMT+08:00"))
+
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    //日志打印
+    implementation 'com.github.ihsanbal:LoggingInterceptor:3.0.0'
+    implementation "com.tencent.liteav:LiteAVSDK_TRTC:10.1.0.11109"
+    implementation 'com.tencent.imsdk:imsdk-plus:6.2.2363'
+    implementation platform('com.google.firebase:firebase-bom:28.0.1')
+    annotationProcessor rootProject.ext.dependencies["lifecycle-compiler"]
+    dependenciesID.each {k,v -> implementation v}
+    rxDependencies.each {k,v -> implementation v}
+
+//    implementation(name: 'playfun-lib-1.5.7', ext: 'aar')
+    implementation project(':app')
+
+}

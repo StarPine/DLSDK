@@ -6,8 +6,8 @@ import android.os.Parcelable;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
-import com.google.gson.annotations.SerializedName;
 import com.dl.playfun.BR;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * @author wulei

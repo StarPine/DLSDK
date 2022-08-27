@@ -1,10 +1,14 @@
 package com.dl.playfun.ui.mine.wallet;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -16,25 +20,29 @@ import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.FragmentWalletBinding;
-import com.dl.playfun.entity.CoinExchangePriceInfo;
 import com.dl.playfun.entity.GameCoinBuy;
+import com.dl.playfun.entity.GoodsEntity;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
 import com.dl.playfun.ui.certification.certificationmale.CertificationMaleFragment;
-import com.dl.playfun.widget.coinrechargesheet.GameCoinExchargeSheetView;
-import com.dl.playfun.widget.coinrechargesheet.GameCoinTopupSheetView;
+import com.dl.playfun.ui.mine.wallet.diamond.recharge.DiamondRechargeActivity;
+import com.dl.playfun.ui.mine.wallet.recharge.RechargeActivity;
+import com.dl.playfun.utils.AutoSizeUtils;
+import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralPayDialog;
+import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 import com.dl.playfun.widget.dialog.MVDialog;
 
 import me.goldze.mvvmhabit.utils.ToastUtils;
-import me.jessyan.autosize.internal.CustomAdapt;
 
 /**
  * @author wulei
  */
-public class WalletFragment extends BaseToolbarFragment<FragmentWalletBinding, WalletViewModel> implements CustomAdapt,View.OnClickListener{
+public class WalletFragment extends BaseToolbarFragment<FragmentWalletBinding, WalletViewModel> implements View.OnClickListener{
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        AutoSizeUtils.applyAdapt(this.getResources());
         return R.layout.fragment_wallet;
     }
 
@@ -64,10 +72,10 @@ public class WalletFragment extends BaseToolbarFragment<FragmentWalletBinding, W
                     .setConfirmOnlick(new MVDialog.ConfirmOnclick() {
                         @Override
                         public void confirm(MVDialog dialog) {
-                            if (AppContext.instance().appRepository.readUserData().getSex() == AppConfig.MALE) {
+                            if (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == AppConfig.MALE) {
                                 viewModel.start(CertificationMaleFragment.class.getCanonicalName());
                                 return;
-                            } else if (AppContext.instance().appRepository.readUserData().getSex() == AppConfig.FEMALE) {
+                            } else if (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == AppConfig.FEMALE) {
                                 viewModel.start(CertificationFemaleFragment.class.getCanonicalName());
                                 return;
                             }
@@ -85,29 +93,14 @@ public class WalletFragment extends BaseToolbarFragment<FragmentWalletBinding, W
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_exchange_game_coin) {
-            AppContext.instance().logEvent(AppsFlyerEvent.Top_up);
-            GameCoinExchargeSheetView coinRechargeSheetView = new GameCoinExchargeSheetView(mActivity);
-            coinRechargeSheetView.show();
-            coinRechargeSheetView.setCoinRechargeSheetViewListener(new GameCoinExchargeSheetView.CoinRechargeSheetViewListener() {
-                @Override
-                public void onPaySuccess(GameCoinExchargeSheetView sheetView, CoinExchangePriceInfo sel_goodsEntity) {
-                    sheetView.dismiss();
-                    viewModel.getUserAccount();
-                }
-
-                @Override
-                public void onPayFailed(GameCoinExchargeSheetView sheetView, String msg) {
-                    sheetView.dismiss();
-                    ToastUtils.showShort(msg);
-                    AppContext.instance().logEvent(AppsFlyerEvent.Failed_to_top_up);
-                }
-            });
+            Intent intent = new Intent(mActivity, DiamondRechargeActivity.class);
+            startActivity(intent);
         }else if(R.id.btn_game_coin_topup == v.getId()){
-            GameCoinTopupSheetView coinRechargeSheetView = new GameCoinTopupSheetView(mActivity);
+            CoinExchargeItegralPayDialog coinRechargeSheetView = new CoinExchargeItegralPayDialog(getContext(),mActivity);
             coinRechargeSheetView.show();
-            coinRechargeSheetView.setCoinRechargeSheetViewListener(new GameCoinTopupSheetView.CoinRechargeSheetViewListener() {
+            coinRechargeSheetView.setCoinRechargeSheetViewListener(new CoinExchargeItegralPayDialog.CoinRechargeSheetViewListener() {
                 @Override
-                public void onPaySuccess(GameCoinTopupSheetView sheetView, GameCoinBuy sel_goodsEntity) {
+                public void onPaySuccess(CoinExchargeItegralPayDialog sheetView, GameCoinBuy sel_goodsEntity) {
                     sheetView.endGooglePlayConnect();
                     sheetView.dismiss();
                     MVDialog.getInstance(WalletFragment.this.getContext())
@@ -122,7 +115,7 @@ public class WalletFragment extends BaseToolbarFragment<FragmentWalletBinding, W
                 }
 
                 @Override
-                public void onPayFailed(GameCoinTopupSheetView sheetView, String msg) {
+                public void onPayFailed(CoinExchargeItegralPayDialog sheetView, String msg) {
                     sheetView.dismiss();
                     ToastUtils.showShort(msg);
                     AppContext.instance().logEvent(AppsFlyerEvent.Failed_to_top_up);
@@ -133,13 +126,16 @@ public class WalletFragment extends BaseToolbarFragment<FragmentWalletBinding, W
 
     }
 
-    @Override
-    public boolean isBaseOnWidth() {
-        return true;
-    }
+    //跳转谷歌支付act
+    ActivityResultLauncher<Intent> toGooglePlayIntent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        Log.e("进入支付页面回调","=========");
+        if (result.getData() != null) {
+            Intent intentData = result.getData();
+            GoodsEntity goodsEntity = (GoodsEntity) intentData.getSerializableExtra("goodsEntity");
+            if(goodsEntity!=null){
+                Log.e("支付成功","===============");
+            }
+        }
+    });
 
-    @Override
-    public float getSizeInDp() {
-        return 360;
-    }
 }

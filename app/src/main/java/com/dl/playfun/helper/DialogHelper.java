@@ -18,7 +18,7 @@ public class DialogHelper {
      * @param baseFragment
      */
     public static void showNotVipCommentDialog(BaseFragment baseFragment) {
-        int sex = AppContext.instance().appRepository.readUserData().getSex();
+        int sex = ConfigManager.getInstance().getAppRepository().readUserData().getSex();
         MVDialog.getInstance(baseFragment.getActivity())
                 .setContent(StringResHelper.getCommentDialogTitle())
                 .setConfirmText(StringResHelper.getCommentDialogBtnText())
@@ -39,7 +39,7 @@ public class DialogHelper {
         String content = "";
         String btn = "";
         String toFragmentName = null;
-        if (AppContext.instance().appRepository.readUserData().getSex() == AppConfig.MALE) {
+        if (ConfigManager.getInstance().getAppRepository().readUserData().getSex() == AppConfig.MALE) {
             if (number <= 0) {
                 title = StringUtils.getString(R.string.playfun_today_browse_useup);
             } else {

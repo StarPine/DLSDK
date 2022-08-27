@@ -38,11 +38,28 @@
             android:theme="@style/AppTheme.AppBarOverlay"
             app:elevation="0dp">
 
-            <com.dl.playfun.widget.BasicToolbar
-                android:id="@+id/basic_toolbar"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/action_bar_height"
-                app:toolbar_title="@string/playfun_coin_detail_detail" />
+                android:layout_height="wrap_content">
+
+                <com.dl.playfun.widget.BasicToolbar
+                    android:id="@+id/basic_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/action_bar_height"
+                    app:toolbar_title="@string/playfun_coin_electronic_wallet" />
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:src="@drawable/icon_shop2"
+                    binding:onClickCommand="@{viewModel.shopOnClickCommand}"
+                    android:visibility="gone"
+                    />
+            </RelativeLayout>
+
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -55,13 +72,13 @@
             binding:onRefreshCommand="@{viewModel.onRefreshCommand}">
 
             <LinearLayout
-                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
                 <com.google.android.material.appbar.AppBarLayout
                     android:layout_width="match_parent"
-                    android:layout_height="283dp"
+                    android:layout_height="233dp"
                     app:elevation="0dp">
 
                     <RelativeLayout
@@ -93,35 +110,38 @@
                                 android:textColor="@color/white"
                                 android:textSize="15sp" />
                         </RelativeLayout>
+
                         <View
-                            android:background="@color/divider"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
                             android:layout_marginStart="14dp"
                             android:layout_marginTop="145dp"
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"/>
+                            android:background="@color/divider" />
 
                         <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
                             android:layout_marginStart="16dp"
                             android:layout_marginTop="166dp"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
                             android:scaleType="fitXY"
-                            android:src="@drawable/wallet_tips_1" />
+                            android:src="@drawable/wallet_tips_1"
+                            android:visibility="gone" />
 
                         <TextView
-                            android:layout_marginTop="167dp"
-                            android:layout_marginStart="59dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="59dp"
+                            android:layout_marginTop="167dp"
                             android:text="@string/playfun_our_coin_hint1"
                             android:textColor="#90919F"
-                            android:textSize="12sp" />
+                            android:textSize="12sp"
+                            android:visibility="gone" />
 
                         <ImageView
                             android:layout_width="32dp"
                             android:layout_height="32dp"
                             android:layout_marginStart="16dp"
-                            android:layout_marginTop="223dp"
+                            android:layout_marginTop="166dp"
                             android:scaleType="fitXY"
                             android:src="@drawable/wallet_tips_2" />
 
@@ -129,170 +149,167 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="59dp"
-                            android:layout_marginTop="220dp"
+                            android:layout_marginTop="166dp"
                             android:text="@string/playfun_our_coin_hint2"
                             android:textColor="#90919F"
                             android:textSize="12sp" />
 
 
-
-
                     </RelativeLayout>
 
-<!--                    <LinearLayout-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="match_parent"-->
-<!--                        android:orientation="vertical"-->
-<!--                        app:layout_scrollFlags="scroll">-->
+                    <!--                    <LinearLayout-->
+                    <!--                        android:layout_width="match_parent"-->
+                    <!--                        android:layout_height="match_parent"-->
+                    <!--                        android:orientation="vertical"-->
+                    <!--                        app:layout_scrollFlags="scroll">-->
 
-<!--                        <RelativeLayout-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="141dp"-->
-<!--                            android:layout_marginTop="7dp">-->
+                    <!--                        <RelativeLayout-->
+                    <!--                            android:layout_width="match_parent"-->
+                    <!--                            android:layout_height="141dp"-->
+                    <!--                            android:layout_marginTop="7dp">-->
 
-<!--                            <ImageView-->
-<!--                                android:layout_width="match_parent"-->
-<!--                                android:layout_height="match_parent"-->
-<!--                                android:scaleType="fitXY"-->
-<!--                                android:src="@drawable/wallet_top_bg" />-->
+                    <!--                            <ImageView-->
+                    <!--                                android:layout_width="match_parent"-->
+                    <!--                                android:layout_height="match_parent"-->
+                    <!--                                android:scaleType="fitXY"-->
+                    <!--                                android:src="@drawable/wallet_top_bg" />-->
 
-<!--                            <TextView-->
-<!--                                android:id="@+id/wallet_balance"-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_marginStart="40dp"-->
-<!--                                android:layout_marginTop="25dp"-->
-<!--                                android:text='@{String.format(@string/x_count, viewModel.coinWalletEntity.totalCoin)}'-->
-<!--                                android:textColor="@color/white"-->
-<!--                                android:textSize="36sp"-->
-<!--                                android:textStyle="bold"-->
-<!--                                tools:text="120" />-->
+                    <!--                            <TextView-->
+                    <!--                                android:id="@+id/wallet_balance"-->
+                    <!--                                android:layout_width="wrap_content"-->
+                    <!--                                android:layout_height="wrap_content"-->
+                    <!--                                android:layout_marginStart="40dp"-->
+                    <!--                                android:layout_marginTop="25dp"-->
+                    <!--                                android:text='@{String.format(@string/x_count, viewModel.coinWalletEntity.totalCoin)}'-->
+                    <!--                                android:textColor="@color/white"-->
+                    <!--                                android:textSize="36sp"-->
+                    <!--                                android:textStyle="bold"-->
+                    <!--                                tools:text="120" />-->
 
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_below="@+id/wallet_balance"-->
-<!--                                android:layout_marginStart="40dp"-->
-<!--                                android:text="@string/fragment_coin_jewel_numble"-->
-<!--                                android:textColor="@color/white"-->
-<!--                                android:textSize="@dimen/text_size_big" />-->
+                    <!--                            <TextView-->
+                    <!--                                android:layout_width="wrap_content"-->
+                    <!--                                android:layout_height="wrap_content"-->
+                    <!--                                android:layout_below="@+id/wallet_balance"-->
+                    <!--                                android:layout_marginStart="40dp"-->
+                    <!--                                android:text="@string/fragment_coin_jewel_numble"-->
+                    <!--                                android:textColor="@color/white"-->
+                    <!--                                android:textSize="@dimen/text_size_big" />-->
 
-<!--                        </RelativeLayout>-->
+                    <!--                        </RelativeLayout>-->
 
-<!--                        <LinearLayout-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:orientation="horizontal"-->
-<!--                            android:visibility="gone">-->
+                    <!--                        <LinearLayout-->
+                    <!--                            android:layout_width="match_parent"-->
+                    <!--                            android:layout_height="wrap_content"-->
+                    <!--                            android:orientation="horizontal"-->
+                    <!--                            android:visibility="gone">-->
 
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:paddingStart="15dp"-->
-<!--                                android:text="@string/fragment_cash_usable_withdraw"-->
-<!--                                android:textColor="@color/text_default"-->
-<!--                                android:textSize="@dimen/text_size_big" />-->
+                    <!--                            <TextView-->
+                    <!--                                android:layout_width="wrap_content"-->
+                    <!--                                android:layout_height="wrap_content"-->
+                    <!--                                android:paddingStart="15dp"-->
+                    <!--                                android:text="@string/fragment_cash_usable_withdraw"-->
+                    <!--                                android:textColor="@color/text_default"-->
+                    <!--                                android:textSize="@dimen/text_size_big" />-->
 
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_marginEnd="15dp"-->
-<!--                                android:layout_weight="1"-->
-<!--                                android:gravity="end"-->
-<!--                                android:text='@{String.format(@string/x_count, viewModel.coinWalletEntity.canCoin)}'-->
-<!--                                android:textColor="@color/text_default"-->
-<!--                                android:textSize="@dimen/text_size_big"-->
-<!--                                tools:text="110" />-->
-<!--                        </LinearLayout>-->
+                    <!--                            <TextView-->
+                    <!--                                android:layout_width="wrap_content"-->
+                    <!--                                android:layout_height="wrap_content"-->
+                    <!--                                android:layout_marginEnd="15dp"-->
+                    <!--                                android:layout_weight="1"-->
+                    <!--                                android:gravity="end"-->
+                    <!--                                android:text='@{String.format(@string/x_count, viewModel.coinWalletEntity.canCoin)}'-->
+                    <!--                                android:textColor="@color/text_default"-->
+                    <!--                                android:textSize="@dimen/text_size_big"-->
+                    <!--                                tools:text="110" />-->
+                    <!--                        </LinearLayout>-->
 
-<!--                        <ImageView-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="1px"-->
-<!--                            android:layout_marginLeft="15dp"-->
-<!--                            android:layout_marginTop="20dp"-->
-<!--                            android:layout_marginRight="15dp"-->
-<!--                            android:src="@color/divider" />-->
+                    <!--                        <ImageView-->
+                    <!--                            android:layout_width="match_parent"-->
+                    <!--                            android:layout_height="1px"-->
+                    <!--                            android:layout_marginLeft="15dp"-->
+                    <!--                            android:layout_marginTop="20dp"-->
+                    <!--                            android:layout_marginRight="15dp"-->
+                    <!--                            android:src="@color/divider" />-->
 
-<!--                        <LinearLayout-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_marginTop="20dp"-->
-<!--                            android:layout_marginBottom="20dp"-->
-<!--                            android:paddingStart="14dp"-->
-<!--                            android:background="@color/white"-->
-<!--                            android:orientation="horizontal">-->
+                    <!--                        <LinearLayout-->
+                    <!--                            android:layout_width="match_parent"-->
+                    <!--                            android:layout_height="wrap_content"-->
+                    <!--                            android:layout_marginTop="20dp"-->
+                    <!--                            android:layout_marginBottom="20dp"-->
+                    <!--                            android:paddingStart="14dp"-->
+                    <!--                            android:background="@color/white"-->
+                    <!--                            android:orientation="horizontal">-->
 
-<!--                            <ImageView-->
-<!--                                android:layout_width="35dp"-->
-<!--                                android:layout_height="35dp"-->
-<!--                                android:scaleType="fitXY"-->
-<!--                                android:src="@drawable/wallet_tips_1" />-->
+                    <!--                            <ImageView-->
+                    <!--                                android:layout_width="35dp"-->
+                    <!--                                android:layout_height="35dp"-->
+                    <!--                                android:scaleType="fitXY"-->
+                    <!--                                android:src="@drawable/wallet_tips_1" />-->
 
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_marginStart="5dp"-->
-<!--                                android:drawablePadding="5dp"-->
-<!--                                android:text="@string/fragment_coin_explain_one"-->
-<!--                                android:textColor="#90919F"-->
-<!--                                android:textSize="12sp" />-->
+                    <!--                            <TextView-->
+                    <!--                                android:layout_width="wrap_content"-->
+                    <!--                                android:layout_height="wrap_content"-->
+                    <!--                                android:layout_marginStart="5dp"-->
+                    <!--                                android:drawablePadding="5dp"-->
+                    <!--                                android:text="@string/fragment_coin_explain_one"-->
+                    <!--                                android:textColor="#90919F"-->
+                    <!--                                android:textSize="12sp" />-->
 
 
+                    <!--                        </LinearLayout>-->
 
-<!--                        </LinearLayout>-->
+                    <!--                        <LinearLayout-->
+                    <!--                            android:paddingStart="16dp"-->
+                    <!--                            android:layout_width="match_parent"-->
+                    <!--                            android:layout_height="wrap_content"-->
+                    <!--                            android:background="@color/white"-->
+                    <!--                            android:paddingBottom="17dp"-->
+                    <!--                            >-->
+                    <!--                            <ImageView-->
+                    <!--                                android:layout_width="35dp"-->
+                    <!--                                android:layout_height="35dp"-->
+                    <!--                                android:layout_marginStart="16dp"-->
+                    <!--                                android:layout_marginTop="2dp"-->
+                    <!--                                android:scaleType="fitXY"-->
+                    <!--                                android:src="@drawable/wallet_tips_2" />-->
 
-<!--                        <LinearLayout-->
-<!--                            android:paddingStart="16dp"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:background="@color/white"-->
-<!--                            android:paddingBottom="17dp"-->
-<!--                            >-->
-<!--                            <ImageView-->
-<!--                                android:layout_width="35dp"-->
-<!--                                android:layout_height="35dp"-->
-<!--                                android:layout_marginStart="16dp"-->
-<!--                                android:layout_marginTop="2dp"-->
-<!--                                android:scaleType="fitXY"-->
-<!--                                android:src="@drawable/wallet_tips_2" />-->
+                    <!--                            <TextView-->
+                    <!--                                android:layout_width="wrap_content"-->
+                    <!--                                android:layout_height="wrap_content"-->
+                    <!--                                android:layout_marginStart="5dp"-->
+                    <!--                                android:layout_marginEnd="15dp"-->
+                    <!--                                android:text="@string/joymask_coin_hint2"-->
+                    <!--                                android:textColor="#90919F"-->
+                    <!--                                android:textSize="12sp" />-->
+                    <!--                        </LinearLayout>-->
 
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_marginStart="5dp"-->
-<!--                                android:layout_marginEnd="15dp"-->
-<!--                                android:text="@string/joymask_coin_hint2"-->
-<!--                                android:textColor="#90919F"-->
-<!--                                android:textSize="12sp" />-->
-<!--                        </LinearLayout>-->
+                    <!--                        <TextView-->
+                    <!--                            android:layout_width="match_parent"-->
+                    <!--                            android:layout_height="67dp"-->
+                    <!--                            android:layout_marginLeft="15dp"-->
+                    <!--                            android:layout_marginTop="5dp"-->
+                    <!--                            android:layout_marginRight="15dp"-->
+                    <!--                            android:layout_marginBottom="20dp"-->
+                    <!--                            android:background="@drawable/wallet_warn_bg"-->
+                    <!--                            android:gravity="center"-->
+                    <!--                            android:paddingStart="10dp"-->
+                    <!--                            android:paddingEnd="10dp"-->
+                    <!--                            android:text="@string/fragment_coin_explain_two"-->
+                    <!--                            android:textColor="@color/text_7639FF"-->
+                    <!--                            android:textSize="@dimen/text_size_small"-->
+                    <!--                            android:visibility="gone" />-->
 
-<!--                        <TextView-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="67dp"-->
-<!--                            android:layout_marginLeft="15dp"-->
-<!--                            android:layout_marginTop="5dp"-->
-<!--                            android:layout_marginRight="15dp"-->
-<!--                            android:layout_marginBottom="20dp"-->
-<!--                            android:background="@drawable/wallet_warn_bg"-->
-<!--                            android:gravity="center"-->
-<!--                            android:paddingStart="10dp"-->
-<!--                            android:paddingEnd="10dp"-->
-<!--                            android:text="@string/fragment_coin_explain_two"-->
-<!--                            android:textColor="@color/text_7639FF"-->
-<!--                            android:textSize="@dimen/text_size_small"-->
-<!--                            android:visibility="gone" />-->
+                    <!--                        <ImageView-->
+                    <!--                            android:layout_width="match_parent"-->
+                    <!--                            android:layout_height="10dp"-->
+                    <!--                            android:background="@color/container_background" />-->
 
-<!--                        <ImageView-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="10dp"-->
-<!--                            android:background="@color/container_background" />-->
+                    <!--                        <ImageView-->
+                    <!--                            android:layout_width="match_parent"-->
+                    <!--                            android:layout_height="10dp"-->
+                    <!--                            android:background="@color/container_background" />-->
 
-<!--                        <ImageView-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="10dp"-->
-<!--                            android:background="@color/container_background" />-->
-
-<!--                    </LinearLayout>-->
+                    <!--                    </LinearLayout>-->
 
                 </com.google.android.material.appbar.AppBarLayout>
 
@@ -344,39 +361,5 @@
             </LinearLayout>
 
         </com.scwang.smart.refresh.layout.SmartRefreshLayout>
-
-        <LinearLayout
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@color/white"
-            android:clipToPadding="false"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal"
-            android:padding="25dp">
-
-
-            <Button
-                android:id="@+id/btn_doing_task"
-                style="@style/ButtonDoingTsak"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="12dp"
-                android:layout_weight="1"
-                android:text="@string/playfun_dialong_coin_doing_task"
-                android:visibility="@{viewModel.isShowEmpty?View.VISIBLE:View.GONE}"
-                binding:onClickCommand="@{viewModel.doingTasknClickCommand}" />
-
-            <Button
-                android:id="@+id/btn_recharge"
-                style="@style/ButtonPrimary"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
-                android:layout_weight="1"
-                android:text="@string/playfun_dialong_coin_rechaege_top_up" />
-        </LinearLayout>
-
     </LinearLayout>
 </layout>

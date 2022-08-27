@@ -1,7 +1,6 @@
 package com.dl.playfun.ui.mine.trace.man;
 
 import android.graphics.drawable.Drawable;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
@@ -11,7 +10,7 @@ import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.entity.TraceEntity;
 import com.dl.playfun.manager.ConfigManager;
-import com.dl.playfun.utils.LogUtils;
+import com.dl.playfun.utils.ExceptionReportUtils;
 import com.dl.playfun.utils.Utils;
 
 import org.jetbrains.annotations.NotNull;
@@ -39,7 +38,12 @@ public class TraceManItemViewModel extends MultiItemViewModel<TraeManViewModel> 
             return;
         }
         if (isPlay == 1) {
-            viewModel.toUserDetails(itemEntity.get().getId());
+            try {
+                viewModel.toUserDetails(itemEntity.get().getId());
+            } catch (Exception e) {
+                ExceptionReportUtils.report(e);
+            }
+            //viewModel.toUserDetails(itemEntity.get().getId());
             return;
         }
         traeManViewModel.uc.clickVip.call();
@@ -96,7 +100,7 @@ public class TraceManItemViewModel extends MultiItemViewModel<TraeManViewModel> 
     }
 
     public String getAgeAndConstellation() {
-        return String.format(StringUtils.getString(R.string.playfun_age_and_constellation), itemEntity.get().getAge(), itemEntity.get().getConstellation());
+        return String.format(StringUtils.getString(R.string.playfun_mine_age), itemEntity.get().getAge());
     }
 
     public Drawable getVipGodsImg(TraceEntity traceEntity) {

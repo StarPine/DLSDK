@@ -7,11 +7,11 @@ import androidx.databinding.ObservableField;
 
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
+import com.dl.playfun.R;
 import com.dl.playfun.entity.TraceEntity;
 import com.dl.playfun.manager.ConfigManager;
-import com.dl.playfun.utils.LogUtils;
-import com.dl.playfun.R;
 import com.dl.playfun.ui.mine.trace.list.TraceListViewModel;
+import com.dl.playfun.utils.ExceptionReportUtils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -32,10 +32,16 @@ public class TraceItemViewModel extends MultiItemViewModel<TraceListViewModel> {
             if (grend.get().intValue() == 0) {
                 //拿到position
                 int position = viewModel.observableList.indexOf(TraceItemViewModel.this);
+                if(position==-1){
+                    return;
+                }
                 viewModel.uc.clickDelLike.setValue(position);
             } else if (grend.get().intValue() == 1) {
                 //拿到position
                 int position = viewModel.observableList.indexOf(TraceItemViewModel.this);
+                if(position==-1){
+                    return;
+                }
                 if (itemEntity.get().getFollow()) {
                     viewModel.uc.clickDelLike.setValue(position);
                 } else {
@@ -50,7 +56,12 @@ public class TraceItemViewModel extends MultiItemViewModel<TraceListViewModel> {
         if (traceListViewModel == null) {
             return;
         }
-        viewModel.traceViewModel.toUserDetails(itemEntity.get().getId());
+        try {
+            viewModel.traceViewModel.toUserDetails(itemEntity.get().getId());
+        } catch (Exception e) {
+            ExceptionReportUtils.report(e);
+        }
+
     });
 
     public TraceItemViewModel(@NonNull @NotNull TraceListViewModel viewModel, TraceEntity traceEntity, Integer grend) {
@@ -88,9 +99,8 @@ public class TraceItemViewModel extends MultiItemViewModel<TraceListViewModel> {
         return View.GONE;
     }
 
-
     public String getAgeAndConstellation() {
-        return String.format(StringUtils.getString(R.string.playfun_age_and_constellation_only_age), itemEntity.get().getAge());
+        return String.format(StringUtils.getString(R.string.playfun_mine_age), itemEntity.get().getAge());
     }
 
     public boolean isEmpty(String obj) {

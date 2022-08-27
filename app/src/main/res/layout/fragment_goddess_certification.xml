@@ -55,7 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:gravity="center"
+                android:layout_gravity="center"
                 android:text="@string/playfun_fragment_goddess_certification_explain_one"
                 android:textColor="@color/gray_dark"
                 android:textSize="@dimen/text_size_big"
@@ -65,7 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:gravity="center"
+                android:layout_gravity="center"
                 android:text="@string/playfun_fragment_goddess_certification_explain_two"
                 android:textSize="@dimen/text_size_middle" />
 

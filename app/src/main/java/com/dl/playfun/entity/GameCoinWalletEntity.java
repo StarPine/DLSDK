@@ -32,7 +32,7 @@ public class GameCoinWalletEntity extends BaseObservable {
 //    @SerializedName("realname")
     private String currencyName;
 //    @SerializedName("account_number")
-    private int totalGameCoins;
+    private long totalAppCoins;
 
     @Bindable
     public int getTotalCoins() {
@@ -63,11 +63,11 @@ public class GameCoinWalletEntity extends BaseObservable {
     }
 
     @Bindable
-    public int getTotalGameCoins() {
-        return totalGameCoins;
+    public long getTotalAppCoins() {
+        return totalAppCoins;
     }
 
-    public void setTotalGameCoins(int totalGameCoins) {
-        this.totalGameCoins = totalGameCoins;
+    public void setTotalGameCoins(long totalGameCoins) {
+        this.totalAppCoins = totalGameCoins;
     }
 }

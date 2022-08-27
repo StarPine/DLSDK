@@ -108,8 +108,10 @@ public class GiftBagDialog extends BaseDialog {
     }
 
     public void setBalanceValue(int balanceValue){
-
-        balance_value.setText(maleBalance - balanceValue+"");
+        balance_value.post(()->{
+            balance_value.setText((maleBalance - balanceValue)+"");
+            maleBalance = maleBalance-balanceValue;
+        });
     }
 
     public void show() {
@@ -337,7 +339,7 @@ public class GiftBagDialog extends BaseDialog {
         initData();
     }
     private void initData() {
-        appRepository = AppContext.instance().appRepository;
+        appRepository = ConfigManager.getInstance().getAppRepository();
         appRepository.getBagGiftInfo()
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
@@ -353,9 +355,6 @@ public class GiftBagDialog extends BaseDialog {
                             btn_stored.setText(R.string.playfun_gift_bag_text1);
                         }
                         int totalCoin = giftBagEntity.getTotalCoin().intValue();
-                        if (isDark) {
-                            totalCoin = maleBalance;
-                        }
                         balance_value.setText(String.valueOf(totalCoin >= 0 ? totalCoin : 0));
                         //礼物列表实现
                         List<GiftBagEntity.giftEntity> listGifEntity = giftBagEntity.getGift();

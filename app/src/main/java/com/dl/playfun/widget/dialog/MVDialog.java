@@ -23,6 +23,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.blankj.utilcode.util.StringUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.dl.playfun.entity.ConfigItemEntity;
@@ -860,8 +861,20 @@ public class MVDialog {
         return INSTANCE;
     }
 
-
-
+    public MVDialog setTitleSize(float textSize){
+        this.textSize = textSize;
+        return INSTANCE;
+    }
+    /**
+     * 设置
+     *
+     * @param titleString
+     * @return
+     */
+    public MVDialog setTitle(String titleString) {
+        this.titleString = titleString;
+        return INSTANCE;
+    }
     /**
      * 获取
      *
@@ -887,13 +900,13 @@ public class MVDialog {
             contentBtn.setTextSize(TypedValue.COMPLEX_UNIT_SP,confirmTextSize);
         }
 
-        if (titleString.equals("")) {
+        if (StringUtils.isEmpty(titleString)) {
             title.setVisibility(View.GONE);
         } else {
             title.setVisibility(View.VISIBLE);
             title.setText(titleString);
         }
-        if (contentString.equals("")) {
+        if (StringUtils.isEmpty(contentString)) {
             content.setVisibility(View.GONE);
         } else {
             content.setVisibility(View.VISIBLE);
@@ -914,9 +927,94 @@ public class MVDialog {
             }
         });
         if (StringUtil.isEmpty(confirmText)) {
+            contentBtn.setVisibility(View.VISIBLE);
             contentBtn.setText(context.getResources().getString(R.string.playfun_confirm));
         } else {
             contentBtn.setText(confirmText);
+            contentBtn.setVisibility(View.VISIBLE);
+        }
+        if (StringUtil.isEmpty(confirmTwoText)) {
+            contentTowBtn.setText(context.getResources().getString(R.string.playfun_confirm));
+            contentTowBtn.setVisibility(View.GONE);
+        } else {
+            contentTowBtn.setText(confirmTwoText);
+            contentTowBtn.setVisibility(View.VISIBLE);
+        }
+        contentBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                ToastUtils.showShort("确定");
+                if (confirmOnclick != null) {
+                    confirmOnclick.confirm(INSTANCE);
+                }
+                bottomDialog.dismiss();
+            }
+        });
+        contentTowBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                ToastUtils.showShort("确定");
+                if (confirmTwoOnclick != null) {
+                    confirmTwoOnclick.confirm(INSTANCE);
+                }
+                bottomDialog.dismiss();
+            }
+        });
+        return bottomDialog;
+    }
+
+    public Dialog getTop2BottomDialog() {
+        Dialog bottomDialog = new Dialog(context, R.style.BottomDialog);
+        View contentView = LayoutInflater.from(context).inflate(R.layout.dialog_top_to_bottom, null);
+        bottomDialog.setContentView(contentView);
+        ViewGroup.LayoutParams layoutParams = contentView.getLayoutParams();
+        layoutParams.width = context.getResources().getDisplayMetrics().widthPixels - (context.getResources().getDisplayMetrics().widthPixels / 5);
+        contentView.setLayoutParams(layoutParams);
+        bottomDialog.getWindow().setGravity(Gravity.CENTER);
+        bottomDialog.getWindow().setWindowAnimations(R.style.BottomDialog_Animation);
+        TextView title = contentView.findViewById(R.id.tv_title);
+        TextView content = contentView.findViewById(R.id.tv_content);
+        Button contentBtn = contentView.findViewById(R.id.btn_confirm);
+        Button contentTowBtn = contentView.findViewById(R.id.btn_confirm_two);
+        if (textSize != 0){
+            title.setTextSize(TypedValue.COMPLEX_UNIT_PX,textSize);
+        }
+        if (confirmTextSize != 0){
+            contentBtn.setTextSize(TypedValue.COMPLEX_UNIT_SP,confirmTextSize);
+        }
+
+        if (StringUtils.isEmpty(titleString)) {
+            title.setVisibility(View.GONE);
+        } else {
+            title.setVisibility(View.VISIBLE);
+            title.setText(titleString);
+        }
+        if (StringUtils.isEmpty(contentString)) {
+            content.setVisibility(View.GONE);
+        } else {
+            content.setVisibility(View.VISIBLE);
+            content.setText(contentString);
+        }
+        if (isNotClose) {
+            contentView.findViewById(R.id.iv_dialog_close).setVisibility(View.GONE);
+        }
+        bottomDialog.setCanceledOnTouchOutside(isCancelable);
+        bottomDialog.setCancelable(isCancelable);
+        contentView.findViewById(R.id.iv_dialog_close).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomDialog.dismiss();
+                if (onDismissListener != null) {
+                    onDismissListener.onDismiss(bottomDialog);
+                }
+            }
+        });
+        if (StringUtil.isEmpty(confirmText)) {
+            contentBtn.setVisibility(View.VISIBLE);
+            contentBtn.setText(context.getResources().getString(R.string.playfun_confirm));
+        } else {
+            contentBtn.setText(confirmText);
+            contentBtn.setVisibility(View.VISIBLE);
         }
         if (StringUtil.isEmpty(confirmTwoText)) {
             contentTowBtn.setText(context.getResources().getString(R.string.playfun_confirm));
@@ -965,7 +1063,7 @@ public class MVDialog {
         TextView title = contentView.findViewById(R.id.tv_title);
         EditText edtMoney = contentView.findViewById(R.id.edt_money);
         Button contentBtn = contentView.findViewById(R.id.btn_confirm);
-        if (titleString.equals("")) {
+        if (StringUtils.isEmpty(titleString)) {
             title.setVisibility(View.GONE);
         } else {
             title.setVisibility(View.VISIBLE);
@@ -1018,7 +1116,7 @@ public class MVDialog {
 
         TextView title = contentView.findViewById(R.id.tv_title);
         TextView content = contentView.findViewById(R.id.tv_content);
-        if (titleString.equals("")) {
+        if (StringUtils.isEmpty(titleString)) {
             title.setVisibility(View.GONE);
         } else {
             title.setVisibility(View.VISIBLE);
@@ -1035,7 +1133,7 @@ public class MVDialog {
             }
         });
         Button contentBtn = contentView.findViewById(R.id.btn_confirm);
-        if (confirmText.equals("")) {
+        if (StringUtils.isEmpty(confirmText)) {
             contentBtn.setText(context.getResources().getString(R.string.playfun_confirm));
         } else {
             contentBtn.setText(confirmText);

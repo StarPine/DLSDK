@@ -2,7 +2,9 @@ package com.dl.playfun.kl.view;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.lifecycle.Observer;
@@ -14,7 +16,7 @@ import com.dl.playfun.entity.CallingInviteInfo;
 import com.dl.playfun.event.AudioCallingCancelEvent;
 import com.dl.playfun.kl.viewmodel.AudioCallingViewModel2;
 import com.dl.playfun.manager.ConfigManager;
-import com.dl.playfun.utils.ChatUtils;
+import com.dl.playfun.manager.LocaleManager;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.widget.dialog.TraceDialog;
 import com.google.gson.Gson;
@@ -22,15 +24,14 @@ import com.dl.playfun.R;
 import com.dl.playfun.databinding.ActivityCallWaiting2Binding;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.tencent.imsdk.v2.V2TIMManager;
-import com.tencent.liteav.trtccalling.model.TUICalling;
+import com.tencent.liteav.trtccalling.TUICalling;
 import com.tencent.liteav.trtccalling.model.util.TUICallingConstants;
 
 import me.goldze.mvvmhabit.base.BaseActivity;
 import me.goldze.mvvmhabit.bus.RxBus;
-import me.jessyan.autosize.internal.CustomAdapt;
 import me.tatarka.bindingcollectionadapter2.BR;
 
-public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Binding, AudioCallingViewModel2> implements CustomAdapt {
+public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Binding, AudioCallingViewModel2> {
 
     private CallingInviteInfo callingInviteInfo;
     //拨打方UserId
@@ -39,6 +40,28 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
     private Integer roomId;
     private TUICalling.Role role;
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocal(newBase));
+    }
+
+    /**
+     * 就算你在Manifest.xml设置横竖屏切换不重走生命周期。横竖屏切换还是会走这里
+
+     */
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        if(newConfig!=null){
+            LocaleManager.setLocal(this);
+        }
+        super.onConfigurationChanged(newConfig);
+        LocaleManager.setLocal(this);
+    }
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        LocaleManager.setLocal(this);
+    }
 
     @Override
     protected void onResume() {
@@ -85,6 +108,7 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
         if (userData != null) {
             callingInviteInfo = new Gson().fromJson(userData, CallingInviteInfo.class);
         }
+
     }
 
     @Override
@@ -109,7 +133,7 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
         } else {//被动接听
             toId = V2TIMManager.getInstance().getLoginUser();
             viewModel.init(callUserId, toId, role);
-            viewModel.getCallingInvitedInfo(1, ChatUtils.imUserIdToSystemUserId(callUserId));
+            viewModel.getCallingInvitedInfo(1, callUserId);
         }
         try {
             new RxPermissions(this)
@@ -121,7 +145,7 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
                             TraceDialog.getInstance(DialingAudioActivity.this)
                                     .setCannelOnclick(new TraceDialog.CannelOnclick() {
                                         @Override
-                                        public void confirm(Dialog dialog) {
+                                        public void cannel(Dialog dialog) {
                                             viewModel.cancelCallClick();
                                         }
                                     })
@@ -153,6 +177,22 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
                 finish();
             }
         });
+
+        viewModel.startAudioActivity.observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer roomId) {
+                Intent intent = new Intent(DialingAudioActivity.this,AudioCallChatingActivity.class);
+                intent.putExtra("fromUserId", callUserId);
+                intent.putExtra("toUserId", toId);
+                intent.putExtra("mRole", role);
+                intent.putExtra("roomId", roomId);
+                startActivity(intent);
+                finish();
+                overridePendingTransition(R.anim.anim_zoom_in, R.anim.anim_stay);
+            }
+        });
+
+
     }
 
 
@@ -160,15 +200,5 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
     public void onBackPressed() {
         super.onBackPressed();
         RxBus.getDefault().post(new AudioCallingCancelEvent());
-    }
-
-    @Override
-    public boolean isBaseOnWidth() {
-        return true;
-    }
-
-    @Override
-    public float getSizeInDp() {
-        return 360;
     }
 }
