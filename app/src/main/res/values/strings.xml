@@ -1241,5 +1241,8 @@
     <string name="playfun_max_vaule">9999999+</string>
     <string name="playfun_send_tips">send</string>
     <string name="playfun_code_tips">Invitation code (optional)</string>
+    <string name="playfun_user_agreement_tips">User Agreement</string>
+    <string name="playfun_privacy_policy_tips">Privacy Policy</string>
+
 
 </resources>
