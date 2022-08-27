@@ -366,7 +366,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                         }
 
                         //公屏礼物数据
-                        if (text.contains("sendGift") && text.contains("messageType")) {
+                        if (text.contains("giftBroadcast") && text.contains("messageType")) {
                             if (AppContext.isHomePage){
                                 setPublicScreenGiftData(text);
                             }
