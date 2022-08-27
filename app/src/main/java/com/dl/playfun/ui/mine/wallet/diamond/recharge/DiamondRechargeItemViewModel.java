@@ -1,8 +1,13 @@
 package com.dl.playfun.ui.mine.wallet.diamond.recharge;
 
+import android.graphics.drawable.Drawable;
+
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
 
+import com.blankj.utilcode.util.Utils;
+import com.dl.playfun.R;
+import com.dl.playfun.app.AppContext;
 import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.entity.VipPackageItemEntity;
 import com.dl.playfun.manager.ConfigManager;
@@ -40,6 +45,42 @@ public class DiamondRechargeItemViewModel extends MultiItemViewModel<DiamondRech
 
     public String getPriceText(){
         return itemEntity.get().getSymbol() + itemEntity.get().getSalePrice();
+    }
+
+    public Drawable getItemBg(){
+        int type = itemEntity.get().getType();
+        int isRecommend = itemEntity.get().getIsRecommend();
+        if (type == 2){
+            return Utils.getApp().getResources().getDrawable(R.drawable.bg_diamond_recharge_item_vip);
+        }else if (type == 1){
+            if (isRecommend == 1){
+                return Utils.getApp().getResources().getDrawable(R.drawable.bg_diamond_recharge_item_recommend);
+            }
+        }
+        return Utils.getApp().getResources().getDrawable(R.drawable.bg_diamond_recharge_item_nomal);
+    }
+
+    public Drawable getTipsBg(){
+        int type = itemEntity.get().getType();
+        int isRecommend = itemEntity.get().getIsRecommend();
+        if (type == 1){
+            if (isRecommend == 1){
+                return Utils.getApp().getResources().getDrawable(R.drawable.bg_diamond_recharge_item_tips_recommend);
+            }
+        }
+        return Utils.getApp().getResources().getDrawable(R.drawable.bg_diamond_recharge_item_child);
+    }
+
+    public int getFlagBg(){
+        int type = itemEntity.get().getType();
+        int limit = itemEntity.get().getLimit();
+        int isRecommend = itemEntity.get().getIsRecommend();
+        if (type == 1){
+            if (isRecommend == 1){
+                return 1;
+            }
+        }
+        return 0;
     }
 
     public boolean isShowFlag(){

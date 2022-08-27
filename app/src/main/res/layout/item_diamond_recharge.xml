@@ -21,9 +21,9 @@
         android:layout_width="match_parent"
         android:layout_height="110dp"
         android:layout_marginBottom="10dp"
-        android:background="@{viewModel.itemEntity.isRecommend == 1?@drawable/bg_diamond_recharge_item_recommend:@drawable/bg_diamond_recharge_item_nomal}"
+        android:background="@{viewModel.getItemBg}"
         binding:onClickCommand="@{viewModel.itemClick}"
-        tools:background="@drawable/bg_diamond_recharge_item_recommend2">
+        tools:background="@drawable/bg_diamond_recharge_item_recommend">
 
         <TextView
             android:id="@+id/tv_flag"
@@ -31,13 +31,15 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:background="@drawable/bg_right_top_corner"
+            android:background="@{viewModel.getFlagBg == 1?@drawable/bg_right_top_corner2:@drawable/bg_right_top_corner}"
             android:gravity="center"
             android:paddingTop="2dp"
             android:paddingBottom="2dp"
             android:text="@{viewModel.itemEntity.type == 1?@string/playfun_diamond_detail_item_flag:@string/playfun_diamond_detail_item_flag2}"
+            android:textColor="@{viewModel.getFlagBg == 1?@color/white:@color/toolbar_title_color}"
             android:textSize="@dimen/text_size_1067"
             android:visibility="@{viewModel.isShowFlag ? View.VISIBLE : View.GONE}"
+            tools:background="@drawable/bg_right_top_corner"
             tools:text="@string/playfun_diamond_detail_item_flag2" />
 
         <LinearLayout
@@ -61,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:text="@{viewModel.itemEntity.giveCoinTitle}"
-                android:textColor="@{viewModel.itemEntity.isRecommend == 1?@color/white:@color/toolbar_title_color}"
+                android:textColor="@{viewModel.itemEntity.type == 2?@color/white:@color/toolbar_title_color}"
                 android:textSize="@dimen/alivc_common_font_20"
                 android:textStyle="bold"
                 tools:text="9999999+" />
@@ -77,7 +79,7 @@
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="20dp"
             android:text="@{viewModel.getPriceText}"
-            android:textColor="@{viewModel.itemEntity.isRecommend == 1?@color/yellow_544:@color/pseekbar_process}"
+            android:textColor="@{viewModel.itemEntity.type == 2?@color/yellow_544:@color/pseekbar_process}"
             android:textSize="@dimen/alivc_common_font_20"
             android:textStyle="bold"
             tools:text="$9999"
@@ -91,13 +93,14 @@
             android:layout_marginLeft="1dp"
             android:layout_marginRight="1dp"
             android:layout_marginBottom="1dp"
-            android:background="@drawable/bg_diamond_recharge_item_child"
+            android:background="@{viewModel.getTipsBg}"
             android:padding="7dp"
             android:paddingStart="10dp"
             android:text="@{viewModel.itemEntity.goodsDesc}"
             android:textColor="@color/pseekbar_process"
             android:textSize="10.67sp"
             android:visibility="@{!ObjectUtils.isEmpty(viewModel.itemEntity.goodsDesc)?View.VISIBLE:View.GONE}"
+            tools:background="@drawable/bg_diamond_recharge_item_tips_recommend"
             tools:text="Get 1000 diamonds, log in the next day and get 1000 diamonds for 29 days"
             tools:visibility="visible" />
 

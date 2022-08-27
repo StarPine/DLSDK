@@ -1,5 +1,6 @@
 package com.dl.playfun.ui.dialog.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.ObjectUtils;
+import com.blankj.utilcode.util.Utils;
 import com.dl.playfun.R;
 import com.dl.playfun.entity.GoodsEntity;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,35 +56,44 @@ public class CoinRechargeAdapter extends RecyclerView.Adapter<CoinRechargeAdapte
         return new RecyclerHolder(view);
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull RecyclerHolder holder, int position) {
         GoodsEntity goodsEntity = dataList.get(position);
         holder.good_text.setText(goodsEntity.getGiveCoinTitle());
         holder.good_name.setText(goodsEntity.getSymbol() + goodsEntity.getSalePrice());
-        //是否推荐
-        if (goodsEntity.getIsRecommend() == 1) {
-            holder.layout1.setBackgroundResource(R.drawable.bg_diamond_recharge_item_recommend);
+        //是否vip
+        if (goodsEntity.getType() == 2) {
+            holder.layout1.setBackgroundResource(R.drawable.bg_diamond_recharge_item_vip);
             holder.good_text.setTextColor(ColorUtils.getColor(R.color.white));
             holder.good_name.setTextColor(ColorUtils.getColor(R.color.yellow_544));
-        } else {
-            holder.layout1.setBackgroundResource(R.drawable.bg_diamond_recharge_item_nomal);
+        } else if (goodsEntity.getType() == 1){
+            if (goodsEntity.getIsRecommend() == 1){
+                holder.layout1.setBackgroundResource(R.drawable.bg_diamond_recharge_item_recommend);
+            }else {
+                holder.layout1.setBackgroundResource(R.drawable.bg_diamond_recharge_item_nomal);
+            }
             holder.good_text.setTextColor(ColorUtils.getColor(R.color.toolbar_title_color));
             holder.good_name.setTextColor(ColorUtils.getColor(R.color.pseekbar_process));
         }
-        if (!ObjectUtils.isEmpty(goodsEntity.getGoodsDesc())) {
-            holder.recharge_tips.setText(goodsEntity.getGoodsDesc());
-            holder.recharge_tips.setVisibility(View.VISIBLE);
-        } else {
-            holder.recharge_tips.setVisibility(View.GONE);
-        }
+        setTipsBg(holder, goodsEntity);
         if (goodsEntity.getType() == 1) {
             if (goodsEntity.getLimit() == 1) { //是否首冲
+                if (goodsEntity.getIsRecommend() == 1){
+                    holder.flag.setBackgroundResource(R.drawable.bg_right_top_corner2);
+                    holder.flag.setTextColor(ColorUtils.getColor(R.color.white));
+                }else {
+                    holder.flag.setTextColor(ColorUtils.getColor(R.color.toolbar_title_color));
+                    holder.flag.setBackgroundResource(R.drawable.bg_right_top_corner);
+                }
                 holder.flag.setText(mContext.getString(R.string.playfun_diamond_detail_item_flag));
                 holder.flag.setVisibility(View.VISIBLE);
             } else {
                 holder.flag.setVisibility(View.GONE);
             }
         } else if (goodsEntity.getType() == 2) {
+            holder.flag.setTextColor(ColorUtils.getColor(R.color.toolbar_title_color));
+            holder.flag.setBackgroundResource(R.drawable.bg_right_top_corner);
             holder.flag.setText(mContext.getString(R.string.playfun_diamond_detail_item_flag2));
             holder.flag.setVisibility(View.VISIBLE);
         }else {
@@ -100,6 +113,22 @@ public class CoinRechargeAdapter extends RecyclerView.Adapter<CoinRechargeAdapte
                 coinRechargeAdapterListener.onBuyClick(v, p);
             }
         });
+    }
+
+    private void setTipsBg(@NotNull RecyclerHolder holder, GoodsEntity goodsEntity) {
+        if (!ObjectUtils.isEmpty(goodsEntity.getGoodsDesc())) {
+            holder.recharge_tips.setText(goodsEntity.getGoodsDesc());
+            holder.recharge_tips.setVisibility(View.VISIBLE);
+            if (goodsEntity.getType() == 1){
+                if (goodsEntity.getIsRecommend() == 1){
+                    holder.recharge_tips.setBackgroundResource(R.drawable.bg_diamond_recharge_item_tips_recommend);
+                    return;
+                }
+            }
+            holder.recharge_tips.setBackgroundResource(R.drawable.bg_diamond_recharge_item_child);
+        } else {
+            holder.recharge_tips.setVisibility(View.GONE);
+        }
     }
 
     @Override
