@@ -227,7 +227,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
             }
             return false;
         });
-        //gameInit();
+        gameInit();
         //开始倒计时
         downTime();
     }

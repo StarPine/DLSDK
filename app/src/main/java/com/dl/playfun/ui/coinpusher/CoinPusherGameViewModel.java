@@ -46,7 +46,7 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
                 .subscribe(new BaseObserver<BaseResponse>() {
                     @Override
                     public void onSuccess(BaseResponse baseResponse) {
-
+                        gameUI.resetDownTimeEvent.postValue(null);
                     }
 
                     @Override
