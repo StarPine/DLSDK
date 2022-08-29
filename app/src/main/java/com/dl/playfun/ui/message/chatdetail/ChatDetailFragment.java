@@ -570,6 +570,10 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                 }
             }
         });
+        //done 本地余额不足消息
+        viewModel.uc.sendLoaclInsufficientBalance.observe(this, data -> {
+            sendLocalCustomTypeMessage();
+        });
     }
 
     private void askPhotoData(MessageRuleEntity messageRuleEntity) {
@@ -1421,6 +1425,21 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         //发送本地消息，并且自定它
         sendLocalMessage(str);
     }
+
+    public void sendLocalCustomTypeMessage() {
+        Map<String, Object> custom_local_data = new HashMap<>();
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("isRemindPay",1);
+
+        custom_local_data.put("type", "message_custom");
+        custom_local_data.put("data", GsonUtils.toJson(data));
+        String str = GsonUtils.toJson(custom_local_data);
+        //发送本地消息，并且自定它
+        sendLocalMessage(str);
+    }
+
+
 
     /**
      * 发送自定义消息。只能自己看

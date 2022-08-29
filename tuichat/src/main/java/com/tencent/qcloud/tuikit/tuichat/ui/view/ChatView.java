@@ -1097,7 +1097,6 @@ public class ChatView extends LinearLayout  implements IChatLayout {
                 if (errCode == ERR_SDK_INTERFACE_NOT_SUPPORT) {
                     showNotSupportDialog();
                 }
-                ToastUtil.toastLongMessage(errMsg);
             }
 
             @Override
