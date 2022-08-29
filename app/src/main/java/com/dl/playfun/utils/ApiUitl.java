@@ -291,12 +291,16 @@ public class ApiUitl {
     public static void saveBitmap(Context context, Bitmap bitmap, String bitName, CallBackUploadFileNameCallback callBackUploadFileNameCallback) {
         String fileName;
         File file;
-        if (Build.BRAND.equals("xiaomi")) { // 小米手机
-            fileName = Environment.getExternalStorageDirectory().getPath() + "/DCIM/Camera/" + bitName;
-        } else if (Build.BRAND.equals("Huawei")) {
-            fileName = Environment.getExternalStorageDirectory().getPath() + "/DCIM/Camera/" + bitName;
-        } else {  // Meizu 、Oppo
-            fileName = Environment.getExternalStorageDirectory().getPath() + "/DCIM/" + bitName;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            fileName = context.getExternalFilesDir(Environment.DIRECTORY_DCIM).getAbsolutePath() + bitName;
+        } else {
+            if (Build.BRAND.equals("xiaomi")) { // 小米手机
+                fileName = Environment.getExternalStorageDirectory().getPath() + "/DCIM/Camera/" + bitName;
+            } else if (Build.BRAND.equals("Huawei")) {
+                fileName = Environment.getExternalStorageDirectory().getPath() + "/DCIM/Camera/" + bitName;
+            } else {  // Meizu 、Oppo
+                fileName = Environment.getExternalStorageDirectory().getPath() + "/DCIM/" + bitName;
+            }
         }
         file = new File(fileName);
 
