@@ -118,7 +118,7 @@
                 android:textColor="@{viewModel.itemEntity.selected ? @color/vip_sub_color_selected:@color/vip_sub_color_normal}"
                 android:textSize="11sp"
                 android:textStyle="bold"
-                android:visibility="@{viewModel.itemEntity.dayPrice.length() == 0 ? View.GONE:View.VISIBLE}"
+                android:visibility="@{viewModel.getDayPrice == null ? View.GONE:View.VISIBLE}"
                 tools:text="￥3.3/天"
                 tools:textColor="@color/vip_sub_color_normal" />
         </RelativeLayout>
