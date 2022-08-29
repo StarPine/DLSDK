@@ -1245,6 +1245,7 @@
     <string name="playfun_privacy_policy_tips">Privacy Policy</string>
     <string name="playfun_vip_ratain_title">Sure to give up VIP privileges?</string>
     <string name="playfun_vip_retain_give_up">Give up</string>
+    <string name="playfun_vip_tips_privilege">Privileges</string>
 
 
 </resources>
