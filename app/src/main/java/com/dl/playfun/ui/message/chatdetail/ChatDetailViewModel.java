@@ -922,6 +922,9 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
             }
         });
         InsufficientBalanceSubscriber = RxBus.getDefault().toObservable(InsufficientBalanceEvent.class).subscribe(event -> {
+            //发送本地余额不足消息
+            uc.sendLoaclInsufficientBalance.call();
+            //调起储值界面
             uc.sendDialogViewEvent.call();
         });
         ShowFloatWindowEntitySubscriber = RxBus.getDefault().toObservable(ShowFloatWindowEntity.class).subscribe(event -> {
@@ -985,6 +988,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<Void> starNotepad = new SingleLiveEvent<>();
         //拨打视频电话
         public SingleLiveEvent<Void> callVideoViewEvent = new SingleLiveEvent<>();
+        public SingleLiveEvent<Void> sendLoaclInsufficientBalance = new SingleLiveEvent<>();
 
     }
 
