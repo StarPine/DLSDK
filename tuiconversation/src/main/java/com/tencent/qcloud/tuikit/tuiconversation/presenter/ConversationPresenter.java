@@ -458,16 +458,17 @@ public class ConversationPresenter {
         provider.getFriendShipConversationList(friendList, new IUIKitCallback<List<ConversationInfo>>() {
             @Override
             public void onSuccess(List<ConversationInfo> dataConversationInfo) {
-                loadedFriendshipInfoList.addAll(dataConversationInfo);
-                if(friendshipAdapter!=null){
-                    friendshipAdapter.onDataSourceChanged(loadedFriendshipInfoList);
-                    friendshipAdapter.onItemRangeChanged(oldFriendSize,loadedFriendshipInfoList.size());
+                if(dataConversationInfo!=null && !dataConversationInfo.isEmpty()){
+                    if(friendshipAdapter!=null){
+                        isFriendConversationList(dataConversationInfo);
+                        ConversationPresenter.this.onNewConversation(dataConversationInfo);
+                    }
                 }
                 adapterLoadingStateChanged(friendshipAdapter);
             }
 
             @Override
-            public void onError(int errCode, String errMsg, List<ConversationInfo> data) {
+            public void onError(String module, int errCode, String errMsg) {
                 adapterLoadingStateChanged(friendshipAdapter);
             }
         });
@@ -993,7 +994,7 @@ public class ConversationPresenter {
                                     }
 
                                     @Override
-                                    public void onError(int errCode, String errMsg, List<ConversationInfo> data) {
+                                    public void onError(String module, int errCode, String errMsg) {
                                         if(loadConversationCallback!=null){
                                             loadConversationCallback.isConversationEmpty(true);
                                         }
@@ -1007,7 +1008,7 @@ public class ConversationPresenter {
                         }
 
                         @Override
-                        public void onError(int errCode, String errMsg, List<String> data) {
+                        public void onError(String module, int errCode, String errMsg) {
                             if(loadConversationCallback!=null){
                                 loadConversationCallback.isConversationEmpty(true);
                             }
@@ -1025,7 +1026,7 @@ public class ConversationPresenter {
                     }
 
                     @Override
-                    public void onError(int errCode, String errMsg, List<String> data) {
+                    public void onError(String module, int errCode, String errMsg) {
                         loadConversation(loadSize);
                     }
                 });
