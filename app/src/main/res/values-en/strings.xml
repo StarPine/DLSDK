@@ -410,8 +410,8 @@
     <string name="playfun_keep">Hidden</string>
     <string name="playfun_on_line">Online</string>
     <string name="playfun_unknown">Unknown</string>
-    <string name="playfun_calling">通話中</string>
-    <string name="playfun_in_video">通話中</string>
+    <string name="playfun_calling">Calling</string>
+    <string name="playfun_in_video">Calling</string>
     <string name="playfun_year">year</string>
     <string name="playfun_month">month</string>
     <string name="playfun_daily">day</string>
@@ -1246,5 +1246,6 @@
     <string name="playfun_vip_ratain_title">Sure to give up VIP privileges?</string>
     <string name="playfun_vip_retain_give_up">Give up</string>
     <string name="playfun_vip_tips_privilege">Privileges</string>
+
 
 </resources>
