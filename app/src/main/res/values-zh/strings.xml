@@ -1215,7 +1215,7 @@
     <string name="playfun_deadline_is_up">期限至：\n%s</string>
     <string name="playfun_buy_now">立即購買</string>
     <string name="playfun_continue_to_now">繼續購買</string>
-    <string name="playfun_vip_service_tips">自動訂閱，隨時取消。\n購買訂閱的費用將從您的iTunes/Google帳戶收取，並意味著您同意我們的用戶協議及隱私政策。可以隨時在設置中管理或取消自動訂閱。</string>
+    <string name="playfun_vip_service_tips">自動訂閱，隨時取消。\n購買訂閱的費用將從您的Google帳戶收取，並意味著您同意我們的用戶協議及隱私政策。可以隨時在設置中管理或取消自動訂閱。</string>
     <string name="playfun_nonactivated">未開通</string>
     <string name="playfun_reward">獎勵</string>
     <string name="playfun_reward_tips">明日登陸可得%s鑽石、 視訊卡*%s</string>

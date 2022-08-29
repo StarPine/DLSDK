@@ -1216,7 +1216,7 @@
     <string name="playfun_deadline_is_up">Deadline until:\n%s</string>
     <string name="playfun_buy_now">Buy now</string>
     <string name="playfun_continue_to_now">Continue to buy</string>
-    <string name="playfun_vip_service_tips">Automatic subscription, cancel anytime. \nPurchasing a subscription will be charged to your iTunes/Google account and signifies your agreement to our User Agreement and Privacy Policy. Automatic subscriptions can be managed or cancelled at any time in the settings.</string>
+    <string name="playfun_vip_service_tips">Automatic subscription, cancel anytime. \nPurchasing a subscription will be charged to your Google account and signifies your agreement to our User Agreement and Privacy Policy. Automatic subscriptions can be managed or cancelled at any time in the settings.</string>
     <string name="playfun_nonactivated">Nonactivated</string>
     <string name="playfun_reward">award</string>
     <string name="playfun_reward_tips">Log in tomorrow to get %s diamonds, video card*%s</string>
