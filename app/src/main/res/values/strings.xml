@@ -1206,17 +1206,7 @@
     <string name="playfun_audio_chat_up">Voice greeting</string>
     <string name="playfun_text_chat_up_hint">Good conversations are more likely to get a reply</string>
     <string name="playfun_text_accost_number_of_fonts">%s/40</string>
-    <string name="playfun_coinpusher_hint_title">歡樂推幣機</string>
-    <string name="playfun_coinpusher_text_30">您30s內沒有投幣，已自動退出</string>
-    <string name="playfun_purchase_text">購買</string>
-    <string name="playfun_capsule_tab">寶盒</string>
-    <string name="playfun_coinpusher_text_1">熱玩</string>
-    <string name="playfun_coinpusher_text_2">空閒</string>
-    <string name="playfun_coinpusher_text_3">%s/次</string>
 
-    <string name="playfun_coinpusher_text_4"><![CDATA[已有金幣<font color=\'#FF1579\' size=\'24\'>%s</font>]]></string>
-
-    <string name="playfun_coinpusher_text_downtime">將在%ss後退出遊戲，請投幣續時</string>
     <string name="playfun_text_accost_tips">Please enter</string>
     <string name="playfun_text_accost_tips2">The greeting word contain inappropriate content, please reset</string>
     <string name="playfun_text_accost_tips3">Greeting words set successfully</string>
@@ -1261,6 +1251,14 @@
     <string name="playfun_perfect_tips">建議上傳本人真實照片</string>
     <string name="playfun_perfect_tips_age">年齡</string>
     <string name="playfun_perfect_age">18歲</string>
-    <string name="playfun_perfect_code_hint">邀請碼（選填）</string>
+    <string name="playfun_coinpusher_hint_title">歡樂推幣機</string>
+    <string name="playfun_coinpusher_text_30">您30s內沒有投幣，已自動退出</string>
+    <string name="playfun_purchase_text">購買</string>
+    <string name="playfun_capsule_tab">寶盒</string>
+    <string name="playfun_coinpusher_text_1">熱玩</string>
+    <string name="playfun_coinpusher_text_2">空閒</string>
+    <string name="playfun_coinpusher_text_3">%s/次</string>
+    <string name="playfun_coinpusher_text_4"><![CDATA[已有金幣<font color=\'#FF1579\' size=\'24\'>%s</font>]]></string>
+    <string name="playfun_coinpusher_text_downtime">將在%ss後退出遊戲，請投幣續時</string>
 
 </resources>
