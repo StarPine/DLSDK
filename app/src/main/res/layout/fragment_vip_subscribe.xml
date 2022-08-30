@@ -172,7 +172,7 @@
                         android:paddingStart="15dp"
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
-                        android:text="特權"
+                        android:text="@string/playfun_vip_tips_privilege"
                         android:textColor="@color/white"
                         android:textSize="16sp"
                         android:textStyle="bold"

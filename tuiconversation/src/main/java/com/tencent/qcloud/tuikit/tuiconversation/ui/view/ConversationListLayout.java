@@ -158,6 +158,8 @@ public class ConversationListLayout extends RecyclerView implements IConversatio
                     mAdapter.onLoadingStateChanged(true);
                     if (presenter != null) {
                         presenter.loadMoreConversation();
+                    }else{
+                        mAdapter.onLoadingStateChanged(false);
                     }
                 }
 

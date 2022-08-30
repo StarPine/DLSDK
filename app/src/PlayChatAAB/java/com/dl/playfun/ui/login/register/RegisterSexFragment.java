@@ -195,7 +195,7 @@ public class RegisterSexFragment extends BaseFragment<FragmentRegisterSexBinding
                 .setDividerType(WheelView.DividerType.WRAP)
                 .setLineSpacingMultiplier(2.8f)
                 .setLabel(yearLabel, monthLabel, dayLabel, getString(R.string.playfun_hour), getString(R.string.playfun_minute), getString(R.string.playfun_second));
-        registerChooseTimeView = new RegisterChooseTimeView(pvTime.build(), timePickerView);
+        registerChooseTimeView = new RegisterChooseTimeView(pvTime.build(),timePickerView);
     }
 
     @Override

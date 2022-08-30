@@ -3,6 +3,7 @@ package com.dl.playfun.ui.radio.issuanceprogram;
 import android.app.Application;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
+import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableArrayList;
@@ -13,6 +14,7 @@ import androidx.databinding.ObservableList;
 import com.aliyun.svideo.crop.bean.AlivcCropOutputParam;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
+import com.blankj.utilcode.util.Utils;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
@@ -30,6 +32,7 @@ import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.BadioEvent;
 import com.dl.playfun.event.SelectMediaSourcesEvent;
 import com.dl.playfun.manager.ConfigManager;
+import com.dl.playfun.ui.login.register.RegisterSexFragment;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.FileUploadUtils;
 import com.dl.playfun.utils.LogUtils;
@@ -195,17 +198,15 @@ public class IssuanceProgramViewModel extends BaseViewModel<AppRepository> {
                                     retriever.setDataSource(selectMediaPath.get());
                                     //获得第一帧图片
                                     Bitmap bitmap = retriever.getFrameAtTime(1);
-                                    ApiUitl.saveBitmap(AppContext.instance(), bitmap, AppConfig.VERSION_NAME + ApiUitl.getDateTimeFileName() + ".jpg", new ApiUitl.CallBackUploadFileNameCallback() {
-                                        @Override
-                                        public void success(String fileName) {
-                                            //取视频第一帧图片保存成功后再次上报发送
-                                            File deleteFile = new File(filePath);
-                                            deleteFile.delete();
-                                            selectMediaPath.set(fileKey);
-                                            uploadAvatar(fileName);
-                                        }
+                                    String filename = ApiUitl.getDiskCacheDir(Utils.getApp()) + "/Overseas" + ApiUitl.getDateTimeFileName() + ".jpg";
+                                    ApiUitl.saveBitmap(bitmap, filename, flag -> {
+                                        //取视频第一帧图片保存成功后再次上报发送
+                                        File deleteFile = new File(filePath);
+                                        deleteFile.delete();
+                                        selectMediaPath.set(fileKey);
+                                        uploadAvatar(filename);
                                     });
-                                } catch (IllegalArgumentException e) {
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 } finally {
                                     retriever.release();

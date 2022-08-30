@@ -2,6 +2,7 @@ package com.dl.playfun.ui.main;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -48,13 +49,16 @@ import com.dl.playfun.ui.home.HomeMainFragment;
 import com.dl.playfun.ui.home.accost.HomeAccostDialog;
 import com.dl.playfun.ui.message.MessageMainFragment;
 import com.dl.playfun.ui.mine.MineFragment;
+import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
 import com.dl.playfun.ui.radio.radiohome.RadioFragment;
 import com.dl.playfun.ui.task.main.TaskMainFragment;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.StringUtil;
+import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.dl.playfun.widget.dialog.TraceDialog;
+import com.dl.playfun.widget.dialog.WebViewDialog;
 import com.dl.playfun.widget.dialog.version.view.UpdateDialogView;
 import com.dl.playfun.widget.pageview.FragmentAdapter;
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
@@ -136,7 +140,43 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
 //        });
         //未付费弹窗
         viewModel.uc.notPaidDialog.observe(this,s -> {
+            String url = Injection.provideDemoRepository().readApiConfigManagerEntity().getPlayFunWebUrl();
+            if (s.equals("2")) {
+                url = url +"/recharge_vip/recharge_vip.html";
+            } else {
+                url = url +"/recharge_zuan/recharge_zuan.html";
+            }
+            new WebViewDialog(getContext(), mActivity, url, new WebViewDialog.ConfirmOnclick() {
+                @Override
+                public void webToVipRechargeVC(Dialog dialog) {
+                    if(dialog!=null){
+                        dialog.dismiss();
+                    }
+                    viewModel.start(VipSubscribeFragment.class.getCanonicalName());
+                }
 
+                @Override
+                public void vipRechargeDiamondSuccess(Dialog dialog, Integer coinValue) {
+                    if(dialog!=null){
+                        dialog.dismiss();
+                    }
+                }
+
+                @Override
+                public void moreRechargeDiamond(Dialog dialog) {
+                    dialog.dismiss();
+                    mActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showRecharge();
+                        }
+                    });
+                }
+
+                @Override
+                public void cancel() {
+                }
+            }).noticeDialog().show();
         });
         //每日奖励
         viewModel.uc.showDayRewardDialog.observe(this,s -> {
@@ -352,6 +392,11 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                 }
             }
         });
+    }
+
+    private void showRecharge() {
+        CoinRechargeSheetView coinRechargeSheetView = new CoinRechargeSheetView(mActivity);
+        coinRechargeSheetView.show();
     }
 
     private void dialogCallback() {
