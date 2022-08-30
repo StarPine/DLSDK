@@ -1258,5 +1258,9 @@
     <string name="playfun_vip_retain_give_up">Give up</string>
     <string name="playfun_vip_tips_privilege">Privileges</string>
 
+    <string name="playfun_perfect_tips">建議上傳本人真實照片</string>
+    <string name="playfun_perfect_tips_age">年齡</string>
+    <string name="playfun_perfect_age">18歲</string>
+    <string name="playfun_perfect_code_hint">邀請碼（選填）</string>
 
 </resources>

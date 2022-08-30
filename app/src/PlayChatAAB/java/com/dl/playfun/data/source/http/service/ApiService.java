@@ -245,6 +245,13 @@ public interface ApiService {
     Observable<BaseDataResponse<List<ExclusiveAccostInfoEntity>>> getExclusiveAccost();
 
     /**
+     * 获取昵称
+     * @return
+     */
+    @GET("api/getRandName")
+    Observable<BaseDataResponse> getRandName();
+
+    /**
      * 每日奖励
      * @return
      */

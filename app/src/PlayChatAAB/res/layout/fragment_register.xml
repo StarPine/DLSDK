@@ -97,6 +97,7 @@
                     />
             </RelativeLayout>
             <EditText
+                android:id="@+id/et_phone"
                 style="@style/EditText"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
@@ -122,6 +123,7 @@
                 android:orientation="horizontal">
 
                 <EditText
+                    android:id="@+id/et_code"
                     style="@style/EditText"
                     android:layout_width="0dp"
                     android:layout_height="48dp"
@@ -145,7 +147,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="@={viewModel.downTimeStr}"
-                    android:textColor="@color/text_7639FF"
+                    android:textColor="@color/purple_text"
                     android:textSize="@dimen/text_size_14"
                     binding:onClickCommand="@{viewModel.sendRegisterSmsOnClickCommand}"
                     tools:text="Send" />
@@ -154,8 +156,10 @@
                 binding:onClickCommand="@{viewModel.registerUserOnClickCommand}"
                 android:layout_marginTop="50dp"
                 android:layout_marginBottom="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
                 android:layout_gravity="center"
-                android:layout_width="110dp"
+                android:layout_width="wrap_content"
                 android:layout_height="60dp"
                 android:background="@drawable/btn_perfect_profile_sub"/>
 

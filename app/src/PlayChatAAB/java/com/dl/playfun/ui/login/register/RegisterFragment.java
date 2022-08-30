@@ -1,5 +1,6 @@
 package com.dl.playfun.ui.login.register;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,21 +8,28 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.blankj.utilcode.util.GsonUtils;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
+import com.dl.playfun.api.AppGameConfig;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.FragmentRegisterBinding;
+import com.dl.playfun.entity.ChooseAreaItemEntity;
 import com.dl.playfun.entity.OverseasUserEntity;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.ui.login.LoginViewModel;
 import com.dl.playfun.utils.ImmersionBarUtils;
+import com.dl.playfun.utils.StringUtil;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -37,6 +45,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
@@ -70,6 +79,15 @@ public class RegisterFragment extends BaseToolbarFragment<FragmentRegisterBindin
     }
 
     @Override
+    public void initViewObservable() {
+        super.initViewObservable();
+        //done 验证码框获取焦点
+        viewModel.getCodeSuccess.observe(this,s -> {
+            showInput(binding.etCode);
+        });
+    }
+
+    @Override
     public int initVariableId() {
         return BR.viewModel;
     }
@@ -86,7 +104,36 @@ public class RegisterFragment extends BaseToolbarFragment<FragmentRegisterBindin
     public void initData() {
         super.initData();
         AppConfig.overseasUserEntity = null;
-        viewModel.getUserIpCode();
+        showInput(binding.etPhone);
+        ChooseAreaItemEntity areaCodeInfo = getAreaCodeInfo();
+        if (areaCodeInfo == null){
+            viewModel.getUserIpCode();
+        }else {
+            viewModel.areaCode.set(areaCodeInfo);
+        }
+    }
+
+    private ChooseAreaItemEntity getAreaCodeInfo() {
+        String areaCode = ConfigManager.getInstance().getAppRepository().readKeyValue("areaCode");
+        if (StringUtil.isEmpty(areaCode)) {
+            return null;
+        }
+        try {
+            return new Gson().fromJson(areaCode, ChooseAreaItemEntity.class);
+        }catch (Exception e){
+
+        }
+        return null;
+    }
+
+
+    //done 弹出键盘
+    private void showInput(EditText editText) {
+        editText.setFocusable(true);
+        editText.setFocusableInTouchMode(true);
+        editText.requestFocus();
+        InputMethodManager inputManager =(InputMethodManager)editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.showSoftInput(editText, 0);
     }
 
     @Override

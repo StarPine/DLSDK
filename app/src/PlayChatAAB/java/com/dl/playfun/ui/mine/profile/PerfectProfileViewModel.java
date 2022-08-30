@@ -17,6 +17,7 @@ import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.CheckNicknameEntity;
+import com.dl.playfun.entity.NoteInfoEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.manager.ThirdPushTokenMgr;
 import com.dl.playfun.ui.login.LoginViewModel;
@@ -33,6 +34,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
+import me.goldze.mvvmhabit.binding.command.BindingAction;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.KLog;
@@ -50,7 +52,9 @@ public class PerfectProfileViewModel extends BaseViewModel<AppRepository> {
     public ObservableField<String> UserName = new ObservableField<>();
 
     public ObservableField<String> UserBirthday = new ObservableField<>("1995-01-01");
+    public ObservableField<String> userAge = new ObservableField<>(getApplication().getString(R.string.playfun_perfect_age));
     public ObservableField<String> UserAvatar = new ObservableField<>();
+    public ObservableField<String> invitationCode = new ObservableField<>();
 
     public UIChangeObservable uc = new UIChangeObservable();
     //返回上一页
@@ -59,8 +63,10 @@ public class PerfectProfileViewModel extends BaseViewModel<AppRepository> {
     public BindingCommand avatarOnClickCommand = new BindingCommand(() -> uc.clickAvatar.call());
     public BindingCommand chooseMaleClick = new BindingCommand(() -> uc.clickChooseMale.call());
     public BindingCommand chooseGirlClick = new BindingCommand(() -> uc.clickChooseGirl.call());
-    //填写生日界面-按钮点击
-    public BindingCommand chooseBirthdayClick = new BindingCommand(() -> uc.clickBirthday.call());
+    //done 選擇年齡
+    public BindingCommand chooseAge = new BindingCommand(() -> uc.chooseAgeClick.call());
+    //done 刷新昵称
+    public BindingCommand refreshOnClick = new BindingCommand(() -> getNickName());
     //提交
     public BindingCommand submitClick = new BindingCommand(() -> {
         if (ObjectUtils.isEmpty(UserSex.get())) {
@@ -70,10 +76,6 @@ public class PerfectProfileViewModel extends BaseViewModel<AppRepository> {
         uc.getClickBirthday.call();
     });
     public BindingCommand nextViewClick = new BindingCommand(() -> {
-        if (StringUtils.isEmpty(UserAvatar.get())) {
-            ToastUtils.showShort(R.string.playfun_fragment_perfect_avatar);
-            return;
-        }
         if (StringUtils.isEmpty(UserName.get())) {
             ToastUtils.showShort(R.string.playfun_fragment_perfect_name_hint);
             return;
@@ -89,7 +91,6 @@ public class PerfectProfileViewModel extends BaseViewModel<AppRepository> {
     public PerfectProfileViewModel(@NonNull Application application, AppRepository model) {
         super(application, model);
     }
-
 
     /**
      * 上传头像
@@ -148,7 +149,7 @@ public class PerfectProfileViewModel extends BaseViewModel<AppRepository> {
                             AppConfig.isRegister = true;
                         }
                         model.clearChannelAF();
-                        uc.showAlertHint.call();
+                        loadProfile(true);
                     }
 
                     @Override
@@ -158,13 +159,13 @@ public class PerfectProfileViewModel extends BaseViewModel<AppRepository> {
                 });
     }
 
-    public boolean getCode() {
+    public void setInvitationCode() {
         Map<String, String> map = model.readOneLinkCode();
         if (ObjectUtils.isEmpty(map)) {
-            return false;
+            return;
         } else {
             String code = map.get("code");
-            return !StringUtils.isTrimEmpty(code) && !code.equals("null");
+            invitationCode.set(code);
         }
 
     }
@@ -247,6 +248,27 @@ public class PerfectProfileViewModel extends BaseViewModel<AppRepository> {
                 });
     }
 
+    public void getNickName() {
+        model.getRandName()
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(this)
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseDataResponse>() {
+                    @Override
+                    public void onSuccess(BaseDataResponse response) {
+                        String data = (String) response.getData();
+                        UserName.set(data);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        super.onComplete();
+                        dismissHUD();
+                    }
+                });
+    }
+
     public class UIChangeObservable {
         //选择头像
         public SingleLiveEvent<Void> clickAvatar = new SingleLiveEvent<>();
@@ -256,11 +278,12 @@ public class PerfectProfileViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent clickChooseGirl = new SingleLiveEvent<>();
         //选择生日
         public SingleLiveEvent clickBirthday = new SingleLiveEvent<>();
-        public SingleLiveEvent showAlertHint = new SingleLiveEvent();
         //获取成日
         public SingleLiveEvent getClickBirthday = new SingleLiveEvent();
         //验证是否是第三方登录解析头像
         public SingleLiveEvent verifyAvatar = new SingleLiveEvent();
+        //選擇年齡
+        public SingleLiveEvent chooseAgeClick = new SingleLiveEvent();
 
     }
 }

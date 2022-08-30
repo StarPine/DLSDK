@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
@@ -13,7 +14,10 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.builder.TimePickerBuilder;
+import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
+import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.bigkoo.pickerview.view.TimePickerView;
 import com.blankj.utilcode.util.ToastUtils;
 import com.contrarywind.view.WheelView;
@@ -30,6 +34,7 @@ import com.dl.playfun.utils.PictureSelectorUtil;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.listener.OnResultCallbackListener;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -54,7 +59,7 @@ public class PerfectProfileFragment extends BaseFragment<FragmentPerfectProfileB
     @Override
     public void initData() {
         super.initData();
-
+        viewModel.getNickName();
     }
 
     @Override
@@ -78,14 +83,6 @@ public class PerfectProfileFragment extends BaseFragment<FragmentPerfectProfileB
             }
         });
 
-        viewModel.uc.clickBirthday.observe(this, new Observer() {
-            @Override
-            public void onChanged(@Nullable Object o) {
-                clearNicknameFocus();
-                shouChooseBirthday();
-            }
-        });
-
         viewModel.uc.verifyAvatar.observe(this, new Observer() {
             @Override
             public void onChanged(Object o) {
@@ -100,6 +97,7 @@ public class PerfectProfileFragment extends BaseFragment<FragmentPerfectProfileB
             }
         });
     }
+
 
     /**
      * @return void
@@ -139,67 +137,6 @@ public class PerfectProfileFragment extends BaseFragment<FragmentPerfectProfileB
             }
         });
     }
-
-    //选择生日dialog
-    public void shouChooseBirthday() {
-        Calendar selectedDate = Calendar.getInstance();
-        selectedDate.set(1995, 0, 1);
-        Calendar startDate = Calendar.getInstance();
-        startDate.set(1931, 0, 1);
-        Calendar endDate = Calendar.getInstance();
-        endDate.set(DateUtil.getYear() - 18, DateUtil.getMonth() - 1, DateUtil.getCurrentMonthDay());
-        TimePickerView pvTime = new TimePickerBuilder(this.getContext(), (date, v) -> {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            int month = (calendar.get(Calendar.MONTH) + 1);
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
-            String months = month < 10 ? "0" + month : String.valueOf(month);
-            String days = day < 10 ? "0" + day : String.valueOf(day);
-            viewModel.UserBirthday.set((calendar.get(Calendar.YEAR)) + "-" + months + "-" + days);
-        })
-                .setType(new boolean[]{true, true, true, false, false, false})//分别对应年月日时分秒，默认全部显示
-                .setCancelText(getString(R.string.cancel))//取消按钮文字
-                .setSubmitText(getString(R.string.confirm))//确认按钮文字
-                .setContentTextSize(14)//滚轮文字大小
-                .setSubCalSize(14)
-                .setTitleSize(14)//标题文字大小
-                .setTitleText(getString(R.string.playfun_fragment_perfect_brithday))//标题文字
-                .setOutSideCancelable(true)//点击屏幕，点在控件外部范围时，是否取消显示
-                .setTitleColor(getResources().getColor(R.color.gray_dark))//标题文字颜色
-                .setSubmitColor(getResources().getColor(R.color.purple))//确定按钮文字颜色
-                .setCancelColor(getResources().getColor(R.color.purple))//取消按钮文字颜色
-                .setTextColorCenter(getResources().getColor(R.color.purple))//设置选中项的颜色
-                .setTextColorOut(getResources().getColor(R.color.gray_light))//设置没有被选中项的颜色
-                .setTitleBgColor(0xffffffff)//标题背景颜色 Night mode
-                .setBgColor(0xffffffff)//滚轮背景颜色 Night mode
-                .setDate(selectedDate)// 如果不设置的话，默认是系统时间*/
-                .setRangDate(startDate, endDate)//起始终止年月日设定
-                .setItemVisibleCount(5)//设置最大可见数目
-                .setDividerType(WheelView.DividerType.WRAP)
-                .setLineSpacingMultiplier(2.8f)
-                .setLabel("", "", "", "", "", "")
-                .isDialog(true)//f是否显示为对话框样式
-                .build();
-        Dialog mDialog = pvTime.getDialog();
-        if (mDialog != null) {
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    Gravity.BOTTOM);
-
-            params.leftMargin = 0;
-            params.rightMargin = 0;
-            pvTime.getDialogContainerLayout().setLayoutParams(params);
-
-            Window dialogWindow = mDialog.getWindow();
-            if (dialogWindow != null) {
-                dialogWindow.setWindowAnimations(R.style.picker_view_slide_anim);//修改动画样式
-                dialogWindow.setGravity(Gravity.BOTTOM);//改成Bottom,底部显示
-            }
-        }
-        pvTime.show();
-    }
-
 
     private void clearNicknameFocus() {
         if (binding.editNickname.isFocused()) {
