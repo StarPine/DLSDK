@@ -16,6 +16,9 @@ import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.R;
+import com.dl.playfun.app.AppContext;
+import com.dl.playfun.app.AppsFlyerEvent;
+import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
@@ -25,6 +28,7 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseDialog;
 import com.dl.playfun.ui.coinpusher.dialog.adapter.CoinPusherCapsuleAdapter;
 import com.dl.playfun.ui.coinpusher.dialog.adapter.CoinPusherConvertAdapter;
+import com.dl.playfun.utils.ToastCenterUtils;
 
 import me.goldze.mvvmhabit.binding.viewadapter.recyclerview.LayoutManagers;
 import me.goldze.mvvmhabit.utils.RxUtils;
@@ -214,7 +218,7 @@ public class CoinPusherConvertDialog  extends BaseDialog {
         String format = String.format(StringUtils.getString(R.string.playfun_coinpusher_text_4),val);
         binding.tvConverDetail.setText(Html.fromHtml(format));
     }
-
+    //兑换宝盒礼包
     private void convertCoinPusherDiamonds(final Integer id,final Integer money){
         ConfigManager.getInstance().getAppRepository().convertCoinPusherDiamonds(id)
                 .doOnSubscribe(this)
@@ -227,6 +231,12 @@ public class CoinPusherConvertDialog  extends BaseDialog {
                         totalMoney -= money;
                         coinPusherConvertAdapter.setMaxValuerSelect(totalMoney);
                         tvTotalMoneyRefresh();
+                    }
+                    @Override
+                    public void onError(RequestException e) {
+                        if (e.getCode() != null && e.getCode() == 21001) {
+                            ToastCenterUtils.showToast(R.string.playfun_dialog_exchange_integral_total_text1);
+                        }
                     }
                     @Override
                     public void onComplete() {

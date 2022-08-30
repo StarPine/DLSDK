@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:binding="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.dl.playfun.R" />
+
+        <variable
+            name="viewModel"
+            type="com.dl.playfun.ui.mine.profile.PerfectProfileViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <View
+            android:id="@+id/status_bar_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp" />
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="12dp"
+            binding:onClickCommand="@{viewModel.backViewClick}"
+            android:src="@drawable/ic_toolbar_back" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="18dp"
+                android:includeFontPadding="false"
+                android:text="@string/fragment_perfect_sex_birther_hint"
+                android:textColor="#ff333333"
+                android:textSize="30sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="12dp"
+                android:includeFontPadding="false"
+                android:text="@string/fragment_perfect_reg_hint2"
+                android:textColor="#ff333333"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="26dp"
+                android:layout_marginEnd="50dp"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:id="@+id/male_layout"
+                    android:layout_width="110dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    binding:onClickCommand="@{viewModel.chooseMaleClick}">
+
+                    <ImageView
+                        android:id="@+id/male_icon"
+                        android:layout_width="110dp"
+                        android:layout_height="110dp"
+                        android:scaleType="fitXY"
+                        android:alpha="0.5"
+                        android:src="@drawable/icon_male" />
+
+                    <ImageView
+                        android:id="@+id/male_icon_check"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_alignBottom="@+id/male_icon"
+                        android:layout_alignParentEnd="true"
+                        android:src="@drawable/icon_check_red_box"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/male_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/male_icon"
+                        android:layout_centerInParent="true"
+                        android:layout_marginTop="9dp"
+                        android:includeFontPadding="false"
+                        android:text="@string/playfun_fragment_perfect_sex_male"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/girl_layout"
+                    android:layout_width="110dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="40dp"
+                    binding:onClickCommand="@{viewModel.chooseGirlClick}">
+
+                    <ImageView
+                        android:id="@+id/female_icon"
+                        android:layout_width="110dp"
+                        android:layout_height="110dp"
+                        android:alpha="0.5"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/icon_girl" />
+
+                    <ImageView
+                        android:id="@+id/female_icon_check"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_alignBottom="@+id/female_icon"
+                        android:layout_alignParentEnd="true"
+                        android:src="@drawable/icon_check_red_box"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/female_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/female_icon"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="9dp"
+                        android:includeFontPadding="false"
+                        android:text="@string/playfun_fragment_perfect_sex_female"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="27dp"
+                android:includeFontPadding="false"
+                android:text="@string/fragment_perfect_hint"
+                android:textColor="#ff333333"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:id="@+id/optionspicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:background="@android:color/white"
+                android:gravity="center"
+                android:minHeight="200dp"
+                android:orientation="horizontal">
+
+                <com.contrarywind.view.WheelView
+                    android:id="@+id/day"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    app:wheelview_textColorCenter="@color/purple"
+                    app:wheelview_textSize="21sp" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="37dp"
+                    android:background="#D8D8D8" />
+
+                <com.contrarywind.view.WheelView
+                    android:id="@+id/month"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    app:wheelview_textColorCenter="@color/purple"
+                    app:wheelview_textSize="21sp" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="37dp"
+                    android:background="#D8D8D8" />
+
+                <com.contrarywind.view.WheelView
+                    android:id="@+id/year"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    app:wheelview_textColorCenter="@color/purple"
+                    app:wheelview_textSize="21sp" />
+
+                <com.contrarywind.view.WheelView
+                    android:id="@+id/hour"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:visibility="gone" />
+
+                <com.contrarywind.view.WheelView
+                    android:id="@+id/min"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:visibility="gone" />
+
+                <com.contrarywind.view.WheelView
+                    android:id="@+id/second"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="110dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="27dp"
+                android:background="@drawable/btn_perfect_profile_sub"
+                binding:onClickCommand="@{viewModel.submitClick}" />
+        </LinearLayout>
+    </LinearLayout>
+</layout>
