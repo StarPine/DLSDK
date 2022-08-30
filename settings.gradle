@@ -8,6 +8,7 @@ include ':AlivcMedia'
 include ':AliyunCrop'
 include ':QueenBeauty'
 include ':faceunity'
+include ':lib-toast'
 //include ':_demo'
 
 /*IM聊天组件*/

@@ -10,10 +10,8 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
@@ -28,8 +26,7 @@ import com.dl.playfun.ui.coinpusher.dialog.CoinPusherDialogAdapter;
 import com.dl.playfun.ui.coinpusher.dialog.CoinPusherGameHistoryDialog;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
-import com.dl.playfun.utils.TimeUtils;
-import com.dl.playfun.utils.ToastCenterUtils;
+import com.misterp.toast.SnackUtils;
 import com.tencent.liteav.trtccalling.ui.floatwindow.FloatWindowService;
 import com.wangsu.libwswebrtc.WsWebRTCObserver;
 import com.wangsu.libwswebrtc.WsWebRTCParameters;
@@ -55,7 +52,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
     //倒计时30秒
     private final long downTimeMillisInFuture = 20 * 1000;
     //倒计时剩余多少时间提示
-    private final long downTimeMillisHint = 10 * 1000;
+    private final long downTimeMillisHint = 10;
     //提示状态标识
     private boolean downTimeMillisHintFlag = false;
 
@@ -262,9 +259,9 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
             @Override
             public void onTick(long millisUntilFinished) {
                 if(!downTimeMillisHintFlag){
-                    if(millisUntilFinished <= downTimeMillisHint){
+                    if(millisUntilFinished / 1000 <= downTimeMillisHint){
                         downTimeMillisHintFlag = true;
-                        ToastCenterUtils.showShort(String.format(StringUtils.getString(R.string.playfun_coinpusher_text_downtime),millisUntilFinished/1000));
+                        SnackUtils.showCenterShort(binding.getRoot(),String.format(StringUtils.getString(R.string.playfun_coinpusher_text_downtime),millisUntilFinished/1000));
                     }
                 }
 

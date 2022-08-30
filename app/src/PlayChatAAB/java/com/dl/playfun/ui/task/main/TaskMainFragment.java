@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
@@ -17,6 +18,7 @@ import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.ui.task.TaskCenterFragment;
 import com.dl.playfun.ui.task.fukubukuro.FukubukuroFragment;
 import com.dl.playfun.utils.ImmersionBarUtils;
+import com.dl.playfun.widget.pageview.FragmentAdapter;
 
 /**
  * Author: 彭石林
@@ -27,6 +29,8 @@ public class TaskMainFragment extends BaseFragment<FragmentTaskMainBinding, Task
 
     private final BaseFragment[] mFragments = new BaseFragment[2];
     private boolean fukubukuroFlag = false;
+
+    private ViewPager2 mainViewPager;
 
     @Override
     public void onSupportVisible() {
@@ -73,9 +77,9 @@ public class TaskMainFragment extends BaseFragment<FragmentTaskMainBinding, Task
                     ((FukubukuroFragment) mFragments[1]).reloadWebRul(AppConfig.FukubukuroWebUrl);
                 }
                 if (showHideFragment) {
-                    showHideFragment(mFragments[1], mFragments[0]);
+                    mainViewPager.setCurrentItem(1,false);
                 } else {
-                    showHideFragment(mFragments[0], mFragments[1]);
+                    mainViewPager.setCurrentItem(0,false);
                 }
             }
         });
@@ -86,12 +90,22 @@ public class TaskMainFragment extends BaseFragment<FragmentTaskMainBinding, Task
         if (firstFragment == null) {
             mFragments[0] = new TaskCenterFragment();
             mFragments[1] = new FukubukuroFragment();
-            loadMultipleRootFragment(R.id.fl_container, 0,
-                    mFragments[0], mFragments[1]);
         } else {
             // 这里我们需要拿到mFragments的引用
             mFragments[0] = firstFragment;
             mFragments[1] = findChildFragment(FukubukuroFragment.class);
         }
+
+        mainViewPager = binding.viewPager;
+        FragmentAdapter fragmentAdapter = new FragmentAdapter(this);
+        fragmentAdapter.setFragmentList(mFragments);
+        // 关闭左右滑动切换页面
+        mainViewPager.setUserInputEnabled(false);
+        // 设置缓存数量 避免销毁重建
+        mainViewPager.setOffscreenPageLimit(1);
+        //取消保存页面--未知BUG
+        mainViewPager.setSaveEnabled(false);
+        mainViewPager.setAdapter(fragmentAdapter);
+        mainViewPager.setCurrentItem(0, false);
     }
 }
