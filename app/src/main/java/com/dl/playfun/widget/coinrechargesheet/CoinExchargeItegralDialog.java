@@ -104,7 +104,10 @@ public class CoinExchargeItegralDialog extends BaseDialog implements View.OnClic
 
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);
-
+        if(billingClientLifecycle!=null){
+            //查询并消耗本地历史订单类型： INAPP 支付购买  SUBS订阅
+            billingClientLifecycle.queryAndConsumePurchase(BillingClient.SkuType.INAPP);
+        }
         this.billingClientLifecycle.PAYMENT_SUCCESS.observe(this, billingPurchasesState -> {
             Log.e("BillingClientLifecycle","支付购买成功回调");
             switch (billingPurchasesState.getBillingFlowNode()){

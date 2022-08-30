@@ -165,6 +165,18 @@ public class RegisterSexFragment extends BaseFragment<FragmentRegisterSexBinding
         startDate.set(1931, 0, 1);
         Calendar endDate = Calendar.getInstance();
         endDate.set(DateUtil.getYear() - 18, DateUtil.getMonth() - 1, DateUtil.getCurrentMonthDay());
+        String defaultLanguage = "zh-TW";
+        //当前用户语言版本
+        String currentLanguage = getString(R.string.playfun_local_language);
+        String yearLabel = "";
+        String monthLabel = "";
+        String dayLabel = "";
+        //当前是中文版本-显示文案
+        if(defaultLanguage.equals(currentLanguage)){
+            yearLabel = getString(R.string.playfun_year);
+            monthLabel = getString(R.string.playfun_month);
+            dayLabel = getString(R.string.playfun_daily);
+        }
         ChooseTimeVIewBuilder pvTime = new ChooseTimeVIewBuilder(this.getContext(), null)
                 .setType(new boolean[]{true, true, true, false, false, false})//分别对应年月日时分秒，默认全部显示
                 .setCancelText(getString(R.string.cancel))//取消按钮文字
@@ -182,8 +194,7 @@ public class RegisterSexFragment extends BaseFragment<FragmentRegisterSexBinding
                 .setItemVisibleCount(5)//设置最大可见数目
                 .setDividerType(WheelView.DividerType.WRAP)
                 .setLineSpacingMultiplier(2.8f)
-                .setLabel(getString(R.string.playfun_year), getString(R.string.playfun_month), getString(R.string.playfun_daily), getString(R.string.playfun_hour), getString(R.string.playfun_minute), getString(R.string.playfun_second));
-        registerChooseTimeView = new RegisterChooseTimeView(pvTime.build(), timePickerView);
+                .setLabel(yearLabel, monthLabel, dayLabel, getString(R.string.playfun_hour), getString(R.string.playfun_minute), getString(R.string.playfun_second));
     }
 
     @Override

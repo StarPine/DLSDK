@@ -410,8 +410,8 @@
     <string name="playfun_keep">Hidden</string>
     <string name="playfun_on_line">Online</string>
     <string name="playfun_unknown">Unknown</string>
-    <string name="playfun_calling">通話中</string>
-    <string name="playfun_in_video">通話中</string>
+    <string name="playfun_calling">Calling</string>
+    <string name="playfun_in_video">Calling</string>
     <string name="playfun_year">year</string>
     <string name="playfun_month">month</string>
     <string name="playfun_daily">day</string>
@@ -1227,7 +1227,7 @@
     <string name="playfun_deadline_is_up">Deadline until:\n%s</string>
     <string name="playfun_buy_now">Buy now</string>
     <string name="playfun_continue_to_now">Continue to buy</string>
-    <string name="playfun_vip_service_tips">Automatic subscription, cancel anytime. \nPurchasing a subscription will be charged to your iTunes/Google account and signifies your agreement to our User Agreement and Privacy Policy. Automatic subscriptions can be managed or cancelled at any time in the settings.</string>
+    <string name="playfun_vip_service_tips">Automatic subscription, cancel anytime. \nPurchasing a subscription will be charged to your Google account and signifies your agreement to our User Agreement and Privacy Policy. Automatic subscriptions can be managed or cancelled at any time in the settings.</string>
     <string name="playfun_nonactivated">Nonactivated</string>
     <string name="playfun_reward">award</string>
     <string name="playfun_reward_tips">Log in tomorrow to get %s diamonds, video card*%s</string>
@@ -1254,6 +1254,9 @@
     <string name="playfun_code_tips">Invitation code (optional)</string>
     <string name="playfun_user_agreement_tips">User Agreement</string>
     <string name="playfun_privacy_policy_tips">Privacy Policy</string>
+    <string name="playfun_vip_ratain_title">Sure to give up VIP privileges?</string>
+    <string name="playfun_vip_retain_give_up">Give up</string>
+    <string name="playfun_vip_tips_privilege">Privileges</string>
 
 
 </resources>

@@ -16,10 +16,14 @@
             android:id="@+id/conversation_layout_contact"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:visibility="gone"
             android:layout_marginBottom="@dimen/home_bottom_nav_height" />
         <RelativeLayout
             android:id="@+id/rl_empty_layout"
-            android:visibility="gone"
+            android:elevation="11dp"
+            android:clickable="true"
+            android:background="@color/white"
+            android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <androidx.appcompat.widget.AppCompatImageView

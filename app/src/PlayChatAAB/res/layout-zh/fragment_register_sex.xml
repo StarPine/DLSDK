@@ -162,7 +162,7 @@
                 android:orientation="horizontal">
 
                 <com.contrarywind.view.WheelView
-                    android:id="@+id/day"
+                    android:id="@+id/year"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -188,7 +188,7 @@
                     android:background="#D8D8D8" />
 
                 <com.contrarywind.view.WheelView
-                    android:id="@+id/year"
+                    android:id="@+id/day"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"

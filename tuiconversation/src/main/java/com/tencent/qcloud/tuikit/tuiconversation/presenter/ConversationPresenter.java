@@ -458,16 +458,17 @@ public class ConversationPresenter {
         provider.getFriendShipConversationList(friendList, new IUIKitCallback<List<ConversationInfo>>() {
             @Override
             public void onSuccess(List<ConversationInfo> dataConversationInfo) {
-                loadedFriendshipInfoList.addAll(dataConversationInfo);
-                if(friendshipAdapter!=null){
-                    friendshipAdapter.onDataSourceChanged(loadedFriendshipInfoList);
-                    friendshipAdapter.onItemRangeChanged(oldFriendSize,loadedFriendshipInfoList.size());
+                if(dataConversationInfo!=null && !dataConversationInfo.isEmpty()){
+                    if(friendshipAdapter!=null){
+                        isFriendConversationList(dataConversationInfo);
+                        ConversationPresenter.this.onNewConversation(dataConversationInfo);
+                    }
                 }
                 adapterLoadingStateChanged(friendshipAdapter);
             }
 
             @Override
-            public void onError(int errCode, String errMsg, List<ConversationInfo> data) {
+            public void onError(String module, int errCode, String errMsg) {
                 adapterLoadingStateChanged(friendshipAdapter);
             }
         });
@@ -562,7 +563,7 @@ public class ConversationPresenter {
                 }
             }
         }
-        if(loadConversationCallback!=null){
+        if(loadConversationCallback!=null && !loadedConversationInfo.isEmpty()){
             loadConversationCallback.isConversationEmpty(false);
         }
         busConversationCount(loadedConversationInfo);
@@ -634,7 +635,7 @@ public class ConversationPresenter {
             if (count > 0 && maxRefreshIndex >= minRefreshIndex) {
                 iAdapter.onItemRangeChanged(minRefreshIndex, count);
             }
-            if(loadConversationCallback!=null){
+            if(loadConversationCallback!=null && !loadedConversationInfo.isEmpty()){
                 loadConversationCallback.isConversationEmpty(false);
             }
             busConversationCount(loadedConversationInfo);
@@ -984,9 +985,6 @@ public class ConversationPresenter {
                                 provider.getFriendShipConversationList(friendList, new IUIKitCallback<List<ConversationInfo>>() {
                                     @Override
                                     public void onSuccess(List<ConversationInfo> dataConversationInfo) {
-                                        if(loadConversationCallback!=null){
-                                            loadConversationCallback.isConversationEmpty(false);
-                                        }
                                         if(!dataConversationInfo.isEmpty()){
                                             //loadedFriendshipInfoList.addAll(dataConversationInfo);
                                             isFriendConversationList(dataConversationInfo);
@@ -996,7 +994,7 @@ public class ConversationPresenter {
                                     }
 
                                     @Override
-                                    public void onError(int errCode, String errMsg, List<ConversationInfo> data) {
+                                    public void onError(String module, int errCode, String errMsg) {
                                         if(loadConversationCallback!=null){
                                             loadConversationCallback.isConversationEmpty(true);
                                         }
@@ -1010,7 +1008,7 @@ public class ConversationPresenter {
                         }
 
                         @Override
-                        public void onError(int errCode, String errMsg, List<String> data) {
+                        public void onError(String module, int errCode, String errMsg) {
                             if(loadConversationCallback!=null){
                                 loadConversationCallback.isConversationEmpty(true);
                             }
@@ -1028,7 +1026,7 @@ public class ConversationPresenter {
                     }
 
                     @Override
-                    public void onError(int errCode, String errMsg, List<String> data) {
+                    public void onError(String module, int errCode, String errMsg) {
                         loadConversation(loadSize);
                     }
                 });

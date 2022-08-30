@@ -931,7 +931,7 @@ public class TaskCenterFragment extends BaseToolbarFragment<TaskCenterFragmentBi
             public void onPaySuccess(CoinExchargeItegralDialog sheetView, GoodsEntity sel_goodsEntity) {
                 coinExchargeItegralSheetView.dismiss();
                 dialog.dismiss();
-                ToastUtils.showShort(R.string.dialog_exchange_integral_success);
+                //ToastUtils.showShort(R.string.dialog_exchange_integral_success);
                 //viewModel.showHUD("儲值中…");
                 //viewModel.BonusExchange(sel_goodsEntity.getActualValue());
             }
