@@ -88,7 +88,9 @@ public class FukubukuroFragment extends BaseFragment<FragmentFukubukuroBinding, 
 
     @Override
     public void initParam() {
-        webUrl = getArguments().getString("link", AppConfig.FukubukuroWebUrl);
+        if(getArguments()!=null){
+            webUrl = getArguments().getString("link", AppConfig.FukubukuroWebUrl);
+        }
     }
 
     public static byte[] syncLoad(String url, String type) {

@@ -306,9 +306,9 @@ public class AppContext extends Application {
             }
         };
         //启动OneLink模板
-        AppsFlyerLib.getInstance().setAppInviteOneLink("x5VR");
+        AppsFlyerLib.getInstance().setAppInviteOneLink(getString(R.string.app_flyer_invite_pathPrefix));
         AppsFlyerLib.getInstance().setDebugLog(true);
-        AppsFlyerLib.getInstance().init(getResources().getString(R.string.app_flyer), conversionListener, this);
+        AppsFlyerLib.getInstance().init(getString(R.string.app_flyer), conversionListener, this);
         AppsFlyerLib.getInstance().start(this);
         AppsFlyerLib.getInstance().registerValidatorListener(this,new
                 AppsFlyerInAppPurchaseValidatorListener() {
