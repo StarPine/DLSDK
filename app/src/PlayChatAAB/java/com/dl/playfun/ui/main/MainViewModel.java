@@ -11,7 +11,6 @@ import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
-import com.dl.playfun.app.Injection;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
@@ -23,6 +22,7 @@ import com.dl.playfun.entity.MqBroadcastGiftEntity;
 import com.dl.playfun.entity.MqGiftDataEntity;
 import com.dl.playfun.entity.VersionEntity;
 import com.dl.playfun.event.BubbleTopShowEvent;
+import com.dl.playfun.event.DailyAccostEvent;
 import com.dl.playfun.event.MainTabEvent;
 import com.dl.playfun.event.MessageCountChangeEvent;
 import com.dl.playfun.event.MessageGiftNewEvent;
@@ -43,10 +43,8 @@ import com.dl.playfun.entity.RestartActivityEntity;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -74,6 +72,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
     public int nextGiveCoin = 0;
     public int nextVideoCard = 0;
     public String dayRewardKey = "";
+
     UIChangeObservable uc = new UIChangeObservable();
     private Disposable mSubscription, taskMainTabEventReceive, mainTabEventReceive, rewardRedDotEventReceive, BubbleTopShowEventSubscription, ResatrtActSubscription2;
 
@@ -92,9 +91,6 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         if (!StringUtil.isEmpty(lockPassword.get())) {
             uc.lockDialog.call();
         }
-//        if (model.readLoginInfo().getIsContract() != 1) {
-//            uc.showAgreementDialog.call();
-//        }
         if (model.readNeedVerifyFace()) {
             uc.showFaceRecognitionDialog.call();
         }
@@ -114,13 +110,14 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         getSensitiveWords();
 
         //每日奖励
-        setDayFlag("day");
+        dayRewardKey = StringUtil.getDailyFlag("dailyReward");
         String value = model.readKeyValue(dayRewardKey);
         if (value == null){
             isShowedReward = false;
         }else {
             isShowedReward = true;
         }
+
     }
 
     @Override
@@ -401,14 +398,6 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         }
     }
 
-    public void setDayFlag(String key) {
-        Date date = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-        String format = formatter.format(date);
-        String userId = ConfigManager.getInstance().getUserImID();
-        dayRewardKey = key + format + userId;
-    }
-
     public void getSensitiveWords() {
         model.getSensitiveWords()
                 .compose(RxUtils.schedulersTransformer())
@@ -445,6 +434,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                         model.putKeyValue(dayRewardKey,"true");
                         DayRewardInfoEntity dayRewardInfoEntity = baseDataResponse.getData();
                         if (dayRewardInfoEntity == null){
+                            RxBus.getDefault().post(new DailyAccostEvent());
                             return;
                         }
                         nextGiveCoin = dayRewardInfoEntity.getNext();
@@ -482,6 +472,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                     public void onSuccess(BaseDataResponse<DayRewardInfoEntity> baseDataResponse) {
                         DayRewardInfoEntity dayRewardInfoEntity = baseDataResponse.getData();
                         if (dayRewardInfoEntity == null){
+                            RxBus.getDefault().post(new DailyAccostEvent());
                             return;
                         }
                         List<DayRewardInfoEntity.NowBean> now = dayRewardInfoEntity.getNow();
@@ -523,8 +514,6 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<VersionEntity> versionEntitySingl = new SingleLiveEvent<>();
         //每个新版本只会弹出一次
         public SingleLiveEvent<Void> versionAlertSl = new SingleLiveEvent<>();
-        //打开批量搭讪
-        public SingleLiveEvent<String> clickAccountDialog = new SingleLiveEvent<>();
         //未付费弹窗
         public SingleLiveEvent<String> notPaidDialog = new SingleLiveEvent<>();
         public SingleLiveEvent<MqBroadcastGiftEntity> giftBanner = new SingleLiveEvent<>();

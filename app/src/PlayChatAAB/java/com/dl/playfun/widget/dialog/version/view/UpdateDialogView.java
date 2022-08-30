@@ -176,7 +176,6 @@ public class UpdateDialogView {
             if (cancelOnclick != null)
                 cancelOnclick.cancel();
         });
-
         return INSTANCE;
     }
 

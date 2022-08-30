@@ -7,9 +7,12 @@ import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.R;
 import com.dl.playfun.entity.ConfigItemEntity;
 import com.dl.playfun.entity.OccupationConfigItemEntity;
+import com.dl.playfun.manager.ConfigManager;
 import com.google.gson.Gson;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -235,6 +238,13 @@ public class StringUtil {
 
     }
 
-
+    //done 设置每日标识
+    public static String getDailyFlag(String key) {
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        String format = formatter.format(date);
+        String userId = ConfigManager.getInstance().getUserImID();
+        return key + format + userId;
+    }
 
 }

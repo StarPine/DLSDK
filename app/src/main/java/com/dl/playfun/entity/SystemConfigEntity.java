@@ -2,12 +2,14 @@ package com.dl.playfun.entity;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * 系统配置参数
  *
  * @author litchi
  */
-public class SystemConfigEntity {
+public class SystemConfigEntity implements Serializable {
 
     private double CashOutServiceFee;
     private double CoinExchangeMoney;
@@ -35,6 +37,53 @@ public class SystemConfigEntity {
     //默认区号
     @SerializedName("region_code")
     private String regionCode;
+    /**
+     * maleAccost : 1
+     * femaleAccost : 1
+     * registerMaleAccost : 0
+     * registerFemaleAccost : 1
+     */
+
+    @SerializedName("maleAccost")
+    private int maleAccost;
+    @SerializedName("femaleAccost")
+    private int femaleAccost;
+    @SerializedName("registerMaleAccost")
+    private int registerMaleAccost;
+    @SerializedName("registerFemaleAccost")
+    private int registerFemaleAccost;
+
+    public int getMaleAccost() {
+        return maleAccost;
+    }
+
+    public void setMaleAccost(int maleAccost) {
+        this.maleAccost = maleAccost;
+    }
+
+    public int getFemaleAccost() {
+        return femaleAccost;
+    }
+
+    public void setFemaleAccost(int femaleAccost) {
+        this.femaleAccost = femaleAccost;
+    }
+
+    public int getRegisterMaleAccost() {
+        return registerMaleAccost;
+    }
+
+    public void setRegisterMaleAccost(int registerMaleAccost) {
+        this.registerMaleAccost = registerMaleAccost;
+    }
+
+    public int getRegisterFemaleAccost() {
+        return registerFemaleAccost;
+    }
+
+    public void setRegisterFemaleAccost(int registerFemaleAccost) {
+        this.registerFemaleAccost = registerFemaleAccost;
+    }
 
     public int getDeleteAccount() {
         return deleteAccount;

@@ -2,7 +2,6 @@ package com.dl.playfun.ui.main;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.app.Dialog;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -36,10 +35,13 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.Injection;
 import com.dl.playfun.app.config.TbarCenterImgConfig;
+import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.databinding.FragmentMainBinding;
 import com.dl.playfun.entity.MqBroadcastGiftEntity;
 import com.dl.playfun.entity.MqBroadcastGiftUserEntity;
+import com.dl.playfun.entity.SystemConfigEntity;
 import com.dl.playfun.entity.VersionEntity;
+import com.dl.playfun.event.DailyAccostEvent;
 import com.dl.playfun.event.MainTabEvent;
 import com.dl.playfun.event.TaskListEvent;
 import com.dl.playfun.manager.ConfigManager;
@@ -49,16 +51,13 @@ import com.dl.playfun.ui.home.HomeMainFragment;
 import com.dl.playfun.ui.home.accost.HomeAccostDialog;
 import com.dl.playfun.ui.message.MessageMainFragment;
 import com.dl.playfun.ui.mine.MineFragment;
-import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
 import com.dl.playfun.ui.radio.radiohome.RadioFragment;
 import com.dl.playfun.ui.task.main.TaskMainFragment;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.StringUtil;
-import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.dl.playfun.widget.dialog.TraceDialog;
-import com.dl.playfun.widget.dialog.WebViewDialog;
 import com.dl.playfun.widget.dialog.version.view.UpdateDialogView;
 import com.dl.playfun.widget.pageview.FragmentAdapter;
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
@@ -140,43 +139,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
 //        });
         //未付费弹窗
         viewModel.uc.notPaidDialog.observe(this,s -> {
-            String url = Injection.provideDemoRepository().readApiConfigManagerEntity().getPlayFunWebUrl();
-            if (s.equals("2")) {
-                url = url +"/recharge_vip/recharge_vip.html";
-            } else {
-                url = url +"/recharge_zuan/recharge_zuan.html";
-            }
-            new WebViewDialog(getContext(), mActivity, url, new WebViewDialog.ConfirmOnclick() {
-                @Override
-                public void webToVipRechargeVC(Dialog dialog) {
-                    if(dialog!=null){
-                        dialog.dismiss();
-                    }
-                    viewModel.start(VipSubscribeFragment.class.getCanonicalName());
-                }
 
-                @Override
-                public void vipRechargeDiamondSuccess(Dialog dialog, Integer coinValue) {
-                    if(dialog!=null){
-                        dialog.dismiss();
-                    }
-                }
-
-                @Override
-                public void moreRechargeDiamond(Dialog dialog) {
-                    dialog.dismiss();
-                    mActivity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            showRecharge();
-                        }
-                    });
-                }
-
-                @Override
-                public void cancel() {
-                }
-            }).noticeDialog().show();
         });
         //每日奖励
         viewModel.uc.showDayRewardDialog.observe(this,s -> {
@@ -224,31 +187,6 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
             viewModel.playing = true;
         });
 
-        //搭讪弹窗-今日缘分
-        viewModel.uc.clickAccountDialog.observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(String isShow) {
-                HomeAccostDialog homeAccostDialog = new HomeAccostDialog(getContext());
-                homeAccostDialog.setIncomplete(isShow);
-                homeAccostDialog.setDialogAccostClicksListener(new HomeAccostDialog.DialogAccostClicksListener() {
-                    @Override
-                    public void onSubmitClick(HomeAccostDialog dialog, List<Integer> listData) {
-                        dialog.dismiss();
-                        viewModel.putAccostList(listData);
-                    }
-
-                    @Override
-                    public void onCancelClick(HomeAccostDialog dialog) {
-                        AppContext.instance().logEvent(AppsFlyerEvent.accost_close);
-                        dialog.dismiss();
-                    }
-                });
-                homeAccostDialog.show();
-                if (isShow.equals("1")){
-                    viewModel.pushGreet(1);
-                }
-            }
-        });
         //气泡提示
         viewModel.uc.bubbleTopShow.observe(this, new Observer<Boolean>() {
             @Override
@@ -264,6 +202,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                 }
             }
         });
+
         viewModel.uc.restartActivity.observe(this, intent -> {
             startActivity(intent);
             mActivity.overridePendingTransition(R.anim.anim_zoom_in, R.anim.anim_stay);
@@ -295,10 +234,13 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                     public void run() {
                         if (versionEntity.getVersion_code().intValue() <= AppConfig.VERSION_CODE.intValue()) {
                             dialogCallback();
+
                         } else {
                             boolean isUpdate = versionEntity.getIs_update().intValue() == 1;
                             UpdateDialogView.getInstance(mActivity)
-                                    .getUpdateDialogView(versionEntity.getVersion_name(), versionEntity.getContent(), versionEntity.getUrl(), isUpdate, "playchat", versionEntity.getLinkUrl())
+                                    .getUpdateDialogView(versionEntity.getVersion_name(),
+                                            versionEntity.getContent(),
+                                            versionEntity.getUrl(), isUpdate, "playchat", versionEntity.getLinkUrl())
                                     .setConfirmOnlick(new UpdateDialogView.CancelOnclick() {
                                         @Override
                                         public void cancel() {
@@ -394,18 +336,16 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         });
     }
 
-    private void showRecharge() {
-        CoinRechargeSheetView coinRechargeSheetView = new CoinRechargeSheetView(mActivity);
-        coinRechargeSheetView.show();
-    }
-
     private void dialogCallback() {
         //注册奖励
         if (AppConfig.isRegister) {
+            AppConfig.isRegisterAccost = true;
             viewModel.getRegisterReward();
         } else {
             if (!viewModel.isShowedReward) {
                 viewModel.getDayReward();
+            } else {
+                RxBus.getDefault().post(new DailyAccostEvent());
             }
         }
     }
@@ -416,6 +356,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
      */
     private void showRewardDialog() {
         if (viewModel.giveCoin <= 0 && viewModel.videoCard <= 0){
+            RxBus.getDefault().post(new DailyAccostEvent());
             return;
         }
         TraceDialog.getInstance(mActivity)
@@ -432,6 +373,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
 
     private void showRegisterRewardDialog() {
         if (viewModel.chatCardNum <= 0 && viewModel.assostCardNum <= 0){
+            RxBus.getDefault().post(new DailyAccostEvent());
             return;
         }
         TraceDialog.getInstance(mActivity)

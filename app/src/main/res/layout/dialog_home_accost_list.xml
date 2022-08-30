@@ -11,36 +11,22 @@
         android:layout_width="wrap_content"
         android:gravity="center"
         android:layout_height="wrap_content">
-        <ImageView
-            android:id="@+id/iv_accost_match"
-            android:layout_width="290dp"
-            android:layout_height="350dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/accost_backdrop_img2"
-            android:visibility="gone"
-            tools:visibility="visible"
-            />
+
         <RelativeLayout
             android:layout_width="290dp"
-            android:layout_height="350dp"
+            android:layout_height="390dp"
+            android:background="@drawable/accost_backdrop_img"
             >
-            <ImageView
-                android:id="@+id/iv_accost_incomplete"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                android:scaleType="fitXY"
-                android:src="@drawable/accost_backdrop_img2"
-                android:visibility="visible"
-                tools:visibility="gone"
-                />
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/refresh_layout"
-                android:layout_width="61dp"
-                android:layout_height="19dp"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="14dp"
-                android:layout_marginEnd="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:layout_below="@+id/item_entity_layout6"
+                android:layout_centerHorizontal="true"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:padding="5dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/accost_refresh_backdrop"
                 android:elevation="11dp">
 
@@ -48,8 +34,6 @@
                     android:id="@+id/refresh_img"
                     android:layout_width="14dp"
                     android:layout_height="14dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerInParent="true"
                     android:layout_marginStart="6dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/accost_refresh_img" />
@@ -58,14 +42,23 @@
                     android:id="@+id/change_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
                     android:layout_marginStart="4dp"
-                    android:layout_toEndOf="@+id/refresh_img"
+                    android:layout_marginEnd="5dp"
                     android:text="@string/playfun_text_accost_hint"
-                    android:textColor="@color/accost_down_time_change"
+                    android:textColor="@color/purple_text"
                     android:textSize="11sp" />
-            </RelativeLayout>
-
+            </LinearLayout>
+            <ImageView
+                android:id="@+id/iv_dialog_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:padding="10dp"
+                android:scaleX="1.4"
+                android:scaleY="1.4"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="6dp"
+                android:src="@drawable/icon_close_dialog" />
 
             <LinearLayout
                 android:id="@+id/item_entity_layout1"
@@ -484,7 +477,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/btn_submit"
                 android:layout_centerInParent="true"
-                android:layout_marginTop="27dp"
+                android:layout_marginTop="15dp"
                 android:minWidth="58dp"
                 android:orientation="vertical">
 
@@ -564,34 +557,29 @@
 
             <ImageView
                 android:id="@+id/btn_submit"
-                android:layout_width="69dp"
-                android:layout_height="69dp"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
                 android:layout_below="@+id/item_entity_layout1"
                 android:layout_centerInParent="true"
-                android:layout_marginTop="27dp"
-                android:src="@drawable/dialog_accost_submit" />
+                android:layout_marginTop="15dp"
+                android:src="@drawable/btn_gif_accost"
+                tools:src="@drawable/btn_accost_nomal"
+                />
 
             <TextView
                 android:id="@+id/exp_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:layout_alignParentTop="@+id/btn_submit"
-                android:layout_centerInParent="true"
-                android:layout_marginTop="-4dp"
-                android:textColor="@color/purple1"
+                android:layout_alignTop="@+id/btn_submit"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/white"
+                android:layout_marginTop="30dp"
                 tools:text="00:05:33" />
         </RelativeLayout>
     </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/iv_dialog_close"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="28dp"
-        android:contentDescription="TODO"
-        android:src="@drawable/ic_dialog_close" />
+
 
 
 </LinearLayout>

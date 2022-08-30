@@ -24,6 +24,7 @@ import com.bumptech.glide.Glide;
 import com.dl.playfun.R;
 import com.dl.playfun.app.GlideEngine;
 import com.dl.playfun.entity.MallWithdrawTipsInfoEntity;
+import com.dl.playfun.event.DailyAccostEvent;
 import com.dl.playfun.ui.mine.vipsubscribe.VipPrivilegeItemViewModel;
 import com.dl.playfun.utils.StringUtil;
 import com.tencent.imsdk.v2.V2TIMManager;
@@ -33,6 +34,8 @@ import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import me.goldze.mvvmhabit.bus.RxBus;
 
 /**
  * Author: 彭石林
@@ -1075,6 +1078,7 @@ public class TraceDialog {
             secondRewardId = 0;
             titleString = "";
             if (confirmOnclick != null) {
+                RxBus.getDefault().post(new DailyAccostEvent());
                 confirmOnclick.confirm(dialog);
             }
         });

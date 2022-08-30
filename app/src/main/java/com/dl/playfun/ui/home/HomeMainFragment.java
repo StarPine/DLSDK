@@ -104,45 +104,9 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
             Intent intent = IntentUtils.getLaunchAppDetailsSettingsIntent(mActivity.getPackageName());
             startActivity(intent);
         });
-        try {
 
-            new RxPermissions(this)
-                    .request(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
-                    .subscribe(granted -> {
-                        if (granted) {
-                            viewModel.locationService.set(true);
-                            if (ConfigManager.getInstance().isLocation()) {
-                                viewModel.showLocationAlert.set(true);
-                            } else {
-                                viewModel.showLocationAlert.set(false);
-                            }
-                            startLocation();
-                        } else {
-                            viewModel.locationService.set(false);
-                            RxBus.getDefault().post(new LocationChangeEvent(LocationChangeEvent.LOCATION_STATUS_FAILED));
-                            viewModel.showLocationAlert.set(true);
-                        }
-                    });
-        } catch (Exception ignored) {
-
-        }
         //展示首页广告位
         viewModel.getAdListBannber();
-    }
-
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if (!hidden) { //页面再次进入时
-            try {
-                if (!ObjectUtils.isEmpty(viewModel.loadLocalUserData().getPermanentCityIds())) {
-                    viewModel.showLocationAlert.set(false);
-                }
-            } catch (Exception e) {
-                viewModel.showLocationAlert.set(true);
-            }
-
-        }
     }
 
     @Override
@@ -203,12 +167,11 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
             }
         });
 
-        //搭讪弹窗
+        //tab 搭讪弹窗
         viewModel.uc.clickAccountDialog.observe(this, new Observer<String>() {
             @Override
             public void onChanged(String isShow) {
                 HomeAccostDialog homeAccostDialog = new HomeAccostDialog(getContext());
-                homeAccostDialog.setIncomplete(isShow);
                 homeAccostDialog.setDialogAccostClicksListener(new HomeAccostDialog.DialogAccostClicksListener() {
                     @Override
                     public void onSubmitClick(HomeAccostDialog dialog, List<Integer> listData) {
