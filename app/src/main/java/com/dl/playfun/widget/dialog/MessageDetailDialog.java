@@ -302,8 +302,9 @@ public class MessageDetailDialog {
         window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         WindowManager.LayoutParams lp = window.getAttributes();
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;   //设置宽度充满屏幕
-        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
         window.setAttributes(lp);
+        window.setWindowAnimations(R.style.ShowImageDialogAnimation);
         return bottomDialog;
     }
 

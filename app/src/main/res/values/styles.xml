@@ -23,8 +23,15 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:background">@color/gray_middle</item>
         <item name="android:backgroundDimEnabled">true</item>
+
     </style>
 
+    <style name="ShowImageDialogAnimation" parent="@android:style/Theme.Dialog">
+        <!--进入动画-->
+        <item name="android:windowEnterAnimation">@anim/anim_zoom_in</item>
+        <!--退出动画-->
+        <item name="android:windowExitAnimation">@anim/anim_zoom_out</item>
+    </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>

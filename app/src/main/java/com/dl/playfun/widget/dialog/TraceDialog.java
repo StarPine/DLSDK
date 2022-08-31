@@ -827,7 +827,6 @@ public class TraceDialog {
         bottomDialog.getWindow().setGravity(Gravity.CENTER);
         ImageView imageView = contentView.findViewById(R.id.imageView);
         if (drawable != null){
-//            GlideEngine.createGlideEngine().loadImage(context, StringUtil.getFullImageUrl(drawable), imageView);
             Glide.with(context)
                     .load(StringUtil.getFullImageUrl(drawable))
                     .fitCenter()//防止部分账号图片被拉伸
@@ -850,8 +849,9 @@ public class TraceDialog {
         window.getDecorView().setPadding(0, 0, 0, 0); //消除边距
         WindowManager.LayoutParams lp = window.getAttributes();
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;   //设置宽度充满屏幕
-        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
         window.setAttributes(lp);
+        window.setWindowAnimations(R.style.ShowImageDialogAnimation);
         return bottomDialog;
     }
 
