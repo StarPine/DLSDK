@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -85,6 +86,11 @@ public class RegisterFragment extends BaseToolbarFragment<FragmentRegisterBindin
         viewModel.getCodeSuccess.observe(this,s -> {
             showInput(binding.etCode);
         });
+        viewModel.setAreaSuccess.observe(this,s -> {
+            if (TextUtils.isEmpty(viewModel.mobile.get()))
+            showInput(binding.etPhone);
+        });
+
     }
 
     @Override

@@ -424,6 +424,7 @@ public class HomeAccostDialog extends BaseDialog {
                                     itemEntityLayout4.setVisibility(View.GONE);
                                 }
                                 if (size > 4) {
+                                    itemEntityLayout5.setVisibility(View.VISIBLE);
                                     AccostItemEntity itemEntity5 = $listData.get(4);
                                     loadImage(itemEntity5.getAvatar(), item_entity_img5);
                                     item_entity_name5.setText(itemEntity5.getNickname());
@@ -439,6 +440,7 @@ public class HomeAccostDialog extends BaseDialog {
                                     itemEntityLayout5.setVisibility(View.GONE);
                                 }
                                 if (size > 5) {
+                                    itemEntityLayout6.setVisibility(View.VISIBLE);
                                     AccostItemEntity itemEntity6 = $listData.get(5);
                                     loadImage(itemEntity6.getAvatar(), item_entity_img6);
                                     item_entity_name6.setText(itemEntity6.getNickname());

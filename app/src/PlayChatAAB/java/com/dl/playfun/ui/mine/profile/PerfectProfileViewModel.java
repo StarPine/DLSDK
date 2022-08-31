@@ -87,6 +87,7 @@ public class PerfectProfileViewModel extends BaseViewModel<AppRepository> {
         }
         checkNickname(UserName.get());
     });
+    private boolean isDuplicate;
 
     public PerfectProfileViewModel(@NonNull Application application, AppRepository model) {
         super(application, model);
@@ -234,8 +235,8 @@ public class PerfectProfileViewModel extends BaseViewModel<AppRepository> {
                     public void onSuccess(BaseDataResponse<CheckNicknameEntity> checkNicknameEntityBaseDataResponse) {
                         CheckNicknameEntity checkNicknameEntity = checkNicknameEntityBaseDataResponse.getData();
                         if (checkNicknameEntity != null && checkNicknameEntity.getStatus() == 1) {
-                            ToastUtils.showShort(R.string.playfun_reg_user_name_error);
-                            UserName.set(checkNicknameEntity.getRecommend());
+                            isDuplicate = true;
+                            getNickName();
                         } else {
                             uc.verifyAvatar.call();
                         }
@@ -258,7 +259,11 @@ public class PerfectProfileViewModel extends BaseViewModel<AppRepository> {
                     @Override
                     public void onSuccess(BaseDataResponse response) {
                         String data = (String) response.getData();
-                        UserName.set(data);
+                        if (isDuplicate){
+                            uc.nicknameDuplicate.postValue(data);
+                        }else {
+                            UserName.set(data);
+                        }
                     }
 
                     @Override
@@ -284,6 +289,8 @@ public class PerfectProfileViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent verifyAvatar = new SingleLiveEvent();
         //選擇年齡
         public SingleLiveEvent chooseAgeClick = new SingleLiveEvent();
+        //昵称重复
+        public SingleLiveEvent<String> nicknameDuplicate = new SingleLiveEvent();
 
     }
 }

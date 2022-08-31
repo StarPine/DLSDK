@@ -361,6 +361,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         }
         TraceDialog.getInstance(mActivity)
                 .setConfirmOnlick(dialog -> {
+                    RxBus.getDefault().post(new DailyAccostEvent());
                     dialog.dismiss();
                 })
                 .dayRewardDialog(true,
@@ -381,6 +382,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                 .setFirstRewardId(R.drawable.icon_say_hi_card)
                 .setSecondRewardId(R.drawable.icon_chat_card)
                 .setConfirmOnlick(dialog -> {
+                    RxBus.getDefault().post(new DailyAccostEvent());
                     AppConfig.isRegister = false;
                     dialog.dismiss();
                 })

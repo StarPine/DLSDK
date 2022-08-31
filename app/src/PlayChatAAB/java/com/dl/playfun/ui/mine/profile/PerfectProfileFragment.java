@@ -3,24 +3,14 @@ package com.dl.playfun.ui.mine.profile;
 import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.FrameLayout;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
-import com.bigkoo.pickerview.builder.TimePickerBuilder;
-import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
-import com.bigkoo.pickerview.view.OptionsPickerView;
-import com.bigkoo.pickerview.view.TimePickerView;
 import com.blankj.utilcode.util.ToastUtils;
-import com.contrarywind.view.WheelView;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
@@ -29,13 +19,11 @@ import com.dl.playfun.databinding.FragmentPerfectProfileBinding;
 import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.ui.login.register.RegisterSexFragment;
 import com.dl.playfun.utils.ApiUitl;
-import com.dl.playfun.utils.DateUtil;
 import com.dl.playfun.utils.PictureSelectorUtil;
+import com.dl.playfun.widget.dialog.TraceDialog;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.listener.OnResultCallbackListener;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 
@@ -96,6 +84,22 @@ public class PerfectProfileFragment extends BaseFragment<FragmentPerfectProfileB
                 }
             }
         });
+        viewModel.uc.nicknameDuplicate.observe(this, name -> {
+            TraceDialog.getInstance(mActivity)
+                    .setTitle(String.format(getString(R.string.playfun_duplicate_nickname_tips), name))
+                    .setCannelText(getString(R.string.cancel))
+                    .setConfirmText(getString(R.string.playfun_mine_trace_delike_confirm))
+                    .chooseType(TraceDialog.TypeEnum.CENTER)
+                    .setConfirmOnlick(new TraceDialog.ConfirmOnclick() {
+                        @Override
+                        public void confirm(Dialog dialog) {
+                            viewModel.UserName.set(name);
+                            dialog.dismiss();
+                        }
+                    }).show();
+        });
+
+
     }
 
 

@@ -62,6 +62,7 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
     public ObservableField<Boolean> agree = new ObservableField<>(true);
 
     public SingleLiveEvent<String> getCodeSuccess = new SingleLiveEvent<>();
+    public SingleLiveEvent<String> setAreaSuccess = new SingleLiveEvent<>();
 
 
     private Disposable ItemChooseAreaSubscription;
@@ -336,7 +337,7 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
                     if (event.getChooseAreaItemEntity() != null) {
                         areaCode.set(event.getChooseAreaItemEntity());
                     }
-
+                    setAreaSuccess.call();
                 });
         RxSubscriptions.add(ItemChooseAreaSubscription);
     }
