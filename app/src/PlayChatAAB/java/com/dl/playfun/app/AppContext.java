@@ -23,6 +23,7 @@ import com.appsflyer.deeplink.DeepLink;
 import com.appsflyer.deeplink.DeepLinkListener;
 import com.appsflyer.deeplink.DeepLinkResult;
 import com.blankj.utilcode.util.GsonUtils;
+import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.Utils;
 import com.bumptech.glide.Glide;
 import com.dl.playfun.BuildConfig;
@@ -131,7 +132,6 @@ public class AppContext extends Application {
 
     public AppRepository appRepository;
     public FirebaseAnalytics mFirebaseAnalytics;
-    Map<String, Object> conversionData = null;
 
     public static AppContext instance() {
         return instance;
@@ -268,13 +268,13 @@ public class AppContext extends Application {
         AppsFlyerConversionListener conversionListener = new AppsFlyerConversionListener() {
             @Override
             public void onConversionDataSuccess(Map<String, Object> conversionDataMap) {
-                String code = String.valueOf(conversionDataMap.get("af_sub1"));
-                String channel = String.valueOf(conversionDataMap.get("af_sub2"));
-                if (!StringUtil.isEmpty(code) || !StringUtil.isEmpty(channel)) {
+                Object code = conversionDataMap.get("af_sub1");
+                Object channel = conversionDataMap.get("af_sub2");
+                if (!ObjectUtils.isEmpty(code) || !ObjectUtils.isEmpty(channel)) {
                     Map<String, String> map = new HashMap<>();
-                    map.put("code", code);
-                    map.put("channel", channel);
-                    appRepository.saveOneLinkCode(GsonUtils.toJson(map));
+                    map.put("code", String.valueOf(code));
+                    map.put("channel", String.valueOf(channel));
+                    ConfigManager.getInstance().getAppRepository().saveOneLinkCode(GsonUtils.toJson(map));
 
                 }
                 String status = Objects.requireNonNull(conversionDataMap.get("af_status")).toString();
@@ -287,7 +287,6 @@ public class AppContext extends Application {
                 } else {
                     Log.e(LOG_TAG, "Conversion: 这是一个自然安装.");
                 }
-                conversionData = conversionDataMap;
             }
 
             @Override
@@ -350,7 +349,7 @@ public class AppContext extends Application {
                         Map<String, String> map = new HashMap<>();
                         map.put("code", code);
                         map.put("channel", channel);
-                        appRepository.saveOneLinkCode(GsonUtils.toJson(map));
+                        ConfigManager.getInstance().getAppRepository().saveOneLinkCode(GsonUtils.toJson(map));
                     }
                     Log.e(LOG_TAG, "The DeepLink data is: " + deepLinkObj.toString());
                 } catch (Exception e) {
