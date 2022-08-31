@@ -3,6 +3,8 @@ package com.dl.playfun.ui.home.accost;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.CountDownTimer;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -213,9 +215,10 @@ public class HomeAccostDialog extends BaseDialog {
 
         btn_submit = rootView.findViewById(R.id.btn_submit);
         Glide.with(getContext()).asGif().load(R.drawable.btn_gif_accost)
-                .error(R.drawable.btn_gif_accost)
-                .placeholder(R.drawable.btn_gif_accost)
-                .into(btn_submit);
+                    .error(R.drawable.btn_gif_accost)
+                    .placeholder(R.drawable.btn_gif_accost)
+                    .into(btn_submit);
+
         btn_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -544,6 +547,10 @@ public class HomeAccostDialog extends BaseDialog {
                 exp_time.setTextColor(ColorUtils.getColor(R.color.white));
                 exp_time.setText(time);
                 exp_time.setVisibility(View.VISIBLE);
+                Drawable.ConstantState constantState = btn_submit.getDrawable().getCurrent().getConstantState();
+                if (!constantState.equals(mContext.getResources().getDrawable(R.drawable.btn_accost_nomal).getConstantState())){
+                    btn_submit.setImageResource(R.drawable.btn_accost_nomal);
+                }
                 //RxBus.getDefault().post(new CountDownTimerEvent((millisUntilFinished / 1000) + "s後自動拒絕"));
             }
 
