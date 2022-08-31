@@ -10,7 +10,13 @@ import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.ImageViewTarget;
+import com.tencent.qcloud.tuicore.TUILogin;
+import com.tencent.qcloud.tuicore.TUIThemeManager;
+import com.tencent.qcloud.tuicore.component.imageEngine.impl.CornerTransform;
 import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
@@ -41,17 +47,20 @@ public class CustomImageMessageHolder extends MessageContentHolder{
     public void layoutVariableViews(TUIMessageBean msg, int position) {
         msgArea.setBackground(null);
         String imagePath = TUIChatUtils.getFullImageUrl(((CustomImageMessageBean) msg).getImgPath());
+        CornerTransform transform = new CornerTransform(TUILogin.getAppContext(), 20);
+        RequestOptions options = new RequestOptions().centerCrop().transform(transform);
         Glide.with(TUIChatService.getAppContext())
                 .asBitmap()
                 .load(imagePath)
                 .error(R.drawable.chat_custom_image_error)
+                .centerCrop()
                 .placeholder(R.drawable.chat_custom_image_load)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .apply(options)
                 .into(new ImageViewTarget<Bitmap>(customImage) {
                     @Override
                     protected void setResource(@Nullable Bitmap resource) {
                         if (resource != null) {
-                            customImage.setLayoutParams(getImageParams(customImage.getLayoutParams(), resource.getWidth(), resource.getHeight()));
                             customImage.setImageBitmap(resource);
                         }
                     }
@@ -99,13 +108,15 @@ public class CustomImageMessageHolder extends MessageContentHolder{
         if (width == 0 || height == 0) {
             return params;
         }
-        if (width > height) {
-            params.width = DEFAULT_MAX_SIZE;
-            params.height = DEFAULT_MAX_SIZE * height / width;
-        } else {
-            params.width = DEFAULT_MAX_SIZE * width / height;
-            params.height = DEFAULT_MAX_SIZE;
-        }
+//        params.width = 480;
+//        params.height = DEFAULT_MAX_SIZE;
+//        if (width > height) {
+//            params.width = DEFAULT_MAX_SIZE;
+//            params.height = DEFAULT_MAX_SIZE * height / width;
+//        } else {
+//            params.width = DEFAULT_MAX_SIZE * width / height;
+//            params.height = DEFAULT_MAX_SIZE;
+//        }
         return params;
     }
 
