@@ -71,7 +71,7 @@ ext {
             "cardview"                     : 'androidx.cardview:cardview:1.0.0',
             "media2"                       : 'androidx.media2:media2-widget:1.1.2',
             //appsflyer最新包
-            "appsflyer"                    : 'com.appsflyer:af-android-sdk:6.8.1' ,
+            "appsflyer"                    : 'com.appsflyer:af-android-sdk:6.8.2' ,
 
             // facebook
             "facebook-core"                : 'com.facebook.android:facebook-core:11.1.1',
