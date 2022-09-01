@@ -91,7 +91,6 @@ public class FukubukuroFragment extends BaseFragment<FragmentFukubukuroBinding, 
         if(getArguments()!=null){
             webUrl = getArguments().getString("link", AppConfig.FukubukuroWebUrl);
         }
-
     }
 
     public static byte[] syncLoad(String url, String type) {

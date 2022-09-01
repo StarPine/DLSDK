@@ -71,7 +71,8 @@ ext {
             "lifecycle"                    : 'androidx.lifecycle:lifecycle-extensions:2.2.0',
             "cardview"                     : 'androidx.cardview:cardview:1.0.0',
             "media2"                       : 'androidx.media2:media2-widget:1.1.2',
-            "appsflyer"                    : 'com.appsflyer:af-android-sdk:6.3.0',
+            //appsflyer最新包
+            "appsflyer"                    : 'com.appsflyer:af-android-sdk:6.8.2' ,
 
             // facebook
             "facebook-core"                : 'com.facebook.android:facebook-core:11.1.1',

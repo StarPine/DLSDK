@@ -4,6 +4,7 @@ import android.app.Application;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
@@ -227,8 +228,8 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
                         try {
                             //添加崩溃人员id
                             FirebaseCrashlytics.getInstance().setUserId(String.valueOf(userDataEntity.getId()));
-                        }catch (Exception e){
-
+                        }catch (Exception crashErr){
+                            Log.e("Crashlytics setUserid ",crashErr.getMessage());
                         }
                         model.saveUserData(userDataEntity);
                         if (userDataEntity.getCertification() == 1) {

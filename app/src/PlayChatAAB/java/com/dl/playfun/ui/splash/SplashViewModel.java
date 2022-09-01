@@ -1,6 +1,7 @@
 package com.dl.playfun.ui.splash;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableBoolean;
@@ -134,8 +135,8 @@ public class SplashViewModel extends BaseViewModel<AppRepository> {
                         try {
                             //添加崩溃人员id
                             FirebaseCrashlytics.getInstance().setUserId(String.valueOf(userDataEntity.getId()));
-                        } catch (Exception ignored) {
-
+                        } catch (Exception crashErr){
+                            Log.e("Crashlytics setUserid ",crashErr.getMessage());
                         }
                         initIM();
                         AppContext.instance().logEvent(AppsFlyerEvent.Silent_login);
