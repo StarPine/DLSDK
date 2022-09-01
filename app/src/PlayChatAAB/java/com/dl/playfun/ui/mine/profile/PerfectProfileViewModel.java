@@ -1,6 +1,7 @@
 package com.dl.playfun.ui.mine.profile;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
@@ -202,8 +203,8 @@ public class PerfectProfileViewModel extends BaseViewModel<AppRepository> {
                         try {
                             //添加崩溃人员id
                             FirebaseCrashlytics.getInstance().setUserId(String.valueOf(userDataEntity.getId()));
-                        } catch (Exception ignored) {
-
+                        } catch (Exception crashErr){
+                            Log.e("Crashlytics setUserid ",crashErr.getMessage());
                         }
                         if (userDataEntity.getCertification() != null && userDataEntity.getCertification().intValue() == 1) {
                             model.saveNeedVerifyFace(true);

@@ -151,8 +151,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="playchat.onelink.me"
-                    android:pathPrefix="/x5VR"
+                    android:host="@string/app_flyer_invite_onelink"
+                    android:pathPrefix="/X5VR"
                     android:scheme="https" />
             </intent-filter>
         </activity>
