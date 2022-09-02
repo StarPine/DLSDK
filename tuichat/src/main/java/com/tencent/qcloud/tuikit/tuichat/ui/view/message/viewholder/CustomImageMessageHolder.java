@@ -35,7 +35,7 @@ public class CustomImageMessageHolder extends MessageContentHolder{
 
     private final ImageView customImage;
     private static final int DEFAULT_MAX_SIZE = 540;
-    private static final int DEFAULT_RADIUS = 10;
+    private static final int DEFAULT_RADIUS = 20;
 
 
     public CustomImageMessageHolder(View itemView) {
@@ -47,7 +47,7 @@ public class CustomImageMessageHolder extends MessageContentHolder{
     public void layoutVariableViews(TUIMessageBean msg, int position) {
         msgArea.setBackground(null);
         String imagePath = TUIChatUtils.getFullImageUrl(((CustomImageMessageBean) msg).getImgPath());
-        CornerTransform transform = new CornerTransform(TUILogin.getAppContext(), 20);
+        CornerTransform transform = new CornerTransform(TUILogin.getAppContext(), DEFAULT_RADIUS);
         RequestOptions options = new RequestOptions().centerCrop().transform(transform);
         Glide.with(TUIChatService.getAppContext())
                 .asBitmap()

@@ -103,6 +103,7 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
     }
 
     public void layoutViews(final TUIMessageBean msg, final int position) {
+        Log.i("starpine",msg.getV2TIMMessage()+"");
         setContentLayoutVisibility(true);
         //清除旧视图，避免数据加载错乱
         msgContentFrame.setVisibility(View.VISIBLE);
