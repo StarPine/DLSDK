@@ -247,7 +247,13 @@ public class CoinRechargeSheetView extends BasePopupWindow implements View.OnCli
      * 显示奖励dialog
      */
     private void showRewardDialog() {
-        int totalReward = currGoodsInfo.getGiveCoin() + currGoodsInfo.getActualValue() + currGoodsInfo.getGoldPrice();
+        int totalReward ;
+        if (currGoodsInfo.getType() == 1){
+            totalReward = currGoodsInfo.getGiveCoin() + currGoodsInfo.getActualValue() + currGoodsInfo.getGoldPrice();
+        }else {
+            totalReward = currGoodsInfo.getGiveCoin();
+        }
+
         TraceDialog.getInstance(mActivity)
                 .setTitle(mActivity.getString(R.string.playfun_recharge_success))
                 .setConfirmOnlick(dialog -> {
