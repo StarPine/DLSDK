@@ -53,16 +53,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="80dp"
+                android:gravity="center_vertical"
                 binding:onClickCommand="@{viewModel.avatarClick}">
 
                 <com.dl.playfun.widget.image.CircleImageView
                     android:id="@+id/user_img"
-                    android:layout_width="34dp"
-                    android:layout_height="34dp"
-                    binding:resizeH="@{34}"
-                    binding:resizeW="@{34}"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    binding:resizeH="@{60}"
+                    binding:resizeW="@{60}"
                     android:layout_marginStart="14dp"
-                    android:layout_marginTop="24dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="10dp"
                     android:clickable="true"
                     android:scaleType="centerCrop"
                     android:src="@drawable/default_address_user"
@@ -79,12 +81,12 @@
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/user_img"
                     android:layout_marginStart="9dp"
-                    android:layout_marginTop="1dp"
+                    android:layout_marginTop="5dp"
                     android:layout_toEndOf="@+id/user_img"
                     android:includeFontPadding="false"
                     android:singleLine="true"
                     android:textColor="@color/black"
-                    android:textSize="13sp"
+                    android:textSize="16sp"
                     android:textStyle="bold"
                     binding:text="@{viewModel.newsEntityObservableField.user.nickname}"
                     tools:text="Anthony" />
@@ -95,7 +97,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/tv_name"
                     android:layout_alignStart="@+id/tv_name"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="10dp"
                     android:includeFontPadding="false"
                     android:text="@{TimeUtils.getFriendlyTimeSpan(viewModel.newsEntityObservableField.createdAt)}"
                     android:textColor="#FF9EA1B0"
@@ -126,11 +128,12 @@
                 <com.dl.playfun.widget.roundedimageview.RoundedImageView
                     android:layout_width="31dp"
                     android:layout_height="13dp"
-                    android:layout_alignBottom="@+id/tv_name"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="7dp"
-                    android:layout_toRightOf="@+id/iv_vip"
-                    binding:imagePath="@{viewModel.gameUrl()}" />
+                    android:layout_alignTop="@+id/tv_name"
+                    android:layout_marginStart="7dp"
+                    android:layout_toEndOf="@+id/iv_vip"
+                    binding:imagePath="@{viewModel.gameUrl()}"
+                    tools:src="@drawable/ic_vip"
+                    />
 
 
             </RelativeLayout>
