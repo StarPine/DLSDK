@@ -816,7 +816,7 @@
     <string name="playfun_text_accost_error3">Cooldown for next greeting\n</string>
     <string name="playfun_text_accost_empty">The number of one-click greetings has been used up today. \nPlease come back tomorrow.</string>
     <string name="playfun_text_accost_hint">refresh</string>
-    <string name="playfun_tw_money_text">New Taiwan Dollar</string>
+    <string name="playfun_tw_money_text">Crystals</string>
     <string name="playfun_tw_money_text1">income</string>
     <string name="playfun_tw_money_text2">Instruction of income</string>
     <string name="playfun_tw_money_empty">It\'s still empty here. \nYou can get diamonds by doing tasks, receiving gifts, replying to messages,\n voice calls and video calls!</string>
