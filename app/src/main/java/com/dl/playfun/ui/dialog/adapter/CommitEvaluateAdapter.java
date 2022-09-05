@@ -53,10 +53,10 @@ public class CommitEvaluateAdapter extends RecyclerView.Adapter<CommitEvaluateAd
         EvaluateItemEntity itemEntity = dataList.get(position);
         holder.tvName.setText(itemEntity.getName());
         if (!itemEntity.isSelected()) {
-            holder.tvName.setBackground(mContext.getDrawable(R.drawable.elevation_gray_round_background));
+            holder.tvName.setBackground(mContext.getResources().getDrawable(R.drawable.elevation_gray_round_background));
             holder.tvName.setTextColor(mContext.getColor(R.color.gray_dark));
         } else {
-            holder.tvName.setBackground(mContext.getDrawable(R.drawable.elevation_purple_dark_background));
+            holder.tvName.setBackground(mContext.getResources().getDrawable(R.drawable.elevation_purple_dark_background));
             holder.tvName.setTextColor(mContext.getColor(R.color.white));
         }
         holder.itemView.setOnClickListener(view -> {

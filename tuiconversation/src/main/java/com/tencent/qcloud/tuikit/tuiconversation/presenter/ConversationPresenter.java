@@ -792,9 +792,16 @@ public class ConversationPresenter {
      */
     public void deleteAllBannedConversation() {
         isDelBanCovversation = true;
-        List<ConversationInfo> dataSource = ((ConversationListAdapter) adapter).getDataSource();
-
-        List<String> users = new ArrayList<String>();
+        List<ConversationInfo> dataSource = null;
+        if(isFriendConversation){
+            dataSource = ((ConversationListAdapter) friendshipAdapter).getDataSource();
+        }else{
+            dataSource = ((ConversationListAdapter) adapter).getDataSource();
+        }
+        if(dataSource==null){
+            return;
+        }
+        List<String> users = new ArrayList<>();
 
         for (ConversationInfo conversationInfo : dataSource) {
             users.add(conversationInfo.getId());
@@ -819,7 +826,16 @@ public class ConversationPresenter {
                         }
                         if (needDelCount == 0){
                             isDelBanCovversation = false;
-                            ((ConversationListAdapter)adapter).banConversationDel();
+                            try{
+                                if(isFriendConversation){
+                                    ((ConversationListAdapter)friendshipAdapter).banConversationDel();
+                                }else{
+                                    ((ConversationListAdapter)adapter).banConversationDel();
+                                }
+                            }catch (Exception ignored){
+                                //一键删除封号设备。异常检测
+                            }
+
                         }
                     }
             }
@@ -1045,16 +1061,21 @@ public class ConversationPresenter {
     * @Date 2022/8/15
     */
     public void busConversationCount( List<ConversationInfo> dataInfoList){
-        ThreadHelper.INST.execute(() -> {
-            int conversationSize = dataInfoList.size();
-            int totalUnreadCounts = 0;
-            for (int i = 0; i < conversationSize; i++) {
-                totalUnreadCounts += dataInfoList.get(i).getUnRead();
-            }
-            if(loadConversationCallback!=null){
-                loadConversationCallback.totalUnreadCount(totalUnreadCounts);
-            }
-        });
+        try {
+            ThreadHelper.INST.execute(() -> {
+                int conversationSize = dataInfoList.size();
+                int totalUnreadCounts = 0;
+                for (int i = 0; i < conversationSize; i++) {
+                    totalUnreadCounts += dataInfoList.get(i).getUnRead();
+                }
+                if(loadConversationCallback!=null){
+                    loadConversationCallback.totalUnreadCount(totalUnreadCounts);
+                }
+            });
+        }catch (Exception ignored){
+            //修正统计会话消息数量。线程溢出
+        }
+
     }
     //设置好友列表
     public void setFriendshipAdapter(IConversationListAdapter adapter) {

@@ -1464,10 +1464,21 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
 
                     @Override
                     public void onSuccess(Object o) {
-                        ArrayList<V2TIMMessage> messages = (ArrayList) o;
-                        TUIMessageBean msgInfos = ChatMessageBuilder.buildMessage(messages.get(0));
-                        ChatPresenter chatPresenter = binding.chatLayout.getChatPresenter();
-                        boolean bl = chatPresenter.addMessageList(msgInfos, false);
+                        if(ObjectUtils.isNotEmpty(o)){
+                            ArrayList<V2TIMMessage> messages = (ArrayList) o;
+                            if(ObjectUtils.isNotEmpty(messages)){
+                                TUIMessageBean msgInflows = ChatMessageBuilder.buildMessage(messages.get(0));
+                                if(msgInflows!=null){
+                                    ChatPresenter chatPresenter = binding.chatLayout.getChatPresenter();
+                                    if(chatPresenter!=null){
+                                        chatPresenter.addMessageList(msgInflows, false);
+                                    }
+                                }
+                            }
+
+                        }
+
+
                     }
                 });
             }

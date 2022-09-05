@@ -1,5 +1,6 @@
 package com.dl.playfun.service;
 
+import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -20,6 +21,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.installations.FirebaseInstallations;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.dl.playfun.R;
@@ -52,21 +54,7 @@ public class GoogleFCMMessagingService extends FirebaseMessagingService {
                 RxBus.getDefault().post(new PushMessageEvent(type));
             }
         }
-        FirebaseInstanceId.getInstance().getInstanceId()
-                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                        if (!task.isSuccessful()) {
-                            Log.w("谷歌FCM推送", "getInstanceId failed", task.getException());
-                            return;
-                        }
-                        String token = task.getResult().getToken();
-                        //谷歌返回的token
-                        Log.e("Google_token", token);
-
-                    }
-                });
-        //这个应该可以看懂
+        //这个应该可以看懂-往通知栏添加消息
         if (remoteMessage.getNotification() != null && remoteMessage.getNotification().getBody() != null) {
             sendNotification(getApplicationContext(), remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody());
         } else {
@@ -90,6 +78,7 @@ public class GoogleFCMMessagingService extends FirebaseMessagingService {
         super.onSendError(s, e);
     }
 
+    @SuppressLint("UnspecifiedImmutableFlag")
     private void sendNotification(Context iContext, String messageTitle, String messageBody) {
 
 
