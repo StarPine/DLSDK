@@ -41,13 +41,6 @@ public class BaseParkItemViewModel extends MultiItemViewModel<BaseParkViewModel>
     public ObservableField<Boolean> accountCollect = new ObservableField<>();
     //条目的点击事件
     public final BindingCommand itemClick = new BindingCommand(() -> {
-//        try {
-//            AppContext.instance().logEvent(AppsFlyerEvent.Nearby_Follow);
-//            Bundle bundle = UserDetailFragment.getStartBundle(itemEntity.get().getId());
-//            viewModel.start(UserDetailFragment.class.getCanonicalName(), bundle);
-//        } catch (Exception e) {
-//            ExceptionReportUtils.report(e);
-//        }
         try {
             AppContext.instance().logEvent(AppsFlyerEvent.Nearby_Follow);
             Bundle bundle = UserDetailFragment.getStartBundle(itemEntity.get().getId());

@@ -231,6 +231,9 @@ public class TrendItemViewModel extends MultiItemViewModel<BaseViewModel> {
     });
     public BindingCommand avatarClick = new BindingCommand(() -> {
         try {
+            if (String.valueOf(newsEntityObservableField.get().getUser().getId()).equals(ConfigManager.getInstance().getUserId())) {
+                return;
+            }
             Bundle bundle = UserDetailFragment.getStartBundle(newsEntityObservableField.get().getUser().getId());
             viewModel.start(UserDetailFragment.class.getCanonicalName(), bundle);
             GSYVideoManager.releaseAllVideos();
