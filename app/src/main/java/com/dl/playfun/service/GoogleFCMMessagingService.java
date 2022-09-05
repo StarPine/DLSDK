@@ -96,8 +96,15 @@ public class GoogleFCMMessagingService extends FirebaseMessagingService {
         //跳转到你想要跳转到页面
         Intent intent = new Intent(AppContext.instance(), MainContainerActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent;
+        //兼容安卓12判断通知栏
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        }
+//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+//                PendingIntent.FLAG_ONE_SHOT);
 
         String channelId = getString(R.string.playfun_received_new_message);
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
