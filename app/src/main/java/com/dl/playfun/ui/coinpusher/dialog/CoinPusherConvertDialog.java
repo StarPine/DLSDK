@@ -16,27 +16,25 @@ import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.R;
-import com.dl.playfun.app.AppContext;
-import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
-import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.databinding.DialogCoinpusherConverBinding;
+import com.dl.playfun.entity.CoinPusherBalanceDataEntity;
 import com.dl.playfun.entity.CoinPusherConverInfoEntity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseDialog;
 import com.dl.playfun.ui.coinpusher.dialog.adapter.CoinPusherCapsuleAdapter;
 import com.dl.playfun.ui.coinpusher.dialog.adapter.CoinPusherConvertAdapter;
-import com.dl.playfun.utils.ToastCenterUtils;
 
 import me.goldze.mvvmhabit.binding.viewadapter.recyclerview.LayoutManagers;
 import me.goldze.mvvmhabit.utils.RxUtils;
+import me.goldze.mvvmhabit.utils.ToastUtils;
 
 /**
  * Author: 彭石林
  * Time: 2022/8/23 12:22
- * Description: This is CoinPusherConvertDialog
+ * Description: 兑换购买弹窗
  */
 public class CoinPusherConvertDialog  extends BaseDialog {
 
@@ -48,9 +46,6 @@ public class CoinPusherConvertDialog  extends BaseDialog {
     private CoinPusherConvertAdapter coinPusherConvertAdapter;
 
     private ItemConvertListener itemConvertListener;
-
-    //金币对换砖石
-    private int SEL_CONVERT_INDEX = -1;
 
     public ItemConvertListener getItemConvertListener() {
         return itemConvertListener;
@@ -116,14 +111,16 @@ public class CoinPusherConvertDialog  extends BaseDialog {
                 coinPusherCapsuleAdapter.setDefaultSelect(position);
                 SEL_COIN_PUSHER_CAPSULE = position;
             }
+            //选择购买宝盒明细弹窗
             CoinPusherConvertCapsuleDialog pusherConvertCapsuleDialog = new CoinPusherConvertCapsuleDialog(getMActivity(),coinPusherCapsuleAdapter.getItemData(SEL_COIN_PUSHER_CAPSULE).getItem());
-            pusherConvertCapsuleDialog.setItemConvertListener(value -> {
+            pusherConvertCapsuleDialog.setItemConvertListener(coinPusherDataEntity -> {
+                ToastUtils.showShort(R.string.playfun_coinpusher_text_5);
                 //购买成功数据相加
-                totalMoney += value;
+                totalMoney = coinPusherDataEntity.getTotalGold();
                 tvTotalMoneyRefresh();
                 coinPusherConvertAdapter.setMaxValuerSelect(totalMoney);
                 if(getItemConvertListener()!=null){
-                    getItemConvertListener().convertSuccess(totalMoney);
+                    getItemConvertListener().convertSuccess(coinPusherDataEntity);
                 }
                 pusherConvertCapsuleDialog.dismiss();
             });
@@ -143,7 +140,7 @@ public class CoinPusherConvertDialog  extends BaseDialog {
                 }
         });
         //购买按钮
-        binding.tvSubConvert.setOnClickListener(v -> convertCoinPusherDiamonds(coinPusherConvertAdapter.getItemData(SEL_COIN_PUSHER_CAPSULE).getId(),coinPusherConvertAdapter.getItemData(SEL_COIN_PUSHER_CAPSULE).getValue()));
+        binding.tvSubConvert.setOnClickListener(v -> convertCoinPusherDiamonds(coinPusherConvertAdapter.getItemData(SEL_COIN_PUSHER_CAPSULE).getId()));
     }
     //监听dialog隐藏
     @Override
@@ -171,7 +168,7 @@ public class CoinPusherConvertDialog  extends BaseDialog {
         super.dismiss();
     }
 
-    private void loadData(){
+    public void loadData(){
         ConfigManager.getInstance().getAppRepository().qryCoinPusherConverList()
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
@@ -218,25 +215,28 @@ public class CoinPusherConvertDialog  extends BaseDialog {
         String format = String.format(StringUtils.getString(R.string.playfun_coinpusher_text_4),val);
         binding.tvConverDetail.setText(Html.fromHtml(format));
     }
-    //兑换宝盒礼包
-    private void convertCoinPusherDiamonds(final Integer id,final Integer money){
+    //金币兑换砖石礼包
+    private void convertCoinPusherDiamonds(final Integer id){
         ConfigManager.getInstance().getAppRepository().convertCoinPusherDiamonds(id)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
                 .doOnSubscribe(disposable -> showHud())
-                .subscribe(new BaseObserver<BaseResponse>(){
+                .subscribe(new BaseObserver<BaseDataResponse<CoinPusherBalanceDataEntity>>(){
+
                     @Override
-                    public void onSuccess(BaseResponse baseResponse) {
-                        totalMoney -= money;
-                        coinPusherConvertAdapter.setMaxValuerSelect(totalMoney);
-                        tvTotalMoneyRefresh();
+                    public void onSuccess(BaseDataResponse<CoinPusherBalanceDataEntity> coinPusherDataEntityResponse) {
+                        CoinPusherBalanceDataEntity coinPusherDataEntity = coinPusherDataEntityResponse.getData();
+                        if(ObjectUtils.isNotEmpty(coinPusherDataEntity)){
+                            totalMoney = coinPusherDataEntity.getTotalGold();
+                            coinPusherConvertAdapter.setMaxValuerSelect(totalMoney);
+                            tvTotalMoneyRefresh();
+                        }
                     }
+
                     @Override
                     public void onError(RequestException e) {
-                        if (e.getCode() != null && e.getCode() == 21001) {
-                            ToastCenterUtils.showToast(R.string.playfun_dialog_exchange_integral_total_text1);
-                        }
+                        super.onError(e);
                     }
                     @Override
                     public void onComplete() {
@@ -246,6 +246,9 @@ public class CoinPusherConvertDialog  extends BaseDialog {
     }
 
     public interface ItemConvertListener{
-        void convertSuccess(int money);
+        void convertSuccess(CoinPusherBalanceDataEntity coinPusherDataEntity);
+        default void buyError() {
+
+        }
     }
 }

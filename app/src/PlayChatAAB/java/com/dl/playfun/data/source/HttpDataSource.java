@@ -30,6 +30,8 @@ import com.dl.playfun.entity.ChooseAreaEntity;
 import com.dl.playfun.entity.CityAllEntity;
 import com.dl.playfun.entity.CoinExchangeBoxInfo;
 import com.dl.playfun.entity.CoinPusherConverInfoEntity;
+import com.dl.playfun.entity.CoinPusherBalanceDataEntity;
+import com.dl.playfun.entity.CoinPusherDataInfoEntity;
 import com.dl.playfun.entity.CoinPusherRoomHistoryEntity;
 import com.dl.playfun.entity.CoinPusherRoomInfoEntity;
 import com.dl.playfun.entity.CoinPusherRoomTagInfoEntity;
@@ -112,13 +114,21 @@ import retrofit2.http.Query;
 public interface HttpDataSource {
 
     /**
-     * @Desc TODO()
+     * @Desc TODO(推币机-查询历史中奖记录)
      * @author 彭石林
      * @parame []
      * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse<java.util.List<com.dl.playfun.entity.CoinPusherRoomHistoryEntity>>>
      * @Date 2022/8/26
      */
     Observable<BaseDataResponse<List<CoinPusherRoomHistoryEntity>>> qryCoinPusherRoomHistory(Integer roomId);
+    /**
+     * @Desc TODO(推币机-开始游戏)
+     * @author 彭石林
+     * @parame [roomId]
+     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse<com.dl.playfun.entity.CoinPusherDataInfoEntity>>
+     * @Date 2022/9/1
+     */
+    Observable<BaseDataResponse<CoinPusherDataInfoEntity>> playingCoinPusherStart(Integer roomId);
     /**
      * @Desc TODO(推币机-结束游戏)
      * @author 彭石林
@@ -142,7 +152,7 @@ public interface HttpDataSource {
      * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
      * @Date 2022/8/24
      */
-    Observable<BaseResponse> playingCoinPusherThrowCoin(Integer roomId);
+    Observable<BaseDataResponse<CoinPusherBalanceDataEntity>> playingCoinPusherThrowCoin(Integer roomId);
     /**
      * @Desc TODO(推币机-钻石兑金币)
      * @author 彭石林
@@ -153,7 +163,7 @@ public interface HttpDataSource {
      * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
      * @Date 2022/8/24
      */
-    Observable<BaseResponse> convertCoinPusherGoldsCoin(Integer id,Integer type);
+    Observable<BaseDataResponse<CoinPusherBalanceDataEntity>> convertCoinPusherGoldsCoin(Integer id, Integer type);
     /**
      * @Desc TODO(推币机-兑换钻石)
      * @author 彭石林
@@ -161,7 +171,7 @@ public interface HttpDataSource {
      * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
      * @Date 2022/8/24
      */
-    Observable<BaseResponse> convertCoinPusherDiamonds(Integer id);
+    Observable<BaseDataResponse<CoinPusherBalanceDataEntity>> convertCoinPusherDiamonds(Integer id);
     /**
      * @Desc TODO(推币机-等级列表)
      * @author 彭石林

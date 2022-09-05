@@ -375,6 +375,10 @@ public class ConversationPresenter {
                         if(loadedFriendshipInfoIdList.contains(update.getConversationId()) || update.getConversationId().contains("customer")){
                             iterator.remove();
                         }
+                    }else{
+                        if(update.getConversationId().contains("customer")){
+                            iterator.remove();
+                        }
                     }
                 }
             }

@@ -153,12 +153,10 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
             //弹出推币机选择弹窗
             CoinPusherRoomListDialog coinersDialog = new CoinPusherRoomListDialog(mActivity);
             coinersDialog.setDialogEventListener(itemEntity -> {
-                CoinPusherRoomInfoEntity.DeviceInfo deviceInfo = itemEntity;
                 coinersDialog.dismiss();
-                Bundle args = new Bundle();
-                args.putInt("roomId",deviceInfo.getId());
                 Intent intent = new Intent(mActivity, CoinPusherGameActivity.class);
-                startActivity(intent,args);
+                intent.putExtra("CoinPusherInfo",itemEntity);
+                startActivity(intent);
             });
             coinersDialog.show();
         });

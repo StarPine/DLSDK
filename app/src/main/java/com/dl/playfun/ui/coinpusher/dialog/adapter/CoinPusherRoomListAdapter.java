@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.dl.playfun.R;
 import com.dl.playfun.databinding.ItemCoinpusherRoomListBinding;
-import com.dl.playfun.entity.CoinPusherRoomInfoEntity;
+import com.dl.playfun.entity.CoinPusherRoomDeviceInfo;
 
 import java.util.List;
 
@@ -21,11 +21,11 @@ import java.util.List;
  */
 public class CoinPusherRoomListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
-    private List<CoinPusherRoomInfoEntity.DeviceInfo> itemData;
+    private List<CoinPusherRoomDeviceInfo> itemData;
 
     private CoinPusherRoomTagAdapter.OnItemClickListener onItemClickListener;
 
-    public void setItemData(List<CoinPusherRoomInfoEntity.DeviceInfo> itemData) {
+    public void setItemData(List<CoinPusherRoomDeviceInfo> itemData) {
         this.itemData = itemData;
         notifyDataSetChanged();
     }
@@ -46,7 +46,7 @@ public class CoinPusherRoomListAdapter extends RecyclerView.Adapter<RecyclerView
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ItemViewHolder itemViewHolder = ((ItemViewHolder) holder);
         if (!ObjectUtils.isEmpty(itemData)) {
-            CoinPusherRoomInfoEntity.DeviceInfo itemEntity = itemData.get(position);
+            CoinPusherRoomDeviceInfo itemEntity = itemData.get(position);
             if (!ObjectUtils.isEmpty(itemEntity)) {
                 itemViewHolder.binding.setItemEntity(itemEntity);
             }
@@ -71,7 +71,7 @@ public class CoinPusherRoomListAdapter extends RecyclerView.Adapter<RecyclerView
         }
     }
 
-    public CoinPusherRoomInfoEntity.DeviceInfo getItemEntity(int position) {
+    public CoinPusherRoomDeviceInfo getItemEntity(int position) {
         if(itemData==null || itemData.size()<position){
             return null;
         }

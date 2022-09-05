@@ -96,7 +96,7 @@ public class CoinPusherGameHistoryDialog extends BaseDialog {
         super.dismissHud();
     }
 
-    private void loadData(Integer roomId){
+    public void loadData(Integer roomId){
         ConfigManager.getInstance().getAppRepository().qryCoinPusherRoomHistory(roomId)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())

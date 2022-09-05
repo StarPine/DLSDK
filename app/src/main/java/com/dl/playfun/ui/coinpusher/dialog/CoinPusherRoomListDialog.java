@@ -16,6 +16,8 @@ import com.dl.playfun.R;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.databinding.DialogCoinpusherListBinding;
+import com.dl.playfun.entity.CoinPusherDataInfoEntity;
+import com.dl.playfun.entity.CoinPusherRoomDeviceInfo;
 import com.dl.playfun.entity.CoinPusherRoomInfoEntity;
 import com.dl.playfun.entity.CoinPusherRoomTagInfoEntity;
 import com.dl.playfun.manager.ConfigManager;
@@ -93,9 +95,11 @@ public class CoinPusherRoomListDialog extends BaseDialog {
         binding.rcvContent.setLayoutManager(layoutManagerFactory.create(binding.rcvContent));
         coinPusherRoomListAdapter = new CoinPusherRoomListAdapter();
         binding.rcvContent.setAdapter(coinPusherRoomListAdapter);
+        //点击设备
         coinPusherRoomListAdapter.setOnItemClickListener(position -> {
-            if(getDialogEventListener()!=null){
-                getDialogEventListener().startViewing(coinPusherRoomListAdapter.getItemEntity(position));
+            CoinPusherRoomDeviceInfo deviceInfo = coinPusherRoomListAdapter.getItemEntity(position);
+            if(ObjectUtils.isNotEmpty(deviceInfo)){
+                playingCoinPusherStart(deviceInfo.getRoomId());
             }
         });
 
@@ -105,8 +109,8 @@ public class CoinPusherRoomListDialog extends BaseDialog {
 
         binding.imgConvert.setOnClickListener(v ->{
             CoinPusherConvertDialog coinPusherConvertDialog = new CoinPusherConvertDialog(getMActivity());
-            coinPusherConvertDialog.setItemConvertListener(money -> {
-                totalMoney += money;
+            coinPusherConvertDialog.setItemConvertListener(coinPusherDataEntity -> {
+                totalMoney = coinPusherDataEntity.getTotalGold();
                 tvTotalMoneyRefresh();
             });
             coinPusherConvertDialog.setOnDismissListener(dialog -> CoinPusherRoomListDialog.this.show());
@@ -189,7 +193,7 @@ public class CoinPusherRoomListDialog extends BaseDialog {
                     @Override
                     public void onSuccess(BaseDataResponse<CoinPusherRoomInfoEntity> coinPusherRoomInfoEntityResponse) {
                         CoinPusherRoomInfoEntity coinPusherRoomInfoEntity = coinPusherRoomInfoEntityResponse.getData();
-                        List<CoinPusherRoomInfoEntity.DeviceInfo> deviceInfoList = coinPusherRoomInfoEntity.getList();
+                        List<CoinPusherRoomDeviceInfo> deviceInfoList = coinPusherRoomInfoEntity.getList();
                         if(ObjectUtils.isNotEmpty(deviceInfoList)){
                             coinPusherRoomListAdapter.setItemData(deviceInfoList);
                         }
@@ -198,6 +202,29 @@ public class CoinPusherRoomListDialog extends BaseDialog {
                     public void onComplete() {
                         dismissHud();
                         stopRefreshOrLoadMore();
+                    }
+                });
+    }
+
+    private void playingCoinPusherStart(Integer roomId){
+        ConfigManager.getInstance().getAppRepository().playingCoinPusherStart(roomId)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(dispose -> showHud())
+                .subscribe(new BaseObserver<BaseDataResponse<CoinPusherDataInfoEntity>>() {
+                    @Override
+                    public void onSuccess(BaseDataResponse<CoinPusherDataInfoEntity> coinPusherDataInfoEntityResponse) {
+                        CoinPusherDataInfoEntity coinPusherDataInfoEntity = coinPusherDataInfoEntityResponse.getData();
+                        if(ObjectUtils.isNotEmpty(coinPusherDataInfoEntity) && getDialogEventListener()!=null){
+                            getDialogEventListener().startViewing(coinPusherDataInfoEntity);
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        super.onComplete();
+                        dismissHud();
                     }
                 });
     }
@@ -216,6 +243,6 @@ public class CoinPusherRoomListDialog extends BaseDialog {
     }
 
     public interface DialogEventListener{
-        void startViewing(CoinPusherRoomInfoEntity.DeviceInfo itemEntity);
+        void startViewing(CoinPusherDataInfoEntity coinPusherDataInfoEntity);
     }
 }

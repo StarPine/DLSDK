@@ -6,9 +6,7 @@ import com.dl.playfun.data.source.http.response.BaseListDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.AccostEntity;
 import com.dl.playfun.entity.AdBannerEntity;
-import com.dl.playfun.entity.AdItemEntity;
 import com.dl.playfun.entity.AdUserBannerEntity;
-import com.dl.playfun.entity.AdUserItemEntity;
 import com.dl.playfun.entity.AddressEntity;
 import com.dl.playfun.entity.AlbumPhotoEntity;
 import com.dl.playfun.entity.AllConfigEntity;
@@ -33,6 +31,8 @@ import com.dl.playfun.entity.ChooseAreaEntity;
 import com.dl.playfun.entity.CityAllEntity;
 import com.dl.playfun.entity.CoinExchangeBoxInfo;
 import com.dl.playfun.entity.CoinPusherConverInfoEntity;
+import com.dl.playfun.entity.CoinPusherBalanceDataEntity;
+import com.dl.playfun.entity.CoinPusherDataInfoEntity;
 import com.dl.playfun.entity.CoinPusherRoomHistoryEntity;
 import com.dl.playfun.entity.CoinPusherRoomInfoEntity;
 import com.dl.playfun.entity.CoinPusherRoomTagInfoEntity;
@@ -99,7 +99,6 @@ import com.dl.playfun.entity.UserProfitPageEntity;
 import com.dl.playfun.entity.UserRemarkEntity;
 import com.dl.playfun.entity.VersionEntity;
 import com.dl.playfun.entity.VipInfoEntity;
-import com.dl.playfun.entity.VipPackageItemEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -137,6 +136,17 @@ public interface ApiService {
     @GET("api/iscan/history")
     Observable<BaseDataResponse<List<CoinPusherRoomHistoryEntity>>> qryCoinPusherRoomHistory(@Query("roomId")Integer roomId);
     /**
+    * @Desc TODO(推币机-开始游戏)
+    * @author 彭石林
+    * @parame [roomId]
+    * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse<com.dl.playfun.entity.CoinPusherDataInfoEntity>>
+    * @Date 2022/9/1
+    */
+    @POST("api/iscan/start")
+    @FormUrlEncoded
+    Observable<BaseDataResponse<CoinPusherDataInfoEntity>> playingCoinPusherStart(@Field("roomId")Integer roomId);
+
+    /**
     * @Desc TODO(推币机-结束游戏)
     * @author 彭石林
     * @parame [roomId]
@@ -165,7 +175,7 @@ public interface ApiService {
     */
     @FormUrlEncoded
     @POST("api/iscan/throwCoin")
-    Observable<BaseResponse> playingCoinPusherThrowCoin(@Field("roomId")Integer roomId);
+    Observable<BaseDataResponse<CoinPusherBalanceDataEntity>> playingCoinPusherThrowCoin(@Field("roomId")Integer roomId);
     /**
     * @Desc TODO(推币机-钻石兑金币)
     * @author 彭石林
@@ -178,7 +188,7 @@ public interface ApiService {
     */
     @FormUrlEncoded
     @POST("api/iscan/goldCoin")
-    Observable<BaseResponse> convertCoinPusherGoldsCoin(@Field("id")Integer id,@Field("type") Integer type);
+    Observable<BaseDataResponse<CoinPusherBalanceDataEntity>> convertCoinPusherGoldsCoin(@Field("id")Integer id, @Field("type") Integer type);
     /**
     * @Desc TODO(推币机-兑换钻石)
     * @author 彭石林
@@ -188,7 +198,7 @@ public interface ApiService {
     */
     @POST("api/iscan/diamonds")
     @FormUrlEncoded
-    Observable<BaseResponse> convertCoinPusherDiamonds(@Field("id") Integer id);
+    Observable<BaseDataResponse<CoinPusherBalanceDataEntity>> convertCoinPusherDiamonds(@Field("id") Integer id);
     /**
     * @Desc TODO(推币机-等级列表)
     * @author 彭石林

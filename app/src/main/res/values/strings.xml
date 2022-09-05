@@ -1213,8 +1213,10 @@
     <string name="playfun_coinpusher_text_1">熱玩</string>
     <string name="playfun_coinpusher_text_2">空閒</string>
     <string name="playfun_coinpusher_text_3">%s/次</string>
-
     <string name="playfun_coinpusher_text_4"><![CDATA[已有金幣<font color=\'#FF1579\' size=\'24\'>%s</font>]]></string>
+    <string name="playfun_coinpusher_text_5">購買成功</string>
+    <string name="playfun_coinpusher_text_6">兌換成功</string>
+    <string name="playfun_coinpusher_text_7">兌換失敗</string>
 
     <string name="playfun_coinpusher_text_downtime">將在%ss後退出遊戲，請投幣續時</string>
     <string name="playfun_text_accost_tips">Please enter</string>

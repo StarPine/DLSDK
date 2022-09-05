@@ -5,9 +5,13 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableInt;
 
+import com.blankj.utilcode.util.ObjectUtils;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
+import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
+import com.dl.playfun.entity.CoinPusherBalanceDataEntity;
+import com.dl.playfun.entity.CoinPusherDataInfoEntity;
 import com.dl.playfun.viewmodel.BaseViewModel;
 
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
@@ -23,18 +27,18 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
 
     public UIChangeObservable gameUI = new UIChangeObservable();
     public ObservableInt totalMoney = new ObservableInt(0);
-    public Integer roomId;
+    public CoinPusherDataInfoEntity coinPusherDataInfoEntity;
 
     public CoinPusherGameViewModel(@NonNull Application application, AppRepository model) {
         super(application, model);
     }
 
     public BindingCommand playCoinClick = new BindingCommand(() -> {
-        playingCoinPusherThrowCoin(roomId);
+        playingCoinPusherThrowCoin(coinPusherDataInfoEntity.getRoomInfo().getRoomId());
     });
 
     public BindingCommand playPusherActClick = new BindingCommand(() -> {
-        playingCoinPusherAct(roomId);
+        playingCoinPusherAct(coinPusherDataInfoEntity.getRoomInfo().getRoomId());
     });
     //投币
     public void playingCoinPusherThrowCoin(Integer roomId){
@@ -43,10 +47,15 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
                 .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseResponse>() {
+                .subscribe(new BaseObserver<BaseDataResponse<CoinPusherBalanceDataEntity>>() {
                     @Override
-                    public void onSuccess(BaseResponse baseResponse) {
-                        gameUI.resetDownTimeEvent.postValue(null);
+                    public void onSuccess(BaseDataResponse<CoinPusherBalanceDataEntity> coinPusherDataEntityResponse) {
+                        CoinPusherBalanceDataEntity coinPusherBalanceDataEntity = coinPusherDataEntityResponse.getData();
+                        if(ObjectUtils.isNotEmpty(coinPusherBalanceDataEntity)){
+                            totalMoney.set(coinPusherBalanceDataEntity.getTotalGold());
+                            gameUI.resetDownTimeEvent.postValue(null);
+                        }
+
                     }
 
                     @Override

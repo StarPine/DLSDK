@@ -9,16 +9,18 @@ import android.view.WindowManager;
 
 import androidx.databinding.DataBindingUtil;
 
+import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.R;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
-import com.dl.playfun.data.source.http.response.BaseResponse;
+import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.databinding.DialogCoinpusherConverDetailBinding;
 import com.dl.playfun.entity.CoinPusherConverInfoEntity;
+import com.dl.playfun.entity.CoinPusherBalanceDataEntity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseDialog;
 import com.dl.playfun.ui.coinpusher.dialog.adapter.CoinPusherCapsuleADetailAdapter;
-import com.dl.playfun.utils.ToastCenterUtils;
+import com.misterp.toast.SnackUtils;
 
 import java.util.List;
 
@@ -28,7 +30,7 @@ import me.goldze.mvvmhabit.utils.RxUtils;
 /**
  * Author: 彭石林
  * Time: 2022/8/25 14:35
- * Description: This is CoinPusherConvertCapsuleDialog
+ * Description: 兑换选择宝盒明细
  */
 public class CoinPusherConvertCapsuleDialog extends BaseDialog {
 
@@ -117,6 +119,7 @@ public class CoinPusherConvertCapsuleDialog extends BaseDialog {
         super.dismissHud();
     }
 
+    //购买宝盒
     private void convertCoinPusherGoldsCoin(final Integer id,final Integer amount,Integer type){
         ConfigManager.getInstance().getAppRepository()
                 .convertCoinPusherGoldsCoin(id,type)
@@ -124,11 +127,12 @@ public class CoinPusherConvertCapsuleDialog extends BaseDialog {
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
                 .doOnSubscribe(disposable -> showHud())
-                .subscribe(new BaseObserver<BaseResponse>(){
+                .subscribe(new BaseObserver<BaseDataResponse<CoinPusherBalanceDataEntity>>(){
                     @Override
-                    public void onSuccess(BaseResponse baseResponse) {
-                        if(getItemConvertListener()!=null){
-                            getItemConvertListener().success(amount);
+                    public void onSuccess(BaseDataResponse<CoinPusherBalanceDataEntity> coinPusherDataEntityBaseDataResponse) {
+                        CoinPusherBalanceDataEntity coinPusherBalanceDataEntity = coinPusherDataEntityBaseDataResponse.getData();
+                        if(coinPusherBalanceDataEntity !=null && getItemConvertListener()!=null){
+                            getItemConvertListener().success(coinPusherBalanceDataEntity);
                         }
                     }
 
@@ -136,7 +140,10 @@ public class CoinPusherConvertCapsuleDialog extends BaseDialog {
                     public void onError(RequestException e) {
                         super.onError(e);
                         if(e.getCode()!=null && e.getCode().intValue()==21001 ){//钻石余额不足
-                            ToastCenterUtils.showToast(R.string.playfun_dialog_exchange_integral_total_text3);
+                            SnackUtils.showCenterShort(binding.getRoot(),StringUtils.getString(R.string.playfun_dialog_exchange_integral_total_text1));
+                            if(getItemConvertListener()!=null){
+                                getItemConvertListener().buyError();
+                            }
                         }
                     }
 
@@ -149,6 +156,10 @@ public class CoinPusherConvertCapsuleDialog extends BaseDialog {
     }
 
     public interface ItemConvertListener {
-        void success(int value);
+        void success(CoinPusherBalanceDataEntity coinPusherBalanceDataEntity);
+
+        default void buyError() {
+
+        }
     }
 }

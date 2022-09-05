@@ -7,7 +7,7 @@
     <data>
         <variable
             name="itemEntity"
-            type="com.dl.playfun.entity.CoinPusherRoomInfoEntity.DeviceInfo" />
+            type="com.dl.playfun.entity.CoinPusherRoomDeviceInfo" />
         <import type="com.dl.playfun.R" />
     </data>
     <FrameLayout
