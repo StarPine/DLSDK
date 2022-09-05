@@ -12,9 +12,14 @@ import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.CoinPusherBalanceDataEntity;
 import com.dl.playfun.entity.CoinPusherDataInfoEntity;
+import com.dl.playfun.event.CoinPusherGamePlayingEvent;
 import com.dl.playfun.viewmodel.BaseViewModel;
+import com.tencent.qcloud.tuicore.custom.CustomConstants;
 
+import io.reactivex.disposables.Disposable;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
+import me.goldze.mvvmhabit.bus.RxBus;
+import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.RxUtils;
 
@@ -28,6 +33,9 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
     public UIChangeObservable gameUI = new UIChangeObservable();
     public ObservableInt totalMoney = new ObservableInt(0);
     public CoinPusherDataInfoEntity coinPusherDataInfoEntity;
+
+    //消费者
+    private Disposable coinPusherGamePlayingSubscription;
 
     public CoinPusherGameViewModel(@NonNull Application application, AppRepository model) {
         super(application, model);
@@ -105,5 +113,26 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
         //重置倒计时
         public SingleLiveEvent<Void> resetDownTimeEvent = new SingleLiveEvent<>();
     }
+
+    @Override
+    public void registerRxBus() {
+        coinPusherGamePlayingSubscription = RxBus.getDefault().toObservable(CoinPusherGamePlayingEvent.class)
+                .subscribe(coinPusherGamePlayingEvent -> {
+                    if(coinPusherGamePlayingEvent!=null){
+                        //开始落币
+                        if(coinPusherGamePlayingEvent.getState().equals(CustomConstants.CoinPusher.START_WINNING)){
+
+                        }
+                    }
+                });
+        //将订阅者加入管理站
+        RxSubscriptions.add(coinPusherGamePlayingSubscription);
+    }
+
+    @Override
+    public void removeRxBus() {
+        RxSubscriptions.remove(coinPusherGamePlayingSubscription);
+    }
+
 
 }

@@ -7,7 +7,9 @@ package com.tencent.qcloud.tuicore.custom;
  */
 public class CustomConstants {
     public static final class Message {
+        //BUSINESS_ID 模板标识
         public static final String CUSTOM_BUSINESS_ID_KEY = "dl_custom_tmp";
+        //内容体
         public static final String CUSTOM_CONTENT_BODY= "contentBody";
         public static final String CUSTOM_MSG_KEY = "customMsgType";
         public static final String CUSTOM_MSG_BODY = "customMsgBody";
@@ -20,5 +22,7 @@ public class CustomConstants {
         public static final String MODULE_NAME = "pushCoinGame";
         //开始落币
         public static final String START_WINNING = "startWinning";
+        //落币数量
+        public static final String DROP_COINS = "dropCoins";
     }
 }

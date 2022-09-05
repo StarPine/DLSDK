@@ -68,8 +68,6 @@ public class CustomConvertUtils {
         if(mapData.containsKey(key)){
             if(Objects.equals(mapData.get(key), moduleName)){
                 String coinPusherString = String.valueOf(mapData.get(contentKey));
-                Log.e(TAG,key+"=========="+moduleName);
-                Log.e(TAG,"取出的内容体为："+coinPusherString);
                 if(CustomConvertUtils.isJSONEmpty(coinPusherString)){
                     return new Gson().fromJson(coinPusherString,Map.class);
                 }
@@ -77,6 +75,20 @@ public class CustomConvertUtils {
         }
         return null;
     }
+    /**
+    * @Desc TODO(效验模型是否存在)
+    * @author 彭石林
+    * @parame [mapData, key, moduleName]
+    * @return boolean
+    * @Date 2022/9/5
+    */
+    public static boolean ContainsMessageModuleKey(final Map<String,Object> mapData,final String key,final String moduleName){
+        if(mapData.containsKey(key)){
+            return Objects.equals(mapData.get(key), moduleName);
+        }
+        return false;
+    }
+
     /**
      * @Desc TODO(判断数据是否为空。是否是json)
      * @author 彭石林
