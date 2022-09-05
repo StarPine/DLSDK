@@ -64,6 +64,7 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
 
     public SingleLiveEvent<String> getCodeSuccess = new SingleLiveEvent<>();
     public SingleLiveEvent<String> setAreaSuccess = new SingleLiveEvent<>();
+    public SingleLiveEvent<Void> phoneLogin = new SingleLiveEvent<>();
 
 
     private Disposable ItemChooseAreaSubscription;
@@ -135,6 +136,7 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
                         TokenEntity tokenEntity = new TokenEntity(authLoginUserEntity.getToken(),authLoginUserEntity.getUserID(),authLoginUserEntity.getUserSig(), authLoginUserEntity.getIsContract());
                         model.saveLoginInfo(tokenEntity);
                         model.putKeyValue("areaCode",new Gson().toJson(areaCode.get()));
+                        model.putKeyValue(AppConfig.LOGIN_TYPE,"phone");
                         if (response.getData() != null && response.getData().getIsNewUser() != null && response.getData().getIsNewUser().intValue() == 1) {
                             AppContext.instance().logEvent(AppsFlyerEvent.register_start);
                             model.saveIsNewUser(true);
@@ -155,6 +157,7 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
             ToastUtils.showShort(R.string.playfun_warn_agree_terms);
             return;
         }
+        phoneLogin.call();
         start(RegisterFragment.class.getCanonicalName());
     }
 
@@ -190,6 +193,7 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
                             AppContext.instance().logEvent(AppsFlyerEvent.register_start);
                         }
                         model.saveLoginInfo(tokenEntity);
+                        model.putKeyValue(AppConfig.LOGIN_TYPE,type);
                         loadProfile();
                     }
 

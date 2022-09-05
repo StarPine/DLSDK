@@ -1262,6 +1262,7 @@
     <string name="playfun_coinpusher_text_downtime">將在%ss後退出遊戲，請投幣續時</string>
     <string name="playfun_duplicate_nickname_tips">妳輸入的暱稱已被佔用，推薦使用 %s</string>
     <string name="fragment_perfect_reg_hint3">請選擇真實性別</string>
+    <string name="playfun_last_login">上次登入</string>
 
 
 </resources>

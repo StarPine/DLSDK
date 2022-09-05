@@ -252,7 +252,8 @@ public class AppContext extends Application {
                         return;
                     }
                     // Get new Instance ID token
-                    String token = task.getResult();
+                    String
+                            token = task.getResult();
                     KLog.d(TAG, "google fcm getToken = " + token);
                     ThirdPushTokenMgr.getInstance().setThirdPushToken(token);
                     pushDeviceToken(token);
@@ -544,6 +545,7 @@ public class AppContext extends Application {
     }
 
     public void pushDeviceToken(String deviceToken) {
+        AppConfig.DEVICE_CODE = deviceToken;
         appRepository.pushDeviceToken(deviceToken, AppConfig.VERSION_NAME_PUSH)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
