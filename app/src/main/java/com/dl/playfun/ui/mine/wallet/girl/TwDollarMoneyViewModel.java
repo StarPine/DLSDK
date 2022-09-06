@@ -10,6 +10,8 @@ import androidx.databinding.ObservableList;
 
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
+import com.dl.playfun.BR;
+import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
@@ -17,11 +19,9 @@ import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.entity.UserProfitPageEntity;
 import com.dl.playfun.entity.UserProfitPageInfoEntity;
 import com.dl.playfun.ui.main.MainFragment;
+import com.dl.playfun.ui.mine.webview.WebViewFragment;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.dl.playfun.widget.emptyview.EmptyState;
-import com.dl.playfun.BR;
-import com.dl.playfun.R;
-import com.dl.playfun.ui.mine.webview.WebViewFragment;
 
 import java.util.List;
 
@@ -48,7 +48,9 @@ public class TwDollarMoneyViewModel extends BaseViewModel<AppRepository> {
     public ObservableField<String> totalProfits = new ObservableField<>();
 
     public ObservableField<Boolean> isShowEmpty = new ObservableField<Boolean>(false);
+    public ObservableField<Boolean> isShowProfitTips = new ObservableField<Boolean>(false);
     public ObservableField<String> withdrawString = new ObservableField<>(StringUtils.getString(R.string.playfun_withdraw));
+    public ObservableField<String> currencyName = new ObservableField<>();
 
     public UIChangeObservable uc = new UIChangeObservable();
     private int currentPage = 1;
@@ -113,6 +115,7 @@ public class TwDollarMoneyViewModel extends BaseViewModel<AppRepository> {
         currentPage++;
         loadDatas(currentPage);
     }
+
     //初始化加载数据
     public void loadDatas(int page) {
         if (userId == null) {
@@ -129,34 +132,37 @@ public class TwDollarMoneyViewModel extends BaseViewModel<AppRepository> {
                 .subscribe(new BaseObserver<BaseDataResponse<UserProfitPageEntity>>() {
                     @Override
                     public void onSuccess(BaseDataResponse<UserProfitPageEntity> response) {
-                        totalProfits.set(String.format("%.2f", response.getData().getTotalProfits()));
-                        UserProfitPageEntity.CustomProfitList pageData = response.getData().getUserProfitList();
-                    List<UserProfitPageInfoEntity> listData = pageData.getData();
-                    if(!ObjectUtils.isEmpty(listData) && listData.size()>0){
-                        isShowEmpty.set(false);
-                        withdrawString.set(StringUtils.getString(R.string.playfun_withdraw));
-                        stateModel.setEmptyState(EmptyState.NORMAL);
-                        for (UserProfitPageInfoEntity itemEntity : listData){
-                            TwDollarMoneyItemViewModel twDollarMoneyItemViewModel = new TwDollarMoneyItemViewModel(TwDollarMoneyViewModel.this,itemEntity);
-                            observableList.add(twDollarMoneyItemViewModel);
-                        }
-                    }else{
-                        if(observableList==null|| observableList.size()<1){
-                            isShowEmpty.set(true);
-                            withdrawString.set(StringUtils.getString(R.string.playfun_dialong_coin_doing_task));
-                            stateModel.emptyText.set(StringUtils.getString(R.string.playfun_tw_money_empty));
-                            stateModel.setEmptyState(EmptyState.EMPTY);
+                        UserProfitPageEntity data = response.getData();
+                        totalProfits.set(String.format("%.2f", data.getTotalProfits()));
+                        isShowProfitTips.set(data.getDisplayProfitTips()==1);
+                        currencyName.set(data.getCurrencyName());
+                        UserProfitPageEntity.CustomProfitList pageData = data.getUserProfitList();
+                        List<UserProfitPageInfoEntity> listData = pageData.getData();
+                        if (!ObjectUtils.isEmpty(listData) && listData.size() > 0) {
+                            isShowEmpty.set(false);
+                            withdrawString.set(StringUtils.getString(R.string.playfun_withdraw));
+                            stateModel.setEmptyState(EmptyState.NORMAL);
+                            for (UserProfitPageInfoEntity itemEntity : listData) {
+                                TwDollarMoneyItemViewModel twDollarMoneyItemViewModel = new TwDollarMoneyItemViewModel(TwDollarMoneyViewModel.this, itemEntity);
+                                observableList.add(twDollarMoneyItemViewModel);
+                            }
+                        } else {
+                            if (observableList == null || observableList.size() < 1) {
+                                isShowEmpty.set(true);
+                                withdrawString.set(StringUtils.getString(R.string.playfun_dialong_coin_doing_task));
+                                stateModel.emptyText.set(StringUtils.getString(R.string.playfun_tw_money_empty));
+                                stateModel.setEmptyState(EmptyState.EMPTY);
+                            }
                         }
                     }
-                }
 
-                @Override
-                public void onComplete() {
-                    dismissHUD();
-                    stopRefreshOrLoadMore();
-                }
+                    @Override
+                    public void onComplete() {
+                        dismissHUD();
+                        stopRefreshOrLoadMore();
+                    }
 
-            });
+                });
     }
 
     public class UIChangeObservable {

@@ -58,6 +58,7 @@
                     android:text="@string/playfun_tw_money_text2"
                     android:textColor="@color/purple1"
                     android:textSize="12sp"
+                    android:visibility="@{viewModel.isShowProfitTips?View.VISIBLE:View.GONE}"
                     binding:onClickCommand="@{viewModel.toWebViewProfitonClickCommand}" />
             </RelativeLayout>
 
@@ -89,7 +90,8 @@
                     android:layout_below="@+id/tw_diamond_num"
                     android:layout_alignStart="@+id/tw_diamond_num"
                     android:elevation="11dp"
-                    android:text="@string/playfun_tw_money_text"
+                    tools:text="@string/playfun_tw_money_text"
+                    android:text="@{viewModel.currencyName}"
                     android:textColor="@color/white"
                     android:textSize="15sp" />
 
