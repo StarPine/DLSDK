@@ -1088,6 +1088,70 @@
                             binding:onClickCommand="@{viewModel.settingOnClickCommand}">
 
                             <ImageView
+                                android:id="@+id/iv_video_switch"
+                                android:layout_width="19dp"
+                                android:layout_height="19dp"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerInParent="true"
+                                android:src="@drawable/icon_video_switch" />
+
+                            <TextView
+                                style="@style/ProfileItemTitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:layout_toEndOf="@+id/iv_video_switch"
+                                android:text="@string/playfun_mine_allow_video"
+                                android:textSize="13sp" />
+
+                            <Switch
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_alignParentRight="true"
+                                android:checked="@={viewModel.userInfoEntity.allowVideo}"
+                                binding:onClickCommand="@{viewModel.switchVideoOnClickCommand}" />
+
+                        </RelativeLayout>
+                        <RelativeLayout
+                            style="@style/ProfileItem"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/profile_item_height"
+                            binding:onClickCommand="@{viewModel.settingOnClickCommand}">
+
+                            <ImageView
+                                android:id="@+id/iv_audio_switch"
+                                android:layout_width="19dp"
+                                android:layout_height="19dp"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerInParent="true"
+                                android:src="@drawable/icon_audio_switch" />
+
+                            <TextView
+                                style="@style/ProfileItemTitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:layout_toEndOf="@+id/iv_audio_switch"
+                                android:text="@string/playfun_mine_allow_audio"
+                                android:textSize="13sp" />
+
+                            <Switch
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_alignParentRight="true"
+                                android:checked="@={viewModel.userInfoEntity.allowAudio}"
+                                binding:onClickCommand="@{viewModel.switchAudioOnClickCommand}" />
+
+                        </RelativeLayout>
+                        <RelativeLayout
+                            style="@style/ProfileItem"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/profile_item_height"
+                            binding:onClickCommand="@{viewModel.settingOnClickCommand}">
+
+                            <ImageView
                                 android:id="@+id/mine_item_10"
                                 android:layout_width="19dp"
                                 android:layout_height="19dp"

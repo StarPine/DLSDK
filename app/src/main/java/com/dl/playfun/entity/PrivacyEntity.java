@@ -36,6 +36,28 @@ public class PrivacyEntity extends BaseObservable {
     @JsonAdapter(BooleanTypeAdapter.class)
     private Boolean isNearby;
     private String phone;
+    @SerializedName("allowVideo")
+    @JsonAdapter(BooleanTypeAdapter.class)
+    private Boolean allowVideo;
+    @SerializedName("allowAudio")
+    @JsonAdapter(BooleanTypeAdapter.class)
+    private Boolean allowAudio;
+
+    public Boolean getAllowVideo() {
+        return allowVideo;
+    }
+
+    public void setAllowVideo(Boolean allowVideo) {
+        this.allowVideo = allowVideo;
+    }
+
+    public Boolean getAllowAudio() {
+        return allowAudio;
+    }
+
+    public void setAllowAudio(Boolean allowAudio) {
+        this.allowAudio = allowAudio;
+    }
 
     public Boolean getHome() {
         return isHome;

@@ -1263,6 +1263,10 @@
     <string name="playfun_duplicate_nickname_tips">妳輸入的暱稱已被佔用，推薦使用 %s</string>
     <string name="fragment_perfect_reg_hint3">請選擇真實性別</string>
     <string name="playfun_last_login">上次登入</string>
+    <string name="playfun_mine_allow_video">允許視訊</string>
+    <string name="playfun_mine_allow_audio">允許語音</string>
+    <string name="playfun_mine_ban_audio_tips">其他用戶將無法對您發起語音通話</string>
+    <string name="playfun_mine_ban_video_tips">其他用戶將無法對您發起視訊通話</string>
 
 
 </resources>

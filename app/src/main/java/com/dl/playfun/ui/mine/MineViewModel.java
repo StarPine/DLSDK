@@ -21,6 +21,7 @@ import com.dl.playfun.entity.ApiConfigManagerEntity;
 import com.dl.playfun.entity.BannerItemEntity;
 import com.dl.playfun.entity.BrowseNumberEntity;
 import com.dl.playfun.entity.EvaluateEntity;
+import com.dl.playfun.entity.PrivacyEntity;
 import com.dl.playfun.entity.SystemConfigTaskEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.entity.UserInfoEntity;
@@ -77,6 +78,9 @@ import me.goldze.mvvmhabit.utils.ToastUtils;
  * @author wulei
  */
 public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
+
+    private final String ALLOW_TYPE_VIDEO = "video";
+    private final String ALLOW_TYPE_AUDIO = "audio";
     //积分夺宝右侧提示
     public ObservableField<String> entryLabelLable = new ObservableField<>();
     //本地UserData
@@ -224,6 +228,15 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
     public BindingCommand settingOnClickCommand = new BindingCommand(() -> {
         start(MeSettingFragment.class.getCanonicalName());
     });
+    //允许语音开关
+    public BindingCommand switchAudioOnClickCommand = new BindingCommand(() -> {
+        setAllowPrivacy(ALLOW_TYPE_AUDIO);
+    });
+    //允许视讯开关
+    public BindingCommand switchVideoOnClickCommand = new BindingCommand(() -> {
+        setAllowPrivacy(ALLOW_TYPE_VIDEO);
+    });
+
     //联系客服按钮的点击事件
     public BindingCommand serviceOnClickCommand = new BindingCommand(() -> {
         try {
@@ -304,6 +317,36 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
             return StringUtils.getString(R.string.playfun_need_verify_before_viewing);
         }
         return StringUtils.getString(R.string.playfun_unknown);
+    }
+
+    private void setAllowPrivacy(String type) {
+        PrivacyEntity entity = new PrivacyEntity();
+        if (type.equals(ALLOW_TYPE_AUDIO)){
+            entity.setAllowAudio(userInfoEntity.get().getAllowAudio());
+        }else if (type.equals(ALLOW_TYPE_VIDEO)){
+            entity.setAllowVideo(userInfoEntity.get().getAllowVideo());
+        }
+        model.setPrivacy(entity)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseResponse>() {
+                    @Override
+                    public void onSuccess(BaseResponse response) {
+                        if (type.equals(ALLOW_TYPE_AUDIO) && !userInfoEntity.get().getAllowAudio()){
+                            ToastUtils.showShort(R.string.playfun_mine_ban_audio_tips);
+                        }else if (type.equals(ALLOW_TYPE_VIDEO) && !userInfoEntity.get().getAllowVideo()){
+                            ToastUtils.showShort(R.string.playfun_mine_ban_video_tips);
+                        }
+                        dismissHUD();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        dismissHUD();
+                    }
+                });
     }
 
     @Override

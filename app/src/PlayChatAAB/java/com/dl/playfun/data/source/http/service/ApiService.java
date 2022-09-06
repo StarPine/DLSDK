@@ -2228,7 +2228,9 @@ public interface ApiService {
             @Field("is_distance") Integer isDistance,
             @Field("is_online_time") Integer isOnlineTIme,
             @Field("is_connection") Integer isConnection,
-            @Field("is_nearby") Integer isNearby
+            @Field("is_nearby") Integer isNearby,
+            @Field("allowAudio") Integer allowAudio,
+            @Field("allowVideo") Integer allowVideo
     );
 
     /**

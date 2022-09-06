@@ -832,7 +832,9 @@ public class HttpDataSourceImpl implements HttpDataSource {
                 privacyEntity.getDistance() == null ? null : privacyEntity.getDistance() ? 1 : 0,
                 privacyEntity.getOnlineIme() == null ? null : privacyEntity.getOnlineIme() ? 1 : 0,
                 privacyEntity.getConnection() == null ? null : privacyEntity.getConnection() ? 1 : 0,
-                privacyEntity.getNearby() == null ? null : privacyEntity.getNearby() ? 1 : 0
+                privacyEntity.getNearby() == null ? null : privacyEntity.getNearby() ? 1 : 0,
+                privacyEntity.getAllowAudio() == null ? null : privacyEntity.getAllowAudio() ? 1 : 0,
+                privacyEntity.getAllowVideo() == null ? null : privacyEntity.getAllowVideo() ? 1 : 0
         );
     }
 
