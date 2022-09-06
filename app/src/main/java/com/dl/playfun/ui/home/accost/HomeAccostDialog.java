@@ -105,6 +105,7 @@ public class HomeAccostDialog extends BaseDialog {
 
     private void initView() {
         //读取本地冷却时间
+        if(ConfigManager.getInstance().getAppRepository().readUserData() != null)
         changeDownTime = readKeyValue(ConfigManager.getInstance().getAppRepository().readUserData().getId() + "_homeAccost");
 
         LayoutInflater inflater = LayoutInflater.from(mContext);

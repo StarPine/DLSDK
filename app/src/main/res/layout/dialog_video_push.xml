@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent"
+    tools:background="@color/coffee">
+
+    <RelativeLayout
+        android:id="@+id/rl_support"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/bg_video_push"
+        android:paddingTop="15dp"
+        android:paddingBottom="20dp">
+
+        <LinearLayout
+            android:id="@+id/ll_user_head"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:background="@drawable/button_purple_background3"
+            android:orientation="horizontal"
+            android:padding="1dp">
+
+            <com.dl.playfun.widget.image.CircleImageView
+                android:id="@+id/iv_user_head"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/default_avatar"
+                tools:ignore="MissingConstraints" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_call_reject"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_toStartOf="@+id/iv_call_accept"
+            android:src="@drawable/call_reject" />
+
+        <ImageView
+            android:id="@+id/iv_call_accept"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="15dp"
+            android:elevation="30dp"
+            android:src="@drawable/call_accept" />
+
+        <TextView
+            android:id="@+id/tv_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="15dp"
+            android:layout_toEndOf="@+id/ll_user_head"
+            android:textColor="@color/balck_35e"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            tools:text="用户昵称" />
+
+        <LinearLayout
+            android:id="@+id/ll_age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_user_name"
+            android:layout_alignStart="@+id/tv_user_name"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/shape_radius20_red"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp"
+            android:paddingTop="2dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="2dp">
+
+            <ImageView
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:src="@drawable/icon_gril_mark" />
+
+            <TextView
+                android:id="@+id/tv_age"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:text="24"
+                android:textColor="@color/white"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_goddess"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/ll_age"
+            android:layout_marginStart="5dp"
+            android:layout_toRightOf="@+id/ll_age"
+            android:src="@drawable/ic_goddess" />
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:textAlignment="center"
+            android:textColor="@color/balck_35e"
+            android:textSize="10sp"
+            tools:text="10s" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_tips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/rl_support"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/bg_video_push_bubble"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:paddingTop="3dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="9dp"
+        android:text="寶貝～快接電話"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="9sp" />
+
+
+</RelativeLayout>

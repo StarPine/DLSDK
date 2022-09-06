@@ -1267,6 +1267,9 @@
     <string name="playfun_mine_allow_audio">允許語音</string>
     <string name="playfun_mine_ban_audio_tips">其他用戶將無法對您發起語音通話</string>
     <string name="playfun_mine_ban_video_tips">其他用戶將無法對您發起視訊通話</string>
+    <string name="playfun_dialog_title_tips">與她聊得愉快嗎？</string>
+    <string name="playfun_evaluation_not_happy">不愉快</string>
+    <string name="playfun_evaluation_happy">愉快</string>
 
 
 </resources>

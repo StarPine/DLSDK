@@ -137,6 +137,9 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
 //                viewModel.playBannerGift();
 //            }
 //        });
+        viewModel.uc.videoEvaluation.observe(this,avatar->{
+            setVideoEvaluationDialog(avatar);
+        });
         //未付费弹窗
         viewModel.uc.notPaidDialog.observe(this,s -> {
 
@@ -334,6 +337,19 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                 }
             }
         });
+    }
+
+
+    private void setVideoEvaluationDialog(String avatar) {
+        TraceDialog.getInstance(mActivity)
+                .setConfirmOnlick(dialog -> {
+
+                })
+                .setConfirmTwoOnlick(dialog -> {
+
+                })
+                .getVideoEvaluationDialog(avatar)
+                .show();
     }
 
     private void dialogCallback() {

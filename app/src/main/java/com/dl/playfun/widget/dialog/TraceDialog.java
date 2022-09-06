@@ -1,5 +1,6 @@
 package com.dl.playfun.widget.dialog;
 
+import android.animation.ValueAnimator;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,16 +10,19 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.ConvertUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
 import com.dl.playfun.R;
@@ -57,12 +61,16 @@ public class TraceDialog {
     private int firstRewardId = 0;
     private int secondRewardId = 0;
 
+    private int mTouchStartY;
+    private int mTouchLastY;
+
 
     private ConfirmOnclick confirmOnclick;
     private ConfirmTwoOnclick confirmTwoOnclick;
     private ConfirmThreeOnclick confirmThreeOnclick;
 
     private CannelOnclick cannelOnclick;
+    private int currentTop;
 
     private TraceDialog(Context context) {
         this.context = context;
@@ -1099,6 +1107,151 @@ public class TraceDialog {
 
         return privilegesView;
     }
+
+    public Dialog getVideoEvaluationDialog(String headUrl) {
+        Dialog dialog = new Dialog(context, R.style.BottomDialog);
+        View contentView = LayoutInflater.from(context).inflate(R.layout.dialog_video_evaluation, null);
+        dialog.setContentView(contentView);
+        ViewGroup.LayoutParams layoutParams = contentView.getLayoutParams();
+        contentView.setLayoutParams(layoutParams);
+        dialog.getWindow().setWindowAnimations(R.style.BottomDialog_Animation);
+
+        dialog.getWindow().setGravity(Gravity.BOTTOM);
+        ImageView close = contentView.findViewById(R.id.iv_close);
+        ImageView userHead = contentView.findViewById(R.id.iv_user_head);
+        LinearLayout notHappy = contentView.findViewById(R.id.ll_not_happy);
+        LinearLayout happy = contentView.findViewById(R.id.ll_happy);
+
+        close.setOnClickListener(v -> dialog.dismiss());
+        notHappy.setOnClickListener(v -> {
+            dialog.dismiss();
+            if (confirmOnclick != null) {
+                confirmOnclick.confirm(dialog);
+            }
+        });
+        happy.setOnClickListener(v -> {
+            dialog.dismiss();
+            if (confirmTwoOnclick != null) {
+                confirmTwoOnclick.confirmTwo(dialog);
+            }
+        });
+        Glide.with(context)
+                .load(StringUtil.getFullImageUrl(headUrl))
+                .error(R.drawable.default_avatar) //异常时候显示的图片
+                .placeholder(R.drawable.default_avatar) //加载成功前显示的图片
+                .fallback( R.drawable.default_avatar) //url为空的时候,显示的图片
+                .into(userHead);
+
+        return dialog;
+    }
+
+    public Dialog getVideoPushDialog(String headUrl) {
+        Dialog dialog = new Dialog(context, R.style.TransparentDialog);
+        View contentView = LayoutInflater.from(context).inflate(R.layout.dialog_video_push, null);
+        dialog.setContentView(contentView);
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(true);
+        ViewGroup.LayoutParams layoutParams = contentView.getLayoutParams();
+        contentView.setLayoutParams(layoutParams);
+        //设置动画
+        Window window = dialog.getWindow();
+        window.setWindowAnimations(R.style.TopDialog_Animation);
+        window.setGravity(Gravity.TOP);
+        //设置宽度充满屏幕
+        WindowManager.LayoutParams lp = window.getAttributes();
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        window.setAttributes(lp);
+
+        ImageView ivCallReject = contentView.findViewById(R.id.iv_call_reject);
+        ImageView ivCallAccept = contentView.findViewById(R.id.iv_call_accept);
+        ImageView userHead = contentView.findViewById(R.id.iv_user_head);
+        ImageView ivGoddess = contentView.findViewById(R.id.iv_goddess);
+        TextView userName = contentView.findViewById(R.id.tv_user_name);
+        TextView userAge = contentView.findViewById(R.id.tv_age);
+        TextView tvTime = contentView.findViewById(R.id.tv_time);
+        RelativeLayout rl_support = contentView.findViewById(R.id.rl_support);
+
+        ivCallReject.setOnClickListener(v -> {
+            dialog.dismiss();
+            if (confirmOnclick != null) {
+                confirmOnclick.confirm(dialog);
+            }
+        });
+        ivCallAccept.setOnClickListener(v -> {
+            dialog.dismiss();
+            if (confirmTwoOnclick != null) {
+                confirmTwoOnclick.confirmTwo(dialog);
+            }
+        });
+
+        userName.setText("用户昵称");
+        Glide.with(context)
+                .load(StringUtil.getFullImageUrl(headUrl))
+                .error(R.drawable.default_avatar) //异常时候显示的图片
+                .placeholder(R.drawable.default_avatar) //加载成功前显示的图片
+                .fallback( R.drawable.default_avatar) //url为空的时候,显示的图片
+                .into(userHead);
+//        startCountdown(dialog, tvTime);
+        int top = ConvertUtils.dp2px(10);
+        currentTop = top;
+        //滑动事件
+        rl_support.setOnTouchListener((v, event) -> {
+            RelativeLayout.LayoutParams rlSupportLayoutParams = (RelativeLayout.LayoutParams) rl_support.getLayoutParams();
+            int action = event.getAction();
+            switch (action) {
+                case MotionEvent.ACTION_DOWN:
+                    mTouchLastY = (int) event.getRawY();
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    mTouchStartY = mTouchLastY - (int) event.getRawY();
+                    currentTop = currentTop - mTouchStartY;
+                    mTouchLastY = (int) event.getRawY();
+                    if (currentTop <= top){
+                        rlSupportLayoutParams.topMargin = currentTop;
+                    }else {
+                        currentTop = top;
+                        rlSupportLayoutParams.topMargin = top;
+                    }
+                    rl_support.setLayoutParams(rlSupportLayoutParams);
+                    break;
+                case MotionEvent.ACTION_UP:
+                    if (rlSupportLayoutParams.topMargin < -10){
+                        dialog.dismiss();
+                    }else {
+                        currentTop = top;
+                        rlSupportLayoutParams.topMargin = top;
+                        rl_support.setLayoutParams(rlSupportLayoutParams);
+                    }
+
+                    break;
+            }
+            return true;
+        });
+
+        return dialog;
+    }
+
+    private void startCountdown(Dialog dialog, TextView tvTime) {
+        ValueAnimator animator = ValueAnimator.ofInt(10,0);
+        //设置时间
+        animator.setDuration(10*1000);
+        //均匀显示
+        animator.setInterpolator(new LinearInterpolator());
+        //监听
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int value = (Integer) animation.getAnimatedValue();
+                tvTime.setText(value+"s");
+                if(value==0){
+                    dialog.dismiss();
+                }
+            }
+        });
+        animator.start();
+    }
+
 
     /**
      * @Desc TODO(首次收益弹窗)

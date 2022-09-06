@@ -28,6 +28,7 @@ import com.dl.playfun.event.MessageCountChangeEvent;
 import com.dl.playfun.event.MessageGiftNewEvent;
 import com.dl.playfun.event.RewardRedDotEvent;
 import com.dl.playfun.event.TaskMainTabEvent;
+import com.dl.playfun.event.VideoEvaluationEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocationManager;
 import com.dl.playfun.utils.FastCallFunUtil;
@@ -74,7 +75,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
     public String dayRewardKey = "";
 
     UIChangeObservable uc = new UIChangeObservable();
-    private Disposable mSubscription, taskMainTabEventReceive, mainTabEventReceive, rewardRedDotEventReceive, BubbleTopShowEventSubscription, ResatrtActSubscription2;
+    private Disposable mSubscription, taskMainTabEventReceive, mainTabEventReceive, rewardRedDotEventReceive, BubbleTopShowEventSubscription, ResatrtActSubscription2, videoEvaluationSubscription;
 
     public MainViewModel(@NonNull Application application, AppRepository appRepository) {
         super(application, appRepository);
@@ -135,6 +136,10 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         ResatrtActSubscription2 = RxBus.getDefault().toObservable(RestartActivityEntity.class).subscribe(event -> {
             uc.restartActivity.postValue(event.getIntent());
         });
+        videoEvaluationSubscription = RxBus.getDefault().toObservable(VideoEvaluationEvent.class).subscribe(event -> {
+            uc.videoEvaluation.postValue(event.getAvatar());
+        });
+
         taskMainTabEventReceive = RxBus.getDefault().toObservable(TaskMainTabEvent.class)
                 .compose(RxUtils.exceptionTransformer())
                 .compose(RxUtils.schedulersTransformer())
@@ -146,6 +151,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         RxSubscriptions.add(rewardRedDotEventReceive);
         RxSubscriptions.add(BubbleTopShowEventSubscription);
         RxSubscriptions.add(ResatrtActSubscription2);
+        RxSubscriptions.add(videoEvaluationSubscription);
     }
 
     @Override
@@ -157,6 +163,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         RxSubscriptions.remove(rewardRedDotEventReceive);
         RxSubscriptions.remove(BubbleTopShowEventSubscription);
         RxSubscriptions.remove(ResatrtActSubscription2);
+        RxSubscriptions.remove(videoEvaluationSubscription);
     }
 
     public void logout() {
@@ -476,6 +483,9 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                             return;
                         }
                         List<DayRewardInfoEntity.NowBean> now = dayRewardInfoEntity.getNow();
+                        if (now == null) {
+                            return;
+                        }
                         for (DayRewardInfoEntity.NowBean nowBean : now) {
                             String type = nowBean.getType();
                             if (type.equals("accost_card")){
@@ -519,6 +529,8 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<MqBroadcastGiftEntity> giftBanner = new SingleLiveEvent<>();
         //任务中心跳转
         public SingleLiveEvent<TaskMainTabEvent> taskCenterclickTab = new SingleLiveEvent<>();
+        public SingleLiveEvent<String> videoEvaluation = new SingleLiveEvent<>();
+
     }
 
 }
