@@ -36,7 +36,6 @@
                 android:layout_marginTop="20dp"
                 android:gravity="center"
                 android:includeFontPadding="false"
-                android:text="寶盒獎勵任選其一"
                 android:textColor="#ff42435e"
                 android:textSize="18sp" />
             <TextView
@@ -47,7 +46,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="金幣、鑽石、搭訕卡"
                 android:textColor="#ff9896b4"
                 android:textSize="14sp"
                 />

@@ -1202,4 +1202,11 @@
     <string name="playfun_coinpusher_text_1">熱玩</string>
     <string name="playfun_coinpusher_text_2">空閒</string>
     <string name="playfun_coinpusher_text_3">%s/次</string>
+    <string name="playfun_coinpusher_hint_retain">正在進行投幣，此時退出遊戲，投幣將失\n效。確認退出遊戲嗎？</string>
+    <string name="playfun_coinpusher_text_playing">投幣</string>
+    <string name="playfun_coinpusher_coin_text_reward">獲得金幣%s枚</string>
+    <string name="playfun_coinpusher_hint_retain2">金幣獎勵正在發放，此時退出遊戲，獎勵\n將丟失。確認退出遊戲嗎？</string>
+    <string name="playfun_coinpusher_room_empty_text">當前沒有可用的機器</string>
+    <string name="playfun_coinpusher_error_text1">加載失敗，請重試 </string>
+    <string name="playfun_refresh">刷新</string>
 </resources>

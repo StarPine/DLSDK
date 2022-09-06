@@ -114,6 +114,16 @@ import retrofit2.http.Query;
 public interface HttpDataSource {
 
     /**
+     * @Desc TODO(查询用户当前余额)
+     * @author 彭石林
+     * @parame []
+     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse<com.dl.playfun.entity.CoinPusherBalanceDataEntity>>
+     * @Date 2022/9/6
+     */
+    @GET("api/iscan/balance")
+    Observable<BaseDataResponse<CoinPusherBalanceDataEntity>> qryUserGameBalance();
+
+    /**
      * @Desc TODO(推币机-查询历史中奖记录)
      * @author 彭石林
      * @parame []

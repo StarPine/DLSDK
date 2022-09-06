@@ -1504,6 +1504,11 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
 
 
     @Override
+    public Observable<BaseDataResponse<CoinPusherBalanceDataEntity>> qryUserGameBalance() {
+        return mHttpDataSource.qryUserGameBalance();
+    }
+
+    @Override
     public Observable<BaseDataResponse<List<CoinPusherRoomHistoryEntity>>> qryCoinPusherRoomHistory(Integer roomId) {
         return mHttpDataSource.qryCoinPusherRoomHistory(roomId);
     }

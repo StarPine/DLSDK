@@ -15,4 +15,13 @@ public interface RetrofitHeadersConfig {
     //任务中心模块
     String TASK_CENTER_URL = "TASK_CENTER_URL:TASK_CENTER_URL";
     String TASK_CENTER_URL_KEY = "TASK_CENTER_URL";
+
+    //推币机请求头配置
+    interface CoinPUsherConfig{
+        //超时时间
+        int API_TIMEOUT = 5;
+        String API_TIMEOUT_HEADER = "API_TIMEOUT_KEY:"+API_TIMEOUT;
+        String API_TIMEOUT_KEY = "API_TIMEOUT_KEY";
+    }
+
 }

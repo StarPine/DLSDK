@@ -20,8 +20,10 @@ public class CustomConstants {
     public static final class CoinPusher {
         //当前推币机模块名
         public static final String MODULE_NAME = "pushCoinGame";
-        //开始落币
+        //落币开始
         public static final String START_WINNING = "startWinning";
+        //落币结束
+        public static final String END_WINNING = "endWinning";
         //落币数量
         public static final String DROP_COINS = "dropCoins";
     }

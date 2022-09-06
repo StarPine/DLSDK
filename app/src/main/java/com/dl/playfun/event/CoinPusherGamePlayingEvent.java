@@ -10,14 +10,17 @@ public class CoinPusherGamePlayingEvent {
     private String state;
     //中奖落币数值
     private Integer goldNumber;
+    //用户当前总余额
+    private Integer totalGold;
 
     public CoinPusherGamePlayingEvent(String state) {
         this.state = state;
     }
 
-    public CoinPusherGamePlayingEvent(String state, Integer goldNumber) {
+    public CoinPusherGamePlayingEvent(String state, Integer goldNumber,Integer totalGold) {
         this.state = state;
         this.goldNumber = goldNumber;
+        this.totalGold = totalGold;
     }
 
     public String getState() {
@@ -34,5 +37,13 @@ public class CoinPusherGamePlayingEvent {
 
     public void setGoldNumber(Integer goldNumber) {
         this.goldNumber = goldNumber;
+    }
+
+    public Integer getTotalGold() {
+        return totalGold;
+    }
+
+    public void setTotalGold(Integer totalGold) {
+        this.totalGold = totalGold;
     }
 }

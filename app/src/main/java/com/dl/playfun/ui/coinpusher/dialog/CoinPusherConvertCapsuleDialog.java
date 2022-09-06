@@ -44,6 +44,10 @@ public class CoinPusherConvertCapsuleDialog extends BaseDialog {
 
     private ItemConvertListener itemConvertListener;
 
+    //兑换弹窗选择明细
+    private String convertItemTitle;
+    private String convertItemContent;
+
     public ItemConvertListener getItemConvertListener() {
         return itemConvertListener;
     }
@@ -52,10 +56,12 @@ public class CoinPusherConvertCapsuleDialog extends BaseDialog {
         this.itemConvertListener = itemConvertListener;
     }
 
-    public CoinPusherConvertCapsuleDialog(Activity activity, List<CoinPusherConverInfoEntity.GoldCoinInfo.GoldCoinItem> itemData) {
+    public CoinPusherConvertCapsuleDialog(Activity activity,String convertItemTitle,String convertItemContent, List<CoinPusherConverInfoEntity.GoldCoinInfo.GoldCoinItem> itemData) {
         super(activity);
         this.mContext = activity;
         super.setMActivity(activity);
+        this.convertItemTitle = convertItemTitle;
+        this.convertItemContent = convertItemContent;
         initView();
         coinPusherCapsuleADetailAdapter.setItemData(itemData);
     }
@@ -66,6 +72,8 @@ public class CoinPusherConvertCapsuleDialog extends BaseDialog {
         binding.imgClose.setOnClickListener(v -> dismiss());
         //支持LiveData绑定xml，数据改变，UI自动会更新
         binding.setLifecycleOwner(this);
+        binding.tvTitle.setText(convertItemTitle);
+        binding.tvTitle2.setText(convertItemContent);
         //表格布局
         LayoutManagers.LayoutManagerFactory layoutManagerFactory = LayoutManagers.grid(3);
         binding.rcvList.setLayoutManager(layoutManagerFactory.create(binding.rcvList));

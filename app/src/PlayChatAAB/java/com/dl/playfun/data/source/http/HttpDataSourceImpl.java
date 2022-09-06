@@ -1292,6 +1292,11 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
+    public Observable<BaseDataResponse<CoinPusherBalanceDataEntity>> qryUserGameBalance() {
+        return apiService.qryUserGameBalance();
+    }
+
+    @Override
     public Observable<BaseDataResponse<List<CoinPusherRoomHistoryEntity>>> qryCoinPusherRoomHistory(Integer roomId) {
         return apiService.qryCoinPusherRoomHistory(roomId);
     }

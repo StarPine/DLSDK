@@ -3,11 +3,16 @@ package com.dl.playfun.ui.coinpusher.dialog;
 import android.app.Activity;
 import android.content.Context;
 import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.UnderlineSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
@@ -46,6 +51,10 @@ public class CoinPusherConvertDialog  extends BaseDialog {
     private CoinPusherConvertAdapter coinPusherConvertAdapter;
 
     private ItemConvertListener itemConvertListener;
+
+    //兑换弹窗选择明细
+    private String convertItemTitle;
+    private String convertItemContent;
 
     public ItemConvertListener getItemConvertListener() {
         return itemConvertListener;
@@ -112,7 +121,7 @@ public class CoinPusherConvertDialog  extends BaseDialog {
                 SEL_COIN_PUSHER_CAPSULE = position;
             }
             //选择购买宝盒明细弹窗
-            CoinPusherConvertCapsuleDialog pusherConvertCapsuleDialog = new CoinPusherConvertCapsuleDialog(getMActivity(),coinPusherCapsuleAdapter.getItemData(SEL_COIN_PUSHER_CAPSULE).getItem());
+            CoinPusherConvertCapsuleDialog pusherConvertCapsuleDialog = new CoinPusherConvertCapsuleDialog(getMActivity(),convertItemTitle,convertItemContent,coinPusherCapsuleAdapter.getItemData(SEL_COIN_PUSHER_CAPSULE).getItem());
             pusherConvertCapsuleDialog.setItemConvertListener(coinPusherDataEntity -> {
                 ToastUtils.showShort(R.string.playfun_coinpusher_text_5);
                 //购买成功数据相加
@@ -141,6 +150,8 @@ public class CoinPusherConvertDialog  extends BaseDialog {
         });
         //购买按钮
         binding.tvSubConvert.setOnClickListener(v -> convertCoinPusherDiamonds(coinPusherConvertAdapter.getItemData(SEL_COIN_PUSHER_CAPSULE).getId()));
+        //空白页面刷新
+        binding.flLayoutEmpty.setOnClickListener(v -> loadData());
     }
     //监听dialog隐藏
     @Override
@@ -186,12 +197,28 @@ public class CoinPusherConvertDialog  extends BaseDialog {
                                 binding.tvCapsuleHint.setText(coinPusherConvertInfo.getGoldTips());
                                 tvTotalMoneyRefresh();
                             }
+                            if(StringUtils.isEmpty(coinPusherConvertInfo.getDiamondsTips())){
+                                binding.tvConverTitle.setText(coinPusherConvertInfo.getDiamondsTips());
+                            }
+                            convertItemTitle = coinPusherConvertInfo.getExchangeTips();
+                            convertItemContent = coinPusherConvertInfo.getExchangeSubtitle();
+
                             //金币兑换砖石
                             if(ObjectUtils.isNotEmpty(coinPusherConvertInfo.getDiamondsList())){
                                 coinPusherConvertAdapter.setItemData(coinPusherConvertInfo.getDiamondsList(),totalMoney);
                             }
+                            emptyListState(0);
+                        }else{
+                            emptyListState(1);
                         }
                     }
+
+                    @Override
+                    public void onError(RequestException e) {
+                        super.onError(e);
+                        emptyListState(1);
+                    }
+
                     @Override
                     public void onComplete() {
                         dismissHud();
@@ -243,6 +270,24 @@ public class CoinPusherConvertDialog  extends BaseDialog {
                         dismissHud();
                     }
                 });
+    }
+
+    private void emptyListState(int state) {
+        if(state == 0){//正常
+            binding.flLayoutEmpty.setVisibility(View.GONE);
+        }else if(state == 1){//级别为空
+                binding.flLayoutEmpty.setVisibility(View.VISIBLE);
+                String emptyText = StringUtils.getString(R.string.playfun_coinpusher_error_text1);
+                String refreshText = StringUtils.getString(R.string.playfun_refresh);
+                SpannableString stringBuilder = new SpannableString(emptyText + refreshText);
+                ForegroundColorSpan whiteSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.gray_light));
+                ForegroundColorSpan redSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.purple_text));
+                stringBuilder.setSpan(whiteSpan, 0, emptyText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                stringBuilder.setSpan(redSpan, stringBuilder.length()-refreshText.length(), stringBuilder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                //添加下划线
+                stringBuilder.setSpan(new UnderlineSpan(), stringBuilder.length()-refreshText.length(), stringBuilder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                binding.tvEmpty.setText(stringBuilder);
+        }
     }
 
     public interface ItemConvertListener{

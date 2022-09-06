@@ -125,7 +125,17 @@ import retrofit2.http.Query;
  */
 
 public interface ApiService {
-    
+
+    /**
+    * @Desc TODO(查询用户当前余额)
+    * @author 彭石林
+    * @parame []
+    * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse<com.dl.playfun.entity.CoinPusherBalanceDataEntity>>
+    * @Date 2022/9/6
+    */
+    @GET("api/iscan/balance")
+    Observable<BaseDataResponse<CoinPusherBalanceDataEntity>> qryUserGameBalance();
+
     /**
     * @Desc TODO(推币机-历史记录)
     * @author 彭石林
@@ -163,6 +173,7 @@ public interface ApiService {
     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
     * @Date 2022/8/24
     */
+    @Headers(RetrofitHeadersConfig.CoinPUsherConfig.API_TIMEOUT_HEADER)
     @POST("api/iscan/act")
     @FormUrlEncoded
     Observable<BaseResponse> playingCoinPusherAct(@Field("roomId")Integer roomId);
@@ -173,6 +184,7 @@ public interface ApiService {
     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
     * @Date 2022/8/24
     */
+    @Headers(RetrofitHeadersConfig.CoinPUsherConfig.API_TIMEOUT_HEADER)
     @FormUrlEncoded
     @POST("api/iscan/throwCoin")
     Observable<BaseDataResponse<CoinPusherBalanceDataEntity>> playingCoinPusherThrowCoin(@Field("roomId")Integer roomId);

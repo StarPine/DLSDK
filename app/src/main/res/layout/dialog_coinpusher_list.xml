@@ -108,6 +108,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/rcv_title"
+                android:visibility="gone"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="8dp">
@@ -122,7 +123,33 @@
                     tools:orientation="horizontal"
                     tools:spanCount="2" />
             </com.scwang.smart.refresh.layout.SmartRefreshLayout>
-
+            <FrameLayout
+                android:id="@+id/fl_layout_empty"
+                android:layout_below="@+id/rcv_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:visibility="gone"
+                >
+                <LinearLayout
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="218dp"
+                        android:layout_height="191dp"
+                        android:src="@drawable/message_conversation_empty"
+                        />
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tv_empty"
+                        android:layout_marginTop="30dp"
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        />
+                </LinearLayout>
+            </FrameLayout>
         </RelativeLayout>
     </LinearLayout>
 

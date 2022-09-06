@@ -411,9 +411,17 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                                             if(CustomConvertUtils.ContainsMessageModuleKey(pushCoinGame,CustomConstants.Message.CUSTOM_MSG_KEY,CustomConstants.CoinPusher.START_WINNING)){
                                                 Log.e("推币机-开始投币","===============");
                                                 RxBus.getDefault().post(new CoinPusherGamePlayingEvent(CustomConstants.CoinPusher.START_WINNING));
+                                            }else if (CustomConvertUtils.ContainsMessageModuleKey(pushCoinGame,CustomConstants.Message.CUSTOM_MSG_KEY,CustomConstants.CoinPusher.END_WINNING)){
+                                                //落币结束
+                                                RxBus.getDefault().post(new CoinPusherGamePlayingEvent(CustomConstants.CoinPusher.END_WINNING));
                                             }else if(CustomConvertUtils.ContainsMessageModuleKey(pushCoinGame,CustomConstants.Message.CUSTOM_MSG_KEY,CustomConstants.CoinPusher.DROP_COINS)){
                                                 Map<String,Object> startWinning = CustomConvertUtils.ConvertMassageModule(pushCoinGame,CustomConstants.Message.CUSTOM_MSG_KEY,CustomConstants.CoinPusher.DROP_COINS,CustomConstants.Message.CUSTOM_MSG_BODY);
-                                                Log.e("推币机-开始落币","==============="+startWinning);
+                                                Log.e("推币机-掉币的消息","==============="+startWinning);
+                                                if(ObjectUtils.isNotEmpty(startWinning)){
+                                                    Integer goldNumber = (Integer) ObjectUtils.getOrDefault(startWinning.get("goldNumber"),0);
+                                                    Integer totalGold = (Integer)ObjectUtils.getOrDefault(startWinning.get("totalGold"),0);
+                                                    RxBus.getDefault().post(new CoinPusherGamePlayingEvent(CustomConstants.CoinPusher.DROP_COINS,goldNumber,totalGold));
+                                                }
                                             }
                                         }
                                     }

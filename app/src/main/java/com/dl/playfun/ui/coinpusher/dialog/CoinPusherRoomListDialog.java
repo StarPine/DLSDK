@@ -3,16 +3,26 @@ package com.dl.playfun.ui.coinpusher.dialog;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.UnderlineSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.ObjectUtils;
+import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.R;
+import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.databinding.DialogCoinpusherListBinding;
@@ -102,7 +112,15 @@ public class CoinPusherRoomListDialog extends BaseDialog {
                 playingCoinPusherStart(deviceInfo.getRoomId());
             }
         });
-
+        //点击空白页面
+        binding.flLayoutEmpty.setOnClickListener(v -> {
+            //级别列表为空
+            if(binding.rcvTitle.getVisibility() == View.GONE){
+                loadData();
+            }else {
+                startRefreshDataInfo();
+            }
+        });
         binding.refreshLayout.setRefreshHeader(new CustomRefreshHeader(getContext()));
         binding.refreshLayout.setEnableLoadMore(false);
         binding.refreshLayout.setOnRefreshListener(v->startRefreshDataInfo());
@@ -176,12 +194,29 @@ public class CoinPusherRoomListDialog extends BaseDialog {
                                  }
                                  coinPusherRoomTagAdapter.setDefaultSelect(idx);
                                  startRefreshDataInfo();
+                                 emptyListState(0);
+                             }else{
+                                 //级别没有数据
+                                 emptyListState(1);
                              }
                          }
                      }
+
+                     @Override
+                     public void onError(RequestException e) {
+                         super.onError(e);
+                         //级别没有数据
+                         emptyListState(1);
+                     }
                  });
     }
-
+    /**
+    * @Desc TODO(根据级别查询设备列表)
+    * @author 彭石林
+    * @parame [tagId]
+    * @return void
+    * @Date 2022/9/6
+    */
     private void qryCoinPusherRoomList(Integer tagId){
         binding.refreshLayout.autoRefresh();
         ConfigManager.getInstance().getAppRepository().qryCoinPusherRoomList(tagId)
@@ -196,7 +231,18 @@ public class CoinPusherRoomListDialog extends BaseDialog {
                         List<CoinPusherRoomDeviceInfo> deviceInfoList = coinPusherRoomInfoEntity.getList();
                         if(ObjectUtils.isNotEmpty(deviceInfoList)){
                             coinPusherRoomListAdapter.setItemData(deviceInfoList);
+                            emptyListState(0);
+                        }else{
+                            coinPusherRoomListAdapter.setItemData(null);
+                            //房间列表没有数据
+                            emptyListState(1);
                         }
+                    }
+                    @Override
+                    public void onError(RequestException e) {
+                        super.onError(e);
+                        //房间列表没有数据
+                        emptyListState(1);
                     }
                     @Override
                     public void onComplete() {
@@ -205,7 +251,13 @@ public class CoinPusherRoomListDialog extends BaseDialog {
                     }
                 });
     }
-
+    /**
+    * @Desc TODO(选择房间)
+    * @author 彭石林
+    * @parame [roomId]
+    * @return void
+    * @Date 2022/9/6
+    */
     private void playingCoinPusherStart(Integer roomId){
         ConfigManager.getInstance().getAppRepository().playingCoinPusherStart(roomId)
                 .doOnSubscribe(this)
@@ -240,6 +292,49 @@ public class CoinPusherRoomListDialog extends BaseDialog {
     private void stopRefreshOrLoadMore(){
         //结束刷新
         binding.refreshLayout.finishRefresh(true);
+    }
+
+    private void emptyListState(int state) {
+        if(state == 0){//正常
+            binding.flLayoutEmpty.setVisibility(View.GONE);
+            if(coinPusherRoomTagAdapter.getItemCount() ==0){
+                binding.rcvTitle.setVisibility(View.VISIBLE);
+            }
+            if(coinPusherRoomListAdapter.getItemCount() > 0){
+                binding.refreshLayout.setVisibility(View.VISIBLE);
+            }
+
+        }else if(state == 1){//级别为空
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) binding.flLayoutEmpty.getLayoutParams();
+            if(coinPusherRoomListAdapter.getItemCount() == 0){
+                layoutParams.topMargin = binding.rcvTitle.getBottom();
+                binding.flLayoutEmpty.setLayoutParams(layoutParams);
+                binding.flLayoutEmpty.setVisibility(View.VISIBLE);
+                binding.refreshLayout.setVisibility(View.GONE);
+                String emptyText = StringUtils.getString(R.string.playfun_coinpusher_room_empty_text);
+                SpannableString stringBuilder = new SpannableString(emptyText);
+                ForegroundColorSpan whiteSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.gray_light));
+                stringBuilder.setSpan(whiteSpan, 0, emptyText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                binding.tvEmpty.setText(stringBuilder);
+            }
+            if(coinPusherRoomTagAdapter.getItemCount() == 0){
+                layoutParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+                layoutParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
+                binding.flLayoutEmpty.setLayoutParams(layoutParams);
+                binding.flLayoutEmpty.setVisibility(View.VISIBLE);
+                binding.rcvTitle.setVisibility(View.GONE);
+                String emptyText = StringUtils.getString(R.string.playfun_coinpusher_error_text1);
+                String refreshText = StringUtils.getString(R.string.playfun_refresh);
+                SpannableString stringBuilder = new SpannableString(emptyText + refreshText);
+                ForegroundColorSpan whiteSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.gray_light));
+                ForegroundColorSpan redSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.purple_text));
+                stringBuilder.setSpan(whiteSpan, 0, emptyText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                stringBuilder.setSpan(redSpan, stringBuilder.length()-refreshText.length(), stringBuilder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                //添加下划线
+                stringBuilder.setSpan(new UnderlineSpan(), stringBuilder.length()-refreshText.length(), stringBuilder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                binding.tvEmpty.setText(stringBuilder);
+            }
+        }
     }
 
     public interface DialogEventListener{
