@@ -61,6 +61,7 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
     GoogleSignInClient googleSignInClient;
     private LoginManager loginManager;
     private PopupWindow popupWindow;
+    private String loginType;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -90,8 +91,8 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
     @Override
     public void onEnterAnimationEnd(Bundle savedInstanceState) {
         super.onEnterAnimationEnd(savedInstanceState);
-        showLastLoginBubble();
         callbackManager = CallbackManager.Factory.create();
+        setLastLoginBubble();
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
         boolean isLoggedIn = accessToken != null && !accessToken.isExpired();
         if (isLoggedIn && loginManager != null) {
@@ -112,7 +113,6 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
                     ToastUtils.showShort(R.string.playfun_warn_agree_terms);
                     return;
                 }
-                hideLastLoginBubble();
                 Collection<String> collection = new ArrayList<String>();
                 collection.add("email");
                 loginManager.logIn(LoginFragment.this, collection);
@@ -181,15 +181,10 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
                     ToastUtils.showShort(R.string.playfun_warn_agree_terms);
                     return;
                 }
-                hideLastLoginBubble();
                 Intent intent = googleSignInClient.getSignInIntent();
                 toGoogleLoginIntent.launch(intent);
             }
         });
-        viewModel.phoneLogin.observe(this,unused -> {
-            hideLastLoginBubble();
-        });
-
     }
 
     @Override
@@ -200,10 +195,20 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
         }
     }
 
-    private void showLastLoginBubble() {
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (hidden){
+            hideLastLoginBubble();
+        }else {
+            showLastLoginBubble();
+        }
+    }
+
+    private void setLastLoginBubble() {
 
         AppRepository appRepository = ConfigManager.getInstance().getAppRepository();
-        String loginType = appRepository.readKeyValue(AppConfig.LOGIN_TYPE);
+        loginType = appRepository.readKeyValue(AppConfig.LOGIN_TYPE);
         if (!ConfigManager.getInstance().getTipMoneyShowFlag()) {
             return;
         }
@@ -214,22 +219,28 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
         popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         popupWindow.setOutsideTouchable(false);
         popupWindow.setFocusable(false);
-        popupWindow.setElevation(50);
-        popupWindow.getContentView().measure(0, 0);
-        int popWidth = popupWindow.getContentView().getMeasuredWidth();
-        int popHeight = popupWindow.getContentView().getMeasuredHeight();
-        if (loginType.equals("facebook")) {
-            popupWindow.showAsDropDown(binding.loginButton, binding.loginButton.getHeight() + popWidth / 2, -binding.loginButton.getHeight() - popHeight / 2);
-        } else if (loginType.equals("google")) {
-            popupWindow.showAsDropDown(binding.ivGoogleLogin, -popWidth / 2 + binding.ivGoogleLogin.getHeight() / 2, -binding.ivGoogleLogin.getHeight() - popHeight);
-        } else if (loginType.equals("phone")) {
-            popupWindow.showAsDropDown(binding.ivPhoneLogin, -popWidth / 2 + binding.ivPhoneLogin.getHeight() / 2, -binding.ivPhoneLogin.getHeight() - popHeight);
-        }
+        showLastLoginBubble();
+
     }
 
     private void hideLastLoginBubble(){
         if (popupWindow != null){
             popupWindow.dismiss();
+        }
+    }
+
+    private void showLastLoginBubble(){
+        if (popupWindow != null){
+            popupWindow.getContentView().measure(0, 0);
+            int popWidth = popupWindow.getContentView().getMeasuredWidth();
+            int popHeight = popupWindow.getContentView().getMeasuredHeight();
+            if (loginType.equals("facebook")) {
+                popupWindow.showAsDropDown(binding.loginButton, binding.loginButton.getHeight() + popWidth / 2, -binding.loginButton.getHeight() - popHeight / 2);
+            } else if (loginType.equals("google")) {
+                popupWindow.showAsDropDown(binding.ivGoogleLogin, -popWidth / 2 + binding.ivGoogleLogin.getHeight() / 2, -binding.ivGoogleLogin.getHeight() - popHeight);
+            } else if (loginType.equals("phone")) {
+                popupWindow.showAsDropDown(binding.ivPhoneLogin, -popWidth / 2 + binding.ivPhoneLogin.getHeight() / 2, -binding.ivPhoneLogin.getHeight() - popHeight);
+            }
         }
     }
 

@@ -64,8 +64,6 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
 
     public SingleLiveEvent<String> getCodeSuccess = new SingleLiveEvent<>();
     public SingleLiveEvent<String> setAreaSuccess = new SingleLiveEvent<>();
-    public SingleLiveEvent<Void> phoneLogin = new SingleLiveEvent<>();
-
 
     private Disposable ItemChooseAreaSubscription;
     //选择地区
@@ -157,7 +155,6 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
             ToastUtils.showShort(R.string.playfun_warn_agree_terms);
             return;
         }
-        phoneLogin.call();
         start(RegisterFragment.class.getCanonicalName());
     }
 
