@@ -174,19 +174,19 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
         coinPusherGamePlayingSubscription = RxBus.getDefault().toObservable(CoinPusherGamePlayingEvent.class)
                 .subscribe(coinPusherGamePlayingEvent -> {
                     if(coinPusherGamePlayingEvent!=null){
-                        //开始落币
                         switch (coinPusherGamePlayingEvent.getState()) {
                             case CustomConstants.CoinPusher.START_WINNING:
+                                //开始落币
                                 gamePlayingState = CustomConstants.CoinPusher.START_WINNING;
                                 gameUI.cancelDownTimeEvent.postValue(null);
-                                gameUI.playingBtnEnable.setValue(false);
+                                gameUI.playingBtnEnable.postValue(true);
                                 break;
                             case CustomConstants.CoinPusher.END_WINNING:
                                 //落币结束
                                 gamePlayingState = null;
                                 //重新开始落币
                                 gameUI.resetDownTimeEvent.postValue(null);
-                                gameUI.playingBtnEnable.setValue(true);
+                                gameUI.playingBtnEnable.postValue(false);
                                 break;
                             case CustomConstants.CoinPusher.DROP_COINS:
                                 gamePlayingState = null;

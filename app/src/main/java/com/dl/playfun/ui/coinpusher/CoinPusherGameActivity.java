@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.blankj.utilcode.util.ColorUtils;
@@ -314,6 +315,14 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
             }else{
                 binding.btnPlaying.setEnabled(true);
                 binding.btnPlaying.setTextColor(ColorUtils.getColor(R.color.black));
+            }
+        });
+        //取消倒计时
+        viewModel.gameUI.cancelDownTimeEvent.observe(this, new Observer<Void>() {
+            @Override
+            public void onChanged(Void unused) {
+                //取消倒计时
+                cancelDownTimer();
             }
         });
     }
