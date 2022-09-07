@@ -331,29 +331,6 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                 });
     }
 
-    //获取聊天照片规则
-    public void getMessageRule(){
-        model.getMessageRule()
-                .doOnSubscribe(this)
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .subscribe(new BaseObserver<BaseDataResponse<List<MessageRuleEntity>>>() {
-
-                    @Override
-                    public void onSuccess(BaseDataResponse<List<MessageRuleEntity>> listBaseDataResponse) {
-                        List<MessageRuleEntity> listMessage = listBaseDataResponse.getData();
-                        if(listMessage!=null){
-                            uc.resultMessageRule.setValue(listMessage);
-                        }
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-    }
-
     //获取用户聊天相册
     public void getPhotoAlbum(Integer userId){
         model.getPhotoAlbum(userId)
@@ -971,8 +948,6 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<List<EvaluateItemEntity>> AlertMEvaluate = new SingleLiveEvent<>();
         //删除评价窗体
         public SingleLiveEvent<Void> removeEvaluateMessage = new SingleLiveEvent<>();
-        //根据聊天规则弹出相册、评论
-        public SingleLiveEvent<List<MessageRuleEntity>> resultMessageRule = new SingleLiveEvent<>();
         //发送礼物失败。充值钻石
         public SingleLiveEvent<Void> sendUserGiftError = new SingleLiveEvent<>();
         //首次收入弹窗展示

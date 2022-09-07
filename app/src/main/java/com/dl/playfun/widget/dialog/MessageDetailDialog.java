@@ -14,9 +14,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.databinding.DataBindingUtil;
+
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
 import com.dl.playfun.R;
+import com.dl.playfun.databinding.DialogCheckImgVideoBinding;
+import com.dl.playfun.databinding.DialogCoinpusherHelpBinding;
 import com.dl.playfun.utils.StringUtil;
 
 /**
@@ -32,39 +36,40 @@ public class MessageDetailDialog {
      * @parame [context, touchOutside, audioCallHintOnClickListener]
      * @Date 2022/3/1
      */
-    public static Dialog CheckImgViewFile(Context context, boolean touchOutside, AudioCallHintOnClickListener audioCallHintOnClickListener) {
+    public static Dialog CheckImgViewFile(Context context, boolean touchOutside, SelectedSnapshotListener selectedSnapshotListener) {
         Dialog dialog = new Dialog(context);
         dialog.setCanceledOnTouchOutside(touchOutside);
         dialog.setCancelable(true);
-        View view = View.inflate(context, R.layout.dialog_check_img_video, null);
-
-        LinearLayout video_layout = view.findViewById(R.id.video_layout);
-        LinearLayout image_layout = view.findViewById(R.id.image_layout);
-        FrameLayout cancel_layout = view.findViewById(R.id.cancel_layout);
-        video_layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                audioCallHintOnClickListener.check1OnClick();
+        LayoutInflater inflater = LayoutInflater.from(context);
+        DialogCheckImgVideoBinding binding = DataBindingUtil.inflate(inflater, R.layout.dialog_check_img_video, null, false);
+        binding.tvPhoto.setOnClickListener(v -> {
+            dialog.dismiss();
+            if(selectedSnapshotListener!=null){
+                selectedSnapshotListener.checkPhoto(false);
             }
         });
-        image_layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                audioCallHintOnClickListener.check2OnClick();
+        binding.tvPhotoCoin.setOnClickListener(v -> {
+            dialog.dismiss();
+            if(selectedSnapshotListener!=null){
+                selectedSnapshotListener.checkPhoto(true);
             }
         });
-        cancel_layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
+        binding.tvVideo.setOnClickListener(v -> {
+            dialog.dismiss();
+            if(selectedSnapshotListener!=null){
+                selectedSnapshotListener.checkVideo(false);
             }
         });
-
+        binding.tvVideoCoin.setOnClickListener(v -> {
+            dialog.dismiss();
+            if(selectedSnapshotListener!=null){
+                selectedSnapshotListener.checkVideo(true);
+            }
+        });
+        dialog.getWindow().setWindowAnimations(R.style.BottomDialog_Animation);
         //设置背景透明,去四个角
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        dialog.setContentView(view);
+        dialog.setContentView(binding.getRoot());
         //设置宽度充满屏幕
         Window window = dialog.getWindow();
         window.setGravity(Gravity.BOTTOM); //可设置dialog的位置
@@ -318,5 +323,12 @@ public class MessageDetailDialog {
         void check1OnClick();
 
         void check2OnClick();
+    }
+
+    public interface SelectedSnapshotListener {
+        //选择照片-- true 钻石 false 普通
+        void checkPhoto(boolean snapshot);
+        //选择影片-- true 钻石 false 普通
+        void checkVideo(boolean snapshot);
     }
 }

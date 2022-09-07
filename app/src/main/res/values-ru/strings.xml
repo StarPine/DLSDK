@@ -993,6 +993,8 @@
 
     <string name="playfun_message_deatail_check_video">Выберите видео</string>
     <string name="playfun_message_deatail_check_img">Выберите фотографию</string>
+    <string name="playfun_message_deatail_check_img_coin">鑽石照片</string>
+    <string name="playfun_message_deatail_check_video_coin">鑽石影片</string>
     <string name="playfun_coin_custom_text">Даймонд прибудут позже!</string>
     <string name="playfun_coustom_time_picker_text">Время активности будут выбрано только в течение одной недели</string>
     <string name="auth_external_login_facebook">Фейсбук</string>

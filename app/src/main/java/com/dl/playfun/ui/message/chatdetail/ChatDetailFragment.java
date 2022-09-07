@@ -120,7 +120,7 @@ import me.yokeyword.fragmentation.ISupportFragment;
 /**
  * @author wulei
  */
-public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBinding, ChatDetailViewModel> implements CustomChatInputFragment.CustomChatInputFragmentListener, InputView.SendOnClickCallback {
+public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBinding, ChatDetailViewModel> implements InputView.SendOnClickCallback {
     public static final String CHAT_INFO = "chatInfo";
 
     public static final String TAG = "ChatDetailFragment";
@@ -136,7 +136,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     //SVGA动画view
     private SVGAImageView giftView;
 
-    private GiftBagDialog giftBagDialog;
     //对方用户id
     private Integer toUserDataId = null;
     private C2CChatPresenter presenter;
@@ -220,7 +219,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         int userId = getTaUserIdIM(); //获取当前聊天对象的ID
         if (userId != 0) {
             //加载聊天规则
-            viewModel.getMessageRule();
             //聊天价格配置
             viewModel.getPriceConfig(userId);
             viewModel.getPhotoAlbum(getTaUserIdIM());
@@ -358,16 +356,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             public void onChanged(Void unused) {
                 paySelectionboxChoose(true);
 
-            }
-        });
-        viewModel.uc.resultMessageRule.observe(this, new Observer<List<MessageRuleEntity>>() {
-            @Override
-            public void onChanged(List<MessageRuleEntity> messageRuleEntities) {
-                //遍历聊天规则
-                for (MessageRuleEntity messageRuleEntity : messageRuleEntities) {
-                    //相册
-//                    askPhotoData(messageRuleEntity);
-                }
             }
         });
         //删除评价
@@ -576,30 +564,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         });
     }
 
-    private void askPhotoData(MessageRuleEntity messageRuleEntity) {
-        if (messageRuleEntity.getType().intValue() == 1) {
-            if (messageRuleEntity.getRuleType() == 1) {//按时间
-                Integer ruleValue = messageRuleEntity.getRuleValue();
-                if (ruleValue != null && ruleValue.intValue() > 0) {
-                    String eventId = mChatInfo.getId() + "_photoAlbum";
-                    LocalMessageIMEntity localMessageIMEntity = LocalDataSourceImpl.getInstance().readLocalMessageIM(eventId);
-                    if (localMessageIMEntity == null) {
-                        viewModel.getPhotoAlbum(getTaUserIdIM());
-                    } else {
-                        long sendTime = localMessageIMEntity.getSendTime();
-                        long localTime = System.currentTimeMillis();
-                        if ((localTime / 1000) - (sendTime / 1000) > ruleValue.intValue()) {//满足发送时间
-                            //LocalDataSourceImpl.getInstance().removeLocalMessage(eventId);
-                            //removeLocalMessage(localMessageIMEntity,eventId);
-                            //插入相册
-                            viewModel.getPhotoAlbum(getTaUserIdIM());
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     private void showMoreMenu(int userId) {
 
         View view = getLayoutInflater().inflate(R.layout.pop_chat_more_menu, null);
@@ -671,8 +635,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         binding.chatLayout.setPresenter(presenter);
         inputLayout = binding.chatLayout.getInputLayout();
 //        inputLayout.enableAudioCall();
-        CustomChatInputFragment customChatInputFragment = new CustomChatInputFragment();
-        inputLayout.replaceMoreInput(customChatInputFragment);
         //设置客服聊天隐藏
 
         inputLayout.setSendOnClickCallbacks(this);//添加发送按钮拦截事件
@@ -720,14 +682,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         messageLayout.setAvatarRadius(50);
         // 设置头像大小
         messageLayout.setAvatarSize(new int[]{48, 48});
-        // 从 ChatLayout 里获取 NoticeLayout
-        //NoticeLayout noticeLayout = binding.chatLayout.getNoticeLayout();
-        // 可以使通知区域一致展示
-        //noticeLayout.alwaysShow(true);
-        // 设置通知主题
-        // noticeLayout.getContent().setText("當前聊天對象可能是機器人！");
-        // 设置通知提醒文字
-        //noticeLayout.getContentExtra().setText("参看有奖");
 
         messageLayout.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -972,9 +926,8 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         super.onPause();
         AudioPlayer.getInstance().stopPlay();
     }
-
-    @Override
-    public void onPictureActionClick() {
+    //选择照片 snapshot 是否是付费
+    public void onPictureActionClick(boolean snapshot) {
         PictureSelectorUtil.selectImage(mActivity, true, 1, new OnResultCallbackListener<LocalMedia>() {
             @Override
             public void onResult(List<LocalMedia> result) {
@@ -986,9 +939,8 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             }
         });
     }
-
-    @Override
-    public void onVideoActionClick() {
+    //选择视频 snapshot 是否是付费
+    public void onVideoActionClick(boolean snapshot) {
         PictureSelectorUtil.selectVideo(mActivity, true, 1, new OnResultCallbackListener<LocalMedia>() {
             @Override
             public void onResult(List<LocalMedia> result) {
@@ -1019,54 +971,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         });
     }
 
-    @Override
-    public void onBurnActionClick() {
-        PictureSelectorUtil.selectImage(mActivity, true, 1, new OnResultCallbackListener<LocalMedia>() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void onResult(List<LocalMedia> result) {
-                PhotoReviewFragment photoReviewFragment = new PhotoReviewFragment();
-                photoReviewFragment.setArguments(PhotoReviewFragment.getStartBundle(result.get(0).getCompressPath()));
-                startForResult(photoReviewFragment, 2001);
-            }
-
-            @Override
-            public void onCancel() {
-            }
-        });
-
-    }
-
-    @Override
-    public void onRedPackageActionClick() {
-        System.out.println();
-    }
-
-    @Override
-    public void onCoinRedPackageActionClick() {
-        if (mChatInfo == null) {
-            return;
-        }
-        if (mChatInfo.getId() != null && mChatInfo.getId().equals(AppConfig.CHAT_SERVICE_USER_ID)) {
-            return;
-        }
-        Bundle bundle = SendCoinRedPackageFragment.getStartBundle(getTaUserIdIM());
-        SendCoinRedPackageFragment sendCoinRedPackageFragment = new SendCoinRedPackageFragment();
-        sendCoinRedPackageFragment.setArguments(bundle);
-        startForResult(sendCoinRedPackageFragment, 2002);
-    }
-
-    @Override
-    public void onMicActionClick() {
-        if (mChatInfo != null) {
-            try {
-                viewModel.checkConnMic(getTaUserIdIM());
-            } catch (Exception e) {
-                e.printStackTrace();
-                ToastUtils.showShort("error");
-            }
-        }
-    }
 
     @Override
     public void onFragmentResult(int requestCode, int resultCode, Bundle data) {
@@ -1131,21 +1035,21 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
 
     @Override
     public void onClickPhoneVideo() {//点击选中图片、视频
-        MessageDetailDialog.CheckImgViewFile(mActivity, true, new MessageDetailDialog.AudioCallHintOnClickListener() {
+        MessageDetailDialog.CheckImgViewFile(mActivity, true, new MessageDetailDialog.SelectedSnapshotListener() {
             @Override
-            public void check1OnClick() {
+            public void checkPhoto(boolean snapshot) {
+                //选择图片
+                onPictureActionClick(snapshot);
+            }
+
+            @Override
+            public void checkVideo(boolean snapshot) {
                 if (Status.mIsShowFloatWindow){
                     me.goldze.mvvmhabit.utils.ToastUtils.showShort(R.string.audio_in_call);
                     return;
                 }
                 //选择视频
-                onVideoActionClick();
-            }
-
-            @Override
-            public void check2OnClick() {
-                //选择图片
-                onPictureActionClick();
+                onVideoActionClick(snapshot);
             }
         }).show();
 //        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -1214,7 +1118,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     }
 
     public void giftBagDialogShow() {
-        giftBagDialog = new GiftBagDialog(getContext(), false, viewModel.maleBalance, 0);
+        GiftBagDialog giftBagDialog = new GiftBagDialog(getContext(), false, viewModel.maleBalance, 0);
         giftBagDialog.setGiftOnClickListener(new GiftBagDialog.GiftOnClickListener() {
             @Override
             public void sendGiftClick(Dialog dialog, int number, GiftBagEntity.giftEntity giftEntity) {
