@@ -88,16 +88,12 @@ public class TaskCenterViewModel extends BaseViewModel<AppRepository> {
     public ObservableList<TaskCenterItemViewModel> daily_task_observableList = new ObservableArrayList<>();
     public ItemBinding<TaskCenterItemViewModel> daily_task_itemBinding = ItemBinding.of(BR.viewModel, R.layout.task_center_item_fragment);
     //积分商品列表
-    public BindingRecyclerViewAdapter<TaskBonusItemViewModel> BonusGoods_adapter = new BindingRecyclerViewAdapter<>();
-    public ObservableList<TaskBonusItemViewModel> BonusGoods_observableList = new ObservableArrayList<>();
-    public ItemBinding<TaskBonusItemViewModel> BonusGoods_itemBinding = ItemBinding.of(BR.viewModel, R.layout.task_center_bonus_goods_fragment);
     public ObservableField<Boolean> isShowSign = new ObservableField<>(true);
     public ObservableField<Boolean> isUnfold = new ObservableField<>(false);
     public ObservableField<Integer> goldMoney = new ObservableField<>(0);
     public UIChangeObservable uc = new UIChangeObservable();
     //福袋
     public ObservableField<List<TaskAdEntity>> adItemEntityObservableField = new ObservableField<>(new ArrayList<>());
-    public List<TaskAdEntity> adItemEntityListObservableField = new ArrayList<>();
     //奖励状态-红点
     private final Map<String, Integer> rewardStausMap = new HashMap<>();
     //用户邀请码
@@ -105,34 +101,6 @@ public class TaskCenterViewModel extends BaseViewModel<AppRepository> {
     public EjectEntity $ejectEntity;
     //连续已经签到N天
     public ObservableField<String> SignDayNumEd = new ObservableField<>("0天");
-    //跳转福袋页面
-    public String $goodBagUrl = null;
-    public ObservableField<Boolean> adItemEntityListEmpty = new ObservableField<>(false); //
-
-    //眺望福袋界面
-    public BindingCommand toWebFudaiClickCommand = new BindingCommand(new BindingAction() {
-        @Override
-        public void call() {
-            if (!StringUtils.isEmpty($goodBagUrl)) {
-//                Bundle bundle = new Bundle();
-//                bundle.putString("link", $goodBagUrl);
-//                start(FukubukuroFragment.class.getCanonicalName(), bundle);
-                RxBus.getDefault().post(new TaskMainTabEvent(true));
-            }
-        }
-    }); //
-
-    //banner点击
-    public BindingCommand<Integer> onBannerClickCommand = new BindingCommand<>(index -> {
-        try {
-            TaskAdEntity taskAdEntity = adItemEntityObservableField.get().get(index);
-            Bundle bundle = new Bundle();
-            bundle.putString("link", taskAdEntity.getLink());
-            start(FukuokaViewFragment.class.getCanonicalName(), bundle);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    });
     //重新刷新页面
     public BindingCommand emptyRetryOnClickCommand = new BindingCommand(new BindingAction() {
         @Override
@@ -162,16 +130,6 @@ public class TaskCenterViewModel extends BaseViewModel<AppRepository> {
             Bundle bundle = new Bundle();
             bundle.putInt("sel_idx", 0);
             start(TaskExchangeRecordFragment.class.getCanonicalName(), bundle);
-        }
-    });
-    //跳转金币明细
-    public BindingCommand ocClicktoGold = new BindingCommand(new BindingAction() {
-        @Override
-        public void call() {
-            //查询钻石兑换积分列表
-            getExchangeIntegraListData();
-            //uc.DialogExchangeIntegral.call();
-            //start(GoldDetailFragment.class.getCanonicalName());
         }
     });
     //点击签到
@@ -245,22 +203,6 @@ public class TaskCenterViewModel extends BaseViewModel<AppRepository> {
 
     }
 
-    /**
-     * @return void
-     * @Desc TODO(跳转福袋页面)
-     * @author 彭石林
-     * @parame []
-     * @Date 2021/9/30
-     */
-    public void toFukubukuro() {
-        if (!StringUtils.isEmpty($goodBagUrl)) {
-//            Bundle bundle = new Bundle();
-//            bundle.putString("link", $goodBagUrl);
-//            start(FukubukuroFragment.class.getCanonicalName(), bundle);
-            RxBus.getDefault().post(new TaskMainTabEvent(true));
-        }
-    }
-
     protected void nextPage() {
         currentPage++;
         loadDatas(currentPage);
@@ -279,80 +221,7 @@ public class TaskCenterViewModel extends BaseViewModel<AppRepository> {
 
     public void loadDatas(int page) {
         getTaskConfig();
-        getBonusGoods(page);
-        taskAdList();
         getTaskListConfig();
-    }
-
-    //获取任务中心广告位
-    public void taskAdList() {
-        model.taskAdList()
-                .doOnSubscribe(this)
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseListDataResponse<TaskAdEntity>>() {
-                    @Override
-                    public void onSuccess(BaseListDataResponse<TaskAdEntity> taskAdEntityBaseListDataResponse) {
-                        List<TaskAdEntity> list = taskAdEntityBaseListDataResponse.getData().getData();
-                        List<TaskAdEntity> adList = new ArrayList<TaskAdEntity>();
-                        List<TaskAdEntity> adList2 = new ArrayList<TaskAdEntity>();
-                        if (ObjectUtils.isEmpty(list)) {
-                            adItemEntityListEmpty.set(true);
-                        } else {
-                            adItemEntityListEmpty.set(false);
-                        }
-                        // 广告类型 1banner图 2卡片图
-                        for (TaskAdEntity taskAdEntity : list) {
-                            if (taskAdEntity.getAdType() == 1) {
-                                adList.add(taskAdEntity);
-                            } else if (taskAdEntity.getAdType() == 2) {
-                                adList2.add(taskAdEntity);
-                                adItemEntityListObservableField.add(taskAdEntity);
-                            }
-                        }
-
-                        if (!adList.isEmpty()) {
-                            adItemEntityObservableField.set(adList);
-                        }
-                        if (!adList2.isEmpty()) {
-                            uc.loadAdList.setValue(adList2);
-                        }
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        dismissHUD();
-                    }
-                });
-
-    }
-
-    //获取积分商品列表
-    public void getBonusGoods(int page) {
-        model.getBonusGoods(page)
-                .doOnSubscribe(this)
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .subscribe(new BaseObserver<BaseListDataResponse<BonusGoodsEntity>>() {
-                    @Override
-                    public void onSuccess(BaseListDataResponse<BonusGoodsEntity> bonusGoodsEntityList) {
-                        if (currentPage == 1) {
-                            BonusGoods_observableList.clear();
-                        }
-                        for (BonusGoodsEntity bonusGoodsEntity : bonusGoodsEntityList.getData().getData()) {
-                            TaskBonusItemViewModel taskBonusItemViewModel = new TaskBonusItemViewModel(TaskCenterViewModel.this, bonusGoodsEntity);
-                            BonusGoods_observableList.add(taskBonusItemViewModel);
-                        }
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        dismissHUD();
-                        stopRefreshOrLoadMore();
-                    }
-                });
-
     }
 
 
@@ -462,8 +331,6 @@ public class TaskCenterViewModel extends BaseViewModel<AppRepository> {
                     public void onSuccess(BaseDataResponse<TaskConfigEntity> taskConfigEntityBaseDataResponse) {
                         isShowEmpty.set(false);
                         TaskConfigEntity taskConfigEntity = taskConfigEntityBaseDataResponse.getData();
-                        $goodBagUrl = taskConfigEntity.getGoodBagUrl();
-                        AppConfig.FukubukuroWebUrl = $goodBagUrl;
                         EjectEntity ejectEntity = new EjectEntity(taskConfigEntity.getIsSignIn(), taskConfigEntity.getDayNumber(), taskConfigEntity.getMaleConfig(), taskConfigEntity.getFemaleConfig());
                         rewardStausMap.put(IS_SINGIN, taskConfigEntity.getIsSignIn() == 1 ? 0 : 1);
                         if (rewardStausMap.containsValue(1)) {//因为请求是异步的，所以要在这里调下小红点
@@ -587,74 +454,6 @@ public class TaskCenterViewModel extends BaseViewModel<AppRepository> {
                 });
     }
 
-    /*
-     * @Desc TODO(查询钻石兑换积分列表数据)
-     * @author 彭石林
-     * @parame []
-     * @return void
-     * @Date 2021/9/23
-     */
-    public void getExchangeIntegraListData() {
-        model.getExchangeIntegraListData()
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .doOnSubscribe(disposable -> {
-                    showHUD();
-                })
-                .subscribe(new BaseObserver<BaseDataResponse<ExchangeIntegraOuterEntity>>() {
-                    @Override
-                    public void onSuccess(BaseDataResponse<ExchangeIntegraOuterEntity> exchangeIntegraEntityBaseListDataResponse) {
-                        dismissHUD();
-                        ExchangeIntegraOuterEntity listData = exchangeIntegraEntityBaseListDataResponse.getData();
-                        if (!ObjectUtils.isEmpty(listData)) {
-                            if (!ObjectUtils.isEmpty(listData.getData())) {
-                                uc.DialogExchangeIntegral.postValue(listData);
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        dismissHUD();
-                    }
-                });
-    }
-
-    /**
-     * @return void
-     * @Desc TODO(钻石购买积分)
-     * @author 彭石林
-     * @parame [id]
-     * @Date 2021/9/23
-     */
-    public void ExchangeIntegraBuy(Integer id, int TotalCoin, int Coin) {
-        model.ExchangeIntegraBuy(id)
-                .doOnSubscribe(this)
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseResponse>() {
-                    @Override
-                    public void onSuccess(BaseResponse baseResponse) {
-                        goldMoney.set(TotalCoin + Coin);
-                        ToastUtils.showShort(R.string.dialog_exchange_integral_success);
-                    }
-
-                    @Override
-                    public void onError(RequestException e) {
-                        if (e.getMessage() != null) {
-                            ToastUtils.showShort(e.getMessage());
-                        }
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        dismissHUD();
-                    }
-                });
-
-    }
 
     public class UIChangeObservable {
         //加载任务中心系统配置
@@ -673,10 +472,6 @@ public class TaskCenterViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<Boolean> UnfoldEvent = new SingleLiveEvent<>();
         SingleLiveEvent<EjectSignInEntity> reporSignInSuccess = new SingleLiveEvent<>();
         SingleLiveEvent<EjectEntity> EjectDay = new SingleLiveEvent<>();
-        //广告栏目加载成功
-        public SingleLiveEvent<List<TaskAdEntity>> loadAdList = new SingleLiveEvent<>();
-        //弹出钻石兑换弹窗
-        public SingleLiveEvent<ExchangeIntegraOuterEntity> DialogExchangeIntegral = new SingleLiveEvent<>();
         //弹出充值钻石弹窗
         public SingleLiveEvent<Void> DialogCoinExchangeIntegral = new SingleLiveEvent<>();
     }

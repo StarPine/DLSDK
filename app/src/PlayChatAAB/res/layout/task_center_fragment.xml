@@ -77,50 +77,10 @@
                                 android:scaleType="fitXY"
                                 android:src="@drawable/task_title" />
 
-                            <LinearLayout
-                                android:id="@+id/task_title_img_layout"
-                                android:layout_width="match_parent"
-                                android:layout_height="41dp"
-                                android:layout_marginTop="200dp"
-                                android:orientation="horizontal">
-
-                                <LinearLayout
-                                    android:layout_width="180dp"
-                                    android:layout_height="match_parent"
-                                    android:gravity="center"
-                                    android:background="@drawable/task_img_title1" >
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textStyle="bold"
-                                        android:textSize="@dimen/text_size_big"
-                                        android:textColor="@color/purple2"
-                                        android:text="@string/playfun_task_center"/>
-
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:layout_width="180dp"
-                                    android:layout_height="match_parent"
-                                    android:gravity="center"
-                                    android:background="@drawable/task_img_title2"
-                                    binding:onClickCommand="@{viewModel.toWebFudaiClickCommand}">
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="5dp"
-                                        android:textStyle="bold"
-                                        android:textSize="@dimen/text_size_small_12"
-                                        android:textColor="@color/coffee"
-                                        android:text="@string/playfun_lucky_bag"/>
-
-                                </LinearLayout>
-
-                            </LinearLayout>
                             <RelativeLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_below="@+id/task_title_img_layout"
+                                android:layout_marginTop="200dp"
                                 android:background="@color/transparent">
 
                                 <LinearLayout
@@ -130,10 +90,10 @@
                                     android:background="@drawable/task_img_content_back2">
 
                                     <RelativeLayout
-                                        android:layout_marginTop="12dp"
                                         android:layout_width="match_parent"
                                         android:layout_height="318dp"
                                         android:layout_marginStart="14dp"
+                                        android:layout_marginTop="12dp"
                                         android:layout_marginEnd="14dp"
                                         android:layout_marginBottom="16dp"
                                         android:background="@drawable/task_img_content_back">
@@ -167,8 +127,7 @@
                                             android:layout_marginTop="10dp"
                                             android:layout_marginEnd="10dp"
                                             binding:drawable_color="@{@color/white}"
-                                            binding:drawable_cornersRadius="@{13}"
-                                            binding:onClickCommand="@{viewModel.ocClicktoGold}">
+                                            binding:drawable_cornersRadius="@{13}">
 
                                             <ImageView
                                                 android:id="@+id/icon1"
@@ -194,24 +153,12 @@
 
                                             <FrameLayout
                                                 android:id="@+id/task_right_img"
-                                                android:layout_width="wrap_content"
-                                                android:layout_height="wrap_content"
+                                                android:layout_width="22dp"
+                                                android:layout_height="22dp"
                                                 android:layout_alignParentRight="true"
                                                 android:layout_centerVertical="true"
-                                                android:layout_marginEnd="2dp">
-
-                                                <ImageView
-                                                    android:layout_width="22dp"
-                                                    android:layout_height="22dp"
-                                                    android:background="@drawable/task_btn_push_back"
-                                                    android:scaleType="fitXY" />
-
-                                                <ImageView
-                                                    android:layout_width="16dp"
-                                                    android:layout_height="16dp"
-                                                    android:layout_gravity="center"
-                                                    android:background="@drawable/ic_task_add" />
-                                            </FrameLayout>
+                                                android:layout_marginEnd="2dp"
+                                                android:visibility="invisible"></FrameLayout>
                                         </RelativeLayout>
 
                                         <LinearLayout
@@ -277,13 +224,13 @@
                                                         android:src="@drawable/dialog_sign_gold_coins" />
 
                                                     <TextView
-                                                        android:includeFontPadding="false"
                                                         android:id="@+id/day2_fen"
                                                         android:layout_width="wrap_content"
                                                         android:layout_height="wrap_content"
                                                         android:layout_below="@+id/day2_img"
                                                         android:layout_centerInParent="true"
                                                         android:layout_marginTop="-1dp"
+                                                        android:includeFontPadding="false"
                                                         android:text="+10"
                                                         android:textColor="#FFB06BA9"
                                                         android:textSize="17sp"
@@ -306,6 +253,7 @@
                                                         android:layout_centerInParent="true"
                                                         android:layout_marginTop="24dp"
                                                         android:src="@drawable/dialog_sign_gold_coins" />
+
                                                     <TextView
                                                         android:id="@+id/day3_fen"
                                                         android:layout_width="wrap_content"
@@ -379,13 +327,13 @@
                                                         android:src="@drawable/dialog_sign_gold_coins" />
 
                                                     <TextView
-                                                        android:includeFontPadding="false"
                                                         android:id="@+id/day5_fen"
                                                         android:layout_width="wrap_content"
                                                         android:layout_height="wrap_content"
                                                         android:layout_below="@+id/day5_img"
                                                         android:layout_centerInParent="true"
                                                         android:layout_marginTop="-1dp"
+                                                        android:includeFontPadding="false"
                                                         android:text="+10"
                                                         android:textColor="#FFB06BA9"
                                                         android:textSize="17sp"
@@ -411,13 +359,13 @@
                                                         android:src="@drawable/dialog_sign_gold_coins" />
 
                                                     <TextView
-                                                        android:includeFontPadding="false"
                                                         android:id="@+id/day6_fen"
                                                         android:layout_width="wrap_content"
                                                         android:layout_height="wrap_content"
                                                         android:layout_below="@+id/day6_img"
                                                         android:layout_centerInParent="true"
                                                         android:layout_marginTop="-1dp"
+                                                        android:includeFontPadding="false"
                                                         android:text="+10"
                                                         android:textColor="#FFB06BA9"
                                                         android:textSize="17sp"
@@ -439,6 +387,7 @@
                                                         android:layout_centerInParent="true"
                                                         android:layout_marginTop="24dp"
                                                         android:visibility="invisible" />
+
                                                     <TextView
                                                         android:id="@+id/day7_fen2"
                                                         android:layout_width="wrap_content"
@@ -446,14 +395,15 @@
                                                         android:layout_centerVertical="true"
                                                         android:layout_marginBottom="2dp"
                                                         android:visibility="visible" />
+
                                                     <TextView
                                                         android:id="@+id/day7_fen"
                                                         android:layout_width="wrap_content"
                                                         android:layout_height="wrap_content"
+                                                        android:layout_below="@+id/day7_fen2"
                                                         android:layout_centerVertical="true"
                                                         android:layout_marginStart="12dp"
                                                         android:layout_marginBottom="4dp"
-                                                        android:layout_below="@+id/day7_fen2"
                                                         android:gravity="center"
                                                         android:text="+30"
                                                         android:textColor="#FFB06BA9"
@@ -509,15 +459,16 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="124dp"
                                         android:background="@drawable/daily_task_img_back" />
+
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="@string/playfun_daily_task"
-                                        android:textStyle="bold"
-                                        android:textSize="@dimen/text_size_big_22"
                                         android:layout_centerHorizontal="true"
                                         android:layout_marginTop="35dp"
-                                        android:textColor="@color/coffee2"/>
+                                        android:text="@string/playfun_daily_task"
+                                        android:textColor="@color/coffee2"
+                                        android:textSize="@dimen/text_size_big_22"
+                                        android:textStyle="bold" />
 
                                     <androidx.recyclerview.widget.RecyclerView
                                         android:id="@+id/daily_task_rx"
@@ -547,7 +498,7 @@
                                         android:layout_below="@+id/xian"
                                         android:layout_centerInParent="true"
                                         android:layout_marginTop="10dp"
-                                        android:layout_marginBottom="12dp"
+                                        android:layout_marginBottom="97dp"
                                         android:orientation="horizontal"
                                         binding:onClickCommand="@{viewModel.ocClickUnfold}">
 
@@ -561,176 +512,9 @@
                                             android:layout_width="14dp"
                                             android:layout_height="9dp"
                                             android:layout_gravity="center"
-                                            android:background="@{viewModel.isUnfold?@drawable/ic_fold:@drawable/ic_unfod}"
-                                             />
+                                            android:background="@{viewModel.isUnfold?@drawable/ic_fold:@drawable/ic_unfod}" />
                                     </LinearLayout>
 
-                                </RelativeLayout>
-
-                                <RelativeLayout
-                                    android:paddingBottom="19dp"
-                                    android:id="@+id/task_fudai_layout"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_below="@+id/task_new_layout"
-                                    android:layout_marginTop="5dp"
-                                    binding:drawable_color="@{@color/white}"
-                                    binding:drawable_cornersRadius="@{1}"
-                                    android:visibility="@{viewModel.adItemEntityListEmpty?View.GONE:View.VISIBLE}">
-
-                                    <TextView
-                                        android:id="@+id/task_ad_title"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginStart="14dp"
-                                        android:layout_marginTop="10dp"
-                                        android:text="@string/playfun_get_free_gifts"
-                                        android:textColor="#ff43435e"
-                                        android:textSize="17sp" />
-
-                                    <com.youth.banner.Banner
-                                        android:id="@+id/banner"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="125dp"
-                                        android:layout_below="@+id/task_ad_title"
-                                        android:layout_marginStart="14dp"
-                                        android:layout_marginTop="6dp"
-                                        android:layout_marginEnd="14dp"
-                                        android:visibility="@{viewModel.adItemEntityObservableField.size()>0?View.VISIBLE:View.GONE}"
-                                        app:image_scale_type="center_crop"
-                                        app:banner_default_image="@drawable/img_vip_sub_banner_default"
-                                        binding:BannerTaskAdData="@{viewModel.adItemEntityObservableField}"
-                                        binding:onBannerClickCommand="@{viewModel.onBannerClickCommand}" />
-
-                                    <ImageView
-                                        android:id="@+id/ad_img"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="125dp"
-                                        android:layout_below="@+id/banner"
-                                        android:layout_marginStart="14dp"
-                                        android:layout_marginTop="11dp"
-                                        android:layout_marginEnd="14dp"
-                                        android:scaleType="centerCrop"
-                                        android:visibility="gone" />
-
-                                    <LinearLayout
-                                        android:id="@+id/ad_layout"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="164dp"
-                                        android:layout_below="@+id/banner"
-                                        android:layout_marginStart="14dp"
-                                        android:layout_marginTop="11dp"
-                                        android:layout_marginEnd="14dp"
-                                        android:orientation="horizontal"
-                                        android:visibility="gone">
-
-                                        <ImageView
-                                            android:id="@+id/ad_img1"
-                                            android:layout_width="161dp"
-                                            android:layout_height="match_parent"
-                                            android:scaleType="centerCrop" />
-
-                                        <LinearLayout
-                                            android:layout_width="161dp"
-                                            android:layout_height="match_parent"
-                                            android:layout_marginStart="10dp"
-                                            android:orientation="vertical">
-
-                                            <ImageView
-                                                android:id="@+id/ad_img2"
-                                                android:layout_width="match_parent"
-                                                android:layout_height="77dp"
-                                                android:scaleType="centerCrop" />
-
-                                            <ImageView
-                                                android:id="@+id/ad_img3"
-                                                android:layout_width="match_parent"
-                                                android:layout_height="77dp"
-                                                android:layout_marginTop="11dp"
-                                                android:scaleType="centerCrop" />
-                                        </LinearLayout>
-                                    </LinearLayout>
-
-                                    <androidx.recyclerview.widget.RecyclerView
-                                        android:id="@+id/ad_rv"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_below="@+id/banner"
-                                        android:layout_marginStart="9dp"
-                                        android:layout_marginTop="11dp"
-                                        android:layout_marginEnd="9dp"
-                                        android:minHeight="77dp"
-                                        android:nestedScrollingEnabled="false"
-                                        android:orientation="vertical"
-                                        android:visibility="gone"
-                                        binding:adapter="@{viewModel.daily_task_ad_adapter}"
-                                        binding:itemBinding="@{viewModel.daily_task_ad_itemBinding}"
-                                        binding:items="@{viewModel.daily_task_ad_observableList}"
-                                        binding:layoutManager="@{LayoutManagers.grid(2)}" />
-                                </RelativeLayout>
-
-                                <RelativeLayout
-                                    android:id="@+id/jifen_dh"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_below="@+id/task_fudai_layout"
-                                    android:layout_marginTop="14dp">
-
-                                    <ImageView
-                                        android:layout_width="match_parent"
-                                        android:layout_height="210dp"
-                                        android:src="@drawable/task_jifen_duih" />
-
-                                    <RelativeLayout
-                                        android:id="@+id/task_points_for"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginStart="14dp"
-                                        android:layout_marginTop="17dp"
-                                        android:layout_marginEnd="14dp"
-                                        binding:onClickCommand="@{viewModel.onClickToExchangeRecord}">
-
-                                        <TextView
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_alignParentLeft="true"
-                                            android:layout_centerInParent="true"
-                                            android:text="@string/task_exchange_record_fragment_title2"
-                                            android:textColor="@color/black"
-                                            android:textSize="17sp" />
-
-                                        <TextView
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_centerVertical="true"
-                                            android:layout_marginEnd="5dp"
-                                            android:layout_toLeftOf="@+id/iv_arrow_right"
-                                            android:text="@string/task_exchange_record_fragment_title"
-                                            android:textColor="#ff9494a5"
-                                            android:textSize="12sp" />
-
-                                        <ImageView
-                                            android:id="@+id/iv_arrow_right"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_alignParentRight="true"
-                                            android:layout_centerVertical="true"
-                                            android:src="@drawable/ic_arrow_right" />
-                                    </RelativeLayout>
-
-                                    <androidx.recyclerview.widget.RecyclerView
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:layout_below="@+id/task_points_for"
-                                        android:layout_marginStart="8.5dp"
-                                        android:layout_marginTop="17dp"
-                                        android:layout_marginEnd="8.5dp"
-                                        android:layout_marginBottom="50dp"
-                                        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                                        binding:adapter="@{viewModel.BonusGoods_adapter}"
-                                        binding:itemBinding="@{viewModel.BonusGoods_itemBinding}"
-                                        binding:items="@{viewModel.BonusGoods_observableList}"
-                                        binding:layoutManager="@{LayoutManagers.grid(2)}" />
                                 </RelativeLayout>
                             </RelativeLayout>
                         </RelativeLayout>

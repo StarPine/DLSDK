@@ -179,6 +179,9 @@ public class EditProfileViewModel extends BaseViewModel<AppRepository> {
     //保存修复
     public void saveProfile() {
         UserDataEntity userEntity = userDataEntity.get();
+        if(userEntity==null){
+            return;
+        }
         if (userEntity.getAvatar() == null || userEntity.getAvatar().length() == 0) {
             ToastUtils.showShort(R.string.playfun_warn_avatar_not_null);
             return;

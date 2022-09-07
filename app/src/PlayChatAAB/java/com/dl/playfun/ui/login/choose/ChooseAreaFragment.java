@@ -12,13 +12,14 @@ import com.dl.playfun.R;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.databinding.FragmentChooseAreaBinding;
 import com.dl.playfun.ui.base.BaseFragment;
+import com.dl.playfun.ui.base.BaseToolbarFragment;
 
 /**
  * Author: 彭石林
  * Time: 2022/7/5 17:35
  * Description: This is ChooseAreaFragment
  */
-public class ChooseAreaFragment extends BaseFragment<FragmentChooseAreaBinding,ChooseAreaViewModel> {
+public class ChooseAreaFragment extends BaseToolbarFragment<FragmentChooseAreaBinding,ChooseAreaViewModel> {
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return R.layout.fragment_choose_area;

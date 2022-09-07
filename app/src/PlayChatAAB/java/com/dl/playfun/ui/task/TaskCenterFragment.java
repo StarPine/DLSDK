@@ -29,22 +29,16 @@ import com.dl.playfun.databinding.TaskCenterFragmentBinding;
 import com.dl.playfun.entity.BonusGoodsEntity;
 import com.dl.playfun.entity.EjectEntity;
 import com.dl.playfun.entity.EjectSignInEntity;
-import com.dl.playfun.entity.ExchangeIntegraEntity;
-import com.dl.playfun.entity.ExchangeIntegraOuterEntity;
 import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.entity.SystemConfigTaskEntity;
-import com.dl.playfun.entity.TaskAdEntity;
 import com.dl.playfun.entity.TaskConfigEntity;
 import com.dl.playfun.event.TaskMainTabEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
-import com.dl.playfun.ui.task.fukubukuro.FukubukuroFragment;
 import com.dl.playfun.ui.task.record.TaskExchangeRecordFragment;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.StringUtil;
-import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralDialog;
-import com.dl.playfun.widget.dialog.TaskFukubukuroDialog;
 import com.dl.playfun.widget.dialog.TraceDialog;
 
 import java.util.List;
@@ -110,14 +104,9 @@ public class TaskCenterFragment extends BaseToolbarFragment<TaskCenterFragmentBi
         if (!hidden) {
             if (ApiUitl.taskBottom) {
                 ApiUitl.taskBottom = false;
-                binding.nestedScroll.scrollTo(0, binding.jifenDh.getTop());
             }
             if (ApiUitl.taskTop) {
                 ApiUitl.taskTop = false;
-                // binding.nestedScroll.fling(0);
-                //binding.nestedScroll.smoothScrollTo(0, 0);
-                //binding.nestedScroll.fullScroll(ScrollView.FOCUS_UP);
-                //binding.nestedScroll.pageScroll(ScrollView.FOCUS_UP);
                 // 让页面返回顶部
                 binding.nestedScroll.post(new Runnable() {
                     @Override
@@ -179,7 +168,6 @@ public class TaskCenterFragment extends BaseToolbarFragment<TaskCenterFragmentBi
                     if (!viewModel.loadTaskAdFlag) {
                         if (viewModel.adItemEntityObservableField.get().size() == 0 && scrollY >= binding.taskNewLayout.getTop()) {
                             viewModel.loadTaskAdFlag = true;
-                            viewModel.taskAdList();
                         }
                     }
                 }
@@ -209,132 +197,11 @@ public class TaskCenterFragment extends BaseToolbarFragment<TaskCenterFragmentBi
 //                }
             }
         });
-        binding.adImg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("link", viewModel.adItemEntityListObservableField.get(0).getLink());
-                    viewModel.start(FukubukuroFragment.class.getCanonicalName(), bundle);
-                } catch (Exception e) {
-
-                }
-            }
-        });
-        binding.adImg1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("link", viewModel.adItemEntityListObservableField.get(0).getLink());
-                    viewModel.start(FukubukuroFragment.class.getCanonicalName(), bundle);
-                } catch (Exception e) {
-
-                }
-            }
-        });
-        binding.adImg2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("link", viewModel.adItemEntityListObservableField.get(1).getLink());
-                    viewModel.start(FukubukuroFragment.class.getCanonicalName(), bundle);
-                } catch (Exception e) {
-
-                }
-            }
-        });
-        binding.adImg3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("link", viewModel.adItemEntityListObservableField.get(2).getLink());
-                    viewModel.start(FukubukuroFragment.class.getCanonicalName(), bundle);
-                } catch (Exception e) {
-
-                }
-            }
-        });
     }
 
 
     @Override
     public void initViewObservable() {
-        //加载兑换钻石弹窗
-        viewModel.uc.DialogExchangeIntegral.observe(this, new Observer<ExchangeIntegraOuterEntity>() {
-            @Override
-            public void onChanged(ExchangeIntegraOuterEntity listData) {
-                TaskFukubukuroDialog.exchangeIntegralDialog(TaskCenterFragment.this.getContext(),
-                        true, String.valueOf(listData.getTotalBonus()), String.valueOf(listData.getTotalCoin()), 0,
-                        listData.getData(),
-                        new TaskFukubukuroDialog.ExchangeIntegraleClick() {
-                            @Override
-                            public void clickSelectItem(Dialog dialog, ExchangeIntegraEntity itemEntity) {
-                                //dialog.dismiss();
-                                if (!ObjectUtils.isEmpty(itemEntity)) {
-                                    if (listData.getTotalCoin().intValue() >= itemEntity.getCoinValue().intValue()) {
-                                        dialog.dismiss();
-                                        viewModel.ExchangeIntegraBuy(itemEntity.getId(), listData.getTotalBonus().intValue(), itemEntity.getBonusValue().intValue());
-                                    } else {
-                                        ToastCenterUtils.showToast(R.string.dialog_exchange_integral_total_text1);
-                                        DialogCoinExchangeIntegralShow(dialog);
-                                    }
-                                }
-                            }
-                        }).show();
-            }
-        });
-        //加载广告栏目图片
-        viewModel.uc.loadAdList.observe(this, new Observer<List<TaskAdEntity>>() {
-            @Override
-            public void onChanged(List<TaskAdEntity> dataList) {
-                int size = dataList.size();
-                if (size == 1) {
-                    binding.adLayout.setVisibility(View.GONE);
-                    binding.adRv.setVisibility(View.GONE);
-                    Glide.with(TaskCenterFragment.this.getContext()).load(StringUtil.getFullImageUrl(dataList.get(0).getImg()))
-                            .error(R.drawable.task_title)
-                            .placeholder(R.drawable.task_title)
-                            .dontAnimate()
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .into(binding.adImg);
-                    binding.adImg.setVisibility(View.VISIBLE);
-                } else if (size == 3) {
-                    binding.adImg.setVisibility(View.GONE);
-                    binding.adRv.setVisibility(View.GONE);
-                    binding.adLayout.setVisibility(View.VISIBLE);
-                    Glide.with(TaskCenterFragment.this.getContext()).load(StringUtil.getFullImageUrl(dataList.get(0).getImg()))
-                            .error(R.drawable.task_title)
-                            .placeholder(R.drawable.task_title)
-                            .dontAnimate()
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .into(binding.adImg1);
-                    Glide.with(TaskCenterFragment.this.getContext()).load(StringUtil.getFullImageUrl(dataList.get(1).getImg()))
-                            .error(R.drawable.task_title)
-                            .placeholder(R.drawable.task_title)
-                            .dontAnimate()
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .into(binding.adImg2);
-                    Glide.with(TaskCenterFragment.this.getContext()).load(StringUtil.getFullImageUrl(dataList.get(2).getImg()))
-                            .error(R.drawable.task_title)
-                            .placeholder(R.drawable.task_title)
-                            .dontAnimate()
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .into(binding.adImg3);
-                } else if (size == 2 || size > 3) {
-                    viewModel.daily_task_ad_observableList.clear();
-                    binding.adLayout.setVisibility(View.GONE);
-                    binding.adImg.setVisibility(View.GONE);
-                    binding.adRv.setVisibility(View.VISIBLE);
-                    for (TaskAdEntity taskAdEntity : dataList) {
-                        TaskCenterADItemViewModel taskCenterADItemViewModel = new TaskCenterADItemViewModel(viewModel, taskAdEntity);
-                        viewModel.daily_task_ad_observableList.add(taskCenterADItemViewModel);
-                    }
-                }
-            }
-        });
         //加载背景图片
         viewModel.uc.loadSysConfigTask.observe(this, new Observer<SystemConfigTaskEntity>() {
             @Override
