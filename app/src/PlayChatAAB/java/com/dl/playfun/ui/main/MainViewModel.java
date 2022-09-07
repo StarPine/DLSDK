@@ -327,62 +327,6 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
             imAdvancedMsgListener = new IMAdvancedMsgListener();
             V2TIMManager.getMessageManager().addAdvancedMsgListener(imAdvancedMsgListener);
         }
-        V2TIMManager.getMessageManager().addAdvancedMsgListener(new V2TIMAdvancedMsgListener() {
-            @Override
-            public void onRecvNewMessage(V2TIMMessage msg) {
-                TUIMessageBean info = ChatMessageBuilder.buildMessage(msg);
-                if (info != null) {
-                    String text = String.valueOf(info.getExtra());
-                    if (StringUtil.isJSON2(text)) {//做自定义通知判断
-
-                        //普通自定义类型
-                        if (text.contains("type")){
-                            Map<String, Object> map_data = new Gson().fromJson(text, Map.class);
-                            if (map_data != null && map_data.get("type") != null) {
-                                String type = Objects.requireNonNull(map_data.get("type")).toString();
-                                String data = (String) map_data.get("data");
-                                if (StringUtil.isJSON2(data)) {
-                                    switch (type) {
-                                        case "message_pushPay"://未支付儲值鑽石
-                                            if (AppContext.isShowNotPaid){
-                                                if(!FastCallFunUtil.getInstance().isFastCallFun("message_pushPay",5000)){
-                                                    Map<String, Object> dataMapPushPay = new Gson().fromJson(data, Map.class);
-                                                    String dataType = Objects.requireNonNull(dataMapPushPay.get("type")).toString();
-                                                    if (dataType.equals("1") || dataType.equals("1.0")) {
-                                                        uc.notPaidDialog.setValue("1");
-                                                    } else {
-                                                        uc.notPaidDialog.setValue("2");
-                                                    }
-                                                }
-                                            }
-                                            break;
-                                        case "message_gift"://接收礼物
-                                            if (map_data.get("is_accost") == null) {//不是搭讪礼物
-                                                if (!AppContext.isCalling){
-                                                    GiftEntity giftEntity = IMGsonUtils.fromJson(data, GiftEntity.class);
-                                                    //是特效礼物才发送订阅通知事件
-                                                    if (!StringUtils.isEmpty(giftEntity.getSvgaPath())) {
-                                                        RxBus.getDefault().post(new MessageGiftNewEvent(giftEntity,msg.getMsgID(),info.getV2TIMMessage().getSender()));
-                                                    }
-                                                }
-                                            }
-                                            break;
-                                    }
-                                }
-                            }
-                        }
-
-                        //公屏礼物数据
-                        if (text.contains("giftBroadcast") && text.contains("messageType")) {
-                            if (AppContext.isHomePage){
-                                setPublicScreenGiftData(text);
-                            }
-                        }
-
-                    }
-                }
-            }
-        });
     }
 
     //移除IM消息监听
