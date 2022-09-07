@@ -398,7 +398,11 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                         if(ObjectUtils.isNotEmpty(contentBody)){
                             //模块类型--判断
                             if(contentBody.containsKey(CustomConstants.Message.MODULE_NAME_KEY)){
-                                V2TIMCustomManagerUtil.CoinPusherManager(contentBody);
+                                //获取moudle-pushCoinGame 推币机
+                                if(CustomConvertUtils.ContainsMessageModuleKey(contentBody, CustomConstants.Message.MODULE_NAME_KEY,CustomConstants.CoinPusher.MODULE_NAME)){
+                                    V2TIMCustomManagerUtil.CoinPusherManager(contentBody);
+                                }
+
                             }
                         }
                         Log.e("接收的自定义消息体：",new String(v2TIMCustomElem.getData()));
