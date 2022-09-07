@@ -100,7 +100,7 @@ public class GoogleFCMMessagingService extends FirebaseMessagingService {
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
                         .setTicker(messageTitle)//标题
-                        .setSmallIcon(R.mipmap.play_fun_launcher)//你的推送栏图标
+                        .setSmallIcon(R.mipmap.ic_launcher)//你的推送栏图标
                         .setContentTitle(messageTitle)
                         .setContentText(messageBody)//内容
                         .setAutoCancel(true)

@@ -51,7 +51,7 @@ import com.dl.playfun.ui.message.MessageMainFragment;
 import com.dl.playfun.ui.mine.MineFragment;
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
 import com.dl.playfun.ui.radio.radiohome.RadioFragment;
-import com.dl.playfun.ui.task.main.TaskMainFragment;
+import com.dl.playfun.ui.task.TaskCenterFragment;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.StringUtil;
@@ -648,7 +648,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         if (firstFragment == null) {
             mFragments[FIRST] = new HomeMainFragment();
             mFragments[SECOND] = new RadioFragment();
-            mFragments[THIRD] = new TaskMainFragment();
+            mFragments[THIRD] = new TaskCenterFragment();
             mFragments[FOURTH] = new MessageMainFragment();
             mFragments[FIFTH] = new MineFragment();
         } else {
@@ -657,7 +657,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
             // 这里我们需要拿到mFragments的引用
             mFragments[FIRST] = firstFragment;
             mFragments[SECOND] = findChildFragment(RadioFragment.class);
-            mFragments[THIRD] = findChildFragment(TaskMainFragment.class);
+            mFragments[THIRD] = findChildFragment(TaskCenterFragment.class);
             mFragments[FOURTH] = findChildFragment(MessageMainFragment.class);
             mFragments[FIFTH] = findChildFragment(MineFragment.class);
         }

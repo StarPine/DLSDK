@@ -1063,13 +1063,17 @@ public class ConversationPresenter {
     public void busConversationCount( List<ConversationInfo> dataInfoList){
         try {
             ThreadHelper.INST.execute(() -> {
-                int conversationSize = dataInfoList.size();
-                int totalUnreadCounts = 0;
-                for (int i = 0; i < conversationSize; i++) {
-                    totalUnreadCounts += dataInfoList.get(i).getUnRead();
-                }
-                if(loadConversationCallback!=null){
-                    loadConversationCallback.totalUnreadCount(totalUnreadCounts);
+                try{
+                    int conversationSize = dataInfoList.size();
+                    int totalUnreadCounts = 0;
+                    for (int i = 0; i < conversationSize; i++) {
+                        totalUnreadCounts += dataInfoList.get(i).getUnRead();
+                    }
+                    if(loadConversationCallback!=null){
+                        loadConversationCallback.totalUnreadCount(totalUnreadCounts);
+                    }
+                }catch (Exception ignored){
+
                 }
             });
         }catch (Exception ignored){
