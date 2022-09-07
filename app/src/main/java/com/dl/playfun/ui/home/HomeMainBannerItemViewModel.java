@@ -8,7 +8,6 @@ import androidx.databinding.ObservableField;
 import com.dl.playfun.entity.AdItemEntity;
 import com.dl.playfun.event.TaskMainTabEvent;
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
-import com.dl.playfun.ui.task.webview.FukuokaViewFragment;
 import com.dl.playfun.ui.webview.WebHomeFragment;
 
 import me.goldze.mvvmhabit.base.MultiItemViewModel;

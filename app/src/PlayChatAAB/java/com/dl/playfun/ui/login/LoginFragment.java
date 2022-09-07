@@ -120,6 +120,7 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
                 Collection<String> collection = new ArrayList<String>();
                 collection.add("email");
                 loginManager.logIn(LoginFragment.this, collection);
+
             }
         });
         LoginManager.getInstance().registerCallback(callbackManager,

@@ -128,7 +128,7 @@
     <string name="playfun_fragment_certification_female_title">Real Person Verification</string>
     <string name="playfun_fragment_certification_content">100% bonus increasing for real person verified users.</string>
     <string name="playfun_fragment_certification_tip">You can not withdraw money without real person verification</string>
-    <string name="playfun_fragment_certification_female_poster">Double income</string>
+    <string name="playfun_fragment_certification_female_poster">Double crystals</string>
     <string name="playfun_fragment_certification_female_comment_man">Comment for free</string>
     <string name="playfun_fragment_certification_female_chat_man">Withdrawals</string>
     <string name="playfun_fragment_certification_female_sing_man">Sign up for men\'s events</string>
@@ -200,7 +200,7 @@
     <string name="playfun_my_trends_no_issuance">Post an event</string>
     <string name="playfun_phono_setting_reading_burn">Snapshots (expires in 2s)</string>
     <string name="playfun_chat_redpackage_detail_name">%s \'s red packet</string>
-    <string name="playfun_profit_message_title">Incomes</string>
+    <string name="playfun_profit_message_title">Crystals</string>
     <string name="playfun_program_detail_title">Event details</string>
     <string name="playfun_program_detail_title_other">Event details</string>
     <string name="playfun_program_detail_detele">The event has been deleted</string>
@@ -816,9 +816,9 @@
     <string name="playfun_text_accost_error3">Cooldown for next greeting\n</string>
     <string name="playfun_text_accost_empty">The number of one-click greetings has been used up today. \nPlease come back tomorrow.</string>
     <string name="playfun_text_accost_hint">refresh</string>
-    <string name="playfun_tw_money_text">New Taiwan Dollar</string>
-    <string name="playfun_tw_money_text1">income</string>
-    <string name="playfun_tw_money_text2">Instruction of income</string>
+    <string name="playfun_tw_money_text">Crystals</string>
+    <string name="playfun_tw_money_text1">Crystals</string>
+    <string name="playfun_tw_money_text2">Instruction</string>
     <string name="playfun_tw_money_empty">It\'s still empty here. \nYou can get diamonds by doing tasks, receiving gifts, replying to messages,\n voice calls and video calls!</string>
     <string name="playfun_gift_bag_number_hint">Quantity:</string>
     <string name="playfun_gift_bag_text1">Gifts for the first top-up</string>
@@ -849,7 +849,7 @@
     <string name="playfun_call_message_deatail_girl_txt9">Chat a little longer</string>
     <string name="playfun_call_message_deatail_girl_txt10">Hang up</string>
     <string name="playfun_call_message_deatail_girl_txt11">Continue chatting</string>
-    <string name="playfun_call_message_deatail_girl_txt12">If you hang up, you won\'t get more income.</string>
+    <string name="playfun_call_message_deatail_girl_txt12">If you hang up, you won\'t get more crystals.</string>
     <string name="playfun_call_message_deatail_girl_txt13">End this chat?</string>
     <string name="playfun_call_message_deatail_girl_txt14">Insufficient balance. The call will be disconnected in %s seconds.</string>
     <string name="playfun_call_message_deatail_girl_txt15">Hang up only</string>
@@ -862,7 +862,7 @@
     <string name="playfun_call_message_deatail_girl_txt_gift">you give</string>
     <string name="playfun_call_message_deatail_girl_txt_male">you give</string>
     <string name="playfun_permissions_audio_txt">To use the voice features, please allow access to the microphone.</string>
-    <string name="playfun_certification_girl_hint_text">Double your income</string>
+    <string name="playfun_certification_girl_hint_text">Double your crystals</string>
     <string name="playfun_certification_girl_hint_text1">Withdrawal qualification</string>
     <string name="playfun_radio_fragment_posts">Post</string>
     <string name="playfun_meagess_gift">Gift</string>

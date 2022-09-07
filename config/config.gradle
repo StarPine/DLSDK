@@ -81,13 +81,11 @@ ext {
 
             //firebase
             "firebase-core"                : 'com.google.firebase:firebase-core:18.0.0',
-            "firebase-analytics2"          : 'com.google.firebase:firebase-analytics',
-            "firebase-analytics"           : 'com.google.firebase:firebase-analytics:18.0.0',
-            "firebase-messaging"           : 'com.google.firebase:firebase-messaging:21.0.0',
+            "firebase-analytics"           : 'com.google.firebase:firebase-analytics:21.1.0',
+            "firebase-messaging"           : 'com.google.firebase:firebase-messaging:23.0.7',
             "firebase-iid"                 : 'com.google.firebase:firebase-iid:21.0.0',
-            "firebase-bom"                 : 'com.google.firebase:firebase-bom:28.0.1',
-            "firebase-auth"                : 'com.google.firebase:firebase-auth',
-            "firebase-crashlytics"         : 'com.google.firebase:firebase-crashlytics',
+            "firebase-bom"                 : 'com.google.firebase:firebase-bom:30.3.1',
+            "firebase-crashlytics"         : 'com.google.firebase:firebase-crashlytics:18.2.12',
 
             //google.gms
             "play-services-location"       : 'com.google.android.gms:play-services-location:19.0.1',

@@ -82,21 +82,26 @@ public class LocationManager {
             if (ActivityCompat.checkSelfPermission(AppContext.instance().getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
                     ActivityCompat.checkSelfPermission(AppContext.instance().getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 mFusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
-                    Location location = task.getResult();
-                    if (locationListener != null) {
-                        if (location != null) {
-                            lat = location.getLatitude();
-                            lng = location.getLongitude();
-                            locationListener.onLocationSuccess(lat, lng);
-                            startLocation(null);
-                        } else {
-                            if (locationListener != null) {
-                                startLocation(locationListener);
+                    try {
+                        Location location = task.getResult();
+                        if (locationListener != null) {
+                            if (location != null) {
+                                lat = location.getLatitude();
+                                lng = location.getLongitude();
+                                locationListener.onLocationSuccess(lat, lng);
+                                startLocation(null);
+                            } else {
+                                if (locationListener != null) {
+                                    startLocation(locationListener);
+                                }
                             }
+                        } else {
+                            startLocation(null);
                         }
-                    } else {
+                    }catch (Exception e){//兼容部分手机不支持谷歌api
                         startLocation(null);
                     }
+
                 });
             }
         } catch (Exception e) {

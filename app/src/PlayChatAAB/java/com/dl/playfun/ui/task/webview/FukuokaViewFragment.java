@@ -433,14 +433,12 @@ public class FukuokaViewFragment extends BaseFragment<WebviewFukubukuroFragmentB
         @JavascriptInterface
         public void toTaskTop() {
             ApiUitl.taskTop = true;
-           // RxBus.getDefault().post(new TaskMainTabEvent(false));
             pop();
         }
 
         @JavascriptInterface
         public void back() {
             //ApiUitl.taskTop = true;
-            //RxBus.getDefault().post(new TaskMainTabEvent(false));
             pop();
         }
 
@@ -448,15 +446,12 @@ public class FukuokaViewFragment extends BaseFragment<WebviewFukubukuroFragmentB
         public void toTaskuroAction() {
             //返回到兑换积分区
             ApiUitl.taskBottom = true;
-            //RxBus.getDefault().post(new TaskMainTabEvent(false));
-            //RxBus.getDefault().post(new TaskMainTabEvent(false));
             pop();
         }
 
         //返回福袋界面
         @JavascriptInterface
         public void toTaskChangeView() {
-            //RxBus.getDefault().post(new TaskMainTabEvent(true));
             ApiUitl.taskDisplay = true;
             pop();
             //
