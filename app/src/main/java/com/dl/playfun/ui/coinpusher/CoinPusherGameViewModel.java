@@ -48,6 +48,10 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
         super(application, model);
     }
 
+    public BindingCommand gameCloseView = new BindingCommand(() -> {
+        finish();
+    });
+
     public BindingCommand playCoinClick = new BindingCommand(() -> {
         playingCoinPusherThrowCoin(coinPusherDataInfoEntity.getRoomInfo().getRoomId());
     });

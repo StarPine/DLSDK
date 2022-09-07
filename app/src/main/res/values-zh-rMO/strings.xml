@@ -1209,4 +1209,6 @@
     <string name="playfun_coinpusher_room_empty_text">當前沒有可用的機器</string>
     <string name="playfun_coinpusher_error_text1">加載失敗，請重試 </string>
     <string name="playfun_refresh">刷新</string>
+    <string name="playfun_coinpusher_game_state_text">搖擺啟停</string>
+    <string name="playfun_coinpusher_game_text_2">%s金幣/次</string>
 </resources>

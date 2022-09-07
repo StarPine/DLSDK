@@ -15,11 +15,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.blankj.utilcode.util.ColorUtils;
-import com.blankj.utilcode.util.FragmentUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
-import com.dl.playfun.api.login.email.LoginEmailPwdViewFragment;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
@@ -217,6 +215,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
         super.initData();
         viewModel.coinPusherDataInfoEntity = coinPusherDataInfoEntity;
         viewModel.totalMoney.set(coinPusherDataInfoEntity.getTotalGold());
+        binding.tvMoneyHint.setText(String.format(StringUtils.getString(R.string.playfun_coinpusher_game_text_2),coinPusherDataInfoEntity.getRoomInfo().getMoney()));
         binding.imgHelp.setOnClickListener(v->{
             if(dialogCoinPusherHelp==null){
                 dialogCoinPusherHelp = CoinPusherDialogAdapter.getDialogCoinPusherHelp(this,null,null);
