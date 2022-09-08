@@ -952,6 +952,15 @@ public interface ApiService {
             @Query("callingSource") Integer callingSource
     );
 
+    @GET("/calling/getCallingInvitedInfo/v2")
+    Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(
+            @Query("callingType") Integer callingType,
+            @Query("inviterImId") String inviterImId,
+            @Query("receiverImId") String receiverImId,
+            @Query("callingSource") Integer callingSource,
+            @Query("videoCallPushLogId") Integer videoCallPushLogId
+    );
+
     /**
      * @return io.reactivex.Observable<com.dl.play.chat.entity.CallingInviteInfo>
      * @Desc TODO(IM聊天页面 拔打中 / 接收中)

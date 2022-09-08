@@ -802,6 +802,9 @@ public interface HttpDataSource {
      */
     Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(Integer callingType, String fromUserId, String toUserId, int callingSource);
 
+    Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(Integer callingType, String fromUserId, String toUserId, int callingSource,int videoCallPushLogId);
+
+
     /**
      * @return io.reactivex.Observable<com.dl.play.chat.entity.CallingInviteInfo>
      * @Desc TODO(IM聊天页面 拔打中 / 接收中)
