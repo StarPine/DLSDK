@@ -1,4 +1,4 @@
-package com.tencent.coustom;
+package com.tencent.custom;
 
 import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 

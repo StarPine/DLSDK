@@ -8,9 +8,9 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
-import com.tencent.coustom.CustomIMTextEntity;
-import com.tencent.coustom.EvaluateItemEntity;
-import com.tencent.coustom.PhotoAlbumItemEntity;
+import com.tencent.custom.CustomIMTextEntity;
+import com.tencent.custom.EvaluateItemEntity;
+import com.tencent.custom.PhotoAlbumItemEntity;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
@@ -21,7 +21,6 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.presenter.GroupChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemClickListener;
-import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 public class TUIGroupChatFragment extends TUIBaseChatFragment {

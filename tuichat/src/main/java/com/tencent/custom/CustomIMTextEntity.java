@@ -1,4 +1,4 @@
-package com.tencent.coustom;
+package com.tencent.custom;
 
 import com.google.gson.annotations.SerializedName;
 

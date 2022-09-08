@@ -22,14 +22,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
-import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.dl.playfun.BR;
@@ -45,7 +43,6 @@ import com.dl.playfun.entity.CrystalDetailsConfigEntity;
 import com.dl.playfun.entity.EvaluateItemEntity;
 import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.entity.LocalMessageIMEntity;
-import com.dl.playfun.entity.MessageRuleEntity;
 import com.dl.playfun.entity.PhotoAlbumEntity;
 import com.dl.playfun.entity.TagEntity;
 import com.dl.playfun.entity.TaskRewardReceiveEntity;
@@ -87,7 +84,7 @@ import com.opensource.svgaplayer.SVGAParser;
 import com.opensource.svgaplayer.SVGASoundManager;
 import com.opensource.svgaplayer.SVGAVideoEntity;
 import com.tbruyelle.rxpermissions2.RxPermissions;
-import com.tencent.coustom.CustomIMTextEntity;
+import com.tencent.custom.CustomIMTextEntity;
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
@@ -789,7 +786,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             }
 
             @Override
-            public void openUserImage(com.tencent.coustom.PhotoAlbumItemEntity itemEntity) {
+            public void openUserImage(com.tencent.custom.PhotoAlbumItemEntity itemEntity) {
                 if (itemEntity != null) {
                     PictureSelectorUtil.previewImage(mActivity, StringUtil.getFullImageWatermarkUrl(itemEntity.getSrc()));
                     //AppContext.instance().logEvent(AppsFlyerEvent.Pchat_photo);
@@ -798,7 +795,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
 
             //评价
             @Override
-            public void onClickEvaluate(int position, TUIMessageBean messageInfo, com.tencent.coustom.EvaluateItemEntity evaluateItemEntity, boolean more) {
+            public void onClickEvaluate(int position, TUIMessageBean messageInfo, com.tencent.custom.EvaluateItemEntity evaluateItemEntity, boolean more) {
                 AppContext.instance().logEvent(AppsFlyerEvent.Pchat_Evaluation);
                 try {
                     if (more) {//更多

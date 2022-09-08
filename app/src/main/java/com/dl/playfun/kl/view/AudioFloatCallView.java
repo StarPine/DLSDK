@@ -25,7 +25,7 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.widget.image.CircleImageView;
 import com.google.gson.Gson;
-import com.tencent.coustom.GiftEntity;
+import com.tencent.custom.GiftEntity;
 import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;

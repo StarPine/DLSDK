@@ -8,25 +8,22 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.tencent.coustom.CustomIMTextEntity;
-import com.tencent.coustom.EvaluateItemEntity;
-import com.tencent.coustom.PhotoAlbumItemEntity;
+import com.tencent.custom.CustomIMTextEntity;
+import com.tencent.custom.EvaluateItemEntity;
+import com.tencent.custom.PhotoAlbumItemEntity;
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.QuoteMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.ICommonMessageAdapter;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemClickListener;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.FileMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.MessageContentHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.MessageHeaderHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.IMessageAdapter;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.MessageBaseHolder;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.MessageViewHolderFactory;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.TextMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 import java.util.ArrayList;

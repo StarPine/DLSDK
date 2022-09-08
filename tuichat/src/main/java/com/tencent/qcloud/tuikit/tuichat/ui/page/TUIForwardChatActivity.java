@@ -7,9 +7,9 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.tencent.coustom.CustomIMTextEntity;
-import com.tencent.coustom.EvaluateItemEntity;
-import com.tencent.coustom.PhotoAlbumItemEntity;
+import com.tencent.custom.CustomIMTextEntity;
+import com.tencent.custom.EvaluateItemEntity;
+import com.tencent.custom.PhotoAlbumItemEntity;
 import com.tencent.qcloud.tuicore.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuicore.component.TitleBarLayout;
 import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity;

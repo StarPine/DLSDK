@@ -3,8 +3,8 @@ package com.tencent.qcloud.tuikit.tuichat.presenter;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
-import com.tencent.coustom.CustomIMTextEntity;
-import com.tencent.coustom.IMGsonUtils;
+import com.tencent.custom.CustomIMTextEntity;
+import com.tencent.custom.IMGsonUtils;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
