@@ -1114,9 +1114,13 @@ public class TraceDialog {
         dialog.setContentView(contentView);
         ViewGroup.LayoutParams layoutParams = contentView.getLayoutParams();
         contentView.setLayoutParams(layoutParams);
+        Window window = dialog.getWindow();
         dialog.getWindow().setWindowAnimations(R.style.BottomDialog_Animation);
-
         dialog.getWindow().setGravity(Gravity.BOTTOM);
+        //设置宽度充满屏幕
+        WindowManager.LayoutParams lp = window.getAttributes();
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        window.setAttributes(lp);
         ImageView close = contentView.findViewById(R.id.iv_close);
         ImageView userHead = contentView.findViewById(R.id.iv_user_head);
         LinearLayout notHappy = contentView.findViewById(R.id.ll_not_happy);
@@ -1145,12 +1149,10 @@ public class TraceDialog {
         return dialog;
     }
 
-    public Dialog getVideoPushDialog(String headUrl) {
+    public Dialog getVideoPushDialog(String headUrl, boolean isMale, boolean isVip, int age ,int seconds,String nickname) {
         Dialog dialog = new Dialog(context, R.style.TransparentDialog);
         View contentView = LayoutInflater.from(context).inflate(R.layout.dialog_video_push, null);
         dialog.setContentView(contentView);
-        dialog.setCancelable(true);
-        dialog.setCanceledOnTouchOutside(true);
         ViewGroup.LayoutParams layoutParams = contentView.getLayoutParams();
         contentView.setLayoutParams(layoutParams);
         //设置动画
@@ -1184,17 +1186,26 @@ public class TraceDialog {
             }
         });
 
-        userName.setText("用户昵称");
+        if (!isMale && isVip){
+            ivGoddess.setVisibility(View.VISIBLE);
+        }else {
+            ivGoddess.setVisibility(View.GONE);
+        }
+
+
+        userAge.setText(age+"");
+        userName.setText(nickname);
         Glide.with(context)
                 .load(StringUtil.getFullImageUrl(headUrl))
                 .error(R.drawable.default_avatar) //异常时候显示的图片
                 .placeholder(R.drawable.default_avatar) //加载成功前显示的图片
                 .fallback( R.drawable.default_avatar) //url为空的时候,显示的图片
                 .into(userHead);
-//        startCountdown(dialog, tvTime);
+        //倒计时
+        startCountdown(dialog, tvTime,seconds);
+        //滑动事件
         int top = ConvertUtils.dp2px(10);
         currentTop = top;
-        //滑动事件
         rl_support.setOnTouchListener((v, event) -> {
             RelativeLayout.LayoutParams rlSupportLayoutParams = (RelativeLayout.LayoutParams) rl_support.getLayoutParams();
             int action = event.getAction();
@@ -1231,10 +1242,10 @@ public class TraceDialog {
         return dialog;
     }
 
-    private void startCountdown(Dialog dialog, TextView tvTime) {
+    private void startCountdown(Dialog dialog, TextView tvTime, int seconds) {
         ValueAnimator animator = ValueAnimator.ofInt(10,0);
         //设置时间
-        animator.setDuration(10*1000);
+        animator.setDuration(seconds*1000);
         //均匀显示
         animator.setInterpolator(new LinearInterpolator());
         //监听
