@@ -1,8 +1,6 @@
 package com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder;
 
 import android.text.Html;
-import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
@@ -16,19 +14,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.tencent.coustom.ConfigUrl;
-import com.tencent.coustom.CustomIMTextEntity;
-import com.tencent.coustom.GiftEntity;
-import com.tencent.coustom.IMGsonUtils;
-import com.tencent.coustom.PhotoAlbumEntity;
-import com.tencent.coustom.PhotoAlbumItemRecyclerAdapter;
+import com.tencent.custom.ConfigUrl;
+import com.tencent.custom.CustomIMTextEntity;
+import com.tencent.custom.GiftEntity;
+import com.tencent.custom.IMGsonUtils;
+import com.tencent.custom.PhotoAlbumEntity;
+import com.tencent.custom.PhotoAlbumItemRecyclerAdapter;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.face.FaceManager;
-import com.tencent.qcloud.tuikit.tuichat.ui.view.MyImageSpan;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.MessageRecyclerView;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 

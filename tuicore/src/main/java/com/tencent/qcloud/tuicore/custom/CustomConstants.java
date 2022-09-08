@@ -27,4 +27,11 @@ public class CustomConstants {
         //落币数量
         public static final String DROP_COINS = "dropCoins";
     }
+    //红包快照模块
+    public static final class PacketSnapshot{
+        //当前模块名
+        public static final String MODULE_NAME = "pushCoinGame";
+        //照片
+        public static final String IMG_PHOTO = "imgPhoto";
+    }
 }

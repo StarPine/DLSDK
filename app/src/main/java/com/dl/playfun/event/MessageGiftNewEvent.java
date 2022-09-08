@@ -1,6 +1,6 @@
 package com.dl.playfun.event;
 
-import com.tencent.coustom.GiftEntity;
+import com.tencent.custom.GiftEntity;
 
 /**
  * Author: 彭石林

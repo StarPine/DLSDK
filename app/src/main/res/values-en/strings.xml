@@ -928,6 +928,8 @@
     <string name="playfun_handling_fee">The platform will charge the user diamond after conversion and charge a fee of %s</string>
     <string name="playfun_message_deatail_check_video">Select a video</string>
     <string name="playfun_message_deatail_check_img">Select a photo</string>
+    <string name="playfun_message_deatail_check_img_coin">鑽石照片</string>
+    <string name="playfun_message_deatail_check_video_coin">鑽石影片</string>
     <string name="playfun_coin_custom_text">Diamonds arrive later!</string>
     <string name="playfun_coustom_time_picker_text">The activity time can only be selected within one week</string>
     <string name="playfun_fragment_issuance_program_explain">If you publish illegal photos such as nudity and vulgarity, the platform will do a ban disposal.</string>

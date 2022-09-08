@@ -7,8 +7,6 @@ import android.os.Message;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
-import com.tencent.coustom.CustomIMTextEntity;
-import com.tencent.coustom.IMGsonUtils;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMSignalingInfo;
 import com.tencent.qcloud.tuicore.TUILogin;

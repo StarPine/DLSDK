@@ -10,9 +10,9 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
-import com.tencent.coustom.CustomIMTextEntity;
-import com.tencent.coustom.EvaluateItemEntity;
-import com.tencent.coustom.PhotoAlbumItemEntity;
+import com.tencent.custom.CustomIMTextEntity;
+import com.tencent.custom.EvaluateItemEntity;
+import com.tencent.custom.PhotoAlbumItemEntity;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
@@ -26,7 +26,6 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemClickListener;

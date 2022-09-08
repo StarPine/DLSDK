@@ -933,6 +933,8 @@
 
     <string name="playfun_message_deatail_check_video">Video seç</string>
     <string name="playfun_message_deatail_check_img">Fotoğraf seç</string>
+    <string name="playfun_message_deatail_check_img_coin">鑽石照片</string>
+    <string name="playfun_message_deatail_check_video_coin">鑽石影片</string>
     <string name="playfun_coin_custom_text">Elmaslar birazdan hesabınıza gelecektir!</string>
     <string name="playfun_coustom_time_picker_text">Etkinlik zamanı sadece bir haftalık zaman içerisinde seçilebilir.</string>
     <string name="playfun_fragment_issuance_program_explain">Etkinlik zamanı sadece bir haftalık zaman içerisinde seçilebilir.</string>

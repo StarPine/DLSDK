@@ -3,9 +3,9 @@ package com.tencent.qcloud.tuikit.tuichat.ui.interfaces;
 import android.view.View;
 import android.widget.TextView;
 
-import com.tencent.coustom.CustomIMTextEntity;
-import com.tencent.coustom.EvaluateItemEntity;
-import com.tencent.coustom.PhotoAlbumItemEntity;
+import com.tencent.custom.CustomIMTextEntity;
+import com.tencent.custom.EvaluateItemEntity;
+import com.tencent.custom.PhotoAlbumItemEntity;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.QuoteMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 

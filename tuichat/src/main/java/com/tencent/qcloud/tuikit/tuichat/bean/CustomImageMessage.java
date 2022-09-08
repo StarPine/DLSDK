@@ -2,6 +2,8 @@ package com.tencent.qcloud.tuikit.tuichat.bean;
 
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 
+import java.io.Serializable;
+
 /**
  * @Name： PlayFun_Google
  * @Description：
@@ -9,7 +11,7 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
  * @Date： 2022/6/29 15:32
  * 修改备注：自定义图片消息类型
  */
-public class CustomImageMessage {
+public class CustomImageMessage implements Serializable {
     public int version = TUIChatConstants.JSON_VERSION_UNKNOWN;
     public String businessID = TUIChatConstants.BUSINESS_ID_CUSTOM_IMAGE;//自定义消息id必须定义
     int type = 2001;

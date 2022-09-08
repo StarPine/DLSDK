@@ -22,7 +22,6 @@ import com.dl.playfun.entity.MqBroadcastGiftEntity;
 import com.dl.playfun.entity.MqGiftDataEntity;
 import com.dl.playfun.entity.VersionEntity;
 import com.dl.playfun.event.BubbleTopShowEvent;
-import com.dl.playfun.event.CoinPusherGamePlayingEvent;
 import com.dl.playfun.event.DailyAccostEvent;
 import com.dl.playfun.event.MainTabEvent;
 import com.dl.playfun.event.MessageCountChangeEvent;
@@ -32,12 +31,13 @@ import com.dl.playfun.event.TaskMainTabEvent;
 import com.dl.playfun.event.VideoEvaluationEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocationManager;
+import com.dl.playfun.manager.V2TIMCustomManagerUtil;
 import com.dl.playfun.utils.FastCallFunUtil;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.google.gson.Gson;
-import com.tencent.coustom.GiftEntity;
-import com.tencent.coustom.IMGsonUtils;
+import com.tencent.custom.GiftEntity;
+import com.tencent.custom.IMGsonUtils;
 import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
 import com.tencent.imsdk.v2.V2TIMCustomElem;
 import com.tencent.imsdk.v2.V2TIMManager;
@@ -405,28 +405,10 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                             //模块类型--判断
                             if(contentBody.containsKey(CustomConstants.Message.MODULE_NAME_KEY)){
                                 //获取moudle-pushCoinGame 推币机
-                                if(CustomConvertUtils.ContainsMessageModuleKey(contentBody,CustomConstants.Message.MODULE_NAME_KEY,CustomConstants.CoinPusher.MODULE_NAME)){
-                                    Map<String,Object> pushCoinGame = CustomConvertUtils.ConvertMassageModule(contentBody,CustomConstants.Message.MODULE_NAME_KEY,CustomConstants.CoinPusher.MODULE_NAME,CustomConstants.Message.CUSTOM_CONTENT_BODY);
-                                    if(ObjectUtils.isNotEmpty(pushCoinGame)){
-                                        //消息类型--判断
-                                        if(pushCoinGame.containsKey(CustomConstants.Message.CUSTOM_MSG_KEY)){
-                                            //开始游戏
-                                            if(CustomConvertUtils.ContainsMessageModuleKey(pushCoinGame,CustomConstants.Message.CUSTOM_MSG_KEY,CustomConstants.CoinPusher.START_WINNING)){
-                                                RxBus.getDefault().post(new CoinPusherGamePlayingEvent(CustomConstants.CoinPusher.START_WINNING));
-                                            }else if (CustomConvertUtils.ContainsMessageModuleKey(pushCoinGame,CustomConstants.Message.CUSTOM_MSG_KEY,CustomConstants.CoinPusher.END_WINNING)){
-                                                //落币结束
-                                                RxBus.getDefault().post(new CoinPusherGamePlayingEvent(CustomConstants.CoinPusher.END_WINNING));
-                                            }else if(CustomConvertUtils.ContainsMessageModuleKey(pushCoinGame,CustomConstants.Message.CUSTOM_MSG_KEY,CustomConstants.CoinPusher.DROP_COINS)){
-                                                Map<String,Object> startWinning = CustomConvertUtils.ConvertMassageModule(pushCoinGame,CustomConstants.Message.CUSTOM_MSG_KEY,CustomConstants.CoinPusher.DROP_COINS,CustomConstants.Message.CUSTOM_MSG_BODY);
-                                                if(ObjectUtils.isNotEmpty(startWinning)){
-                                                    Integer goldNumber = (Integer) ObjectUtils.getOrDefault(startWinning.get("goldNumber"),0);
-                                                    Integer totalGold = (Integer)ObjectUtils.getOrDefault(startWinning.get("totalGold"),0);
-                                                    RxBus.getDefault().post(new CoinPusherGamePlayingEvent(CustomConstants.CoinPusher.DROP_COINS,goldNumber,totalGold));
-                                                }
-                                            }
-                                        }
-                                    }
+                                if(CustomConvertUtils.ContainsMessageModuleKey(contentBody, CustomConstants.Message.MODULE_NAME_KEY,CustomConstants.CoinPusher.MODULE_NAME)){
+                                    V2TIMCustomManagerUtil.CoinPusherManager(contentBody);
                                 }
+
                             }
                         }
                         Log.e("接收的自定义消息体：",new String(v2TIMCustomElem.getData()));

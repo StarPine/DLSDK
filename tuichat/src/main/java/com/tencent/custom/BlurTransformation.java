@@ -1,4 +1,4 @@
-package com.tencent.coustom;
+package com.tencent.custom;
 
 import android.content.Context;
 import android.graphics.Bitmap;

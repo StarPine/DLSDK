@@ -31,7 +31,6 @@ import com.dl.playfun.entity.EvaluateObjEntity;
 import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.entity.IMTransUserEntity;
 import com.dl.playfun.entity.MallWithdrawTipsInfoEntity;
-import com.dl.playfun.entity.MessageRuleEntity;
 import com.dl.playfun.entity.PhotoAlbumEntity;
 import com.dl.playfun.entity.PriceConfigEntity;
 import com.dl.playfun.entity.ShowFloatWindowEntity;
@@ -53,8 +52,9 @@ import com.dl.playfun.utils.Utils;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.google.gson.Gson;
 import com.luck.picture.lib.entity.LocalMedia;
+import com.tencent.custom.tmp.CustomDlTempMessage;
 import com.tencent.qcloud.tuicore.Status;
-import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
+import com.tencent.qcloud.tuicore.custom.CustomConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.CustomImageMessage;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
@@ -327,29 +327,6 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                     @Override
                     public void onComplete() {
                         dismissHUD();
-                    }
-                });
-    }
-
-    //获取聊天照片规则
-    public void getMessageRule(){
-        model.getMessageRule()
-                .doOnSubscribe(this)
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .subscribe(new BaseObserver<BaseDataResponse<List<MessageRuleEntity>>>() {
-
-                    @Override
-                    public void onSuccess(BaseDataResponse<List<MessageRuleEntity>> listBaseDataResponse) {
-                        List<MessageRuleEntity> listMessage = listBaseDataResponse.getData();
-                        if(listMessage!=null){
-                            uc.resultMessageRule.setValue(listMessage);
-                        }
-                    }
-
-                    @Override
-                    public void onComplete() {
-
                     }
                 });
     }
@@ -755,7 +732,20 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                             customImageMessage.setImgPath(fileKey);
                             customImageMessage.setImgWidth(localMedia.getWidth());
                             customImageMessage.setImgHeight(localMedia.getHeight());
-                            String data = GsonUtils.toJson(customImageMessage);
+
+
+                            CustomDlTempMessage.MsgModuleInfo msgModuleInfo = new CustomDlTempMessage.MsgModuleInfo();
+                            msgModuleInfo.setMsgModuleName(CustomConstants.PacketSnapshot.MODULE_NAME);
+                            //消息内容体
+                            CustomDlTempMessage.MsgBodyInfo msgBodyInfo = new CustomDlTempMessage.MsgBodyInfo();
+                            msgBodyInfo.setCustomMsgType(CustomConstants.PacketSnapshot.IMG_PHOTO);
+                            msgBodyInfo.setCustomMsgBody(customImageMessage);
+                            msgModuleInfo.setContentBody(msgBodyInfo);
+
+                            CustomDlTempMessage customDlTempMessage = new CustomDlTempMessage();
+                            customDlTempMessage.setContentBody(msgModuleInfo);
+
+                            String data = GsonUtils.toJson(customDlTempMessage);
                             TUIMessageBean info = ChatMessageBuilder.buildCustomMessage(data, null, null);
                             uc.signUploadSendMessage.postValue(info);
                         }
@@ -971,8 +961,6 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<List<EvaluateItemEntity>> AlertMEvaluate = new SingleLiveEvent<>();
         //删除评价窗体
         public SingleLiveEvent<Void> removeEvaluateMessage = new SingleLiveEvent<>();
-        //根据聊天规则弹出相册、评论
-        public SingleLiveEvent<List<MessageRuleEntity>> resultMessageRule = new SingleLiveEvent<>();
         //发送礼物失败。充值钻石
         public SingleLiveEvent<Void> sendUserGiftError = new SingleLiveEvent<>();
         //首次收入弹窗展示

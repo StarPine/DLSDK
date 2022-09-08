@@ -125,9 +125,6 @@ public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseVie
         if (hud != null && hud.isShowing()) {
             hud.dismiss();
         }
-        if (progress > 0 && progress % 10 == 0) {
-            System.out.println();
-        }
         if (progressHud == null) {
             progressHud = KProgressHUD.create(getContext())
                     .setStyle(KProgressHUD.Style.BAR_DETERMINATE)
