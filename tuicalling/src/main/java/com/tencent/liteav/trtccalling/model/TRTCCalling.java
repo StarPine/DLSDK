@@ -249,6 +249,7 @@ public class TRTCCalling {
     private V2TIMSimpleMsgListener mTIMSimpleMsgListener = new V2TIMSimpleMsgListener() {
         @Override
         public void onRecvC2CCustomMessage(String msgID, V2TIMUserInfo sender, byte[] customData) {
+            if(customData == null)return;
             String customStr = new String(customData);
             if (TextUtils.isEmpty(customStr)) {
                 return;
