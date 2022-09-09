@@ -60,6 +60,7 @@ import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.entity.GoogleNearPoiBean;
 import com.dl.playfun.entity.GooglePoiBean;
 import com.dl.playfun.entity.IMTransUserEntity;
+import com.dl.playfun.entity.ImUserSigEntity;
 import com.dl.playfun.entity.IsChatEntity;
 import com.dl.playfun.entity.LevelApiEntity;
 import com.dl.playfun.entity.LevelPageInfoEntity;
@@ -1003,6 +1004,13 @@ public interface ApiService {
      */
     @GET("api/gift")
     Observable<BaseDataResponse<GiftBagEntity>> getBagGiftInfo();
+
+    /**
+     * 刷新im凭证
+     * @return
+     */
+    @GET("api/flushSign")
+    Observable<BaseDataResponse<ImUserSigEntity>> flushSign();
 
     /**
      * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse>

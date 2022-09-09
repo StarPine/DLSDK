@@ -145,11 +145,11 @@ public class TUILogin {
         if (initSuccess) {
             this.userId = userId;
             this.userSig = userSig;
-            if (TextUtils.equals(userId, V2TIMManager.getInstance().getLoginUser()) && !TextUtils.isEmpty(userId)) {
-                TUICallback.onSuccess(callback);
-                getUserInfo(userId);
-                return;
-            }
+//            if (TextUtils.equals(userId, V2TIMManager.getInstance().getLoginUser()) && !TextUtils.isEmpty(userId) && isUserLogined()) {
+//                TUICallback.onSuccess(callback);
+//                getUserInfo(userId);
+//                return;
+//            }
 
             V2TIMManager.getInstance().login(userId, userSig, new V2TIMCallback() {
                 @Override

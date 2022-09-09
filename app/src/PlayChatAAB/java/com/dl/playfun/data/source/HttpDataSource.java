@@ -57,6 +57,7 @@ import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.entity.GoogleNearPoiBean;
 import com.dl.playfun.entity.GooglePoiBean;
 import com.dl.playfun.entity.IMTransUserEntity;
+import com.dl.playfun.entity.ImUserSigEntity;
 import com.dl.playfun.entity.IsChatEntity;
 import com.dl.playfun.entity.LevelApiEntity;
 import com.dl.playfun.entity.LevelPageInfoEntity;
@@ -838,6 +839,13 @@ public interface HttpDataSource {
      * @Date 2021/12/7
      */
     Observable<BaseDataResponse<GiftBagEntity>> getBagGiftInfo();
+
+    /**
+     * 刷新im凭证
+     * @return
+     */
+    Observable<BaseDataResponse<ImUserSigEntity>> flushSign();
+
     /**
      * @Desc TODO(用户收益页面)
      * @author 彭石林

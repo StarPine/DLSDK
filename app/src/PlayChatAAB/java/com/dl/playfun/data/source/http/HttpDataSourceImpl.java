@@ -62,6 +62,7 @@ import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.entity.GoogleNearPoiBean;
 import com.dl.playfun.entity.GooglePoiBean;
 import com.dl.playfun.entity.IMTransUserEntity;
+import com.dl.playfun.entity.ImUserSigEntity;
 import com.dl.playfun.entity.IsChatEntity;
 import com.dl.playfun.entity.LevelApiEntity;
 import com.dl.playfun.entity.LevelPageInfoEntity;
@@ -253,6 +254,11 @@ public class HttpDataSourceImpl implements HttpDataSource {
     @Override
     public Observable<BaseDataResponse<GiftBagEntity>> getBagGiftInfo() {
         return apiService.getBagGiftInfo();
+    }
+
+    @Override
+    public Observable<BaseDataResponse<ImUserSigEntity>> flushSign() {
+        return apiService.flushSign();
     }
 
     @Override
