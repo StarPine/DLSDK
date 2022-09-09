@@ -201,8 +201,6 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
         super.onHiddenChanged(hidden);
         if (hidden){
             hideLastLoginBubble();
-        }else {
-            showLastLoginBubble();
         }
     }
 
