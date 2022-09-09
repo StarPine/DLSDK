@@ -1175,9 +1175,6 @@ public class TraceDialog {
 
         ivCallReject.setOnClickListener(v -> {
             dialog.dismiss();
-            if (confirmOnclick != null) {
-                confirmOnclick.confirm(dialog);
-            }
         });
         ivCallAccept.setOnClickListener(v -> {
             dialog.dismiss();
@@ -1192,6 +1189,11 @@ public class TraceDialog {
             ivGoddess.setVisibility(View.GONE);
         }
 
+        dialog.setOnDismissListener(dialog1 -> {
+            if (confirmOnclick != null) {
+                confirmOnclick.confirm(dialog);
+            }
+        });
 
         userAge.setText(age+"");
         userName.setText(nickname);

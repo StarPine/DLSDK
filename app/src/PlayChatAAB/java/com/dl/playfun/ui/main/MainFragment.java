@@ -3,7 +3,9 @@ package com.dl.playfun.ui.main;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Dialog;
+import android.app.Service;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -90,6 +92,8 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
     private long TOUCH_TIME = 0;
 
     private AliYunMqttClientLifecycle aliYunMqttClientLifecycle;
+    private Vibrator mVibrator;
+    private boolean isShowing;
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -380,15 +384,15 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         });
     }
 
-
     //视讯评价
     private void setVideoEvaluationDialog(VideoEvaluationEntity evaluationEntity) {
+        if (evaluationEntity == null)return;
         TraceDialog.getInstance(mActivity)
                 .setConfirmOnlick(dialog -> {
-
+                    viewModel.videoFeedback(evaluationEntity.getVideoCallPushLogId(),2);
                 })
                 .setConfirmTwoOnlick(dialog -> {
-
+                    viewModel.videoFeedback(evaluationEntity.getVideoCallPushLogId(),1);
                 })
                 .getVideoEvaluationDialog(evaluationEntity.getAvatar())
                 .show();
@@ -396,7 +400,19 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
 
     //视讯推送
     private void setVideoPushDialog(VideoPushEntity videoPushEntity) {
+        if (videoPushEntity == null || videoPushEntity.getUserProfile() == null || isShowing)return;
+        isShowing = true;
+        if (videoPushEntity.getIsShake() == 1){
+            mVibrator = (Vibrator) mActivity.getApplication().getSystemService(Service.VIBRATOR_SERVICE);
+            mVibrator.vibrate(new long[]{500, 300, 500, 300}, 0);
+        }
+
         TraceDialog.getInstance(mActivity)
+                .setConfirmOnlick(dialog -> {
+                    isShowing = false;
+                    if (mVibrator != null)
+                        mVibrator.cancel();
+                })
                 .setConfirmTwoOnlick(dialog -> {
                     viewModel.getCallingInvitedInfo(ConfigManager.getInstance().getUserImID(),
                             videoPushEntity.getUserProfile().getImId(),
@@ -600,6 +616,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
+        AppConfig.isMainPage = !hidden;
         if (!hidden) {
             if (System.currentTimeMillis() - TOUCH_TIME > WAIT_TIME) {
                 //刷新任何列表数据

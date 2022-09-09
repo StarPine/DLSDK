@@ -232,6 +232,15 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
+    public Observable<BaseDataResponse> videoFeedback(long videoCallPushLogId, int feedback) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("videoCallPushLogId", videoCallPushLogId);
+        map.put("feedback", feedback);
+        return apiService.videoFeedback(ApiUitl.getBody(GsonUtils.toJson(map)));
+    }
+
+
+    @Override
     public Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(Integer callingType, Integer fromUserId, Integer toUserId, Integer currentUserId) {
         return apiService.callingInviteInfo(callingType, fromUserId, toUserId, currentUserId);
     }

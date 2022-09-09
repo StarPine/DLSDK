@@ -241,6 +241,10 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
         return mHttpDataSource.callingInviteInfo(callingType, fromUserId, toUserId, callingSource,videoCallPushLogId);
     }
 
+    @Override
+    public Observable<BaseDataResponse> videoFeedback(long videoCallPushLogId, int feedback) {
+        return mHttpDataSource.videoFeedback(videoCallPushLogId, feedback);
+    }
 
     @Override
     public Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(Integer callingType, Integer fromUserId, Integer toUserId, Integer currentUserId) {

@@ -958,8 +958,16 @@ public interface ApiService {
             @Query("inviterImId") String inviterImId,
             @Query("receiverImId") String receiverImId,
             @Query("callingSource") Integer callingSource,
-            @Query("videoCallPushLogId") Integer videoCallPushLogId
+            @Query("callingSourceId") Integer videoCallPushLogId
     );
+
+    /**
+     * 视讯推送评价
+     * @return
+     */
+    @Headers("Content-Type: application/json")
+    @POST("/calling/videoCallPushLog/feedback")
+    Observable<BaseDataResponse> videoFeedback(@Body RequestBody requestBody);
 
     /**
      * @return io.reactivex.Observable<com.dl.play.chat.entity.CallingInviteInfo>

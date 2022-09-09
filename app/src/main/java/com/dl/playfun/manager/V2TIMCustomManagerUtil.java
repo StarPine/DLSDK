@@ -1,10 +1,17 @@
 package com.dl.playfun.manager;
 
+import android.util.Log;
+
 import com.blankj.utilcode.util.ObjectUtils;
 import com.dl.playfun.event.CoinPusherGamePlayingEvent;
+import com.google.gson.reflect.TypeToken;
 import com.tencent.qcloud.tuicore.custom.CustomConstants;
 import com.tencent.qcloud.tuicore.custom.CustomConvertUtils;
+import com.tencent.qcloud.tuicore.custom.entity.CustomBaseEntity;
+import com.tencent.qcloud.tuicore.custom.entity.VideoEvaluationEntity;
+import com.tencent.qcloud.tuicore.custom.entity.VideoPushEntity;
 
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.Map;
 
@@ -49,4 +56,32 @@ public class V2TIMCustomManagerUtil {
             }
         }
     }
+
+    public static VideoPushEntity videoPushManager(String customData){
+        try {
+            Type videoPushType = new TypeToken<CustomBaseEntity<VideoPushEntity>>() {}.getType();
+            return (VideoPushEntity) CustomConvertUtils.customMassageAnalyzeModule(customData,
+                            CustomConstants.PushMessage.MODULE_NAME,
+                            CustomConstants.PushMessage.VIDEO_CALL_PUSH,
+                            videoPushType);
+        }catch (Exception e){
+            Log.i("V2TIMCustomManagerUtil", "自定数据解析异常");
+        }
+        return null;
+    }
+
+    public static VideoEvaluationEntity videoEvaluationManager(String customData){
+        try {
+            Type videoEvaluationType = new TypeToken<CustomBaseEntity<VideoEvaluationEntity>>() {}.getType();
+            return  (VideoEvaluationEntity) CustomConvertUtils.customMassageAnalyzeModule(customData,
+                            CustomConstants.PushMessage.MODULE_NAME,
+                            CustomConstants.PushMessage.VIDEO_CALL_FEEDBACK,
+                            videoEvaluationType);
+        }catch (Exception e){
+            Log.i("V2TIMCustomManagerUtil", "自定数据解析异常");
+        }
+        return null;
+    }
+
+
 }

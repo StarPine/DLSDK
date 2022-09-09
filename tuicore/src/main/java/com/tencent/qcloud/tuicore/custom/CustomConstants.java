@@ -40,7 +40,7 @@ public class CustomConstants {
         //模块名
         public static final String MODULE_NAME = "pushMessage";
         public static final String VIDEO_CALL_PUSH = "videoCallPush";
-        public static final String VIDEO_CALL_PUSH_FEEDBACK = "videoCallPushFeedback";
+        public static final String VIDEO_CALL_FEEDBACK = "videoCallFeedback";
     }
 
 

@@ -38,7 +38,6 @@ import com.dl.playfun.utils.FastCallFunUtil;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.tencent.custom.GiftEntity;
 import com.tencent.custom.IMGsonUtils;
 import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
@@ -49,14 +48,11 @@ import com.dl.playfun.entity.RestartActivityEntity;
 import com.tencent.qcloud.tuicore.Status;
 import com.tencent.qcloud.tuicore.custom.CustomConstants;
 import com.tencent.qcloud.tuicore.custom.CustomConvertUtils;
-import com.tencent.qcloud.tuicore.custom.entity.CustomBaseEntity;
-import com.tencent.qcloud.tuicore.custom.entity.CustomMsgTypeEntity;
 import com.tencent.qcloud.tuicore.custom.entity.VideoEvaluationEntity;
 import com.tencent.qcloud.tuicore.custom.entity.VideoPushEntity;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -422,22 +418,14 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                         if (data != null){
                             String customData = new String(data);
                             if (customData.contains(CustomConstants.PushMessage.VIDEO_CALL_PUSH)){
-                                Type videoPushType = new TypeToken<CustomBaseEntity<VideoPushEntity>>() {}.getType();
-                                CustomMsgTypeEntity customMsgTypeEntity = CustomConvertUtils
-                                        .customMassageAnalyzeModule(customData, CustomConstants.PushMessage.MODULE_NAME,videoPushType);
-                                VideoPushEntity videoPushEntity = (VideoPushEntity) CustomConvertUtils.
-                                        customMassageAnalyzeType(customMsgTypeEntity, CustomConstants.PushMessage.VIDEO_CALL_PUSH);
-                                if (videoPushEntity != null){
+                                VideoPushEntity videoPushEntity = V2TIMCustomManagerUtil.videoPushManager(customData);
+                                if (videoPushEntity != null && AppConfig.isMainPage){
                                     uc.videoPush.postValue(videoPushEntity);
                                 }
                             }
 
-                            if (customData.contains(CustomConstants.PushMessage.VIDEO_CALL_PUSH_FEEDBACK)){
-                                Type videoEvaluationType = new TypeToken<CustomBaseEntity<VideoEvaluationEntity>>() {}.getType();
-                                CustomMsgTypeEntity customMsgTypeEntity = CustomConvertUtils
-                                        .customMassageAnalyzeModule(customData, CustomConstants.PushMessage.MODULE_NAME,videoEvaluationType);
-                                VideoEvaluationEntity evaluationEntity = (VideoEvaluationEntity) CustomConvertUtils
-                                        .customMassageAnalyzeType(customMsgTypeEntity, CustomConstants.PushMessage.VIDEO_CALL_PUSH_FEEDBACK);
+                            if (customData.contains(CustomConstants.PushMessage.VIDEO_CALL_FEEDBACK)){
+                                VideoEvaluationEntity evaluationEntity = V2TIMCustomManagerUtil.videoEvaluationManager(customData);
                                 if (evaluationEntity != null){
                                     uc.videoEvaluation.postValue(evaluationEntity);
                                 }
@@ -500,13 +488,33 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
 
     }
 
+    //视频评价上报
+    public void videoFeedback(long videoCallPushLogId, int feedback) {
+        model.videoFeedback(videoCallPushLogId,feedback)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .subscribe(new BaseObserver<BaseDataResponse>() {
+
+                    @Override
+                    public void onSuccess(BaseDataResponse baseDataResponse) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+    }
+
     //拨打语音、视频
     public void getCallingInvitedInfo(String myImUserId, String otherImUserId,int videoCallPushLogId) {
         if (Status.mIsShowFloatWindow){
             ToastUtils.showShort(R.string.audio_in_call);
             return;
         }
-        model.callingInviteInfo(2, myImUserId, otherImUserId, 0,videoCallPushLogId)
+        model.callingInviteInfo(2, myImUserId, otherImUserId, 2,videoCallPushLogId)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())

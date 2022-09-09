@@ -11,14 +11,14 @@ import java.io.Serializable;
  * @Date： 2022/9/9 12:28
  */
 public class VideoEvaluationEntity implements Serializable {
-    private int videoCallPushLogId;
+    private long videoCallPushLogId;
     private String avatar;
 
-    public int getVideoCallPushLogId() {
+    public long getVideoCallPushLogId() {
         return videoCallPushLogId;
     }
 
-    public void setVideoCallPushLogId(int videoCallPushLogId) {
+    public void setVideoCallPushLogId(long videoCallPushLogId) {
         this.videoCallPushLogId = videoCallPushLogId;
     }
 

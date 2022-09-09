@@ -804,6 +804,13 @@ public interface HttpDataSource {
 
     Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(Integer callingType, String fromUserId, String toUserId, int callingSource,int videoCallPushLogId);
 
+    /**
+     * 视讯推送评价
+     * @param videoCallPushLogId
+     * @param feedback
+     * @return
+     */
+    Observable<BaseDataResponse> videoFeedback(long videoCallPushLogId, int feedback);
 
     /**
      * @return io.reactivex.Observable<com.dl.play.chat.entity.CallingInviteInfo>

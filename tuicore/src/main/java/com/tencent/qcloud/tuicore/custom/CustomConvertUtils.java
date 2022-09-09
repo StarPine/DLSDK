@@ -125,12 +125,12 @@ public class CustomConvertUtils {
 
     }
 
-    public static CustomMsgTypeEntity customMassageAnalyzeModule(String customData, String moduleName, Type classType) {
+    public static Object customMassageAnalyzeModule(String customData, String moduleName, String typeName, Type classType) {
         try {
             CustomBaseEntity customBaseEntity = new Gson().fromJson(customData, classType);
             String msgModuleName = customBaseEntity.getContentBody().getMsgModuleName();
             if (moduleName.equals(msgModuleName)){
-                return customBaseEntity.getContentBody().getContentBody();
+                return customMassageAnalyzeType(customBaseEntity.getContentBody().getContentBody(),typeName);
             }
         }catch (Exception e){
             Log.i("CustomConvertUtils", "module解析异常");

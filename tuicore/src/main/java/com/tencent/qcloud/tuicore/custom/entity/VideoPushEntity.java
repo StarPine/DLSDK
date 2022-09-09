@@ -23,6 +23,7 @@ public class VideoPushEntity implements Serializable {
     private int videoCallPushLogId;
     private UserProfileBean userProfile;
     private int seconds;
+    private int isShake;
 
     public int getVideoCallPushLogId() {
         return videoCallPushLogId;
@@ -34,6 +35,10 @@ public class VideoPushEntity implements Serializable {
 
     public int getSeconds() {
         return seconds;
+    }
+
+    public int getIsShake() {
+        return isShake;
     }
 
     public static class UserProfileBean implements Serializable {
