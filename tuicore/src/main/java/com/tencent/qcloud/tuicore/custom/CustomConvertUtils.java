@@ -4,9 +4,14 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.tencent.imsdk.v2.V2TIMCustomElem;
 import com.tencent.qcloud.tuicore.TUIConstants;
+import com.tencent.qcloud.tuicore.custom.entity.CustomBaseEntity;
+import com.tencent.qcloud.tuicore.custom.entity.CustomMsgTypeEntity;
+import com.tencent.qcloud.tuicore.custom.entity.VideoPushEntity;
 
+import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.Objects;
 
@@ -119,5 +124,31 @@ public class CustomConvertUtils {
         return result;
 
     }
+
+    public static CustomMsgTypeEntity customMassageAnalyzeModule(String customData, String moduleName, Type classType) {
+        try {
+            CustomBaseEntity customBaseEntity = new Gson().fromJson(customData, classType);
+            String msgModuleName = customBaseEntity.getContentBody().getMsgModuleName();
+            if (moduleName.equals(msgModuleName)){
+                return customBaseEntity.getContentBody().getContentBody();
+            }
+        }catch (Exception e){
+            Log.i("CustomConvertUtils", "module解析异常");
+        }
+        return null;
+    }
+
+    public static Object customMassageAnalyzeType(CustomMsgTypeEntity msgTypeEntity, String typeName) {
+        try {
+            String customMsgType = msgTypeEntity.getCustomMsgType();
+            if (customMsgType.equals(typeName)){
+                return msgTypeEntity.getCustomMsgBody();
+            }
+        }catch (Exception e){
+            Log.i("CustomConvertUtils", "type解析异常");
+        }
+        return null;
+    }
+
 
 }

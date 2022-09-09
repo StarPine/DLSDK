@@ -36,11 +36,9 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.Injection;
 import com.dl.playfun.app.config.TbarCenterImgConfig;
-import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.databinding.FragmentMainBinding;
 import com.dl.playfun.entity.MqBroadcastGiftEntity;
 import com.dl.playfun.entity.MqBroadcastGiftUserEntity;
-import com.dl.playfun.entity.SystemConfigEntity;
 import com.dl.playfun.entity.VersionEntity;
 import com.dl.playfun.event.DailyAccostEvent;
 import com.dl.playfun.event.MainTabEvent;
@@ -49,7 +47,6 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.ui.dialog.LockDialog;
 import com.dl.playfun.ui.home.HomeMainFragment;
-import com.dl.playfun.ui.home.accost.HomeAccostDialog;
 import com.dl.playfun.ui.message.MessageMainFragment;
 import com.dl.playfun.ui.mine.MineFragment;
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
@@ -64,10 +61,10 @@ import com.dl.playfun.widget.dialog.TraceDialog;
 import com.dl.playfun.widget.dialog.WebViewDialog;
 import com.dl.playfun.widget.dialog.version.view.UpdateDialogView;
 import com.dl.playfun.widget.pageview.FragmentAdapter;
+import com.tencent.qcloud.tuicore.custom.entity.VideoEvaluationEntity;
+import com.tencent.qcloud.tuicore.custom.entity.VideoPushEntity;
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.view.ConversationCommonHolder;
-
-import java.util.List;
 
 import me.goldze.mvvmhabit.bus.RxBus;
 
@@ -133,6 +130,13 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
     public void initViewObservable() {
         super.initViewObservable();
         viewModel.versionOnClickCommand();
+        viewModel.uc.videoEvaluation.observe(this,evaluationEntity->{
+            setVideoEvaluationDialog(evaluationEntity);
+        });
+        viewModel.uc.videoPush.observe(this,videoPushEntity->{
+            setVideoPushDialog(videoPushEntity);
+        });
+
         AppContext.instance().logEvent(AppsFlyerEvent.main_open);
 //        aliYunMqttClientLifecycle.broadcastGiftEvent.observe(this, new Observer<MqBroadcastGiftEntity>() {
 //            @Override
@@ -374,6 +378,37 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                 }
             }
         });
+    }
+
+
+    //视讯评价
+    private void setVideoEvaluationDialog(VideoEvaluationEntity evaluationEntity) {
+        TraceDialog.getInstance(mActivity)
+                .setConfirmOnlick(dialog -> {
+
+                })
+                .setConfirmTwoOnlick(dialog -> {
+
+                })
+                .getVideoEvaluationDialog(evaluationEntity.getAvatar())
+                .show();
+    }
+
+    //视讯推送
+    private void setVideoPushDialog(VideoPushEntity videoPushEntity) {
+        TraceDialog.getInstance(mActivity)
+                .setConfirmTwoOnlick(dialog -> {
+                    viewModel.getCallingInvitedInfo(ConfigManager.getInstance().getUserImID(),
+                            videoPushEntity.getUserProfile().getImId(),
+                            videoPushEntity.getVideoCallPushLogId());
+                })
+                .getVideoPushDialog(videoPushEntity.getUserProfile().getAvatar(),
+                        videoPushEntity.getUserProfile().getSex() == 0,
+                        videoPushEntity.getUserProfile().getIsVip() == 1,
+                        videoPushEntity.getUserProfile().getAge(),
+                        videoPushEntity.getSeconds(),
+                        videoPushEntity.getUserProfile().getNickname())
+                .show();
     }
 
     private void showRecharge() {

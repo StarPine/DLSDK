@@ -34,4 +34,14 @@ public class CustomConstants {
         //照片
         public static final String IMG_PHOTO = "imgPhoto";
     }
+
+    //视讯推送
+    public static final class PushMessage {
+        //模块名
+        public static final String MODULE_NAME = "pushMessage";
+        public static final String VIDEO_CALL_PUSH = "videoCallPush";
+        public static final String VIDEO_CALL_PUSH_FEEDBACK = "videoCallPushFeedback";
+    }
+
+
 }
