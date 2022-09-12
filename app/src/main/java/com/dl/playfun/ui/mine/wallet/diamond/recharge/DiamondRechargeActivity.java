@@ -71,7 +71,8 @@ public class DiamondRechargeActivity extends BaseActivity<ActivityDiamondRecharg
         this.billingClientLifecycle = ((AppContext)getApplication()).getBillingClientLifecycle();
         if(billingClientLifecycle!=null){
             //查询并消耗本地历史订单类型： INAPP 支付购买  SUBS订阅
-            billingClientLifecycle.queryAndConsumePurchase(BillingClient.SkuType.INAPP);
+            //billingClientLifecycle.queryAndConsumePurchase(BillingClient.SkuType.INAPP);
+            billingClientLifecycle.queryPurchasesAsync(BillingClient.SkuType.INAPP);
             billingClientLifecycle.queryAndConsumePurchase(BillingClient.SkuType.SUBS);
         }
         viewModel.getRechargeList();
