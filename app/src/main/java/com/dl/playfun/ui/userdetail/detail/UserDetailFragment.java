@@ -149,6 +149,14 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
 
     @Override
     public void initViewObservable() {
+        //搭讪相关
+        viewModel.uc.sendAccostFirstError.observe(this, new Observer<Void>() {
+            @Override
+            public void onChanged(Void unused) {
+                AppContext.instance().logEvent(AppsFlyerEvent.Top_up);
+                toRecharge();
+            }
+        });
         viewModel.uc.sendDialogViewEvent.observe(this, event -> {
             paySelectionboxChoose();
         });

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:binding="http://schemas.android.com/apk/res-auto">
 
     <data>
@@ -22,52 +23,76 @@
         android:orientation="horizontal"
         android:visibility="@{viewModel.detailEntity.sex == null ? View.GONE:View.VISIBLE}">
 
-        <com.dl.playfun.widget.DrawableCenterTextView
-            android:layout_width="85dp"
-            android:layout_height="match_parent"
-            android:drawableStart="@drawable/ic_toolbar_evaluate"
-            android:drawablePadding="4.19dp"
-            android:gravity="center_vertical"
-            android:textColor="@drawable/user_detail_bottom_text_color"
-            android:textSize="13sp"
-            binding:onClickCommand="@{viewModel.evaluateOnClickCommand}" />
-
-        <com.dl.playfun.widget.DrawableCenterTextView
-            android:layout_width="75dp"
-            android:layout_height="match_parent"
-            android:drawableStart="@drawable/ic_user_detail_send_message"
-            android:drawablePadding="4.19dp"
-            android:enabled="@{!(viewModel.detailEntity.albumType == 3 &amp;&amp; viewModel.detailEntity.albumApply != 1)}"
-            android:gravity="center_vertical"
-            android:textColor="@drawable/user_detail_bottom_text_color"
-            android:textSize="13sp"
-            binding:onClickCommand="@{viewModel.chatOnClickCommand}" />
-
-        <com.dl.playfun.widget.DrawableCenterTextView
-            android:id="@+id/dt_social_account"
+        <LinearLayout
             android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            android:drawableStart="@drawable/ic_user_detail_video"
-            android:drawablePadding="4.19dp"
-            android:enabled="@{!(viewModel.detailEntity.albumType == 3 &amp;&amp; viewModel.detailEntity.albumApply != 1)}"
-            android:gravity="center_vertical"
-            android:textColor="@drawable/user_detail_bottom_text_color"
-            android:textSize="13sp"
-            binding:onClickCommand="@{viewModel.socialAccountOnClickCommand}" />
+            android:gravity="center"
+            android:orientation="horizontal">
 
+            <com.dl.playfun.widget.DrawableCenterTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_toolbar_evaluate"
+                android:gravity="center_vertical"
+                android:textColor="@drawable/user_detail_bottom_text_color"
+                android:textSize="13sp"
+                binding:onClickCommand="@{viewModel.evaluateOnClickCommand}" />
+        </LinearLayout>
 
-        <com.dl.playfun.widget.DrawableCenterTextView
-            android:layout_width="90dp"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:drawableStart="@drawable/ic_toolbar_mic"
-            android:drawablePadding="4.19dp"
-            android:enabled="@{!(viewModel.detailEntity.albumType == 3 &amp;&amp; viewModel.detailEntity.albumApply != 1) &amp;&amp; viewModel.detailEntity.isConnectionMic}"
-            android:gravity="center_vertical"
-            android:textColor="@drawable/user_detail_bottom_text_color"
-            android:textSize="13sp"
-            binding:onClickCommand="@{viewModel.connMicOnClickCommand}" />
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <com.dl.playfun.widget.DrawableCenterTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@{viewModel.detailEntity.isAccost == 0?@drawable/ic_user_detail_accost:@drawable/ic_user_detail_send_message}"
+                android:gravity="center_vertical"
+                android:textColor="@drawable/user_detail_bottom_text_color"
+                android:textSize="13sp"
+                binding:onClickCommand="@{viewModel.chatOnClickCommand}"
+                tools:drawableStart="@drawable/ic_user_detail_accost"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+            <com.dl.playfun.widget.DrawableCenterTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_user_detail_audio"
+                android:textColor="@drawable/user_detail_bottom_text_color"
+                android:textSize="13sp"
+                binding:onClickCommand="@{viewModel.connMicOnClickCommand}" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+            <com.dl.playfun.widget.DrawableCenterTextView
+                android:id="@+id/dt_social_account"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_user_detail_video"
+                android:gravity="center_vertical"
+                android:textColor="@drawable/user_detail_bottom_text_color"
+                android:textSize="13sp"
+                binding:onClickCommand="@{viewModel.socialAccountOnClickCommand}" />
+
+        </LinearLayout>
+
 
     </LinearLayout>
 </layout>

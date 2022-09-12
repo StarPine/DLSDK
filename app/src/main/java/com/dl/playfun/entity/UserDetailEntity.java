@@ -58,6 +58,9 @@ public class UserDetailEntity extends BaseObservable {
     private Integer isOnline;
     @SerializedName("calling_status")
     private int callingStatus;
+    @SerializedName("is_accost")
+    private int isAccost;
+
     /**
      * 男性则代表是否是vip，女性则代表是否为女神
      */
@@ -163,6 +166,14 @@ public class UserDetailEntity extends BaseObservable {
     public void setBlacklistStatus(Integer blacklistStatus) {
         this.blacklistStatus = blacklistStatus;
         notifyPropertyChanged(BR.blacklistStatus);
+    }
+
+    public int getIsAccost() {
+        return isAccost;
+    }
+
+    public void setIsAccost(int isAccost) {
+        this.isAccost = isAccost;
     }
 
     public Integer getUnlockAccountMoney() {
