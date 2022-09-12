@@ -75,6 +75,7 @@ public class RechargeActivity extends BaseActivity<ActivityRechargeBinding, Rech
         if(billingClientLifecycle!=null){
             //查询并消耗本地历史订单类型： INAPP 支付购买  SUBS订阅
             billingClientLifecycle.queryAndConsumePurchase(BillingClient.SkuType.INAPP);
+            billingClientLifecycle.queryAndConsumePurchase(BillingClient.SkuType.SUBS);
         }
         binding.tvOriginalPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         binding.basicToolbar.setToolbarListener(this);
