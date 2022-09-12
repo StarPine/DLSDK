@@ -27,11 +27,13 @@ public class CustomConstants {
         //落币数量
         public static final String DROP_COINS = "dropCoins";
     }
-    //红包快照模块
-    public static final class PacketSnapshot{
+    //照片、视频模块
+    public static final class MediaGallery {
         //当前模块名
-        public static final String MODULE_NAME = "pushCoinGame";
+        public static final String MODULE_NAME = "mediaGalleryPay";
         //照片
-        public static final String IMG_PHOTO = "imgPhoto";
+        public static final String PHOTO_GALLERY = "photoGalleryPay";
+        //视频
+        public static final String  VIDEO_GALLERY = "videoGalleryPay";
     }
 }

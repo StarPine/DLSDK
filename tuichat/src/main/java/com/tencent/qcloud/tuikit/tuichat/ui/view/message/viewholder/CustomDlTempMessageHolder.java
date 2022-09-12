@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tencent.custom.IMGsonUtils;
+import com.tencent.custom.PhotoGalleryPayEntity;
 import com.tencent.custom.tmp.CustomDlTempMessage;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.custom.CustomConstants;
@@ -56,10 +57,10 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
             }
             CustomDlTempMessage.MsgBodyInfo msgModuleInfo = customDlTempMessage.getContentBody().getContentBody();
             //红包照片模块
-            if (CustomConstants.PacketSnapshot.MODULE_NAME.equals(moduleName)) {
+            if (CustomConstants.MediaGallery.MODULE_NAME.equals(moduleName)) {
                 //照片内容
-                if(CustomConstants.PacketSnapshot.IMG_PHOTO.equals(msgModuleInfo.getCustomMsgType())){
-                    CustomImageMessage customImageMessageBean = IMGsonUtils.fromJson(IMGsonUtils.toJson(msgModuleInfo.getCustomMsgBody()),CustomImageMessage.class);
+                if(CustomConstants.MediaGallery.PHOTO_GALLERY.equals(msgModuleInfo.getCustomMsgType())){
+                    PhotoGalleryPayEntity customImageMessageBean = IMGsonUtils.fromJson(IMGsonUtils.toJson(msgModuleInfo.getCustomMsgBody()),PhotoGalleryPayEntity.class);
                     imgLoad(itemView.getContext(), flTmpLayout, customImageMessageBean);
                 }
             }else{
@@ -89,9 +90,9 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
         rootView.addView(defaultView);
     }
     //测试自定义图片渲染
-    public void imgLoad(Context context, FrameLayout rootView, CustomImageMessage customImageMessageBean){
-        View customImageView = View.inflate(context, R.layout.custom_image_message_layout, null);
-        ImageView customImage = customImageView.findViewById(R.id.iv_custom_image);
+    public void imgLoad(Context context, FrameLayout rootView, PhotoGalleryPayEntity customImageMessageBean){
+        View customImageView = View.inflate(context, R.layout.tmp_message_photo_gallery_layout, null);
+        ImageView imgContent = customImageView.findViewById(R.id.img_content);
         String imagePath = TUIChatUtils.getFullImageUrl(customImageMessageBean.getImgPath());
         Glide.with(TUIChatService.getAppContext())
                 .asBitmap()
@@ -100,7 +101,7 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
                 .centerCrop()
                 .placeholder(R.drawable.chat_custom_image_load)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(customImage);
+                .into(imgContent);
         rootView.addView(customImageView);
     }
 

@@ -16,7 +16,7 @@ public class GeneralConfig {
 
     private boolean isAndroidPrivateRing;
     //以读回执
-    private boolean showRead = true;
+    private boolean showRead = false;
     private boolean reactEnable = false;
     private boolean replyEnable = true;
     private boolean quoteEnable = true;

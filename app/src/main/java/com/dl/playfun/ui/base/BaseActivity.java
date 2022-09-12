@@ -21,6 +21,8 @@ import com.dl.playfun.R;
 import com.dl.playfun.manager.LocaleManager;
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
 import com.dl.playfun.viewmodel.BaseViewModel;
+import com.dl.playfun.widget.dialog.loading.DialogProgress;
+import com.dl.playfun.widget.progress.MPCircleProgressBar;
 import com.gyf.immersionbar.ImmersionBar;
 import com.kaopiz.kprogresshud.KProgressHUD;
 
@@ -34,6 +36,7 @@ import java.util.Map;
 public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseViewModel> extends me.goldze.mvvmhabit.base.BaseActivity<V, VM> {
     private KProgressHUD hud;
     private KProgressHUD progressHud;
+    private DialogProgress dialogProgress;
 
 
     @Override
@@ -158,6 +161,7 @@ public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseVie
                     .setCancellable(false)
 //                    .setSize(100, 100)
                     .setMaxProgress(100)
+                    .setCustomView(new MPCircleProgressBar(getContext()))
                     .show();
         }
         progressHud.setLabel(title);

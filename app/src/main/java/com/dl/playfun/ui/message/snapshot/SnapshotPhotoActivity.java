@@ -26,6 +26,7 @@ public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSet
 
     private String imgPath = null;
     private boolean snapshot = false;
+    private boolean isVideo = false;
 
     private SnapshotPhotoDialog snapshotPhotoDialog;
     @Override
@@ -56,6 +57,7 @@ public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSet
         super.initParam();
         imgPath = getIntent().getStringExtra("imgPath");
         snapshot = getIntent().getBooleanExtra("snapshot",false);
+        isVideo = getIntent().getBooleanExtra("isVideo",false);
     }
 
     @Override
@@ -68,8 +70,14 @@ public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSet
     public void initData() {
         super.initData();
         viewModel.isVideoSetting.set(snapshot);
-        Log.e("当前选择图片地址：",String.valueOf(imgPath));
-        GlideEngine.createGlideEngine().loadImage(this,imgPath,binding.imgContent,binding.imgLong);
+        if(isVideo){
+
+        }else{
+            //选择的是图片
+            Log.e("当前选择图片地址：",String.valueOf(imgPath));
+            GlideEngine.createGlideEngine().loadImage(this,imgPath,binding.imgContent,binding.imgLong);
+        }
+
     }
 
 

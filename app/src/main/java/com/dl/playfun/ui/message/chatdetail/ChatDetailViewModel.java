@@ -52,6 +52,7 @@ import com.dl.playfun.utils.Utils;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.google.gson.Gson;
 import com.luck.picture.lib.entity.LocalMedia;
+import com.tencent.custom.PhotoGalleryPayEntity;
 import com.tencent.custom.tmp.CustomDlTempMessage;
 import com.tencent.qcloud.tuicore.Status;
 import com.tencent.qcloud.tuicore.custom.CustomConstants;
@@ -702,64 +703,6 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                     public void onComplete() {
                         super.onComplete();
                         dismissHUD();
-                    }
-                });
-    }
-
-    //上传文件到阿里云
-    public void uploadFileOSS(final LocalMedia localMedia){
-        final String filePath = localMedia.getCompressPath();
-        Observable.just(filePath)
-                .compose(RxUtils.exceptionTransformer())
-                .doOnSubscribe(this)
-                .doOnSubscribe(disposable -> showHUD())
-                .subscribeOn(Schedulers.io())
-                .map((Function<String, String>) s -> {
-                    String fileName = AppConfig.OSS_CUSTOM_FILE_NAME_CHAT +"/"+ Utils.formatYYMMSS.format(new Date());
-                    return FileUploadUtils.ossUploadFileCustom(FileUploadUtils.FILE_TYPE_IMAGE,filePath,fileName, null);
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableObserver<String>() {
-                    @Override
-                    public void onNext(String fileKey) {
-                        dismissHUD();
-                        if(fileKey!=null){
-                            //用IM框架默认的图片类型
-//                            TUIMessageBean info = ChatMessageBuilder.buildImageMessage(Uri.fromFile(new File(filePath)));
-                            //用自定义图片类型
-                            CustomImageMessage customImageMessage = new CustomImageMessage();
-                            customImageMessage.version = TUIChatConstants.version;
-                            customImageMessage.setImgPath(fileKey);
-                            customImageMessage.setImgWidth(localMedia.getWidth());
-                            customImageMessage.setImgHeight(localMedia.getHeight());
-
-
-                            CustomDlTempMessage.MsgModuleInfo msgModuleInfo = new CustomDlTempMessage.MsgModuleInfo();
-                            msgModuleInfo.setMsgModuleName(CustomConstants.PacketSnapshot.MODULE_NAME);
-                            //消息内容体
-                            CustomDlTempMessage.MsgBodyInfo msgBodyInfo = new CustomDlTempMessage.MsgBodyInfo();
-                            msgBodyInfo.setCustomMsgType(CustomConstants.PacketSnapshot.IMG_PHOTO);
-                            msgBodyInfo.setCustomMsgBody(customImageMessage);
-                            msgModuleInfo.setContentBody(msgBodyInfo);
-
-                            CustomDlTempMessage customDlTempMessage = new CustomDlTempMessage();
-                            customDlTempMessage.setContentBody(msgModuleInfo);
-
-                            String data = GsonUtils.toJson(customDlTempMessage);
-                            TUIMessageBean info = ChatMessageBuilder.buildCustomMessage(data, null, null);
-                            uc.signUploadSendMessage.postValue(info);
-                        }
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        dismissHUD();
-                        ToastUtils.showShort(R.string.playfun_upload_failed);
-                    }
-
-                    @Override
-                    public void onComplete() {
                     }
                 });
     }

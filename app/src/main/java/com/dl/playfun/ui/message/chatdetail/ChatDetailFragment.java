@@ -21,6 +21,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -42,6 +44,7 @@ import com.dl.playfun.entity.ApiConfigManagerEntity;
 import com.dl.playfun.entity.CrystalDetailsConfigEntity;
 import com.dl.playfun.entity.EvaluateItemEntity;
 import com.dl.playfun.entity.GiftBagEntity;
+import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.entity.LocalMessageIMEntity;
 import com.dl.playfun.entity.PhotoAlbumEntity;
 import com.dl.playfun.entity.TagEntity;
@@ -932,7 +935,8 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                 Intent snapshotIntent = new Intent(mActivity,SnapshotPhotoActivity.class);
                 snapshotIntent.putExtra("imgPath",result.get(0).getCompressPath());
                 snapshotIntent.putExtra("snapshot",snapshot);
-                startActivity(snapshotIntent);
+                snapshotIntent.putExtra("isVideo",false);
+                toSnapshotPhotoIntent.launch(snapshotIntent);
                // viewModel.uploadFileOSS(result.get(0));
             }
 
@@ -941,6 +945,22 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             }
         });
     }
+
+    //跳转图片、视频编辑
+    ActivityResultLauncher<Intent> toSnapshotPhotoIntent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        if (result.getData() != null) {
+            Intent intentData = result.getData();
+            boolean isVideo = intentData.getBooleanExtra("isVideo",false);
+            GoodsEntity goodsEntity = (GoodsEntity) intentData.getSerializableExtra("mediaGalleryPay");
+            if(goodsEntity!=null){
+                Log.e("支付成功","===============");
+            }
+        }
+    });
+
+
+
+
     //选择视频 snapshot 是否是付费
     public void onVideoActionClick(boolean snapshot) {
         PictureSelectorUtil.selectVideo(mActivity, true, 1, new OnResultCallbackListener<LocalMedia>() {

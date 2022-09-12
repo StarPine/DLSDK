@@ -21,6 +21,8 @@ import androidx.lifecycle.Observer;
 import com.blankj.utilcode.util.KeyboardUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
+import com.dl.playfun.widget.dialog.loading.DialogProgress;
+import com.dl.playfun.widget.progress.MPCircleProgressBar;
 import com.gyf.immersionbar.ImmersionBar;
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.dl.playfun.R;
@@ -39,7 +41,8 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
     protected AppCompatActivity mActivity;
     protected FragmentActivity _mActivity;
     private KProgressHUD hud;
-    private KProgressHUD progressHud;
+
+    private DialogProgress dialogProgress;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -192,8 +195,8 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
     }
 
     private void showHud(String title) {
-        if (progressHud != null && progressHud.isShowing()) {
-            progressHud.dismiss();
+        if (dialogProgress != null && dialogProgress.isShowing()) {
+            dialogProgress.dismiss();
         }
 //        ImageView imageView = new ImageView(getContext());
 //        imageView.setBackgroundResource(R.drawable.spin_animation);
@@ -226,19 +229,12 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
     }
 
     public void showProgressHud(String title, int progress) {
-        if (progressHud == null) {
-            progressHud = KProgressHUD.create(this.getContext())
-                    .setStyle(KProgressHUD.Style.BAR_DETERMINATE)
-//                    .setBackgroundColor(getResources().getColor(R.color.hud_background))
-                    .setCancellable(false)
-//                    .setSize(100, 100)
-                    .setMaxProgress(100)
-                    .show();
+        if (dialogProgress == null) {
+            dialogProgress = new DialogProgress(this.getContext());
         }
-        progressHud.setLabel(title);
-        progressHud.setProgress(progress);
-        if (!progressHud.isShowing()) {
-            progressHud.show();
+        dialogProgress.setProgress(progress);
+        if (!dialogProgress.isShowing()) {
+            dialogProgress.show();
         }
     }
 
@@ -246,8 +242,8 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
         if (hud != null && hud.isShowing()) {
             hud.dismiss();
         }
-        if (progressHud != null && progressHud.isShowing()) {
-            progressHud.dismiss();
+        if (dialogProgress != null && dialogProgress.isShowing()) {
+            dialogProgress.dismiss();
         }
     }
 
