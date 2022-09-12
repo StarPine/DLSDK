@@ -56,6 +56,7 @@ import com.dl.playfun.ui.dialog.GiftBagDialog;
 import com.dl.playfun.ui.message.chatdetail.notepad.NotepadActivity;
 import com.dl.playfun.ui.message.photoreview.PhotoReviewFragment;
 import com.dl.playfun.ui.message.sendcoinredpackage.SendCoinRedPackageFragment;
+import com.dl.playfun.ui.message.snapshot.SnapshotPhotoActivity;
 import com.dl.playfun.ui.mine.myphotoalbum.MyPhotoAlbumFragment;
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
 import com.dl.playfun.ui.mine.wallet.girl.TwDollarMoneyFragment;
@@ -928,7 +929,11 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         PictureSelectorUtil.selectImage(mActivity, true, 1, new OnResultCallbackListener<LocalMedia>() {
             @Override
             public void onResult(List<LocalMedia> result) {
-                viewModel.uploadFileOSS(result.get(0));
+                Intent snapshotIntent = new Intent(mActivity,SnapshotPhotoActivity.class);
+                snapshotIntent.putExtra("imgPath",result.get(0).getCompressPath());
+                snapshotIntent.putExtra("snapshot",snapshot);
+                startActivity(snapshotIntent);
+               // viewModel.uploadFileOSS(result.get(0));
             }
 
             @Override

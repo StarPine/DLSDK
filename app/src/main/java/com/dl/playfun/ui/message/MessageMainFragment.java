@@ -57,11 +57,10 @@ public class MessageMainFragment extends BaseFragment<FragmentMessageMainBinding
         viewModel.loadDatas();
 
         BaseFragment firstFragment = findChildFragment(ChatMessageFragment.class);
+        mFragments[0] = new ChatMessageFragment();
         if (firstFragment == null) {
-            mFragments[0] = new ChatMessageFragment();
             mFragments[1] = new OftenContactFragment();
         } else {
-            mFragments[0] = new ChatMessageFragment();
             if(findChildFragment(OftenContactFragment.class)!=null){
                 mFragments[1] = findChildFragment(OftenContactFragment.class);
             }else{

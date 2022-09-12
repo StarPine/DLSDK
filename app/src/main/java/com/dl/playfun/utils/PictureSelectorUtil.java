@@ -38,7 +38,7 @@ public class PictureSelectorUtil {
                 .theme(R.style.picture_white_style_custom)
                 .imageEngine(GlideEngine.createGlideEngine())
                 .isCompress(true)
-                .compressQuality(10)// 图片压缩后输出质量 0~ 100
+                .compressQuality(100)// 图片压缩后输出质量 0~ 100
                 .synOrAsy(true)
                 .imageSpanCount(IMAGE_SPAN_COUNT)
                 .compressFocusAlpha(true)

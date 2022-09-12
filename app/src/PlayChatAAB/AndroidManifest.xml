@@ -183,6 +183,16 @@
             android:windowSoftInputMode="adjustPan|adjustResize|stateHidden"><!--" adjustResize|stateHidden"-->
         </activity>
 
+        <!-- 快照页面 -->
+        <activity android:name=".ui.message.snapshot.SnapshotPhotoActivity"
+            android:requestLegacyExternalStorage="true"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            android:exported="true"
+            android:theme="@style/AppTheme.NoActionBar"
+            />
+
+
         <activity
             android:name="com.dl.playfun.kl.view.AudioCallChatingActivity"
             android:launchMode="singleTop"

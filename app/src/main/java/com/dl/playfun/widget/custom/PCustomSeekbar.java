@@ -186,21 +186,29 @@ public class PCustomSeekbar extends View {
             int size = section_title.size();
             itemWidth = spot_on.getWidth();
             int widths = (itemWidth / 2);
-            //有内容后。应该计算出每个item节点的宽  view宽度 / 数量 =得到每节的长度
-            // 在减去item的宽。得到实际每节的绘制宽（每节的长度应当减去 item节点的宽度。避免线盖住节点。视图重叠）
-            processWidth = (getMeasuredWidth() - dp2px(getContext(), 10) - (itemWidth * size)) / size;
-            processWidth = processWidth + (processWidth / 2) - itemWidth;
-            if (measureWidthCallBack != null) {
-                int countJ = (maxIndex + 1);
-                measureWidthCallBack.measureWidthCall((processWidth * countJ + (itemWidth * countJ)) + (itemWidth * 2));
-            }
-            canvas.drawRect(0, 0, getMeasuredWidth(), getMeasuredHeight(), mPaint);
-            canvas.drawBitmap(bitmap, 0, 0, null);
+
             mPaint.setAlpha(255);
             mPaint.setColor(getContext().getResources().getColor(colors[1]));
             mProcessPaint.setColor(getContext().getResources().getColor(colors[0]));
             mProcessOffPaint.setColor(getContext().getResources().getColor(colors[2]));
 
+            //有内容后。应该计算出每个item节点的宽  view宽度 / 数量 =得到每节的长度
+            // 在减去item的宽。得到实际每节的绘制宽（每节的长度应当减去 item节点的宽度。避免线盖住节点。视图重叠）
+            int paddingWidth = getPaddingStart() + getPaddingEnd() + dp2px(getContext(), 15);
+            //每个线节点的宽
+            int itemWidthTwo = itemWidth * 2;
+            int processWidth = (getMeasuredWidth() - paddingWidth - dp2px(getContext(), 10) - (itemWidth * size)) / size;
+            processWidth = processWidth + (processWidth / 2) - itemWidth;
+
+
+            int barLineWidth = 0;
+            if (measureWidthCallBack != null) {
+                barLineWidth = (processWidth *  (maxIndex)) + ((maxIndex ) * itemWidth) + paddingWidth;
+                measureWidthCallBack.measureWidthCall(barLineWidth);
+            }
+
+            //第一条线
+            canvas.drawLine((itemWidth * 2) + widths, 0, barLineWidth, 0, mProcessOffPaint);
             for (int count = 0; count < section_title.size(); count++) {
                 int startX = 0;
                 //默认的下标绘制0 < 当前进度
@@ -209,12 +217,12 @@ public class PCustomSeekbar extends View {
                         //加行距
                         canvas.drawBitmap(spot_off, itemWidth + widths, thumbHeight + 2, mProcessOffPaint);
                         //第一条线
-                        canvas.drawLine((itemWidth * 2) + widths, thumbHeight, processWidth + (itemWidth * 2) + widths, thumbHeight + lineHeight, mProcessOffPaint);
+                        canvas.drawLine(itemWidthTwo + widths, thumbHeight, processWidth + itemWidthTwo + widths, thumbHeight + lineHeight, mProcessOffPaint);
                     } else {
                         //加行距
                         canvas.drawBitmap(cur_sections < count ? spot : spot_on, itemWidth + widths, thumbHeight + 2, cur_sections < count ? mPaint : mProcessPaint);
                         //第一条线
-                        canvas.drawLine((itemWidth * 2) + widths, thumbHeight + lineHeight, processWidth + (itemWidth * 2) + widths, thumbHeight + lineHeight, cur_sections > count ? mProcessPaint : mPaint);
+                        canvas.drawLine(itemWidthTwo + widths, thumbHeight + lineHeight, processWidth + itemWidthTwo + widths, thumbHeight + lineHeight, cur_sections > count ? mProcessPaint : mPaint);
                     }
 
                 } else {
@@ -224,31 +232,30 @@ public class PCustomSeekbar extends View {
                         //绘制节点
                         canvas.drawBitmap(spot_off, widths + startX + itemWidth, thumbHeight + 2, cur_sections < count ? mPaint : mProcessOffPaint);
                         if (count != section_title.size() - 1) {
-                            canvas.drawLine(startX + widths + (itemWidth * 2), thumbHeight + lineHeight, lineLeftWidth + widths + (itemWidth * 2), thumbHeight + lineHeight, mProcessOffPaint);
+                            canvas.drawLine(startX + widths + itemWidthTwo, thumbHeight + lineHeight, lineLeftWidth + widths + itemWidthTwo, thumbHeight + lineHeight, mProcessOffPaint);
                         }
                     } else {
                         //绘制节点
                         canvas.drawBitmap(cur_sections < count ? spot : spot_on, widths + startX + itemWidth, thumbHeight + 2, cur_sections < count ? mPaint : mProcessPaint);
                         if (count != section_title.size() - 1) {
                             if (count > maxIndex - 1) {
-                                canvas.drawLine(startX + widths + (itemWidth * 2), thumbHeight + lineHeight, lineLeftWidth + widths + (itemWidth * 2), thumbHeight + lineHeight, mProcessOffPaint);
+                                canvas.drawLine(startX + widths + itemWidthTwo, thumbHeight + lineHeight, lineLeftWidth + widths + itemWidthTwo, thumbHeight + lineHeight, mProcessOffPaint);
                             } else {
-                                canvas.drawLine(startX + widths + (itemWidth * 2), thumbHeight + lineHeight, lineLeftWidth + widths + (itemWidth * 2), thumbHeight + lineHeight, cur_sections > count ? mProcessPaint : mPaint);
+                                canvas.drawLine(startX + widths + itemWidthTwo, thumbHeight + lineHeight, lineLeftWidth + widths + itemWidthTwo, thumbHeight + lineHeight, cur_sections > count ? mProcessPaint : mPaint);
                             }
-
                         }
                     }
 
                 }
                 float startTextX = mTextPaint.measureText(section_title.get(count)) / 2;
                 if (count == 0) {
-                    canvas.drawText(section_title.get(count), (startX + ((itemWidth * 2))) - startTextX, (thumbHeight * 2) + thumbHeight + 7, mTextPaint);
+                    canvas.drawText(section_title.get(count), (startX + (itemWidthTwo)) - startTextX, (thumbHeight * 2) + thumbHeight + 7, mTextPaint);
                 } else if (count == maxIndex) {
-                    canvas.drawText(section_title.get(count), (startX + ((itemWidth * 2))) - startTextX, (thumbHeight * 2) + thumbHeight + 7, mTextPaint);
+                    canvas.drawText(section_title.get(count), (startX + (itemWidthTwo)) - startTextX, (thumbHeight * 2) + thumbHeight + 7, mTextPaint);
                 } else if (count == section_title.size() - 1) {
-                    canvas.drawText(section_title.get(count), (startX + ((itemWidth * 2))) - startTextX, (thumbHeight * 2) + thumbHeight + 7, mTextPaint3);
+                    canvas.drawText(section_title.get(count), (startX + (itemWidthTwo)) - startTextX, (thumbHeight * 2) + thumbHeight + 7, mTextPaint3);
                 } else if (count == cur_sections) {
-                    canvas.drawText(section_title.get(count), (startX + ((itemWidth * 2))) - startTextX, (thumbHeight * 2) + thumbHeight + 7, mTextPaint2);
+                    canvas.drawText(section_title.get(count), (startX + (itemWidthTwo)) - startTextX, (thumbHeight * 2) + thumbHeight + 7, mTextPaint2);
                 }
             }
         }
