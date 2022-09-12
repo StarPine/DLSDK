@@ -2,6 +2,8 @@ package com.dl.playfun.entity;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Author: 彭石林
  * Time: 2021/12/20 14:35
@@ -49,7 +51,7 @@ public class PriceConfigEntity {
     }
 
     //男
-    public class Current {
+    public class Current implements Serializable {
         private Integer balance;
         private Integer sex;
         @SerializedName("prop_total")
@@ -63,6 +65,8 @@ public class PriceConfigEntity {
         private String audioProfitTips;
         @SerializedName("text_price")
         private Integer textPrice;
+        private int allowVideo;
+        private int allowAudio;
 
         public String getVideoTips() {
             return videoTips;
@@ -148,6 +152,22 @@ public class PriceConfigEntity {
                     ", audioProfitTips='" + audioProfitTips + '\'' +
                     ", textPrice=" + textPrice +
                     '}';
+        }
+
+        public int getAllowVideo() {
+            return allowVideo;
+        }
+
+        public void setAllowVideo(int allowVideo) {
+            this.allowVideo = allowVideo;
+        }
+
+        public int getAllowAudio() {
+            return allowAudio;
+        }
+
+        public void setAllowAudio(int allowAudio) {
+            this.allowAudio = allowAudio;
         }
     }
 

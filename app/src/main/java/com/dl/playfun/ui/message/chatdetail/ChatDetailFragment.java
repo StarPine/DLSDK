@@ -92,6 +92,7 @@ import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuicore.Status;
 import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
+import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
@@ -864,6 +865,18 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                     viewModel.start(CertificationMaleFragment.class.getCanonicalName());
                 } else {
                     viewModel.start(CertificationFemaleFragment.class.getCanonicalName());
+                }
+            }
+
+            @Override
+            public void systemTipsOnClick(int position, TUIMessageBean messageInfo, String type) {
+                switch (type){
+                    case "disableCalls_2-callingType_1":
+                        viewModel.setAllowPrivacy(viewModel.ALLOW_TYPE_AUDIO);
+                        break;
+                    case "disableCalls_2-callingType_2":
+                        viewModel.setAllowPrivacy(viewModel.ALLOW_TYPE_VIDEO);
+                        break;
                 }
             }
 

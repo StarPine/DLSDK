@@ -33,6 +33,7 @@ import com.dl.playfun.entity.IMTransUserEntity;
 import com.dl.playfun.entity.MallWithdrawTipsInfoEntity;
 import com.dl.playfun.entity.PhotoAlbumEntity;
 import com.dl.playfun.entity.PriceConfigEntity;
+import com.dl.playfun.entity.PrivacyEntity;
 import com.dl.playfun.entity.ShowFloatWindowEntity;
 import com.dl.playfun.entity.StatusEntity;
 import com.dl.playfun.entity.TagEntity;
@@ -42,6 +43,7 @@ import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.AddBlackListEvent;
 import com.dl.playfun.event.CallChatingHangupEvent;
 import com.dl.playfun.event.MessageGiftNewEvent;
+import com.dl.playfun.event.MineInfoChangeEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.utils.ApiUitl;
@@ -87,6 +89,8 @@ import me.goldze.mvvmhabit.utils.ToastUtils;
  */
 public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
     public static final String TAG = "ChatDetailViewModel";
+    public final String ALLOW_TYPE_VIDEO = "video";
+    public final String ALLOW_TYPE_AUDIO = "audio";
     //是否是常联系
     public ObservableBoolean isContactsEnabled = new ObservableBoolean(false);
     public ObservableField<Boolean> isTagShow = new ObservableField<>(false);
@@ -98,6 +102,8 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
     public ObservableField<String> menuBlockade = new ObservableField<>();//封锁
     public ObservableField<TagEntity> tagEntitys = new ObservableField<>();
     public ObservableField<List<String>> sensitiveWords = new ObservableField<>();
+    public boolean mySelfVideoFlag;
+    public boolean mySelfAudioFlag;
     //聊天对方IM 用户ID
     public String TMToUserId;
     //IM聊天价格配置
@@ -601,6 +607,8 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                         PriceConfigEntity priceConfigEntity = response.getData();
                         if(priceConfigEntity != null){
                             priceConfigEntityField = priceConfigEntity;
+                            mySelfAudioFlag = priceConfigEntity.getCurrent().getAllowAudio() == 1;
+                            mySelfVideoFlag = priceConfigEntity.getCurrent().getAllowVideo() == 1;
                             uc.imProfit.call();
                         }
                     }
@@ -881,6 +889,41 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                     });
         }
 
+    }
+
+    public void setAllowPrivacy(String type) {
+        PrivacyEntity entity = new PrivacyEntity();
+        if (type.equals(ALLOW_TYPE_AUDIO)){
+            if (mySelfAudioFlag)return;
+            entity.setAllowAudio(true);
+        }else if (type.equals(ALLOW_TYPE_VIDEO)){
+            if (mySelfVideoFlag)return;
+            entity.setAllowVideo(true);
+        }
+        model.setPrivacy(entity)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseResponse>() {
+                    @Override
+                    public void onSuccess(BaseResponse response) {
+                        if (type.equals(ALLOW_TYPE_AUDIO)){
+                            mySelfAudioFlag = true;
+                            ToastUtils.showShort(R.string.playfun_activated_audio);
+                        }else if (type.equals(ALLOW_TYPE_VIDEO)){
+                            mySelfVideoFlag = true;
+                            ToastUtils.showShort(R.string.playfun_activated_video);
+                        }
+                        RxBus.getDefault().post(new MineInfoChangeEvent());
+                        dismissHUD();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        dismissHUD();
+                    }
+                });
     }
 
 

@@ -1272,6 +1272,8 @@
     <string name="playfun_dialog_title_tips">與她聊得愉快嗎？</string>
     <string name="playfun_evaluation_not_happy">不愉快</string>
     <string name="playfun_evaluation_happy">愉快</string>
+    <string name="playfun_activated_video">已開啟視訊開關</string>
+    <string name="playfun_activated_audio">已開啟語音開關</string>
 
 
 </resources>

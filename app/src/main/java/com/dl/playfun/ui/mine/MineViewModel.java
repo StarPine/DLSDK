@@ -31,7 +31,7 @@ import com.dl.playfun.event.MyPhotoAlbumChangeEvent;
 import com.dl.playfun.event.ProfileChangeEvent;
 import com.dl.playfun.event.RefreshUserDataEvent;
 import com.dl.playfun.event.TraceEmptyEvent;
-import com.dl.playfun.event.VipRechargeSuccessEvent;
+import com.dl.playfun.event.MineInfoChangeEvent;
 import com.dl.playfun.helper.JumpHelper;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
@@ -415,7 +415,7 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
                     loadUserInfo();
                     loadAlbumDetail(8);
                 });
-        mVipRechargeSubscription = RxBus.getDefault().toObservable(VipRechargeSuccessEvent.class)
+        mVipRechargeSubscription = RxBus.getDefault().toObservable(MineInfoChangeEvent.class)
                 .subscribe(event -> {
                     loadUserInfo();
                 });

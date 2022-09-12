@@ -43,5 +43,21 @@ public class CustomConstants {
         public static final String VIDEO_CALL_FEEDBACK = "videoCallFeedback";
     }
 
+    //通话模块
+    public static final class CallingMessage {
+        //模块名
+        public static final String MODULE_NAME = "calling";
+        public static final String TYPE_CALLING_FAILED = "callingFailed";
+    }
+
+    //系统提示模块
+    public static final class SystemTipsMessage {
+        //模块名
+        public static final String MODULE_NAME = "systemTips";
+        public static final String TYPE_DISABLE_CALLS = "disableCalls";
+    }
+
+
+
 
 }

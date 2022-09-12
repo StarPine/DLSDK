@@ -643,6 +643,13 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
                     mOnItemClickListener.onClickCustomText();
                 }
             }
+
+            @Override
+            public void systemTipsOnClick(int position, TUIMessageBean messageInfo, String type) {
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.systemTipsOnClick(position,messageInfo,type);
+                }
+            }
         });
     }
 
