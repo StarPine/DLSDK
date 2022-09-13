@@ -83,8 +83,13 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
+                        android:thumb="@drawable/switch_thumb"
+                        android:track="@drawable/switch_track"
+                        android:switchMinWidth="10dp"
                         android:checked="@={viewModel.privacyEntity.home}"
-                        binding:onClickCommand="@{viewModel.switchOnClickCommand}" />
+                        binding:onClickCommand="@{viewModel.switchOnClickCommand}"
+                        tools:checked="false"
+                        />
 
                 </RelativeLayout>
 
@@ -105,6 +110,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
+                        android:thumb="@drawable/switch_thumb"
+                        android:track="@drawable/switch_track"
                         android:checked="@={viewModel.privacyEntity.nearby}"
                         binding:onClickCommand="@{viewModel.switchOnClickCommand}" />
 
@@ -133,6 +140,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
+                        android:thumb="@drawable/switch_thumb"
+                        android:track="@drawable/switch_track"
                         android:checked="@={viewModel.privacyEntity.distance}"
                         binding:onClickCommand="@{viewModel.switchOnClickCommand}" />
                 </RelativeLayout>
@@ -153,6 +162,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
+                        android:thumb="@drawable/switch_thumb"
+                        android:track="@drawable/switch_track"
                         android:checked="@={viewModel.privacyEntity.onlineIme}"
                         binding:onClickCommand="@{viewModel.switchOnClickCommand}" />
                 </RelativeLayout>

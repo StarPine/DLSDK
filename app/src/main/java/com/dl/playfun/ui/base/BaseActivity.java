@@ -18,6 +18,7 @@ import androidx.lifecycle.Observer;
 
 import com.dl.playfun.R;
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
+import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.gyf.immersionbar.ImmersionBar;
 import com.kaopiz.kprogresshud.KProgressHUD;
@@ -36,7 +37,6 @@ public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseVie
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStatusView();
         View statusView = findViewById(R.id.status_bar_view);
         if (statusView != null) {
             ImmersionBar.setStatusBarView(this, statusView);
@@ -46,14 +46,16 @@ public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseVie
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void setStatusView() {
-        Window window = getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏图标和文字颜色为暗色
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(Color.TRANSPARENT);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ImmersionBarUtils.setupStatusBar(this, true, true);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ImmersionBarUtils.setupStatusBar(this, true, true);
     }
 
     @Override

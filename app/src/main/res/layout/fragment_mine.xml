@@ -1084,8 +1084,7 @@
                         <RelativeLayout
                             style="@style/ProfileItem"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/profile_item_height"
-                            binding:onClickCommand="@{viewModel.settingOnClickCommand}">
+                            android:layout_height="@dimen/profile_item_height">
 
                             <ImageView
                                 android:id="@+id/iv_video_switch"
@@ -1109,6 +1108,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
                                 android:layout_alignParentRight="true"
+                                android:thumb="@drawable/switch_thumb"
+                                android:track="@drawable/switch_track"
                                 android:checked="@={viewModel.userInfoEntity.allowVideo}"
                                 binding:onClickCommand="@{viewModel.switchVideoOnClickCommand}" />
 
@@ -1116,8 +1117,7 @@
                         <RelativeLayout
                             style="@style/ProfileItem"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/profile_item_height"
-                            binding:onClickCommand="@{viewModel.settingOnClickCommand}">
+                            android:layout_height="@dimen/profile_item_height">
 
                             <ImageView
                                 android:id="@+id/iv_audio_switch"
@@ -1141,6 +1141,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
                                 android:layout_alignParentRight="true"
+                                android:thumb="@drawable/switch_thumb"
+                                android:track="@drawable/switch_track"
                                 android:checked="@={viewModel.userInfoEntity.allowAudio}"
                                 binding:onClickCommand="@{viewModel.switchAudioOnClickCommand}" />
 

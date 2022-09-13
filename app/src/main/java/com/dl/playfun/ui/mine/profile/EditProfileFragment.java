@@ -212,7 +212,7 @@ public class EditProfileFragment extends BaseToolbarFragment<FragmentEditProfile
         Calendar selectedDate = Calendar.getInstance();
         if (viewModel.userDataEntity.get().getBirthday() != null) {
             try {
-                selectedDate.setTime(Utils.format.parse(viewModel.userDataEntity.get().getBirthday()));
+                selectedDate.setTime(Utils.formatday.parse(viewModel.userDataEntity.get().getBirthday()));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
