@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -137,6 +138,13 @@ public class MineFragment extends BaseRefreshFragment<FragmentMineBinding, MineV
     @Override
     public void initData() {
         super.initData();
+        //允许语音开关
+        binding.shAudio.setOnCheckedChangeListener((buttonView, isChecked) ->
+                viewModel.setAllowPrivacy(viewModel.ALLOW_TYPE_AUDIO, isChecked));
+        //允许视讯开关
+        binding.shVideo.setOnCheckedChangeListener((buttonView, isChecked) ->
+                viewModel.setAllowPrivacy(viewModel.ALLOW_TYPE_VIDEO, isChecked));
+
         binding.appbarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {
             @Override
             public void onStateChanged(AppBarLayout appBarLayout, State state) {
@@ -193,6 +201,12 @@ public class MineFragment extends BaseRefreshFragment<FragmentMineBinding, MineV
         super.initViewObservable();
         AppContext.instance().logEvent(AppsFlyerEvent.Me);
         inputMethodManager = (InputMethodManager) this.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        viewModel.uc.allowAudio.observe(this,aBoolean -> {
+            binding.shAudio.setChecked(aBoolean);
+        });
+        viewModel.uc.allowVideo.observe(this,aBoolean -> {
+            binding.shVideo.setChecked(aBoolean);
+        });
         viewModel.uc.removeAudioAlert.observe(this, new Observer<Void>() {
             @Override
             public void onChanged(Void unused) {

@@ -1104,14 +1104,13 @@
                                 android:textSize="13sp" />
 
                             <Switch
+                                android:id="@+id/sh_video"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
                                 android:layout_alignParentRight="true"
                                 android:thumb="@drawable/switch_thumb"
-                                android:track="@drawable/switch_track"
-                                android:checked="@={viewModel.userInfoEntity.allowVideo}"
-                                binding:onClickCommand="@{viewModel.switchVideoOnClickCommand}" />
+                                android:track="@drawable/switch_track"/>
 
                         </RelativeLayout>
                         <RelativeLayout
@@ -1137,14 +1136,13 @@
                                 android:textSize="13sp" />
 
                             <Switch
+                                android:id="@+id/sh_audio"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
                                 android:layout_alignParentRight="true"
                                 android:thumb="@drawable/switch_thumb"
-                                android:track="@drawable/switch_track"
-                                android:checked="@={viewModel.userInfoEntity.allowAudio}"
-                                binding:onClickCommand="@{viewModel.switchAudioOnClickCommand}" />
+                                android:track="@drawable/switch_track" />
 
                         </RelativeLayout>
                         <RelativeLayout

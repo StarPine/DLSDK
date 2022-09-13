@@ -79,8 +79,8 @@ import me.goldze.mvvmhabit.utils.ToastUtils;
  */
 public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
 
-    private final String ALLOW_TYPE_VIDEO = "video";
-    private final String ALLOW_TYPE_AUDIO = "audio";
+    public final String ALLOW_TYPE_VIDEO = "video";
+    public final String ALLOW_TYPE_AUDIO = "audio";
     //积分夺宝右侧提示
     public ObservableField<String> entryLabelLable = new ObservableField<>();
     //本地UserData
@@ -228,14 +228,6 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
     public BindingCommand settingOnClickCommand = new BindingCommand(() -> {
         start(MeSettingFragment.class.getCanonicalName());
     });
-    //允许语音开关
-    public BindingCommand switchAudioOnClickCommand = new BindingCommand(() -> {
-        setAllowPrivacy(ALLOW_TYPE_AUDIO);
-    });
-    //允许视讯开关
-    public BindingCommand switchVideoOnClickCommand = new BindingCommand(() -> {
-        setAllowPrivacy(ALLOW_TYPE_VIDEO);
-    });
 
     //联系客服按钮的点击事件
     public BindingCommand serviceOnClickCommand = new BindingCommand(() -> {
@@ -319,12 +311,12 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
         return StringUtils.getString(R.string.playfun_unknown);
     }
 
-    private void setAllowPrivacy(String type) {
+    public void setAllowPrivacy(String type, boolean isOpen) {
         PrivacyEntity entity = new PrivacyEntity();
         if (type.equals(ALLOW_TYPE_AUDIO)){
-            entity.setAllowAudio(userInfoEntity.get().getAllowAudio());
+            entity.setAllowAudio(isOpen);
         }else if (type.equals(ALLOW_TYPE_VIDEO)){
-            entity.setAllowVideo(userInfoEntity.get().getAllowVideo());
+            entity.setAllowVideo(isOpen);
         }
         model.setPrivacy(entity)
                 .doOnSubscribe(this)
@@ -334,9 +326,9 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
                 .subscribe(new BaseObserver<BaseResponse>() {
                     @Override
                     public void onSuccess(BaseResponse response) {
-                        if (type.equals(ALLOW_TYPE_AUDIO) && !userInfoEntity.get().getAllowAudio()){
+                        if (type.equals(ALLOW_TYPE_AUDIO) && !isOpen){
                             ToastUtils.showShort(R.string.playfun_mine_ban_audio_tips);
-                        }else if (type.equals(ALLOW_TYPE_VIDEO) && !userInfoEntity.get().getAllowVideo()){
+                        }else if (type.equals(ALLOW_TYPE_VIDEO) && !isOpen){
                             ToastUtils.showShort(R.string.playfun_mine_ban_video_tips);
                         }
                         dismissHUD();
@@ -487,6 +479,8 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
                             entryLabelLable.set(systemConfigTaskEntity.getEntryLabel());
                         }
                         uc.entryLabelLableEvent.call();
+                        uc.allowAudio.setValue(userInfoEntity.get().getAllowAudio());
+                        uc.allowVideo.setValue(userInfoEntity.get().getAllowVideo());
                     }
 
                     @Override
@@ -723,5 +717,7 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
         public SingleLiveEvent<Void> entryLabelLableEvent = new SingleLiveEvent<>();
         //删除录音提示
         public SingleLiveEvent<Void> removeAudioAlert = new SingleLiveEvent<>();
+        public SingleLiveEvent<Boolean> allowAudio = new SingleLiveEvent<>();
+        public SingleLiveEvent<Boolean> allowVideo = new SingleLiveEvent<>();
     }
 }
