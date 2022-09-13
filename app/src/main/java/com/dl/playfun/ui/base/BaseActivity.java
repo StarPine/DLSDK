@@ -49,7 +49,7 @@ public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseVie
     @Override
     protected void onResume() {
         super.onResume();
-        ImmersionBarUtils.setupStatusBar(this, false, true);
+        ImmersionBarUtils.setupStatusBar(this, true, true);
     }
 
     @Override
