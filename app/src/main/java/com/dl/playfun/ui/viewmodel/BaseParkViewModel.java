@@ -14,6 +14,7 @@ import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.ParkItemEntity;
+import com.dl.playfun.event.AccostEvent;
 import com.dl.playfun.event.LikeChangeEvent;
 import com.dl.playfun.event.TaskListEvent;
 import com.dl.playfun.event.TaskTypeStatusEvent;
@@ -60,6 +61,7 @@ public abstract class BaseParkViewModel<T extends AppRepository> extends BaseRef
     private Disposable mSubscription2;
     private Disposable mLikeSubscription;
     private Disposable taskTypeStatusEvent;
+    private Disposable mAccostSubscription;
     private boolean accostThree = false;
     private boolean dayAccost = false;
 
@@ -98,11 +100,23 @@ public abstract class BaseParkViewModel<T extends AppRepository> extends BaseRef
                     accostThree = taskTypeStatusEvent.getAccostThree() == 0;
                     dayAccost = taskTypeStatusEvent.getDayAccost() == 0;
                 });
+        mAccostSubscription = RxBus.getDefault().toObservable(AccostEvent.class)
+                .subscribe(accostEvent -> {
+                    int position = accostEvent.position;
+                    int itemCount = adapter.getItemCount();
+                    if (position < 0 || position > itemCount -1){
+                        return;
+                    }
+                    adapter.getAdapterItem(position).itemEntity.get().setIsAccost(1);
+                    adapter.notifyItemChanged(position);
+                });
 
         //将订阅者加入管理站
         RxSubscriptions.add(mSubscription2);
         RxSubscriptions.add(mLikeSubscription);
         RxSubscriptions.add(taskTypeStatusEvent);
+        RxSubscriptions.add(mAccostSubscription);
+
     }
 
     @Override
@@ -112,6 +126,7 @@ public abstract class BaseParkViewModel<T extends AppRepository> extends BaseRef
         RxSubscriptions.remove(mSubscription2);
         RxSubscriptions.remove(mLikeSubscription);
         RxSubscriptions.remove(taskTypeStatusEvent);
+        RxSubscriptions.remove(mAccostSubscription);
     }
 
     public void addLike(int position) {

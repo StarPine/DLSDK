@@ -32,6 +32,7 @@ import com.dl.playfun.entity.IsChatEntity;
 import com.dl.playfun.entity.ParkItemEntity;
 import com.dl.playfun.entity.StatusEntity;
 import com.dl.playfun.entity.UserDetailEntity;
+import com.dl.playfun.event.AccostEvent;
 import com.dl.playfun.event.AddBlackListEvent;
 import com.dl.playfun.event.LikeChangeEvent;
 import com.dl.playfun.event.TaskListEvent;
@@ -95,6 +96,7 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
     public ObservableField<String> dynamicPic2 = new ObservableField<>();
     public ObservableField<String> dynamicPic3 = new ObservableField<>();
     public ObservableField<String> dynamicPic4 = new ObservableField<>();
+    public int position ;
     UIChangeObservable uc = new UIChangeObservable();
     //下拉刷新
     public BindingCommand onRefreshCommand = new BindingCommand(() -> {
@@ -419,6 +421,7 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
                     @Override
                     public void onSuccess(BaseResponse response) {
                         ToastUtils.showShort(R.string.playfun_text_accost_success1);
+                        RxBus.getDefault().post(new AccostEvent(position));
                         loadData();
                     }
 

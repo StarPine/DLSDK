@@ -47,7 +47,9 @@ public class BaseParkItemViewModel extends MultiItemViewModel<BaseParkViewModel>
     public final BindingCommand itemClick = new BindingCommand(() -> {
         try {
             AppContext.instance().logEvent(AppsFlyerEvent.Nearby_Follow);
+            int position = viewModel.observableList.indexOf(BaseParkItemViewModel.this);
             Bundle bundle = UserDetailFragment.getStartBundle(itemEntity.get().getId());
+            bundle.putInt(UserDetailFragment.ARG_USER_DETAIL_POSITION,position);
             viewModel.start(UserDetailFragment.class.getCanonicalName(), bundle);
         } catch (Exception e) {
             ExceptionReportUtils.report(e);
