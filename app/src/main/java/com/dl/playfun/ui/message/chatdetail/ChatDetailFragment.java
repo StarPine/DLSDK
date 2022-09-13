@@ -870,13 +870,18 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                     viewModel.start(CertificationFemaleFragment.class.getCanonicalName());
                 }
             }
-
+            //查看图片
             @Override
             public void onImageClick(TUIMessageBean messageInfo) {
                 CustomImageMessageBean customImageMessageBean = (CustomImageMessageBean) messageInfo;
                 if (customImageMessageBean != null && customImageMessageBean.getImgPath() != null) {
                     MessageDetailDialog.getImageDialog(mActivity, customImageMessageBean.getImgPath()).show();
                 }
+            }
+
+            @Override
+            public void onMediaGalleryClick(String IMKey, String srcPath) {
+                Log.e(TAG,"当前发送视讯语音模块:"+IMKey+"============="+srcPath);
             }
         });
 

@@ -549,6 +549,14 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
             }
 
             @Override
+            public void onMediaGalleryClick(String IMKey,String srcPath) {
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onMediaGalleryClick(IMKey, srcPath);
+                }
+            }
+
+
+            @Override
             public void onSendFailBtnClick(View view, int position, TUIMessageBean messageInfo) {
                 new TUIKitDialog(getContext())
                         .builder()

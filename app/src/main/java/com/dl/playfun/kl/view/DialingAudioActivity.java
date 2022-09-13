@@ -142,6 +142,9 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
                         if (granted) {
 
                         } else {
+                            if(this.isFinishing()){
+                                return;
+                            }
                             TraceDialog.getInstance(DialingAudioActivity.this)
                                     .setCannelOnclick(new TraceDialog.CannelOnclick() {
                                         @Override

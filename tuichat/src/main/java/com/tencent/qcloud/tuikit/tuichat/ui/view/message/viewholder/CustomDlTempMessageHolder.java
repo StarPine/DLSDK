@@ -1,24 +1,39 @@
 package com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.tencent.custom.IMGsonUtils;
 import com.tencent.custom.PhotoGalleryPayEntity;
+import com.tencent.custom.VideoGalleryPayEntity;
 import com.tencent.custom.tmp.CustomDlTempMessage;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.custom.CustomConstants;
+import com.tencent.qcloud.tuicore.custom.CustomDrawableUtils;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.CustomImageMessage;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
+
+import java.util.Map;
 
 /**
  * Author: 彭石林
@@ -42,6 +57,7 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
     public void layoutVariableViews(TUIMessageBean msg, int position) {
         if(flTmpLayout!=null && flTmpLayout.getChildCount()>1){
             flTmpLayout.removeAllViews();
+            flTmpLayout.setBackgroundColor(Color.TRANSPARENT);
         }
         CustomDlTempMessage customDlTempMessage =  IMGsonUtils.fromJson(new String(msg.getCustomElemData()), CustomDlTempMessage.class);
         if(customDlTempMessage == null){
@@ -58,10 +74,18 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
             CustomDlTempMessage.MsgBodyInfo msgModuleInfo = customDlTempMessage.getContentBody().getContentBody();
             //红包照片模块
             if (CustomConstants.MediaGallery.MODULE_NAME.equals(moduleName)) {
+                Log.e(TAG,"当前红包模块："+moduleName);
+                Log.e(TAG,"模块内容:"+String.valueOf(msgModuleInfo.getCustomMsgType())+"\n"+msgModuleInfo.getCustomMsgBody());
                 //照片内容
                 if(CustomConstants.MediaGallery.PHOTO_GALLERY.equals(msgModuleInfo.getCustomMsgType())){
                     PhotoGalleryPayEntity customImageMessageBean = IMGsonUtils.fromJson(IMGsonUtils.toJson(msgModuleInfo.getCustomMsgBody()),PhotoGalleryPayEntity.class);
-                    imgLoad(itemView.getContext(), flTmpLayout, customImageMessageBean);
+                    LoadMediaGalleryPhoto(msg.getV2TIMMessage().getMsgID(),itemView.getContext(), flTmpLayout, customImageMessageBean,customDlTempMessage.getCustomElemData());
+                }else if(CustomConstants.MediaGallery.VIDEO_GALLERY.equals(msgModuleInfo.getCustomMsgType())){
+                    VideoGalleryPayEntity customVideoMessageBean = IMGsonUtils.fromJson(IMGsonUtils.toJson(msgModuleInfo.getCustomMsgBody()),VideoGalleryPayEntity.class);
+                    LoadMediaGalleryVideo(msg.getV2TIMMessage().getMsgID(),itemView.getContext(), flTmpLayout, customVideoMessageBean,customDlTempMessage.getCustomElemData());
+                }else{
+                    //默认展示解析不出的模板提示
+                    defaultLayout(itemView.getContext(),flTmpLayout,msg.isSelf());
                 }
             }else{
                 //默认展示解析不出的模板提示
@@ -74,35 +98,152 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
     }
     //默认消息模板
     public void defaultLayout(Context context,FrameLayout rootView,boolean isSelf){
-        View defaultView = View.inflate(context, R.layout.test_custom_message_layout1, null);
-        TextView textView = defaultView.findViewById(R.id.test_custom_message_tv);
-        TextView linkView = defaultView.findViewById(R.id.link_tv);
-        linkView.setVisibility(View.GONE);
-        if (!isSelf) {
-            textView.setTextColor(textView.getResources().getColor(TUIThemeManager.getAttrResId(textView.getContext(), R.attr.chat_other_custom_msg_text_color)));
-            linkView.setTextColor(textView.getResources().getColor(TUIThemeManager.getAttrResId(textView.getContext(), R.attr.chat_other_custom_msg_link_color)));
-        } else {
-            textView.setTextColor(textView.getResources().getColor(TUIThemeManager.getAttrResId(textView.getContext(), R.attr.chat_self_custom_msg_text_color)));
-            linkView.setTextColor(textView.getResources().getColor(TUIThemeManager.getAttrResId(textView.getContext(), R.attr.chat_self_custom_msg_link_color)));
+        View defaultView = View.inflate(context, R.layout.tmp_message_default_layout, null);
+        FrameLayout frameLayout = defaultView.findViewById(R.id.container);
+        TextView textContent = defaultView.findViewById(R.id.tv_content);
+        if(frameLayout!=null){
+            if (properties.getLeftBubble() != null && properties.getLeftBubble().getConstantState() != null) {
+                frameLayout.setBackground(properties.getLeftBubble().getConstantState().newDrawable());
+            } else {
+                frameLayout.setBackgroundResource(TUIThemeManager.getAttrResId(itemView.getContext(), R.attr.chat_bubble_other_bg));
+            }
         }
-        textView.setText(R.string.no_support_msg);
+        if (!isSelf) {
+            textContent.setTextColor(textContent.getResources().getColor(TUIThemeManager.getAttrResId(textContent.getContext(), R.attr.chat_other_custom_msg_text_color)));
+        } else {
+            textContent.setTextColor(textContent.getResources().getColor(TUIThemeManager.getAttrResId(textContent.getContext(), R.attr.chat_self_custom_msg_text_color)));
+        }
+
+        String txt = getContext().getString(R.string.dl_tmp_default_text);
+        String txt2 = getContext().getString(R.string.dl_tmp_default_text2);
+        int whiteLength = txt.length() - txt2.length();
+        SpannableString stringBuilder = new SpannableString(txt);
+        ForegroundColorSpan whiteSpan = new ForegroundColorSpan(getContext().getResources().getColor(R.color.black));
+        ForegroundColorSpan redSpan = new ForegroundColorSpan(getContext().getResources().getColor(R.color.purple_be63));
+        stringBuilder.setSpan(whiteSpan, 0, whiteLength, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        stringBuilder.setSpan(redSpan, whiteLength, txt.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        stringBuilder.setSpan(new UnderlineSpan(), whiteLength, txt.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        textContent.setText(stringBuilder);
         msgContentFrame.setClickable(true);
         rootView.addView(defaultView);
     }
     //测试自定义图片渲染
-    public void imgLoad(Context context, FrameLayout rootView, PhotoGalleryPayEntity customImageMessageBean){
+    public void LoadMediaGalleryPhoto(String IMKey,Context context, FrameLayout rootView, PhotoGalleryPayEntity customImageMessageBean,byte[] customElemData){
+        Map<String,Object> mapData = null;
+        if(customElemData==null || customElemData.length==0){
+            mapData = IMGsonUtils.fromJson(new String(customElemData), Map.class);
+        }
+        Log.e(TAG,"当前穿透字段内容为:"+String.valueOf(mapData));
         View customImageView = View.inflate(context, R.layout.tmp_message_photo_gallery_layout, null);
+        customImageView.setBackgroundColor(Color.TRANSPARENT);
+        customImageView.setLayoutParams(new FrameLayout.LayoutParams(-2,-2));
+        FrameLayout fLTlLayout = customImageView.findViewById(R.id.fl_tl_layout);
+        //底部布局
+        RelativeLayout rlLayout = customImageView.findViewById(R.id.rl_layout);
+        //付费照片
+        if(customImageMessageBean.isStatePhotoPay()){
+            rlLayout.setVisibility(View.VISIBLE);
+            fLTlLayout.setVisibility(View.VISIBLE);
+            //当前收费价格
+            TextView tvCoin = customImageView.findViewById(R.id.tv_coin);
+            if(tvCoin!=null){
+                if(customImageMessageBean.getUnlockPrice()!=null && customImageMessageBean.getUnlockPrice().intValue() > 0){
+                    tvCoin.setVisibility(View.VISIBLE);
+                    tvCoin.setText(String.valueOf(customImageMessageBean.getUnlockPrice().intValue()));
+                }else{
+                    tvCoin.setVisibility(View.GONE);
+                }
+            }
+            CustomDrawableUtils.generateDrawable(fLTlLayout, Color.parseColor("#717477"),
+                    null,8,null,null,8,
+                    null,null,null,null);
+        }else{
+            //非付费照片
+            //   普通照片： stateSnapshot = false
+            //   普通快照： stateSnapshot = true
+            if(customImageMessageBean.isStateSnapshot()){
+                fLTlLayout.setVisibility(View.VISIBLE);
+                CustomDrawableUtils.generateDrawable(fLTlLayout, Color.parseColor("#717477"),
+                        null,8,null,null,8,
+                        null,null,null,null);
+            }else{
+                //隐藏快照标识
+                fLTlLayout.setVisibility(View.GONE);
+            }
+            rlLayout.setVisibility(View.GONE);
+        }
+        //设置图片圆角角度
+        RoundedCorners roundedCorners = new RoundedCorners(dp2px(getContext(),8));
+        //通过RequestOptions扩展功能,override:采样率,因为ImageView就这么大,可以压缩图片,降低内存消耗
+        RequestOptions override = RequestOptions.bitmapTransform(roundedCorners).override(dp2px(getContext(),86), dp2px(getContext(),154));
         ImageView imgContent = customImageView.findViewById(R.id.img_content);
         String imagePath = TUIChatUtils.getFullImageUrl(customImageMessageBean.getImgPath());
         Glide.with(TUIChatService.getAppContext())
-                .asBitmap()
                 .load(imagePath)
-                .error(R.drawable.chat_custom_image_error)
-                .centerCrop()
-                .placeholder(R.drawable.chat_custom_image_load)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .apply(override.error(R.drawable.chat_custom_image_error).placeholder(R.drawable.chat_custom_image_load))
                 .into(imgContent);
         rootView.addView(customImageView);
+        rootView.setOnClickListener(v -> {
+            if (onItemClickListener != null) {
+                onItemClickListener.onMediaGalleryClick(IMKey,customImageMessageBean.getImgPath());
+            }
+        });
     }
 
+    //测试自定义图片渲染
+    public void LoadMediaGalleryVideo(String IMKey,Context context, FrameLayout rootView, VideoGalleryPayEntity customImageMessageBean,byte[] customElemData){
+        Map<String,Object> mapData = null;
+        if(customElemData==null || customElemData.length==0){
+            mapData = IMGsonUtils.fromJson(new String(customElemData), Map.class);
+        }
+        Log.e(TAG,"当前穿透字段内容为:"+String.valueOf(mapData));
+        View customImageView = View.inflate(context, R.layout.tmp_message_video_gallery_layout, null);
+        customImageView.setBackgroundColor(Color.TRANSPARENT);
+        customImageView.setLayoutParams(new FrameLayout.LayoutParams(-2,-2));
+        //底部布局
+        RelativeLayout rlLayout = customImageView.findViewById(R.id.rl_layout);
+        //付费视频
+        if(customImageMessageBean.isStateVideoPay()){
+            rlLayout.setVisibility(View.VISIBLE);
+            //当前收费价格
+            TextView tvCoin = customImageView.findViewById(R.id.tv_coin);
+            if(tvCoin!=null){
+                if(customImageMessageBean.getUnlockPrice()!=null && customImageMessageBean.getUnlockPrice().intValue() > 0){
+                    tvCoin.setVisibility(View.VISIBLE);
+                    tvCoin.setText(String.valueOf(customImageMessageBean.getUnlockPrice().intValue()));
+                }else{
+                    tvCoin.setVisibility(View.GONE);
+                }
+            }
+        }else{
+            //非付费视频
+            rlLayout.setVisibility(View.GONE);
+        }
+        //设置图片圆角角度
+        RoundedCorners roundedCorners = new RoundedCorners(dp2px(getContext(),8));
+        //通过RequestOptions扩展功能,override:采样率,因为ImageView就这么大,可以压缩图片,降低内存消耗
+        RequestOptions override = RequestOptions.bitmapTransform(roundedCorners).override(dp2px(getContext(),86), dp2px(getContext(),154));
+        ImageView imgContent = customImageView.findViewById(R.id.img_content);
+        String imagePath = TUIChatUtils.getFullImageUrl(customImageMessageBean.getSrcPath());
+        Glide.with(TUIChatService.getAppContext())
+                .load(imagePath)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .apply(override.error(R.drawable.chat_custom_image_error).placeholder(R.drawable.chat_custom_image_load))
+                .into(imgContent);
+        rootView.addView(customImageView);
+        rootView.setOnClickListener(v -> {
+            if (onItemClickListener != null) {
+                onItemClickListener.onMediaGalleryClick(IMKey,customImageMessageBean.getSrcPath());
+            }
+        });
+    }
+
+    private Context getContext(){
+        return itemView.getContext();
+    }
+    private int dp2px(Context context, float dpValue) {
+        final float densityScale = context.getResources().getDisplayMetrics().density;
+        return (int) (dpValue * densityScale + 0.5f);
+    }
 }

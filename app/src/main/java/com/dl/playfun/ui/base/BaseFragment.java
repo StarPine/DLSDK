@@ -198,16 +198,6 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
         if (dialogProgress != null && dialogProgress.isShowing()) {
             dialogProgress.dismiss();
         }
-//        ImageView imageView = new ImageView(getContext());
-//        imageView.setBackgroundResource(R.drawable.spin_animation);
-//        AnimationDrawable drawable = (AnimationDrawable) imageView.getBackground();
-//        drawable.start();
-
-//        <ProgressBar
-//        android:id="@+id/progressBar"
-//        style="?android:attr/progressBarStyle"
-//        android:layout_width="match_parent"
-//        android:layout_height="wrap_content" />
 
         if (hud == null) {
             ProgressBar progressBar = new ProgressBar(getContext());
@@ -229,6 +219,9 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
     }
 
     public void showProgressHud(String title, int progress) {
+        if (hud != null && hud.isShowing()) {
+            hud.dismiss();
+        }
         if (dialogProgress == null) {
             dialogProgress = new DialogProgress(this.getContext());
         }
@@ -317,6 +310,7 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
 
     @Override
     public void onDestroy() {
+        dismissHud();
         mDelegate.onDestroy();
         super.onDestroy();
     }

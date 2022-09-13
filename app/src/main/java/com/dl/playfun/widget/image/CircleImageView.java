@@ -19,7 +19,7 @@ import androidx.annotation.DrawableRes;
 /**
  * 圆形图片控件
  */
-public class CircleImageView extends ImageView {
+public class CircleImageView extends androidx.appcompat.widget.AppCompatImageView {
 
 
     private static final Bitmap.Config BITMAP_CONFIG = Bitmap.Config.ARGB_8888;

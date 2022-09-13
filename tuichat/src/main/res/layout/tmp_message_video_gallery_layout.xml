@@ -11,20 +11,6 @@
         android:background="@drawable/custom_border_radius_y8"
         android:layout_width="86dp"
         android:layout_height="154dp">
-        <FrameLayout
-            android:elevation="11dp"
-            android:id="@+id/fl_tl_layout"
-            android:layout_width="24dp"
-            android:layout_height="17dp"
-            >
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_gravity="center"
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/icon_snapshot"
-                />
-        </FrameLayout>
         <com.custom.view.widget.roundedimageview.RoundedImageView
             android:layout_margin="1dp"
             android:id="@+id/img_content"
@@ -86,6 +72,13 @@
                 android:src="@drawable/icon_playfun_confirm_1"
                 />
         </RelativeLayout>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_gravity="center"
+            android:id="@+id/img_play"
+            android:layout_width="31dp"
+            android:layout_height="31dp"
+            android:src="@drawable/icon_playfun_play_start"
+            />
     </FrameLayout>
 
 </LinearLayout>

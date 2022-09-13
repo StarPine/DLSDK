@@ -128,14 +128,14 @@ public class JMTUICallVideoView extends BaseTUICallView {
 
                 @Override
                 public void onDenied(List<String> permissionsDeniedForever, List<String> permissionsDenied) {
+                    if(isDestroyed()){
+                        return;
+                    }
                     TraceDialog.getInstance(mContext)
-                            .setCannelOnclick(new TraceDialog.CannelOnclick() {
-                                @Override
-                                public void cannel(Dialog dialog) {
-                                    mTRTCCalling.reject();
-                                    ToastUtils.showShort(R.string.trtccalling_tips_start_camera_audio);
-                                    finish();
-                                }
+                            .setCannelOnclick(dialog -> {
+                                mTRTCCalling.reject();
+                                ToastUtils.showShort(R.string.trtccalling_tips_start_camera_audio);
+                                finish();
                             })
                             .setConfirmOnlick(new TraceDialog.ConfirmOnclick() {
                                 @Override

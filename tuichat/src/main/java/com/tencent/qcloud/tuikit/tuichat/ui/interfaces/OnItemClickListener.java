@@ -56,4 +56,7 @@ public abstract class OnItemClickListener {
 
     //DL Add lsf -- 图片点击
     public void onImageClick(TUIMessageBean messageInfo){}
+
+    //自定义 发送红包模块点击触发
+    public void onMediaGalleryClick(String IMKey,String srcPath) {}
 }

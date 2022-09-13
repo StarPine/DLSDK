@@ -35,7 +35,6 @@ import java.util.Map;
  */
 public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseViewModel> extends me.goldze.mvvmhabit.base.BaseActivity<V, VM> {
     private KProgressHUD hud;
-    private KProgressHUD progressHud;
     private DialogProgress dialogProgress;
 
 
@@ -65,7 +64,6 @@ public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseVie
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStatusView();
         View statusView = findViewById(R.id.status_bar_view);
         if (statusView != null) {
             ImmersionBar.setStatusBarView(this, statusView);
@@ -73,16 +71,6 @@ public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseVie
         if (viewModel != null) {
             viewModel.onViewCreated();
         }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void setStatusView() {
-        Window window = getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏图标和文字颜色为暗色
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(Color.TRANSPARENT);
     }
 
     @Override
@@ -131,8 +119,8 @@ public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseVie
     }
 
     private void showHud(String title) {
-        if (progressHud != null && progressHud.isShowing()) {
-            progressHud.dismiss();
+        if (dialogProgress != null && dialogProgress.isShowing()) {
+            dialogProgress.dismiss();
         }
 
         if (hud == null) {
@@ -154,20 +142,12 @@ public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseVie
         if (hud != null && hud.isShowing()) {
             hud.dismiss();
         }
-        if (progressHud == null) {
-            progressHud = KProgressHUD.create(getContext())
-                    .setStyle(KProgressHUD.Style.BAR_DETERMINATE)
-//                    .setBackgroundColor(getResources().getColor(R.color.hud_background))
-                    .setCancellable(false)
-//                    .setSize(100, 100)
-                    .setMaxProgress(100)
-                    .setCustomView(new MPCircleProgressBar(getContext()))
-                    .show();
+        if (dialogProgress == null) {
+            dialogProgress = new DialogProgress(this.getContext());
         }
-        progressHud.setLabel(title);
-        progressHud.setProgress(progress);
-        if (!progressHud.isShowing()) {
-            progressHud.show();
+        dialogProgress.setProgress(progress);
+        if (!dialogProgress.isShowing()) {
+            dialogProgress.show();
         }
     }
 
@@ -175,9 +155,15 @@ public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseVie
         if (hud != null && hud.isShowing()) {
             hud.dismiss();
         }
-        if (progressHud != null && progressHud.isShowing()) {
-            progressHud.dismiss();
+        if (dialogProgress != null && dialogProgress.isShowing()) {
+            dialogProgress.dismiss();
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        dismissHud();
+        super.onDestroy();
     }
 
     public Context getContext(){

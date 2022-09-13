@@ -472,5 +472,6 @@
 
     <declare-styleable name="MPCircleProgressBar">
         <attr name="width" format="dimension"/>
+        <attr name="txtWidth" format="dimension"/>
     </declare-styleable>
 </resources>
