@@ -475,7 +475,7 @@ public class FukubukuroFragment extends BaseFragment<FragmentFukubukuroBinding, 
 
         @JavascriptInterface
         public String getVersionTask() {
-            return "1.2.0 ";
+            return AppConfig.VERSION_NAME;
         }
 
     }

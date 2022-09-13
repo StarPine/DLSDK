@@ -303,7 +303,7 @@ public class WebHomeFragment extends BaseFragment<ActivityWebHomePlayfunBinding,
         //获取当前版本
         @JavascriptInterface
         public String getVersionTask() {
-            return AppConfig.VERSION_NAME_PUSH;
+            return AppConfig.VERSION_NAME;
         }
 
         //获取本地用户信息

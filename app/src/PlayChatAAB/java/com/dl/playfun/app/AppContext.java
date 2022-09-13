@@ -591,7 +591,7 @@ public class AppContext extends Application {
 
     public void pushDeviceToken(String deviceToken) {
         AppConfig.DEVICE_CODE = deviceToken;
-        appRepository.pushDeviceToken(deviceToken, AppConfig.VERSION_NAME_PUSH)
+        appRepository.pushDeviceToken(deviceToken, AppConfig.VERSION_NAME)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
                 .subscribe(new BaseDisposableObserver<BaseResponse>() {
