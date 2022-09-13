@@ -1084,8 +1084,7 @@
                         <RelativeLayout
                             style="@style/ProfileItem"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/profile_item_height"
-                            binding:onClickCommand="@{viewModel.settingOnClickCommand}">
+                            android:layout_height="@dimen/profile_item_height">
 
                             <ImageView
                                 android:id="@+id/iv_video_switch"
@@ -1118,8 +1117,7 @@
                         <RelativeLayout
                             style="@style/ProfileItem"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/profile_item_height"
-                            binding:onClickCommand="@{viewModel.settingOnClickCommand}">
+                            android:layout_height="@dimen/profile_item_height">
 
                             <ImageView
                                 android:id="@+id/iv_audio_switch"
