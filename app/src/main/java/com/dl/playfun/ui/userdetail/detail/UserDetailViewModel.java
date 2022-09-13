@@ -428,7 +428,7 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
                     @Override
                     public void onError(RequestException e) {
                         super.onError(e);
-                        if(e.getCode()!=null && e.getCode().intValue()==21001 ){//钻石余额不足
+                        if(e.getCode()!=null && e.getCode() == 21001 ){//钻石余额不足
                             ToastCenterUtils.showToast(R.string.playfun_dialog_exchange_integral_total_text3);
                             uc.sendAccostFirstError.call();
                         }
@@ -945,7 +945,7 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
                     public void onError(RequestException e) {
                         super.onError(e);
                         if (e != null) {
-                            if (e.getCode() == 1) {
+                            if (e.getCode() == 21001) {
                                 uc.sendDialogViewEvent.call();
                             }
                         }

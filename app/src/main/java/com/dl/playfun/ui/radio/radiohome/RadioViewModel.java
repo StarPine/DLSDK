@@ -741,7 +741,7 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
                     @Override
                     public void onSuccess(BaseDataResponse<CallingInviteInfo> callingInviteInfoBaseDataResponse) {
                         if (callingInviteInfoBaseDataResponse.getCode() == 2) {//對方忙線中
-                            radioUC.otherBusy.call();
+                            ToastUtils.showShort(R.string.custom_message_other_busy);
                             return;
                         }
                         if (callingInviteInfoBaseDataResponse.getCode() == 22001) {//游戏中
@@ -758,7 +758,7 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
                     public void onError(RequestException e) {
                         super.onError(e);
                         if (e != null) {
-                            if (e.getCode() == 1) {
+                            if (e.getCode() == 21001) {
                                 radioUC.sendDialogViewEvent.call();
                             }
                         }
