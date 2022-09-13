@@ -2,6 +2,7 @@ package com.dl.playfun.ui.message.contact;
 
 import android.app.Application;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
@@ -51,12 +52,16 @@ public class OftenContactViewModel extends BaseViewModel<AppRepository> {
                     @Override
                     public void onSuccess(BaseDataResponse<ImUserSigEntity> response) {
                         ImUserSigEntity data = response.getData();
+                        if (data == null || TextUtils.isEmpty(data.getUserSig())){
+                            RxBus.getDefault().post(new LoginExpiredEvent());
+                            return;
+                        }
                         TokenEntity tokenEntity = model.readLoginInfo();
                         tokenEntity.setUserSig(data.getUserSig());
-                        model.saveLoginInfo(tokenEntity);
                         TUILogin.login(Utils.getContext(), model.readApiConfigManagerEntity().getImAppId(), tokenEntity.getUserID(), tokenEntity.getUserSig(), new TUICallback() {
                             @Override
                             public void onSuccess() {
+                                model.saveLoginInfo(tokenEntity);
                                 loginSuccess.call();
                             }
 

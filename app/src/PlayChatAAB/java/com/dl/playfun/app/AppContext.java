@@ -9,6 +9,7 @@ import android.net.http.HttpResponseCache;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -561,12 +562,16 @@ public class AppContext extends Application {
                     @Override
                     public void onSuccess(BaseDataResponse<ImUserSigEntity> response) {
                         ImUserSigEntity data = response.getData();
+                        if (data == null || TextUtils.isEmpty(data.getUserSig())){
+                            RxBus.getDefault().post(new LoginExpiredEvent());
+                            return;
+                        }
                         TokenEntity tokenEntity = appRepository.readLoginInfo();
                         tokenEntity.setUserSig(data.getUserSig());
-                        appRepository.saveLoginInfo(tokenEntity);
                         TUILogin.login(AppContext.this, appRepository.readApiConfigManagerEntity().getImAppId(), tokenEntity.getUserID(), tokenEntity.getUserSig(), new TUICallback() {
                                     @Override
                                     public void onSuccess() {
+                                        appRepository.saveLoginInfo(tokenEntity);
                                         ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
                                     }
 
@@ -580,10 +585,6 @@ public class AppContext extends Application {
                     @Override
                     public void onError(RequestException e) {
                         RxBus.getDefault().post(new LoginExpiredEvent());
-                    }
-
-                    @Override
-                    public void onComplete() {
                     }
 
                 });
