@@ -418,6 +418,7 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
                 .subscribe(new BaseObserver<BaseResponse>() {
                     @Override
                     public void onSuccess(BaseResponse response) {
+                        ToastUtils.showShort(R.string.playfun_text_accost_success1);
                         loadData();
                     }
 
