@@ -91,8 +91,8 @@ import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuicore.Status;
+import com.tencent.qcloud.tuicore.custom.CustomConstants;
 import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
-import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
@@ -869,12 +869,12 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             }
 
             @Override
-            public void systemTipsOnClick(int position, TUIMessageBean messageInfo, String type) {
+            public void systemTipsOnClick(int position, TUIMessageBean messageInfo, int type) {
                 switch (type){
-                    case "disableCalls_2-callingType_1":
+                    case CustomConstants.SystemTipsMessage.TYPE_DISABLECALLS_CALLING_AUDIO:
                         viewModel.setAllowPrivacy(viewModel.ALLOW_TYPE_AUDIO);
                         break;
-                    case "disableCalls_2-callingType_2":
+                    case CustomConstants.SystemTipsMessage.TYPE_DISABLECALLS_CALLING_VIDEO:
                         viewModel.setAllowPrivacy(viewModel.ALLOW_TYPE_VIDEO);
                         break;
                 }

@@ -11,14 +11,14 @@ import java.io.Serializable;
  * @Date： 2022/9/12 10:53
  */
 public class SystemTipsEntity implements Serializable {
-    private String type;
+    private int type;
     private String content;
 
-    public String getType() {
+    public int getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(int type) {
         this.type = type;
     }
 

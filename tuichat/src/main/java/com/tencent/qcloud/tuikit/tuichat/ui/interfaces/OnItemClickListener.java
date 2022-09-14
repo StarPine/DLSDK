@@ -54,7 +54,7 @@ public abstract class OnItemClickListener {
 
     public abstract void onClickCustomText();
 
-    public void systemTipsOnClick(int position,TUIMessageBean messageInfo, String type) {};
+    public void systemTipsOnClick(int position,TUIMessageBean messageInfo, int type) {};
 
     //DL Add lsf -- 图片点击
     public void onImageClick(TUIMessageBean messageInfo){}

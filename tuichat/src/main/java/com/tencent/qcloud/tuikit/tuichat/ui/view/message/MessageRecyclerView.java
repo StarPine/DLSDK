@@ -645,7 +645,7 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
             }
 
             @Override
-            public void systemTipsOnClick(int position, TUIMessageBean messageInfo, String type) {
+            public void systemTipsOnClick(int position, TUIMessageBean messageInfo, int type) {
                 if (mOnItemClickListener != null) {
                     mOnItemClickListener.systemTipsOnClick(position,messageInfo,type);
                 }
