@@ -1,12 +1,11 @@
-package com.dl.playfun.ui.message.snapshot;
+package com.dl.playfun.ui.message.mediagallery;
 
 import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableBoolean;
+import androidx.databinding.ObservableField;
 
-import com.blankj.utilcode.util.GsonUtils;
-import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.data.AppRepository;
@@ -14,12 +13,6 @@ import com.dl.playfun.utils.FileUploadUtils;
 import com.dl.playfun.utils.Utils;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.luck.picture.lib.entity.LocalMedia;
-import com.tencent.custom.tmp.CustomDlTempMessage;
-import com.tencent.qcloud.tuicore.custom.CustomConstants;
-import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
-import com.tencent.qcloud.tuikit.tuichat.bean.CustomImageMessage;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 
 import java.util.Date;
 
@@ -28,7 +21,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
-import me.goldze.mvvmhabit.binding.command.BindingAction;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.RxUtils;
@@ -40,14 +32,24 @@ import me.goldze.mvvmhabit.utils.ToastUtils;
  * Description: This is SnapshotPhotoViewModel
  */
 public class SnapshotPhotoViewModel extends BaseViewModel<AppRepository> {
+    //是否是视频
     public ObservableBoolean isVideoSetting = new ObservableBoolean(false);
+    //是否付费
+    public ObservableBoolean isPayState = new ObservableBoolean(false);
+    //快照
     public ObservableBoolean isBurn = new ObservableBoolean(false);
+    //本地文件地址
+    public ObservableField<String> srcPath = new ObservableField<>();
 
     public SingleLiveEvent<Void> settingEvent = new SingleLiveEvent<>();
+
+    public SingleLiveEvent<String> setResultDataEvent = new SingleLiveEvent<>();
 
     public SnapshotPhotoViewModel(@NonNull Application application, AppRepository model) {
         super(application, model);
     }
+    //返回上一页
+    public BindingCommand<Void> onBackViewClick = new BindingCommand<>(this::finish);
 
     public BindingCommand settingClick = new BindingCommand(()->{
         settingEvent.call();
@@ -56,14 +58,13 @@ public class SnapshotPhotoViewModel extends BaseViewModel<AppRepository> {
     public BindingCommand burnOnClickCommand = new BindingCommand(() -> {
     });
 
-    //上传文件
+    //确认上传
     public BindingCommand<Void> clickReportFile = new BindingCommand(() -> {
-
+        uploadFileOSS(srcPath.get());
     });
 
     //上传文件到阿里云
-    public void uploadFileOSS(final LocalMedia localMedia){
-        final String filePath = localMedia.getCompressPath();
+    public void uploadFileOSS(final String filePath){
         Observable.just(filePath)
                 .compose(RxUtils.exceptionTransformer())
                 .doOnSubscribe(this)
@@ -89,6 +90,7 @@ public class SnapshotPhotoViewModel extends BaseViewModel<AppRepository> {
                     public void onNext(String fileKey) {
                         dismissHUD();
                         if(fileKey!=null){
+                            setResultDataEvent.setValue(fileKey);
                             //用IM框架默认的图片类型
 //                            TUIMessageBean info = ChatMessageBuilder.buildImageMessage(Uri.fromFile(new File(filePath)));
                             //用自定义图片类型

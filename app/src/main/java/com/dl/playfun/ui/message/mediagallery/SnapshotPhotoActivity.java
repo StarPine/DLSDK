@@ -1,5 +1,7 @@
-package com.dl.playfun.ui.message.snapshot;
+package com.dl.playfun.ui.message.mediagallery;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -10,11 +12,10 @@ import com.dl.playfun.R;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.GlideEngine;
 import com.dl.playfun.databinding.ActivitySnapshotPhotoSettingBinding;
+import com.dl.playfun.entity.MediaGalleryEditEntity;
 import com.dl.playfun.ui.base.BaseActivity;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
-import com.tencent.imsdk.v2.V2TIMCallback;
-import com.tencent.qcloud.tuicore.TUILogin;
 
 /**
  * Author: 彭石林
@@ -24,11 +25,27 @@ import com.tencent.qcloud.tuicore.TUILogin;
 public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSettingBinding,SnapshotPhotoViewModel> {
 
 
-    private String imgPath = null;
-    private boolean snapshot = false;
+    private String srcPath = null;
+    private boolean isPayState = false;
     private boolean isVideo = false;
 
     private SnapshotPhotoDialog snapshotPhotoDialog;
+
+    /**
+    * @Desc TODO()
+    * @author 彭石林
+    * @parame [isPayState 是否付费, isVideoSetting 是否 视频, srcPath 文件信息]
+    * @return android.content.Intent
+    * @Date 2022/9/14
+    */
+    public static Intent createIntent(Context mContext, boolean isPayState, boolean isVideoSetting, String srcPath){
+        Intent snapshotIntent = new Intent(mContext,SnapshotPhotoActivity.class);
+        snapshotIntent.putExtra("isPayState",isPayState);
+        snapshotIntent.putExtra("isVideo",isVideoSetting);
+        snapshotIntent.putExtra("srcPath",srcPath);
+        return snapshotIntent;
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -55,8 +72,8 @@ public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSet
     @Override
     public void initParam() {
         super.initParam();
-        imgPath = getIntent().getStringExtra("imgPath");
-        snapshot = getIntent().getBooleanExtra("snapshot",false);
+        srcPath = getIntent().getStringExtra("srcPath");
+        isPayState = getIntent().getBooleanExtra("isPayState",false);
         isVideo = getIntent().getBooleanExtra("isVideo",false);
     }
 
@@ -69,13 +86,14 @@ public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSet
     @Override
     public void initData() {
         super.initData();
-        viewModel.isVideoSetting.set(snapshot);
+        viewModel.isVideoSetting.set(isVideo);
+        viewModel.srcPath.set(srcPath);
         if(isVideo){
 
         }else{
             //选择的是图片
-            Log.e("当前选择图片地址：",String.valueOf(imgPath));
-            GlideEngine.createGlideEngine().loadImage(this,imgPath,binding.imgContent,binding.imgLong);
+            Log.e("当前选择图片地址：",String.valueOf(srcPath));
+            GlideEngine.createGlideEngine().loadImage(this, srcPath,binding.imgContent,binding.imgLong);
         }
 
     }
@@ -90,6 +108,18 @@ public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSet
                 snapshotPhotoDialog = new SnapshotPhotoDialog(this);
             }
             snapshotPhotoDialog.show();
+        });
+        //返回页面数据
+        viewModel.setResultDataEvent.observe(this,filePath -> {
+            MediaGalleryEditEntity mediaGalleryEditEntity = new MediaGalleryEditEntity();
+            mediaGalleryEditEntity.setVideoSetting(isVideo);
+            mediaGalleryEditEntity.setStatePay(isPayState);
+            mediaGalleryEditEntity.setSrcPath(filePath);
+            mediaGalleryEditEntity.setStateSnapshot(viewModel.isBurn.get());
+            Intent intent = new Intent();
+            intent.putExtra("mediaGalleryEditEntity", mediaGalleryEditEntity);
+            setResult(2001,intent);
+            finish();
         });
     }
 

@@ -204,16 +204,14 @@ public class FileUploadUtils {
             return null;
         }
         if (fileType == FILE_TYPE_IMAGE) {
-            if (filePath.toLowerCase().endsWith(".jpg") || filePath.toLowerCase().endsWith(".jpeg") || filePath.toLowerCase().endsWith(".png")) {
-                List<File> list = Luban.with(AppContext.instance().getApplicationContext()).load(Uri.fromFile(new File(filePath))).setTargetDir(AppContext.instance().getCacheDir().getAbsolutePath()).get();
-                if (list == null || list.isEmpty()) {
-                    return null;
-                }
-                if (StringUtils.isEmpty(directory)) {
-                    directory = "";
-                }
-                filePath = list.get(0).getAbsolutePath();
+            List<File> list = Luban.with(AppContext.instance().getApplicationContext()).load(Uri.fromFile(new File(filePath))).setTargetDir(AppContext.instance().getCacheDir().getAbsolutePath()).get();
+            if (list == null || list.isEmpty()) {
+                return null;
             }
+            if (StringUtils.isEmpty(directory)) {
+                directory = "";
+            }
+            filePath = list.get(0).getAbsolutePath();
         }else{
             throw new InstantiationException("error fileType is not ");
         }

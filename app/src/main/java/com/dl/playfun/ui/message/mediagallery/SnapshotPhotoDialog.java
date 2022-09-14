@@ -1,4 +1,4 @@
-package com.dl.playfun.ui.message.snapshot;
+package com.dl.playfun.ui.message.mediagallery;
 
 import android.content.Context;
 import android.view.Gravity;

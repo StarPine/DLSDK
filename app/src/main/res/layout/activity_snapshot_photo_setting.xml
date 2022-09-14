@@ -8,7 +8,7 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="com.dl.playfun.ui.message.snapshot.SnapshotPhotoViewModel" />
+            type="com.dl.playfun.ui.message.mediagallery.SnapshotPhotoViewModel" />
     </data>
 
     <LinearLayout
@@ -33,6 +33,7 @@
                 android:layout_height="19dp"
                 android:src="@drawable/ic_toolbar_back"
                 android:tint="@color/white"
+                binding:onClickCommand="@{viewModel.onBackViewClick}"
                 />
             <androidx.appcompat.widget.AppCompatTextView
                 binding:onClickCommand="@{viewModel.clickReportFile}"
@@ -103,37 +104,10 @@
                         android:text="@string/playfun_phono_setting_reading_burn"
                         android:textColor="@color/white"
                         android:textSize="15sp" />
-                    <LinearLayout
-                        android:visibility="@{viewModel.isVideoSetting ? View.VISIBLE : View.GONE}"
-                        android:layout_gravity="center|top"
-                        binding:drawable_cornersRadius="@{22}"
-                        binding:drawable_gradient_startColor="@{@color/playfun_shape_radius_start_color}"
-                        binding:drawable_gradient_endColor="@{@color/playfun_shape_radius_end_color}"
-                        android:orientation="horizontal"
-                        android:gravity="center"
-                        android:layout_width="114dp"
-                        android:layout_height="38dp"
-                        tools:visibility="gone"
-                        >
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:layout_width="17dp"
-                            android:layout_height="17dp"
-                            android:src="@drawable/ic_coin"
-                            />
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:layout_marginStart="5dp"
-                            android:includeFontPadding="false"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/playfun_setting_text"
-                            android:textColor="@color/white"
-                            android:textSize="15sp"
-                            />
-                    </LinearLayout>
                 </LinearLayout>
                 <LinearLayout
                     binding:onClickCommand="@{viewModel.settingClick}"
-                    android:visibility="@{!viewModel.isVideoSetting ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{!viewModel.isVideoSetting ? (viewModel.isPayState?View.VISIBLE : View.GONE) : View.GONE}"
                     android:layout_gravity="end"
                     android:layout_marginEnd="22dp"
                     binding:drawable_cornersRadius="@{22}"

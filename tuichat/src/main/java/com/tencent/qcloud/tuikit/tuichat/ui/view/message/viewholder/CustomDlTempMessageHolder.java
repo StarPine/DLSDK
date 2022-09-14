@@ -1,5 +1,7 @@
 package com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder;
 
+import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.text.Html;
@@ -21,6 +23,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.tencent.custom.IMGsonUtils;
+import com.tencent.custom.MvBlurTransformation;
 import com.tencent.custom.PhotoGalleryPayEntity;
 import com.tencent.custom.VideoGalleryPayEntity;
 import com.tencent.custom.tmp.CustomDlTempMessage;
@@ -74,15 +77,13 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
             CustomDlTempMessage.MsgBodyInfo msgModuleInfo = customDlTempMessage.getContentBody().getContentBody();
             //红包照片模块
             if (CustomConstants.MediaGallery.MODULE_NAME.equals(moduleName)) {
-                Log.e(TAG,"当前红包模块："+moduleName);
-                Log.e(TAG,"模块内容:"+String.valueOf(msgModuleInfo.getCustomMsgType())+"\n"+msgModuleInfo.getCustomMsgBody());
                 //照片内容
                 if(CustomConstants.MediaGallery.PHOTO_GALLERY.equals(msgModuleInfo.getCustomMsgType())){
                     PhotoGalleryPayEntity customImageMessageBean = IMGsonUtils.fromJson(IMGsonUtils.toJson(msgModuleInfo.getCustomMsgBody()),PhotoGalleryPayEntity.class);
-                    LoadMediaGalleryPhoto(msg.getV2TIMMessage().getMsgID(),itemView.getContext(), flTmpLayout, customImageMessageBean,customDlTempMessage.getCustomElemData());
+                    LoadMediaGalleryPhoto(msg.getV2TIMMessage().getMsgID(),itemView.getContext(), flTmpLayout, customImageMessageBean,msg.getV2TIMMessage().getCloudCustomData());
                 }else if(CustomConstants.MediaGallery.VIDEO_GALLERY.equals(msgModuleInfo.getCustomMsgType())){
                     VideoGalleryPayEntity customVideoMessageBean = IMGsonUtils.fromJson(IMGsonUtils.toJson(msgModuleInfo.getCustomMsgBody()),VideoGalleryPayEntity.class);
-                    LoadMediaGalleryVideo(msg.getV2TIMMessage().getMsgID(),itemView.getContext(), flTmpLayout, customVideoMessageBean,customDlTempMessage.getCustomElemData());
+                    LoadMediaGalleryVideo(msg.getV2TIMMessage().getMsgID(),itemView.getContext(), flTmpLayout, customVideoMessageBean,msg.getV2TIMMessage().getCloudCustomData());
                 }else{
                     //默认展示解析不出的模板提示
                     defaultLayout(itemView.getContext(),flTmpLayout,msg.isSelf());
@@ -128,10 +129,10 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
         rootView.addView(defaultView);
     }
     //测试自定义图片渲染
-    public void LoadMediaGalleryPhoto(String IMKey,Context context, FrameLayout rootView, PhotoGalleryPayEntity customImageMessageBean,byte[] customElemData){
+    public void LoadMediaGalleryPhoto(String IMKey,Context context, FrameLayout rootView, PhotoGalleryPayEntity customImageMessageBean,String customElemData){
         Map<String,Object> mapData = null;
-        if(customElemData==null || customElemData.length==0){
-            mapData = IMGsonUtils.fromJson(new String(customElemData), Map.class);
+        if(!TextUtils.isEmpty(customElemData)){
+            mapData = IMGsonUtils.fromJson(customElemData, Map.class);
         }
         Log.e(TAG,"当前穿透字段内容为:"+String.valueOf(mapData));
         View customImageView = View.inflate(context, R.layout.tmp_message_photo_gallery_layout, null);
@@ -140,10 +141,13 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
         FrameLayout fLTlLayout = customImageView.findViewById(R.id.fl_tl_layout);
         //底部布局
         RelativeLayout rlLayout = customImageView.findViewById(R.id.rl_layout);
+        boolean stateSnapshot = false;
         //付费照片
         if(customImageMessageBean.isStatePhotoPay()){
             rlLayout.setVisibility(View.VISIBLE);
-            fLTlLayout.setVisibility(View.VISIBLE);
+            //快照
+            stateSnapshot  = customImageMessageBean.isStateSnapshot();
+            fLTlLayout.setVisibility(stateSnapshot ? View.VISIBLE : View.GONE);
             //当前收费价格
             TextView tvCoin = customImageView.findViewById(R.id.tv_coin);
             if(tvCoin!=null){
@@ -162,6 +166,7 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
             //   普通照片： stateSnapshot = false
             //   普通快照： stateSnapshot = true
             if(customImageMessageBean.isStateSnapshot()){
+                stateSnapshot = true;
                 fLTlLayout.setVisibility(View.VISIBLE);
                 CustomDrawableUtils.generateDrawable(fLTlLayout, Color.parseColor("#717477"),
                         null,8,null,null,8,
@@ -172,10 +177,13 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
             }
             rlLayout.setVisibility(View.GONE);
         }
-        //设置图片圆角角度
-        RoundedCorners roundedCorners = new RoundedCorners(dp2px(getContext(),8));
-        //通过RequestOptions扩展功能,override:采样率,因为ImageView就这么大,可以压缩图片,降低内存消耗
-        RequestOptions override = RequestOptions.bitmapTransform(roundedCorners).override(dp2px(getContext(),86), dp2px(getContext(),154));
+        RequestOptions override;
+        if(stateSnapshot){
+            override = RequestOptions. bitmapTransform(new MvBlurTransformation(90)).override(dp2px(getContext(),86), dp2px(getContext(),154));
+        }else{
+            //通过RequestOptions扩展功能,override:采样率,因为ImageView就这么大,可以压缩图片,降低内存消耗
+            override = new RequestOptions().override(dp2px(getContext(),86), dp2px(getContext(),154));
+        }
         ImageView imgContent = customImageView.findViewById(R.id.img_content);
         String imagePath = TUIChatUtils.getFullImageUrl(customImageMessageBean.getImgPath());
         Glide.with(TUIChatService.getAppContext())
@@ -192,10 +200,10 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
     }
 
     //测试自定义图片渲染
-    public void LoadMediaGalleryVideo(String IMKey,Context context, FrameLayout rootView, VideoGalleryPayEntity customImageMessageBean,byte[] customElemData){
+    public void LoadMediaGalleryVideo(String IMKey,Context context, FrameLayout rootView, VideoGalleryPayEntity customImageMessageBean,String customElemData){
         Map<String,Object> mapData = null;
-        if(customElemData==null || customElemData.length==0){
-            mapData = IMGsonUtils.fromJson(new String(customElemData), Map.class);
+        if(!TextUtils.isEmpty(customElemData)){
+            mapData = IMGsonUtils.fromJson(customElemData, Map.class);
         }
         Log.e(TAG,"当前穿透字段内容为:"+String.valueOf(mapData));
         View customImageView = View.inflate(context, R.layout.tmp_message_video_gallery_layout, null);

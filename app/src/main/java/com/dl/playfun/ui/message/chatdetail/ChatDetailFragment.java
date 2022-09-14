@@ -46,6 +46,7 @@ import com.dl.playfun.entity.EvaluateItemEntity;
 import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.entity.LocalMessageIMEntity;
+import com.dl.playfun.entity.MediaGalleryEditEntity;
 import com.dl.playfun.entity.PhotoAlbumEntity;
 import com.dl.playfun.entity.TagEntity;
 import com.dl.playfun.entity.TaskRewardReceiveEntity;
@@ -59,7 +60,7 @@ import com.dl.playfun.ui.dialog.GiftBagDialog;
 import com.dl.playfun.ui.message.chatdetail.notepad.NotepadActivity;
 import com.dl.playfun.ui.message.photoreview.PhotoReviewFragment;
 import com.dl.playfun.ui.message.sendcoinredpackage.SendCoinRedPackageFragment;
-import com.dl.playfun.ui.message.snapshot.SnapshotPhotoActivity;
+import com.dl.playfun.ui.message.mediagallery.SnapshotPhotoActivity;
 import com.dl.playfun.ui.mine.myphotoalbum.MyPhotoAlbumFragment;
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
 import com.dl.playfun.ui.mine.wallet.girl.TwDollarMoneyFragment;
@@ -89,14 +90,20 @@ import com.opensource.svgaplayer.SVGASoundManager;
 import com.opensource.svgaplayer.SVGAVideoEntity;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.tencent.custom.CustomIMTextEntity;
+import com.tencent.custom.PhotoGalleryPayEntity;
+import com.tencent.custom.VideoGalleryPayEntity;
+import com.tencent.custom.tmp.CustomDlTempMessage;
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuicore.Status;
+import com.tencent.qcloud.tuicore.custom.CustomConstants;
 import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
+import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.CustomImageMessage;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
@@ -937,11 +944,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         PictureSelectorUtil.selectImage(mActivity, true, 1, new OnResultCallbackListener<LocalMedia>() {
             @Override
             public void onResult(List<LocalMedia> result) {
-                Intent snapshotIntent = new Intent(mActivity,SnapshotPhotoActivity.class);
-                snapshotIntent.putExtra("imgPath",result.get(0).getCompressPath());
-                snapshotIntent.putExtra("snapshot",snapshot);
-                snapshotIntent.putExtra("isVideo",false);
-                toSnapshotPhotoIntent.launch(snapshotIntent);
+                toSnapshotPhotoIntent.launch(SnapshotPhotoActivity.createIntent(mActivity,snapshot,false,result.get(0).getCompressPath()));
                // viewModel.uploadFileOSS(result.get(0));
             }
 
@@ -955,10 +958,38 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     ActivityResultLauncher<Intent> toSnapshotPhotoIntent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         if (result.getData() != null) {
             Intent intentData = result.getData();
-            boolean isVideo = intentData.getBooleanExtra("isVideo",false);
-            GoodsEntity goodsEntity = (GoodsEntity) intentData.getSerializableExtra("mediaGalleryPay");
-            if(goodsEntity!=null){
-                Log.e("支付成功","===============");
+            MediaGalleryEditEntity mediaGalleryEditEntity = (MediaGalleryEditEntity) intentData.getSerializableExtra("mediaGalleryEditEntity");
+            if(mediaGalleryEditEntity!=null){
+                Log.e(TAG,"当前选择的图片地址："+mediaGalleryEditEntity.toString());
+                //用自定义图片类型
+                CustomDlTempMessage.MsgModuleInfo msgModuleInfo = new CustomDlTempMessage.MsgModuleInfo();
+                msgModuleInfo.setMsgModuleName(CustomConstants.MediaGallery.MODULE_NAME);
+                //消息内容体
+                CustomDlTempMessage.MsgBodyInfo msgBodyInfo = new CustomDlTempMessage.MsgBodyInfo();
+                msgBodyInfo.setCustomMsgType(mediaGalleryEditEntity.isVideoSetting() ? CustomConstants.MediaGallery.VIDEO_GALLERY : CustomConstants.MediaGallery.PHOTO_GALLERY);
+                if(mediaGalleryEditEntity.isVideoSetting()){//视频
+                    msgBodyInfo.setCustomMsgType(CustomConstants.MediaGallery.VIDEO_GALLERY);
+                    VideoGalleryPayEntity videoGalleryPayEntity = new VideoGalleryPayEntity();
+                    videoGalleryPayEntity.setStateVideoPay(mediaGalleryEditEntity.isStatePay());
+                    videoGalleryPayEntity.setSrcPath(mediaGalleryEditEntity.getSrcPath());
+                    msgBodyInfo.setCustomMsgBody(videoGalleryPayEntity);
+                }else{ // 图片
+                    msgBodyInfo.setCustomMsgType(CustomConstants.MediaGallery.PHOTO_GALLERY);
+                    PhotoGalleryPayEntity photoGalleryPayEntity = new PhotoGalleryPayEntity();
+                    photoGalleryPayEntity.setStatePhotoPay(mediaGalleryEditEntity.isStatePay());
+                    photoGalleryPayEntity.setStateSnapshot(mediaGalleryEditEntity.isStateSnapshot());
+                    photoGalleryPayEntity.setImgPath(mediaGalleryEditEntity.getSrcPath());
+                    msgBodyInfo.setCustomMsgBody(photoGalleryPayEntity);
+                }
+                msgModuleInfo.setContentBody(msgBodyInfo);
+                CustomDlTempMessage customDlTempMessage = new CustomDlTempMessage();
+                customDlTempMessage.setContentBody(msgModuleInfo);
+
+                String data = GsonUtils.toJson(customDlTempMessage);
+                TUIMessageBean messageInfo = ChatMessageBuilder.buildCustomMessage(data, null, null);
+                if (messageInfo != null) {
+                    binding.chatLayout.sendMessage(messageInfo, false);
+                }
             }
         }
     });
