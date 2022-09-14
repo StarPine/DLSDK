@@ -156,7 +156,6 @@ public class OftenContactFragment extends BaseFragment<FragmentOftenContactBindi
         binding.conversationLayoutContact.getConversationList().setBanConversationDelListener(() -> viewModel.dismissHUD());
 
         binding.conversationLayoutContact.getConversationList().setOnItemClickListener((view, position, messageInfo) -> {
-            //点击用户头像
             String id = messageInfo.getId();
             if (id.trim().contains(AppConfig.CHAT_SERVICE_USER_ID)) {
                 ChatUtils.startChatActivity(messageInfo,0,viewModel);

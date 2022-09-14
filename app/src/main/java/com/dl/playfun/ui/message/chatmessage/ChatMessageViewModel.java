@@ -101,23 +101,21 @@ public class ChatMessageViewModel extends BaseViewModel<AppRepository> {
                     public void onSuccess(BaseDataResponse<IMTransUserEntity> response) {
                         IMTransUserEntity  imTransUserEntity = response.getData();
                         if(imTransUserEntity!=null && imTransUserEntity.getUserId()!=null){
-                            if(userDetailView){//去往用户主页
-                                Bundle bundle = UserDetailFragment.getStartBundle(imTransUserEntity.getUserId());
-                                start(UserDetailFragment.class.getCanonicalName(), bundle);
-                            }else{//进入私聊页面
-                                userMessageCollation(imTransUserEntity.getUserId());
-                            }
-
+                            userMessageCollation(imTransUserEntity.getUserId(), userDetailView);
+                        }else {
+                            dismissHUD();
                         }
                     }
+
                     @Override
-                    public void onComplete() {
+                    public void onError(RequestException e) {
+                        super.onError(e);
                         dismissHUD();
                     }
                 });
     }
 
-    public void userMessageCollation(int userId) {
+    public void userMessageCollation(int userId, boolean userDetailView) {
         model.userMessageCollation(userId)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
@@ -126,7 +124,12 @@ public class ChatMessageViewModel extends BaseViewModel<AppRepository> {
                 .subscribe(new BaseObserver<BaseResponse>() {
                     @Override
                     public void onSuccess(BaseResponse response) {
-                        uc.startChatUserView.postValue(userId);
+                        if(userDetailView){//去往用户主页
+                            Bundle bundle = UserDetailFragment.getStartBundle(userId);
+                            start(UserDetailFragment.class.getCanonicalName(), bundle);
+                        }else{//进入私聊页面
+                            uc.startChatUserView.postValue(userId);
+                        }
                     }
 
                     @Override

@@ -194,7 +194,6 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
         binding.conversationLayout.getConversationList().setOnItemClickListener(new ConversationListLayout.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position, ConversationInfo messageInfo) {
-                //点击用户头像
                 String id = messageInfo.getId();
                 if (id.trim().contains(AppConfig.CHAT_SERVICE_USER_ID)) {
                     ChatUtils.startChatActivity(messageInfo,0,viewModel);
