@@ -30,6 +30,7 @@ import com.tencent.custom.tmp.CustomDlTempMessage;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.custom.CustomConstants;
 import com.tencent.qcloud.tuicore.custom.CustomDrawableUtils;
+import com.tencent.qcloud.tuicore.custom.entity.MediaGalleryEditEntity;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.CustomImageMessage;
@@ -129,7 +130,7 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
         rootView.addView(defaultView);
     }
     //测试自定义图片渲染
-    public void LoadMediaGalleryPhoto(String IMKey,Context context, FrameLayout rootView, PhotoGalleryPayEntity customImageMessageBean,String customElemData){
+    public void LoadMediaGalleryPhoto(String IMKey,Context context, FrameLayout rootView, PhotoGalleryPayEntity photoGalleryPayEntity,String customElemData){
         Map<String,Object> mapData = null;
         if(!TextUtils.isEmpty(customElemData)){
             mapData = IMGsonUtils.fromJson(customElemData, Map.class);
@@ -143,17 +144,17 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
         RelativeLayout rlLayout = customImageView.findViewById(R.id.rl_layout);
         boolean stateSnapshot = false;
         //付费照片
-        if(customImageMessageBean.isStatePhotoPay()){
+        if(photoGalleryPayEntity.isStatePhotoPay()){
             rlLayout.setVisibility(View.VISIBLE);
             //快照
-            stateSnapshot  = customImageMessageBean.isStateSnapshot();
+            stateSnapshot  = photoGalleryPayEntity.isStateSnapshot();
             fLTlLayout.setVisibility(stateSnapshot ? View.VISIBLE : View.GONE);
             //当前收费价格
             TextView tvCoin = customImageView.findViewById(R.id.tv_coin);
             if(tvCoin!=null){
-                if(customImageMessageBean.getUnlockPrice()!=null && customImageMessageBean.getUnlockPrice().intValue() > 0){
+                if(photoGalleryPayEntity.getUnlockPrice()!=null && photoGalleryPayEntity.getUnlockPrice().intValue() > 0){
                     tvCoin.setVisibility(View.VISIBLE);
-                    tvCoin.setText(String.valueOf(customImageMessageBean.getUnlockPrice().intValue()));
+                    tvCoin.setText(String.valueOf(photoGalleryPayEntity.getUnlockPrice().intValue()));
                 }else{
                     tvCoin.setVisibility(View.GONE);
                 }
@@ -165,7 +166,7 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
             //非付费照片
             //   普通照片： stateSnapshot = false
             //   普通快照： stateSnapshot = true
-            if(customImageMessageBean.isStateSnapshot()){
+            if(photoGalleryPayEntity.isStateSnapshot()){
                 stateSnapshot = true;
                 fLTlLayout.setVisibility(View.VISIBLE);
                 CustomDrawableUtils.generateDrawable(fLTlLayout, Color.parseColor("#717477"),
@@ -179,13 +180,13 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
         }
         RequestOptions override;
         if(stateSnapshot){
-            override = RequestOptions. bitmapTransform(new MvBlurTransformation(90)).override(dp2px(getContext(),86), dp2px(getContext(),154));
+            override = RequestOptions. bitmapTransform(new MvBlurTransformation(100)).override(dp2px(getContext(),86), dp2px(getContext(),154));
         }else{
             //通过RequestOptions扩展功能,override:采样率,因为ImageView就这么大,可以压缩图片,降低内存消耗
             override = new RequestOptions().override(dp2px(getContext(),86), dp2px(getContext(),154));
         }
         ImageView imgContent = customImageView.findViewById(R.id.img_content);
-        String imagePath = TUIChatUtils.getFullImageUrl(customImageMessageBean.getImgPath());
+        String imagePath = TUIChatUtils.getFullImageUrl(photoGalleryPayEntity.getImgPath());
         Glide.with(TUIChatService.getAppContext())
                 .load(imagePath)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -194,13 +195,19 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
         rootView.addView(customImageView);
         rootView.setOnClickListener(v -> {
             if (onItemClickListener != null) {
-                onItemClickListener.onMediaGalleryClick(IMKey,customImageMessageBean.getImgPath());
+                MediaGalleryEditEntity mediaGalleryEditEntity = new MediaGalleryEditEntity();
+                mediaGalleryEditEntity.setSrcPath(photoGalleryPayEntity.getImgPath());
+                mediaGalleryEditEntity.setVideoSetting(false);
+                mediaGalleryEditEntity.setUnlockPrice(photoGalleryPayEntity.getUnlockPrice());
+                mediaGalleryEditEntity.setStatePay(photoGalleryPayEntity.isStatePhotoPay());
+                mediaGalleryEditEntity.setStateSnapshot(photoGalleryPayEntity.isStateSnapshot());
+                onItemClickListener.onMediaGalleryClick(IMKey,mediaGalleryEditEntity);
             }
         });
     }
 
     //测试自定义图片渲染
-    public void LoadMediaGalleryVideo(String IMKey,Context context, FrameLayout rootView, VideoGalleryPayEntity customImageMessageBean,String customElemData){
+    public void LoadMediaGalleryVideo(String IMKey,Context context, FrameLayout rootView, VideoGalleryPayEntity videoGalleryPayEntity,String customElemData){
         Map<String,Object> mapData = null;
         if(!TextUtils.isEmpty(customElemData)){
             mapData = IMGsonUtils.fromJson(customElemData, Map.class);
@@ -212,14 +219,14 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
         //底部布局
         RelativeLayout rlLayout = customImageView.findViewById(R.id.rl_layout);
         //付费视频
-        if(customImageMessageBean.isStateVideoPay()){
+        if(videoGalleryPayEntity.isStateVideoPay()){
             rlLayout.setVisibility(View.VISIBLE);
             //当前收费价格
             TextView tvCoin = customImageView.findViewById(R.id.tv_coin);
             if(tvCoin!=null){
-                if(customImageMessageBean.getUnlockPrice()!=null && customImageMessageBean.getUnlockPrice().intValue() > 0){
+                if(videoGalleryPayEntity.getUnlockPrice()!=null && videoGalleryPayEntity.getUnlockPrice().intValue() > 0){
                     tvCoin.setVisibility(View.VISIBLE);
-                    tvCoin.setText(String.valueOf(customImageMessageBean.getUnlockPrice().intValue()));
+                    tvCoin.setText(String.valueOf(videoGalleryPayEntity.getUnlockPrice().intValue()));
                 }else{
                     tvCoin.setVisibility(View.GONE);
                 }
@@ -233,7 +240,7 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
         //通过RequestOptions扩展功能,override:采样率,因为ImageView就这么大,可以压缩图片,降低内存消耗
         RequestOptions override = RequestOptions.bitmapTransform(roundedCorners).override(dp2px(getContext(),86), dp2px(getContext(),154));
         ImageView imgContent = customImageView.findViewById(R.id.img_content);
-        String imagePath = TUIChatUtils.getFullImageUrl(customImageMessageBean.getSrcPath());
+        String imagePath = TUIChatUtils.getFullImageUrl(videoGalleryPayEntity.getSrcPath());
         Glide.with(TUIChatService.getAppContext())
                 .load(imagePath)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -242,7 +249,12 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
         rootView.addView(customImageView);
         rootView.setOnClickListener(v -> {
             if (onItemClickListener != null) {
-                onItemClickListener.onMediaGalleryClick(IMKey,customImageMessageBean.getSrcPath());
+                MediaGalleryEditEntity mediaGalleryEditEntity = new MediaGalleryEditEntity();
+                mediaGalleryEditEntity.setSrcPath(videoGalleryPayEntity.getSrcPath());
+                mediaGalleryEditEntity.setVideoSetting(true);
+                mediaGalleryEditEntity.setUnlockPrice(videoGalleryPayEntity.getUnlockPrice());
+                mediaGalleryEditEntity.setStatePay(videoGalleryPayEntity.isStateVideoPay());
+                onItemClickListener.onMediaGalleryClick(IMKey,mediaGalleryEditEntity);
             }
         });
     }

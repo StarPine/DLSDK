@@ -1,4 +1,4 @@
-package com.dl.playfun.entity;
+package com.tencent.qcloud.tuicore.custom.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -21,10 +21,6 @@ public class MediaGalleryEditEntity implements Serializable {
     private BigDecimal unlockPrice;
     //oss相对地址
     private String srcPath;
-    //图片宽
-    private int imgWidth;
-    //图片高
-    private int imgHeight;
 
     public boolean isVideoSetting() {
         return isVideoSetting;
@@ -74,22 +70,6 @@ public class MediaGalleryEditEntity implements Serializable {
         this.srcPath = srcPath;
     }
 
-    public int getImgWidth() {
-        return imgWidth;
-    }
-
-    public void setImgWidth(int imgWidth) {
-        this.imgWidth = imgWidth;
-    }
-
-    public int getImgHeight() {
-        return imgHeight;
-    }
-
-    public void setImgHeight(int imgHeight) {
-        this.imgHeight = imgHeight;
-    }
-
     @Override
     public String toString() {
         return "MediaGalleryEditEntity{" +
@@ -99,8 +79,6 @@ public class MediaGalleryEditEntity implements Serializable {
                 ", stateUnlockPhoto=" + stateUnlockPhoto +
                 ", unlockPrice=" + unlockPrice +
                 ", srcPath='" + srcPath + '\'' +
-                ", imgWidth=" + imgWidth +
-                ", imgHeight=" + imgHeight +
                 '}';
     }
 }

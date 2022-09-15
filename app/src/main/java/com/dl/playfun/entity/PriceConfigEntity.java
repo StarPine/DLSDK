@@ -63,6 +63,16 @@ public class PriceConfigEntity {
         private String audioProfitTips;
         @SerializedName("text_price")
         private Integer textPrice;
+        //发送照片、视频价格模板
+        private MediaPayPerConfigEntity mediaPayPerConfig;
+
+        public MediaPayPerConfigEntity getMediaPayPerConfig() {
+            return mediaPayPerConfig;
+        }
+
+        public void setMediaPayPerConfig(MediaPayPerConfigEntity mediaPayPerConfig) {
+            this.mediaPayPerConfig = mediaPayPerConfig;
+        }
 
         public String getVideoTips() {
             return videoTips;

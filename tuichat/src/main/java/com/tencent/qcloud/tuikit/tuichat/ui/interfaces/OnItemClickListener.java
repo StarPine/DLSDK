@@ -6,6 +6,7 @@ import android.widget.TextView;
 import com.tencent.custom.CustomIMTextEntity;
 import com.tencent.custom.EvaluateItemEntity;
 import com.tencent.custom.PhotoAlbumItemEntity;
+import com.tencent.qcloud.tuicore.custom.entity.MediaGalleryEditEntity;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.QuoteMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 
@@ -58,5 +59,5 @@ public abstract class OnItemClickListener {
     public void onImageClick(TUIMessageBean messageInfo){}
 
     //自定义 发送红包模块点击触发
-    public void onMediaGalleryClick(String IMKey,String srcPath) {}
+    public void onMediaGalleryClick(String IMKey, MediaGalleryEditEntity mediaGalleryEditEntity) {}
 }

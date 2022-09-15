@@ -22,8 +22,8 @@
                 android:background="@color/transparent"
                 android:layout_width="match_parent"
                 android:layout_height="0dp" />
-
             <androidx.appcompat.widget.AppCompatImageView
+                android:layout_below="@+id/status_bar_view"
                 android:layout_width="19dp"
                 android:layout_height="19dp"
                 android:layout_marginStart="10dp"
@@ -32,147 +32,176 @@
                 android:tint="@color/white"
                 binding:onClickCommand="@{photoViewModel.onBackViewClick}"
                 />
-            <FrameLayout
-                binding:drawable_color="@{@color/navigation_checked}"
-                android:layout_alignParentTop="true"
-                android:layout_centerInParent="true"
-                android:layout_width="46dp"
-                android:layout_height="46dp">
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    />
-            </FrameLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:orientation="vertical">
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="31dp"
-                    android:layout_height="31dp"
-                    android:scaleType="fitXY"
-                    android:layout_gravity="center"
-                    android:src="@drawable/icon_snapshot" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/playfun_mine_burn"
-                    android:textColor="@color/pseekbar_process"
-                    android:textSize="13sp" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tv_btn"
-                    android:layout_gravity="center"
-                    android:layout_width="154dp"
-                    android:layout_height="43dp"
-                    android:gravity="center"
-                    android:text="@string/playfun_confirm"
-                    android:textColor="@color/white"
-                    android:textSize="13sp"
-                    binding:drawable_cornersRadius="@{22}"
-                    binding:drawable_gradient_endColor="@{@color/playfun_shape_radius_end_color}"
-                    binding:drawable_gradient_startColor="@{@color/playfun_shape_radius_start_color}" />
-            </LinearLayout>
-            <LinearLayout
-                android:visibility="@{photoViewModel.evaluationState ? View.VISIBLE : View.GONE}"
-                android:gravity="center"
-                android:layout_centerInParent="true"
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:visibility="gone"
-                >
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="31dp"
-                    android:layout_height="31dp"
-                    android:src="@drawable/icon_snapshot_display"
-                    />
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_marginTop="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/playfun_photo_burned"
-                    android:textColor="@color/white"
-                    android:textSize="13sp"
-                    />
-            </LinearLayout>
-
-            <LinearLayout
-                tools:visibility="gone"
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/img_content"
+                android:visibility="gone"
                 android:layout_width="match_parent"
-                android:layout_height="86dp"
-                android:layout_alignParentBottom="true"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:visibility="@{photoViewModel.evaluationState ? View.VISIBLE : View.GONE}">
-
-                <LinearLayout
-                    android:layout_width="144dp"
-                    android:layout_height="38dp"
-                    android:layout_gravity="center"
-                    android:orientation="horizontal"
-                    binding:drawable_color="@{@color/black}"
-                    binding:drawable_cornersRadius="@{22}"
-                    binding:drawable_stroke_color="@{@color/purple_text}"
-                    binding:drawable_stroke_width="@{1}">
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="30dp"
-                        android:src="@drawable/img_give_like" />
-
+                android:layout_height="match_parent"
+                android:background="@color/black"
+                android:scaleType="centerInside" />
+            <com.luck.picture.lib.widget.longimage.SubsamplingScaleImageView
+                android:id="@+id/img_long"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/black"
+                android:scaleType="centerInside"
+                />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/img_fuzzy"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/img_playfun_fuzzy_loading"
+                android:scaleType="fitXY"
+                />
+            <RelativeLayout
+                android:id="@+id/rl_container"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <FrameLayout
+                    binding:drawable_color="@{@color/navigation_checked}"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerInParent="true"
+                    android:layout_width="46dp"
+                    android:layout_height="46dp">
                     <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:orientation="vertical">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="31dp"
+                        android:layout_height="31dp"
+                        android:scaleType="fitXY"
                         android:layout_gravity="center"
-                        android:layout_marginStart="10dp"
-                        android:includeFontPadding="false"
-                        android:text="不喜歡"
-                        android:textColor="#ffffffff"
-                        android:textSize="15sp" />
+                        android:src="@drawable/icon_snapshot" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/playfun_mine_burn"
+                        android:textColor="@color/pseekbar_process"
+                        android:textSize="13sp" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tv_btn"
+                        android:layout_gravity="center"
+                        android:layout_width="154dp"
+                        android:layout_height="43dp"
+                        android:gravity="center"
+                        android:text="@string/playfun_confirm"
+                        android:textColor="@color/white"
+                        android:textSize="13sp"
+                        binding:drawable_cornersRadius="@{22}"
+                        binding:drawable_gradient_endColor="@{@color/playfun_shape_radius_end_color}"
+                        binding:drawable_gradient_startColor="@{@color/playfun_shape_radius_start_color}" />
+                </LinearLayout>
+                <LinearLayout
+                    android:visibility="@{photoViewModel.evaluationState ? View.VISIBLE : View.GONE}"
+                    android:gravity="center"
+                    android:layout_centerInParent="true"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:visibility="gone"
+                    >
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="31dp"
+                        android:layout_height="31dp"
+                        android:src="@drawable/icon_snapshot_display"
+                        />
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_marginTop="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/playfun_photo_burned"
+                        android:textColor="@color/white"
+                        android:textSize="13sp"
+                        />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="144dp"
-                    android:layout_height="38dp"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="28dp"
+                    tools:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="86dp"
+                    android:layout_alignParentBottom="true"
+                    android:gravity="center"
                     android:orientation="horizontal"
-                    binding:drawable_cornersRadius="@{22}"
-                    binding:drawable_gradient_endColor="@{@color/playfun_shape_radius_end_color}"
-                    binding:drawable_gradient_startColor="@{@color/playfun_shape_radius_start_color}">
+                    android:visibility="@{photoViewModel.evaluationState ? View.VISIBLE : View.GONE}">
 
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
+                    <LinearLayout
+                        android:layout_width="144dp"
+                        android:layout_height="38dp"
                         android:layout_gravity="center"
-                        android:layout_marginStart="30dp"
-                        android:rotationX="180"
-                        android:src="@drawable/img_give_like" />
+                        android:orientation="horizontal"
+                        binding:drawable_color="@{@color/black}"
+                        binding:drawable_cornersRadius="@{22}"
+                        binding:drawable_stroke_color="@{@color/purple_text}"
+                        binding:drawable_stroke_width="@{1}">
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="30dp"
+                            android:src="@drawable/img_give_like" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="10dp"
+                            android:includeFontPadding="false"
+                            android:text="不喜歡"
+                            android:textColor="#ffffffff"
+                            android:textSize="15sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="144dp"
+                        android:layout_height="38dp"
                         android:layout_gravity="center"
-                        android:layout_marginStart="10dp"
-                        android:includeFontPadding="false"
-                        android:text="喜歡"
-                        android:textColor="#ffffffff"
-                        android:textSize="15sp" />
+                        android:layout_marginStart="28dp"
+                        android:orientation="horizontal"
+                        binding:drawable_cornersRadius="@{22}"
+                        binding:drawable_gradient_endColor="@{@color/playfun_shape_radius_end_color}"
+                        binding:drawable_gradient_startColor="@{@color/playfun_shape_radius_start_color}">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="30dp"
+                            android:rotationX="180"
+                            android:src="@drawable/img_give_like" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="10dp"
+                            android:includeFontPadding="false"
+                            android:text="喜歡"
+                            android:textColor="#ffffffff"
+                            android:textSize="15sp" />
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
+            </RelativeLayout>
+
         </RelativeLayout>
     </FrameLayout>
 </layout>

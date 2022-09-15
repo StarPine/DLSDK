@@ -126,7 +126,20 @@ import retrofit2.http.Query;
  */
 
 public interface ApiService {
-    
+
+    /**
+    * @Desc TODO(支付购买聊天中的付费资源)
+    * @author 彭石林
+    * @parame [
+     * msgKey    string	聊天中的msgKey
+     * toUserId	int	对方的用户id]
+    * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
+    * @Date 2022/9/15
+    */
+    @POST("api/chatResource/pay")
+    @FormUrlEncoded
+    Observable<BaseResponse> mediaGalleryPay(@Field("msgKey")String msgKey, @Field("toUserId") Integer toUserId);
+
     /**
     * @Desc TODO(推币机-历史记录)
     * @author 彭石林

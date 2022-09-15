@@ -12,10 +12,13 @@ import com.dl.playfun.R;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.GlideEngine;
 import com.dl.playfun.databinding.ActivitySnapshotPhotoSettingBinding;
-import com.dl.playfun.entity.MediaGalleryEditEntity;
+import com.dl.playfun.entity.MediaPayPerConfigEntity;
+import com.tencent.qcloud.tuicore.custom.entity.MediaGalleryEditEntity;
 import com.dl.playfun.ui.base.BaseActivity;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
+
+import java.util.List;
 
 /**
  * Author: 彭石林
@@ -29,6 +32,7 @@ public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSet
     private boolean isPayState = false;
     private boolean isVideo = false;
 
+    private List<MediaPayPerConfigEntity.itemEntity> mediaPriceTmpConfig;
     private SnapshotPhotoDialog snapshotPhotoDialog;
 
     /**
@@ -38,11 +42,12 @@ public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSet
     * @return android.content.Intent
     * @Date 2022/9/14
     */
-    public static Intent createIntent(Context mContext, boolean isPayState, boolean isVideoSetting, String srcPath){
+    public static Intent createIntent(Context mContext, boolean isPayState, boolean isVideoSetting, String srcPath,MediaPayPerConfigEntity.itemTagEntity mediaPriceTmpConfig){
         Intent snapshotIntent = new Intent(mContext,SnapshotPhotoActivity.class);
         snapshotIntent.putExtra("isPayState",isPayState);
         snapshotIntent.putExtra("isVideo",isVideoSetting);
         snapshotIntent.putExtra("srcPath",srcPath);
+        snapshotIntent.putExtra("mediaPriceTmpConfig",mediaPriceTmpConfig);
         return snapshotIntent;
     }
 

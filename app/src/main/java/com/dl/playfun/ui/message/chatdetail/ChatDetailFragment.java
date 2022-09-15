@@ -44,9 +44,10 @@ import com.dl.playfun.entity.ApiConfigManagerEntity;
 import com.dl.playfun.entity.CrystalDetailsConfigEntity;
 import com.dl.playfun.entity.EvaluateItemEntity;
 import com.dl.playfun.entity.GiftBagEntity;
-import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.entity.LocalMessageIMEntity;
-import com.dl.playfun.entity.MediaGalleryEditEntity;
+import com.dl.playfun.entity.MediaPayPerConfigEntity;
+import com.dl.playfun.ui.message.mediagallery.photo.MediaGalleryPhotoPayActivity;
+import com.tencent.qcloud.tuicore.custom.entity.MediaGalleryEditEntity;
 import com.dl.playfun.entity.PhotoAlbumEntity;
 import com.dl.playfun.entity.TagEntity;
 import com.dl.playfun.entity.TaskRewardReceiveEntity;
@@ -101,9 +102,7 @@ import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuicore.Status;
 import com.tencent.qcloud.tuicore.custom.CustomConstants;
 import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
-import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.CustomImageMessage;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
@@ -122,6 +121,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import me.yokeyword.fragmentation.ISupportFragment;
 
@@ -885,10 +885,18 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                     MessageDetailDialog.getImageDialog(mActivity, customImageMessageBean.getImgPath()).show();
                 }
             }
-
+            //查看
             @Override
-            public void onMediaGalleryClick(String IMKey, String srcPath) {
-                Log.e(TAG,"当前发送视讯语音模块:"+IMKey+"============="+srcPath);
+            public void onMediaGalleryClick(String IMKey, MediaGalleryEditEntity mediaGalleryEditEntity) {
+                if(mediaGalleryEditEntity!=null){
+                    //视频查看
+                    if(mediaGalleryEditEntity.isVideoSetting()){
+
+                    }else{//图片查看
+                        startActivity(MediaGalleryPhotoPayActivity.createIntent(getContext(),mediaGalleryEditEntity));
+                    }
+                }
+                Log.e(TAG,"当前发送视讯语音模块:"+IMKey+"============="+mediaGalleryEditEntity.toString());
             }
         });
 
@@ -944,7 +952,16 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         PictureSelectorUtil.selectImage(mActivity, true, 1, new OnResultCallbackListener<LocalMedia>() {
             @Override
             public void onResult(List<LocalMedia> result) {
-                toSnapshotPhotoIntent.launch(SnapshotPhotoActivity.createIntent(mActivity,snapshot,false,result.get(0).getCompressPath()));
+                MediaPayPerConfigEntity.itemTagEntity mediaPriceTmpConfig = null;
+                if(viewModel.priceConfigEntityField!=null){
+                    if(viewModel.priceConfigEntityField.getCurrent()!=null && viewModel.priceConfigEntityField.getCurrent().getMediaPayPerConfig()!=null){
+                        if(viewModel.priceConfigEntityField.getCurrent().getMediaPayPerConfig().getPhoto()!=null){
+                            mediaPriceTmpConfig = viewModel.priceConfigEntityField.getCurrent().getMediaPayPerConfig().getPhoto();
+                        }
+
+                    }
+                }
+                toSnapshotPhotoIntent.launch(SnapshotPhotoActivity.createIntent(mActivity,snapshot,false,result.get(0).getCompressPath(),mediaPriceTmpConfig));
                // viewModel.uploadFileOSS(result.get(0));
             }
 
@@ -1018,9 +1035,16 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                     path = localMedia.getPath();
                 }
 
-                String thumbPath = ImageUtils.getVideoThumbnail(path, MediaStore.Images.Thumbnails.MINI_KIND, 0, 0);
-                TUIMessageBean info = ChatMessageBuilder.buildVideoMessage(thumbPath, path, localMedia.getWidth(), localMedia.getHeight(), localMedia.getDuration());
-                binding.chatLayout.sendMessage(info, false);
+                MediaPayPerConfigEntity.itemTagEntity mediaPriceTmpConfig = null;
+                if(viewModel.priceConfigEntityField!=null){
+                    if(viewModel.priceConfigEntityField.getCurrent()!=null && viewModel.priceConfigEntityField.getCurrent().getMediaPayPerConfig()!=null){
+                        if(viewModel.priceConfigEntityField.getCurrent().getMediaPayPerConfig().getVideo()!=null){
+                            mediaPriceTmpConfig = viewModel.priceConfigEntityField.getCurrent().getMediaPayPerConfig().getVideo();
+                        }
+
+                    }
+                }
+                toSnapshotPhotoIntent.launch(SnapshotPhotoActivity.createIntent(mActivity,snapshot,true,path,mediaPriceTmpConfig));
             }
 
             @Override
