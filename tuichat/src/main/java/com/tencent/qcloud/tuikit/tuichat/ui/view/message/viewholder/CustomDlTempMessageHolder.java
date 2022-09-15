@@ -75,7 +75,8 @@ public class CustomDlTempMessageHolder extends MessageContentHolder {
                 }
             } else if (CustomConstants.SystemTipsMessage.MODULE_NAME.equals(moduleName)) {
                 //系统提示模块
-                if (CustomConstants.SystemTipsMessage.TYPE_DISABLE_CALLS.equals(msgModuleInfo.getCustomMsgType())) {
+                if (CustomConstants.SystemTipsMessage.TYPE_DISABLE_CALLS.equals(msgModuleInfo.getCustomMsgType())
+                        || CustomConstants.SystemTipsMessage.TYPE_JUMP_WEB.equals(msgModuleInfo.getCustomMsgType())) {
                     loadSystemTipsView(position, msg, msgModuleInfo);
                 }
             } else {
@@ -96,7 +97,7 @@ public class CustomDlTempMessageHolder extends MessageContentHolder {
         msgBody.setText(Html.fromHtml(systemTipsEntity.getContent()));
         systemTipsView.setOnClickListener(v -> {
             if (onItemClickListener != null)
-                onItemClickListener.systemTipsOnClick(position, msg, systemTipsEntity.getType());
+                onItemClickListener.systemTipsOnClick(position, msg, systemTipsEntity);
         });
 
         customJsonMsgContentFrame.addView(systemTipsView);

@@ -59,6 +59,7 @@ import com.dl.playfun.ui.message.sendcoinredpackage.SendCoinRedPackageFragment;
 import com.dl.playfun.ui.mine.myphotoalbum.MyPhotoAlbumFragment;
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
 import com.dl.playfun.ui.mine.wallet.girl.TwDollarMoneyFragment;
+import com.dl.playfun.ui.mine.webview.WebViewFragment;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.ui.userdetail.report.ReportUserFragment;
 import com.dl.playfun.utils.ApiUitl;
@@ -92,6 +93,7 @@ import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuicore.Status;
 import com.tencent.qcloud.tuicore.custom.CustomConstants;
+import com.tencent.qcloud.tuicore.custom.entity.SystemTipsEntity;
 import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomImageMessageBean;
@@ -869,7 +871,8 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             }
 
             @Override
-            public void systemTipsOnClick(int position, TUIMessageBean messageInfo, int type) {
+            public void systemTipsOnClick(int position, TUIMessageBean messageInfo, SystemTipsEntity systemTipsEntity) {
+                int type = systemTipsEntity.getType();
                 switch (type){
                     case CustomConstants.SystemTipsMessage.TYPE_DISABLECALLS_CALLING_AUDIO:
                         viewModel.setAllowPrivacy(viewModel.ALLOW_TYPE_AUDIO);
@@ -877,6 +880,13 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                     case CustomConstants.SystemTipsMessage.TYPE_DISABLECALLS_CALLING_VIDEO:
                         viewModel.setAllowPrivacy(viewModel.ALLOW_TYPE_VIDEO);
                         break;
+                    case CustomConstants.SystemTipsMessage.TYPE_OUTSIDE_URL:
+                        openUrl(systemTipsEntity);
+                        break;
+                    case CustomConstants.SystemTipsMessage.TYPE_INSIDE_URL:
+                        toWebFragment(systemTipsEntity);
+                        break;
+
                 }
             }
 
@@ -928,6 +938,26 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             custom_local_data.put("text", toSendMessageText);
             String str = GsonUtils.toJson(custom_local_data);
             inputLayout.getMessageHandler().sendMessage(ChatMessageBuilder.buildTextMessage(str));
+        }
+    }
+
+    private void openUrl(SystemTipsEntity systemTipsEntity) {
+        try {
+            Uri uri = Uri.parse(systemTipsEntity.getUrl());
+            Intent web = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(web);
+        } catch (Exception e) {
+
+        }
+    }
+
+    private void toWebFragment(SystemTipsEntity systemTipsEntity) {
+        try {
+            Bundle bundle = new Bundle();
+            bundle.putString("link", systemTipsEntity.getUrl());
+            viewModel.start(WebViewFragment.class.getCanonicalName(), bundle);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

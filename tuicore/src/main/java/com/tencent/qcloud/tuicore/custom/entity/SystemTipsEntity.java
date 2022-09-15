@@ -13,6 +13,15 @@ import java.io.Serializable;
 public class SystemTipsEntity implements Serializable {
     private int type;
     private String content;
+    private String url;
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
     public int getType() {
         return type;

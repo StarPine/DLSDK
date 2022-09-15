@@ -55,13 +55,27 @@ public class CustomConstants {
         //模块名
         public static final String MODULE_NAME = "systemTips";
         public static final String TYPE_DISABLE_CALLS = "disableCalls";
-        //给接听方的禁用语音系统消息
+        public static final String TYPE_JUMP_WEB = "openUrl";
+
+        /**
+         * 给接听方的禁用语音系统消息
+         */
         public static final int TYPE_DISABLECALLS_CALLING_AUDIO = 1003;
-        //给接听方的禁用视讯系统消息
+
+        /**
+         * 给接听方的禁用视讯系统消息
+         */
         public static final int TYPE_DISABLECALLS_CALLING_VIDEO = 1004;
+
+        /**
+         * 外部链接跳转
+         */
+        public static final int TYPE_OUTSIDE_URL = 10001;
+
+        /**
+         * 内部链接跳转
+         */
+        public static final int TYPE_INSIDE_URL = 10002;
     }
-
-
-
 
 }
