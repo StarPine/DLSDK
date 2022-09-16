@@ -9,13 +9,19 @@ import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.ImageViewTarget;
 import com.dl.playfun.BR;
@@ -27,13 +33,16 @@ import com.dl.playfun.entity.MediaPayPerConfigEntity;
 import com.dl.playfun.transformations.MvBlurTransformation;
 import com.dl.playfun.ui.base.BaseActivity;
 import com.dl.playfun.ui.message.mediagallery.SnapshotPhotoActivity;
+import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.StringUtil;
+import com.luck.picture.lib.listener.OnImageCompleteCallback;
 import com.luck.picture.lib.tools.MediaUtils;
 import com.luck.picture.lib.widget.longimage.ImageSource;
 import com.luck.picture.lib.widget.longimage.ImageViewState;
 import com.luck.picture.lib.widget.longimage.SubsamplingScaleImageView;
 import com.tencent.qcloud.tuicore.custom.entity.MediaGalleryEditEntity;
+import com.tencent.qcloud.tuikit.tuichat.component.photoview.view.PhotoView;
 
 /**
  * Author: 彭石林
@@ -43,8 +52,11 @@ import com.tencent.qcloud.tuicore.custom.entity.MediaGalleryEditEntity;
 public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGalleryPhotoBinding,MediaGalleryPhotoPayViewModel> {
     private static final String TAG = "MediaGalleryPhotoPay";
     private MediaGalleryEditEntity mediaGalleryEditEntity;
+    //倒计时
+    private CountDownTimer downTimer;
     @Override
     public int initContentView(Bundle savedInstanceState) {
+        AutoSizeUtils.applyAdapt(getResources());
         return R.layout.activity_media_gallery_photo;
     }
 
@@ -85,82 +97,57 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        AutoSizeUtils.closeAdapt(getResources());
+        stopTimer();
+    }
+
+    @Override
     public void initData() {
         super.initData();
         Log.e(TAG,"当前传递的内容为："+String.valueOf(mediaGalleryEditEntity==null));
-        viewModel.evaluationState.set(true);
         if(mediaGalleryEditEntity!=null){
             Log.e(TAG,"当前传递的内容为："+String.valueOf(mediaGalleryEditEntity.toString()));
             //快照
             if(mediaGalleryEditEntity.isStateSnapshot()){
-                showHud();
+                GlideEngine.createGlideEngine().loadImage(this, StringUtil.getFullImageUrl(mediaGalleryEditEntity.getSrcPath()), binding.imgContent, binding.imgLong,true, new GlideEngine.LoadProgressCallback() {
+                    @Override
+                    public void onLoadStarted(@Nullable Drawable placeholder) {
+                        showHud();
+                    }
+
+                    @Override
+                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                        dismissHud();
+                    }
+
+                    @Override
+                    public void setResource(boolean imgLong) {
+                        dismissHud();
+                        binding.rlContainer.setVisibility(View.VISIBLE);
+                        viewModel.snapshotLockState.set(true);
+                    }
+                });
                 Log.e(TAG,"当前oss文件地址："+StringUtil.getFullImageUrl(mediaGalleryEditEntity.getSrcPath()));
-                Glide.with(getContext())
-                        .asBitmap()
-                        .apply(bitmapTransform(new MvBlurTransformation(85)))
-                        .load(StringUtil.getFullImageUrl(mediaGalleryEditEntity.getSrcPath()))
-                        .into(new ImageViewTarget<Bitmap>(binding.imgContent) {
-                            @Override
-                            protected void setResource(@Nullable Bitmap resource) {
-                                dismissHud();
-                                binding.rlContainer.setVisibility(View.VISIBLE);
-                                binding.imgFuzzy.setVisibility(View.GONE);
-                                if (resource != null) {
-                                    boolean eqLongImage = MediaUtils.isLongImg(resource.getWidth(),
-                                            resource.getHeight());
-                                    binding.imgContent.setVisibility(eqLongImage ? View.VISIBLE : View.GONE);
-                                    binding.imgLong.setVisibility(eqLongImage ? View.GONE : View.VISIBLE);
-                                    if (eqLongImage) {
-                                        // 加载长图
-                                        binding.imgLong.setQuickScaleEnabled(true);
-                                        binding.imgLong.setZoomEnabled(true);
-                                        binding.imgLong.setPanEnabled(true);
-                                        binding.imgLong.setDoubleTapZoomDuration(100);
-                                        binding.imgLong.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP);
-                                        binding.imgLong.setDoubleTapZoomDpi(SubsamplingScaleImageView.ZOOM_FOCUS_CENTER);
-                                        binding.imgLong.setImage(ImageSource.bitmap(resource),
-                                                new ImageViewState(0, new PointF(0, 0), 0));
-                                    } else {
-                                        // 普通图片
-                                        binding.imgContent.setImageBitmap(resource);
-                                    }
-                                }
-                            }
-                        });
             }else{
                 Log.e(TAG,"当前oss文件地址："+StringUtil.getFullImageUrl(mediaGalleryEditEntity.getSrcPath()));
-                Glide.with(getContext())
-                        .asBitmap()
-                        .load(StringUtil.getFullImageUrl(mediaGalleryEditEntity.getSrcPath()))
-                        .into(new ImageViewTarget<Bitmap>(binding.imgContent) {
-                            @Override
-                            protected void setResource(@Nullable Bitmap resource) {
-                                dismissHud();
-                                Log.e(TAG,"当前图片资源："+String.valueOf(resource==null));
-                                binding.rlContainer.setVisibility(View.VISIBLE);
-                                binding.imgFuzzy.setVisibility(View.GONE);
-                                if (resource != null) {
-                                    boolean eqLongImage = MediaUtils.isLongImg(resource.getWidth(),
-                                            resource.getHeight());
-                                    binding.imgContent.setVisibility(eqLongImage ? View.VISIBLE : View.GONE);
-                                    binding.imgLong.setVisibility(eqLongImage ? View.GONE : View.VISIBLE);
-                                    if (eqLongImage) {
-                                        // 加载长图
-                                        binding.imgLong.setQuickScaleEnabled(true);
-                                        binding.imgLong.setZoomEnabled(true);
-                                        binding.imgLong.setPanEnabled(true);
-                                        binding.imgLong.setDoubleTapZoomDuration(100);
-                                        binding.imgLong.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP);
-                                        binding.imgLong.setDoubleTapZoomDpi(SubsamplingScaleImageView.ZOOM_FOCUS_CENTER);
-                                        binding.imgLong.setImage(ImageSource.bitmap(resource),
-                                                new ImageViewState(0, new PointF(0, 0), 0));
-                                    } else {
-                                        // 普通图片
-                                        binding.imgContent.setImageBitmap(resource);
-                                    }
-                                }
-                            }
-                        });
+                GlideEngine.createGlideEngine().loadImage(this, StringUtil.getFullImageUrl(mediaGalleryEditEntity.getSrcPath()), binding.imgContent, binding.imgLong,false, new GlideEngine.LoadProgressCallback() {
+                    @Override
+                    public void onLoadStarted(@Nullable Drawable placeholder) {
+                        showHud();
+                    }
+
+                    @Override
+                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                        dismissHud();
+                    }
+
+                    @Override
+                    public void setResource(boolean imgLong) {
+                        dismissHud();
+                    }
+                });
             }
         }
     }
@@ -171,35 +158,33 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
         return ViewModelProviders.of(this, factory).get(MediaGalleryPhotoPayViewModel.class);
     }
 
+    /**
+     * 开始计时
+     */
+    public void startTimer() {
+        //倒计时15秒，一次1秒
+        downTimer = new CountDownTimer(2 * 1000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                    viewModel.snapshotTimeText.set((millisUntilFinished / 1000)+"s");
+            }
+            @Override
+            public void onFinish() {
+                stopTimer();
+                viewModel.evaluationState.set(true);
+            }
+        };
+        downTimer.start();
+    }
 
-    private void loadImageCallback() {
-        Glide.with(getContext())
-                .asBitmap()
-                .load(path)
-                .into(new ImageViewTarget<Bitmap>(binding.cropImageView) {
-                    @Override
-                    public void onLoadStarted(@Nullable Drawable placeholder) {
-                        super.onLoadStarted(placeholder);
-                    }
-
-                    @Override
-                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                        super.onLoadFailed(errorDrawable);
-                    }
-
-                    @Override
-                    protected void setResource(@Nullable Bitmap resource) {
-                        if (resource != null) {
-                            // 普通图片
-                            int imgWidth = resource.getWidth();
-                            int ImgHeight = resource.getHeight();
-                            $layoutParams.width = imgWidth;
-                            $layoutParams.height = ImgHeight;
-                            binding.cropImageView.setLayoutParams($layoutParams);
-                            binding.cropImageView.setImageBitmap(resource);
-                        }
-                    }
-                });
+    /**
+     * 停止计时
+     */
+    public void stopTimer() {
+        if (downTimer != null) {
+            downTimer.cancel();
+            downTimer = null;
+        }
     }
 
 

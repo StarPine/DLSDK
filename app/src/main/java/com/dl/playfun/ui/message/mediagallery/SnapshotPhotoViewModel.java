@@ -91,30 +91,6 @@ public class SnapshotPhotoViewModel extends BaseViewModel<AppRepository> {
                         dismissHUD();
                         if(fileKey!=null){
                             setResultDataEvent.setValue(fileKey);
-                            //用IM框架默认的图片类型
-//                            TUIMessageBean info = ChatMessageBuilder.buildImageMessage(Uri.fromFile(new File(filePath)));
-                            //用自定义图片类型
-//                            CustomImageMessage customImageMessage = new CustomImageMessage();
-//                            customImageMessage.version = TUIChatConstants.version;
-//                            customImageMessage.setImgPath(fileKey);
-//                            customImageMessage.setImgWidth(localMedia.getWidth());
-//                            customImageMessage.setImgHeight(localMedia.getHeight());
-//
-//
-//                            CustomDlTempMessage.MsgModuleInfo msgModuleInfo = new CustomDlTempMessage.MsgModuleInfo();
-//                            msgModuleInfo.setMsgModuleName(CustomConstants.MediaGallery.MODULE_NAME);
-//                            //消息内容体
-//                            CustomDlTempMessage.MsgBodyInfo msgBodyInfo = new CustomDlTempMessage.MsgBodyInfo();
-//                            msgBodyInfo.setCustomMsgType(CustomConstants.MediaGallery.PHOTO_GALLERY);
-//                            msgBodyInfo.setCustomMsgBody(customImageMessage);
-//                            msgModuleInfo.setContentBody(msgBodyInfo);
-//
-//                            CustomDlTempMessage customDlTempMessage = new CustomDlTempMessage();
-//                            customDlTempMessage.setContentBody(msgModuleInfo);
-//
-//                            String data = GsonUtils.toJson(customDlTempMessage);
-//                            TUIMessageBean info = ChatMessageBuilder.buildCustomMessage(data, null, null);
-//                            uc.signUploadSendMessage.postValue(info);
                         }
 
                     }

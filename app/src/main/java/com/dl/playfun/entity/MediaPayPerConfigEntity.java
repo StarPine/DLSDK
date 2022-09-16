@@ -10,55 +10,55 @@ import java.util.List;
  * Description: This is MediaPayPerConfigEntity
  */
 public class MediaPayPerConfigEntity implements Serializable{
-    private itemTagEntity video;
-    private itemTagEntity photo;
+    private itemTagEntity videoResource;
+    private itemTagEntity photoResource;
 
     public itemTagEntity getVideo() {
-        return video;
+        return videoResource;
     }
 
     public void setVideo(itemTagEntity video) {
-        this.video = video;
+        this.videoResource = video;
     }
 
     public itemTagEntity getPhoto() {
-        return photo;
+        return photoResource;
     }
 
     public void setPhoto(itemTagEntity photo) {
-        this.photo = photo;
+        this.photoResource = photo;
     }
 
     public static class itemTagEntity implements Serializable{
-        private List<itemEntity> content;
+        private List<ItemEntity> configList;
 
-        public List<itemEntity> getContent() {
-            return content;
+        public List<ItemEntity> getContent() {
+            return configList;
         }
 
-        public void setContent(List<itemEntity> content) {
-            this.content = content;
+        public void setContent(List<ItemEntity> content) {
+            this.configList = content;
         }
     }
 
-    public static class itemEntity implements Serializable {
-        private int coin;
-        private BigDecimal profit;
+    public static class ItemEntity implements Serializable {
+        private String redPackageCoin;
+        private BigDecimal redPackagProfit;
 
-        public int getCoin() {
-            return coin;
+        public String getCoin() {
+            return redPackageCoin;
         }
 
-        public void setCoin(int coin) {
-            this.coin = coin;
+        public void setCoin(String coin) {
+            this.redPackageCoin = coin;
         }
 
         public BigDecimal getProfit() {
-            return profit;
+            return redPackagProfit;
         }
 
         public void setProfit(BigDecimal profit) {
-            this.profit = profit;
+            this.redPackagProfit = profit;
         }
     }
 }

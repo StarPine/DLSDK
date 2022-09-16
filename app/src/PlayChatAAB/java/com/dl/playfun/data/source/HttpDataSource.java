@@ -112,6 +112,15 @@ import retrofit2.http.Query;
 public interface HttpDataSource {
 
     /**
+     * @Desc TODO(红包照片设置以读)
+     * @author 彭石林
+     * @parame [msgKey, toUserId]
+     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
+     * @Date 2022/9/16
+     */
+    Observable<BaseResponse> mediaGallerySnapshotUnLock(String msgKey, Integer toUserId);
+
+    /**
      * @Desc TODO()
      * @author 彭石林
      * @parame []

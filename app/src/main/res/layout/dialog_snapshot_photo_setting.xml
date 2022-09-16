@@ -41,12 +41,12 @@
                 />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:gravity="center"
                 android:id="@+id/tv_btn"
                 android:layout_width="58dp"
                 android:layout_height="24dp"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="14dp"
+                android:gravity="center"
                 android:text="@string/playfun_confirm"
                 android:textColor="@color/white"
                 android:textSize="13sp"

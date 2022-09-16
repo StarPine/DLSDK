@@ -1602,6 +1602,11 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
 
 
     @Override
+    public Observable<BaseResponse> mediaGallerySnapshotUnLock(String msgKey, Integer toUserId) {
+        return mHttpDataSource.mediaGallerySnapshotUnLock(msgKey, toUserId);
+    }
+
+    @Override
     public Observable<BaseDataResponse<List<CoinPusherRoomHistoryEntity>>> qryCoinPusherRoomHistory(Integer roomId) {
         return mHttpDataSource.qryCoinPusherRoomHistory(roomId);
     }

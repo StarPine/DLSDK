@@ -128,6 +128,16 @@ import retrofit2.http.Query;
 public interface ApiService {
 
     /**
+    * @Desc TODO(红包照片设置以读)
+    * @author 彭石林
+    * @parame [msgKey, toUserId]
+    * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
+    * @Date 2022/9/16
+    */
+    @GET("api/chatResource/readSnapshot")
+    Observable<BaseResponse> mediaGallerySnapshotUnLock(@Query("msgKey") String msgKey, @Query("toUserId") Integer toUserId);
+
+    /**
     * @Desc TODO(支付购买聊天中的付费资源)
     * @author 彭石林
     * @parame [

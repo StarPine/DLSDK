@@ -19,10 +19,6 @@ public class PhotoGalleryPayEntity implements Serializable {
     private BigDecimal unlockPrice;
     //oss相对地址
     private String imgPath;
-    //图片宽
-    private int imgWidth;
-    //图片高
-    private int imgHeight;
 
     public boolean isStateSnapshot() {
         return stateSnapshot;
@@ -62,21 +58,5 @@ public class PhotoGalleryPayEntity implements Serializable {
 
     public void setImgPath(String imgPath) {
         this.imgPath = imgPath;
-    }
-
-    public int getImgWidth() {
-        return imgWidth;
-    }
-
-    public void setImgWidth(int imgWidth) {
-        this.imgWidth = imgWidth;
-    }
-
-    public int getImgHeight() {
-        return imgHeight;
-    }
-
-    public void setImgHeight(int imgHeight) {
-        this.imgHeight = imgHeight;
     }
 }

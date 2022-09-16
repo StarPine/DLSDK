@@ -32,7 +32,7 @@ public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSet
     private boolean isPayState = false;
     private boolean isVideo = false;
 
-    private List<MediaPayPerConfigEntity.itemEntity> mediaPriceTmpConfig;
+    private MediaPayPerConfigEntity.itemTagEntity mediaPriceTmpConfig;
     private SnapshotPhotoDialog snapshotPhotoDialog;
 
     /**
@@ -77,9 +77,13 @@ public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSet
     @Override
     public void initParam() {
         super.initParam();
-        srcPath = getIntent().getStringExtra("srcPath");
-        isPayState = getIntent().getBooleanExtra("isPayState",false);
-        isVideo = getIntent().getBooleanExtra("isVideo",false);
+        Intent intent = getIntent();
+        if(intent != null){
+            srcPath = intent.getStringExtra("srcPath");
+            isPayState = intent.getBooleanExtra("isPayState",false);
+            isVideo = intent.getBooleanExtra("isVideo",false);
+            mediaPriceTmpConfig = (MediaPayPerConfigEntity.itemTagEntity) intent.getSerializableExtra("mediaPriceTmpConfig");
+        }
     }
 
     @Override
@@ -93,6 +97,7 @@ public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSet
         super.initData();
         viewModel.isVideoSetting.set(isVideo);
         viewModel.srcPath.set(srcPath);
+        viewModel.isPayState.set(isPayState);
         if(isVideo){
 
         }else{
@@ -110,7 +115,7 @@ public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSet
         super.initViewObservable();
         viewModel.settingEvent.observe(this, unused -> {
             if(snapshotPhotoDialog==null){
-                snapshotPhotoDialog = new SnapshotPhotoDialog(this);
+                snapshotPhotoDialog = new SnapshotPhotoDialog(this,mediaPriceTmpConfig);
             }
             snapshotPhotoDialog.show();
         });

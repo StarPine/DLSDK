@@ -1296,6 +1296,11 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
+    public Observable<BaseResponse> mediaGallerySnapshotUnLock(String msgKey, Integer toUserId) {
+        return apiService.mediaGallerySnapshotUnLock(msgKey, toUserId);
+    }
+
+    @Override
     public Observable<BaseDataResponse<List<CoinPusherRoomHistoryEntity>>> qryCoinPusherRoomHistory(Integer roomId) {
         return apiService.qryCoinPusherRoomHistory(roomId);
     }

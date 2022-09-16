@@ -9,6 +9,8 @@ import java.math.BigDecimal;
  * Description: 发送图片、视频信息类
  */
 public class MediaGalleryEditEntity implements Serializable {
+    //IM聊天信息ID
+    private String msgKeyId;
     //是否是视频
     private boolean isVideoSetting;
     //是否快照
@@ -21,6 +23,24 @@ public class MediaGalleryEditEntity implements Serializable {
     private BigDecimal unlockPrice;
     //oss相对地址
     private String srcPath;
+    //对方ID
+    private Integer toUserId;
+
+    public Integer getToUserId() {
+        return toUserId;
+    }
+
+    public void setToUserId(Integer toUserId) {
+        this.toUserId = toUserId;
+    }
+
+    public String getMsgKeyId() {
+        return msgKeyId;
+    }
+
+    public void setMsgKeyId(String msgKeyId) {
+        this.msgKeyId = msgKeyId;
+    }
 
     public boolean isVideoSetting() {
         return isVideoSetting;

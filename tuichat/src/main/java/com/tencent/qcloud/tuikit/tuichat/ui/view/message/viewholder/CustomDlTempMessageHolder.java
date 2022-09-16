@@ -132,9 +132,6 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
     //测试自定义图片渲染
     public void LoadMediaGalleryPhoto(String IMKey,Context context, FrameLayout rootView, PhotoGalleryPayEntity photoGalleryPayEntity,String customElemData){
         Map<String,Object> mapData = null;
-        if(!TextUtils.isEmpty(customElemData)){
-            mapData = IMGsonUtils.fromJson(customElemData, Map.class);
-        }
         Log.e(TAG,"当前穿透字段内容为:"+String.valueOf(mapData));
         View customImageView = View.inflate(context, R.layout.tmp_message_photo_gallery_layout, null);
         customImageView.setBackgroundColor(Color.TRANSPARENT);
@@ -180,7 +177,7 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
         }
         RequestOptions override;
         if(stateSnapshot){
-            override = RequestOptions. bitmapTransform(new MvBlurTransformation(100)).override(dp2px(getContext(),86), dp2px(getContext(),154));
+            override = RequestOptions.bitmapTransform(new MvBlurTransformation(100)).override(dp2px(getContext(),86), dp2px(getContext(),154));
         }else{
             //通过RequestOptions扩展功能,override:采样率,因为ImageView就这么大,可以压缩图片,降低内存消耗
             override = new RequestOptions().override(dp2px(getContext(),86), dp2px(getContext(),154));
@@ -196,6 +193,7 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
         rootView.setOnClickListener(v -> {
             if (onItemClickListener != null) {
                 MediaGalleryEditEntity mediaGalleryEditEntity = new MediaGalleryEditEntity();
+                mediaGalleryEditEntity.setMsgKeyId(IMKey);
                 mediaGalleryEditEntity.setSrcPath(photoGalleryPayEntity.getImgPath());
                 mediaGalleryEditEntity.setVideoSetting(false);
                 mediaGalleryEditEntity.setUnlockPrice(photoGalleryPayEntity.getUnlockPrice());
@@ -250,6 +248,7 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
         rootView.setOnClickListener(v -> {
             if (onItemClickListener != null) {
                 MediaGalleryEditEntity mediaGalleryEditEntity = new MediaGalleryEditEntity();
+                mediaGalleryEditEntity.setMsgKeyId(IMKey);
                 mediaGalleryEditEntity.setSrcPath(videoGalleryPayEntity.getSrcPath());
                 mediaGalleryEditEntity.setVideoSetting(true);
                 mediaGalleryEditEntity.setUnlockPrice(videoGalleryPayEntity.getUnlockPrice());

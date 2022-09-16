@@ -116,6 +116,7 @@ import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -889,6 +890,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             @Override
             public void onMediaGalleryClick(String IMKey, MediaGalleryEditEntity mediaGalleryEditEntity) {
                 if(mediaGalleryEditEntity!=null){
+                    mediaGalleryEditEntity.setToUserId(toUserDataId);
                     //视频查看
                     if(mediaGalleryEditEntity.isVideoSetting()){
 
@@ -958,7 +960,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                         if(viewModel.priceConfigEntityField.getCurrent().getMediaPayPerConfig().getPhoto()!=null){
                             mediaPriceTmpConfig = viewModel.priceConfigEntityField.getCurrent().getMediaPayPerConfig().getPhoto();
                         }
-
                     }
                 }
                 toSnapshotPhotoIntent.launch(SnapshotPhotoActivity.createIntent(mActivity,snapshot,false,result.get(0).getCompressPath(),mediaPriceTmpConfig));
@@ -995,6 +996,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                     PhotoGalleryPayEntity photoGalleryPayEntity = new PhotoGalleryPayEntity();
                     photoGalleryPayEntity.setStatePhotoPay(mediaGalleryEditEntity.isStatePay());
                     photoGalleryPayEntity.setStateSnapshot(mediaGalleryEditEntity.isStateSnapshot());
+                    photoGalleryPayEntity.setUnlockPrice(new BigDecimal("1000"));
                     photoGalleryPayEntity.setImgPath(mediaGalleryEditEntity.getSrcPath());
                     msgBodyInfo.setCustomMsgBody(photoGalleryPayEntity);
                 }
@@ -1058,21 +1060,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     public void onFragmentResult(int requestCode, int resultCode, Bundle data) {
         if (resultCode != ISupportFragment.RESULT_OK) {
             return;
-        }
-        if (requestCode == 2002) {
-            int id = data.getInt(SendCoinRedPackageFragment.ARG_RED_PACKAGE_ID);
-            String desc = data.getString(SendCoinRedPackageFragment.ARG_DESC);
-            int number = data.getInt(SendCoinRedPackageFragment.ARG_NUMBER, 0);
-            CustomMessageData customMessageData = CustomMessageData.genCoinRedPackageMessage(id, number, desc);
-            TUIMessageBean info = ChatMessageBuilder.buildCustomMessage(GsonUtils.toJson(customMessageData), null, null);
-            binding.chatLayout.sendMessage(info, false);
-        } else if (requestCode == 1003) {
-
-        } else if (requestCode == 2001) {
-            String imageSrcKey = data.getString(PhotoReviewFragment.ARG_IMAGE_SRC_KEY);
-            CustomMessageData customMessageData = CustomMessageData.genBurnMessage(imageSrcKey);
-            TUIMessageBean info = ChatMessageBuilder.buildCustomMessage(GsonUtils.toJson(customMessageData), null, null);
-            binding.chatLayout.sendMessage(info, false);
         }
     }
 
