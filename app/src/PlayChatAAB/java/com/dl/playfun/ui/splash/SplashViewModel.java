@@ -1,6 +1,7 @@
 package com.dl.playfun.ui.splash;
 
 import android.app.Application;
+import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -20,6 +21,7 @@ import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.entity.AllConfigEntity;
 import com.dl.playfun.entity.ApiConfigManagerEntity;
 import com.dl.playfun.entity.CityAllEntity;
+import com.dl.playfun.entity.TokenEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.ui.login.LoginFragment;
 import com.dl.playfun.ui.main.MainFragment;
@@ -130,6 +132,12 @@ public class SplashViewModel extends BaseViewModel<AppRepository> {
                     public void onSuccess(BaseDataResponse<UserDataEntity> response) {
                         UserDataEntity userDataEntity = response.getData();
                         model.saveUserData(userDataEntity);
+                        //更新IM userSig
+                        if (!TextUtils.isEmpty(userDataEntity.getUserSig())) {
+                            TokenEntity tokenEntity = model.readLoginInfo();
+                            tokenEntity.setUserSig(userDataEntity.getUserSig());
+                            model.saveLoginInfo(tokenEntity);
+                        }
                         AppsFlyerLib.getInstance().setCustomerUserId(String.valueOf(userDataEntity.getId()));
                         AppContext.instance().mFirebaseAnalytics.setUserId(String.valueOf(userDataEntity.getId()));
                         try {
