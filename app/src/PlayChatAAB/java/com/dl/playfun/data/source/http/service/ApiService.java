@@ -126,7 +126,33 @@ import retrofit2.http.Query;
  */
 
 public interface ApiService {
-
+    /**
+    * @Desc TODO(获取红包相片/影片评价)
+    * @author 彭石林
+    * @parame []
+    * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse<java.util.Map<java.lang.String,java.lang.Integer>>>
+    * @Date 2022/9/17
+    */
+    @GET("api/chatResource/evaluation")
+    Observable<BaseDataResponse<Map<String, Integer>>> mediaGalleryEvaluationQry(@Query("msgKey") String msgKey, @Query("toUserId") Integer toUserId);
+    /**
+    * @Desc TODO(红包相片/影片评价)
+    * @author 彭石林
+    * @parame [
+     * msgKey	string	聊天中的msgKey
+     *     toUserId	int	对方的用户id
+     *     type	int	评价，1差评，2好评
+     * ]
+    * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
+    * @Date 2022/9/17
+    */
+    @FormUrlEncoded
+    @POST("api/chatResource/evaluation")
+    Observable<BaseResponse> mediaGalleryEvaluationPut(
+            @Field("msgKey")String msgKey,
+            @Field("toUserId")Integer toUserId,
+            @Field("type") Integer type
+            );
     /**
     * @Desc TODO(红包照片设置以读)
     * @author 彭石林

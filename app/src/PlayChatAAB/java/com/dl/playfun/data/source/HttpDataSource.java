@@ -112,6 +112,43 @@ import retrofit2.http.Query;
 public interface HttpDataSource {
 
     /**
+     * @Desc TODO(支付购买聊天中的付费资源)
+     * @author 彭石林
+     * @parame [
+     * msgKey    string	聊天中的msgKey
+     * toUserId	int	对方的用户id]
+     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
+     * @Date 2022/9/15
+     */
+    @FormUrlEncoded
+    Observable<BaseResponse> mediaGalleryPay(String msgKey,Integer toUserId);
+
+    /**
+     * @Desc TODO(获取红包相片/影片评价)
+     * @author 彭石林
+     * @parame []
+     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse<java.util.Map<java.lang.String,java.lang.Integer>>>
+     * @Date 2022/9/17
+     */
+    Observable<BaseDataResponse<Map<String, Integer>>> mediaGalleryEvaluationQry(String msgKey, Integer toUserId);
+    /**
+     * @Desc TODO(红包相片/影片评价)
+     * @author 彭石林
+     * @parame [
+     * msgKey	string	聊天中的msgKey
+     *     toUserId	int	对方的用户id
+     *     type	int	评价，1差评，2好评
+     * ]
+     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
+     * @Date 2022/9/17
+     */
+    Observable<BaseResponse> mediaGalleryEvaluationPut(
+            String msgKey,
+            Integer toUserId,
+            Integer type
+    );
+
+    /**
      * @Desc TODO(红包照片设置以读)
      * @author 彭石林
      * @parame [msgKey, toUserId]

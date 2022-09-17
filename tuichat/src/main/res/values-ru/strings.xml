@@ -160,4 +160,5 @@
     <string name="custom_message_other_busy">Другая сторона занята</string>
     <string name="opponent_in_game">В игре</string>
     <string name="call_ended">Звонок завершён</string>
+    <string name="playfun_im_photo_burned">照片已刪除</string>
 </resources>

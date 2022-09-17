@@ -19,6 +19,26 @@ public class PhotoGalleryPayEntity implements Serializable {
     private BigDecimal unlockPrice;
     //oss相对地址
     private String imgPath;
+    //价格配置id，当类型为付费资源时，该值为必填
+    private Integer configId;
+    //价格配置下标，当类型为付费资源时，该值为必填
+    private String configIndex;
+
+    public Integer getConfigId() {
+        return configId;
+    }
+
+    public void setConfigId(Integer configId) {
+        this.configId = configId;
+    }
+
+    public String getConfigIndex() {
+        return configIndex;
+    }
+
+    public void setConfigIndex(String configIndex) {
+        this.configIndex = configIndex;
+    }
 
     public boolean isStateSnapshot() {
         return stateSnapshot;

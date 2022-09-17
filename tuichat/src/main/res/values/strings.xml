@@ -214,4 +214,5 @@
 	<string name="playfun_in_game_missed">Playing and connection failed</string>
 	<string name="custom_message_txt8">Insufficient balance, to top up!</string>
 	<string name="custom_message_call_message_deatail_time_msg">Call ended, duration:  %02d:%02d:%02d</string>
+    <string name="playfun_im_photo_burned">照片已刪除</string>
 </resources>

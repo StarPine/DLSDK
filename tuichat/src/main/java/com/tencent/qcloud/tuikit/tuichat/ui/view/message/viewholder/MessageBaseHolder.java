@@ -43,7 +43,7 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
 
     public ICommonMessageAdapter mAdapter;
     public MessageProperties properties = MessageProperties.getInstance();
-    protected OnItemClickListener onItemClickListener;
+    public OnItemClickListener onItemClickListener;
 
     public TextView chatTimeText, profitTip;
     public FrameLayout msgContentFrame,msgContentReservFrame,customJsonMsgContentFrame;

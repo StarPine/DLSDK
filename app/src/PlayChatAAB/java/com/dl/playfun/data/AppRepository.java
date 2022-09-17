@@ -1602,6 +1602,21 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
 
 
     @Override
+    public Observable<BaseResponse> mediaGalleryPay(String msgKey, Integer toUserId) {
+        return mHttpDataSource.mediaGalleryPay(msgKey, toUserId);
+    }
+
+    @Override
+    public Observable<BaseDataResponse<Map<String, Integer>>> mediaGalleryEvaluationQry(String msgKey, Integer toUserId) {
+        return mHttpDataSource.mediaGalleryEvaluationQry(msgKey,toUserId);
+    }
+
+    @Override
+    public Observable<BaseResponse> mediaGalleryEvaluationPut(String msgKey, Integer toUserId, Integer type) {
+        return mHttpDataSource.mediaGalleryEvaluationPut(msgKey, toUserId, type);
+    }
+
+    @Override
     public Observable<BaseResponse> mediaGallerySnapshotUnLock(String msgKey, Integer toUserId) {
         return mHttpDataSource.mediaGallerySnapshotUnLock(msgKey, toUserId);
     }

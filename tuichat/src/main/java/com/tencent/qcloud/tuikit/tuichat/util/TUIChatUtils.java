@@ -138,13 +138,12 @@ public class TUIChatUtils {
     public static boolean isJSON2(String str) {
         boolean result = false;
         if (StringUtils.isEmpty(str)){
-            return result;
+            return false;
         }
         try {
             new Gson().fromJson(str, Map.class);
             result = true;
-        } catch (Exception e) {
-            result = false;
+        } catch (Exception ignored) {
         }
         return result;
 

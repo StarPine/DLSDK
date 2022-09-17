@@ -56,6 +56,7 @@ import com.tencent.custom.PhotoGalleryPayEntity;
 import com.tencent.custom.tmp.CustomDlTempMessage;
 import com.tencent.qcloud.tuicore.Status;
 import com.tencent.qcloud.tuicore.custom.CustomConstants;
+import com.tencent.qcloud.tuicore.custom.entity.MediaGalleryEditEntity;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.CustomImageMessage;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
@@ -575,10 +576,8 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                     @Override
                     public void onError(RequestException e) {
                         super.onError(e);
-                        if (e != null) {
-                            if (e.getCode() == 1) {
-                                uc.sendDialogViewEvent.call();
-                            }
+                        if(e.getCode()!=null && e.getCode() ==21001 && e.getCode()==1 ){//钻石余额不足
+                            uc.sendDialogViewEvent.call();
                         }
                     }
 
@@ -825,6 +824,41 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
         }
 
     }
+    /**
+    * @Desc TODO(解锁IM付费消息)
+    * @author 彭石林
+    * @parame []
+    * @return void
+    * @Date 2022/9/17
+    */
+    public void mediaGalleryPay(MediaGalleryEditEntity mediaGalleryEditEntity){
+        model.mediaGalleryPay(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId())
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseResponse>(){
+
+                    @Override
+                    public void onSuccess(BaseResponse baseResponse) {
+                        uc.mediaGalleryPayEvent.setValue(mediaGalleryEditEntity);
+                    }
+
+                    @Override
+                    public void onError(RequestException e) {
+                        super.onError(e);
+                        if(e.getCode()!=null && e.getCode() == 21001 ){//钻石余额不足
+                            uc.sendDialogViewEvent.call();
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        super.onComplete();
+                        dismissHUD();
+                    }
+                });
+    }
 
 
     public void playSVGAGift(){
@@ -920,7 +954,8 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
         //拨打视频电话
         public SingleLiveEvent<Void> callVideoViewEvent = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> sendLoaclInsufficientBalance = new SingleLiveEvent<>();
-
+        //解锁付费消息成功
+        public SingleLiveEvent<MediaGalleryEditEntity> mediaGalleryPayEvent = new SingleLiveEvent<>();
     }
 
 

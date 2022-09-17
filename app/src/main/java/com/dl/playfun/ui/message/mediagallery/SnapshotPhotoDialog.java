@@ -1,6 +1,7 @@
 package com.dl.playfun.ui.message.mediagallery;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -33,7 +34,8 @@ public class SnapshotPhotoDialog extends BaseDialog {
 
     private SnapshotListener snapshotListener;
 
-    private String checkPrice;
+    private MediaPayPerConfigEntity.ItemEntity checkItemEntity;
+    private Integer configId;
 
     public SnapshotListener getSnapshotListener() {
         return snapshotListener;
@@ -67,6 +69,8 @@ public class SnapshotPhotoDialog extends BaseDialog {
                 MediaPayPerConfigEntity.ItemEntity itemEntity = mediaPriceTmpConfig.getContent().get(0);
                 binding.tvCoin.setText(itemEntity.getCoin());
                 binding.tvMoney.setText(itemEntity.getProfit().toString());
+                configId = mediaPriceTmpConfig.getConfigId();
+                checkItemEntity = itemEntity;
             }
         }
 
@@ -74,7 +78,6 @@ public class SnapshotPhotoDialog extends BaseDialog {
         binding.seekbarPhoto.setMeasureWidthCallBack(width -> {
             ViewGroup.LayoutParams layoutParams = binding.seekbarPhotoView.getLayoutParams();
             layoutParams.width = width;
-            Log.e("当前测量宽度控件","==========="+width);
             binding.seekbarPhotoView.setLayoutParams(layoutParams);
         });
         binding.seekbarPhotoView.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -83,10 +86,10 @@ public class SnapshotPhotoDialog extends BaseDialog {
                 binding.seekbarPhoto.setProgress(seekBar.getProgress());
                 if(getSnapshotListener()!=null){
                     if(ObjectUtils.isNotEmpty(mediaPriceTmpConfig) && ObjectUtils.isNotEmpty(mediaPriceTmpConfig.getContent())){
-                        MediaPayPerConfigEntity.ItemEntity itemEntity = mediaPriceTmpConfig.getContent().get(progress);
-                        checkPrice = itemEntity.getProfit().toString();
+                        MediaPayPerConfigEntity.ItemEntity itemEntity = mediaPriceTmpConfig.getContent().get(seekBar.getProgress());
+                        checkItemEntity = itemEntity;
                         binding.tvCoin.setText(itemEntity.getCoin());
-                        binding.tvMoney.setText(checkPrice);
+                        binding.tvMoney.setText(itemEntity.getProfit().toString());
                     }
                 }
             }
@@ -102,7 +105,7 @@ public class SnapshotPhotoDialog extends BaseDialog {
         });
         binding.tvBtn.setOnClickListener(v ->{
             if(getSnapshotListener()!=null){
-                getSnapshotListener().confirm(checkPrice);
+                getSnapshotListener().confirm(checkItemEntity,configId);
             }
             dismiss();
         });
@@ -124,6 +127,6 @@ public class SnapshotPhotoDialog extends BaseDialog {
     }
 
     public interface SnapshotListener{
-        void confirm(String price);
+        void confirm(MediaPayPerConfigEntity.ItemEntity itemEntity, Integer configId);
     }
 }

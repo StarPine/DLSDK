@@ -198,4 +198,5 @@
     <string name="custom_message_txt8">餘額不足，請儲值</string>
     <string name="custom_message_call_message_deatail_time_msg">結束通話，通話時長:  %02d:%02d:%02d</string>
     <string name="save_success">保存成功</string>
+    <string name="playfun_im_photo_burned">照片已刪除</string>
 </resources>

@@ -160,5 +160,6 @@
     <string name="custom_message_other_busy">The other party is busy</string>
     <string name="opponent_in_game">In Game</string>
     <string name="call_ended">Call ended</string>
+    <string name="playfun_im_photo_burned">照片已刪除</string>
 
 </resources>

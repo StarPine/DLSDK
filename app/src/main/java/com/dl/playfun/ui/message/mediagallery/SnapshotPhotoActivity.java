@@ -18,6 +18,7 @@ import com.dl.playfun.ui.base.BaseActivity;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -34,6 +35,9 @@ public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSet
 
     private MediaPayPerConfigEntity.itemTagEntity mediaPriceTmpConfig;
     private SnapshotPhotoDialog snapshotPhotoDialog;
+
+    private MediaPayPerConfigEntity.ItemEntity checkItemEntity;
+    private Integer configId;
 
     /**
     * @Desc TODO()
@@ -98,6 +102,7 @@ public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSet
         viewModel.isVideoSetting.set(isVideo);
         viewModel.srcPath.set(srcPath);
         viewModel.isPayState.set(isPayState);
+        checkItemEntity = mediaPriceTmpConfig.getContent().get(0);
         if(isVideo){
 
         }else{
@@ -116,6 +121,10 @@ public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSet
         viewModel.settingEvent.observe(this, unused -> {
             if(snapshotPhotoDialog==null){
                 snapshotPhotoDialog = new SnapshotPhotoDialog(this,mediaPriceTmpConfig);
+                snapshotPhotoDialog.setSnapshotListener((itemEntity, configId) -> {
+                    checkItemEntity = itemEntity;
+                    this.configId = configId;
+                });
             }
             snapshotPhotoDialog.show();
         });
@@ -124,6 +133,12 @@ public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSet
             MediaGalleryEditEntity mediaGalleryEditEntity = new MediaGalleryEditEntity();
             mediaGalleryEditEntity.setVideoSetting(isVideo);
             mediaGalleryEditEntity.setStatePay(isPayState);
+            if(checkItemEntity!=null){
+                mediaGalleryEditEntity.setUnlockPrice(new BigDecimal(checkItemEntity.getCoin()));
+                mediaGalleryEditEntity.setMsgRenvenue(checkItemEntity.getProfit());
+                mediaGalleryEditEntity.setConfigId(configId);
+                mediaGalleryEditEntity.setConfigIndex(checkItemEntity.getConfigIndexString());
+            }
             mediaGalleryEditEntity.setSrcPath(filePath);
             mediaGalleryEditEntity.setStateSnapshot(viewModel.isBurn.get());
             Intent intent = new Intent();

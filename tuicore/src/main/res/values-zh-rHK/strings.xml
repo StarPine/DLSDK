@@ -28,5 +28,6 @@
     <string name="text_message2">回復對方即可得到收入喔！</string>
     <string name="dl_tmp_default_text">當前版本暫不支持該類型消息，\n請升級至最新版本查看\n立即升級>></string>
     <string name="dl_tmp_default_text2">立即升級>></string>
-
+    <string name="dl_tmp_mediagallery_text">照片獎勵水晶+%s</string>
+    <string name="dl_tmp_mediagallery_text2">影片獎勵水晶+%s</string>
 </resources>

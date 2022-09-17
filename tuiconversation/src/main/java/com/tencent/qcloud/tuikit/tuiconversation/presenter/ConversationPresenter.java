@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tuikit.tuiconversation.presenter;
 
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -20,15 +19,12 @@ import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationService;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.interfaces.ConversationEventListener;
 import com.tencent.qcloud.tuikit.tuiconversation.model.ConversationProvider;
+import com.tencent.qcloud.tuikit.tuiconversation.ui.interfaces.IConversationListAdapter;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.view.ConversationListAdapter;
 import com.tencent.qcloud.tuikit.tuiconversation.util.ConversationUtils;
-import com.tencent.qcloud.tuikit.tuiconversation.ui.interfaces.IConversationListAdapter;
 import com.tencent.qcloud.tuikit.tuiconversation.util.TUIConversationLog;
 import com.tencent.qcloud.tuikit.tuiconversation.util.TUIConversationUtils;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;

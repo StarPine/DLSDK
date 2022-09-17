@@ -31,6 +31,15 @@ public class MediaPayPerConfigEntity implements Serializable{
 
     public static class itemTagEntity implements Serializable{
         private List<ItemEntity> configList;
+        private Integer configId;
+
+        public Integer getConfigId() {
+            return configId;
+        }
+
+        public void setConfigId(Integer configId) {
+            this.configId = configId;
+        }
 
         public List<ItemEntity> getContent() {
             return configList;
@@ -44,6 +53,15 @@ public class MediaPayPerConfigEntity implements Serializable{
     public static class ItemEntity implements Serializable {
         private String redPackageCoin;
         private BigDecimal redPackagProfit;
+        private String configIndexString;
+
+        public String getConfigIndexString() {
+            return configIndexString;
+        }
+
+        public void setConfigIndexString(String configIndexString) {
+            this.configIndexString = configIndexString;
+        }
 
         public String getCoin() {
             return redPackageCoin;

@@ -59,5 +59,5 @@ public abstract class OnItemClickListener {
     public void onImageClick(TUIMessageBean messageInfo){}
 
     //自定义 发送红包模块点击触发
-    public void onMediaGalleryClick(String IMKey, MediaGalleryEditEntity mediaGalleryEditEntity) {}
+    public void onMediaGalleryClick(MediaGalleryEditEntity mediaGalleryEditEntity) {}
 }

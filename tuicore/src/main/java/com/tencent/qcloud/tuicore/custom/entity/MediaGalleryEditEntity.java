@@ -25,6 +25,47 @@ public class MediaGalleryEditEntity implements Serializable {
     private String srcPath;
     //对方ID
     private Integer toUserId;
+    //聊天收益
+    private BigDecimal msgRenvenue;
+    //是否当前用户发送
+    private boolean selfSend;
+
+    //价格配置id，当类型为付费资源时，该值为必填
+    private Integer configId;
+    //价格配置下标，当类型为付费资源时，该值为必填
+    private String configIndex;
+
+    public boolean isSelfSend() {
+        return selfSend;
+    }
+
+    public void setSelfSend(boolean selfSend) {
+        this.selfSend = selfSend;
+    }
+
+    public Integer getConfigId() {
+        return configId;
+    }
+
+    public void setConfigId(Integer configId) {
+        this.configId = configId;
+    }
+
+    public String getConfigIndex() {
+        return configIndex;
+    }
+
+    public void setConfigIndex(String configIndex) {
+        this.configIndex = configIndex;
+    }
+
+    public BigDecimal getMsgRenvenue() {
+        return msgRenvenue;
+    }
+
+    public void setMsgRenvenue(BigDecimal msgRenvenue) {
+        this.msgRenvenue = msgRenvenue;
+    }
 
     public Integer getToUserId() {
         return toUserId;

@@ -1,48 +1,28 @@
 package com.dl.playfun.ui.message.mediagallery.photo;
 
-import static com.blankj.utilcode.util.SnackbarUtils.dismiss;
-import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
-
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.ImageViewTarget;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.GlideEngine;
 import com.dl.playfun.databinding.ActivityMediaGalleryPhotoBinding;
-import com.dl.playfun.entity.MediaPayPerConfigEntity;
-import com.dl.playfun.transformations.MvBlurTransformation;
 import com.dl.playfun.ui.base.BaseActivity;
-import com.dl.playfun.ui.message.mediagallery.SnapshotPhotoActivity;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.StringUtil;
-import com.luck.picture.lib.listener.OnImageCompleteCallback;
-import com.luck.picture.lib.tools.MediaUtils;
-import com.luck.picture.lib.widget.longimage.ImageSource;
-import com.luck.picture.lib.widget.longimage.ImageViewState;
-import com.luck.picture.lib.widget.longimage.SubsamplingScaleImageView;
+import com.tencent.qcloud.tuicore.custom.CustomDrawableUtils;
 import com.tencent.qcloud.tuicore.custom.entity.MediaGalleryEditEntity;
-import com.tencent.qcloud.tuikit.tuichat.component.photoview.view.PhotoView;
 
 /**
  * Author: 彭石林
@@ -81,13 +61,13 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
     @Override
     protected void onResume() {
         super.onResume();
-        ImmersionBarUtils.setupStatusBar(this, false, true);
+        ImmersionBarUtils.setupStatusBar(this, false, false);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        ImmersionBarUtils.setupStatusBar(this, true, true);
+        ImmersionBarUtils.setupStatusBar(this, true, false);
     }
 
     @Override
@@ -106,11 +86,13 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
     @Override
     public void initData() {
         super.initData();
+        viewModel.mediaGalleryEditEntity = mediaGalleryEditEntity;
         Log.e(TAG,"当前传递的内容为："+String.valueOf(mediaGalleryEditEntity==null));
         if(mediaGalleryEditEntity!=null){
             Log.e(TAG,"当前传递的内容为："+String.valueOf(mediaGalleryEditEntity.toString()));
-            //快照
-            if(mediaGalleryEditEntity.isStateSnapshot()){
+            //快照 并且不是自己查看 加蒙版
+            if(mediaGalleryEditEntity.isStateSnapshot() && !mediaGalleryEditEntity.isSelfSend()){
+                viewModel.mediaGalleryEvaluationQry(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId());
                 GlideEngine.createGlideEngine().loadImage(this, StringUtil.getFullImageUrl(mediaGalleryEditEntity.getSrcPath()), binding.imgContent, binding.imgLong,true, new GlideEngine.LoadProgressCallback() {
                     @Override
                     public void onLoadStarted(@Nullable Drawable placeholder) {
@@ -150,8 +132,76 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
                 });
             }
         }
+        //好评
+        binding.llLike.setOnClickListener(v -> {
+            Integer evaluationType = viewModel.evaluationLikeEvent.getValue();
+            if(evaluationType !=null && evaluationType == 0){
+                viewModel.mediaGalleryEvaluationPut(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId(),2);
+            }
+        });
+        binding.llNoLike.setOnClickListener(v -> {
+            Integer evaluationType = viewModel.evaluationLikeEvent.getValue();
+            if(evaluationType !=null && evaluationType == 0){
+                //差评
+                viewModel.mediaGalleryEvaluationPut(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId(),1);
+            }
+        });
     }
 
+    @Override
+    public void initViewObservable() {
+        super.initViewObservable();
+        //解锁事件
+        viewModel.snapshotLockEvent.observe(this, unused -> {
+            GlideEngine.createGlideEngine().loadImage(this, StringUtil.getFullImageUrl(mediaGalleryEditEntity.getSrcPath()), binding.imgContent, binding.imgLong,false, new GlideEngine.LoadProgressCallback() {
+                @Override
+                public void onLoadStarted(@Nullable Drawable placeholder) {
+                    showHud();
+                }
+
+                @Override
+                public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                    dismissHud();
+                }
+
+                @Override
+                public void setResource(boolean imgLong) {
+                    dismissHud();
+                    viewModel.snapshotLockState.set(false);
+                    //图片加载成功开始倒计时
+                    startTimer();
+                }
+            });
+        });
+        //当前评价状态
+        viewModel.evaluationLikeEvent.observe(this, state -> {
+            //评价，0未评价，1差评，2好评
+            if(state == 1){
+                generateDrawable(binding.llNoLike,null,22,null,null,R.color.playfun_shape_radius_start_color,R.color.playfun_shape_radius_end_color);
+                generateDrawable(binding.llLike,R.color.black,22,R.color.purple_text,1,null,null);
+            }else if(state == 2){
+                generateDrawable(binding.llLike,null,22,null,null,R.color.playfun_shape_radius_start_color,R.color.playfun_shape_radius_end_color);
+                generateDrawable(binding.llNoLike,R.color.black,22,R.color.purple_text,1,null,null);
+            }else{
+                generateDrawable(binding.llLike,R.color.black,22,R.color.purple_text,1,null,null);
+                generateDrawable(binding.llNoLike,R.color.black,22,R.color.purple_text,1,null,null);
+            }
+        });
+    }
+
+    void generateDrawable(View view,Integer drawableColor,Integer drawableCornersRadius,Integer drawableStrokeColor, Integer drawableStrokeWidth,Integer drawableStartColor, Integer drawableEndColor){
+        CustomDrawableUtils.generateDrawable(view, getColorFromResource(drawableColor),
+                drawableCornersRadius,null,null,null,null,
+                getColorFromResource(drawableStartColor),getColorFromResource(drawableEndColor),drawableStrokeWidth,getColorFromResource(drawableStrokeColor));
+    }
+
+    Integer getColorFromResource(Integer resourceId) {
+        if (resourceId==null) {
+            return null;
+        } else {
+            return getContext().getResources().getColor(resourceId);
+        }
+    }
     @Override
     public MediaGalleryPhotoPayViewModel initViewModel() {
         AppViewModelFactory factory = AppViewModelFactory.getInstance(getApplication());
@@ -162,8 +212,9 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
      * 开始计时
      */
     public void startTimer() {
+        viewModel.snapshotTimeState.set(true);
         //倒计时15秒，一次1秒
-        downTimer = new CountDownTimer(2 * 1000, 1000) {
+        downTimer = new CountDownTimer(6 * 1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                     viewModel.snapshotTimeText.set((millisUntilFinished / 1000)+"s");
@@ -171,7 +222,23 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
             @Override
             public void onFinish() {
                 stopTimer();
-                viewModel.evaluationState.set(true);
+                //再次模糊图片
+                GlideEngine.createGlideEngine().loadImage(getContext(), StringUtil.getFullImageUrl(mediaGalleryEditEntity.getSrcPath()), binding.imgContent, binding.imgLong,true, new GlideEngine.LoadProgressCallback() {
+                    @Override
+                    public void onLoadStarted(@Nullable Drawable placeholder) {
+                        showHud();
+                    }
+
+                    @Override
+                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                        dismissHud();
+                    }
+
+                    @Override
+                    public void setResource(boolean imgLong) {
+                        dismissHud();
+                    }
+                });
             }
         };
         downTimer.start();
@@ -184,6 +251,13 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
         if (downTimer != null) {
             downTimer.cancel();
             downTimer = null;
+        }
+        //倒计时补可见
+        viewModel.snapshotTimeState.set(false);
+        //查询评价接口失败。不让继续评价
+        if(viewModel.evaluationLikeEvent.getValue()!=null){
+            //评价弹出
+            viewModel.evaluationState.set(true);
         }
     }
 

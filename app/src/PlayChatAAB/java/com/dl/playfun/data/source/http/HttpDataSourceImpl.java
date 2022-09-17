@@ -1296,6 +1296,21 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
+    public Observable<BaseResponse> mediaGalleryPay(String msgKey, Integer toUserId) {
+        return apiService.mediaGalleryPay(msgKey, toUserId);
+    }
+
+    @Override
+    public Observable<BaseDataResponse<Map<String, Integer>>> mediaGalleryEvaluationQry(String msgKey, Integer toUserId) {
+        return apiService.mediaGalleryEvaluationQry(msgKey, toUserId);
+    }
+
+    @Override
+    public Observable<BaseResponse> mediaGalleryEvaluationPut(String msgKey, Integer toUserId, Integer type) {
+        return apiService.mediaGalleryEvaluationPut(msgKey, toUserId, type);
+    }
+
+    @Override
     public Observable<BaseResponse> mediaGallerySnapshotUnLock(String msgKey, Integer toUserId) {
         return apiService.mediaGallerySnapshotUnLock(msgKey, toUserId);
     }

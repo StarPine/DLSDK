@@ -35,6 +35,7 @@ import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.CustomImageMessage;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.dltmpapply.MediaGalleryModuleView;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
 import java.util.Map;
@@ -59,9 +60,8 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
 
     @Override
     public void layoutVariableViews(TUIMessageBean msg, int position) {
-        if(flTmpLayout!=null && flTmpLayout.getChildCount()>1){
+        if(flTmpLayout!=null){
             flTmpLayout.removeAllViews();
-            flTmpLayout.setBackgroundColor(Color.TRANSPARENT);
         }
         CustomDlTempMessage customDlTempMessage =  IMGsonUtils.fromJson(new String(msg.getCustomElemData()), CustomDlTempMessage.class);
         if(customDlTempMessage == null){
@@ -76,22 +76,13 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
                 return;
             }
             CustomDlTempMessage.MsgBodyInfo msgModuleInfo = customDlTempMessage.getContentBody().getContentBody();
-            //红包照片模块
-            if (CustomConstants.MediaGallery.MODULE_NAME.equals(moduleName)) {
-                //照片内容
-                if(CustomConstants.MediaGallery.PHOTO_GALLERY.equals(msgModuleInfo.getCustomMsgType())){
-                    PhotoGalleryPayEntity customImageMessageBean = IMGsonUtils.fromJson(IMGsonUtils.toJson(msgModuleInfo.getCustomMsgBody()),PhotoGalleryPayEntity.class);
-                    LoadMediaGalleryPhoto(msg.getV2TIMMessage().getMsgID(),itemView.getContext(), flTmpLayout, customImageMessageBean,msg.getV2TIMMessage().getCloudCustomData());
-                }else if(CustomConstants.MediaGallery.VIDEO_GALLERY.equals(msgModuleInfo.getCustomMsgType())){
-                    VideoGalleryPayEntity customVideoMessageBean = IMGsonUtils.fromJson(IMGsonUtils.toJson(msgModuleInfo.getCustomMsgBody()),VideoGalleryPayEntity.class);
-                    LoadMediaGalleryVideo(msg.getV2TIMMessage().getMsgID(),itemView.getContext(), flTmpLayout, customVideoMessageBean,msg.getV2TIMMessage().getCloudCustomData());
-                }else{
-                    //默认展示解析不出的模板提示
-                    defaultLayout(itemView.getContext(),flTmpLayout,msg.isSelf());
+            if (CustomConstants.MediaGallery.MODULE_NAME.equals(moduleName)) { //IM照片、视频模块
+                if (msgArea != null) {
+                    msgArea.setBackground(null);
                 }
-            }else{
-                //默认展示解析不出的模板提示
-                defaultLayout(itemView.getContext(),flTmpLayout,msg.isSelf());
+                new MediaGalleryModuleView(this).layoutVariableViews(msg, getContext(), flTmpLayout, msgModuleInfo);
+            } else {//默认展示解析不出的模板提示
+                defaultLayout(itemView.getContext(), flTmpLayout, msg.isSelf());
             }
         }else{
             defaultLayout(itemView.getContext(),flTmpLayout,msg.isSelf());
@@ -99,7 +90,7 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
 
     }
     //默认消息模板
-    public void defaultLayout(Context context,FrameLayout rootView,boolean isSelf){
+    public void defaultLayout(Context context, FrameLayout rootView, boolean isSelf){
         View defaultView = View.inflate(context, R.layout.tmp_message_default_layout, null);
         FrameLayout frameLayout = defaultView.findViewById(R.id.container);
         TextView textContent = defaultView.findViewById(R.id.tv_content);
@@ -129,139 +120,12 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
         msgContentFrame.setClickable(true);
         rootView.addView(defaultView);
     }
-    //测试自定义图片渲染
-    public void LoadMediaGalleryPhoto(String IMKey,Context context, FrameLayout rootView, PhotoGalleryPayEntity photoGalleryPayEntity,String customElemData){
-        Map<String,Object> mapData = null;
-        Log.e(TAG,"当前穿透字段内容为:"+String.valueOf(mapData));
-        View customImageView = View.inflate(context, R.layout.tmp_message_photo_gallery_layout, null);
-        customImageView.setBackgroundColor(Color.TRANSPARENT);
-        customImageView.setLayoutParams(new FrameLayout.LayoutParams(-2,-2));
-        FrameLayout fLTlLayout = customImageView.findViewById(R.id.fl_tl_layout);
-        //底部布局
-        RelativeLayout rlLayout = customImageView.findViewById(R.id.rl_layout);
-        boolean stateSnapshot = false;
-        //付费照片
-        if(photoGalleryPayEntity.isStatePhotoPay()){
-            rlLayout.setVisibility(View.VISIBLE);
-            //快照
-            stateSnapshot  = photoGalleryPayEntity.isStateSnapshot();
-            fLTlLayout.setVisibility(stateSnapshot ? View.VISIBLE : View.GONE);
-            //当前收费价格
-            TextView tvCoin = customImageView.findViewById(R.id.tv_coin);
-            if(tvCoin!=null){
-                if(photoGalleryPayEntity.getUnlockPrice()!=null && photoGalleryPayEntity.getUnlockPrice().intValue() > 0){
-                    tvCoin.setVisibility(View.VISIBLE);
-                    tvCoin.setText(String.valueOf(photoGalleryPayEntity.getUnlockPrice().intValue()));
-                }else{
-                    tvCoin.setVisibility(View.GONE);
-                }
-            }
-            CustomDrawableUtils.generateDrawable(fLTlLayout, Color.parseColor("#717477"),
-                    null,8,null,null,8,
-                    null,null,null,null);
-        }else{
-            //非付费照片
-            //   普通照片： stateSnapshot = false
-            //   普通快照： stateSnapshot = true
-            if(photoGalleryPayEntity.isStateSnapshot()){
-                stateSnapshot = true;
-                fLTlLayout.setVisibility(View.VISIBLE);
-                CustomDrawableUtils.generateDrawable(fLTlLayout, Color.parseColor("#717477"),
-                        null,8,null,null,8,
-                        null,null,null,null);
-            }else{
-                //隐藏快照标识
-                fLTlLayout.setVisibility(View.GONE);
-            }
-            rlLayout.setVisibility(View.GONE);
-        }
-        RequestOptions override;
-        if(stateSnapshot){
-            override = RequestOptions.bitmapTransform(new MvBlurTransformation(100)).override(dp2px(getContext(),86), dp2px(getContext(),154));
-        }else{
-            //通过RequestOptions扩展功能,override:采样率,因为ImageView就这么大,可以压缩图片,降低内存消耗
-            override = new RequestOptions().override(dp2px(getContext(),86), dp2px(getContext(),154));
-        }
-        ImageView imgContent = customImageView.findViewById(R.id.img_content);
-        String imagePath = TUIChatUtils.getFullImageUrl(photoGalleryPayEntity.getImgPath());
-        Glide.with(TUIChatService.getAppContext())
-                .load(imagePath)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .apply(override.error(R.drawable.chat_custom_image_error).placeholder(R.drawable.chat_custom_image_load))
-                .into(imgContent);
-        rootView.addView(customImageView);
-        rootView.setOnClickListener(v -> {
-            if (onItemClickListener != null) {
-                MediaGalleryEditEntity mediaGalleryEditEntity = new MediaGalleryEditEntity();
-                mediaGalleryEditEntity.setMsgKeyId(IMKey);
-                mediaGalleryEditEntity.setSrcPath(photoGalleryPayEntity.getImgPath());
-                mediaGalleryEditEntity.setVideoSetting(false);
-                mediaGalleryEditEntity.setUnlockPrice(photoGalleryPayEntity.getUnlockPrice());
-                mediaGalleryEditEntity.setStatePay(photoGalleryPayEntity.isStatePhotoPay());
-                mediaGalleryEditEntity.setStateSnapshot(photoGalleryPayEntity.isStateSnapshot());
-                onItemClickListener.onMediaGalleryClick(IMKey,mediaGalleryEditEntity);
-            }
-        });
-    }
 
-    //测试自定义图片渲染
-    public void LoadMediaGalleryVideo(String IMKey,Context context, FrameLayout rootView, VideoGalleryPayEntity videoGalleryPayEntity,String customElemData){
-        Map<String,Object> mapData = null;
-        if(!TextUtils.isEmpty(customElemData)){
-            mapData = IMGsonUtils.fromJson(customElemData, Map.class);
-        }
-        Log.e(TAG,"当前穿透字段内容为:"+String.valueOf(mapData));
-        View customImageView = View.inflate(context, R.layout.tmp_message_video_gallery_layout, null);
-        customImageView.setBackgroundColor(Color.TRANSPARENT);
-        customImageView.setLayoutParams(new FrameLayout.LayoutParams(-2,-2));
-        //底部布局
-        RelativeLayout rlLayout = customImageView.findViewById(R.id.rl_layout);
-        //付费视频
-        if(videoGalleryPayEntity.isStateVideoPay()){
-            rlLayout.setVisibility(View.VISIBLE);
-            //当前收费价格
-            TextView tvCoin = customImageView.findViewById(R.id.tv_coin);
-            if(tvCoin!=null){
-                if(videoGalleryPayEntity.getUnlockPrice()!=null && videoGalleryPayEntity.getUnlockPrice().intValue() > 0){
-                    tvCoin.setVisibility(View.VISIBLE);
-                    tvCoin.setText(String.valueOf(videoGalleryPayEntity.getUnlockPrice().intValue()));
-                }else{
-                    tvCoin.setVisibility(View.GONE);
-                }
-            }
-        }else{
-            //非付费视频
-            rlLayout.setVisibility(View.GONE);
-        }
-        //设置图片圆角角度
-        RoundedCorners roundedCorners = new RoundedCorners(dp2px(getContext(),8));
-        //通过RequestOptions扩展功能,override:采样率,因为ImageView就这么大,可以压缩图片,降低内存消耗
-        RequestOptions override = RequestOptions.bitmapTransform(roundedCorners).override(dp2px(getContext(),86), dp2px(getContext(),154));
-        ImageView imgContent = customImageView.findViewById(R.id.img_content);
-        String imagePath = TUIChatUtils.getFullImageUrl(videoGalleryPayEntity.getSrcPath());
-        Glide.with(TUIChatService.getAppContext())
-                .load(imagePath)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .apply(override.error(R.drawable.chat_custom_image_error).placeholder(R.drawable.chat_custom_image_load))
-                .into(imgContent);
-        rootView.addView(customImageView);
-        rootView.setOnClickListener(v -> {
-            if (onItemClickListener != null) {
-                MediaGalleryEditEntity mediaGalleryEditEntity = new MediaGalleryEditEntity();
-                mediaGalleryEditEntity.setMsgKeyId(IMKey);
-                mediaGalleryEditEntity.setSrcPath(videoGalleryPayEntity.getSrcPath());
-                mediaGalleryEditEntity.setVideoSetting(true);
-                mediaGalleryEditEntity.setUnlockPrice(videoGalleryPayEntity.getUnlockPrice());
-                mediaGalleryEditEntity.setStatePay(videoGalleryPayEntity.isStateVideoPay());
-                onItemClickListener.onMediaGalleryClick(IMKey,mediaGalleryEditEntity);
-            }
-        });
-    }
 
-    private Context getContext(){
+    public Context getContext(){
         return itemView.getContext();
     }
-    private int dp2px(Context context, float dpValue) {
+    public int dp2px(Context context, float dpValue) {
         final float densityScale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * densityScale + 0.5f);
     }

@@ -550,9 +550,9 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
             }
 
             @Override
-            public void onMediaGalleryClick(String IMKey, MediaGalleryEditEntity mediaGalleryEditEntity) {
+            public void onMediaGalleryClick(MediaGalleryEditEntity mediaGalleryEditEntity) {
                 if (mOnItemClickListener != null) {
-                    mOnItemClickListener.onMediaGalleryClick(IMKey, mediaGalleryEditEntity);
+                    mOnItemClickListener.onMediaGalleryClick(mediaGalleryEditEntity);
                 }
             }
 

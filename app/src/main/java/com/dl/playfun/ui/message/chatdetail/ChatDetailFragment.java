@@ -888,19 +888,30 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             }
             //查看
             @Override
-            public void onMediaGalleryClick(String IMKey, MediaGalleryEditEntity mediaGalleryEditEntity) {
+            public void onMediaGalleryClick(MediaGalleryEditEntity mediaGalleryEditEntity) {
                 if(mediaGalleryEditEntity!=null){
                     mediaGalleryEditEntity.setToUserId(toUserDataId);
                     //视频查看
                     if(mediaGalleryEditEntity.isVideoSetting()){
 
                     }else{//图片查看
-                        startActivity(MediaGalleryPhotoPayActivity.createIntent(getContext(),mediaGalleryEditEntity));
+                        //付费照片
+                        if(mediaGalleryEditEntity.isStatePay()){
+                            //是否解锁
+                            if(mediaGalleryEditEntity.isSelfSend() || mediaGalleryEditEntity.isStateUnlockPhoto()){
+                                viewModel.uc.mediaGalleryPayEvent.setValue(mediaGalleryEditEntity);
+                            }else{
+                                viewModel.mediaGalleryPay(mediaGalleryEditEntity);
+                            }
+                        }else{
+                            viewModel.uc.mediaGalleryPayEvent.setValue(mediaGalleryEditEntity);
+                        }
+
                     }
                 }
-                Log.e(TAG,"当前发送视讯语音模块:"+IMKey+"============="+mediaGalleryEditEntity.toString());
             }
         });
+        viewModel.uc.mediaGalleryPayEvent.observe(this, mediaGalleryEditEntity -> startActivity(MediaGalleryPhotoPayActivity.createIntent(getContext(),mediaGalleryEditEntity)));
 
         viewModel.uc.loadMessage.observe(this, new Observer<Boolean>() {
             @Override
@@ -996,7 +1007,9 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                     PhotoGalleryPayEntity photoGalleryPayEntity = new PhotoGalleryPayEntity();
                     photoGalleryPayEntity.setStatePhotoPay(mediaGalleryEditEntity.isStatePay());
                     photoGalleryPayEntity.setStateSnapshot(mediaGalleryEditEntity.isStateSnapshot());
-                    photoGalleryPayEntity.setUnlockPrice(new BigDecimal("1000"));
+                    photoGalleryPayEntity.setUnlockPrice(mediaGalleryEditEntity.getUnlockPrice());
+                    photoGalleryPayEntity.setConfigId(mediaGalleryEditEntity.getConfigId());
+                    photoGalleryPayEntity.setConfigIndex(mediaGalleryEditEntity.getConfigIndex());
                     photoGalleryPayEntity.setImgPath(mediaGalleryEditEntity.getSrcPath());
                     msgBodyInfo.setCustomMsgBody(photoGalleryPayEntity);
                 }
