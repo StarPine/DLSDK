@@ -12,7 +12,6 @@ import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.utils.FileUploadUtils;
 import com.dl.playfun.utils.Utils;
 import com.dl.playfun.viewmodel.BaseViewModel;
-import com.luck.picture.lib.entity.LocalMedia;
 
 import java.util.Date;
 
@@ -28,14 +27,15 @@ import me.goldze.mvvmhabit.utils.ToastUtils;
 
 /**
  * Author: 彭石林
- * Time: 2022/9/9 12:03
- * Description: This is SnapshotPhotoViewModel
+ * Time: 2022/9/19 11:05
+ * Description: This is MediaGalleryVideoSettingViewModel
  */
-public class SnapshotPhotoViewModel extends BaseViewModel<AppRepository> {
+public class MediaGalleryVideoSettingViewModel extends BaseViewModel<AppRepository> {
+    public MediaGalleryVideoSettingViewModel(@NonNull Application application, AppRepository model) {
+        super(application, model);
+    }
     //是否付费
     public ObservableBoolean isPayState = new ObservableBoolean(false);
-    //快照
-    public ObservableBoolean isBurn = new ObservableBoolean(false);
     //本地文件地址
     public ObservableField<String> srcPath = new ObservableField<>();
 
@@ -43,17 +43,11 @@ public class SnapshotPhotoViewModel extends BaseViewModel<AppRepository> {
 
     public SingleLiveEvent<String> setResultDataEvent = new SingleLiveEvent<>();
 
-    public SnapshotPhotoViewModel(@NonNull Application application, AppRepository model) {
-        super(application, model);
-    }
     //返回上一页
     public BindingCommand<Void> onBackViewClick = new BindingCommand<>(this::finish);
 
     public BindingCommand settingClick = new BindingCommand(()->{
         settingEvent.call();
-    });
-
-    public BindingCommand burnOnClickCommand = new BindingCommand(() -> {
     });
 
     //确认上传
@@ -70,7 +64,7 @@ public class SnapshotPhotoViewModel extends BaseViewModel<AppRepository> {
                 .subscribeOn(Schedulers.io())
                 .map((Function<String, String>) s -> {
                     String fileName = AppConfig.OSS_CUSTOM_FILE_NAME_CHAT +"/"+ Utils.formatYYMMSS.format(new Date());
-                    return FileUploadUtils.ossUploadFileCustom(FileUploadUtils.FILE_TYPE_IMAGE, filePath, fileName, new FileUploadUtils.FileUploadProgressListener() {
+                    return FileUploadUtils.ossUploadFileCustom(FileUploadUtils.FILE_TYPE_VIDEO, filePath, fileName, new FileUploadUtils.FileUploadProgressListener() {
                         @Override
                         public void fileCompressProgress(int progress) {
                             showProgressHUD(String.format("%ss", progress), progress);
@@ -104,5 +98,4 @@ public class SnapshotPhotoViewModel extends BaseViewModel<AppRepository> {
                     }
                 });
     }
-
 }

@@ -191,6 +191,22 @@
             android:exported="true"
             android:theme="@style/AppTheme.NoActionBar"
             />
+        <!--视频设置页面-->
+        <activity android:name=".ui.message.mediagallery.MediaGalleryVideoSettingActivity"
+            android:requestLegacyExternalStorage="true"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            android:exported="true"
+            android:theme="@style/AppTheme.NoActionBar"
+            />
+        <activity android:name=".ui.message.mediagallery.video.MediaGalleryVideoPayActivity"
+            android:requestLegacyExternalStorage="true"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            android:exported="true"
+            android:theme="@style/AppTheme.NoActionBar"
+            />
+
         <!-- IM快照 or 普通照片查看-->
         <activity android:name=".ui.message.mediagallery.photo.MediaGalleryPhotoPayActivity"
             android:requestLegacyExternalStorage="true"

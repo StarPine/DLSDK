@@ -3,23 +3,26 @@ package com.dl.playfun.ui.message.mediagallery;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.lifecycle.ViewModelProviders;
 
+import com.blankj.utilcode.util.GsonUtils;
+import com.blankj.utilcode.util.ObjectUtils;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.GlideEngine;
 import com.dl.playfun.databinding.ActivitySnapshotPhotoSettingBinding;
 import com.dl.playfun.entity.MediaPayPerConfigEntity;
+import com.dl.playfun.manager.ConfigManager;
 import com.tencent.qcloud.tuicore.custom.entity.MediaGalleryEditEntity;
 import com.dl.playfun.ui.base.BaseActivity;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 
 import java.math.BigDecimal;
-import java.util.List;
+
+import me.goldze.mvvmhabit.utils.StringUtils;
 
 /**
  * Author: 彭石林
@@ -27,11 +30,12 @@ import java.util.List;
  * Description: This is SnapshotPhotoActivity
  */
 public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSettingBinding,SnapshotPhotoViewModel> {
+    //本地价格模板
+    private final String localPriceConfigSettingKey = "MediaGalleryPhotoSettingKey";
+    private MediaPayPerConfigEntity.ItemEntity localCheckItemEntity = null;
 
-
-    private String srcPath = null;
+    private String srcLocalPath = null;
     private boolean isPayState = false;
-    private boolean isVideo = false;
 
     private MediaPayPerConfigEntity.itemTagEntity mediaPriceTmpConfig;
     private SnapshotPhotoDialog snapshotPhotoDialog;
@@ -46,10 +50,9 @@ public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSet
     * @return android.content.Intent
     * @Date 2022/9/14
     */
-    public static Intent createIntent(Context mContext, boolean isPayState, boolean isVideoSetting, String srcPath,MediaPayPerConfigEntity.itemTagEntity mediaPriceTmpConfig){
+    public static Intent createIntent(Context mContext, boolean isPayState, String srcPath,MediaPayPerConfigEntity.itemTagEntity mediaPriceTmpConfig){
         Intent snapshotIntent = new Intent(mContext,SnapshotPhotoActivity.class);
         snapshotIntent.putExtra("isPayState",isPayState);
-        snapshotIntent.putExtra("isVideo",isVideoSetting);
         snapshotIntent.putExtra("srcPath",srcPath);
         snapshotIntent.putExtra("mediaPriceTmpConfig",mediaPriceTmpConfig);
         return snapshotIntent;
@@ -83,9 +86,8 @@ public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSet
         super.initParam();
         Intent intent = getIntent();
         if(intent != null){
-            srcPath = intent.getStringExtra("srcPath");
+            srcLocalPath = intent.getStringExtra("srcPath");
             isPayState = intent.getBooleanExtra("isPayState",false);
-            isVideo = intent.getBooleanExtra("isVideo",false);
             mediaPriceTmpConfig = (MediaPayPerConfigEntity.itemTagEntity) intent.getSerializableExtra("mediaPriceTmpConfig");
         }
     }
@@ -99,31 +101,32 @@ public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSet
     @Override
     public void initData() {
         super.initData();
-        viewModel.isVideoSetting.set(isVideo);
-        viewModel.srcPath.set(srcPath);
+        viewModel.srcPath.set(srcLocalPath);
         viewModel.isPayState.set(isPayState);
-        checkItemEntity = mediaPriceTmpConfig.getContent().get(0);
-        if(isVideo){
 
-        }else{
-            //选择的是图片
-            Log.e("当前选择图片地址：",String.valueOf(srcPath));
-            GlideEngine.createGlideEngine().loadImage(this, srcPath,binding.imgContent,binding.imgLong);
+        String localPriceValue = ConfigManager.getInstance().getAppRepository().readKeyValue(localPriceConfigSettingKey);
+        if(!StringUtils.isEmpty(localPriceValue)){
+            localCheckItemEntity = GsonUtils.fromJson(localPriceValue, MediaPayPerConfigEntity.ItemEntity.class);
         }
-
+        if(ObjectUtils.isNotEmpty(localCheckItemEntity)){
+            checkItemEntity = localCheckItemEntity;
+        }else{
+            checkItemEntity = mediaPriceTmpConfig.getContent().get(0);
+        }
+        //选择的是图片
+        GlideEngine.createGlideEngine().loadImage(this, srcLocalPath,binding.imgContent,binding.imgLong,R.drawable.playfun_loading_logo_placeholder_max,R.drawable.playfun_loading_logo_error);
     }
-
-
 
     @Override
     public void initViewObservable() {
         super.initViewObservable();
         viewModel.settingEvent.observe(this, unused -> {
             if(snapshotPhotoDialog==null){
-                snapshotPhotoDialog = new SnapshotPhotoDialog(this,mediaPriceTmpConfig);
+                snapshotPhotoDialog = new SnapshotPhotoDialog(this,mediaPriceTmpConfig,localCheckItemEntity);
                 snapshotPhotoDialog.setSnapshotListener((itemEntity, configId) -> {
                     checkItemEntity = itemEntity;
                     this.configId = configId;
+                    ConfigManager.getInstance().getAppRepository().putKeyValue(localPriceConfigSettingKey,GsonUtils.toJson(checkItemEntity));
                 });
             }
             snapshotPhotoDialog.show();
@@ -131,9 +134,10 @@ public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSet
         //返回页面数据
         viewModel.setResultDataEvent.observe(this,filePath -> {
             MediaGalleryEditEntity mediaGalleryEditEntity = new MediaGalleryEditEntity();
-            mediaGalleryEditEntity.setVideoSetting(isVideo);
+            mediaGalleryEditEntity.setVideoSetting(false);
             mediaGalleryEditEntity.setStatePay(isPayState);
-            if(checkItemEntity!=null){
+            mediaGalleryEditEntity.setAndroidLocalSrcPath(srcLocalPath);
+            if(checkItemEntity!=null && isPayState){
                 mediaGalleryEditEntity.setUnlockPrice(new BigDecimal(checkItemEntity.getCoin()));
                 mediaGalleryEditEntity.setMsgRenvenue(checkItemEntity.getProfit());
                 mediaGalleryEditEntity.setConfigId(configId);

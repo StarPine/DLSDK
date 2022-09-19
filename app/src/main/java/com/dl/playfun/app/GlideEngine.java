@@ -173,6 +173,42 @@ public class GlideEngine implements ImageEngine {
                 });
     }
 
+    public void loadImage(@NonNull Context context, @NonNull String url,
+                          @NonNull ImageView imageView,
+                          SubsamplingScaleImageView longImageView,int placeholderImg,int errorImg) {
+        Glide.with(context)
+                .asBitmap()
+                .load(url)
+                .placeholder(placeholderImg)
+                .error(errorImg)
+                .into(new ImageViewTarget<Bitmap>(imageView) {
+                    @Override
+                    protected void setResource(@Nullable Bitmap resource) {
+                        if (resource != null) {
+                            boolean eqLongImage = MediaUtils.isLongImg(resource.getWidth(),
+                                    resource.getHeight());
+                            longImageView.setVisibility(eqLongImage ? View.VISIBLE : View.GONE);
+                            imageView.setVisibility(eqLongImage ? View.GONE : View.VISIBLE);
+                            if (eqLongImage) {
+                                // 加载长图
+                                longImageView.setQuickScaleEnabled(true);
+                                longImageView.setZoomEnabled(true);
+                                longImageView.setPanEnabled(true);
+                                longImageView.setDoubleTapZoomDuration(100);
+                                longImageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP);
+                                longImageView.setDoubleTapZoomDpi(SubsamplingScaleImageView.ZOOM_FOCUS_CENTER);
+                                longImageView.setImage(ImageSource.bitmap(resource),
+                                        new ImageViewState(0, new PointF(0, 0), 0));
+                            } else {
+                                // 普通图片
+                                imageView.setImageBitmap(resource);
+                            }
+                        }
+                    }
+                });
+    }
+
+
     /**
      * 加载相册目录
      *
@@ -253,6 +289,7 @@ public class GlideEngine implements ImageEngine {
     */
     public void loadImage(@NonNull Context context, @NonNull String url,
                           @NonNull ImageView imageView,
+                          int placeholderImg,int errorImg,
                           SubsamplingScaleImageView longImageView,boolean stateSnapshot, LoadProgressCallback callback) {
         RequestOptions override;
         if(stateSnapshot){
@@ -264,7 +301,7 @@ public class GlideEngine implements ImageEngine {
         Glide.with(context)
                 .asBitmap()
                 .load(url)
-                .apply(override)
+                .apply(override.error(errorImg).placeholder(placeholderImg))
                 .into(new ImageViewTarget<Bitmap>(imageView) {
                     @Override
                     public void onLoadStarted(@Nullable Drawable placeholder) {
@@ -305,6 +342,48 @@ public class GlideEngine implements ImageEngine {
                             }
                             if (callback != null) {
                                 callback.setResource(eqLongImage);
+                            }
+                        }
+                    }
+                });
+    }
+    /**
+     * @Desc TODO(加载长图处理)
+     * @author 彭石林
+     * @parame [context, url, imageView, longImageView, callback]
+     * @Date 2022/9/16
+     */
+    public void loadImage(@NonNull Context context, @NonNull String url,
+                          @NonNull ImageView imageView,int placeholderImg,int errorImg, LoadProgressCallback callback) {
+        Glide.with(context)
+                .asBitmap()
+                .load(url)
+                .placeholder(placeholderImg)
+                .error(errorImg)
+                .into(new ImageViewTarget<Bitmap>(imageView) {
+                    @Override
+                    public void onLoadStarted(@Nullable Drawable placeholder) {
+                        super.onLoadStarted(placeholder);
+                        if (callback != null) {
+                            callback.onLoadStarted(placeholder);
+                        }
+                    }
+
+                    @Override
+                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                        super.onLoadFailed(errorDrawable);
+                        if (callback != null) {
+                            callback.onLoadFailed(errorDrawable);
+                        }
+                    }
+
+                    @Override
+                    protected void setResource(@Nullable Bitmap resource) {
+                        if (resource != null) {
+                                // 普通图片
+                                imageView.setImageBitmap(resource);
+                            if (callback != null) {
+                                callback.setResource(false);
                             }
                         }
                     }

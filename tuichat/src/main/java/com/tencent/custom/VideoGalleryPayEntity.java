@@ -16,6 +16,16 @@ public class VideoGalleryPayEntity {
     private BigDecimal unlockPrice;
     //oss文件信息
     private String srcPath;
+    //安卓端本地资源绝对地址
+    private String androidLocalSrcPath;
+
+    public String getAndroidLocalSrcPath() {
+        return androidLocalSrcPath;
+    }
+
+    public void setAndroidLocalSrcPath(String androidLocalSrcPath) {
+        this.androidLocalSrcPath = androidLocalSrcPath;
+    }
 
     public boolean isStateVideoPay() {
         return stateVideoPay;

@@ -24,18 +24,20 @@ import java.util.List;
 /**
  * Author: 彭石林
  * Time: 2022/9/9 17:55
- * Description: This is SnapshotPhotoDialog
+ * Description: 发送付费照片、视频调节价格
  */
 public class SnapshotPhotoDialog extends BaseDialog {
 
     private final DialogSnapshotPhotoSettingBinding binding;
 
-    private MediaPayPerConfigEntity.itemTagEntity mediaPriceTmpConfig;
+    private final MediaPayPerConfigEntity.itemTagEntity mediaPriceTmpConfig;
 
     private SnapshotListener snapshotListener;
 
     private MediaPayPerConfigEntity.ItemEntity checkItemEntity;
     private Integer configId;
+
+    private MediaPayPerConfigEntity.ItemEntity localCheckItemEntity;
 
     public SnapshotListener getSnapshotListener() {
         return snapshotListener;
@@ -45,9 +47,10 @@ public class SnapshotPhotoDialog extends BaseDialog {
         this.snapshotListener = snapshotListener;
     }
 
-    public SnapshotPhotoDialog(Context context, MediaPayPerConfigEntity.itemTagEntity mediaPriceTmpConfig) {
+    public SnapshotPhotoDialog(Context context, MediaPayPerConfigEntity.itemTagEntity mediaPriceTmpConfig,MediaPayPerConfigEntity.ItemEntity localCheckItemEntity) {
         super(context);
         this.mediaPriceTmpConfig = mediaPriceTmpConfig;
+        this.localCheckItemEntity = localCheckItemEntity;
         LayoutInflater inflater = LayoutInflater.from(context);
         binding = DataBindingUtil.inflate(inflater, R.layout.dialog_snapshot_photo_setting, null, false);
         setCancelable(true);
@@ -57,20 +60,33 @@ public class SnapshotPhotoDialog extends BaseDialog {
         ArrayList<String> listData = new ArrayList<>();
         if(ObjectUtils.isNotEmpty(mediaPriceTmpConfig)){
             List<MediaPayPerConfigEntity.ItemEntity> itemData = mediaPriceTmpConfig.getContent();
-            for (MediaPayPerConfigEntity.ItemEntity itemSet : itemData) {
-                listData.add(itemSet.getProfit().toString());
+            int checkedIdx = 0;
+            for (int i = 0; i < itemData.size(); i++) {
+                checkedIdx = i;
+                listData.add(itemData.get(i).getProfit().toString());
+                if(localCheckItemEntity!=null){
+                    if(localCheckItemEntity.getCoin()!=null && localCheckItemEntity.getProfit()!=null){
+                        if(localCheckItemEntity.getCoin().equals(itemData.get(i).getCoin()) && localCheckItemEntity.getProfit().equals(itemData.get(i).getProfit())){
+                            checkItemEntity = itemData.get(i);
+                        }
+                    }
+                }
             }
             if(ObjectUtils.isNotEmpty(listData)){
                 int size = listData.size();
                 binding.seekbarPhoto.initData(listData, size-1);
-                binding.seekbarPhoto.setProgress(0);
+                binding.seekbarPhoto.setProgress(checkedIdx);
                 binding.seekbarPhotoView.setMax(size-1);
-                binding.seekbarPhotoView.setProgress(0);
-                MediaPayPerConfigEntity.ItemEntity itemEntity = mediaPriceTmpConfig.getContent().get(0);
-                binding.tvCoin.setText(itemEntity.getCoin());
-                binding.tvMoney.setText(itemEntity.getProfit().toString());
+                binding.seekbarPhotoView.setProgress(checkedIdx);
+                if(localCheckItemEntity!=null){
+                    checkItemEntity = localCheckItemEntity;
+                }else{
+                    checkItemEntity = mediaPriceTmpConfig.getContent().get(0);
+                }
+                binding.tvCoin.setText(checkItemEntity.getCoin());
+                binding.tvMoney.setText(String.valueOf(checkItemEntity.getProfit()));
                 configId = mediaPriceTmpConfig.getConfigId();
-                checkItemEntity = itemEntity;
+
             }
         }
 

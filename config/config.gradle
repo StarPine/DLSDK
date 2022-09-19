@@ -121,7 +121,7 @@ ext {
             // 动画资源：https://lottiefiles.com、https://icons8.com/animated-icons
             "lottie"                       : 'com.airbnb.android:lottie:3.6.1',
             //视频列表播放插件 完整版引入
-            "GSYVideoPlayer"               : 'com.github.CarGuo.GSYVideoPlayer:GSYVideoPlayer:v8.1.7-release-jitpack',
+            "GSYVideoPlayer"               : 'com.github.CarGuo.GSYVideoPlayer:GSYVideoPlayer:v8.3.4-release-jitpack',
             //SVGA动画播放库
             "SVGAPlayer"                   : 'com.github.svga:SVGAPlayer-Android:2.6.1',
             "viewpager2"                   : "androidx.viewpager2:viewpager2:1.0.0",

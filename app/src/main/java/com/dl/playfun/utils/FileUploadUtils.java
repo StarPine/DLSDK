@@ -212,6 +212,44 @@ public class FileUploadUtils {
                 directory = "";
             }
             filePath = list.get(0).getAbsolutePath();
+        }else if (fileType == FILE_TYPE_VIDEO) {
+            String outPath = String.format("%s/%s", AppContext.instance().getCacheDir().getAbsolutePath(), getFileName(filePath));
+
+            final CountDownLatch latch = new CountDownLatch(1);
+            final boolean[] success = {false};
+            VideoCompress.compressVideoMedium(filePath, outPath, new VideoCompress.CompressListener() {
+                @Override
+                public void onStart() {
+                    System.out.println();
+                }
+
+                @Override
+                public void onSuccess() {
+                    success[0] = true;
+                    latch.countDown();
+                }
+
+                @Override
+                public void onFail() {
+                    success[0] = false;
+                    latch.countDown();
+                }
+
+                @Override
+                public void onProgress(float percent) {
+                    if(fileUploadProgressListener!=null){
+                        fileUploadProgressListener.fileCompressProgress((int) percent);
+                    }
+                }
+            });
+            try {
+                latch.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if (success[0]) {
+                filePath = outPath;
+            }
         }else{
             throw new InstantiationException("error fileType is not ");
         }

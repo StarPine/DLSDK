@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
@@ -24,6 +25,8 @@ import com.dl.playfun.utils.StringUtil;
 import com.tencent.qcloud.tuicore.custom.CustomDrawableUtils;
 import com.tencent.qcloud.tuicore.custom.entity.MediaGalleryEditEntity;
 
+import java.io.File;
+
 /**
  * Author: 彭石林
  * Time: 2022/9/14 11:20
@@ -34,6 +37,9 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
     private MediaGalleryEditEntity mediaGalleryEditEntity;
     //倒计时
     private CountDownTimer downTimer;
+    //文件地址
+    private String srcPath;
+
     @Override
     public int initContentView(Bundle savedInstanceState) {
         AutoSizeUtils.applyAdapt(getResources());
@@ -87,13 +93,20 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
     public void initData() {
         super.initData();
         viewModel.mediaGalleryEditEntity = mediaGalleryEditEntity;
-        Log.e(TAG,"当前传递的内容为："+String.valueOf(mediaGalleryEditEntity==null));
         if(mediaGalleryEditEntity!=null){
-            Log.e(TAG,"当前传递的内容为："+String.valueOf(mediaGalleryEditEntity.toString()));
+            srcPath = StringUtil.getFullImageUrl(mediaGalleryEditEntity.getSrcPath());
+            //本地资源存在
+            if(!TextUtils.isEmpty(mediaGalleryEditEntity.getAndroidLocalSrcPath())){
+                //判断本地资源是否存在
+                File imageFile = new File(mediaGalleryEditEntity.getAndroidLocalSrcPath());
+                if(imageFile.exists()){
+                    srcPath = mediaGalleryEditEntity.getAndroidLocalSrcPath();
+                }
+            }
             //快照 并且不是自己查看 加蒙版
             if(mediaGalleryEditEntity.isStateSnapshot() && !mediaGalleryEditEntity.isSelfSend()){
                 viewModel.mediaGalleryEvaluationQry(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId());
-                GlideEngine.createGlideEngine().loadImage(this, StringUtil.getFullImageUrl(mediaGalleryEditEntity.getSrcPath()), binding.imgContent, binding.imgLong,true, new GlideEngine.LoadProgressCallback() {
+                GlideEngine.createGlideEngine().loadImage(this, srcPath, binding.imgContent,R.drawable.playfun_loading_logo_placeholder_max,R.drawable.playfun_loading_logo_error, binding.imgLong,true, new GlideEngine.LoadProgressCallback() {
                     @Override
                     public void onLoadStarted(@Nullable Drawable placeholder) {
                         showHud();
@@ -111,10 +124,8 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
                         viewModel.snapshotLockState.set(true);
                     }
                 });
-                Log.e(TAG,"当前oss文件地址："+StringUtil.getFullImageUrl(mediaGalleryEditEntity.getSrcPath()));
             }else{
-                Log.e(TAG,"当前oss文件地址："+StringUtil.getFullImageUrl(mediaGalleryEditEntity.getSrcPath()));
-                GlideEngine.createGlideEngine().loadImage(this, StringUtil.getFullImageUrl(mediaGalleryEditEntity.getSrcPath()), binding.imgContent, binding.imgLong,false, new GlideEngine.LoadProgressCallback() {
+                GlideEngine.createGlideEngine().loadImage(this, srcPath, binding.imgContent,R.drawable.playfun_loading_logo_placeholder_max,R.drawable.playfun_loading_logo_error, binding.imgLong,false, new GlideEngine.LoadProgressCallback() {
                     @Override
                     public void onLoadStarted(@Nullable Drawable placeholder) {
                         showHud();
@@ -153,7 +164,7 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
         super.initViewObservable();
         //解锁事件
         viewModel.snapshotLockEvent.observe(this, unused -> {
-            GlideEngine.createGlideEngine().loadImage(this, StringUtil.getFullImageUrl(mediaGalleryEditEntity.getSrcPath()), binding.imgContent, binding.imgLong,false, new GlideEngine.LoadProgressCallback() {
+            GlideEngine.createGlideEngine().loadImage(this, srcPath, binding.imgContent, R.drawable.playfun_loading_logo_placeholder_max,R.drawable.playfun_loading_logo_error,binding.imgLong,false, new GlideEngine.LoadProgressCallback() {
                 @Override
                 public void onLoadStarted(@Nullable Drawable placeholder) {
                     showHud();
@@ -223,7 +234,7 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
             public void onFinish() {
                 stopTimer();
                 //再次模糊图片
-                GlideEngine.createGlideEngine().loadImage(getContext(), StringUtil.getFullImageUrl(mediaGalleryEditEntity.getSrcPath()), binding.imgContent, binding.imgLong,true, new GlideEngine.LoadProgressCallback() {
+                GlideEngine.createGlideEngine().loadImage(getContext(), srcPath, binding.imgContent,R.drawable.playfun_loading_logo_placeholder_max,R.drawable.playfun_loading_logo_error, binding.imgLong,true, new GlideEngine.LoadProgressCallback() {
                     @Override
                     public void onLoadStarted(@Nullable Drawable placeholder) {
                         showHud();

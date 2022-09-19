@@ -8,7 +8,7 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="com.dl.playfun.ui.message.mediagallery.SnapshotPhotoViewModel" />
+            type="com.dl.playfun.ui.message.mediagallery.MediaGalleryVideoSettingViewModel" />
     </data>
 
     <LinearLayout
@@ -52,27 +52,19 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/img_content"
+            <com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
+                android:id="@+id/video_player"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_above="@+id/fl_layout_bottom"
-                android:background="@color/black"
-                android:scaleType="centerInside" />
-            <com.luck.picture.lib.widget.longimage.SubsamplingScaleImageView
-                android:layout_above="@+id/fl_layout_bottom"
-                android:id="@+id/img_long"
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_above="@+id/fl_layout_bottom"
                 binding:drawable_gradient_endColor="@{@color/black}"
-                binding:drawable_gradient_startColor="@{@color/transparent}" />
+                binding:drawable_gradient_startColor="@{@color/transparent}"/>
 
             <FrameLayout
                 android:id="@+id/fl_layout_bottom"
@@ -81,30 +73,6 @@
                 android:background="@color/black"
                 android:layout_width="match_parent"
                 android:layout_height="60dp">
-                <LinearLayout
-                    android:layout_marginStart="14dp"
-                    android:orientation="horizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <CheckBox
-                        android:layout_gravity="center"
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:button="@null"
-                        android:drawableStart="@drawable/snapshot_checkbox_selector"
-                        android:checked="@={viewModel.isBurn}"
-                        binding:onClickCommand="@{viewModel.burnOnClickCommand}"
-                        tools:ignore="TouchTargetSizeCheck" />
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:layout_marginStart="5dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:includeFontPadding="false"
-                        android:text="@string/playfun_phono_setting_reading_burn"
-                        android:textColor="@color/white"
-                        android:textSize="15sp" />
-                </LinearLayout>
                 <LinearLayout
                     binding:onClickCommand="@{viewModel.settingClick}"
                     android:visibility="@{viewModel.isPayState ? View.VISIBLE : View.GONE}"

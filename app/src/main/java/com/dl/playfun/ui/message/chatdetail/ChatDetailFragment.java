@@ -46,7 +46,9 @@ import com.dl.playfun.entity.EvaluateItemEntity;
 import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.entity.LocalMessageIMEntity;
 import com.dl.playfun.entity.MediaPayPerConfigEntity;
+import com.dl.playfun.ui.message.mediagallery.MediaGalleryVideoSettingActivity;
 import com.dl.playfun.ui.message.mediagallery.photo.MediaGalleryPhotoPayActivity;
+import com.dl.playfun.ui.message.mediagallery.video.MediaGalleryVideoPayActivity;
 import com.tencent.qcloud.tuicore.custom.entity.MediaGalleryEditEntity;
 import com.dl.playfun.entity.PhotoAlbumEntity;
 import com.dl.playfun.entity.TagEntity;
@@ -893,7 +895,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                     mediaGalleryEditEntity.setToUserId(toUserDataId);
                     //视频查看
                     if(mediaGalleryEditEntity.isVideoSetting()){
-
+                        viewModel.uc.mediaGalleryPayEvent.setValue(mediaGalleryEditEntity);
                     }else{//图片查看
                         //付费照片
                         if(mediaGalleryEditEntity.isStatePay()){
@@ -911,22 +913,26 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                 }
             }
         });
-        viewModel.uc.mediaGalleryPayEvent.observe(this, mediaGalleryEditEntity -> startActivity(MediaGalleryPhotoPayActivity.createIntent(getContext(),mediaGalleryEditEntity)));
+        viewModel.uc.mediaGalleryPayEvent.observe(this, mediaGalleryEditEntity -> {
+            if(mediaGalleryEditEntity.isVideoSetting()){
+                startActivity(MediaGalleryVideoPayActivity.createIntent(getContext(),mediaGalleryEditEntity));
+            }else{
+                startActivity(MediaGalleryPhotoPayActivity.createIntent(getContext(),mediaGalleryEditEntity));
+            }
 
-        viewModel.uc.loadMessage.observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                if (aBoolean) {
-                    messageLayout.setIsVip(true);//设置VIP状态
-                    messageLayout.setRead_sum(-1);
-                    messageLayout.setSend_num(-1);
-                    MessageRecyclerView messageRecyclerView = binding.chatLayout.getMessageLayout();
-                    //binding.chatLayout.loadMessages();
-                    messageRecyclerView.getAdapter().notifyDataSetChanged();
-                    //viewModel.loadUserInfo();
-                    ConfigManager.getInstance().DesInstance();
-                    ConfigManager.DesInstance();
-                }
+        });
+
+        viewModel.uc.loadMessage.observe(this, aBoolean -> {
+            if (aBoolean) {
+                messageLayout.setIsVip(true);//设置VIP状态
+                messageLayout.setRead_sum(-1);
+                messageLayout.setSend_num(-1);
+                MessageRecyclerView messageRecyclerView = binding.chatLayout.getMessageLayout();
+                //binding.chatLayout.loadMessages();
+                messageRecyclerView.getAdapter().notifyDataSetChanged();
+                //viewModel.loadUserInfo();
+                ConfigManager.getInstance().DesInstance();
+                ConfigManager.DesInstance();
             }
         });
         viewModel.uc.addLikeSuccess.observe(this, new Observer<String>() {
@@ -973,8 +979,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                         }
                     }
                 }
-                toSnapshotPhotoIntent.launch(SnapshotPhotoActivity.createIntent(mActivity,snapshot,false,result.get(0).getCompressPath(),mediaPriceTmpConfig));
-               // viewModel.uploadFileOSS(result.get(0));
+                toSnapshotPhotoIntent.launch(SnapshotPhotoActivity.createIntent(mActivity,snapshot,result.get(0).getCompressPath(),mediaPriceTmpConfig));
             }
 
             @Override
@@ -989,7 +994,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             Intent intentData = result.getData();
             MediaGalleryEditEntity mediaGalleryEditEntity = (MediaGalleryEditEntity) intentData.getSerializableExtra("mediaGalleryEditEntity");
             if(mediaGalleryEditEntity!=null){
-                Log.e(TAG,"当前选择的图片地址："+mediaGalleryEditEntity.toString());
                 //用自定义图片类型
                 CustomDlTempMessage.MsgModuleInfo msgModuleInfo = new CustomDlTempMessage.MsgModuleInfo();
                 msgModuleInfo.setMsgModuleName(CustomConstants.MediaGallery.MODULE_NAME);
@@ -1001,6 +1005,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                     VideoGalleryPayEntity videoGalleryPayEntity = new VideoGalleryPayEntity();
                     videoGalleryPayEntity.setStateVideoPay(mediaGalleryEditEntity.isStatePay());
                     videoGalleryPayEntity.setSrcPath(mediaGalleryEditEntity.getSrcPath());
+                    videoGalleryPayEntity.setAndroidLocalSrcPath(mediaGalleryEditEntity.getAndroidLocalSrcPath());
                     msgBodyInfo.setCustomMsgBody(videoGalleryPayEntity);
                 }else{ // 图片
                     msgBodyInfo.setCustomMsgType(CustomConstants.MediaGallery.PHOTO_GALLERY);
@@ -1011,6 +1016,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                     photoGalleryPayEntity.setConfigId(mediaGalleryEditEntity.getConfigId());
                     photoGalleryPayEntity.setConfigIndex(mediaGalleryEditEntity.getConfigIndex());
                     photoGalleryPayEntity.setImgPath(mediaGalleryEditEntity.getSrcPath());
+                    photoGalleryPayEntity.setAndroidLocalSrcPath(mediaGalleryEditEntity.getAndroidLocalSrcPath());
                     msgBodyInfo.setCustomMsgBody(photoGalleryPayEntity);
                 }
                 msgModuleInfo.setContentBody(msgBodyInfo);
@@ -1056,10 +1062,9 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                         if(viewModel.priceConfigEntityField.getCurrent().getMediaPayPerConfig().getVideo()!=null){
                             mediaPriceTmpConfig = viewModel.priceConfigEntityField.getCurrent().getMediaPayPerConfig().getVideo();
                         }
-
                     }
                 }
-                toSnapshotPhotoIntent.launch(SnapshotPhotoActivity.createIntent(mActivity,snapshot,true,path,mediaPriceTmpConfig));
+                toSnapshotPhotoIntent.launch(MediaGalleryVideoSettingActivity.createIntent(mActivity,snapshot,path,mediaPriceTmpConfig));
             }
 
             @Override

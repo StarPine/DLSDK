@@ -31,6 +31,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.CustomDlTempMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Map;
@@ -157,6 +158,14 @@ public class MediaGalleryModuleView  {
         }
         ImageView imgContent = customImageView.findViewById(R.id.img_content);
         String imagePath = TUIChatUtils.getFullImageUrl(photoGalleryPayEntity.getImgPath());
+        //本地资源存在
+        if(!TextUtils.isEmpty(photoGalleryPayEntity.getAndroidLocalSrcPath())){
+            //判断本地资源是否存在
+            File imageFile = new File(photoGalleryPayEntity.getAndroidLocalSrcPath());
+            if(imageFile.exists()){
+                imagePath = photoGalleryPayEntity.getAndroidLocalSrcPath();
+            }
+        }
         Glide.with(TUIChatService.getAppContext())
                 .load(imagePath)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -215,6 +224,14 @@ public class MediaGalleryModuleView  {
         RequestOptions override = RequestOptions.bitmapTransform(roundedCorners).override(dp2px(getContext(),86), dp2px(getContext(),154));
         ImageView imgContent = customImageView.findViewById(R.id.img_content);
         String imagePath = TUIChatUtils.getFullImageUrl(videoGalleryPayEntity.getSrcPath());
+        //本地资源存在
+        if(!TextUtils.isEmpty(videoGalleryPayEntity.getAndroidLocalSrcPath())){
+            //判断本地资源是否存在
+            File videoFile = new File(videoGalleryPayEntity.getAndroidLocalSrcPath());
+            if(videoFile.exists()){
+                imagePath = videoGalleryPayEntity.getAndroidLocalSrcPath();
+            }
+        }
         Glide.with(TUIChatService.getAppContext())
                 .load(imagePath)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

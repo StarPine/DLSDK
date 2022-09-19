@@ -24,6 +24,17 @@ public class PhotoGalleryPayEntity implements Serializable {
     //价格配置下标，当类型为付费资源时，该值为必填
     private String configIndex;
 
+    //安卓端本地资源绝对地址
+    private String androidLocalSrcPath;
+
+    public String getAndroidLocalSrcPath() {
+        return androidLocalSrcPath;
+    }
+
+    public void setAndroidLocalSrcPath(String androidLocalSrcPath) {
+        this.androidLocalSrcPath = androidLocalSrcPath;
+    }
+
     public Integer getConfigId() {
         return configId;
     }
