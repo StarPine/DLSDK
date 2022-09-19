@@ -13,8 +13,8 @@ public interface RetrofitHeadersConfig {
     String DEFAULT_API_INIT_URL = "DEFAULT_API_INIT_URL:DEFAULT_API_INIT_URL";
     String DEFAULT_API_INIT_URL_KEY = "DEFAULT_API_INIT_URL";
     //任务中心模块
-    String TASK_CENTER_URL = "TASK_CENTER_URL:TASK_CENTER_URL";
-    String TASK_CENTER_URL_KEY = "TASK_CENTER_URL";
+    String PlayChat_API_URL = "PlayChat_API_URL:PlayChat_API_URL";
+    String PlayChat_API_URL_KEY = "PlayChat_API_URL";
 
     //推币机请求头配置
     interface CoinPUsherConfig{

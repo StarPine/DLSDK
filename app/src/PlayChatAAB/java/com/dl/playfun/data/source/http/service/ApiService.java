@@ -126,6 +126,7 @@ import retrofit2.http.Query;
 
 public interface ApiService {
 
+    /*=====================================推币机模块=====================================*/
     /**
     * @Desc TODO(查询用户当前余额)
     * @author 彭石林
@@ -133,9 +134,9 @@ public interface ApiService {
     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse<com.dl.playfun.entity.CoinPusherBalanceDataEntity>>
     * @Date 2022/9/6
     */
+    @Headers(RetrofitHeadersConfig.PlayChat_API_URL)
     @GET("api/iscan/balance")
     Observable<BaseDataResponse<CoinPusherBalanceDataEntity>> qryUserGameBalance();
-
     /**
     * @Desc TODO(推币机-历史记录)
     * @author 彭石林
@@ -143,6 +144,7 @@ public interface ApiService {
     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse<java.util.List<com.dl.playfun.entity.CoinPusherRoomHistoryEntity>>>
     * @Date 2022/8/26
     */
+    @Headers(RetrofitHeadersConfig.PlayChat_API_URL)
     @GET("api/iscan/history")
     Observable<BaseDataResponse<List<CoinPusherRoomHistoryEntity>>> qryCoinPusherRoomHistory(@Query("roomId")Integer roomId);
     /**
@@ -153,6 +155,7 @@ public interface ApiService {
     * @Date 2022/9/1
     */
     @POST("api/iscan/start")
+    @Headers(RetrofitHeadersConfig.PlayChat_API_URL)
     @FormUrlEncoded
     Observable<BaseDataResponse<CoinPusherDataInfoEntity>> playingCoinPusherStart(@Field("roomId")Integer roomId);
 
@@ -164,6 +167,7 @@ public interface ApiService {
     * @Date 2022/8/24
     */
     @POST("api/iscan/end")
+    @Headers(RetrofitHeadersConfig.PlayChat_API_URL)
     @FormUrlEncoded
     Observable<BaseResponse> playingCoinPusherClose(@Field("roomId")Integer roomId);
     /**
@@ -173,7 +177,7 @@ public interface ApiService {
     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
     * @Date 2022/8/24
     */
-    @Headers(RetrofitHeadersConfig.CoinPUsherConfig.API_TIMEOUT_HEADER)
+    @Headers({RetrofitHeadersConfig.CoinPUsherConfig.API_TIMEOUT_HEADER,RetrofitHeadersConfig.PlayChat_API_URL})
     @POST("api/iscan/act")
     @FormUrlEncoded
     Observable<BaseResponse> playingCoinPusherAct(@Field("roomId")Integer roomId);
@@ -184,7 +188,7 @@ public interface ApiService {
     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
     * @Date 2022/8/24
     */
-    @Headers(RetrofitHeadersConfig.CoinPUsherConfig.API_TIMEOUT_HEADER)
+    @Headers({RetrofitHeadersConfig.CoinPUsherConfig.API_TIMEOUT_HEADER,RetrofitHeadersConfig.PlayChat_API_URL})
     @FormUrlEncoded
     @POST("api/iscan/throwCoin")
     Observable<BaseDataResponse<CoinPusherBalanceDataEntity>> playingCoinPusherThrowCoin(@Field("roomId")Integer roomId);
@@ -199,6 +203,7 @@ public interface ApiService {
     * @Date 2022/8/24
     */
     @FormUrlEncoded
+    @Headers(RetrofitHeadersConfig.PlayChat_API_URL)
     @POST("api/iscan/goldCoin")
     Observable<BaseDataResponse<CoinPusherBalanceDataEntity>> convertCoinPusherGoldsCoin(@Field("id")Integer id, @Field("type") Integer type);
     /**
@@ -209,6 +214,7 @@ public interface ApiService {
     * @Date 2022/8/24
     */
     @POST("api/iscan/diamonds")
+    @Headers(RetrofitHeadersConfig.PlayChat_API_URL)
     @FormUrlEncoded
     Observable<BaseDataResponse<CoinPusherBalanceDataEntity>> convertCoinPusherDiamonds(@Field("id") Integer id);
     /**
@@ -218,6 +224,7 @@ public interface ApiService {
     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse<com.dl.playfun.entity.CoinPusherRoomTagInfoEntity>>
     * @Date 2022/8/24
     */
+    @Headers(RetrofitHeadersConfig.PlayChat_API_URL)
     @GET("api/iscan/tag")
     Observable<BaseDataResponse<CoinPusherRoomTagInfoEntity>> qryCoinPusherRoomTagList();
     /**
@@ -227,6 +234,7 @@ public interface ApiService {
     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse<com.dl.playfun.entity.CoinPusherRoomInfoEntity>>
     * @Date 2022/8/24
     */
+    @Headers(RetrofitHeadersConfig.PlayChat_API_URL)
     @GET("api/iscan")
     Observable<BaseDataResponse<CoinPusherRoomInfoEntity>> qryCoinPusherRoomList(@Query("tagId") Integer tagId);
     /**
@@ -236,8 +244,10 @@ public interface ApiService {
     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse<com.dl.playfun.entity.CoinPusherConverInfoEntity>>
     * @Date 2022/8/23
     */
+    @Headers(RetrofitHeadersConfig.PlayChat_API_URL)
     @GET("api/iscan/exchange")
     Observable<BaseDataResponse<CoinPusherConverInfoEntity>> qryCoinPusherConverList();
+    /*=====================================推币机模块=====================================*/
     /**
     * @Desc TODO(添加常联系人)
     * @author 彭石林
@@ -418,7 +428,7 @@ public interface ApiService {
      * @parame [id]
      * @Date 2021/9/23
      */
-    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
+    @Headers(RetrofitHeadersConfig.PlayChat_API_URL)
     @POST("api/v2/bonus/buy")
     @FormUrlEncoded
     Observable<BaseResponse> ExchangeIntegraBuy(@Field("id") Integer id);
@@ -429,7 +439,7 @@ public interface ApiService {
      * @parame []
      * @Date 2021/9/23
      */
-    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
+    @Headers(RetrofitHeadersConfig.PlayChat_API_URL)
     @GET("api/v2/bonus/list")
     Observable<BaseDataResponse<ExchangeIntegraOuterEntity>> getExchangeIntegraListData();
     /**
@@ -439,7 +449,7 @@ public interface ApiService {
      * @parame []
      * @Date 2021/9/4
      */
-    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
+    @Headers(RetrofitHeadersConfig.PlayChat_API_URL)
     @GET("api/v2/task/ad")
     Observable<BaseListDataResponse<TaskAdEntity>> taskAdList();
 
@@ -450,7 +460,7 @@ public interface ApiService {
      * @parame [permanent_city_ids, address_id]
      * @Date 2021/8/14
      */
-    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
+    @Headers(RetrofitHeadersConfig.PlayChat_API_URL)
     @FormUrlEncoded
     @POST("api/v2/exchange/supply")
     Observable<BaseResponse> subSupply(@Field("exchange_ids[]") List<Integer> exchange_ids, @Field("address_id") Integer address_id);
@@ -462,7 +472,7 @@ public interface ApiService {
      * @parame [id]
      * @Date 2021/8/16
      */
-    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
+    @Headers(RetrofitHeadersConfig.PlayChat_API_URL)
     @DELETE("/api/v2/address/{id}")
     Observable<BaseResponse> removeAddress(@Path("id") Integer id);
 
@@ -473,7 +483,7 @@ public interface ApiService {
      * @parame [id]
      * @Date 2021/8/13
      */
-    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
+    @Headers(RetrofitHeadersConfig.PlayChat_API_URL)
     @GET("api/v2/address/view")
     Observable<BaseDataResponse<AddressEntity>> getAddress(@Query("id") Integer id);
 
@@ -484,7 +494,7 @@ public interface ApiService {
      * @parame []
      * @Date 2021/8/13
      */
-    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
+    @Headers(RetrofitHeadersConfig.PlayChat_API_URL)
     @GET("api/v2/address")
     Observable<BaseListDataResponse<AddressEntity>> getAddressList(@Query("page") Integer page);
 
@@ -495,7 +505,7 @@ public interface ApiService {
      * @parame [contacts, city, are, address, phone, is_default]
      * @Date 2021/8/13
      */
-    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
+    @Headers(RetrofitHeadersConfig.PlayChat_API_URL)
     @POST("api/v2/address")
     Observable<BaseResponse> createAddress(
             @Query("contacts") String contacts,
@@ -512,7 +522,7 @@ public interface ApiService {
      * @parame [contacts, city, are, address, phone, is_default]
      * @Date 2021/8/13
      */
-    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
+    @Headers(RetrofitHeadersConfig.PlayChat_API_URL)
     @PUT("api/v2/address")
     Observable<BaseResponse> updateAddress(
             @Query("id") Integer id,
@@ -530,7 +540,7 @@ public interface ApiService {
      * @parame [page]
      * @Date 2021/8/10
      */
-    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
+    @Headers(RetrofitHeadersConfig.PlayChat_API_URL)
     @GET("api/v2/exchange")
     Observable<BaseListDataResponse<ExchangeEntity>> qryExchange(@Query("page") Integer page, @Query("status") Integer status);
 
@@ -541,7 +551,7 @@ public interface ApiService {
      * @parame [goodsId]
      * @Date 2021/8/10
      */
-    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
+    @Headers(RetrofitHeadersConfig.PlayChat_API_URL)
     @POST("api/v2/exchange")
     Observable<BaseResponse> exchange(@Query("goods_id") String goodsId);
 
@@ -552,7 +562,7 @@ public interface ApiService {
      * @parame [page]
      * @Date 2021/8/10
      */
-    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
+    @Headers(RetrofitHeadersConfig.PlayChat_API_URL)
     @GET("api/v2/bonusGoods")
     Observable<BaseListDataResponse<BonusGoodsEntity>> getBonusGoods(@Query("page") Integer page);
 
@@ -563,7 +573,7 @@ public interface ApiService {
      * @parame []
      * @Date 2021/8/9
      */
-    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
+    @Headers(RetrofitHeadersConfig.PlayChat_API_URL)
     @GET("api/v2/bonus")
     Observable<BaseListDataResponse<GoldDetailEntity>> getGoldList(@Query("page") Integer page);
 
@@ -574,7 +584,7 @@ public interface ApiService {
      * @parame []
      * @Date 2021/8/9
      */
-    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
+    @Headers(RetrofitHeadersConfig.PlayChat_API_URL)
     @POST("api/v2/bonus")
     Observable<BaseResponse> ToaskSubBonus(@Query("type") String key);
 
@@ -583,7 +593,7 @@ public interface ApiService {
      * @Desc TODO(领取任务)
      * @author liaosf
      */
-    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
+    @Headers(RetrofitHeadersConfig.PlayChat_API_URL)
     @POST("api/v4/task/receive")
     Observable<BaseDataResponse<TaskRewardReceiveEntity>> TaskRewardReceive(@Query("slug") String key);
 
@@ -594,7 +604,7 @@ public interface ApiService {
      * @parame []
      * @Date 2021/8/10
      */
-    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
+    @Headers(RetrofitHeadersConfig.PlayChat_API_URL)
     @GET("api/v4/task/list")
     Observable<BaseDataResponse<List<TaskConfigItemEntity>>> getTaskListConfig();
 
@@ -605,7 +615,7 @@ public interface ApiService {
      * @parame []
      * @Date 2021/8/7
      */
-    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
+    @Headers(RetrofitHeadersConfig.PlayChat_API_URL)
     @GET("api/v4/task")
     Observable<BaseDataResponse<TaskConfigEntity>> getTaskConfig();
 
@@ -616,7 +626,7 @@ public interface ApiService {
      * @parame []
      * @Date 2021/8/6
      */
-    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
+    @Headers(RetrofitHeadersConfig.PlayChat_API_URL)
     @POST("api/v4/signIn")
     Observable<BaseDataResponse<EjectSignInEntity>> reportEjectSignIn();
 
@@ -627,7 +637,7 @@ public interface ApiService {
      * @parame []
      * @Date 2021/8/6
      */
-    @Headers(RetrofitHeadersConfig.TASK_CENTER_URL)
+    @Headers(RetrofitHeadersConfig.PlayChat_API_URL)
     @GET("api/v2/signIn/eject")
     Observable<BaseDataResponse<EjectEntity>> getEjectconfig();
 

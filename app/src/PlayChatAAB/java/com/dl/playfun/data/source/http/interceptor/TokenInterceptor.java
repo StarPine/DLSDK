@@ -1,7 +1,5 @@
 package com.dl.playfun.data.source.http.interceptor;
 
-import android.util.Log;
-
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.data.RetrofitHeadersConfig;
@@ -52,10 +50,10 @@ public class TokenInterceptor implements Interceptor {
                     //登录接口api 不加token
                     upUrlFlag = 3;
                 }
-                if(!ObjectUtils.isEmpty(headers.get(RetrofitHeadersConfig.TASK_CENTER_URL_KEY))){
+                if(!ObjectUtils.isEmpty(headers.get(RetrofitHeadersConfig.PlayChat_API_URL_KEY))){
                     upUrlFlag = 2;
                 }
-                if(headers.get(RetrofitHeadersConfig.DEFAULT_API_INIT_URL_KEY)==null && headers.get(RetrofitHeadersConfig.NO_TOKEN_CHECK_KEY)==null && headers.get(RetrofitHeadersConfig.TASK_CENTER_URL_KEY)==null){
+                if(headers.get(RetrofitHeadersConfig.DEFAULT_API_INIT_URL_KEY)==null && headers.get(RetrofitHeadersConfig.NO_TOKEN_CHECK_KEY)==null && headers.get(RetrofitHeadersConfig.PlayChat_API_URL_KEY)==null){
                     upUrlFlag = 1;
                 }
                 if(upUrlFlag == 1 || upUrlFlag == 2){
