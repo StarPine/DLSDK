@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="message_num">messages</string>
     <string name="date_yesterday">Yesterday</string>
     <string name="date_tommorow">Tomorrow</string>
     <string name="date_year">YYYY</string>
