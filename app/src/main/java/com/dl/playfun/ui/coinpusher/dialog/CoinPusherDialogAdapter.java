@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.Window;
 import android.view.WindowManager;
 
+import androidx.annotation.StringRes;
 import androidx.databinding.DataBindingUtil;
 
 import com.dl.playfun.R;
@@ -14,6 +15,7 @@ import com.dl.playfun.databinding.DialogCoinpusherConverBinding;
 import com.dl.playfun.databinding.DialogCoinpusherConverDetailBinding;
 import com.dl.playfun.databinding.DialogCoinpusherHelpBinding;
 import com.dl.playfun.databinding.DialogCoinpusherHintBinding;
+import com.dl.playfun.databinding.DialogCoinpusherHintRetainBinding;
 
 import me.goldze.mvvmhabit.utils.StringUtils;
 
@@ -81,6 +83,46 @@ public class CoinPusherDialogAdapter {
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         window.setAttributes(lp);
         return dialog;
+    }
+
+    /**
+    * @Desc TODO(正在投币中退出挽留提示)
+    * @author 彭石林
+    * @parame [mContext]
+    * @return android.app.Dialog
+    * @Date 2022/9/6
+    */
+    public static Dialog getDialogCoinPusherRetainHint(Context mContext,@StringRes int ContentResId,CoinPusherDialogListener coinPusherDialogListener){
+        Dialog dialog = new Dialog(mContext);
+        dialog.setCancelable(true);
+        LayoutInflater inflater = LayoutInflater.from(mContext);
+        DialogCoinpusherHintRetainBinding binding = DataBindingUtil.inflate(inflater, R.layout.dialog_coinpusher_hint_retain, null, false);
+        binding.tvSub.setOnClickListener(v -> {
+            if(coinPusherDialogListener!=null){
+                coinPusherDialogListener.onConfirm(dialog);
+            }
+        });
+        binding.tvContent.setText(ContentResId);
+        binding.tvCancel.setOnClickListener(v -> dialog.dismiss());
+        //设置背景透明,去四个角
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.setContentView(binding.getRoot());
+        //设置宽度充满屏幕
+        Window window = dialog.getWindow();
+        window.setGravity(Gravity.CENTER); //可设置dialog的位置
+        window.getDecorView().setPadding(0, 0, 0, 0); //消除边距
+        WindowManager.LayoutParams lp = window.getAttributes();
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;   //设置宽度充满屏幕
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        window.setAttributes(lp);
+        dialog.show();
+        return dialog;
+    }
+
+    public interface CoinPusherDialogListener {
+        default void onConfirm(Dialog dialog) {
+
+        }
     }
 
 

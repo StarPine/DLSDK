@@ -372,7 +372,7 @@ public class ConversationPresenter {
                             iterator.remove();
                         }
                     }else{
-                        if (update.getConversationId().contains("customer")){
+                        if(update.getConversationId().contains("customer")){
                             iterator.remove();
                         }
                     }

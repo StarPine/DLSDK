@@ -5,6 +5,7 @@ import android.text.TextUtils;
 
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
+import com.dl.playfun.data.source.http.interceptor.ApiTimeOutInterceptor;
 import com.dl.playfun.data.source.http.interceptor.TokenInterceptor;
 import com.ihsanbal.logging.Level;
 import com.ihsanbal.logging.LoggingInterceptor;
@@ -90,6 +91,7 @@ public class RetrofitClient {
                 .addInterceptor(new BaseInterceptor(headers))
                 .addInterceptor(new CacheInterceptor(mContext))
                 .addInterceptor(new TokenInterceptor())
+                .addInterceptor(new ApiTimeOutInterceptor())
                 .addInterceptor(new LoggingInterceptor
                         .Builder()//构建者模式
                         .loggable(AppConfig.isDebug) //是否开启日志打印

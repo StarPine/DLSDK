@@ -14,6 +14,11 @@ public class CoinPusherConverInfoEntity {
     private String goldTips;
     //钻石提示词
     private String diamondsTips;
+    //兑换钻石弹窗明细提示头
+    private String exchangeTips;
+    //兑换钻石弹窗明细提示内容
+    private String exchangeSubtitle;
+
     //金币对话钻石列表
     private List<DiamondsInfo> diamondsList;
     //宝盒列表
@@ -58,6 +63,22 @@ public class CoinPusherConverInfoEntity {
 
     public void setGoldCoinList(List<GoldCoinInfo> goldCoinList) {
         this.goldCoinList = goldCoinList;
+    }
+
+    public String getExchangeTips() {
+        return exchangeTips;
+    }
+
+    public void setExchangeTips(String exchangeTips) {
+        this.exchangeTips = exchangeTips;
+    }
+
+    public String getExchangeSubtitle() {
+        return exchangeSubtitle;
+    }
+
+    public void setExchangeSubtitle(String exchangeSubtitle) {
+        this.exchangeSubtitle = exchangeSubtitle;
     }
 
     public class GoldCoinInfo {

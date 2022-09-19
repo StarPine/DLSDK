@@ -22,6 +22,7 @@ import com.dl.playfun.entity.MqBroadcastGiftEntity;
 import com.dl.playfun.entity.MqGiftDataEntity;
 import com.dl.playfun.entity.VersionEntity;
 import com.dl.playfun.event.BubbleTopShowEvent;
+import com.dl.playfun.event.CoinPusherGamePlayingEvent;
 import com.dl.playfun.event.DailyAccostEvent;
 import com.dl.playfun.event.MainTabEvent;
 import com.dl.playfun.event.MessageCountChangeEvent;
@@ -81,7 +82,6 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
     private Disposable mSubscription, taskMainTabEventReceive, mainTabEventReceive, rewardRedDotEventReceive, BubbleTopShowEventSubscription, ResatrtActSubscription2;
 
     private IMAdvancedMsgListener imAdvancedMsgListener;
-
     public MainViewModel(@NonNull Application application, AppRepository appRepository) {
         super(application, appRepository);
         if (appRepository.readUserData() != null && !ObjectUtils.isEmpty(appRepository.readUserData().getSex())) {
@@ -163,6 +163,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         RxSubscriptions.remove(rewardRedDotEventReceive);
         RxSubscriptions.remove(BubbleTopShowEventSubscription);
         RxSubscriptions.remove(ResatrtActSubscription2);
+        removeIMListener();
     }
 
     public void logout() {
@@ -346,6 +347,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                     case 1:
                         String text = String.valueOf(info.getExtra());
                         if (StringUtil.isJSON2(text)) {//做自定义通知判断
+
                             //普通自定义类型
                             if (text.contains("type")){
                                 Map<String, Object> map_data = new Gson().fromJson(text, Map.class);
@@ -397,11 +399,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                         if(ObjectUtils.isNotEmpty(contentBody)){
                             //模块类型--判断
                             if(contentBody.containsKey(CustomConstants.Message.MODULE_NAME_KEY)){
-                                //获取moudle-pushCoinGame 推币机
-                                if(CustomConvertUtils.ContainsMessageModuleKey(contentBody, CustomConstants.Message.MODULE_NAME_KEY,CustomConstants.CoinPusher.MODULE_NAME)){
-                                    V2TIMCustomManagerUtil.CoinPusherManager(contentBody);
-                                }
-
+                                V2TIMCustomManagerUtil.CoinPusherManager(contentBody);
                             }
                         }
                         Log.e("接收的自定义消息体：",new String(v2TIMCustomElem.getData()));
@@ -550,6 +548,8 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<VersionEntity> versionEntitySingl = new SingleLiveEvent<>();
         //每个新版本只会弹出一次
         public SingleLiveEvent<Void> versionAlertSl = new SingleLiveEvent<>();
+        //打开批量搭讪
+        public SingleLiveEvent<String> clickAccountDialog = new SingleLiveEvent<>();
         //未付费弹窗
         public SingleLiveEvent<String> notPaidDialog = new SingleLiveEvent<>();
         public SingleLiveEvent<MqBroadcastGiftEntity> giftBanner = new SingleLiveEvent<>();

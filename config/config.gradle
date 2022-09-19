@@ -58,6 +58,7 @@ ext {
             "AliyunVideoCommon": "default",
             "AlivcMedia"       : "default",
             "faceunity"       : "default",
+            "lib-toast"       : "default"
     ]
 
     dependenciesID = [

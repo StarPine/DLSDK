@@ -78,13 +78,13 @@ public class MainContainerActivity extends MySupportActivity {
     protected void onRestart() {
         super.onRestart();
         LocaleManager.setLocal(this);
-        isLaunchMain();
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         onCreateTime = System.currentTimeMillis() / 1000;
+        isLaunchMain();
         AutoSizeUtils.applyAdapt(this.getResources());
         setContentView(R.layout.activity_main_container);
         ImmersionBarUtils.setupStatusBar(this, true, false);
@@ -291,7 +291,6 @@ public class MainContainerActivity extends MySupportActivity {
     @Override
     public void onResume() {
         super.onResume();
-        isLaunchMain();
         //30秒没有投币提示
         if(AppConfig.CoinPusherGameNotPushed){
             AppConfig.CoinPusherGameNotPushed = false;

@@ -19,6 +19,7 @@ import com.dl.playfun.entity.CoinPusherRoomHistoryEntity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseDialog;
 import com.dl.playfun.ui.coinpusher.dialog.adapter.CoinPusherGameHistoryAdapter;
+import com.dl.playfun.viewadapter.CustomRefreshHeader;
 import com.dl.playfun.widget.recyclerview.LineManagers;
 
 import java.util.List;
@@ -47,7 +48,7 @@ public class CoinPusherGameHistoryDialog extends BaseDialog {
         this.mContext = activity;
         this.roomId = roomId;
         initView();
-        loadData(roomId);
+        startRefreshDataInfo();
     }
 
     private void initView() {
@@ -62,6 +63,10 @@ public class CoinPusherGameHistoryDialog extends BaseDialog {
         coinPusherCapsuleAdapter = new CoinPusherGameHistoryAdapter();
         binding.rcvList.setAdapter(coinPusherCapsuleAdapter);
         binding.imgClose.setOnClickListener(v ->dismiss());
+
+        binding.refreshLayout.setRefreshHeader(new CustomRefreshHeader(getContext()));
+        binding.refreshLayout.setEnableLoadMore(false);
+        binding.refreshLayout.setOnRefreshListener(v->startRefreshDataInfo());
     }
 
     public void show() {
@@ -96,7 +101,7 @@ public class CoinPusherGameHistoryDialog extends BaseDialog {
         super.dismissHud();
     }
 
-    private void loadData(Integer roomId){
+    public void loadData(Integer roomId){
         ConfigManager.getInstance().getAppRepository().qryCoinPusherRoomHistory(roomId)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
@@ -114,8 +119,18 @@ public class CoinPusherGameHistoryDialog extends BaseDialog {
                     @Override
                     public void onComplete() {
                         dismissHud();
+                        stopRefreshOrLoadMore();
                     }
                 });
+    }
+
+    private void startRefreshDataInfo(){
+        binding.refreshLayout.autoRefresh();
+        loadData(roomId);
+    }
+    private void stopRefreshOrLoadMore(){
+        //结束刷新
+        binding.refreshLayout.finishRefresh(true);
     }
 
 }

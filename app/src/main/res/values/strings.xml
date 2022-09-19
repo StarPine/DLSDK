@@ -1208,7 +1208,19 @@
     <string name="playfun_audio_chat_up">Voice greeting</string>
     <string name="playfun_text_chat_up_hint">Good conversations are more likely to get a reply</string>
     <string name="playfun_text_accost_number_of_fonts">%s/40</string>
+    <string name="playfun_coinpusher_hint_title">歡樂推幣機</string>
+    <string name="playfun_coinpusher_text_30">您30s內沒有投幣，已自動退出</string>
+    <string name="playfun_purchase_text">購買</string>
+    <string name="playfun_capsule_tab">寶盒</string>
+    <string name="playfun_coinpusher_text_1">熱玩</string>
+    <string name="playfun_coinpusher_text_2">空閒</string>
+    <string name="playfun_coinpusher_text_3">%s/次</string>
+    <string name="playfun_coinpusher_text_4"><![CDATA[已有金幣<font color=\'#FF1579\' size=\'24\'>%s</font>]]></string>
+    <string name="playfun_coinpusher_text_5">購買成功</string>
+    <string name="playfun_coinpusher_text_6">兌換成功</string>
+    <string name="playfun_coinpusher_text_7">兌換失敗</string>
 
+    <string name="playfun_coinpusher_text_downtime">將在%ss後退出遊戲，請投幣續時</string>
     <string name="playfun_text_accost_tips">Please enter</string>
     <string name="playfun_text_accost_tips2">The greeting word contain inappropriate content, please reset</string>
     <string name="playfun_text_accost_tips3">Greeting words set successfully</string>
@@ -1249,6 +1261,15 @@
     <string name="playfun_vip_ratain_title">Sure to give up VIP privileges?</string>
     <string name="playfun_vip_retain_give_up">Give up</string>
     <string name="playfun_vip_tips_privilege">Privileges</string>
+    <string name="playfun_coinpusher_hint_retain">正在進行投幣，此時退出遊戲，投幣將失\n效。確認退出遊戲嗎？</string>
+    <string name="playfun_coinpusher_text_playing">投幣</string>
+    <string name="playfun_coinpusher_coin_text_reward">獲得金幣%s枚</string>
+    <string name="playfun_coinpusher_hint_retain2">金幣獎勵正在發放，此時退出遊戲，獎勵\n將丟失。確認退出遊戲嗎？</string>
+    <string name="playfun_coinpusher_room_empty_text">當前沒有可用的機器</string>
+    <string name="playfun_coinpusher_error_text1">加載失敗，請重試 </string>
+    <string name="playfun_refresh">刷新</string>
+    <string name="playfun_coinpusher_game_state_text">ON/OFF</string>
+    <string name="playfun_coinpusher_game_text_2">%s金幣/次</string>
 
     <string name="playfun_perfect_tips">建議上傳本人真實照片</string>
     <string name="playfun_perfect_tips_age">年齡</string>

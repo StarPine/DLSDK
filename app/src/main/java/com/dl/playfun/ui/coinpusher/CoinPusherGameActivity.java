@@ -1,7 +1,9 @@
 package com.dl.playfun.ui.coinpusher;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -21,6 +23,8 @@ import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.databinding.ActivityCoinpusherGameBinding;
+import com.dl.playfun.entity.CoinPusherBalanceDataEntity;
+import com.dl.playfun.entity.CoinPusherDataInfoEntity;
 import com.dl.playfun.manager.LocaleManager;
 import com.dl.playfun.ui.base.BaseActivity;
 import com.dl.playfun.ui.coinpusher.dialog.CoinPusherConvertDialog;
@@ -28,9 +32,9 @@ import com.dl.playfun.ui.coinpusher.dialog.CoinPusherDialogAdapter;
 import com.dl.playfun.ui.coinpusher.dialog.CoinPusherGameHistoryDialog;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
-import com.dl.playfun.utils.TimeUtils;
-import com.dl.playfun.utils.ToastCenterUtils;
+import com.misterp.toast.SnackUtils;
 import com.tencent.liteav.trtccalling.ui.floatwindow.FloatWindowService;
+import com.tencent.qcloud.tuicore.custom.CustomConstants;
 import com.wangsu.libwswebrtc.WsWebRTCObserver;
 import com.wangsu.libwswebrtc.WsWebRTCParameters;
 import com.wangsu.libwswebrtc.WsWebRTCPortalReport;
@@ -49,17 +53,21 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
     public static CountDownTimer downTimer = null;
 
     private final String TAG = "CoinPusherGameActivity";
-
+    //玩法说明
     private Dialog dialogCoinPusherHelp = null;
+    //兑换列表
+    private CoinPusherConvertDialog coinPusherConvertDialog = null;
+    //历史记录
+    private CoinPusherGameHistoryDialog coinPusherGameHistoryDialog = null;
 
     //倒计时30秒
-    private final long downTimeMillisInFuture = 20 * 1000;
+    private  long downTimeMillisInFuture = 30;
     //倒计时剩余多少时间提示
-    private final long downTimeMillisHint = 10 * 1000;
+    private  long downTimeMillisHint = 10;
     //提示状态标识
     private boolean downTimeMillisHintFlag = false;
 
-    private Integer roomId;
+    private CoinPusherDataInfoEntity coinPusherDataInfoEntity;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -114,9 +122,13 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
     @Override
     public void initParam() {
         super.initParam();
-       Bundle bundle =  getIntent().getExtras();
-       if(bundle!=null){
-           roomId = bundle.getInt("roomId",-1);
+       Intent intent =  getIntent();
+       if(intent!=null){
+           coinPusherDataInfoEntity = (CoinPusherDataInfoEntity) intent.getSerializableExtra("CoinPusherInfo");
+           //倒计时多少时间结束游戏
+           downTimeMillisInFuture = coinPusherDataInfoEntity.getOutTime();
+           ////倒计时剩余多少时间提示
+           downTimeMillisHint = coinPusherDataInfoEntity.getCountdown();
        }
     }
 
@@ -130,9 +142,9 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
         WsWebRTCView webrtcView = binding.WebRtcSurfaceView;
         WsWebRTCParameters webrtcParam = new WsWebRTCParameters();
         //设置客户 id,由网宿分配给客户的 id 字符串
-        webrtcParam.setCustomerID("sessionid_test");
+        webrtcParam.setCustomerID(viewModel.coinPusherDataInfoEntity.getClientWsRtcId());
         //设置播放流
-        webrtcParam.setStreamUrl("http://webrtc.pull.azskj.cn/live/tbtest-39.sdp");//http://webrtc.pull.azskj.cn/live/tbtest-39.sdp
+        webrtcParam.setStreamUrl(viewModel.coinPusherDataInfoEntity.getRtcUrl());//http://webrtc.pull.azskj.cn/live/tbtest-39.sdp
         //设置是否使用 dtls 加密，默认加密，false：加密；true：不加密
         webrtcParam.disableDTLS(false);
         //设置视频是否使用硬解，默认硬解，false：软解；true：硬解
@@ -198,10 +210,13 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
         webrtcView.start();
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void initData() {
         super.initData();
-        viewModel.roomId = 5;
+        viewModel.coinPusherDataInfoEntity = coinPusherDataInfoEntity;
+        viewModel.totalMoney.set(coinPusherDataInfoEntity.getTotalGold());
+        binding.tvMoneyHint.setText(String.format(StringUtils.getString(R.string.playfun_coinpusher_game_text_2),coinPusherDataInfoEntity.getRoomInfo().getMoney()));
         binding.imgHelp.setOnClickListener(v->{
             if(dialogCoinPusherHelp==null){
                 dialogCoinPusherHelp = CoinPusherDialogAdapter.getDialogCoinPusherHelp(this,null,null);
@@ -209,12 +224,36 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
             dialogCoinPusherHelp.show();
         });
         binding.imgConvert.setOnClickListener(v ->{
-            CoinPusherConvertDialog coinPusherConvertDialog = new CoinPusherConvertDialog(this);
-            coinPusherConvertDialog.setItemConvertListener(money -> viewModel.totalMoney.set(viewModel.totalMoney.get() + money));
+            //购买兑换金币
+            if(coinPusherConvertDialog == null){
+                coinPusherConvertDialog = new CoinPusherConvertDialog(this);
+                coinPusherConvertDialog.setItemConvertListener(new CoinPusherConvertDialog.ItemConvertListener() {
+                    @Override
+                    public void convertSuccess(CoinPusherBalanceDataEntity coinPusherBalanceDataEntity) {
+                        viewModel.totalMoney.set(coinPusherBalanceDataEntity.getTotalGold());
+                        //取消倒计时
+                        cancelDownTimer();
+                        //重新开始倒计时
+                        downTime();
+                    }
+
+                    @Override
+                    public void buyError() {
+
+                    }
+                });
+            }else{
+                coinPusherConvertDialog.loadData();
+            }
             coinPusherConvertDialog.show();
+
         });
         binding.imgHistroy.setOnClickListener(v ->{
-            CoinPusherGameHistoryDialog coinPusherGameHistoryDialog = new CoinPusherGameHistoryDialog(this,viewModel.roomId);
+            if(coinPusherGameHistoryDialog == null){
+                coinPusherGameHistoryDialog = new CoinPusherGameHistoryDialog(this,viewModel.coinPusherDataInfoEntity.getRoomInfo().getRoomId());
+            }else{
+                coinPusherGameHistoryDialog.loadData(viewModel.coinPusherDataInfoEntity.getRoomInfo().getRoomId());
+            }
             coinPusherGameHistoryDialog.show();
         });
         binding.btnPlaying.setOnTouchListener((v, event) -> {
@@ -227,7 +266,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
             }
             return false;
         });
-        //gameInit();
+        gameInit();
         //开始倒计时
         downTime();
     }
@@ -235,18 +274,76 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
     @Override
     public void initViewObservable() {
         super.initViewObservable();
+        //取消倒计时
         viewModel.gameUI.resetDownTimeEvent.observe(this, unused -> {
             //取消倒计时
             cancelDownTimer();
             //重新开始倒计时
             downTime();
         });
+        //开始显示loading
+        viewModel.gameUI.loadingShow.observe(this,unused->{
+            binding.flLayoutLoading.post(()->{
+                if(binding.flLayoutLoading.getVisibility() != View.VISIBLE){
+                    binding.flLayoutLoading.setVisibility(View.VISIBLE);
+                    binding.btnPlaying.setEnabled(false);
+                    binding.btnPlaying.setTextColor(ColorUtils.getColor(R.color.yellow_548));
+                }
+
+            });
+        });
+        //取消显示loading
+        viewModel.gameUI.loadingHide.observe(this,unused->{
+            binding.flLayoutLoading.post(()->{
+                if(binding.flLayoutLoading.getVisibility() != View.GONE){
+                    binding.flLayoutLoading.setVisibility(View.GONE);
+                    binding.btnPlaying.setEnabled(true);
+                    binding.btnPlaying.setTextColor(ColorUtils.getColor(R.color.black));
+                }
+
+            });
+        });
+        //toast弹窗居中
+        viewModel.gameUI.toastCenter.observe(this,value->{
+            SnackUtils.showCenterShort(binding.getRoot(),value);
+        });
+        //是否禁用投币按钮
+        viewModel.gameUI.playingBtnEnable.observe(this, flag ->{
+            if(flag){
+                binding.btnPlaying.setEnabled(false);
+                binding.btnPlaying.setTextColor(ColorUtils.getColor(R.color.yellow_548));
+            }else{
+                binding.btnPlaying.setEnabled(true);
+                binding.btnPlaying.setTextColor(ColorUtils.getColor(R.color.black));
+            }
+        });
+        //取消倒计时
+        viewModel.gameUI.cancelDownTimeEvent.observe(this, new Observer<Void>() {
+            @Override
+            public void onChanged(Void unused) {
+                //取消倒计时
+                cancelDownTimer();
+            }
+        });
     }
 
     @Override
     public  void onDestroy() {
-        viewModel.playingCoinPusherClose(viewModel.roomId);
+        AutoSizeUtils.closeAdapt(getResources());
+        viewModel.playingCoinPusherClose(viewModel.coinPusherDataInfoEntity.getRoomInfo().getRoomId());
         try {
+            if(dialogCoinPusherHelp != null && dialogCoinPusherHelp.isShowing() ){
+                dialogCoinPusherHelp.dismiss();
+                dialogCoinPusherHelp = null;
+            }
+            if(coinPusherConvertDialog != null && coinPusherConvertDialog.isShowing() ){
+                coinPusherConvertDialog.dismiss();
+                coinPusherConvertDialog = null;
+            }
+            if(coinPusherGameHistoryDialog != null && coinPusherGameHistoryDialog.isShowing() ){
+                coinPusherGameHistoryDialog.dismiss();
+                coinPusherGameHistoryDialog = null;
+            }
             //暂停播放。释放资源
             binding.WebRtcSurfaceView.stop();
             binding.WebRtcSurfaceView.uninitilize();
@@ -256,15 +353,52 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
         super.onDestroy();
     }
 
+    /**
+    * @Desc TODO(拦截返回按键)
+    * @author 彭石林
+    * @parame []
+    * @return void
+    * @Date 2022/9/6
+    */
+    @Override
+    public void onBackPressed() {
+        if(viewModel!=null){
+            if(viewModel.gamePlayingState==null){ //状态为空
+                super.onBackPressed();
+            }else if(viewModel.gamePlayingState.equals(viewModel.loadingPlayer)){//投币开始
+                CoinPusherDialogAdapter.getDialogCoinPusherRetainHint(this, R.string.playfun_coinpusher_hint_retain, new CoinPusherDialogAdapter.CoinPusherDialogListener() {
+                    @Override
+                    public void onConfirm(Dialog dialog) {
+                        dialog.dismiss();
+                        //结束当前页面
+                        finish();
+                    }
+                }).show();
+
+            }else if(viewModel.gamePlayingState.equals(CustomConstants.CoinPusher.START_WINNING)){ //落币开始
+                CoinPusherDialogAdapter.getDialogCoinPusherRetainHint(this, R.string.playfun_coinpusher_hint_retain2, new CoinPusherDialogAdapter.CoinPusherDialogListener() {
+                    @Override
+                    public void onConfirm(Dialog dialog) {
+                        dialog.dismiss();
+                        //结束当前页面
+                        finish();
+                    }
+                }).show();
+            }
+        }else{
+            super.onBackPressed();
+        }
+    }
+
     //倒计时开始
     private void downTime() {
-        downTimer = new CountDownTimer(downTimeMillisInFuture, 1000) {
+        downTimer = new CountDownTimer(downTimeMillisInFuture * 1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 if(!downTimeMillisHintFlag){
-                    if(millisUntilFinished <= downTimeMillisHint){
+                    if(millisUntilFinished / 1000 <= downTimeMillisHint){
                         downTimeMillisHintFlag = true;
-                        ToastCenterUtils.showShort(String.format(StringUtils.getString(R.string.playfun_coinpusher_text_downtime),millisUntilFinished/1000));
+                        SnackUtils.showCenterShort(binding.getRoot(),String.format(StringUtils.getString(R.string.playfun_coinpusher_text_downtime),millisUntilFinished/1000));
                     }
                 }
 

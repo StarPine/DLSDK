@@ -49,12 +49,18 @@
                     android:textColor="#ff9897b3"
                     android:textSize="14sp"
                     />
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rcv_list"
+                <com.scwang.smart.refresh.layout.SmartRefreshLayout
+                    android:id="@+id/refresh_layout"
                     android:layout_marginTop="19dp"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    />
+                    android:layout_height="match_parent">
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcv_list"
+                        android:layout_marginTop="19dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        />
+                </com.scwang.smart.refresh.layout.SmartRefreshLayout>
             </LinearLayout>
         </FrameLayout>
 

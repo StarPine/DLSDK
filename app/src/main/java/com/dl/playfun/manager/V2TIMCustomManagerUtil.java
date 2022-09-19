@@ -18,12 +18,12 @@ import me.goldze.mvvmhabit.bus.RxBus;
 public class V2TIMCustomManagerUtil {
 
     /**
-     * @Desc TODO(推币机模块处理)
-     * @author 彭石林
-     * @parame [contentBody]
-     * @return void
-     * @Date 2022/9/7
-     */
+    * @Desc TODO(推币机模块处理)
+    * @author 彭石林
+    * @parame [contentBody]
+    * @return void
+    * @Date 2022/9/7
+    */
     public static void CoinPusherManager(Map<String,Object> contentBody){
         //获取moudle-pushCoinGame 推币机
         if(CustomConvertUtils.ContainsMessageModuleKey(contentBody, CustomConstants.Message.MODULE_NAME_KEY,CustomConstants.CoinPusher.MODULE_NAME)){

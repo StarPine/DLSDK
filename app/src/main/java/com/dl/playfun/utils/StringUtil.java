@@ -208,6 +208,19 @@ public class StringUtil {
         return str;
     }
 
+    /**
+    * @Desc TODO(判断数据是否为空。是否是json)
+    * @author 彭石林
+    * @parame [str]
+    * @return boolean
+    * @Date 2022/9/2
+    */
+    public static boolean isJSONEmpty(String str){
+        if(isEmpty(str)){
+            return false;
+        }
+        return isJSON2(str);
+    }
 
     /**
      * 判断数据是否为json类型

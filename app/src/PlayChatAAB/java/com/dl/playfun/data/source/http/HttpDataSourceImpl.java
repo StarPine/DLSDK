@@ -8,9 +8,7 @@ import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.data.source.http.service.ApiService;
 import com.dl.playfun.entity.AccostEntity;
 import com.dl.playfun.entity.AdBannerEntity;
-import com.dl.playfun.entity.AdItemEntity;
 import com.dl.playfun.entity.AdUserBannerEntity;
-import com.dl.playfun.entity.AdUserItemEntity;
 import com.dl.playfun.entity.AddressEntity;
 import com.dl.playfun.entity.AlbumPhotoEntity;
 import com.dl.playfun.entity.AllConfigEntity;
@@ -35,6 +33,8 @@ import com.dl.playfun.entity.ChooseAreaEntity;
 import com.dl.playfun.entity.CityAllEntity;
 import com.dl.playfun.entity.CoinExchangeBoxInfo;
 import com.dl.playfun.entity.CoinPusherConverInfoEntity;
+import com.dl.playfun.entity.CoinPusherBalanceDataEntity;
+import com.dl.playfun.entity.CoinPusherDataInfoEntity;
 import com.dl.playfun.entity.CoinPusherRoomHistoryEntity;
 import com.dl.playfun.entity.CoinPusherRoomInfoEntity;
 import com.dl.playfun.entity.CoinPusherRoomTagInfoEntity;
@@ -101,7 +101,6 @@ import com.dl.playfun.entity.UserProfitPageEntity;
 import com.dl.playfun.entity.UserRemarkEntity;
 import com.dl.playfun.entity.VersionEntity;
 import com.dl.playfun.entity.VipInfoEntity;
-import com.dl.playfun.entity.VipPackageItemEntity;
 import com.dl.playfun.utils.ApiUitl;
 
 import java.util.HashMap;
@@ -110,9 +109,6 @@ import java.util.Map;
 
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
-import retrofit2.http.Body;
-import retrofit2.http.Field;
-import retrofit2.http.Query;
 
 /**
  * @author goldze
@@ -1296,6 +1292,11 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
+    public Observable<BaseDataResponse<CoinPusherBalanceDataEntity>> qryUserGameBalance() {
+        return apiService.qryUserGameBalance();
+    }
+
+    @Override
     public Observable<BaseResponse> mediaGalleryPay(String msgKey, Integer toUserId) {
         return apiService.mediaGalleryPay(msgKey, toUserId);
     }
@@ -1321,6 +1322,11 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
+    public Observable<BaseDataResponse<CoinPusherDataInfoEntity>> playingCoinPusherStart(Integer roomId) {
+        return apiService.playingCoinPusherStart(roomId);
+    }
+
+    @Override
     public Observable<BaseResponse> playingCoinPusherClose(Integer roomId) {
         return apiService.playingCoinPusherClose(roomId);
     }
@@ -1331,17 +1337,17 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
-    public Observable<BaseResponse> playingCoinPusherThrowCoin(Integer roomId) {
+    public Observable<BaseDataResponse<CoinPusherBalanceDataEntity>> playingCoinPusherThrowCoin(Integer roomId) {
         return apiService.playingCoinPusherThrowCoin(roomId);
     }
 
     @Override
-    public Observable<BaseResponse> convertCoinPusherGoldsCoin(Integer id,Integer type) {
+    public Observable<BaseDataResponse<CoinPusherBalanceDataEntity>> convertCoinPusherGoldsCoin(Integer id, Integer type) {
         return apiService.convertCoinPusherGoldsCoin(id, type);
     }
 
     @Override
-    public Observable<BaseResponse> convertCoinPusherDiamonds(Integer id) {
+    public Observable<BaseDataResponse<CoinPusherBalanceDataEntity>> convertCoinPusherDiamonds(Integer id) {
         return apiService.convertCoinPusherDiamonds(id);
     }
 

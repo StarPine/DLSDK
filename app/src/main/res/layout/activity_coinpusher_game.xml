@@ -28,6 +28,16 @@
             android:scaleType="fitXY"
             android:src="@drawable/img_coinpusher_help"
             />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="50dp"
+            android:layout_marginStart="15dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/img_close_black_radius"
+            binding:onClickCommand="@{gameViewModel.gameCloseView}"
+            />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_below="@+id/img_help"
@@ -97,7 +107,7 @@
                     android:background="@drawable/ic_task_add" />
             </FrameLayout>
         </RelativeLayout>
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_money_hint"
             android:layout_alignParentBottom="true"
             android:layout_marginStart="31dp"
@@ -105,7 +115,7 @@
             android:includeFontPadding="false"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1000金幣/次"
+            android:text="@string/playfun_coinpusher_game_text_2"
             android:textColor="#ffffd84a"
             android:textSize="13sp"
             />
@@ -131,13 +141,12 @@
                 android:background="@drawable/btn_coinpusher_play"
                 android:gravity="center"
                 android:layout_gravity="center"
-                android:text="投幣"
+                android:text="@string/playfun_coinpusher_text_playing"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 binding:onClickCommand="@{gameViewModel.playCoinClick}" />
         </FrameLayout>
-
-        <androidx.appcompat.widget.AppCompatTextView
+        <FrameLayout
             binding:onClickCommand="@{gameViewModel.playPusherActClick}"
             android:layout_width="112dp"
             android:layout_height="40dp"
@@ -145,9 +154,36 @@
             android:layout_alignParentBottom="true"
             android:layout_marginEnd="15dp"
             android:layout_marginBottom="41dp"
-            android:background="@drawable/img_coinpusher_wiper"
-            android:gravity="center"
-            android:paddingStart="20dp"
-            tools:text="start" />
+            >
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/img_coinpusher_wiper"
+                />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:includeFontPadding="false"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center|end"
+                android:layout_marginEnd="17dp"
+                android:textSize="11sp"
+                android:textColor="@color/black"
+                android:text="@string/playfun_coinpusher_game_state_text" />
+        </FrameLayout>
+        <FrameLayout
+            android:elevation="99dp"
+            android:clickable="true"
+            android:visibility="gone"
+            android:id="@+id/fl_layout_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ProgressBar
+                style="@android:style/Widget.ProgressBar"
+                android:layout_gravity="center"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:indeterminateDrawable="@drawable/anim_custom_progress_draw" />
+        </FrameLayout>
     </RelativeLayout>
 </layout>
