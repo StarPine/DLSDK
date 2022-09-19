@@ -179,6 +179,7 @@ android {
                 resValue "string","app_name","PlayChat-beta"
                 //Facebook APPID
                 resValue "string","facebook_app_id","5173832349346696"
+                resValue "string","facebook_app_token","c5725141441c9d4a5bf4abc6a502b3e3"
                 //AppsFlorid-AppId
                 resValue "string","app_flyer","J4YbG6jNVHaFWuAeixmCuC"
                 //AppsFlorid-AppInviteOneLink

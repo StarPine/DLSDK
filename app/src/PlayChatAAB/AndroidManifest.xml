@@ -60,7 +60,8 @@
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
+            android:value="@string/fb_login_protocol_scheme" />
+        <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_app_token"/>
 
         <activity
             android:name="com.facebook.FacebookActivity"
