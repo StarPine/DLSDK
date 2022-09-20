@@ -53,5 +53,5 @@ dependencies {
 
     api project(':tuicore')
     implementation project(':mvvmhabit')
-    implementation project(':customDrawable')
+    implementation project(':lib-src')
 }

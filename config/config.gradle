@@ -52,7 +52,7 @@ ext {
             "tuicore"          : "default",
             "mvvmhabit"        : "default",
             "jsBridge"         : "default",
-            "customDrawable"   : "default",
+            "lib-src"   : "default",
             "AliyunCrop"  : "default",
             "AliyunSVideoBase" : "default",
             "AliyunVideoCommon": "default",

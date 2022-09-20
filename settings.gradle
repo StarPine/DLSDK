@@ -1,7 +1,7 @@
 rootProject.name='PlayFun_Google'
 include ':app', ':mvvmhabit'
 include ':jsBridge'
-include ':customDrawable'
+include ':lib-src'
 include ':AliyunVideoCommon'
 include ':AliyunSVideoBase'
 include ':AlivcMedia'
