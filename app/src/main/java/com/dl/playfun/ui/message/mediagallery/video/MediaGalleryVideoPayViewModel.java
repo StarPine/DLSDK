@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableBoolean;
+import androidx.databinding.ObservableField;
 
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
@@ -26,6 +27,10 @@ public class MediaGalleryVideoPayViewModel extends BaseViewModel<AppRepository> 
 
     //是否需要评价
     public ObservableBoolean evaluationState = new ObservableBoolean(false);
+    //本地资源
+    public ObservableBoolean isLocalSrc = new ObservableBoolean(false);
+    //播放地址
+    public ObservableField<String> srcPath = new ObservableField<>();
 
     //评价状态：评价，0未评价，1差评，2好评
     public SingleLiveEvent<Integer> evaluationLikeEvent = new SingleLiveEvent<>();

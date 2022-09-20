@@ -76,10 +76,10 @@
 
             <RelativeLayout
                 android:id="@+id/rl_container"
-                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <LinearLayout
+                    tools:visibility="gone"
                     android:visibility="@{photoViewModel.snapshotLockState ? View.VISIBLE : View.GONE}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -118,7 +118,7 @@
                         binding:drawable_gradient_startColor="@{@color/playfun_shape_radius_start_color}" />
                 </LinearLayout>
                 <LinearLayout
-                    android:visibility="@{photoViewModel.evaluationState ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{photoViewModel.isReadLook ? View.VISIBLE : View.GONE}"
                     android:gravity="center"
                     android:layout_centerInParent="true"
                     android:orientation="vertical"

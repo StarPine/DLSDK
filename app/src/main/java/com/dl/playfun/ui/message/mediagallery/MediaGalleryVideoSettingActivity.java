@@ -120,7 +120,7 @@ public class MediaGalleryVideoSettingActivity extends BaseActivity<ActivitySnaps
             checkItemEntity = mediaPriceTmpConfig.getContent().get(0);
         }
 
-        setVideoUri(binding.videoPlayer, srcLocalPath);
+        //setVideoUri(binding.videoPlayer, srcLocalPath);
     }
 
     @Override
@@ -129,11 +129,16 @@ public class MediaGalleryVideoSettingActivity extends BaseActivity<ActivitySnaps
         viewModel.settingEvent.observe(this, unused -> {
             if(snapshotPhotoDialog==null){
                 snapshotPhotoDialog = new SnapshotPhotoDialog(this,mediaPriceTmpConfig,localCheckItemEntity);
-                snapshotPhotoDialog.setSnapshotListener((itemEntity, configId) -> {
+                snapshotPhotoDialog.setSnapshot(false);
+                snapshotPhotoDialog.setSnapshotListener((itemEntity, configId,isSnapshot) -> {
                     checkItemEntity = itemEntity;
                     this.configId = configId;
+                    localCheckItemEntity = checkItemEntity;
                     ConfigManager.getInstance().getAppRepository().putKeyValue(localPriceConfigSettingKey,GsonUtils.toJson(checkItemEntity));
                 });
+            }else{
+                snapshotPhotoDialog.setLocalCheckItemEntity(localCheckItemEntity);
+                snapshotPhotoDialog.init();
             }
             snapshotPhotoDialog.show();
         });

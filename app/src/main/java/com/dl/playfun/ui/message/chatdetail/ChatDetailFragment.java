@@ -1052,6 +1052,9 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                     videoGalleryPayEntity.setStateVideoPay(mediaGalleryEditEntity.isStatePay());
                     videoGalleryPayEntity.setSrcPath(mediaGalleryEditEntity.getSrcPath());
                     videoGalleryPayEntity.setAndroidLocalSrcPath(mediaGalleryEditEntity.getAndroidLocalSrcPath());
+                    videoGalleryPayEntity.setUnlockPrice(mediaGalleryEditEntity.getUnlockPrice());
+                    videoGalleryPayEntity.setConfigId(mediaGalleryEditEntity.getConfigId());
+                    videoGalleryPayEntity.setConfigIndex(mediaGalleryEditEntity.getConfigIndex());
                     msgBodyInfo.setCustomMsgBody(videoGalleryPayEntity);
                 }else{ // 图片
                     msgBodyInfo.setCustomMsgType(CustomConstants.MediaGallery.PHOTO_GALLERY);

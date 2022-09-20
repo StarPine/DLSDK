@@ -22,7 +22,7 @@ public class PhotoGalleryPayEntity implements Serializable {
     //价格配置id，当类型为付费资源时，该值为必填
     private Integer configId;
     //价格配置下标，当类型为付费资源时，该值为必填
-    private String configIndex;
+    private String configIndexString;
 
     //安卓端本地资源绝对地址
     private String androidLocalSrcPath;
@@ -44,11 +44,11 @@ public class PhotoGalleryPayEntity implements Serializable {
     }
 
     public String getConfigIndex() {
-        return configIndex;
+        return configIndexString;
     }
 
     public void setConfigIndex(String configIndex) {
-        this.configIndex = configIndex;
+        this.configIndexString = configIndex;
     }
 
     public boolean isStateSnapshot() {

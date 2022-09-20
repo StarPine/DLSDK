@@ -37,6 +37,17 @@ public class MediaGalleryEditEntity implements Serializable {
     //安卓端本地资源绝对地址
     private String androidLocalSrcPath;
 
+    //是否已读查看
+    private boolean isReadLook;
+
+    public boolean isReadLook() {
+        return isReadLook;
+    }
+
+    public void setReadLook(boolean readLook) {
+        isReadLook = readLook;
+    }
+
     public String getAndroidLocalSrcPath() {
         return androidLocalSrcPath;
     }

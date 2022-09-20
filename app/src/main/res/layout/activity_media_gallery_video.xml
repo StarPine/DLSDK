@@ -38,13 +38,24 @@
                 binding:onClickCommand="@{videoViewModel.onBackViewClick}"
                 />
 
-            <com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
+<!--            <com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer-->
+<!--                android:id="@+id/video_player"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_above="@+id/fl_layout_bottom"-->
+<!--                android:layout_below="@+id/img_back"-->
+<!--                android:layout_marginTop="30dp" />-->
+
+            <com.dl.playfun.widget.videoview.SampleCoverVideo
                 android:id="@+id/video_player"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_above="@+id/fl_layout_bottom"
                 android:layout_below="@+id/img_back"
-                android:layout_marginTop="30dp" />
+                binding:playStatus="@{1}"
+                binding:position="@{1}"
+                binding:isLocalFile="@{videoViewModel.isLocalSrc}"
+                binding:videoUri="@{videoViewModel.srcPath}" />
 
             <LinearLayout
                 tools:visibility="invisible"
