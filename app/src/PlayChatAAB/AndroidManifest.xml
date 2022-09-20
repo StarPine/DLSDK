@@ -59,6 +59,10 @@
         tools:targetApi="n">
 
         <meta-data
+            android:name="com.dl.playfun.widget.glide.GlideCache"
+            android:value="AppGlideModule" />
+
+        <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/fb_login_protocol_scheme" />
         <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_app_token"/>

@@ -13,6 +13,7 @@ import android.view.View;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.bumptech.glide.Glide;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppViewModelFactory;
@@ -22,6 +23,9 @@ import com.dl.playfun.ui.base.BaseActivity;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.StringUtil;
+import com.dl.playfun.widget.glide.GlideCache;
+import com.dl.playfun.widget.glide.GlideProgressListener;
+import com.dl.playfun.widget.glide.GlideProgressManager;
 import com.tencent.qcloud.tuicore.custom.CustomDrawableUtils;
 import com.tencent.qcloud.tuicore.custom.entity.MediaGalleryEditEntity;
 
@@ -87,12 +91,22 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
         super.onDestroy();
         AutoSizeUtils.closeAdapt(getResources());
         stopTimer();
+        GlideProgressManager.getInstance().removeGlideProgressListener(glideProgressListener);
     }
+
+    GlideProgressListener glideProgressListener = (url, progress, isFinish) -> {
+        if(srcPath!=null && url!=null && srcPath.equals(url)){
+            binding.getRoot().post(()->showProgressHud(null,progress));
+        }
+
+    };
 
     @Override
     public void initData() {
         super.initData();
         viewModel.mediaGalleryEditEntity = mediaGalleryEditEntity;
+
+        GlideProgressManager.getInstance().setGlideProgressListener(glideProgressListener);
         if(mediaGalleryEditEntity!=null){
             srcPath = StringUtil.getFullImageUrl(mediaGalleryEditEntity.getSrcPath());
             //本地资源存在

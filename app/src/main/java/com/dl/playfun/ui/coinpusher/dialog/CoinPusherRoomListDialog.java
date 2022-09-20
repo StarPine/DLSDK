@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
+import com.blankj.utilcode.util.ToastUtils;
 import com.dl.playfun.R;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
@@ -35,6 +36,7 @@ import com.dl.playfun.ui.base.BaseDialog;
 import com.dl.playfun.ui.coinpusher.dialog.adapter.CoinPusherRoomListAdapter;
 import com.dl.playfun.ui.coinpusher.dialog.adapter.CoinPusherRoomTagAdapter;
 import com.dl.playfun.viewadapter.CustomRefreshHeader;
+import com.tencent.qcloud.tuicore.Status;
 
 import java.util.List;
 
@@ -109,6 +111,11 @@ public class CoinPusherRoomListDialog extends BaseDialog {
         coinPusherRoomListAdapter.setOnItemClickListener(position -> {
             CoinPusherRoomDeviceInfo deviceInfo = coinPusherRoomListAdapter.getItemEntity(position);
             if(ObjectUtils.isNotEmpty(deviceInfo)){
+                //拨打语音小窗口不允许打电话
+                if (Status.mIsShowFloatWindow){
+                    ToastUtils.showShort(R.string.audio_in_call);
+                    return;
+                }
                 playingCoinPusherStart(deviceInfo.getRoomId());
             }
         });
@@ -282,7 +289,7 @@ public class CoinPusherRoomListDialog extends BaseDialog {
     }
 
     private void tvTotalMoneyRefresh(){
-        binding.tvTotalMoney.post(() -> binding.tvTotalMoney.setText(totalMoney > 99999 ? totalMoney+"+" : totalMoney+""));
+        binding.tvTotalMoney.post(() -> binding.tvTotalMoney.setText(totalMoney > 99999 ? "99999+" : totalMoney+""));
 
     }
 
@@ -297,7 +304,7 @@ public class CoinPusherRoomListDialog extends BaseDialog {
     private void emptyListState(int state) {
         if(state == 0){//正常
             binding.flLayoutEmpty.setVisibility(View.GONE);
-            if(coinPusherRoomTagAdapter.getItemCount() ==0){
+            if(coinPusherRoomTagAdapter.getItemCount() > 0){
                 binding.rcvTitle.setVisibility(View.VISIBLE);
             }
             if(coinPusherRoomListAdapter.getItemCount() > 0){

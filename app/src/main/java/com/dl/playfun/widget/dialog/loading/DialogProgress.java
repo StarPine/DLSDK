@@ -6,10 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 
 import com.dl.playfun.R;
 import com.dl.playfun.ui.base.BaseDialog;
 import com.dl.playfun.widget.progress.MPCircleProgressBar;
+import com.tencent.qcloud.tuicore.custom.CustomDrawableUtils;
 
 /**
  * Author: 彭石林
@@ -30,10 +32,24 @@ public class DialogProgress extends BaseDialog {
     void initView(Context context) {
         contentView = LayoutInflater.from(context).inflate(R.layout.dialog_mp_loading, null);
         mpCircleProgressBar = contentView.findViewById(R.id.progress);
+        FrameLayout flLayout = contentView.findViewById(R.id.fl_layout);
+        if(flLayout!=null){
+            CustomDrawableUtils.generateDrawable(flLayout, getColorFromResource(R.color.black),
+                    19,null,null,null,null,
+                    null,null,null,null);
+        }
+
         setCanceledOnTouchOutside(false);
         setCancelable(false);
     }
 
+    Integer getColorFromResource(Integer resourceId) {
+        if (resourceId==null) {
+            return null;
+        } else {
+            return getContext().getResources().getColor(resourceId);
+        }
+    }
     public void show() {
         //设置背景透明,去四个角
         getWindow().setBackgroundDrawableResource(android.R.color.transparent);

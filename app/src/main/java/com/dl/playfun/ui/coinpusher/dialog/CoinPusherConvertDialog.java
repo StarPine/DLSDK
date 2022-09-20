@@ -238,7 +238,7 @@ public class CoinPusherConvertDialog  extends BaseDialog {
     }
 
     private void tvTotalMoneyRefresh(){
-        String val = totalMoney > 99999 ? totalMoney+"+" : totalMoney+"";
+        String val = totalMoney > 99999 ? "99999+" : totalMoney+"";
         String format = String.format(StringUtils.getString(R.string.playfun_coinpusher_text_4),val);
         binding.tvConverDetail.setText(Html.fromHtml(format));
     }

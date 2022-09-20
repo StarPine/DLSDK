@@ -119,6 +119,10 @@ public class RetrofitClient {
 
     }
 
+    public OkHttpClient getOkHttpClient(){
+        return okHttpClient;
+    }
+
     public static RetrofitClient getInstance() {
         return SingletonHolder.INSTANCE;
     }

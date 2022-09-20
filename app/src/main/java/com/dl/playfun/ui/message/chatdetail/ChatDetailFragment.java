@@ -1274,7 +1274,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     @Override
     public void onClickCallPlayUser() {//点击调用拨打通话
         if (Status.mIsShowFloatWindow){
-            me.goldze.mvvmhabit.utils.ToastUtils.showShort(com.tencent.qcloud.tuikit.tuichat.R.string.audio_in_call);
+            me.goldze.mvvmhabit.utils.ToastUtils.showShort(R.string.audio_in_call);
             return;
         }
         if (viewModel.tagEntitys.get() != null) {

@@ -1086,7 +1086,7 @@
     <string name="playfun_fragment_message_main_setting">推送設定</string>
     <string name="playfun_my_program_no_show">暫時沒有活動記錄</string>
     <string name="playfun_my_trends_no_issuance">暫時沒有動態記錄</string>
-    <string name="playfun_phono_setting_reading_burn">快照（查看2秒後焚毀）</string>
+    <string name="playfun_phono_setting_reading_burn">快照（查看後焚毀）</string>
     <string name="playfun_chat_redpackage_detail_name">%s的紅包</string>
     <string name="playfun_profit_message_title">收入通知</string>
     <string name="playfun_program_detail_title">活動詳情</string>

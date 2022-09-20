@@ -143,7 +143,7 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
     }
 
     public String tvTotalMoneyRefresh(int moneyNum){
-        return moneyNum > 99999 ? moneyNum+"+" : moneyNum+"";
+        return moneyNum > 99999 ? "99999+" : moneyNum+"";
     }
 
     public static class UIChangeObservable{
