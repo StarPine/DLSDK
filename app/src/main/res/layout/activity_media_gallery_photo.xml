@@ -39,6 +39,7 @@
                 android:layout_below="@+id/status_bar_view"
                 binding:drawable_color="@{@color/navigation_checked}"
                 binding:drawable_cornersRadius="@{50}"
+                android:layout_marginTop="12dp"
                 android:layout_alignParentTop="true"
                 android:layout_centerInParent="true"
                 android:elevation="11dp"

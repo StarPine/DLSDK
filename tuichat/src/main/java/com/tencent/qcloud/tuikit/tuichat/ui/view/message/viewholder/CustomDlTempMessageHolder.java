@@ -1,48 +1,25 @@
 package com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder;
 
-import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
-
 import android.content.Context;
-import android.graphics.Color;
-import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.Html;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.UnderlineSpan;
-import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.request.RequestOptions;
-import com.google.gson.Gson;
 import com.tencent.custom.IMGsonUtils;
-import com.tencent.custom.MvBlurTransformation;
-import com.tencent.custom.PhotoGalleryPayEntity;
-import com.tencent.custom.VideoGalleryPayEntity;
 import com.tencent.custom.tmp.CustomDlTempMessage;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.custom.CustomConstants;
-import com.tencent.qcloud.tuicore.custom.CustomDrawableUtils;
-import com.tencent.qcloud.tuicore.custom.entity.MediaGalleryEditEntity;
-import com.tencent.qcloud.tuicore.custom.entity.CallingRejectEntity;
-import com.tencent.qcloud.tuicore.custom.entity.SystemTipsEntity;
 import com.tencent.qcloud.tuikit.tuichat.R;
-import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
-import com.tencent.qcloud.tuikit.tuichat.bean.CustomImageMessage;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.dltmpapply.CallingMessageModuleView;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.dltmpapply.MediaGalleryModuleView;
-import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
-
-import java.util.Map;
+import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.dltmpapply.SystemTipsMessageModuleView;
 
 /**
  * Author: 彭石林
@@ -70,14 +47,14 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
         }
         CustomDlTempMessage customDlTempMessage = IMGsonUtils.fromJson(new String(msg.getCustomElemData()), CustomDlTempMessage.class);
         if (customDlTempMessage == null) {
-            defaultLayout(itemView.getContext(), flTmpLayout, msg.isSelf());
+            defaultLayout(flTmpLayout, msg.isSelf());
             return;
         }
         //判断模块
         if (customDlTempMessage.getContentBody() != null && !TextUtils.isEmpty(customDlTempMessage.getContentBody().getMsgModuleName())) {
             String moduleName = customDlTempMessage.getContentBody().getMsgModuleName();
             if (TextUtils.isEmpty(moduleName)) {
-                defaultLayout(itemView.getContext(), flTmpLayout, msg.isSelf());
+                defaultLayout(flTmpLayout, msg.isSelf());
                 return;
             }
             CustomDlTempMessage.MsgBodyInfo msgModuleInfo = customDlTempMessage.getContentBody().getContentBody();
@@ -85,57 +62,26 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
                 if (msgArea != null) {
                     msgArea.setBackground(null);
                 }
-                new MediaGalleryModuleView(this).layoutVariableViews(msg, getContext(), flTmpLayout, msgModuleInfo);
+                new MediaGalleryModuleView(this).layoutVariableViews(msg, flTmpLayout, msgModuleInfo);
             }else if (CustomConstants.CallingMessage.MODULE_NAME.equals(moduleName)) {
                 //禁止通话模块
-                if (CustomConstants.CallingMessage.TYPE_CALLING_FAILED.equals(msgModuleInfo.getCustomMsgType())) {
-                    CallingRejectEntity callingRejectEntity = IMGsonUtils.fromJson(IMGsonUtils.toJson(msgModuleInfo.getCustomMsgBody()), CallingRejectEntity.class);
-                    loadCallingView(msg, callingRejectEntity);
-                }
+                new CallingMessageModuleView(this).layoutVariableViews(msg, flTmpLayout,msgModuleInfo);
             } else if (CustomConstants.SystemTipsMessage.MODULE_NAME.equals(moduleName)) {
                 //系统提示模块
-                if (CustomConstants.SystemTipsMessage.TYPE_DISABLE_CALLS.equals(msgModuleInfo.getCustomMsgType())
-                        || CustomConstants.SystemTipsMessage.TYPE_JUMP_WEB.equals(msgModuleInfo.getCustomMsgType())) {
-                    loadSystemTipsView(position, msg, msgModuleInfo);
-                }
+                new SystemTipsMessageModuleView(this).layoutVariableViews(msg,position,flTmpLayout,msgModuleInfo);
             } else {
                 //默认展示解析不出的模板提示
-                defaultLayout(itemView.getContext(), flTmpLayout, msg.isSelf());
+                defaultLayout(flTmpLayout, msg.isSelf());
             }
         }else{
-            defaultLayout(itemView.getContext(),flTmpLayout,msg.isSelf());
+            defaultLayout(flTmpLayout,msg.isSelf());
         }
 
     }
 
-    private void loadSystemTipsView(int position, TUIMessageBean msg, CustomDlTempMessage.MsgBodyInfo msgModuleInfo) {
-        hideWithAvatarView();
-        SystemTipsEntity systemTipsEntity = new Gson().fromJson(new Gson().toJson(msgModuleInfo.getCustomMsgBody()), SystemTipsEntity.class);
-        View systemTipsView = View.inflate(itemView.getContext(), R.layout.message_adapter_content_server_tip, null);
-        TextView msgBody = systemTipsView.findViewById(R.id.custom_tip_text);
-        msgBody.setText(Html.fromHtml(systemTipsEntity.getContent()));
-        systemTipsView.setOnClickListener(v -> {
-            if (onItemClickListener != null)
-                onItemClickListener.systemTipsOnClick(position, msg, systemTipsEntity);
-        });
-
-        customJsonMsgContentFrame.addView(systemTipsView);
-    }
-
-    private void loadCallingView(TUIMessageBean msg, CallingRejectEntity callingRejectEntity) {
-        View callingView = View.inflate(itemView.getContext(), R.layout.message_adapter_content_json_text, null);
-        TextView msgBody = callingView.findViewById(R.id.msg_body_tv);
-        ImageView leftView = callingView.findViewById(R.id.left_icon);
-        ImageView rightView = callingView.findViewById(R.id.right_icon);
-        setBackColor(msg, msgBody);
-        setCallingMsgIconStyle(msg, leftView, rightView, callingRejectEntity.getCallingType());
-        msgBody.setText(callingRejectEntity.getContent());
-        flTmpLayout.addView(callingView);
-    }
-
     //默认消息模板
-    public void defaultLayout(Context context, FrameLayout rootView, boolean isSelf){
-        View defaultView = View.inflate(context, R.layout.tmp_message_default_layout, null);
+    public void defaultLayout(FrameLayout rootView, boolean isSelf){
+        View defaultView = View.inflate(getContext(), R.layout.tmp_message_default_layout, null);
         FrameLayout frameLayout = defaultView.findViewById(R.id.container);
         TextView textContent = defaultView.findViewById(R.id.tv_content);
         if(frameLayout!=null){
@@ -166,20 +112,6 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
     }
 
 
-    private void setCallingMsgIconStyle(TUIMessageBean msg, ImageView leftView, ImageView rightView, int callingType) {
-        leftView.setVisibility(View.GONE);
-        rightView.setVisibility(View.GONE);
-        if (msg.isSelf()) {
-            rightView.setBackgroundResource(callingType == 1 ?
-                    R.drawable.custom_audio_right_img_2 : R.drawable.custom_video_right_img_1);
-            rightView.setVisibility(View.VISIBLE);
-        } else {
-            leftView.setBackgroundResource(callingType == 1 ?
-                    R.drawable.custom_audio_left_img_2 : R.drawable.custom_video_left_img_1);
-            leftView.setVisibility(View.VISIBLE);
-        }
-    }
-
 
     /**
      * 设置内容字体和颜色
@@ -199,22 +131,6 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
                 msgBodyText.setTextColor(properties.getLeftChatContentFontColor());
             }
         }
-    }
-
-    //测试自定义图片渲染
-    public void imgLoad(Context context, FrameLayout rootView, CustomImageMessage customImageMessageBean) {
-        View customImageView = View.inflate(context, R.layout.custom_image_message_layout, null);
-        ImageView customImage = customImageView.findViewById(R.id.iv_custom_image);
-        String imagePath = TUIChatUtils.getFullImageUrl(customImageMessageBean.getImgPath());
-        Glide.with(TUIChatService.getAppContext())
-                .asBitmap()
-                .load(imagePath)
-                .error(R.drawable.chat_custom_image_error)
-                .centerCrop()
-                .placeholder(R.drawable.chat_custom_image_load)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(customImage);
-        rootView.addView(customImageView);
     }
 
     public Context getContext(){

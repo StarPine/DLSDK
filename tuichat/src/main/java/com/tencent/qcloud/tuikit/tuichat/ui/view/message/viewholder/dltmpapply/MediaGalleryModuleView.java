@@ -41,37 +41,36 @@ import java.util.Map;
  * Time: 2022/9/17 10:55
  * Description: IM发送图片、视频模块
  */
-public class MediaGalleryModuleView  {
+public class MediaGalleryModuleView extends BaseMessageModuleView {
 
     private final String TAG = "MediaGalleryContent";
-    private final CustomDlTempMessageHolder customDlTempMessageHolder;
 
     public MediaGalleryModuleView(CustomDlTempMessageHolder customDlTempMessageHolder) {
-        this.customDlTempMessageHolder = customDlTempMessageHolder;
+        super(customDlTempMessageHolder);
     }
 
-    public void layoutVariableViews(TUIMessageBean msg, Context mContext, FrameLayout rootView, CustomDlTempMessage.MsgBodyInfo msgModuleInfo){
+    public void layoutVariableViews(TUIMessageBean msg, FrameLayout rootView, CustomDlTempMessage.MsgBodyInfo msgModuleInfo){
         switch (msgModuleInfo.getCustomMsgType()){
             case CustomConstants.MediaGallery.PHOTO_GALLERY:
                 PhotoGalleryPayEntity customImageMessageBean = IMGsonUtils.fromJson(IMGsonUtils.toJson(msgModuleInfo.getCustomMsgBody()),PhotoGalleryPayEntity.class);
-                LoadMediaGalleryPhoto(msg, mContext, rootView, customImageMessageBean);
+                LoadMediaGalleryPhoto(msg, rootView, customImageMessageBean);
                 break;
             case CustomConstants.MediaGallery.VIDEO_GALLERY:
                 VideoGalleryPayEntity customVideoMessageBean = IMGsonUtils.fromJson(IMGsonUtils.toJson(msgModuleInfo.getCustomMsgBody()),VideoGalleryPayEntity.class);
-                LoadMediaGalleryVideo(msg, mContext, rootView, customVideoMessageBean);
+                LoadMediaGalleryVideo(msg, rootView, customVideoMessageBean);
                 break;
             default:
                 //默认展示解析不出的模板提示
-                customDlTempMessageHolder.defaultLayout(getContext(),rootView,msg.isSelf());
+                customDlTempMessageHolder.defaultLayout(rootView,msg.isSelf());
                 break;
         }
     }
 
     //测试自定义图片渲染
-    public void LoadMediaGalleryPhoto(TUIMessageBean msg, Context context, FrameLayout rootView, PhotoGalleryPayEntity photoGalleryPayEntity){
+    public void LoadMediaGalleryPhoto(TUIMessageBean msg, FrameLayout rootView, PhotoGalleryPayEntity photoGalleryPayEntity){
         //自定义头部消息体转换
         CloudCustomDataMediaGalleryEntity cloudCustomDataMediaGalleryEntity = getCloudCustomDataConvert(msg.getV2TIMMessage().getCloudCustomData());
-        View customImageView = View.inflate(context, R.layout.tmp_message_photo_gallery_layout, null);
+        View customImageView = View.inflate(getContext(), R.layout.tmp_message_photo_gallery_layout, null);
         FrameLayout flContainer = customImageView.findViewById(R.id.fl_container);
         customImageView.setBackgroundColor(Color.TRANSPARENT);
         customImageView.setLayoutParams(new FrameLayout.LayoutParams(-2,-2));
@@ -193,10 +192,10 @@ public class MediaGalleryModuleView  {
     }
 
     //测试自定义图片渲染
-    public void LoadMediaGalleryVideo(TUIMessageBean msg, Context context, FrameLayout rootView, VideoGalleryPayEntity videoGalleryPayEntity){
+    public void LoadMediaGalleryVideo(TUIMessageBean msg, FrameLayout rootView, VideoGalleryPayEntity videoGalleryPayEntity){
         //自定义头部消息体转换
         CloudCustomDataMediaGalleryEntity cloudCustomDataMediaGalleryEntity = getCloudCustomDataConvert(msg.getV2TIMMessage().getCloudCustomData());
-        View customImageView = View.inflate(context, R.layout.tmp_message_video_gallery_layout, null);
+        View customImageView = View.inflate(getContext(), R.layout.tmp_message_video_gallery_layout, null);
         customImageView.setBackgroundColor(Color.TRANSPARENT);
         customImageView.setLayoutParams(new FrameLayout.LayoutParams(-2,-2));
         //底部布局
@@ -279,13 +278,5 @@ public class MediaGalleryModuleView  {
             cloudCustomDataMediaGalleryEntity = IMGsonUtils.fromJson(customDlTempMessage,CloudCustomDataMediaGalleryEntity.class);
         }
         return cloudCustomDataMediaGalleryEntity;
-    }
-
-    public Context getContext(){
-        return customDlTempMessageHolder.getContext();
-    }
-    public int dp2px(Context context, float dpValue) {
-        final float densityScale = context.getResources().getDisplayMetrics().density;
-        return (int) (dpValue * densityScale + 0.5f);
     }
 }

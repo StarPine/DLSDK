@@ -66,7 +66,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
         messageDetailsTimeTv = itemView.findViewById(R.id.msg_detail_time_tv);
     }
 
-    protected void hideWithAvatarView() {
+    public void hideWithAvatarView() {
         leftUserIcon.setVisibility(View.GONE);
         rightUserIcon.setVisibility(View.GONE);
         msgContentLinear.setVisibility(View.GONE);
