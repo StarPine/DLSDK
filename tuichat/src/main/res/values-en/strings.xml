@@ -143,10 +143,10 @@
     <string name="custom_send_error_message">Send Failed</string>
     <string name="custom_send_error_message_txt1">Diamond balance is insufficient, get diamonds to continue chatting</string>
     <string name="custom_send_error_message_txt2">Get now>></string>
-    <string name="custom_message_txt1">Crystals +%s. Crystals doubles with real person verification. Go to verification>></string>
+    <string name="custom_message_txt1">Crystals +%s. Crystals double with real person verification. Go to verification>></string>
     <string name="custom_message_txt1_key">Go to Verification>></string>
     <string name="custom_message_txt2">C+%s</string>
-    <string name="custom_message_txt2_test2">C+%s, Crystals doubles after real person authentication Go to authentication>></string>
+    <string name="custom_message_txt2_test2">C+%s, Crystals double after real person authentication Go to authentication>></string>
     <string name="custom_message_txt3">His balance is insufficient. Please remind him of recharging.</string>
     <string name="custom_message_txt4">followed</string>
     <string name="custom_message_txt5">You</string>

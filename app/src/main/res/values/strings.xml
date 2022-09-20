@@ -68,7 +68,7 @@
     <string name="playfun_member_subscribe_title">VIP Center</string>
     <string name="playfun_photo_album_title_button_text_male">Add Photos</string>
     <string name="playfun_photo_album_title_button_female">Add Photos or Videos</string>
-    <string name="playfun_mine_set_redpackage_photo">Paid Photo</string>
+    <string name="playfun_mine_set_redpackage_photo">Diamond Photo</string>
     <string name="playfun_mine_burn">Snapshots</string>
     <string name="playfun_mine_burn_recover">Recover</string>
     <string name="playfun_set_red_package_photo_tip">Only one photo can be selected as a paid photo. Others must pay %s diamonds to view it.</string>
@@ -133,7 +133,7 @@
     <string name="playfun_fragment_certification_female_chat_man">Exchange right</string>
     <string name="playfun_fragment_certification_female_sing_man">Sign up for men\'s events</string>
     <string name="playfun_fragment_certification_female_read_phone">Paid Photos</string>
-    <string name="playfun_fragment_certification_female_charge_phone">Paid Album</string>
+    <string name="playfun_fragment_certification_female_charge_phone">Diamond Album</string>
     <string name="playfun_start_certification">Verify</string>
     <string name="playfun_fragment_certification_male_one">Real person verification through facial recognition</string>
     <string name="playfun_fragment_certification_male_two">Facial recognition is done automatically by the system  in just a few seconds. After successful verification, you can sign up ladies\' events for free.</string>
@@ -200,7 +200,7 @@
     <string name="playfun_my_trends_no_issuance">Post an event</string>
     <string name="playfun_phono_setting_reading_burn">Snapshots (expires in 2s)</string>
     <string name="playfun_chat_redpackage_detail_name">%s \'s red packet</string>
-    <string name="playfun_profit_message_title">Crystals</string>
+    <string name="playfun_profit_message_title">Award</string>
     <string name="playfun_program_detail_title">Event details</string>
     <string name="playfun_program_detail_title_other">Event details</string>
     <string name="playfun_program_detail_detele">The event has been deleted</string>
@@ -551,7 +551,7 @@
     <string name="playfun_unlock_he_photo_album_goddess_free">Unlock (%s), a Queen does not need to pay!</string>
     <string name="playfun_dialog_goddess_comment_title">Only the Queen can comment</string>
     <string name="playfun_dialog_goddess_comment_button_text">Get the Queen Verification to comment for free</string>
-    <string name="playfun_dialog_goddess_comment_cert_button_text">Real Person Verification</string>
+    <string name="playfun_dialog_goddess_comment_cert_button_text">Verify Real Person</string>
     <string name="playfun_warn_female_not_sign_up_program">Unable to sign up for ladies\' events.</string>
     <string name="playfun_warn_male_not_sign_up_program">Unable to  sign up for men\'s events.</string>
     <string name="playfun_warn_paypal_account_not_null">Enter PayPal account</string>
