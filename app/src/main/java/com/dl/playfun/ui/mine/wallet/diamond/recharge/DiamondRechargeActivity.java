@@ -151,7 +151,12 @@ public class DiamondRechargeActivity extends BaseActivity<ActivityDiamondRecharg
      */
     private void showRewardDialog() {
         GoodsEntity goodsEntity = viewModel.selectedGoodsEntity.get();
-        int totalReward = goodsEntity.getGiveCoin() + goodsEntity.getActualValue() + goodsEntity.getGoldPrice();
+        int totalReward ;
+        if (goodsEntity.getType() == 1){
+            totalReward = goodsEntity.getGiveCoin() + goodsEntity.getActualValue() + goodsEntity.getGoldPrice();
+        }else {
+            totalReward = goodsEntity.getGiveCoin();
+        }
         TraceDialog.getInstance(this)
                 .setTitle(getString(R.string.playfun_recharge_success))
                 .setConfirmOnlick(dialog -> {

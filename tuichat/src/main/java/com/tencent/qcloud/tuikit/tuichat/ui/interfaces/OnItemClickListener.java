@@ -7,6 +7,7 @@ import com.tencent.custom.CustomIMTextEntity;
 import com.tencent.custom.EvaluateItemEntity;
 import com.tencent.custom.PhotoAlbumItemEntity;
 import com.tencent.qcloud.tuicore.custom.entity.MediaGalleryEditEntity;
+import com.tencent.qcloud.tuicore.custom.entity.SystemTipsEntity;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.QuoteMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 
@@ -54,6 +55,8 @@ public abstract class OnItemClickListener {
     public abstract void clickToUserMain();
 
     public abstract void onClickCustomText();
+
+    public void systemTipsOnClick(int position,TUIMessageBean messageInfo, SystemTipsEntity systemTipsEntity) {};
 
     //DL Add lsf -- 图片点击
     public void onImageClick(TUIMessageBean messageInfo){}

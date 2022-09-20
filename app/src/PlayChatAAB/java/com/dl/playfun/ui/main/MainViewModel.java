@@ -9,6 +9,7 @@ import androidx.databinding.ObservableField;
 
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
+import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.data.AppRepository;
@@ -17,6 +18,7 @@ import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.BubbleEntity;
+import com.dl.playfun.entity.CallingInviteInfo;
 import com.dl.playfun.entity.DayRewardInfoEntity;
 import com.dl.playfun.entity.MqBroadcastGiftEntity;
 import com.dl.playfun.entity.MqGiftDataEntity;
@@ -29,6 +31,7 @@ import com.dl.playfun.event.MessageCountChangeEvent;
 import com.dl.playfun.event.MessageGiftNewEvent;
 import com.dl.playfun.event.RewardRedDotEvent;
 import com.dl.playfun.event.TaskMainTabEvent;
+import com.dl.playfun.kl.Utils;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocationManager;
 import com.dl.playfun.manager.V2TIMCustomManagerUtil;
@@ -43,8 +46,11 @@ import com.tencent.imsdk.v2.V2TIMCustomElem;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.dl.playfun.entity.RestartActivityEntity;
+import com.tencent.qcloud.tuicore.Status;
 import com.tencent.qcloud.tuicore.custom.CustomConstants;
 import com.tencent.qcloud.tuicore.custom.CustomConvertUtils;
+import com.tencent.qcloud.tuicore.custom.entity.VideoEvaluationEntity;
+import com.tencent.qcloud.tuicore.custom.entity.VideoPushEntity;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 
@@ -59,6 +65,7 @@ import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.RxUtils;
+import me.goldze.mvvmhabit.utils.ToastUtils;
 
 /**
  * @author wulei
@@ -79,9 +86,10 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
     public String dayRewardKey = "";
 
     UIChangeObservable uc = new UIChangeObservable();
-    private Disposable mSubscription, taskMainTabEventReceive, mainTabEventReceive, rewardRedDotEventReceive, BubbleTopShowEventSubscription, ResatrtActSubscription2;
+    private Disposable mSubscription, taskMainTabEventReceive, mainTabEventReceive, rewardRedDotEventReceive, BubbleTopShowEventSubscription, ResatrtActSubscription2, videoEvaluationSubscription;
 
     private IMAdvancedMsgListener imAdvancedMsgListener;
+
     public MainViewModel(@NonNull Application application, AppRepository appRepository) {
         super(application, appRepository);
         if (appRepository.readUserData() != null && !ObjectUtils.isEmpty(appRepository.readUserData().getSex())) {
@@ -152,6 +160,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         RxSubscriptions.add(rewardRedDotEventReceive);
         RxSubscriptions.add(BubbleTopShowEventSubscription);
         RxSubscriptions.add(ResatrtActSubscription2);
+        RxSubscriptions.add(videoEvaluationSubscription);
     }
 
     @Override
@@ -163,6 +172,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         RxSubscriptions.remove(rewardRedDotEventReceive);
         RxSubscriptions.remove(BubbleTopShowEventSubscription);
         RxSubscriptions.remove(ResatrtActSubscription2);
+        RxSubscriptions.remove(videoEvaluationSubscription);
         removeIMListener();
     }
 
@@ -347,7 +357,6 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                     case 1:
                         String text = String.valueOf(info.getExtra());
                         if (StringUtil.isJSON2(text)) {//做自定义通知判断
-
                             //普通自定义类型
                             if (text.contains("type")){
                                 Map<String, Object> map_data = new Gson().fromJson(text, Map.class);
@@ -400,7 +409,31 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                             //模块类型--判断
                             if(contentBody.containsKey(CustomConstants.Message.MODULE_NAME_KEY)){
                                 V2TIMCustomManagerUtil.CoinPusherManager(contentBody);
+                                //获取moudle-pushCoinGame 推币机
+                                if(CustomConvertUtils.ContainsMessageModuleKey(contentBody, CustomConstants.Message.MODULE_NAME_KEY,CustomConstants.CoinPusher.MODULE_NAME)){
+                                    V2TIMCustomManagerUtil.CoinPusherManager(contentBody);
+                                }
                             }
+                        }
+
+
+                        byte[] data = v2TIMCustomElem.getData();
+                        if (data != null){
+                            String customData = new String(data);
+                            if (customData.contains(CustomConstants.PushMessage.VIDEO_CALL_PUSH)){
+                                VideoPushEntity videoPushEntity = V2TIMCustomManagerUtil.videoPushManager(customData);
+                                if (videoPushEntity != null && AppConfig.isMainPage){
+                                    uc.videoPush.postValue(videoPushEntity);
+                                }
+                            }
+
+                            if (customData.contains(CustomConstants.PushMessage.VIDEO_CALL_FEEDBACK)){
+                                VideoEvaluationEntity evaluationEntity = V2TIMCustomManagerUtil.videoEvaluationManager(customData);
+                                if (evaluationEntity != null){
+                                    uc.videoEvaluation.postValue(evaluationEntity);
+                                }
+                            }
+
                         }
                         Log.e("接收的自定义消息体：",new String(v2TIMCustomElem.getData()));
                         break;
@@ -452,6 +485,62 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                     }
                 });
 
+    }
+
+    //视频评价上报
+    public void videoFeedback(long videoCallPushLogId, int feedback) {
+        model.videoFeedback(videoCallPushLogId,feedback)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .subscribe(new BaseObserver<BaseDataResponse>() {
+
+                    @Override
+                    public void onSuccess(BaseDataResponse baseDataResponse) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+    }
+
+    //拨打语音、视频
+    public void getCallingInvitedInfo(String myImUserId, String otherImUserId,int videoCallPushLogId) {
+        if (Status.mIsShowFloatWindow){
+            ToastUtils.showShort(R.string.audio_in_call);
+            return;
+        }
+        model.callingInviteInfo(2, myImUserId, otherImUserId, 2,videoCallPushLogId)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseDataResponse<CallingInviteInfo>>() {
+                    @Override
+                    public void onSuccess(BaseDataResponse<CallingInviteInfo> callingInviteInfoBaseDataResponse) {
+                        if (callingInviteInfoBaseDataResponse.getCode() == 2) {//忙线中
+                            ToastUtils.showShort(R.string.custom_message_other_busy);
+                            return;
+                        }
+                        CallingInviteInfo callingInviteInfo = callingInviteInfoBaseDataResponse.getData();
+                        if (callingInviteInfo != null) {
+                            Utils.tryStartCallSomeone(2, otherImUserId, callingInviteInfo.getRoomId(), new Gson().toJson(callingInviteInfo));
+                        }
+                    }
+
+                    @Override
+                    public void onError(RequestException e) {
+                        super.onError(e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        dismissHUD();
+                    }
+                });
     }
 
     /**
@@ -510,6 +599,9 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                             return;
                         }
                         List<DayRewardInfoEntity.NowBean> now = dayRewardInfoEntity.getNow();
+                        if (now == null) {
+                            return;
+                        }
                         for (DayRewardInfoEntity.NowBean nowBean : now) {
                             String type = nowBean.getType();
                             if (type.equals("accost_card")){
@@ -548,13 +640,14 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<VersionEntity> versionEntitySingl = new SingleLiveEvent<>();
         //每个新版本只会弹出一次
         public SingleLiveEvent<Void> versionAlertSl = new SingleLiveEvent<>();
-        //打开批量搭讪
-        public SingleLiveEvent<String> clickAccountDialog = new SingleLiveEvent<>();
         //未付费弹窗
         public SingleLiveEvent<String> notPaidDialog = new SingleLiveEvent<>();
         public SingleLiveEvent<MqBroadcastGiftEntity> giftBanner = new SingleLiveEvent<>();
         //任务中心跳转
         public SingleLiveEvent<TaskMainTabEvent> taskCenterclickTab = new SingleLiveEvent<>();
+        public SingleLiveEvent<VideoEvaluationEntity> videoEvaluation = new SingleLiveEvent<>();
+        public SingleLiveEvent<VideoPushEntity> videoPush = new SingleLiveEvent<>();
+
     }
 
 }

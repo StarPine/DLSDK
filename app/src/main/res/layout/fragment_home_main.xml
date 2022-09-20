@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="210dp"
             android:scaleType="fitXY"
-            android:src="@drawable/img_main_bar_backdrop2" />
+            android:src="@drawable/img_main_bar_backdrop" />
 
         <View
             android:id="@+id/status_bar_view"
@@ -163,14 +163,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="50dp"
-                android:background="@color/container_background"
+                android:background="@color/white"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 binding:onLoadMoreCommand="@{viewModel.onLoadMoreCommand}"
                 binding:onRefreshCommand="@{viewModel.onRefreshCommand}">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    >
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rcv_layout"

@@ -12,6 +12,24 @@ public class UserProfitPageEntity {
     private BigDecimal totalProfits;
     private CustomProfitList   userProfitList;
     private int  enableWithdraw;
+    private int  displayProfitTips;
+    private String  currencyName;
+
+    public int getDisplayProfitTips() {
+        return displayProfitTips;
+    }
+
+    public void setDisplayProfitTips(int displayProfitTips) {
+        this.displayProfitTips = displayProfitTips;
+    }
+
+    public String getCurrencyName() {
+        return currencyName;
+    }
+
+    public void setCurrencyName(String currencyName) {
+        this.currencyName = currencyName;
+    }
 
     public BigDecimal getTotalProfits() {
         return totalProfits;

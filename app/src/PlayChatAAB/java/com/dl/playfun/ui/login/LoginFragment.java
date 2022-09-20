@@ -1,38 +1,32 @@
 package com.dl.playfun.ui.login;
 
-import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.aliyun.svideo.crop.CropMediaActivity;
-import com.aliyun.svideosdk.common.struct.common.AliyunSnapVideoParam;
-import com.aliyun.svideosdk.common.struct.common.VideoDisplayMode;
-import com.aliyun.svideosdk.common.struct.common.VideoQuality;
-import com.aliyun.svideosdk.common.struct.encoder.VideoCodecs;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
+import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.databinding.FragmentLoginBinding;
 import com.dl.playfun.entity.OverseasUserEntity;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseFragment;
-import com.dl.playfun.ui.login.LoginViewModel;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -49,7 +43,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
-import com.luck.picture.lib.permissions.PermissionChecker;
 
 import org.json.JSONObject;
 
@@ -61,12 +54,14 @@ import me.goldze.mvvmhabit.utils.ToastUtils;
 /**
  * @author wulei
  */
-public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewModel>  {
+public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewModel> {
 
     CallbackManager callbackManager;
     GoogleSignInOptions gso;
     GoogleSignInClient googleSignInClient;
     private LoginManager loginManager;
+    private PopupWindow popupWindow;
+    private String loginType;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -97,6 +92,7 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
     public void onEnterAnimationEnd(Bundle savedInstanceState) {
         super.onEnterAnimationEnd(savedInstanceState);
         callbackManager = CallbackManager.Factory.create();
+        setLastLoginBubble();
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
         boolean isLoggedIn = accessToken != null && !accessToken.isExpired();
         if (isLoggedIn && loginManager != null) {
@@ -133,11 +129,11 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
                             public void onCompleted(@Nullable JSONObject jsonObject, @Nullable GraphResponse graphResponse) {
                                 try {
                                     OverseasUserEntity overseasUserEntity = new OverseasUserEntity();
-                                    if(!jsonObject.isNull("email")){
+                                    if (!jsonObject.isNull("email")) {
                                         overseasUserEntity.setEmail(jsonObject.getString("email"));
                                     }
                                     String token_for_business = null;
-                                    if(!jsonObject.isNull("token_for_business")){
+                                    if (!jsonObject.isNull("token_for_business")) {
                                         token_for_business = jsonObject.getString("token_for_business");
                                     }
                                     Profile profile = Profile.getCurrentProfile();
@@ -145,7 +141,7 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
                                     if (profile != null) {
                                         overseasUserEntity.setName(profile.getName());
                                         Uri uriFacebook = profile.getProfilePictureUri(500, 500);
-                                        if(uriFacebook!=null){
+                                        if (uriFacebook != null) {
                                             phoneUrl = uriFacebook.toString();
                                         }
                                     }
@@ -179,7 +175,7 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
                     }
                 });
         GoogleLogin();
-        binding.signInButton.setOnClickListener(new View.OnClickListener() {
+        binding.ivGoogleLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!viewModel.agree.get()) {
@@ -190,7 +186,6 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
                 toGoogleLoginIntent.launch(intent);
             }
         });
-
     }
 
     @Override
@@ -198,6 +193,53 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
         super.onActivityResult(requestCode, resultCode, data);
         if (callbackManager != null) {
             callbackManager.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (hidden){
+            hideLastLoginBubble();
+        }
+    }
+
+    private void setLastLoginBubble() {
+
+        AppRepository appRepository = ConfigManager.getInstance().getAppRepository();
+        loginType = appRepository.readKeyValue(AppConfig.LOGIN_TYPE);
+        if (!ConfigManager.getInstance().getTipMoneyShowFlag()) {
+            return;
+        }
+        if (TextUtils.isEmpty(loginType)){
+            return;
+        }
+        View view = getLayoutInflater().inflate(R.layout.pop_last_login_bubble, null);
+        popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        popupWindow.setOutsideTouchable(false);
+        popupWindow.setFocusable(false);
+        showLastLoginBubble();
+
+    }
+
+    private void hideLastLoginBubble(){
+        if (popupWindow != null){
+            popupWindow.dismiss();
+        }
+    }
+
+    private void showLastLoginBubble(){
+        if (popupWindow != null){
+            popupWindow.getContentView().measure(0, 0);
+            int popWidth = popupWindow.getContentView().getMeasuredWidth();
+            int popHeight = popupWindow.getContentView().getMeasuredHeight();
+            if (loginType.equals("facebook")) {
+                popupWindow.showAsDropDown(binding.loginButton, binding.loginButton.getHeight() + popWidth / 2, -binding.loginButton.getHeight() - popHeight / 2);
+            } else if (loginType.equals("google")) {
+                popupWindow.showAsDropDown(binding.ivGoogleLogin, -popWidth / 2 + binding.ivGoogleLogin.getHeight() / 2, -binding.ivGoogleLogin.getHeight() - popHeight);
+            } else if (loginType.equals("phone")) {
+                popupWindow.showAsDropDown(binding.ivPhoneLogin, -popWidth / 2 + binding.ivPhoneLogin.getHeight() / 2, -binding.ivPhoneLogin.getHeight() - popHeight);
+            }
         }
     }
 

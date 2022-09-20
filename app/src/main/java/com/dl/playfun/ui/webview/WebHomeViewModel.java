@@ -81,7 +81,7 @@ public class WebHomeViewModel extends BaseViewModel<AppRepository> {
                     public void onError(RequestException e) {
                         super.onError(e);
                         if (e != null) {
-                            if (e.getCode() == 1) {
+                            if (e.getCode() == 21001) {
                                 webUC.sendDialogViewEvent.call();
                             }
                         }

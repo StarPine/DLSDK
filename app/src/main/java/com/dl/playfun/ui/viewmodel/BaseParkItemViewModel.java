@@ -13,7 +13,10 @@ import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.entity.AdItemEntity;
 import com.dl.playfun.entity.ParkItemEntity;
 import com.dl.playfun.entity.TaskAdEntity;
+import com.dl.playfun.event.TaskMainTabEvent;
 import com.dl.playfun.manager.ConfigManager;
+import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
+import com.dl.playfun.ui.mine.wallet.diamond.recharge.DiamondRechargeActivity;
 import com.dl.playfun.ui.task.webview.FukuokaViewFragment;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.ui.webview.WebHomeFragment;
@@ -27,6 +30,7 @@ import java.util.Objects;
 
 import me.goldze.mvvmhabit.base.MultiItemViewModel;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
+import me.goldze.mvvmhabit.bus.RxBus;
 
 /**
  * @author wulei
@@ -41,16 +45,11 @@ public class BaseParkItemViewModel extends MultiItemViewModel<BaseParkViewModel>
     public ObservableField<Boolean> accountCollect = new ObservableField<>();
     //条目的点击事件
     public final BindingCommand itemClick = new BindingCommand(() -> {
-//        try {
-//            AppContext.instance().logEvent(AppsFlyerEvent.Nearby_Follow);
-//            Bundle bundle = UserDetailFragment.getStartBundle(itemEntity.get().getId());
-//            viewModel.start(UserDetailFragment.class.getCanonicalName(), bundle);
-//        } catch (Exception e) {
-//            ExceptionReportUtils.report(e);
-//        }
         try {
             AppContext.instance().logEvent(AppsFlyerEvent.Nearby_Follow);
+            int position = viewModel.observableList.indexOf(BaseParkItemViewModel.this);
             Bundle bundle = UserDetailFragment.getStartBundle(itemEntity.get().getId());
+            bundle.putInt(UserDetailFragment.ARG_USER_DETAIL_POSITION,position);
             viewModel.start(UserDetailFragment.class.getCanonicalName(), bundle);
         } catch (Exception e) {
             ExceptionReportUtils.report(e);
@@ -94,10 +93,19 @@ public class BaseParkItemViewModel extends MultiItemViewModel<BaseParkViewModel>
     public BindingCommand<Integer> onBannerClickCommand = new BindingCommand<>(index -> {
         try {
             AdItemEntity adItemEntity = itemBannerEntity.get().get(index);
-            if(adItemEntity!=null && adItemEntity.getLink()!=null){
-                Bundle bundle = new Bundle();
-                bundle.putString("link", adItemEntity.getLink());
-                viewModel.start(WebHomeFragment.class.getCanonicalName(), bundle);
+            int typeAct = adItemEntity.getType();
+            if(typeAct!=0){
+                switch (typeAct){
+                    case 5:
+                        viewModel.startActivity(DiamondRechargeActivity.class);
+                        break;
+                }
+            }else{
+                if(adItemEntity!=null && adItemEntity.getLink()!=null){
+                    Bundle bundle = new Bundle();
+                    bundle.putString("link", adItemEntity.getLink());
+                    viewModel.start(WebHomeFragment.class.getCanonicalName(), bundle);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

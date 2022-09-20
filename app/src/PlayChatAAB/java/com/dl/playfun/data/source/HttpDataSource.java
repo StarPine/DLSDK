@@ -59,6 +59,7 @@ import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.entity.GoogleNearPoiBean;
 import com.dl.playfun.entity.GooglePoiBean;
 import com.dl.playfun.entity.IMTransUserEntity;
+import com.dl.playfun.entity.ImUserSigEntity;
 import com.dl.playfun.entity.IsChatEntity;
 import com.dl.playfun.entity.LevelApiEntity;
 import com.dl.playfun.entity.LevelPageInfoEntity;
@@ -868,6 +869,16 @@ public interface HttpDataSource {
      */
     Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(Integer callingType, String fromUserId, String toUserId, int callingSource);
 
+    Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(Integer callingType, String fromUserId, String toUserId, int callingSource,int videoCallPushLogId);
+
+    /**
+     * 视讯推送评价
+     * @param videoCallPushLogId
+     * @param feedback
+     * @return
+     */
+    Observable<BaseDataResponse> videoFeedback(long videoCallPushLogId, int feedback);
+
     /**
      * @return io.reactivex.Observable<com.dl.play.chat.entity.CallingInviteInfo>
      * @Desc TODO(IM聊天页面 拔打中 / 接收中)
@@ -894,6 +905,13 @@ public interface HttpDataSource {
      * @Date 2021/12/7
      */
     Observable<BaseDataResponse<GiftBagEntity>> getBagGiftInfo();
+
+    /**
+     * 刷新im凭证
+     * @return
+     */
+    Observable<BaseDataResponse<ImUserSigEntity>> flushSign();
+
     /**
      * @Desc TODO(用户收益页面)
      * @author 彭石林

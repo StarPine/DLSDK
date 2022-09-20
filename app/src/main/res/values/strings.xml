@@ -815,7 +815,7 @@
     <string name="playfun_text_accost_error2">Greet at least one user.</string>
     <string name="playfun_text_accost_error3">Cooldown for next greeting\n</string>
     <string name="playfun_text_accost_empty">The number of one-click greetings has been used up today. \nPlease come back tomorrow.</string>
-    <string name="playfun_text_accost_hint">refresh</string>
+    <string name="playfun_text_accost_hint">Next</string>
     <string name="playfun_tw_money_text">Crystals</string>
     <string name="playfun_tw_money_text1">Crystals</string>
     <string name="playfun_tw_money_text2">Instruction</string>
@@ -1276,6 +1276,16 @@
     <string name="playfun_coinpusher_text_downtime">將在%ss後退出遊戲，請投幣續時</string>
     <string name="playfun_duplicate_nickname_tips">妳輸入的暱稱已被佔用，推薦使用 %s</string>
     <string name="fragment_perfect_reg_hint3">請選擇真實性別</string>
+    <string name="playfun_last_login">上次登入</string>
+    <string name="playfun_mine_allow_video">允許視訊</string>
+    <string name="playfun_mine_allow_audio">允許語音</string>
+    <string name="playfun_mine_ban_audio_tips">其他用戶將無法對您發起語音通話</string>
+    <string name="playfun_mine_ban_video_tips">其他用戶將無法對您發起視訊通話</string>
+    <string name="playfun_dialog_title_tips">與她聊得愉快嗎？</string>
+    <string name="playfun_evaluation_not_happy">不愉快</string>
+    <string name="playfun_evaluation_happy">愉快</string>
+    <string name="playfun_activated_video">已開啟視訊開關</string>
+    <string name="playfun_activated_audio">已開啟語音開關</string>
 
 
 </resources>

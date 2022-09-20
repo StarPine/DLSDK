@@ -192,6 +192,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
+                    android:thumb="@drawable/switch_thumb"
+                    android:track="@drawable/switch_track"
                     android:checked="@={viewModel.isDefault}" />
             </RelativeLayout>
 

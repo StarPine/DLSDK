@@ -36,4 +36,48 @@ public class CustomConstants {
         //视频
         public static final String  VIDEO_GALLERY = "videoGalleryPay";
     }
+
+    //视讯推送
+    public static final class PushMessage {
+        //模块名
+        public static final String MODULE_NAME = "pushMessage";
+        public static final String VIDEO_CALL_PUSH = "videoCallPush";
+        public static final String VIDEO_CALL_FEEDBACK = "videoCallFeedback";
+    }
+
+    //通话模块
+    public static final class CallingMessage {
+        //模块名
+        public static final String MODULE_NAME = "calling";
+        public static final String TYPE_CALLING_FAILED = "callingFailed";
+    }
+
+    //系统提示模块
+    public static final class SystemTipsMessage {
+        //模块名
+        public static final String MODULE_NAME = "systemTips";
+        public static final String TYPE_DISABLE_CALLS = "disableCalls";
+        public static final String TYPE_JUMP_WEB = "openUrl";
+
+        /**
+         * 给接听方的禁用语音系统消息
+         */
+        public static final int TYPE_DISABLECALLS_CALLING_AUDIO = 1003;
+
+        /**
+         * 给接听方的禁用视讯系统消息
+         */
+        public static final int TYPE_DISABLECALLS_CALLING_VIDEO = 1004;
+
+        /**
+         * 外部链接跳转
+         */
+        public static final int TYPE_OUTSIDE_URL = 10001;
+
+        /**
+         * 内部链接跳转
+         */
+        public static final int TYPE_INSIDE_URL = 10002;
+    }
+
 }

@@ -482,7 +482,7 @@ public class FukuokaViewFragment extends BaseFragment<WebviewFukubukuroFragmentB
 
         @JavascriptInterface
         public String getVersionTask() {
-            return "1.2.0 ";
+            return AppConfig.VERSION_NAME;
         }
     }
 }

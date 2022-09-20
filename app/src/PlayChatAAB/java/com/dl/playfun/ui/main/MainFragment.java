@@ -3,7 +3,9 @@ package com.dl.playfun.ui.main;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Dialog;
+import android.app.Service;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -36,11 +38,9 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.Injection;
 import com.dl.playfun.app.config.TbarCenterImgConfig;
-import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.databinding.FragmentMainBinding;
 import com.dl.playfun.entity.MqBroadcastGiftEntity;
 import com.dl.playfun.entity.MqBroadcastGiftUserEntity;
-import com.dl.playfun.entity.SystemConfigEntity;
 import com.dl.playfun.entity.VersionEntity;
 import com.dl.playfun.event.DailyAccostEvent;
 import com.dl.playfun.event.MainTabEvent;
@@ -49,7 +49,6 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.ui.dialog.LockDialog;
 import com.dl.playfun.ui.home.HomeMainFragment;
-import com.dl.playfun.ui.home.accost.HomeAccostDialog;
 import com.dl.playfun.ui.message.MessageMainFragment;
 import com.dl.playfun.ui.mine.MineFragment;
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
@@ -64,10 +63,10 @@ import com.dl.playfun.widget.dialog.TraceDialog;
 import com.dl.playfun.widget.dialog.WebViewDialog;
 import com.dl.playfun.widget.dialog.version.view.UpdateDialogView;
 import com.dl.playfun.widget.pageview.FragmentAdapter;
+import com.tencent.qcloud.tuicore.custom.entity.VideoEvaluationEntity;
+import com.tencent.qcloud.tuicore.custom.entity.VideoPushEntity;
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.view.ConversationCommonHolder;
-
-import java.util.List;
 
 import me.goldze.mvvmhabit.bus.RxBus;
 
@@ -93,6 +92,8 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
     private long TOUCH_TIME = 0;
 
     private AliYunMqttClientLifecycle aliYunMqttClientLifecycle;
+    private Vibrator mVibrator;
+    private boolean isShowing;
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -133,6 +134,13 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
     public void initViewObservable() {
         super.initViewObservable();
         viewModel.versionOnClickCommand();
+        viewModel.uc.videoEvaluation.observe(this,evaluationEntity->{
+            setVideoEvaluationDialog(evaluationEntity);
+        });
+        viewModel.uc.videoPush.observe(this,videoPushEntity->{
+            setVideoPushDialog(videoPushEntity);
+        });
+
         AppContext.instance().logEvent(AppsFlyerEvent.main_open);
 //        aliYunMqttClientLifecycle.broadcastGiftEvent.observe(this, new Observer<MqBroadcastGiftEntity>() {
 //            @Override
@@ -376,6 +384,49 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         });
     }
 
+    //视讯评价
+    private void setVideoEvaluationDialog(VideoEvaluationEntity evaluationEntity) {
+        if (evaluationEntity == null)return;
+        TraceDialog.getInstance(mActivity)
+                .setConfirmOnlick(dialog -> {
+                    viewModel.videoFeedback(evaluationEntity.getVideoCallPushLogId(),2);
+                })
+                .setConfirmTwoOnlick(dialog -> {
+                    viewModel.videoFeedback(evaluationEntity.getVideoCallPushLogId(),1);
+                })
+                .getVideoEvaluationDialog(evaluationEntity.getAvatar())
+                .show();
+    }
+
+    //视讯推送
+    private void setVideoPushDialog(VideoPushEntity videoPushEntity) {
+        if (videoPushEntity == null || videoPushEntity.getUserProfile() == null || isShowing)return;
+        isShowing = true;
+        if (videoPushEntity.getIsShake() == 1){
+            mVibrator = (Vibrator) mActivity.getApplication().getSystemService(Service.VIBRATOR_SERVICE);
+            mVibrator.vibrate(new long[]{500, 300, 500, 300}, 0);
+        }
+
+        TraceDialog.getInstance(mActivity)
+                .setConfirmOnlick(dialog -> {
+                    isShowing = false;
+                    if (mVibrator != null)
+                        mVibrator.cancel();
+                })
+                .setConfirmTwoOnlick(dialog -> {
+                    viewModel.getCallingInvitedInfo(ConfigManager.getInstance().getUserImID(),
+                            videoPushEntity.getUserProfile().getImId(),
+                            videoPushEntity.getVideoCallPushLogId());
+                })
+                .getVideoPushDialog(videoPushEntity.getUserProfile().getAvatar(),
+                        videoPushEntity.getUserProfile().getSex() == 0,
+                        videoPushEntity.getUserProfile().getIsVip() == 1,
+                        videoPushEntity.getUserProfile().getAge(),
+                        videoPushEntity.getSeconds(),
+                        videoPushEntity.getUserProfile().getNickname())
+                .show();
+    }
+
     private void showRecharge() {
         CoinRechargeSheetView coinRechargeSheetView = new CoinRechargeSheetView(mActivity);
         coinRechargeSheetView.show();
@@ -565,6 +616,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
+        AppConfig.isMainPage = !hidden;
         if (!hidden) {
             if (System.currentTimeMillis() - TOUCH_TIME > WAIT_TIME) {
                 //刷新任何列表数据

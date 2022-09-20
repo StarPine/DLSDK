@@ -43,6 +43,8 @@ import com.dl.playfun.event.ZoomInPictureEvent;
 import com.dl.playfun.kl.Utils;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.mine.broadcast.mytrends.TrendItemViewModel;
+import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
+import com.dl.playfun.ui.mine.wallet.diamond.recharge.DiamondRechargeActivity;
 import com.dl.playfun.ui.radio.issuanceprogram.IssuanceProgramFragment;
 import com.dl.playfun.ui.radio.radiohome.item.RadioItemBannerVideoViewModel;
 import com.dl.playfun.ui.task.webview.FukuokaViewFragment;
@@ -130,7 +132,14 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
     public BindingCommand<Integer> onBannerClickCommand = new BindingCommand<>(index -> {
         try {
             AdItemEntity adItemEntity = itemBannerEntity.get().get(index);
-            if(adItemEntity!=null && adItemEntity.getLink()!=null){
+            int typeAct = adItemEntity.getType();
+            if(typeAct!=0){
+                switch (typeAct){
+                    case 5:
+                        startActivity(DiamondRechargeActivity.class);
+                        break;
+                }
+            }else if(adItemEntity!=null && adItemEntity.getLink()!=null){
                 Bundle bundle = new Bundle();
                 bundle.putString("link", adItemEntity.getLink());
                 start(FukuokaViewFragment.class.getCanonicalName(), bundle);
@@ -732,7 +741,7 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
                     @Override
                     public void onSuccess(BaseDataResponse<CallingInviteInfo> callingInviteInfoBaseDataResponse) {
                         if (callingInviteInfoBaseDataResponse.getCode() == 2) {//對方忙線中
-                            radioUC.otherBusy.call();
+                            ToastUtils.showShort(R.string.custom_message_other_busy);
                             return;
                         }
                         if (callingInviteInfoBaseDataResponse.getCode() == 22001) {//游戏中
@@ -749,7 +758,7 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
                     public void onError(RequestException e) {
                         super.onError(e);
                         if (e != null) {
-                            if (e.getCode() == 1) {
+                            if (e.getCode() == 21001) {
                                 radioUC.sendDialogViewEvent.call();
                             }
                         }

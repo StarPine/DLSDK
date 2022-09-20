@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="43dp"
         android:layout_marginRight="43dp"
-        android:background="@drawable/audio_alert_layout_img"
+        android:background="@drawable/attendance_success_back"
         android:gravity="center"
         android:minWidth="319dp"
         android:orientation="vertical">

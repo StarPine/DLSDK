@@ -460,7 +460,7 @@ public class WebViewFragment extends BaseFragment<WebviewFragmentBinding, WebVie
 
         @JavascriptInterface
         public String getVersionTask() {
-            return "1.2.0 ";
+            return AppConfig.VERSION_NAME;
         }
 
         @JavascriptInterface

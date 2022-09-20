@@ -26,6 +26,7 @@ import com.dl.playfun.databinding.FragmentChatMessageBinding;
 import com.dl.playfun.entity.BrowseNumberEntity;
 import com.dl.playfun.entity.SystemConfigEntity;
 import com.dl.playfun.entity.TokenEntity;
+import com.dl.playfun.event.LoginExpiredEvent;
 import com.dl.playfun.event.MessageCountChangeTagEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.ThirdPushTokenMgr;
@@ -41,6 +42,7 @@ import com.tencent.imsdk.v2.V2TIMConversationListener;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuicore.TUILogin;
+import com.tencent.qcloud.tuicore.interfaces.TUICallback;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.model.CustomConfigSetting;
@@ -76,33 +78,9 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
         return viewModel;
     }
 
-    private final V2TIMConversationListener unreadListener = new V2TIMConversationListener() {
-        @Override
-        public void onTotalUnreadMessageCountChanged(long totalUnreadCount) {
-            RxBus.getDefault().post(new MessageCountChangeTagEvent((int) totalUnreadCount));
-        }
-    };
-
-
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //V2TIMManager.getConversationManager().removeConversationListener(unreadListener);
-    }
-
-    private void registerUnreadListener() {
-//        V2TIMManager.getConversationManager().addConversationListener(unreadListener);
-//        V2TIMManager.getConversationManager().getTotalUnreadMessageCount(new V2TIMValueCallback<Long>() {
-//            @Override
-//            public void onSuccess(Long totalUnreadCount) {
-//                RxBus.getDefault().post(new MessageCountChangeTagEvent(totalUnreadCount.intValue()));
-//            }
-//
-//            @Override
-//            public void onError(int code, String desc) {
-//
-//            }
-//        });
     }
 
     @Override
@@ -126,19 +104,18 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
             if(TUILogin.isUserLogined()){
                 initIM();
                 ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
-                registerUnreadListener();
             }else{
-                TUIUtils.login(tokenEntity.getUserID(), tokenEntity.getUserSig(), new V2TIMCallback() {
+                TUILogin.login(mActivity, appRepository.readApiConfigManagerEntity().getImAppId(), tokenEntity.getUserID(), tokenEntity.getUserSig(), new TUICallback() {
                     @Override
                     public void onSuccess() {
                         initIM();
                         ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
-                        registerUnreadListener();
                     }
 
                     @Override
                     public void onError(int code, String desc) {
                         KLog.e("tencent im login error  errCode = " + code + ", errInfo = " + desc);
+                        viewModel.flushSign();
                     }
                 });
             }
@@ -149,6 +126,10 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
     @Override
     public void initViewObservable() {
         super.initViewObservable();
+        viewModel.uc.loginSuccess.observe(this, Void -> {
+            initIM();
+            ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
+        });
     }
 
     private void initIM() {
@@ -213,7 +194,6 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
         binding.conversationLayout.getConversationList().setOnItemClickListener(new ConversationListLayout.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position, ConversationInfo messageInfo) {
-                //点击用户头像
                 String id = messageInfo.getId();
                 if (id.trim().contains(AppConfig.CHAT_SERVICE_USER_ID)) {
                     ChatUtils.startChatActivity(messageInfo,0,viewModel);

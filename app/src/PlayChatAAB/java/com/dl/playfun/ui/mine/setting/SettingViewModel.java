@@ -50,9 +50,6 @@ public class SettingViewModel extends BaseViewModel<AppRepository> {
     public ObservableBoolean showUrl = new ObservableBoolean(false);
     //隐私政策
     public ObservableBoolean showUrl2 = new ObservableBoolean(false);
-    public BindingCommand isConnectionOnClickCommand = new BindingCommand(() -> {
-        setConnectPrivacy();
-    });
     //绑定社群账号
     public BindingCommand bindingCommunityAccount = new BindingCommand(() ->{
         start(CommunityAccountFragment.class.getCanonicalName());
@@ -127,30 +124,6 @@ public class SettingViewModel extends BaseViewModel<AppRepository> {
                     @Override
                     public void onSuccess(BaseDataResponse<PrivacyEntity> response) {
                         privacyEntity.set(response.getData());
-                    }
-                });
-    }
-
-    /**
-     * 设置我的隐私
-     */
-    private void setConnectPrivacy() {
-        PrivacyEntity entity = new PrivacyEntity();
-        entity.setConnection(privacyEntity.get().getConnection());
-        model.setPrivacy(entity)
-                .doOnSubscribe(this)
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseResponse>() {
-                    @Override
-                    public void onSuccess(BaseResponse response) {
-                        dismissHUD();
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        dismissHUD();
                     }
                 });
     }

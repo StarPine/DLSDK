@@ -21,6 +21,7 @@ import com.dl.playfun.entity.ApiConfigManagerEntity;
 import com.dl.playfun.entity.BannerItemEntity;
 import com.dl.playfun.entity.BrowseNumberEntity;
 import com.dl.playfun.entity.EvaluateEntity;
+import com.dl.playfun.entity.PrivacyEntity;
 import com.dl.playfun.entity.SystemConfigTaskEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.entity.UserInfoEntity;
@@ -30,7 +31,7 @@ import com.dl.playfun.event.MyPhotoAlbumChangeEvent;
 import com.dl.playfun.event.ProfileChangeEvent;
 import com.dl.playfun.event.RefreshUserDataEvent;
 import com.dl.playfun.event.TraceEmptyEvent;
-import com.dl.playfun.event.VipRechargeSuccessEvent;
+import com.dl.playfun.event.MineInfoChangeEvent;
 import com.dl.playfun.helper.JumpHelper;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
@@ -77,6 +78,9 @@ import me.goldze.mvvmhabit.utils.ToastUtils;
  * @author wulei
  */
 public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
+
+    public final String ALLOW_TYPE_VIDEO = "video";
+    public final String ALLOW_TYPE_AUDIO = "audio";
     //积分夺宝右侧提示
     public ObservableField<String> entryLabelLable = new ObservableField<>();
     //本地UserData
@@ -224,6 +228,7 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
     public BindingCommand settingOnClickCommand = new BindingCommand(() -> {
         start(MeSettingFragment.class.getCanonicalName());
     });
+
     //联系客服按钮的点击事件
     public BindingCommand serviceOnClickCommand = new BindingCommand(() -> {
         try {
@@ -306,6 +311,36 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
         return StringUtils.getString(R.string.playfun_unknown);
     }
 
+    public void setAllowPrivacy(String type, boolean isOpen) {
+        PrivacyEntity entity = new PrivacyEntity();
+        if (type.equals(ALLOW_TYPE_AUDIO)){
+            entity.setAllowAudio(isOpen);
+        }else if (type.equals(ALLOW_TYPE_VIDEO)){
+            entity.setAllowVideo(isOpen);
+        }
+        model.setPrivacy(entity)
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseResponse>() {
+                    @Override
+                    public void onSuccess(BaseResponse response) {
+                        if (type.equals(ALLOW_TYPE_AUDIO) && !isOpen){
+                            ToastUtils.showShort(R.string.playfun_mine_ban_audio_tips);
+                        }else if (type.equals(ALLOW_TYPE_VIDEO) && !isOpen){
+                            ToastUtils.showShort(R.string.playfun_mine_ban_video_tips);
+                        }
+                        dismissHUD();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        dismissHUD();
+                    }
+                });
+    }
+
     @Override
     public void registerRxBus() {
         super.registerRxBus();
@@ -372,7 +407,7 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
                     loadUserInfo();
                     loadAlbumDetail(8);
                 });
-        mVipRechargeSubscription = RxBus.getDefault().toObservable(VipRechargeSuccessEvent.class)
+        mVipRechargeSubscription = RxBus.getDefault().toObservable(MineInfoChangeEvent.class)
                 .subscribe(event -> {
                     loadUserInfo();
                 });
@@ -444,6 +479,8 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
                             entryLabelLable.set(systemConfigTaskEntity.getEntryLabel());
                         }
                         uc.entryLabelLableEvent.call();
+                        uc.allowAudio.setValue(userInfoEntity.get().getAllowAudio());
+                        uc.allowVideo.setValue(userInfoEntity.get().getAllowVideo());
                     }
 
                     @Override
@@ -680,5 +717,7 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
         public SingleLiveEvent<Void> entryLabelLableEvent = new SingleLiveEvent<>();
         //删除录音提示
         public SingleLiveEvent<Void> removeAudioAlert = new SingleLiveEvent<>();
+        public SingleLiveEvent<Boolean> allowAudio = new SingleLiveEvent<>();
+        public SingleLiveEvent<Boolean> allowVideo = new SingleLiveEvent<>();
     }
 }

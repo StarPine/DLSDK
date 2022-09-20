@@ -62,6 +62,7 @@ import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.entity.GoogleNearPoiBean;
 import com.dl.playfun.entity.GooglePoiBean;
 import com.dl.playfun.entity.IMTransUserEntity;
+import com.dl.playfun.entity.ImUserSigEntity;
 import com.dl.playfun.entity.IsChatEntity;
 import com.dl.playfun.entity.LevelApiEntity;
 import com.dl.playfun.entity.LevelPageInfoEntity;
@@ -223,6 +224,20 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
+    public Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(Integer callingType, String fromUserId, String toUserId, int callingSource ,int videoCallPushLogId) {
+        return apiService.callingInviteInfo(callingType, fromUserId, toUserId, callingSource,videoCallPushLogId);
+    }
+
+    @Override
+    public Observable<BaseDataResponse> videoFeedback(long videoCallPushLogId, int feedback) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("videoCallPushLogId", videoCallPushLogId);
+        map.put("feedback", feedback);
+        return apiService.videoFeedback(ApiUitl.getBody(GsonUtils.toJson(map)));
+    }
+
+
+    @Override
     public Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(Integer callingType, Integer fromUserId, Integer toUserId, Integer currentUserId) {
         return apiService.callingInviteInfo(callingType, fromUserId, toUserId, currentUserId);
     }
@@ -235,6 +250,11 @@ public class HttpDataSourceImpl implements HttpDataSource {
     @Override
     public Observable<BaseDataResponse<GiftBagEntity>> getBagGiftInfo() {
         return apiService.getBagGiftInfo();
+    }
+
+    @Override
+    public Observable<BaseDataResponse<ImUserSigEntity>> flushSign() {
+        return apiService.flushSign();
     }
 
     @Override
@@ -828,7 +848,9 @@ public class HttpDataSourceImpl implements HttpDataSource {
                 privacyEntity.getDistance() == null ? null : privacyEntity.getDistance() ? 1 : 0,
                 privacyEntity.getOnlineIme() == null ? null : privacyEntity.getOnlineIme() ? 1 : 0,
                 privacyEntity.getConnection() == null ? null : privacyEntity.getConnection() ? 1 : 0,
-                privacyEntity.getNearby() == null ? null : privacyEntity.getNearby() ? 1 : 0
+                privacyEntity.getNearby() == null ? null : privacyEntity.getNearby() ? 1 : 0,
+                privacyEntity.getAllowAudio() == null ? null : privacyEntity.getAllowAudio() ? 1 : 0,
+                privacyEntity.getAllowVideo() == null ? null : privacyEntity.getAllowVideo() ? 1 : 0
         );
     }
 

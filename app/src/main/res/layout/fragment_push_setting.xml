@@ -75,6 +75,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
+                    android:thumb="@drawable/switch_thumb"
+                    app:track="@drawable/switch_track"
                     android:checked="@={viewModel.pushSettingEntity.chat}"
                     binding:onClickCommand="@{viewModel.switchOnClickCommand}" />
             </RelativeLayout>
@@ -100,6 +102,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
+                    android:thumb="@drawable/switch_thumb"
+                    app:track="@drawable/switch_track"
                     android:checked="@={viewModel.pushSettingEntity.sign}"
                     binding:onClickCommand="@{viewModel.switchOnClickCommand}" />
             </RelativeLayout>
@@ -125,6 +129,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
+                    android:thumb="@drawable/switch_thumb"
+                    app:track="@drawable/switch_track"
                     android:checked="@={viewModel.pushSettingEntity.give}"
                     binding:onClickCommand="@{viewModel.switchOnClickCommand}" />
             </RelativeLayout>
@@ -153,6 +159,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
+                    android:thumb="@drawable/switch_thumb"
+                    app:track="@drawable/switch_track"
                     android:checked="@={viewModel.pushSettingEntity.apply}"
                     binding:onClickCommand="@{viewModel.switchOnClickCommand}" />
             </LinearLayout>
@@ -189,6 +197,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
+                    android:thumb="@drawable/switch_thumb"
+                    app:track="@drawable/switch_track"
                     android:checked="@={viewModel.isSound}"
                     binding:onClickCommand="@{viewModel.isSoundOnClickCommand}" />
             </RelativeLayout>
@@ -214,6 +224,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
+                    android:thumb="@drawable/switch_thumb"
+                    app:track="@drawable/switch_track"
                     android:checked="@={viewModel.isShake}"
                     binding:onClickCommand="@{viewModel.isShakeOnClickCommand}" />
             </RelativeLayout>

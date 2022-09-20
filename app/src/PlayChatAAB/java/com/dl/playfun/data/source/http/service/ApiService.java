@@ -62,6 +62,7 @@ import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.entity.GoogleNearPoiBean;
 import com.dl.playfun.entity.GooglePoiBean;
 import com.dl.playfun.entity.IMTransUserEntity;
+import com.dl.playfun.entity.ImUserSigEntity;
 import com.dl.playfun.entity.IsChatEntity;
 import com.dl.playfun.entity.LevelApiEntity;
 import com.dl.playfun.entity.LevelPageInfoEntity;
@@ -1036,6 +1037,23 @@ public interface ApiService {
             @Query("callingSource") Integer callingSource
     );
 
+    @GET("/calling/getCallingInvitedInfo/v2")
+    Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(
+            @Query("callingType") Integer callingType,
+            @Query("inviterImId") String inviterImId,
+            @Query("receiverImId") String receiverImId,
+            @Query("callingSource") Integer callingSource,
+            @Query("callingSourceId") Integer videoCallPushLogId
+    );
+
+    /**
+     * 视讯推送评价
+     * @return
+     */
+    @Headers("Content-Type: application/json")
+    @POST("/calling/videoCallPushLog/feedback")
+    Observable<BaseDataResponse> videoFeedback(@Body RequestBody requestBody);
+
     /**
      * @return io.reactivex.Observable<com.dl.play.chat.entity.CallingInviteInfo>
      * @Desc TODO(IM聊天页面 拔打中 / 接收中)
@@ -1070,6 +1088,13 @@ public interface ApiService {
      */
     @GET("api/gift")
     Observable<BaseDataResponse<GiftBagEntity>> getBagGiftInfo();
+
+    /**
+     * 刷新im凭证
+     * @return
+     */
+    @GET("api/flushSign")
+    Observable<BaseDataResponse<ImUserSigEntity>> flushSign();
 
     /**
      * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse>
@@ -2312,7 +2337,9 @@ public interface ApiService {
             @Field("is_distance") Integer isDistance,
             @Field("is_online_time") Integer isOnlineTIme,
             @Field("is_connection") Integer isConnection,
-            @Field("is_nearby") Integer isNearby
+            @Field("is_nearby") Integer isNearby,
+            @Field("allowAudio") Integer allowAudio,
+            @Field("allowVideo") Integer allowVideo
     );
 
     /**

@@ -139,6 +139,16 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
+    public Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(Integer callingType, String fromUserId, String toUserId, int callingSource, int videoCallPushLogId) {
+        return mHttpDataSource.callingInviteInfo(callingType, fromUserId, toUserId, callingSource,videoCallPushLogId);
+    }
+
+    @Override
+    public Observable<BaseDataResponse> videoFeedback(long videoCallPushLogId, int feedback) {
+        return mHttpDataSource.videoFeedback(videoCallPushLogId, feedback);
+    }
+
+    @Override
     public Observable<BaseDataResponse<CallingInviteInfo>> callingInviteInfo(Integer callingType, Integer fromUserId, Integer toUserId, Integer currentUserId) {
         return mHttpDataSource.callingInviteInfo(callingType, fromUserId, toUserId, currentUserId);
     }
@@ -151,6 +161,11 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     @Override
     public Observable<BaseDataResponse<GiftBagEntity>> getBagGiftInfo() {
         return mHttpDataSource.getBagGiftInfo();
+    }
+
+    @Override
+    public Observable<BaseDataResponse<ImUserSigEntity>> flushSign() {
+        return mHttpDataSource.flushSign();
     }
 
     @Override

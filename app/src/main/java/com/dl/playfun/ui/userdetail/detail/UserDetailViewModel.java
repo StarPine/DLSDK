@@ -29,10 +29,13 @@ import com.dl.playfun.entity.EvaluateEntity;
 import com.dl.playfun.entity.EvaluateItemEntity;
 import com.dl.playfun.entity.EvaluateObjEntity;
 import com.dl.playfun.entity.IsChatEntity;
+import com.dl.playfun.entity.ParkItemEntity;
 import com.dl.playfun.entity.StatusEntity;
 import com.dl.playfun.entity.UserDetailEntity;
+import com.dl.playfun.event.AccostEvent;
 import com.dl.playfun.event.AddBlackListEvent;
 import com.dl.playfun.event.LikeChangeEvent;
+import com.dl.playfun.event.TaskListEvent;
 import com.dl.playfun.event.TheirPhotoAlbumChangeEvent;
 import com.dl.playfun.event.UserRemarkChangeEvent;
 import com.dl.playfun.event.UserUpdateVipEvent;
@@ -44,6 +47,7 @@ import com.dl.playfun.utils.FileUploadUtils;
 import com.dl.playfun.utils.ListUtils;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.utils.TimeUtils;
+import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.widget.emptyview.EmptyState;
 import com.google.gson.Gson;
 import com.dl.playfun.R;
@@ -53,6 +57,7 @@ import com.tencent.qcloud.tuicore.Status;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -91,6 +96,7 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
     public ObservableField<String> dynamicPic2 = new ObservableField<>();
     public ObservableField<String> dynamicPic3 = new ObservableField<>();
     public ObservableField<String> dynamicPic4 = new ObservableField<>();
+    public int position ;
     UIChangeObservable uc = new UIChangeObservable();
     //下拉刷新
     public BindingCommand onRefreshCommand = new BindingCommand(() -> {
@@ -149,13 +155,7 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
         if (detailEntity.get() == null) {
             return;
         }
-
-        if (detailEntity.get().isConnectionMic()) {
-            //视频拨打
-            getCallingInvitedInfo(2, detailEntity.get().getImUserId(), detailEntity.get().getImToUserId());
-        } else {
-            ToastUtils.showShort(R.string.user_detail_him_disable_mic2);
-        }
+        getCallingInvitedInfo(2, detailEntity.get().getImUserId(), detailEntity.get().getImToUserId());
     });
     /**
      * 語音通話
@@ -168,13 +168,7 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
         if (detailEntity.get() == null) {
             return;
         }
-
-        if (detailEntity.get().isConnectionMic()) {
-            //语音拨打
-            getCallingInvitedInfo(1, detailEntity.get().getImUserId(), detailEntity.get().getImToUserId());
-        } else {
-            ToastUtils.showShort(R.string.user_detail_him_disable_mic);
-        }
+        getCallingInvitedInfo(1, detailEntity.get().getImUserId(), detailEntity.get().getImToUserId());
     });
     //申请查看
     public BindingCommand applyCheckDetailOnClickCommand = new BindingCommand(() -> {
@@ -189,9 +183,16 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
     private boolean isLinkMic = false;
     //进入私聊页面
     public BindingCommand chatOnClickCommand = new BindingCommand(() -> {
-        AppContext.instance().logEvent(AppsFlyerEvent.Send_message);
-        ChatUtils.chatUser(detailEntity.get().getImToUserId(),userId.get(), detailEntity.get().getNickname(), this);
-        //isChat(userId.get(), 1);
+        if (detailEntity.get() == null) {
+            return;
+        }
+        if (detailEntity.get().getIsAccost() == 1){
+            AppContext.instance().logEvent(AppsFlyerEvent.Send_message);
+            ChatUtils.chatUser(detailEntity.get().getImToUserId(),userId.get(), detailEntity.get().getNickname(), this);
+        }else {
+            putAccostFirst();
+        }
+
     });
     //申请查看相册
     public BindingCommand applyCheckAlbumOnClickCommand = new BindingCommand(() -> {
@@ -406,6 +407,38 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
                         stopRefreshOrLoadMore();
                     }
 
+                });
+    }
+
+    //搭讪
+    public void putAccostFirst() {
+        model.putAccostFirst(userId.get())
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(this)
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseResponse>() {
+                    @Override
+                    public void onSuccess(BaseResponse response) {
+                        ToastUtils.showShort(R.string.playfun_text_accost_success1);
+                        RxBus.getDefault().post(new AccostEvent(position));
+                        loadData();
+                    }
+
+                    @Override
+                    public void onError(RequestException e) {
+                        super.onError(e);
+                        if(e.getCode()!=null && e.getCode() == 21001 ){//钻石余额不足
+                            ToastCenterUtils.showToast(R.string.playfun_dialog_exchange_integral_total_text3);
+                            uc.sendAccostFirstError.call();
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        super.onComplete();
+                        dismissHUD();
+                    }
                 });
     }
 
@@ -912,7 +945,7 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
                     public void onError(RequestException e) {
                         super.onError(e);
                         if (e != null) {
-                            if (e.getCode() == 1) {
+                            if (e.getCode() == 21001) {
                                 uc.sendDialogViewEvent.call();
                             }
                         }
@@ -956,5 +989,6 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
         public SingleLiveEvent<Void> finishRefreshing = new SingleLiveEvent<>();
         //钻石不足。唤起充值
         public SingleLiveEvent<Void> sendDialogViewEvent = new SingleLiveEvent<>();
+        public SingleLiveEvent<Void> sendAccostFirstError = new SingleLiveEvent<>();
     }
 }

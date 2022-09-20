@@ -33,6 +33,8 @@ import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.tencent.imsdk.v2.V2TIMCallback;
+import com.tencent.qcloud.tuicore.TUILogin;
+import com.tencent.qcloud.tuicore.interfaces.TUICallback;
 import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
 
 import io.reactivex.disposables.Disposable;
@@ -212,15 +214,14 @@ public class MainContainerActivity extends MySupportActivity {
                                 .setNotClose(true)
                                 .setConfirmOnlick(dialog -> {
                                     dialog.dismiss();
-                                    TUIUtils.logout(new V2TIMCallback() {
+                                    TUILogin.logout(new TUICallback() {
                                         @Override
                                         public void onSuccess() {
                                             startWithPopTo(new LoginFragment(), MainFragment.class, true);
                                         }
 
                                         @Override
-                                        public void onError(int i, String s) {
-                                            //返回游戏
+                                        public void onError(int errorCode, String errorMessage) {
                                             startWithPopTo(new LoginFragment(), MainFragment.class, true);
                                         }
                                     });

@@ -22,6 +22,7 @@ import com.tencent.custom.PhotoAlbumItemEntity;
 import com.tencent.qcloud.tuicore.component.dialog.TUIKitDialog;
 import com.tencent.qcloud.tuicore.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuicore.custom.entity.MediaGalleryEditEntity;
+import com.tencent.qcloud.tuicore.custom.entity.SystemTipsEntity;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
@@ -650,6 +651,13 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
             public void onClickCustomText() {
                 if (mOnItemClickListener != null) {
                     mOnItemClickListener.onClickCustomText();
+                }
+            }
+
+            @Override
+            public void systemTipsOnClick(int position, TUIMessageBean messageInfo, SystemTipsEntity systemTipsEntity) {
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.systemTipsOnClick(position,messageInfo, systemTipsEntity);
                 }
             }
         });

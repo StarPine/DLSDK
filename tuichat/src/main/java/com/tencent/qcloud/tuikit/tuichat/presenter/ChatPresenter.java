@@ -124,7 +124,13 @@ public abstract class ChatPresenter {
     }
 
     public void loadMessage(int type, TUIMessageBean locateMessage) {
-        loadMessage(type, locateMessage, null);
+        loadMessage(type, locateMessage, new IUIKitCallback<List<TUIMessageBean>>() {
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                loadMessage(type, locateMessage,null);
+                messageListAdapter.onViewNeedRefresh(MessageRecyclerView.DATA_CHANGE_TYPE_REFRESH, 0);
+            }
+        });
     }
 
     public void loadMessage(int type, TUIMessageBean locateMessage, IUIKitCallback<List<TUIMessageBean>> callback) {};
@@ -212,6 +218,7 @@ public abstract class ChatPresenter {
 
                     @Override
                     public void onError(String module, int errCode, String errMsg) {
+                        messageListAdapter.onViewNeedRefresh(MessageRecyclerView.DATA_CHANGE_TYPE_REFRESH, 0);
                         TUIChatUtils.callbackOnError(callback, errCode, errMsg);
                     }
                 });

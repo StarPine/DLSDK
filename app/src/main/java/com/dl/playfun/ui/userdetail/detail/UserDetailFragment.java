@@ -79,8 +79,10 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
 
     public static final String ARG_USER_DETAIL_USER_ID = "arg_user_detail_user_id";
     public static final String ARG_USER_DETAIL_MORENUMBER = "arg_user_detail_morenumber";
+    public static final String ARG_USER_DETAIL_POSITION = "arg_user_detail_position";
 
     private int userId;
+    private int position;
     private Integer moreNumber;
 
     private boolean flagShow = false;
@@ -115,6 +117,7 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
     public void initParam() {
         super.initParam();
         userId = getArguments().getInt(ARG_USER_DETAIL_USER_ID, 0);
+        position = getArguments().getInt(ARG_USER_DETAIL_POSITION, -1);
         moreNumber = Integer.getInteger(getArguments().getString(ARG_USER_DETAIL_MORENUMBER));
     }
 
@@ -149,6 +152,14 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
 
     @Override
     public void initViewObservable() {
+        //搭讪相关
+        viewModel.uc.sendAccostFirstError.observe(this, new Observer<Void>() {
+            @Override
+            public void onChanged(Void unused) {
+                AppContext.instance().logEvent(AppsFlyerEvent.Top_up);
+                toRecharge();
+            }
+        });
         viewModel.uc.sendDialogViewEvent.observe(this, event -> {
             paySelectionboxChoose();
         });
@@ -507,6 +518,7 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
     @Override
     public void initData() {
         super.initData();
+        viewModel.position = position;
         binding.refreshLayout.setEnableLoadMore(false);
         binding.meAvatar.setOnClickListener(this);
         binding.ivBack.setOnClickListener(this);

@@ -8,6 +8,8 @@ import androidx.databinding.ObservableField;
 import com.dl.playfun.entity.AdItemEntity;
 import com.dl.playfun.event.TaskMainTabEvent;
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
+import com.dl.playfun.ui.mine.wallet.diamond.recharge.DiamondRechargeActivity;
+import com.dl.playfun.ui.task.webview.FukuokaViewFragment;
 import com.dl.playfun.ui.webview.WebHomeFragment;
 
 import me.goldze.mvvmhabit.base.MultiItemViewModel;
@@ -33,7 +35,7 @@ public class HomeMainBannerItemViewModel extends MultiItemViewModel<HomeMainView
             AdItemEntity adItemEntity = itemEntity.get();
             int typeAct = adItemEntity.getType();
             if(typeAct!=0){
-                //客户端跳转类型 1:会员中心 2：任务中心 3：天天福袋 4：推币机
+                //客户端跳转类型 1:会员中心 2：任务中心 3：天天福袋 4：推币机 5:钻石储值
                 switch (typeAct){
                     case 1:
                         viewModel.start(VipSubscribeFragment.class.getCanonicalName());
@@ -47,6 +49,10 @@ public class HomeMainBannerItemViewModel extends MultiItemViewModel<HomeMainView
                     case 4:
                         viewModel.uc.coinPusherRoomEvent.postValue(null);
                         break;
+                    case 5:
+                        viewModel.startActivity(DiamondRechargeActivity.class);
+                        break;
+
                 }
             }else{
                 if(adItemEntity!=null && adItemEntity.getLink()!=null){

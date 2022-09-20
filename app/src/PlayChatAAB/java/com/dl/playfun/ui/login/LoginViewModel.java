@@ -65,7 +65,6 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
     public SingleLiveEvent<String> getCodeSuccess = new SingleLiveEvent<>();
     public SingleLiveEvent<String> setAreaSuccess = new SingleLiveEvent<>();
 
-
     private Disposable ItemChooseAreaSubscription;
     //选择地区
     public BindingCommand ChooseAreaView = new BindingCommand(()->{
@@ -135,6 +134,7 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
                         TokenEntity tokenEntity = new TokenEntity(authLoginUserEntity.getToken(),authLoginUserEntity.getUserID(),authLoginUserEntity.getUserSig(), authLoginUserEntity.getIsContract());
                         model.saveLoginInfo(tokenEntity);
                         model.putKeyValue("areaCode",new Gson().toJson(areaCode.get()));
+                        model.putKeyValue(AppConfig.LOGIN_TYPE,"phone");
                         if (response.getData() != null && response.getData().getIsNewUser() != null && response.getData().getIsNewUser().intValue() == 1) {
                             AppContext.instance().logEvent(AppsFlyerEvent.register_start);
                             model.saveIsNewUser(true);
@@ -190,6 +190,7 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
                             AppContext.instance().logEvent(AppsFlyerEvent.register_start);
                         }
                         model.saveLoginInfo(tokenEntity);
+                        model.putKeyValue(AppConfig.LOGIN_TYPE,type);
                         loadProfile();
                     }
 

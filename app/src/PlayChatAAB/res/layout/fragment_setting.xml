@@ -53,34 +53,10 @@
                 android:orientation="vertical"
                 android:paddingBottom="30dp">
 
-                <LinearLayout
-                    style="@style/ProfileItem"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/profile_item_height"
-                    android:gravity="center_vertical"
-                    android:background="@color/white">
-
-                    <TextView
-                        style="@style/ProfileItemTitle"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
-                        android:text="@string/playfun_setting_allow_link_mic"
-                        />
-
-                    <Switch
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="@={viewModel.privacyEntity.connection}"
-                        binding:onClickCommand="@{viewModel.isConnectionOnClickCommand}" />
-                </LinearLayout>
-
                 <RelativeLayout
                     style="@style/ProfileItem"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/profile_item_height"
-                    android:layout_marginTop="10dp"
                     android:background="@color/white"
                     binding:onClickCommand="@{viewModel.pushSettingOnClickCommand}">
 

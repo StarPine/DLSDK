@@ -7,6 +7,7 @@ import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.data.source.http.interceptor.ApiTimeOutInterceptor;
 import com.dl.playfun.data.source.http.interceptor.TokenInterceptor;
+import com.dl.playfun.utils.ApiUitl;
 import com.ihsanbal.logging.Level;
 import com.ihsanbal.logging.LoggingInterceptor;
 
@@ -81,9 +82,11 @@ public class RetrofitClient {
 //                - 宠物大富翁-台湾繁体 source值 1648699860 twpet_
         headers.put("client", "Android");
         headers.put("sdkVersion", AppConfig.SDK_VERSION_NAME_PUSH);
-        headers.put("version", AppConfig.VERSION_NAME_PUSH);
+        headers.put("build", AppConfig.VERSION_CODE+"");
+        headers.put("version", AppConfig.VERSION_NAME);
         //source 来源ID 1642158125=喵遊(俄语) 1648520220=杜拉克 //playchat 1648626888
         headers.put("appId",AppConfig.APPID);
+        headers.put("deviceCode", ApiUitl.getAndroidId());
         headers.put("Accept-Language", mContext.getString(R.string.playfun_local_language));
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .cookieJar(new CookieJarImpl(new PersistentCookieStore(mContext)))

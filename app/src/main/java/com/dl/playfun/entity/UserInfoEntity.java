@@ -4,6 +4,8 @@ import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 import com.dl.playfun.BR;
+import com.dl.playfun.data.typeadapter.BooleanTypeAdapter;
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -83,6 +85,28 @@ public class UserInfoEntity extends BaseObservable {
     //是否开放专属招呼入口 0否 1是
     @SerializedName("isAnchor")
     private int isAnchor;
+    @SerializedName("allowVideo")
+    @JsonAdapter(BooleanTypeAdapter.class)
+    private Boolean allowVideo;
+    @SerializedName("allowAudio")
+    @JsonAdapter(BooleanTypeAdapter.class)
+    private Boolean allowAudio;
+
+    public Boolean getAllowVideo() {
+        return allowVideo;
+    }
+
+    public void setAllowVideo(Boolean allowVideo) {
+        this.allowVideo = allowVideo;
+    }
+
+    public Boolean getAllowAudio() {
+        return allowAudio;
+    }
+
+    public void setAllowAudio(Boolean allowAudio) {
+        this.allowAudio = allowAudio;
+    }
 
     public int getAnchor() {
         return anchor;

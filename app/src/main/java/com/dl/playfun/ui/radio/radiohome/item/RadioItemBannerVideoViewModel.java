@@ -1,6 +1,7 @@
 package com.dl.playfun.ui.radio.radiohome.item;
 
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
@@ -11,9 +12,12 @@ import androidx.databinding.ObservableField;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
 import com.dl.playfun.R;
+import com.dl.playfun.app.AppContext;
+import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.entity.AdUserItemEntity;
 import com.dl.playfun.ui.radio.radiohome.RadioViewModel;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
+import com.dl.playfun.utils.ExceptionReportUtils;
 import com.dl.playfun.utils.StringUtil;
 import com.tencent.qcloud.tuicore.Status;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
@@ -45,6 +49,13 @@ public class RadioItemBannerVideoViewModel extends MultiItemViewModel<RadioViewM
         int position = viewModel.radioItemsAdUser.indexOf(this);
         if(position!=-1){
             viewModel.itemClickChangeIdx(position);
+        }
+        try {
+            AppContext.instance().logEvent(AppsFlyerEvent.Nearby_Follow);
+            Bundle bundle = UserDetailFragment.getStartBundle(adUserItemEntity.get().getUserId());
+            viewModel.start(UserDetailFragment.class.getCanonicalName(), bundle);
+        } catch (Exception e) {
+            ExceptionReportUtils.report(e);
         }
     });
     //获取播放状态图片

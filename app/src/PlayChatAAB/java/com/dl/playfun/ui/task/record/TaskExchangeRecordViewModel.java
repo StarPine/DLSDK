@@ -31,7 +31,7 @@ public class TaskExchangeRecordViewModel extends BaseViewModel<AppRepository> {
     public BindingCommand helpOnClickCommand = new BindingCommand(new BindingAction() {
         @Override
         public void call() {
-            Bundle bundle = WebDetailFragment.getStartBundle(AppConfig.ExchangeRecord_URL);
+            Bundle bundle = WebDetailFragment.getStartBundle(model.readApiConfigManagerEntity().getPlayChatWebUrl() + "/ExchangeRule");
             start(WebDetailFragment.class.getCanonicalName(), bundle);
         }
     });

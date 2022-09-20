@@ -15,10 +15,12 @@ import com.blankj.utilcode.util.SizeUtils;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
+import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.Injection;
 import com.dl.playfun.databinding.FragmentOftenContactBinding;
 import com.dl.playfun.entity.TokenEntity;
+import com.dl.playfun.event.LoginExpiredEvent;
 import com.dl.playfun.event.MessageCountChangeContactEvent;
 import com.dl.playfun.manager.ThirdPushTokenMgr;
 import com.dl.playfun.tim.TUIUtils;
@@ -28,6 +30,7 @@ import com.dl.playfun.utils.ChatUtils;
 import com.dl.playfun.widget.dialog.TraceDialog;
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.qcloud.tuicore.TUILogin;
+import com.tencent.qcloud.tuicore.interfaces.TUICallback;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
 import com.tencent.qcloud.tuikit.tuiconversation.ui.view.ConversationListLayout;
@@ -74,7 +77,7 @@ public class OftenContactFragment extends BaseFragment<FragmentOftenContactBindi
             if(TUILogin.isUserLogined()){
                 initIM();
             }else{
-                TUIUtils.login(tokenEntity.getUserID(), tokenEntity.getUserSig(), new V2TIMCallback() {
+                TUILogin.login(mActivity, Injection.provideDemoRepository().readApiConfigManagerEntity().getImAppId(), tokenEntity.getUserID(), tokenEntity.getUserSig(), new TUICallback() {
                     @Override
                     public void onSuccess() {
                         initIM();
@@ -84,6 +87,7 @@ public class OftenContactFragment extends BaseFragment<FragmentOftenContactBindi
                     @Override
                     public void onError(int code, String desc) {
                         KLog.e("tencent im login error  errCode = " + code + ", errInfo = " + desc);
+                        viewModel.flushSign();
                     }
                 });
             }
@@ -135,6 +139,7 @@ public class OftenContactFragment extends BaseFragment<FragmentOftenContactBindi
         listLayout.disableItemUnreadDot(false);
         initConversationListener();
     }
+
     public void initConversationListener(){
         binding.conversationLayoutContact.getConversationList().setOnItemAvatarClickListener((view, position, messageInfo) -> {
             //点击用户头像
@@ -151,7 +156,6 @@ public class OftenContactFragment extends BaseFragment<FragmentOftenContactBindi
         binding.conversationLayoutContact.getConversationList().setBanConversationDelListener(() -> viewModel.dismissHUD());
 
         binding.conversationLayoutContact.getConversationList().setOnItemClickListener((view, position, messageInfo) -> {
-            //点击用户头像
             String id = messageInfo.getId();
             if (id.trim().contains(AppConfig.CHAT_SERVICE_USER_ID)) {
                 ChatUtils.startChatActivity(messageInfo,0,viewModel);
@@ -196,10 +200,15 @@ public class OftenContactFragment extends BaseFragment<FragmentOftenContactBindi
                 ChatUtils.startChatActivity(selectedConversationInfo,toUserId,viewModel);
             }
         });
+
+
     }
 
     @Override
     public void initViewObservable() {
-
+        viewModel.loginSuccess.observe(this, Void -> {
+            initIM();
+            ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
+        });
     }
 }
