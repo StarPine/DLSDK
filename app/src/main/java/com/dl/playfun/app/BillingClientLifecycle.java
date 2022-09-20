@@ -21,6 +21,7 @@ import com.android.billingclient.api.ConsumeParams;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchaseHistoryRecord;
 import com.android.billingclient.api.PurchaseHistoryResponseListener;
+import com.android.billingclient.api.PurchasesResponseListener;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
@@ -378,6 +379,7 @@ public class BillingClientLifecycle implements LifecycleObserver, BillingClientS
                             //确认购买交易，不然三天后会退款给用户
                             try {
                                 Purchase purchase = new Purchase(purchaseHistoryRecord.getOriginalJson(), purchaseHistoryRecord.getSignature());
+                                Log.e(TAG,SkuType+"===="+purchaseHistoryRecord.getSkus()+"=查询当前订单状态："+purchase.toString());
                                 if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
                                     //消耗品 开始消耗
                                     consumePurchaseHistory(purchase);
@@ -431,6 +433,30 @@ public class BillingClientLifecycle implements LifecycleObserver, BillingClientS
     //返回支付流程节点
     private BillingPurchasesState getBillingPurchasesState(int billingResponseCode, BillingPurchasesState.BillingFlowNode billingFlowNode, Purchase purchase){
         return new BillingPurchasesState(billingResponseCode,billingFlowNode,purchase);
+    }
+
+    /**
+     * 补单操作 查询已支付的商品，并通知服务器后消费（google的支付里面，没有消费的商品，不能再次购买）
+     */
+    public void queryPurchasesAsync(String SkuType){
+        PurchasesResponseListener mPurchasesResponseListener = (billingResult, purchasesResult) -> {
+            if(billingResult.getResponseCode() != BillingClient.BillingResponseCode.OK) return;
+            if(purchasesResult!=null && !purchasesResult.isEmpty()){
+                for (Purchase purchase : purchasesResult) {
+                    if(purchase!=null){
+                        if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
+                            //消耗品 开始消耗
+                            consumePurchaseHistory(purchase);
+                            //确认购买交易
+                            if (!purchase.isAcknowledged()) {
+                                acknowledgeHistoryPurchase(purchase);
+                            }
+                        }
+                    }
+                }
+            }
+        };
+        billingClient.queryPurchasesAsync(SkuType,mPurchasesResponseListener);
     }
 
 }

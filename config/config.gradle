@@ -13,7 +13,7 @@ ext {
     //是否切成PLayFUn打包aar
     BuildSdkPlayfun = false;
     //是否 PlayChat打包(false = Debug 或 true = 正式包)成 app
-    BuildPlayChatRelease = false;
+    BuildPlayChatRelease = true;
 
     //android开发版本配置
     android = [
@@ -75,8 +75,8 @@ ext {
             "appsflyer"                    : 'com.appsflyer:af-android-sdk:6.8.2' ,
 
             // facebook
-            "facebook-core"                : 'com.facebook.android:facebook-core:11.1.1',
-            "facebook-login"               : 'com.facebook.android:facebook-login:11.1.1',
+            "facebook-core"                : 'com.facebook.android:facebook-core:14.1.1',
+            "facebook-login"               : 'com.facebook.android:facebook-login:14.1.1',
             "faceunity-core"               : 'com.faceunity:core:8.1.0',
             "faceunity-model"               : 'com.faceunity:model:8.1.0',
 

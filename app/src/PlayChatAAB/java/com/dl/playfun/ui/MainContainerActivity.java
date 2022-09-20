@@ -325,7 +325,8 @@ public class MainContainerActivity extends MySupportActivity {
             //页面可见时间 - 页面创建时间 < 10秒。说明再次进入。继续查询订单
             if(onResumeLastTime - onCreateTime  >= 10){
                 onCreateTime = onResumeLastTime;
-                queryAndConsumePurchase();
+            }else {
+                return;
             }
         }
         //queryPurchases() 方法会使用 Google Play 商店应用的缓存，而不会发起网络请求

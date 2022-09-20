@@ -46,6 +46,7 @@ import com.dl.playfun.ui.MainContainerActivity;
 import com.dl.playfun.ui.login.LoginFragment;
 import com.dl.playfun.ui.main.MainFragment;
 import com.dl.playfun.utils.StringUtil;
+import com.facebook.FacebookSdk;
 import com.faceunity.nama.FURenderer;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -171,7 +172,6 @@ public class AppContext extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         instance = this;
         BaseApplication.setApplication(this);
 
