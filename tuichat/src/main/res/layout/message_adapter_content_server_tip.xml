@@ -15,10 +15,7 @@
         android:includeFontPadding="false"
         android:maxWidth="280dp"
         android:gravity="center_horizontal"
-        android:paddingStart="5dp"
-        android:paddingTop="1dp"
-        android:paddingEnd="5dp"
-        android:paddingBottom="1dp"
+        android:padding="5dp"
         android:textSize="11sp"
         tools:text="dsaga阿公会开关华控股哈好看暗示法咖啡加快发哈拒绝好看暗示法咖啡加快发哈拒绝好看暗示法咖啡加快发哈拒绝好看暗示法咖啡加快发哈拒绝"
         />

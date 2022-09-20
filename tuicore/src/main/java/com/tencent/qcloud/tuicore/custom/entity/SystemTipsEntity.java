@@ -1,6 +1,7 @@
 package com.tencent.qcloud.tuicore.custom.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 修改备注：
@@ -12,8 +13,8 @@ import java.io.Serializable;
  */
 public class SystemTipsEntity implements Serializable {
     private int type;
-    private String content;
     private String url;
+    private List<ContentBean> content;
 
     public String getUrl() {
         return url;
@@ -31,11 +32,41 @@ public class SystemTipsEntity implements Serializable {
         this.type = type;
     }
 
-    public String getContent() {
+    public List<ContentBean> getContent() {
         return content;
     }
 
-    public void setContent(String content) {
+    public void setContent(List<ContentBean> content) {
         this.content = content;
+    }
+
+    public static class ContentBean implements Serializable {
+        private String text;
+        private String color;
+        private int bold;
+
+        public String getText() {
+            return text;
+        }
+
+        public void setText(String text) {
+            this.text = text;
+        }
+
+        public String getColor() {
+            return color;
+        }
+
+        public void setColor(String color) {
+            this.color = color;
+        }
+
+        public int getBold() {
+            return bold;
+        }
+
+        public void setBold(int bold) {
+            this.bold = bold;
+        }
     }
 }
