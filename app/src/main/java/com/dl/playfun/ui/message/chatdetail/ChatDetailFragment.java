@@ -107,6 +107,7 @@ import com.tencent.qcloud.tuicore.custom.CustomConstants;
 import com.tencent.qcloud.tuicore.custom.entity.SystemTipsEntity;
 import com.tencent.qcloud.tuicore.custom.CustomConstants;
 import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
+import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
@@ -158,6 +159,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     //默认记录马上视频的距离底部宽高
     private volatile int defBottomMargin = 0;
     private volatile int defBottomMarginHeight = 0;
+    private CoinRechargeSheetView coinRechargeFragmentView;
 
     @Nullable
     @Override
@@ -1422,8 +1424,12 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             AppContext.instance().logEvent(AppsFlyerEvent.im_topup);
         }
         AppContext.instance().logEvent(AppsFlyerEvent.Top_up);
-        CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(mActivity);
-        coinRechargeFragmentView.show();
+        if (coinRechargeFragmentView == null){
+            coinRechargeFragmentView = new CoinRechargeSheetView(mActivity);
+        }
+        if (!coinRechargeFragmentView.isShowing()){
+            coinRechargeFragmentView.show();
+        }
     }
 
     @Override

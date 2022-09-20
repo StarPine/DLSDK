@@ -11,15 +11,20 @@ import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
+import com.dl.playfun.entity.DiamondPaySuccessEntity;
 import com.dl.playfun.entity.GameCoinWalletEntity;
+import com.dl.playfun.entity.ShowFloatWindowEntity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.mine.wallet.coin.CoinFragment;
 import com.dl.playfun.ui.mine.wallet.girl.TwDollarMoneyFragment;
 import com.dl.playfun.ui.mine.webview.WebViewFragment;
 import com.dl.playfun.viewmodel.BaseViewModel;
 
+import io.reactivex.disposables.Disposable;
 import me.goldze.mvvmhabit.binding.command.BindingAction;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
+import me.goldze.mvvmhabit.bus.RxBus;
+import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.RxUtils;
 import me.goldze.mvvmhabit.utils.StringUtils;
@@ -38,6 +43,8 @@ public class WalletViewModel extends BaseViewModel<AppRepository> {
     public ObservableField<String> totalGameCoin = new ObservableField<>();
 
     public SingleLiveEvent<Void> certification = new SingleLiveEvent<>();
+    //RxBus订阅事件
+    private Disposable paySuccessSubscriber;
 
     public WalletViewModel(@NonNull Application application, AppRepository repository) {
         super(application, repository);
@@ -105,6 +112,22 @@ public class WalletViewModel extends BaseViewModel<AppRepository> {
                         dismissHUD();
                     }
                 });
+    }
+
+    @Override
+    public void registerRxBus() {
+        super.registerRxBus();
+        paySuccessSubscriber = RxBus.getDefault().toObservable(DiamondPaySuccessEntity.class).subscribe(event -> {
+            getUserAccount();
+        });
+        //将订阅者加入管理站
+        RxSubscriptions.add(paySuccessSubscriber);
+    }
+
+    @Override
+    public void removeRxBus() {
+        super.removeRxBus();
+        RxSubscriptions.remove(paySuccessSubscriber);
     }
 
     public boolean getTipMoneyShowFlag() {
