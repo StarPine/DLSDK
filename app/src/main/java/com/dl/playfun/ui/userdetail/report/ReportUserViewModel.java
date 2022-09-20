@@ -42,6 +42,7 @@ public class ReportUserViewModel extends BaseViewModel<AppRepository> {
     public List<String> images = new ArrayList<>();
     public List<String> filePaths = new ArrayList<>();
     public String type;
+    public int count = 0;
     public ObservableField<String> description = new ObservableField<>("");
     public BindingRecyclerViewAdapter<ReportItemViewModel> adapter = new BindingRecyclerViewAdapter<>();
     public ObservableList<ReportItemViewModel> reportItemViewModels = new ObservableArrayList<>();
@@ -58,17 +59,15 @@ public class ReportUserViewModel extends BaseViewModel<AppRepository> {
                 return;
             }
             if (type.equals("home")) {
-                if (ListUtils.isEmpty(filePaths)) {
-                    ToastUtils.showShort(R.string.playfun_report_user_provide);
-                    return;
-                } else {
+                if (!ListUtils.isEmpty(filePaths)){
                     for (int i = 0; i < filePaths.size(); i++) {
+                        count++;
                         uploadAvatar(filePaths.get(i));
                     }
+                    return;
                 }
-            } else {
-                commitReport();
             }
+            commitReport();
         }
     });
 
@@ -85,12 +84,6 @@ public class ReportUserViewModel extends BaseViewModel<AppRepository> {
 
     //提交举报
     public void commitReport() {
-        if (type.equals("home")) {
-            if (filePaths.size() != images.size()) {
-                return;
-            }
-        }
-
 
         model.report(id, type, reasonId, images, description.get())
                 .compose(RxUtils.schedulersTransformer())
@@ -128,19 +121,20 @@ public class ReportUserViewModel extends BaseViewModel<AppRepository> {
                 .subscribe(new DisposableObserver<String>() {
                     @Override
                     public void onNext(String fileKey) {
-                        dismissHUD();
                         images.add(fileKey);
-                        commitReport();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        dismissHUD();
                         ToastUtils.showShort(R.string.playfun_upload_failed);
                     }
 
                     @Override
                     public void onComplete() {
+                        count--;
+                        if (count == 0){
+                            commitReport();
+                        }
                         dismissHUD();
                     }
                 });

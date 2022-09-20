@@ -96,7 +96,11 @@ public class PicChooseView extends RecyclerView implements PicChooseAdapter.PicC
     }
 
     private void addPic() {
-        PictureSelectorUtil.selectImage((Activity) getContext(), showCamera, maxSelectNum, 50, new OnResultCallbackListener<LocalMedia>() {
+        int curMaxSelectNum = 0;
+        if (datas.get(datas.size() - 1).getType() == PicChooseItemEntity.TYPE_ADD){
+            curMaxSelectNum = maxSelectNum - datas.size() + 1;
+        }
+        PictureSelectorUtil.selectImage((Activity) getContext(), showCamera, curMaxSelectNum, 50, new OnResultCallbackListener<LocalMedia>() {
             @Override
             public void onResult(List<LocalMedia> result) {
                 if (onMediaOperateListener != null) {
