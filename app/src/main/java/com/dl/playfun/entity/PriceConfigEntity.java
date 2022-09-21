@@ -68,6 +68,17 @@ public class PriceConfigEntity {
         //发送照片、视频价格模板
         private MediaPayPerConfigEntity mediaPayPerConfig;
 
+        //发送付费照片、适配开关
+        private MediaGallerySwitchEntity mediaPayDenyPer;
+
+        public MediaGallerySwitchEntity getMediaPayDenyPer() {
+            return mediaPayDenyPer;
+        }
+
+        public void setMediaPayDenyPer(MediaGallerySwitchEntity mediaPayDenyPer) {
+            this.mediaPayDenyPer = mediaPayDenyPer;
+        }
+
         public MediaPayPerConfigEntity getMediaPayPerConfig() {
             return mediaPayPerConfig;
         }

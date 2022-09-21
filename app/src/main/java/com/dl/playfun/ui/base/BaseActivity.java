@@ -146,9 +146,6 @@ public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseVie
             dialogProgress = new DialogProgress(this.getContext());
         }
         dialogProgress.setProgress(progress);
-        if (!dialogProgress.isShowing()) {
-            dialogProgress.show();
-        }
     }
 
     public void dismissHud() {

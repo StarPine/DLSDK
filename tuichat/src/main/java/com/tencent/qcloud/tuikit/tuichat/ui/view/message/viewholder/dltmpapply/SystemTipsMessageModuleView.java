@@ -39,7 +39,7 @@ public class SystemTipsMessageModuleView extends BaseMessageModuleView{
                 || CustomConstants.SystemTipsMessage.TYPE_JUMP_WEB.equals(msgModuleInfo.getCustomMsgType())) {
             loadSystemTipsView(position, msg, msgModuleInfo);
         }else{
-            customDlTempMessageHolder.defaultLayout(rootView,msg.isSelf());
+            customDlTempMessageHolder.defaultLayout(rootView, msg.isSelf(),position,msg);
         }
     }
     private void loadSystemTipsView(int position, TUIMessageBean msg, CustomDlTempMessage.MsgBodyInfo msgModuleInfo) {

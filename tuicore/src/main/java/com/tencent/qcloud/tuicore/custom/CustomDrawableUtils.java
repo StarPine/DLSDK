@@ -20,7 +20,8 @@ public class CustomDrawableUtils {
                                         Integer drawable_gradient_startColor,
                                         Integer drawable_gradient_endColor,
                                         Integer drawable_stroke_width,
-                                        Integer drawable_stroke_color
+                                        Integer drawable_stroke_color,
+                                        Integer drawable_alpha
     ) {
         final Context mContext = view.getContext();
         GradientDrawable roundRect = new GradientDrawable();
@@ -68,6 +69,9 @@ public class CustomDrawableUtils {
             colors[0] = drawable_gradient_startColor;
             colors[1] = drawable_gradient_endColor;
             roundRect.setColors(colors);
+        }
+        if(drawable_alpha != null){
+            roundRect.setAlpha(drawable_alpha);
         }
         view.setBackground(roundRect);
     }

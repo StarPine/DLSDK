@@ -31,6 +31,11 @@ public class SystemConfigEntity implements Serializable {
     private int deleteAccount;
     private SystemConfigContentEntity content;
 
+    //快照可看时间--2022-09-21
+    private Integer photoSnapshotTime = 2;
+    //VIP快照可看时间--2022-09-21
+    private Integer photoSnapshotVIPTime;
+
     //会话列表限制数量
     @SerializedName("conversation_astrict_count")
     private Integer conversationAstrictCount;
@@ -52,6 +57,23 @@ public class SystemConfigEntity implements Serializable {
     private int registerMaleAccost;
     @SerializedName("registerFemaleAccost")
     private int registerFemaleAccost;
+
+
+    public Integer getPhotoSnapshotVIPTime() {
+        return photoSnapshotVIPTime;
+    }
+
+    public void setPhotoSnapshotVIPTime(Integer photoSnapshotVIPTime) {
+        this.photoSnapshotVIPTime = photoSnapshotVIPTime;
+    }
+
+    public Integer getPhotoSnapshotTime() {
+        return photoSnapshotTime;
+    }
+
+    public void setPhotoSnapshotTime(Integer photoSnapshotTime) {
+        this.photoSnapshotTime = photoSnapshotTime;
+    }
 
     public int getMaleAccost() {
         return maleAccost;

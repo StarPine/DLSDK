@@ -49,7 +49,7 @@ public class MediaGalleryModuleView extends BaseMessageModuleView {
         super(customDlTempMessageHolder);
     }
 
-    public void layoutVariableViews(TUIMessageBean msg, FrameLayout rootView, CustomDlTempMessage.MsgBodyInfo msgModuleInfo){
+    public void layoutVariableViews(TUIMessageBean msg, FrameLayout rootView, int position, CustomDlTempMessage.MsgBodyInfo msgModuleInfo){
         switch (msgModuleInfo.getCustomMsgType()){
             case CustomConstants.MediaGallery.PHOTO_GALLERY:
                 PhotoGalleryPayEntity customImageMessageBean = IMGsonUtils.fromJson(IMGsonUtils.toJson(msgModuleInfo.getCustomMsgBody()),PhotoGalleryPayEntity.class);
@@ -61,19 +61,44 @@ public class MediaGalleryModuleView extends BaseMessageModuleView {
                 break;
             default:
                 //默认展示解析不出的模板提示
-                customDlTempMessageHolder.defaultLayout(rootView,msg.isSelf());
+                customDlTempMessageHolder.defaultLayout(rootView, msg.isSelf(),position,msg);
                 break;
         }
     }
 
-    //测试自定义图片渲染
+    //设置展示收益内容
+    private void tvProfitTipTmp(TextView tvProfitTip,FrameLayout flContainer,ImageView imgUnlock,String moneyTmpText, BigDecimal redPackageRevenue){
+        if(redPackageRevenue!=null && redPackageRevenue.doubleValue()>0){
+            tvProfitTip.setText(String.format(moneyTmpText,redPackageRevenue.setScale(2, RoundingMode.HALF_UP)));
+            LinearLayout.LayoutParams flParams = (LinearLayout.LayoutParams) flContainer.getLayoutParams();
+            LinearLayout.LayoutParams tvParams = (LinearLayout.LayoutParams) tvProfitTip.getLayoutParams();
+            flParams.gravity = Gravity.END;
+            tvParams.gravity = Gravity.END;
+            flContainer.setLayoutParams(flParams);
+            tvProfitTip.setLayoutParams(tvParams);
+            tvProfitTip.setVisibility(View.VISIBLE);
+            imgUnlock.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * @Desc TODO(付费照片or普通照片or快照)
+     * @author 彭石林
+     * @parame [msg, rootView, videoGalleryPayEntity]
+     * @return void
+     * @Date 2022/9/21
+     */
     public void LoadMediaGalleryPhoto(TUIMessageBean msg, FrameLayout rootView, PhotoGalleryPayEntity photoGalleryPayEntity){
         //自定义头部消息体转换
         CloudCustomDataMediaGalleryEntity cloudCustomDataMediaGalleryEntity = getCloudCustomDataConvert(msg.getV2TIMMessage().getCloudCustomData());
+        if(cloudCustomDataMediaGalleryEntity == null){
+            cloudCustomDataMediaGalleryEntity = new CloudCustomDataMediaGalleryEntity();
+        }
         View customImageView = View.inflate(getContext(), R.layout.tmp_message_photo_gallery_layout, null);
         FrameLayout flContainer = customImageView.findViewById(R.id.fl_container);
         customImageView.setBackgroundColor(Color.TRANSPARENT);
         customImageView.setLayoutParams(new FrameLayout.LayoutParams(-2,-2));
+        //快照角标
         FrameLayout fLTlLayout = customImageView.findViewById(R.id.fl_tl_layout);
         //底部布局
         RelativeLayout rlLayout = customImageView.findViewById(R.id.rl_layout);
@@ -95,32 +120,22 @@ public class MediaGalleryModuleView extends BaseMessageModuleView {
             if(stateSnapshot){
                 CustomDrawableUtils.generateDrawable(fLTlLayout, Color.parseColor("#717477"),
                         null,8,null,null,8,
-                        null,null,null,null);
+                        null,null,null,null,null);
             }
             //是否解锁
-            if(cloudCustomDataMediaGalleryEntity!=null && !cloudCustomDataMediaGalleryEntity.isUnLocked()){
+            if(!cloudCustomDataMediaGalleryEntity.isUnLocked()){
                 //已经解锁
                 fLUnlockLayout.setVisibility(View.GONE);
                 if(msg.isSelf()){
-                    //收益
-                    BigDecimal redPackageRevenue = cloudCustomDataMediaGalleryEntity.getRedPackageRenvenue();
-                    if(redPackageRevenue!=null && redPackageRevenue.doubleValue()>0){
-                        String photoText = getContext().getString(R.string.dl_tmp_mediagallery_text);
-                        tvProfitTip.setText(String.format(photoText,redPackageRevenue.setScale(2, RoundingMode.HALF_UP)));
-                        LinearLayout.LayoutParams flParams = (LinearLayout.LayoutParams) flContainer.getLayoutParams();
-                        LinearLayout.LayoutParams tvParams = (LinearLayout.LayoutParams) tvProfitTip.getLayoutParams();
-                        flParams.gravity = Gravity.END;
-                        tvParams.gravity = Gravity.END;
-                        flContainer.setLayoutParams(flParams);
-                        tvProfitTip.setLayoutParams(tvParams);
-                        tvProfitTip.setVisibility(View.VISIBLE);
-                        imgUnlock.setVisibility(View.VISIBLE);
-                    }
+                    String tmpMoneyText = getContext().getString(R.string.dl_tmp_mediagallery_text);
+                    tvProfitTipTmp(tvProfitTip,flContainer,imgUnlock,tmpMoneyText,cloudCustomDataMediaGalleryEntity.getRedPackageRenvenue());
                 }else{
+                    fLTlLayout.setVisibility(View.GONE);
                     if(cloudCustomDataMediaGalleryEntity.isRead()){
                         llBurned.setVisibility(View.VISIBLE);
                         imgUnlock.setVisibility(View.GONE);
                     }else{
+                        imgUnlock.setVisibility(View.VISIBLE);
                         llBurned.setVisibility(View.GONE);
                     }
 
@@ -139,10 +154,17 @@ public class MediaGalleryModuleView extends BaseMessageModuleView {
             //   普通快照： stateSnapshot = true
             if(photoGalleryPayEntity.isStateSnapshot()){
                 stateSnapshot = true;
-                fLTlLayout.setVisibility(View.VISIBLE);
+                if(cloudCustomDataMediaGalleryEntity.isRead() && !msg.isSelf()){
+                    llBurned.setVisibility(View.VISIBLE);
+                    imgUnlock.setVisibility(View.GONE);
+                    fLTlLayout.setVisibility(View.GONE);
+                }else{
+                    llBurned.setVisibility(View.GONE);
+                    fLTlLayout.setVisibility(View.VISIBLE);
+                }
                 CustomDrawableUtils.generateDrawable(fLTlLayout, Color.parseColor("#717477"),
                         null,8,null,null,8,
-                        null,null,null,null);
+                        null,null,null,null,null);
             }else{
                 //隐藏快照标识
                 fLTlLayout.setVisibility(View.GONE);
@@ -166,7 +188,6 @@ public class MediaGalleryModuleView extends BaseMessageModuleView {
                     }
                 }
             }
-
         }else{
             isFuzzy = false;
         }
@@ -189,14 +210,15 @@ public class MediaGalleryModuleView extends BaseMessageModuleView {
         Glide.with(TUIChatService.getAppContext())
                 .load(imagePath)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .apply(override.error(R.drawable.chat_custom_image_error).placeholder(R.drawable.chat_custom_image_load))
+                .apply(override.error(R.drawable.playfun_loading_logo_error_min).placeholder(R.drawable.playfun_loading_logo))
                 .into(imgContent);
         rootView.addView(customImageView);
+        CloudCustomDataMediaGalleryEntity finalCloudCustomDataMediaGalleryEntity = cloudCustomDataMediaGalleryEntity;
         rootView.setOnClickListener(v -> {
             if (customDlTempMessageHolder.onItemClickListener != null) {
                 MediaGalleryEditEntity mediaGalleryEditEntity = new MediaGalleryEditEntity();
-                if(cloudCustomDataMediaGalleryEntity!=null){
-                    mediaGalleryEditEntity.setMsgKeyId(cloudCustomDataMediaGalleryEntity.getMsgKey());
+                if(finalCloudCustomDataMediaGalleryEntity !=null){
+                    mediaGalleryEditEntity.setMsgKeyId(finalCloudCustomDataMediaGalleryEntity.getMsgKey());
                 }
                 mediaGalleryEditEntity.setSelfSend(msg.isSelf());
                 mediaGalleryEditEntity.setSrcPath(photoGalleryPayEntity.getImgPath());
@@ -204,25 +226,57 @@ public class MediaGalleryModuleView extends BaseMessageModuleView {
                 mediaGalleryEditEntity.setUnlockPrice(photoGalleryPayEntity.getUnlockPrice());
                 mediaGalleryEditEntity.setStatePay(photoGalleryPayEntity.isStatePhotoPay());
                 mediaGalleryEditEntity.setStateSnapshot(photoGalleryPayEntity.isStateSnapshot());
-                mediaGalleryEditEntity.setStateUnlockPhoto(!cloudCustomDataMediaGalleryEntity.isUnLocked());
-                mediaGalleryEditEntity.setReadLook(cloudCustomDataMediaGalleryEntity.isRead());
+                mediaGalleryEditEntity.setStateUnlockPhoto(!finalCloudCustomDataMediaGalleryEntity.isUnLocked());
+                mediaGalleryEditEntity.setReadLook(finalCloudCustomDataMediaGalleryEntity.isRead());
                 customDlTempMessageHolder.onItemClickListener.onMediaGalleryClick(mediaGalleryEditEntity);
             }
         });
     }
 
-    //测试自定义图片渲染
+    /**
+    * @Desc TODO(付费影片or普通影片)
+    * @author 彭石林
+    * @parame [msg, rootView, videoGalleryPayEntity]
+    * @return void
+    * @Date 2022/9/21
+    */
     public void LoadMediaGalleryVideo(TUIMessageBean msg, FrameLayout rootView, VideoGalleryPayEntity videoGalleryPayEntity){
         //自定义头部消息体转换
-        CloudCustomDataMediaGalleryEntity cloudCustomDataMediaGalleryEntity = getCloudCustomDataConvert(msg.getV2TIMMessage().getCloudCustomData());
+       CloudCustomDataMediaGalleryEntity cloudCustomDataMediaGalleryEntity = getCloudCustomDataConvert(msg.getV2TIMMessage().getCloudCustomData());
+        if(cloudCustomDataMediaGalleryEntity==null){
+            cloudCustomDataMediaGalleryEntity = new CloudCustomDataMediaGalleryEntity();
+        }
         View customImageView = View.inflate(getContext(), R.layout.tmp_message_video_gallery_layout, null);
         customImageView.setBackgroundColor(Color.TRANSPARENT);
         customImageView.setLayoutParams(new FrameLayout.LayoutParams(-2,-2));
         //底部布局
         RelativeLayout rlLayout = customImageView.findViewById(R.id.rl_layout);
+        //解锁金额布局
+        RelativeLayout fLUnlockLayout = customImageView.findViewById(R.id.fl_unlock_layout);
+        //解锁成功状态
+        ImageView imgUnlock = customImageView.findViewById(R.id.img_unlock);
+        //收益提示
+        TextView tvProfitTip = customImageView.findViewById(R.id.tv_profit_tip);
+        FrameLayout flContainer = customImageView.findViewById(R.id.fl_container);
         //付费视频
         if(videoGalleryPayEntity.isStateVideoPay()){
             rlLayout.setVisibility(View.VISIBLE);
+                //是否已解锁
+                if(!cloudCustomDataMediaGalleryEntity.isUnLocked()){
+                    //发送方是自己
+                    if(msg.isSelf()) {
+                        fLUnlockLayout.setVisibility(View.GONE);
+                        imgUnlock.setVisibility(View.VISIBLE);
+                        //收益
+                        String tmpMoneyText = getContext().getString(R.string.dl_tmp_mediagallery_text2);
+                        tvProfitTipTmp(tvProfitTip,flContainer,imgUnlock,tmpMoneyText,cloudCustomDataMediaGalleryEntity.getRedPackageRenvenue());
+                    }else{
+                        rlLayout.setVisibility(View.GONE);
+                    }
+                }else{
+                    fLUnlockLayout.setVisibility(View.VISIBLE);
+                    imgUnlock.setVisibility(View.GONE);
+                }
             //当前收费价格
             TextView tvCoin = customImageView.findViewById(R.id.tv_coin);
             if(tvCoin!=null){
@@ -254,15 +308,15 @@ public class MediaGalleryModuleView extends BaseMessageModuleView {
         Glide.with(TUIChatService.getAppContext())
                 .load(imagePath)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .apply(override.error(R.drawable.chat_custom_image_error).placeholder(R.drawable.chat_custom_image_load))
+                .apply(override.error(R.drawable.playfun_loading_logo_error_min).placeholder(R.drawable.playfun_loading_logo))
                 .into(imgContent);
         rootView.addView(customImageView);
+        CloudCustomDataMediaGalleryEntity finalCloudCustomDataMediaGalleryEntity = cloudCustomDataMediaGalleryEntity;
         rootView.setOnClickListener(v -> {
             if (customDlTempMessageHolder.onItemClickListener != null) {
                 MediaGalleryEditEntity mediaGalleryEditEntity = new MediaGalleryEditEntity();
-                if(cloudCustomDataMediaGalleryEntity!=null){
-                    mediaGalleryEditEntity.setMsgKeyId(cloudCustomDataMediaGalleryEntity.getMsgKey());
-                }
+                    mediaGalleryEditEntity.setMsgKeyId(finalCloudCustomDataMediaGalleryEntity.getMsgKey());
+                    mediaGalleryEditEntity.setStateUnlockPhoto(!finalCloudCustomDataMediaGalleryEntity.isUnLocked());
                 mediaGalleryEditEntity.setSelfSend(msg.isSelf());
                 mediaGalleryEditEntity.setSrcPath(videoGalleryPayEntity.getSrcPath());
                 mediaGalleryEditEntity.setVideoSetting(true);
@@ -292,9 +346,7 @@ public class MediaGalleryModuleView extends BaseMessageModuleView {
     private CloudCustomDataMediaGalleryEntity getCloudCustomDataConvert(String customDlTempMessage){
         //自定义消息体。外层
         CloudCustomDataMediaGalleryEntity cloudCustomDataMediaGalleryEntity = null;
-        Log.e(TAG,"当前转换类型实际前数据："+customDlTempMessage);
         if(TUIChatUtils.isJSON2(customDlTempMessage)){
-            Log.e(TAG,"当前转换类型实际数据："+customDlTempMessage);
             cloudCustomDataMediaGalleryEntity = IMGsonUtils.fromJson(customDlTempMessage,CloudCustomDataMediaGalleryEntity.class);
         }
         return cloudCustomDataMediaGalleryEntity;

@@ -22,6 +22,7 @@ import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 import me.goldze.mvvmhabit.utils.StringUtils;
 
@@ -35,6 +36,10 @@ public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSet
     private final String localPriceConfigSettingKey = "MediaGalleryPhotoSettingKey";
     //本地缓存上次选择快照设置
     private final String localSnapshotCheckSettingKey = "MediaGalleryPhotoCheckSettingKey";
+    //本地缓存上次选择快照设置
+    private final String localSnapshotPayCheckSettingKey = "localSnapshotPayCheckSettingKey";
+    //本地缓存上次选择快照模板id
+    private final String localSnapshotConfigIdSettingKey = "MediaGalleryPhotoConfigIdSettingKey";
     private boolean localSnapshotCheck = false;
     private MediaPayPerConfigEntity.ItemEntity localCheckItemEntity = null;
 
@@ -108,9 +113,15 @@ public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSet
         viewModel.srcPath.set(srcLocalPath);
         viewModel.isPayState.set(isPayState);
         AppRepository appRepository = ConfigManager.getInstance().getAppRepository();
-        localSnapshotCheck = Boolean.parseBoolean(appRepository.readKeyValue(localSnapshotCheckSettingKey));
+        if(isPayState){
+            localSnapshotCheck =  Boolean.parseBoolean(appRepository.readKeyValue(localSnapshotPayCheckSettingKey));
+        }else{
+            localSnapshotCheck =  Boolean.parseBoolean(appRepository.readKeyValue(localSnapshotCheckSettingKey));
+        }
         viewModel.isBurn.set(localSnapshotCheck);
         String localPriceValue = appRepository.readKeyValue(localPriceConfigSettingKey);
+        String localConfigId = appRepository.readKeyValue(localSnapshotConfigIdSettingKey);
+        configId = StringUtils.isEmpty(localConfigId) ? null : Integer.parseInt(localConfigId);
         if(!StringUtils.isEmpty(localPriceValue)){
             localCheckItemEntity = GsonUtils.fromJson(localPriceValue, MediaPayPerConfigEntity.ItemEntity.class);
         }
@@ -118,6 +129,7 @@ public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSet
             checkItemEntity = localCheckItemEntity;
         }else{
             checkItemEntity = mediaPriceTmpConfig.getContent().get(0);
+            this.configId = mediaPriceTmpConfig.getConfigId();
         }
         //选择的是图片
         GlideEngine.createGlideEngine().loadImage(this, srcLocalPath,binding.imgContent,binding.imgLong,R.drawable.playfun_loading_logo_placeholder_max,R.drawable.playfun_loading_logo_error);
@@ -130,14 +142,19 @@ public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSet
             if(snapshotPhotoDialog==null){
                 snapshotPhotoDialog = new SnapshotPhotoDialog(this,mediaPriceTmpConfig,localCheckItemEntity);
                 snapshotPhotoDialog.setSnapshotCheck(localSnapshotCheck);
-                snapshotPhotoDialog.setSnapshotListener((itemEntity, configId,isSnapshot) -> {
+                snapshotPhotoDialog.setSnapshotListener((itemEntity, configIds,isSnapshot) -> {
                     checkItemEntity = itemEntity;
-                    this.configId = configId;
+                    this.configId = configIds;
                     viewModel.isBurn.set(isSnapshot);
                     localCheckItemEntity = itemEntity;
                     localSnapshotCheck = isSnapshot;
+                    ConfigManager.getInstance().getAppRepository().putKeyValue(localSnapshotConfigIdSettingKey,String.valueOf(configIds));
                     ConfigManager.getInstance().getAppRepository().putKeyValue(localPriceConfigSettingKey,GsonUtils.toJson(checkItemEntity));
-                    ConfigManager.getInstance().getAppRepository().putKeyValue(localSnapshotCheckSettingKey, String.valueOf(isSnapshot));
+                    if(isPayState){
+                        ConfigManager.getInstance().getAppRepository().putKeyValue(localSnapshotPayCheckSettingKey, String.valueOf(isSnapshot));
+                    }else{
+                        ConfigManager.getInstance().getAppRepository().putKeyValue(localSnapshotCheckSettingKey, String.valueOf(isSnapshot));
+                    }
                 });
             }else{
                 snapshotPhotoDialog.setSnapshotCheck(localSnapshotCheck);
@@ -160,6 +177,11 @@ public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSet
             }
             mediaGalleryEditEntity.setSrcPath(filePath);
             mediaGalleryEditEntity.setStateSnapshot(viewModel.isBurn.get());
+            if(isPayState){
+                ConfigManager.getInstance().getAppRepository().putKeyValue(localSnapshotPayCheckSettingKey, String.valueOf(mediaGalleryEditEntity.isStateSnapshot()));
+            }else{
+                ConfigManager.getInstance().getAppRepository().putKeyValue(localSnapshotCheckSettingKey, String.valueOf(mediaGalleryEditEntity.isStateSnapshot()));
+            }
             Intent intent = new Intent();
             intent.putExtra("mediaGalleryEditEntity", mediaGalleryEditEntity);
             setResult(2001,intent);

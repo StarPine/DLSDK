@@ -36,6 +36,9 @@ import me.goldze.mvvmhabit.utils.StringUtils;
 public class MediaGalleryVideoSettingActivity extends BaseActivity<ActivitySnapshotVideoSettingBinding,MediaGalleryVideoSettingViewModel> {
     //本地价格模板
     private final String localPriceConfigSettingKey = "MediaGalleryVideoSettingKey";
+    //本地缓存上次选择快照模板id
+    private final String localSnapshotConfigIdSettingKey = "MediaGalleryVideoConfigIdSettingKey";
+
     private MediaPayPerConfigEntity.ItemEntity localCheckItemEntity = null;
 
     private final String TAG = MediaGalleryVideoSettingActivity.class.getCanonicalName();
@@ -111,6 +114,9 @@ public class MediaGalleryVideoSettingActivity extends BaseActivity<ActivitySnaps
         viewModel.srcPath.set(srcLocalPath);
         viewModel.isPayState.set(isPayState);
         String localPriceValue = ConfigManager.getInstance().getAppRepository().readKeyValue(localPriceConfigSettingKey);
+        String localConfigId = ConfigManager.getInstance().getAppRepository().readKeyValue(localSnapshotConfigIdSettingKey);
+
+        configId = StringUtils.isEmpty(localConfigId) ? null : Integer.parseInt(localConfigId);
         if(!StringUtils.isEmpty(localPriceValue)){
             localCheckItemEntity = GsonUtils.fromJson(localPriceValue, MediaPayPerConfigEntity.ItemEntity.class);
         }
@@ -118,9 +124,9 @@ public class MediaGalleryVideoSettingActivity extends BaseActivity<ActivitySnaps
             checkItemEntity = localCheckItemEntity;
         }else{
             checkItemEntity = mediaPriceTmpConfig.getContent().get(0);
+            configId = mediaPriceTmpConfig.getConfigId();
         }
 
-        //setVideoUri(binding.videoPlayer, srcLocalPath);
     }
 
     @Override
@@ -130,11 +136,12 @@ public class MediaGalleryVideoSettingActivity extends BaseActivity<ActivitySnaps
             if(snapshotPhotoDialog==null){
                 snapshotPhotoDialog = new SnapshotPhotoDialog(this,mediaPriceTmpConfig,localCheckItemEntity);
                 snapshotPhotoDialog.setSnapshot(false);
-                snapshotPhotoDialog.setSnapshotListener((itemEntity, configId,isSnapshot) -> {
+                snapshotPhotoDialog.setSnapshotListener((itemEntity, configIds,isSnapshot) -> {
                     checkItemEntity = itemEntity;
-                    this.configId = configId;
+                    this.configId = configIds;
                     localCheckItemEntity = checkItemEntity;
                     ConfigManager.getInstance().getAppRepository().putKeyValue(localPriceConfigSettingKey,GsonUtils.toJson(checkItemEntity));
+                    ConfigManager.getInstance().getAppRepository().putKeyValue(localSnapshotConfigIdSettingKey,String.valueOf(configIds));
                 });
             }else{
                 snapshotPhotoDialog.setLocalCheckItemEntity(localCheckItemEntity);
