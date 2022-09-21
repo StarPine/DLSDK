@@ -96,7 +96,7 @@ public class PicChooseView extends RecyclerView implements PicChooseAdapter.PicC
     }
 
     private void addPic() {
-        int curMaxSelectNum = 0;
+        int curMaxSelectNum = maxSelectNum;
         if (datas.get(datas.size() - 1).getType() == PicChooseItemEntity.TYPE_ADD){
             curMaxSelectNum = maxSelectNum - datas.size() + 1;
         }

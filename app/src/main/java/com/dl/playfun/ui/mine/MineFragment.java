@@ -138,6 +138,7 @@ public class MineFragment extends BaseRefreshFragment<FragmentMineBinding, MineV
     @Override
     public void initData() {
         super.initData();
+        binding.refreshLayout.setEnableLoadMore(false);
         //允许语音开关
         binding.shAudio.setOnCheckedChangeListener((buttonView, isChecked) ->
                 viewModel.setAllowPrivacy(viewModel.ALLOW_TYPE_AUDIO, isChecked));

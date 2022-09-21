@@ -112,54 +112,27 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="25dp"
-            android:padding="5dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:padding="10dp"
             binding:onClickCommand="@{viewModel.traceOnClickCommand}">
 
-            <TextView
-                android:layout_width="85dp"
-                android:layout_height="28dp"
-                android:background="@drawable/mine_trace_live"
-                android:gravity="center_vertical|right"
-                android:paddingEnd="10dp"
-                android:text="@string/playfun_mine_trace_live"
-                android:textColor="#FF834CFF"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:paddingStart="30dp"
-                android:maxLines="1"
-                android:ellipsize="end"
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/mine_trace_live"
                 android:visibility="@{viewModel.traceLive}" />
 
-            <TextView
-                android:layout_width="85dp"
-                android:layout_height="28dp"
-                android:background="@drawable/mine_trace_live2"
-                android:gravity="center_vertical|right"
-                android:paddingEnd="13dp"
-                android:text="@string/playfun_mine_trace_live2"
-                android:textColor="@color/white"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:paddingStart="35dp"
-                android:maxLines="1"
-                android:ellipsize="end"
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/mine_trace_live2"
                 android:visibility="@{viewModel.traceLive2}" />
 
-            <TextView
-                android:layout_width="85dp"
-                android:layout_height="28dp"
-                android:background="@drawable/mine_trace_live3"
-                android:ellipsize="end"
-                android:gravity="center_vertical|right"
-                android:maxLines="1"
-                android:paddingStart="30dp"
-                android:paddingEnd="9dp"
-                android:text="@string/playfun_mine_trace_live3"
-                android:textColor="#FF834CFF"
-                android:textSize="12sp"
-                android:textStyle="bold"
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/mine_trace_live3"
                 android:visibility="@{viewModel.traceLive3}" />
         </RelativeLayout>
 
