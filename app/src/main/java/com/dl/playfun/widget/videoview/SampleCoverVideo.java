@@ -81,6 +81,20 @@ public class SampleCoverVideo extends StandardGSYVideoPlayer {
                 .into(mCoverImage);
     }
 
+    public void loadCoverImage(String url, int res,int error) {
+        mCoverOriginUrl = url;
+        mDefaultRes = res;
+        Glide.with(getContext().getApplicationContext())
+                .setDefaultRequestOptions(
+                        new RequestOptions()
+                                .frame(1000000)
+                                .centerCrop()
+                                .error(error)
+                                .placeholder(res))
+                .load(url)
+                .into(mCoverImage);
+    }
+
     public void loadCoverImageBy(int id, int res) {
         mCoverOriginId = id;
         mDefaultRes = res;

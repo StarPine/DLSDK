@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -37,7 +38,9 @@ public class SnapshotPhotoDialog extends BaseDialog {
     private MediaPayPerConfigEntity.ItemEntity checkItemEntity;
     private Integer configId;
 
-    private final MediaPayPerConfigEntity.ItemEntity localCheckItemEntity;
+    private boolean isSnapshot = true;
+
+    private MediaPayPerConfigEntity.ItemEntity localCheckItemEntity;
 
     public SnapshotListener getSnapshotListener() {
         return snapshotListener;
@@ -47,7 +50,28 @@ public class SnapshotPhotoDialog extends BaseDialog {
         this.snapshotListener = snapshotListener;
     }
 
-    public SnapshotPhotoDialog(Context context, MediaPayPerConfigEntity.itemTagEntity mediaPriceTmpConfig,MediaPayPerConfigEntity.ItemEntity localCheckItemEntity) {
+    public boolean isSnapshot() {
+        return isSnapshot;
+    }
+
+    public void setSnapshot(boolean snapshot) {
+        isSnapshot = snapshot;
+        if(!isSnapshot()){
+            binding.snapshotLayout.setVisibility(View.GONE);
+        }else{
+            binding.snapshotLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void setSnapshotCheck(boolean check) {
+        binding.snapshotCheckbox.setChecked(check);
+    }
+
+    public void setLocalCheckItemEntity(MediaPayPerConfigEntity.ItemEntity localCheckItemEntity) {
+        this.localCheckItemEntity = localCheckItemEntity;
+    }
+
+    public SnapshotPhotoDialog(Context context, MediaPayPerConfigEntity.itemTagEntity mediaPriceTmpConfig, MediaPayPerConfigEntity.ItemEntity localCheckItemEntity) {
         super(context);
         this.mediaPriceTmpConfig = mediaPriceTmpConfig;
         this.localCheckItemEntity = localCheckItemEntity;
@@ -56,7 +80,7 @@ public class SnapshotPhotoDialog extends BaseDialog {
         setCancelable(true);
         init();
     }
-    private void init() {
+    public void init() {
         ArrayList<String> listData = new ArrayList<>();
         if(ObjectUtils.isNotEmpty(mediaPriceTmpConfig)){
             List<MediaPayPerConfigEntity.ItemEntity> itemData = mediaPriceTmpConfig.getContent();
@@ -84,7 +108,7 @@ public class SnapshotPhotoDialog extends BaseDialog {
                     checkItemEntity = mediaPriceTmpConfig.getContent().get(0);
                 }
                 binding.tvCoin.setText(checkItemEntity.getCoin());
-                binding.tvMoney.setText(String.valueOf(checkItemEntity.getProfit()));
+                binding.tvMoney.setText("+"+String.valueOf(checkItemEntity.getProfit()));
                 configId = mediaPriceTmpConfig.getConfigId();
 
             }
@@ -105,7 +129,7 @@ public class SnapshotPhotoDialog extends BaseDialog {
                         MediaPayPerConfigEntity.ItemEntity itemEntity = mediaPriceTmpConfig.getContent().get(seekBar.getProgress());
                         checkItemEntity = itemEntity;
                         binding.tvCoin.setText(itemEntity.getCoin());
-                        binding.tvMoney.setText(itemEntity.getProfit().toString());
+                        binding.tvMoney.setText("+"+String.valueOf(itemEntity.getProfit()));
                     }
                 }
             }
@@ -121,13 +145,11 @@ public class SnapshotPhotoDialog extends BaseDialog {
         });
         binding.tvBtn.setOnClickListener(v ->{
             if(getSnapshotListener()!=null){
-                getSnapshotListener().confirm(checkItemEntity,configId);
+                getSnapshotListener().confirm(checkItemEntity,configId,binding.snapshotCheckbox.isChecked());
             }
             dismiss();
         });
-    }
 
-    public void show() {
         //设置背景透明,去四个角
         getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         setContentView(binding.getRoot());
@@ -139,10 +161,13 @@ public class SnapshotPhotoDialog extends BaseDialog {
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;   //设置宽度充满屏幕
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         window.setAttributes(lp);
+    }
+
+    public void show() {
         super.show();
     }
 
     public interface SnapshotListener{
-        void confirm(MediaPayPerConfigEntity.ItemEntity itemEntity, Integer configId);
+        void confirm(MediaPayPerConfigEntity.ItemEntity itemEntity, Integer configId,boolean isSnapshot);
     }
 }

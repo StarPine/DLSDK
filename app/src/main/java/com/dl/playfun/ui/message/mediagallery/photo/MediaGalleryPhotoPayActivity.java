@@ -98,7 +98,6 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
         if(srcPath!=null && url!=null && srcPath.equals(url)){
             binding.getRoot().post(()->showProgressHud(null,progress));
         }
-
     };
 
     @Override
@@ -119,7 +118,6 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
             }
             //快照 并且不是自己查看 加蒙版
             if(mediaGalleryEditEntity.isStateSnapshot() && !mediaGalleryEditEntity.isSelfSend()){
-                viewModel.mediaGalleryEvaluationQry(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId());
                 GlideEngine.createGlideEngine().loadImage(this, srcPath, binding.imgContent,R.drawable.playfun_loading_logo_placeholder_max,R.drawable.playfun_loading_logo_error, binding.imgLong,true, new GlideEngine.LoadProgressCallback() {
                     @Override
                     public void onLoadStarted(@Nullable Drawable placeholder) {
@@ -134,8 +132,9 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
                     @Override
                     public void setResource(boolean imgLong) {
                         dismissHud();
-                        binding.rlContainer.setVisibility(View.VISIBLE);
-                        viewModel.snapshotLockState.set(true);
+                        if(!mediaGalleryEditEntity.isReadLook()){
+                            viewModel.snapshotLockState.set(true);
+                        }
                     }
                 });
             }else{
@@ -155,6 +154,13 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
                         dismissHud();
                     }
                 });
+            }
+            //不是自己发送
+            if(!mediaGalleryEditEntity.isSelfSend()){
+                //是快照或者 付费照片才查看评价
+                if(mediaGalleryEditEntity.isStateSnapshot() || mediaGalleryEditEntity.isStatePay()){
+                    viewModel.mediaGalleryEvaluationQry(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId());
+                }
             }
         }
         //好评
@@ -200,6 +206,7 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
         });
         //当前评价状态
         viewModel.evaluationLikeEvent.observe(this, state -> {
+            Log.e(TAG,"大哥前评价状态："+state);
             //评价，0未评价，1差评，2好评
             if(state == 1){
                 generateDrawable(binding.llNoLike,null,22,null,null,R.color.playfun_shape_radius_start_color,R.color.playfun_shape_radius_end_color);
@@ -207,7 +214,12 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
             }else if(state == 2){
                 generateDrawable(binding.llLike,null,22,null,null,R.color.playfun_shape_radius_start_color,R.color.playfun_shape_radius_end_color);
                 generateDrawable(binding.llNoLike,R.color.black,22,R.color.purple_text,1,null,null);
-            }else{
+            }else if(state == 0){
+                //没有评价、并且是已经解锁状态
+                if(mediaGalleryEditEntity.isStateUnlockPhoto()){
+                    viewModel.evaluationState.set(true);
+                }
+                Log.e(TAG,"当前状态为："+viewModel.evaluationState.get());
                 generateDrawable(binding.llLike,R.color.black,22,R.color.purple_text,1,null,null);
                 generateDrawable(binding.llNoLike,R.color.black,22,R.color.purple_text,1,null,null);
             }
@@ -282,7 +294,9 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
         //查询评价接口失败。不让继续评价
         if(viewModel.evaluationLikeEvent.getValue()!=null){
             //评价弹出
-            viewModel.evaluationState.set(true);
+            viewModel.evaluationState.set(false);
+            //是否已经看过
+            viewModel.isReadLook.set(true);
         }
     }
 

@@ -54,7 +54,6 @@ public class GlideProgressResponseBody extends ResponseBody {
     private class ProgressSource extends ForwardingSource {
 
         private long mTotalBytesRead;
-        private int mCurrentProgress;
 
         public ProgressSource(Source delegate) {
             super(delegate);
@@ -71,15 +70,8 @@ public class GlideProgressResponseBody extends ResponseBody {
             } else {
                 mTotalBytesRead += bytesRead;
             }
-
             int progress = (int) (100f * mTotalBytesRead / fullLength);
-
-            Log.e(TAG, "download url is： " + mUrl + " progress is " + progress);
-
             GlideProgressManager.getInstance().notifyProgress(mUrl, progress, (mTotalBytesRead == fullLength));
-
-            mCurrentProgress = progress;
-
             return bytesRead;
         }
     }

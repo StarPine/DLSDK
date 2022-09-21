@@ -99,6 +99,7 @@ public class MediaGalleryModuleView extends BaseMessageModuleView {
             }
             //是否解锁
             if(cloudCustomDataMediaGalleryEntity!=null && !cloudCustomDataMediaGalleryEntity.isUnLocked()){
+                //已经解锁
                 fLUnlockLayout.setVisibility(View.GONE);
                 if(msg.isSelf()){
                     //收益
@@ -149,7 +150,27 @@ public class MediaGalleryModuleView extends BaseMessageModuleView {
             rlLayout.setVisibility(View.GONE);
         }
         RequestOptions override;
-        if(stateSnapshot && !msg.isSelf()){
+        boolean isFuzzy = stateSnapshot;
+        if(!msg.isSelf()){
+            if(!stateSnapshot){//不是快照
+                //付费照片
+                if(photoGalleryPayEntity.isStatePhotoPay()){
+                    //已经解锁
+                    if(!cloudCustomDataMediaGalleryEntity.isUnLocked()){
+                        //隐藏付费layout相关功能
+                        rlLayout.setVisibility(View.GONE);
+                        //以读
+                        isFuzzy = cloudCustomDataMediaGalleryEntity.isRead();
+                    }else{
+                        isFuzzy = true;
+                    }
+                }
+            }
+
+        }else{
+            isFuzzy = false;
+        }
+        if(isFuzzy){
             override = RequestOptions.bitmapTransform(new MvBlurTransformation(90)).override(dp2px(getContext(),86), dp2px(getContext(),154));
         }else{
             //通过RequestOptions扩展功能,override:采样率,因为ImageView就这么大,可以压缩图片,降低内存消耗
@@ -172,9 +193,6 @@ public class MediaGalleryModuleView extends BaseMessageModuleView {
                 .into(imgContent);
         rootView.addView(customImageView);
         rootView.setOnClickListener(v -> {
-            if(cloudCustomDataMediaGalleryEntity!=null && !msg.isSelf() && cloudCustomDataMediaGalleryEntity.isRead()){
-                return;
-            }
             if (customDlTempMessageHolder.onItemClickListener != null) {
                 MediaGalleryEditEntity mediaGalleryEditEntity = new MediaGalleryEditEntity();
                 if(cloudCustomDataMediaGalleryEntity!=null){
@@ -186,6 +204,8 @@ public class MediaGalleryModuleView extends BaseMessageModuleView {
                 mediaGalleryEditEntity.setUnlockPrice(photoGalleryPayEntity.getUnlockPrice());
                 mediaGalleryEditEntity.setStatePay(photoGalleryPayEntity.isStatePhotoPay());
                 mediaGalleryEditEntity.setStateSnapshot(photoGalleryPayEntity.isStateSnapshot());
+                mediaGalleryEditEntity.setStateUnlockPhoto(!cloudCustomDataMediaGalleryEntity.isUnLocked());
+                mediaGalleryEditEntity.setReadLook(cloudCustomDataMediaGalleryEntity.isRead());
                 customDlTempMessageHolder.onItemClickListener.onMediaGalleryClick(mediaGalleryEditEntity);
             }
         });

@@ -44,7 +44,7 @@ public class VideoViewAdapter {
         }
         //videoView.setUrl(url);
         // url = StringUtil.getFullAudioUrl(url);
-        videoView.loadCoverImage(url, R.drawable.default_placeholder_img);
+        videoView.loadCoverImage(url, R.drawable.playfun_loading_logo_placeholder_max,R.drawable.playfun_loading_logo_error);
         //防止错位，离开释放
         //gsyVideoPlayer.initUIState();
 

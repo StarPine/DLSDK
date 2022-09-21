@@ -31,6 +31,9 @@ public class MediaGalleryPhotoPayViewModel extends BaseViewModel<AppRepository> 
 
     public MediaGalleryEditEntity mediaGalleryEditEntity;
 
+    //快照专属是否已读
+    public ObservableBoolean isReadLook = new ObservableBoolean(false);
+
     //是否需要评价
     public ObservableBoolean evaluationState = new ObservableBoolean(false);
 

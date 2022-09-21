@@ -138,6 +138,7 @@
                 android:thumb="@drawable/pseekbar_thumb" />
         </RelativeLayout>
         <LinearLayout
+            android:id="@+id/snapshot_layout"
             android:layout_marginTop="17dp"
             android:layout_marginStart="14dp"
             android:layout_marginBottom="30dp"
@@ -146,6 +147,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <CheckBox
+                android:id="@+id/snapshot_checkbox"
                 android:layout_gravity="center"
                 android:layout_width="15dp"
                 android:layout_height="15dp"

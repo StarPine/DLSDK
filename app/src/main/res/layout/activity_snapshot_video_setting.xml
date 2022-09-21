@@ -52,12 +52,20 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
+
+<!--            <com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer-->
+<!--                android:id="@+id/video_player"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_above="@+id/fl_layout_bottom" />-->
+            <com.dl.playfun.widget.videoview.SampleCoverVideo
                 android:id="@+id/video_player"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_above="@+id/fl_layout_bottom"
-                />
+                binding:playStatus="@{1}"
+                binding:isLocalFile="@{true}"
+                binding:videoUri="@{viewModel.srcPath}" />
 
             <View
                 android:layout_width="match_parent"
@@ -68,39 +76,38 @@
 
             <FrameLayout
                 android:id="@+id/fl_layout_bottom"
-                android:layout_alignParentBottom="true"
-                android:paddingTop="4dp"
-                android:background="@color/black"
                 android:layout_width="match_parent"
-                android:layout_height="60dp">
+                android:layout_height="60dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/black"
+                android:paddingTop="4dp">
+
                 <LinearLayout
-                    binding:onClickCommand="@{viewModel.settingClick}"
-                    android:visibility="@{viewModel.isPayState ? View.VISIBLE : View.GONE}"
-                    android:layout_gravity="end"
-                    android:layout_marginEnd="22dp"
-                    binding:drawable_cornersRadius="@{22}"
-                    binding:drawable_gradient_startColor="@{@color/playfun_shape_radius_start_color}"
-                    binding:drawable_gradient_endColor="@{@color/playfun_shape_radius_end_color}"
-                    android:orientation="horizontal"
-                    android:gravity="center"
                     android:layout_width="114dp"
                     android:layout_height="38dp"
-                    tools:visibility="visible"
-                    >
+                    android:layout_gravity="center|top"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="@{viewModel.isPayState ? View.VISIBLE : View.GONE}"
+                    binding:drawable_cornersRadius="@{22}"
+                    binding:drawable_gradient_endColor="@{@color/playfun_shape_radius_end_color}"
+                    binding:drawable_gradient_startColor="@{@color/playfun_shape_radius_start_color}"
+                    binding:onClickCommand="@{viewModel.settingClick}"
+                    tools:visibility="visible">
+
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="17dp"
                         android:layout_height="17dp"
-                        android:src="@drawable/ic_coin"
-                        />
+                        android:src="@drawable/ic_coin" />
+
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:layout_marginStart="5dp"
-                        android:includeFontPadding="false"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:includeFontPadding="false"
                         android:text="@string/playfun_setting_text"
                         android:textColor="@color/white"
-                        android:textSize="15sp"
-                        />
+                        android:textSize="15sp" />
                 </LinearLayout>
             </FrameLayout>
         </RelativeLayout>

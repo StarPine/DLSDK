@@ -12,6 +12,7 @@ import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.GlideEngine;
+import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.databinding.ActivitySnapshotPhotoSettingBinding;
 import com.dl.playfun.entity.MediaPayPerConfigEntity;
 import com.dl.playfun.manager.ConfigManager;
@@ -32,6 +33,9 @@ import me.goldze.mvvmhabit.utils.StringUtils;
 public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSettingBinding,SnapshotPhotoViewModel> {
     //本地价格模板
     private final String localPriceConfigSettingKey = "MediaGalleryPhotoSettingKey";
+    //本地缓存上次选择快照设置
+    private final String localSnapshotCheckSettingKey = "MediaGalleryPhotoCheckSettingKey";
+    private boolean localSnapshotCheck = false;
     private MediaPayPerConfigEntity.ItemEntity localCheckItemEntity = null;
 
     private String srcLocalPath = null;
@@ -103,8 +107,10 @@ public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSet
         super.initData();
         viewModel.srcPath.set(srcLocalPath);
         viewModel.isPayState.set(isPayState);
-
-        String localPriceValue = ConfigManager.getInstance().getAppRepository().readKeyValue(localPriceConfigSettingKey);
+        AppRepository appRepository = ConfigManager.getInstance().getAppRepository();
+        localSnapshotCheck = Boolean.parseBoolean(appRepository.readKeyValue(localSnapshotCheckSettingKey));
+        viewModel.isBurn.set(localSnapshotCheck);
+        String localPriceValue = appRepository.readKeyValue(localPriceConfigSettingKey);
         if(!StringUtils.isEmpty(localPriceValue)){
             localCheckItemEntity = GsonUtils.fromJson(localPriceValue, MediaPayPerConfigEntity.ItemEntity.class);
         }
@@ -123,11 +129,20 @@ public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSet
         viewModel.settingEvent.observe(this, unused -> {
             if(snapshotPhotoDialog==null){
                 snapshotPhotoDialog = new SnapshotPhotoDialog(this,mediaPriceTmpConfig,localCheckItemEntity);
-                snapshotPhotoDialog.setSnapshotListener((itemEntity, configId) -> {
+                snapshotPhotoDialog.setSnapshotCheck(localSnapshotCheck);
+                snapshotPhotoDialog.setSnapshotListener((itemEntity, configId,isSnapshot) -> {
                     checkItemEntity = itemEntity;
                     this.configId = configId;
+                    viewModel.isBurn.set(isSnapshot);
+                    localCheckItemEntity = itemEntity;
+                    localSnapshotCheck = isSnapshot;
                     ConfigManager.getInstance().getAppRepository().putKeyValue(localPriceConfigSettingKey,GsonUtils.toJson(checkItemEntity));
+                    ConfigManager.getInstance().getAppRepository().putKeyValue(localSnapshotCheckSettingKey, String.valueOf(isSnapshot));
                 });
+            }else{
+                snapshotPhotoDialog.setSnapshotCheck(localSnapshotCheck);
+                snapshotPhotoDialog.setLocalCheckItemEntity(localCheckItemEntity);
+                snapshotPhotoDialog.init();
             }
             snapshotPhotoDialog.show();
         });

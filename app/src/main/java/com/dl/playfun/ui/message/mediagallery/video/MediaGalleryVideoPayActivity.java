@@ -74,16 +74,22 @@ public class MediaGalleryVideoPayActivity extends BaseActivity<ActivityMediaGall
     @Override
     public void initData() {
         super.initData();
-        srcPath = StringUtil.getFullImageUrl(mediaGalleryEditEntity.getSrcPath());
+        srcPath = mediaGalleryEditEntity.getSrcPath();
         //本地资源存在
         if(!TextUtils.isEmpty(mediaGalleryEditEntity.getAndroidLocalSrcPath())){
             //判断本地资源是否存在
             File videoFile = new File(mediaGalleryEditEntity.getAndroidLocalSrcPath());
             if(videoFile.exists()){
                 srcPath = mediaGalleryEditEntity.getAndroidLocalSrcPath();
+                viewModel.srcPath.set(srcPath);
+                viewModel.isLocalSrc.set(true);
+            }else{
+                viewModel.srcPath.set(srcPath);
             }
+        }else{
+            viewModel.srcPath.set(srcPath);
         }
-        setVideoUri(binding.videoPlayer,srcPath);
+       // setVideoUri(binding.videoPlayer,srcPath);
 
         //好评
         binding.llLike.setOnClickListener(v -> {
