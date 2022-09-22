@@ -26,6 +26,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
+import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
@@ -472,6 +473,12 @@ public class HomeAccostDialog extends BaseDialog {
                             }
                         }
                     }
+
+                    @Override
+                    public void onError(RequestException e) {
+                        super.onError(e);
+                        RxBus.getDefault().post(new LoadEvent(false));
+                    }
                 });
     }
 
@@ -654,8 +661,8 @@ public class HomeAccostDialog extends BaseDialog {
                     }
 
                     @Override
-                    public void onComplete() {
-
+                    public void onError(RequestException e) {
+                        RxBus.getDefault().post(new LoadEvent(false));
                     }
                 });
     }
