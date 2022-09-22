@@ -1162,6 +1162,7 @@ public class TraceDialog {
         //设置宽度充满屏幕
         WindowManager.LayoutParams lp = window.getAttributes();
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
         window.setAttributes(lp);
 
         ImageView ivCallReject = contentView.findViewById(R.id.iv_call_reject);
