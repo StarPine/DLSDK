@@ -36,9 +36,8 @@ public class DialogProgress extends BaseDialog {
         if(flLayout!=null){
             CustomDrawableUtils.generateDrawable(flLayout, getColorFromResource(R.color.black),
                     19,null,null,null,null,
-                    null,null,null,null);
+                    null,null,null,null,49);
         }
-
         setCanceledOnTouchOutside(false);
         setCancelable(false);
     }
@@ -67,19 +66,13 @@ public class DialogProgress extends BaseDialog {
     }
 
     public void setProgress(int progress){
-        if(isShowing()){
-            if(progress>=100){
-                dismiss();
-            }else{
-                if(mpCircleProgressBar!=null){
-                    mpCircleProgressBar.SetCurrent(progress);
-                }
-            }
+        if(progress>=100){
+            dismiss();
         }else{
-            if(progress<100){
-                if(mpCircleProgressBar!=null){
-                    mpCircleProgressBar.SetCurrent(progress);
-                }
+            if(mpCircleProgressBar!=null){
+                mpCircleProgressBar.SetCurrent(progress);
+            }
+            if(!isShowing()){
                 show();
             }
         }

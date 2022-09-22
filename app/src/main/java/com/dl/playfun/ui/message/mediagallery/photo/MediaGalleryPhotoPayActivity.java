@@ -9,6 +9,8 @@ import android.os.CountDownTimer;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
@@ -19,6 +21,7 @@ import com.dl.playfun.R;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.GlideEngine;
 import com.dl.playfun.databinding.ActivityMediaGalleryPhotoBinding;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseActivity;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
@@ -26,10 +29,12 @@ import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.widget.glide.GlideCache;
 import com.dl.playfun.widget.glide.GlideProgressListener;
 import com.dl.playfun.widget.glide.GlideProgressManager;
+import com.gyf.immersionbar.ImmersionBar;
 import com.tencent.qcloud.tuicore.custom.CustomDrawableUtils;
 import com.tencent.qcloud.tuicore.custom.entity.MediaGalleryEditEntity;
 
 import java.io.File;
+import java.util.Objects;
 
 /**
  * Author: 彭石林
@@ -43,6 +48,8 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
     private CountDownTimer downTimer;
     //文件地址
     private String srcPath;
+    //快照可看时间
+    private long millisInFuture = 2;
 
     @Override
     public int initContentView(Bundle savedInstanceState) {
@@ -83,12 +90,15 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
     @Override
     public void initParam() {
         super.initParam();
+        //防窥屏
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
         mediaGalleryEditEntity = (MediaGalleryEditEntity) getIntent().getSerializableExtra("mediaGalleryEditEntity");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
         AutoSizeUtils.closeAdapt(getResources());
         stopTimer();
         GlideProgressManager.getInstance().removeGlideProgressListener(glideProgressListener);
@@ -96,15 +106,31 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
 
     GlideProgressListener glideProgressListener = (url, progress, isFinish) -> {
         if(srcPath!=null && url!=null && srcPath.equals(url)){
-            binding.getRoot().post(()->showProgressHud(null,progress));
+            binding.getRoot().post(()->processLoading(progress));
         }
     };
+
+    private void processLoading(int progress){
+        if(progress>=100){
+            binding.processLayout.setVisibility(View.GONE);
+        }else{
+            binding.progress.SetCurrent(progress);
+            if (binding.processLayout.getVisibility() == View.GONE) {
+                binding.processLayout.setVisibility(View.VISIBLE);
+            }
+        }
+    }
 
     @Override
     public void initData() {
         super.initData();
+        //快照预览时间
+        millisInFuture = ConfigManager.getInstance().mediaGallerySnapshotUnLockTime();
+        int barHeight = ImmersionBar.getStatusBarHeight(this);
+        ViewGroup.LayoutParams gulp = binding.statusBarViews.getLayoutParams();
+        gulp.height = barHeight;
+        binding.statusBarViews.setLayoutParams(gulp);
         viewModel.mediaGalleryEditEntity = mediaGalleryEditEntity;
-
         GlideProgressManager.getInstance().setGlideProgressListener(glideProgressListener);
         if(mediaGalleryEditEntity!=null){
             srcPath = StringUtil.getFullImageUrl(mediaGalleryEditEntity.getSrcPath());
@@ -121,17 +147,14 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
                 GlideEngine.createGlideEngine().loadImage(this, srcPath, binding.imgContent,R.drawable.playfun_loading_logo_placeholder_max,R.drawable.playfun_loading_logo_error, binding.imgLong,true, new GlideEngine.LoadProgressCallback() {
                     @Override
                     public void onLoadStarted(@Nullable Drawable placeholder) {
-                        showHud();
                     }
 
                     @Override
                     public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                        dismissHud();
                     }
 
                     @Override
                     public void setResource(boolean imgLong) {
-                        dismissHud();
                         if(!mediaGalleryEditEntity.isReadLook()){
                             viewModel.snapshotLockState.set(true);
                         }
@@ -141,24 +164,23 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
                 GlideEngine.createGlideEngine().loadImage(this, srcPath, binding.imgContent,R.drawable.playfun_loading_logo_placeholder_max,R.drawable.playfun_loading_logo_error, binding.imgLong,false, new GlideEngine.LoadProgressCallback() {
                     @Override
                     public void onLoadStarted(@Nullable Drawable placeholder) {
-                        showHud();
                     }
 
                     @Override
                     public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                        dismissHud();
                     }
 
                     @Override
                     public void setResource(boolean imgLong) {
-                        dismissHud();
                     }
                 });
             }
             //不是自己发送
             if(!mediaGalleryEditEntity.isSelfSend()){
-                //是快照或者 付费照片才查看评价
-                if(mediaGalleryEditEntity.isStateSnapshot() || mediaGalleryEditEntity.isStatePay()){
+                //付费照片才查看评价
+                if( mediaGalleryEditEntity.isStatePay() && mediaGalleryEditEntity.isReadLook()){
+                    //是否已经看过
+                    viewModel.isReadLook.set(mediaGalleryEditEntity.isReadLook());
                     viewModel.mediaGalleryEvaluationQry(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId());
                 }
             }
@@ -166,8 +188,10 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
         //好评
         binding.llLike.setOnClickListener(v -> {
             Integer evaluationType = viewModel.evaluationLikeEvent.getValue();
-            if(evaluationType !=null && evaluationType == 0){
-                viewModel.mediaGalleryEvaluationPut(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId(),2);
+            if(evaluationType !=null){
+                if(evaluationType == 0 || evaluationType == 1){
+                    viewModel.mediaGalleryEvaluationPut(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId(),2);
+                }
             }
         });
         binding.llNoLike.setOnClickListener(v -> {
@@ -182,22 +206,26 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
     @Override
     public void initViewObservable() {
         super.initViewObservable();
+
         //解锁事件
         viewModel.snapshotLockEvent.observe(this, unused -> {
             GlideEngine.createGlideEngine().loadImage(this, srcPath, binding.imgContent, R.drawable.playfun_loading_logo_placeholder_max,R.drawable.playfun_loading_logo_error,binding.imgLong,false, new GlideEngine.LoadProgressCallback() {
                 @Override
                 public void onLoadStarted(@Nullable Drawable placeholder) {
-                    showHud();
                 }
 
                 @Override
                 public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                    dismissHud();
                 }
 
                 @Override
                 public void setResource(boolean imgLong) {
-                    dismissHud();
+                    //是否已经看过
+                    viewModel.isReadLook.set(mediaGalleryEditEntity.isReadLook());
+                    //付费照片才查看评价
+                    if( mediaGalleryEditEntity.isStatePay()){
+                        viewModel.mediaGalleryEvaluationQry(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId());
+                    }
                     viewModel.snapshotLockState.set(false);
                     //图片加载成功开始倒计时
                     startTimer();
@@ -206,9 +234,9 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
         });
         //当前评价状态
         viewModel.evaluationLikeEvent.observe(this, state -> {
-            Log.e(TAG,"大哥前评价状态："+state);
             //评价，0未评价，1差评，2好评
             if(state == 1){
+                viewModel.evaluationState.set(true);
                 generateDrawable(binding.llNoLike,null,22,null,null,R.color.playfun_shape_radius_start_color,R.color.playfun_shape_radius_end_color);
                 generateDrawable(binding.llLike,R.color.black,22,R.color.purple_text,1,null,null);
             }else if(state == 2){
@@ -219,7 +247,6 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
                 if(mediaGalleryEditEntity.isStateUnlockPhoto()){
                     viewModel.evaluationState.set(true);
                 }
-                Log.e(TAG,"当前状态为："+viewModel.evaluationState.get());
                 generateDrawable(binding.llLike,R.color.black,22,R.color.purple_text,1,null,null);
                 generateDrawable(binding.llNoLike,R.color.black,22,R.color.purple_text,1,null,null);
             }
@@ -229,7 +256,7 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
     void generateDrawable(View view,Integer drawableColor,Integer drawableCornersRadius,Integer drawableStrokeColor, Integer drawableStrokeWidth,Integer drawableStartColor, Integer drawableEndColor){
         CustomDrawableUtils.generateDrawable(view, getColorFromResource(drawableColor),
                 drawableCornersRadius,null,null,null,null,
-                getColorFromResource(drawableStartColor),getColorFromResource(drawableEndColor),drawableStrokeWidth,getColorFromResource(drawableStrokeColor));
+                getColorFromResource(drawableStartColor),getColorFromResource(drawableEndColor),drawableStrokeWidth,getColorFromResource(drawableStrokeColor),null);
     }
 
     Integer getColorFromResource(Integer resourceId) {
@@ -251,7 +278,7 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
     public void startTimer() {
         viewModel.snapshotTimeState.set(true);
         //倒计时15秒，一次1秒
-        downTimer = new CountDownTimer(6 * 1000, 1000) {
+        downTimer = new CountDownTimer(millisInFuture * 1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                     viewModel.snapshotTimeText.set((millisUntilFinished / 1000)+"s");
@@ -263,17 +290,15 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
                 GlideEngine.createGlideEngine().loadImage(getContext(), srcPath, binding.imgContent,R.drawable.playfun_loading_logo_placeholder_max,R.drawable.playfun_loading_logo_error, binding.imgLong,true, new GlideEngine.LoadProgressCallback() {
                     @Override
                     public void onLoadStarted(@Nullable Drawable placeholder) {
-                        showHud();
                     }
 
                     @Override
                     public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                        dismissHud();
                     }
 
                     @Override
                     public void setResource(boolean imgLong) {
-                        dismissHud();
+
                     }
                 });
             }

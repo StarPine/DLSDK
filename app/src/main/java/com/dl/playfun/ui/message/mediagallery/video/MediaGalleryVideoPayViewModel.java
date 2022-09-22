@@ -55,7 +55,7 @@ public class MediaGalleryVideoPayViewModel extends BaseViewModel<AppRepository> 
                             Map<String, Integer> mapData = mapBaseDataResponse.getData();
                             if(mapData.containsKey("evaluation")){
                                 int evaluation = Integer.parseInt(String.valueOf(mapData.get("evaluation")));
-                                if(evaluation ==0){
+                                if(evaluation == 0 || evaluation == 1){
                                     evaluationState.set(true);
                                     evaluationLikeEvent.setValue(mapData.get("evaluation"));
                                 }

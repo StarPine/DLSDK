@@ -2224,5 +2224,8 @@
     <string name="playfun_evaluation_happy">愉快</string>
     <string name="playfun_activated_video">已開啟視訊開關</string>
     <string name="playfun_activated_audio">已開啟語音開關</string>
+    <string name="playfun_text_dislike">不喜歡</string>
+    <string name="playfun_text_like">喜歡</string>
+    <string name="playfun_text_disable_the_deadline">禁用期限至：%s</string>
     <!--PlayFun-APP-END-->
 </resources>

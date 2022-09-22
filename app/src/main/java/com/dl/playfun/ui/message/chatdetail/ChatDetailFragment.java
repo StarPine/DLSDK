@@ -45,6 +45,7 @@ import com.dl.playfun.entity.CrystalDetailsConfigEntity;
 import com.dl.playfun.entity.EvaluateItemEntity;
 import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.entity.LocalMessageIMEntity;
+import com.dl.playfun.entity.MediaGallerySwitchEntity;
 import com.dl.playfun.entity.MediaPayPerConfigEntity;
 import com.dl.playfun.ui.message.mediagallery.MediaGalleryVideoSettingActivity;
 import com.dl.playfun.ui.message.mediagallery.photo.MediaGalleryPhotoPayActivity;
@@ -920,21 +921,16 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                 if(mediaGalleryEditEntity!=null){
                     mediaGalleryEditEntity.setToUserId(toUserDataId);
                     //视频查看
-                    if(mediaGalleryEditEntity.isVideoSetting()){
-                        viewModel.uc.mediaGalleryPayEvent.setValue(mediaGalleryEditEntity);
-                    }else{//图片查看
-                        //付费照片
-                        if(mediaGalleryEditEntity.isStatePay()){
-                            //是否解锁
-                            if(mediaGalleryEditEntity.isSelfSend() || mediaGalleryEditEntity.isStateUnlockPhoto()){
-                                viewModel.uc.mediaGalleryPayEvent.setValue(mediaGalleryEditEntity);
-                            }else{
-                                viewModel.mediaGalleryPay(mediaGalleryEditEntity);
-                            }
-                        }else{
+                    //是否解锁
+                    if(mediaGalleryEditEntity.isStatePay()){
+                        //已经解锁
+                        if(mediaGalleryEditEntity.isSelfSend() || mediaGalleryEditEntity.isStateUnlockPhoto()){
                             viewModel.uc.mediaGalleryPayEvent.setValue(mediaGalleryEditEntity);
+                        }else{
+                            viewModel.mediaGalleryPay(mediaGalleryEditEntity);
                         }
-
+                    }else{
+                        viewModel.uc.mediaGalleryPayEvent.setValue(mediaGalleryEditEntity);
                     }
                 }
             }
@@ -1171,7 +1167,12 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
 
     @Override
     public void onClickPhoneVideo() {//点击选中图片、视频
-        MessageDetailDialog.CheckImgViewFile(mActivity, true, new MessageDetailDialog.SelectedSnapshotListener() {
+
+        MediaGallerySwitchEntity mediaGallerySwitchEntity = null;
+        if(viewModel.priceConfigEntityField!=null && viewModel.priceConfigEntityField.getCurrent()!=null){
+            mediaGallerySwitchEntity = viewModel.priceConfigEntityField.getCurrent().getMediaPayDenyPer();
+        }
+        MessageDetailDialog.CheckImgViewFile(mActivity, true,mediaGallerySwitchEntity, new MessageDetailDialog.SelectedSnapshotListener() {
             @Override
             public void checkPhoto(boolean snapshot) {
                 //选择图片

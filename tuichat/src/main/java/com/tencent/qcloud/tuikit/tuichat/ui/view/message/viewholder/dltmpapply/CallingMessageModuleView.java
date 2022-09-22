@@ -26,11 +26,11 @@ public class CallingMessageModuleView extends BaseMessageModuleView{
         super(customDlTempMessageHolder);
     }
 
-    public void layoutVariableViews(TUIMessageBean msg, FrameLayout rootView, CustomDlTempMessage.MsgBodyInfo msgModuleInfo){
+    public void layoutVariableViews(TUIMessageBean msg, FrameLayout rootView,int position, CustomDlTempMessage.MsgBodyInfo msgModuleInfo){
         if (CustomConstants.CallingMessage.TYPE_CALLING_FAILED.equals(msgModuleInfo.getCustomMsgType())) {
             loadCallingView(msg, msgModuleInfo, rootView);
         } else {
-            customDlTempMessageHolder.defaultLayout(rootView, msg.isSelf());
+            customDlTempMessageHolder.defaultLayout(rootView, msg.isSelf(),position,msg);
         }
     }
 

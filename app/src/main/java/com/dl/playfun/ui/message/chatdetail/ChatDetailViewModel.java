@@ -849,6 +849,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
 
                     @Override
                     public void onSuccess(BaseResponse baseResponse) {
+                        mediaGalleryEditEntity.setStateUnlockPhoto(true);
                         uc.mediaGalleryPayEvent.setValue(mediaGalleryEditEntity);
                     }
 

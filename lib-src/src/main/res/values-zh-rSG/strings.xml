@@ -1264,5 +1264,8 @@
     <string name="playfun_refresh">刷新</string>
     <string name="playfun_coinpusher_game_state_text">搖擺啟停</string>
     <string name="playfun_coinpusher_game_text_2">%s金幣/次</string>
+    <string name="playfun_text_dislike">不喜歡</string>
+    <string name="playfun_text_like">喜歡</string>
+    <string name="playfun_text_disable_the_deadline">禁用期限至：%s</string>
     <!--PlayFun-APP-END-->
 </resources>

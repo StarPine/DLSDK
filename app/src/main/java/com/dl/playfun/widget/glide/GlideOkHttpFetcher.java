@@ -67,7 +67,7 @@ public class GlideOkHttpFetcher implements DataFetcher<InputStream> {
         mResponseBody = response.body();
 
         if (!response.isSuccessful() || mResponseBody == null) {
-            throw new IOException("Request failed with code: " + response.code());
+            throw new IOException("Request failed with code: " + response.code()+" url =="+request.url().url().toString());
         }
 
         mInputStream = ContentLengthInputStream.obtain(

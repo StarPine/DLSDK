@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.WindowManager;
 
 import androidx.lifecycle.ViewModelProviders;
 
@@ -14,6 +15,7 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.databinding.ActivityMediaGalleryVideoBinding;
 import com.dl.playfun.ui.base.BaseActivity;
 import com.dl.playfun.utils.AutoSizeUtils;
+import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.StringUtil;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
@@ -47,6 +49,18 @@ public class MediaGalleryVideoPayActivity extends BaseActivity<ActivityMediaGall
         return BR.videoViewModel;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ImmersionBarUtils.setupStatusBar(this, false, false);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ImmersionBarUtils.setupStatusBar(this, true, false);
+    }
+
     /**
      * @Desc TODO()
      * @author 彭石林
@@ -63,6 +77,8 @@ public class MediaGalleryVideoPayActivity extends BaseActivity<ActivityMediaGall
     @Override
     public void initParam() {
         super.initParam();
+        //防窥屏
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
         mediaGalleryEditEntity = (MediaGalleryEditEntity) getIntent().getSerializableExtra("mediaGalleryEditEntity");
     }
 
@@ -90,12 +106,18 @@ public class MediaGalleryVideoPayActivity extends BaseActivity<ActivityMediaGall
             viewModel.srcPath.set(srcPath);
         }
        // setVideoUri(binding.videoPlayer,srcPath);
+        //是付费影片
+        if(mediaGalleryEditEntity.isStatePay()){
+            viewModel.mediaGalleryEvaluationQry(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId());
+        }
 
         //好评
         binding.llLike.setOnClickListener(v -> {
             Integer evaluationType = viewModel.evaluationLikeEvent.getValue();
-            if(evaluationType !=null && evaluationType == 0){
-                viewModel.mediaGalleryEvaluationPut(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId(),2);
+            if(evaluationType !=null){
+                if(evaluationType == 0 || evaluationType == 1){
+                    viewModel.mediaGalleryEvaluationPut(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId(),2);
+                }
             }
         });
         binding.llNoLike.setOnClickListener(v -> {
@@ -126,7 +148,7 @@ public class MediaGalleryVideoPayActivity extends BaseActivity<ActivityMediaGall
     void generateDrawable(View view,Integer drawableColor,Integer drawableCornersRadius,Integer drawableStrokeColor, Integer drawableStrokeWidth,Integer drawableStartColor, Integer drawableEndColor){
         CustomDrawableUtils.generateDrawable(view, getColorFromResource(drawableColor),
                 drawableCornersRadius,null,null,null,null,
-                getColorFromResource(drawableStartColor),getColorFromResource(drawableEndColor),drawableStrokeWidth,getColorFromResource(drawableStrokeColor));
+                getColorFromResource(drawableStartColor),getColorFromResource(drawableEndColor),drawableStrokeWidth,getColorFromResource(drawableStrokeColor),null);
     }
     Integer getColorFromResource(Integer resourceId) {
         if (resourceId==null) {
@@ -216,6 +238,7 @@ public class MediaGalleryVideoPayActivity extends BaseActivity<ActivityMediaGall
     @Override
     public void onDestroy() {
         super.onDestroy();
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
         AutoSizeUtils.closeAdapt(getResources());
     }
 }

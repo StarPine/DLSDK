@@ -2,6 +2,7 @@ package com.dl.playfun.widget.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,12 +17,20 @@ import android.widget.TextView;
 
 import androidx.databinding.DataBindingUtil;
 
+import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
 import com.dl.playfun.R;
 import com.dl.playfun.databinding.DialogCheckImgVideoBinding;
 import com.dl.playfun.databinding.DialogCoinpusherHelpBinding;
+import com.dl.playfun.entity.MediaGallerySwitchEntity;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.utils.StringUtil;
+import com.dl.playfun.utils.Utils;
+
+import java.util.Date;
+
+import me.goldze.mvvmhabit.utils.ToastUtils;
 
 /**
  * Author: 彭石林
@@ -36,19 +45,51 @@ public class MessageDetailDialog {
      * @parame [context, touchOutside, audioCallHintOnClickListener]
      * @Date 2022/3/1
      */
-    public static Dialog CheckImgViewFile(Context context, boolean touchOutside, SelectedSnapshotListener selectedSnapshotListener) {
+    public static Dialog CheckImgViewFile(Context context, boolean touchOutside, MediaGallerySwitchEntity mediaGallerySwitchEntity, SelectedSnapshotListener selectedSnapshotListener) {
         Dialog dialog = new Dialog(context);
         dialog.setCanceledOnTouchOutside(touchOutside);
         dialog.setCancelable(true);
         LayoutInflater inflater = LayoutInflater.from(context);
         DialogCheckImgVideoBinding binding = DataBindingUtil.inflate(inflater, R.layout.dialog_check_img_video, null, false);
+        //收益开关
+        boolean switchMoney = ConfigManager.getInstance().getTipMoneyShowFlag();
+        Long endDateTimestamp = null;
+        if(!switchMoney){
+            //收益开关打开。关闭付费照片、影片
+            binding.tvPhotoCoin.setVisibility(View.GONE);
+            binding.tvVideoCoin.setVisibility(View.GONE);
+            binding.coinView.setVisibility(View.GONE);
+        }else{
+            //后台配置开关
+            if(mediaGallerySwitchEntity!=null){
+                //1为时间限制(需要返回截止时间)，2为运营限制
+                if(mediaGallerySwitchEntity.getBannedStatus() == 1){
+                    endDateTimestamp = mediaGallerySwitchEntity.getEndDateTimestamp();
+                }else if(mediaGallerySwitchEntity.getBannedStatus() == 2){
+                    //运营限制 隐藏按钮
+                    binding.tvPhotoCoin.setVisibility(View.GONE);
+                    binding.tvVideoCoin.setVisibility(View.GONE);
+                    binding.coinView.setVisibility(View.GONE);
+                }
+            }
+        }
         binding.tvPhoto.setOnClickListener(v -> {
             dialog.dismiss();
             if(selectedSnapshotListener!=null){
                 selectedSnapshotListener.checkPhoto(false);
             }
         });
+        Long finalEndDateTimestamp = endDateTimestamp;
         binding.tvPhotoCoin.setOnClickListener(v -> {
+            if(finalEndDateTimestamp !=null){
+                long currentTimeMillis = System.currentTimeMillis() / 1000;
+                if(finalEndDateTimestamp - currentTimeMillis > 0){
+                    Date currentData = new Date();
+                    currentData.setTime(finalEndDateTimestamp * 1000);
+                    ToastUtils.showShort(String.format(StringUtils.getString(R.string.playfun_text_disable_the_deadline), Utils.format.format(currentData)));
+                    return;
+                }
+            }
             dialog.dismiss();
             if(selectedSnapshotListener!=null){
                 selectedSnapshotListener.checkPhoto(true);
@@ -61,6 +102,15 @@ public class MessageDetailDialog {
             }
         });
         binding.tvVideoCoin.setOnClickListener(v -> {
+            if(finalEndDateTimestamp !=null){
+                long currentTimeMillis = System.currentTimeMillis() / 1000;
+                if(finalEndDateTimestamp - currentTimeMillis > 0){
+                    Date currentData = new Date();
+                    currentData.setTime(finalEndDateTimestamp * 1000);
+                    ToastUtils.showShort(String.format(StringUtils.getString(R.string.playfun_text_disable_the_deadline), Utils.format.format(currentData)));
+                    return;
+                }
+            }
             dialog.dismiss();
             if(selectedSnapshotListener!=null){
                 selectedSnapshotListener.checkVideo(true);

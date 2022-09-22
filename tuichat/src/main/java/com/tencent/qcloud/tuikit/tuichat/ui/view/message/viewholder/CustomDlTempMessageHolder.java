@@ -47,14 +47,14 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
         }
         CustomDlTempMessage customDlTempMessage = IMGsonUtils.fromJson(new String(msg.getCustomElemData()), CustomDlTempMessage.class);
         if (customDlTempMessage == null) {
-            defaultLayout(flTmpLayout, msg.isSelf());
+            defaultLayout(flTmpLayout, msg.isSelf(),position,msg);
             return;
         }
         //判断模块
         if (customDlTempMessage.getContentBody() != null && !TextUtils.isEmpty(customDlTempMessage.getContentBody().getMsgModuleName())) {
             String moduleName = customDlTempMessage.getContentBody().getMsgModuleName();
             if (TextUtils.isEmpty(moduleName)) {
-                defaultLayout(flTmpLayout, msg.isSelf());
+                defaultLayout(flTmpLayout, msg.isSelf(),position,msg);
                 return;
             }
             CustomDlTempMessage.MsgBodyInfo msgModuleInfo = customDlTempMessage.getContentBody().getContentBody();
@@ -62,25 +62,31 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
                 if (msgArea != null) {
                     msgArea.setBackground(null);
                 }
-                new MediaGalleryModuleView(this).layoutVariableViews(msg, flTmpLayout, msgModuleInfo);
+                flTmpLayout.setOnLongClickListener(v -> {
+                    if (onItemClickListener != null) {
+                        onItemClickListener.onMessageLongClick(flTmpLayout, position, msg);
+                    }
+                    return true;
+                });
+                new MediaGalleryModuleView(this).layoutVariableViews(msg, flTmpLayout, position, msgModuleInfo);
             }else if (CustomConstants.CallingMessage.MODULE_NAME.equals(moduleName)) {
                 //禁止通话模块
-                new CallingMessageModuleView(this).layoutVariableViews(msg, flTmpLayout,msgModuleInfo);
+                new CallingMessageModuleView(this).layoutVariableViews(msg, flTmpLayout, position,msgModuleInfo);
             } else if (CustomConstants.SystemTipsMessage.MODULE_NAME.equals(moduleName)) {
                 //系统提示模块
                 new SystemTipsMessageModuleView(this).layoutVariableViews(msg,position,flTmpLayout,msgModuleInfo);
             } else {
                 //默认展示解析不出的模板提示
-                defaultLayout(flTmpLayout, msg.isSelf());
+                defaultLayout(flTmpLayout, msg.isSelf(),position,msg);
             }
         }else{
-            defaultLayout(flTmpLayout,msg.isSelf());
+            defaultLayout(flTmpLayout,msg.isSelf(),position,msg);
         }
 
     }
 
     //默认消息模板
-    public void defaultLayout(FrameLayout rootView, boolean isSelf){
+    public void defaultLayout(FrameLayout rootView, boolean isSelf,int position,TUIMessageBean msg){
         View defaultView = View.inflate(getContext(), R.layout.tmp_message_default_layout, null);
         FrameLayout frameLayout = defaultView.findViewById(R.id.container);
         TextView textContent = defaultView.findViewById(R.id.tv_content);
@@ -107,8 +113,13 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
         stringBuilder.setSpan(redSpan, whiteLength, txt.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         stringBuilder.setSpan(new UnderlineSpan(), whiteLength, txt.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         textContent.setText(stringBuilder);
-        msgContentFrame.setClickable(true);
         rootView.addView(defaultView);
+        rootView.setOnLongClickListener(v -> {
+            if (onItemClickListener != null) {
+                onItemClickListener.onMessageLongClick(rootView, position, msg);
+            }
+            return true;
+        });
     }
 
 

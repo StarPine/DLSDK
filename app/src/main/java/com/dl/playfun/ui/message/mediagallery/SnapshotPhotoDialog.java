@@ -86,7 +86,7 @@ public class SnapshotPhotoDialog extends BaseDialog {
             List<MediaPayPerConfigEntity.ItemEntity> itemData = mediaPriceTmpConfig.getContent();
             int checkedIdx = 0;
             for (int i = 0; i < itemData.size(); i++) {
-                listData.add(itemData.get(i).getProfit().toString());
+                listData.add(itemData.get(i).getCoin());
                 if(localCheckItemEntity!=null){
                     if(localCheckItemEntity.getCoin()!=null && localCheckItemEntity.getProfit()!=null){
                         if(localCheckItemEntity.getCoin().equals(itemData.get(i).getCoin()) && localCheckItemEntity.getProfit().equals(itemData.get(i).getProfit())){
@@ -108,7 +108,7 @@ public class SnapshotPhotoDialog extends BaseDialog {
                     checkItemEntity = mediaPriceTmpConfig.getContent().get(0);
                 }
                 binding.tvCoin.setText(checkItemEntity.getCoin());
-                binding.tvMoney.setText("+"+String.valueOf(checkItemEntity.getProfit()));
+                binding.tvMoney.setText("+"+String.valueOf(checkItemEntity.getCoin()));
                 configId = mediaPriceTmpConfig.getConfigId();
 
             }

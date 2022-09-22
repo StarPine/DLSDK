@@ -42,7 +42,7 @@ public class MediaGalleryPhotoPayViewModel extends BaseViewModel<AppRepository> 
     //快照可见倒计时状态
     public ObservableBoolean snapshotTimeState = new ObservableBoolean(false);
     //快照可见倒计时时间
-    public ObservableField<String> snapshotTimeText = new ObservableField<>();
+    public ObservableField<String> snapshotTimeText = new ObservableField<>("10s");
     //提示解锁
     public ObservableBoolean snapshotLockState = new ObservableBoolean(false);
     //解锁事件

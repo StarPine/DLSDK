@@ -104,7 +104,46 @@ public class ConfigManager {
         return getAppRepository().readSwitches(EaringlSwitchUtil.REMOVE_IM_MESSAGE).intValue() == 1;
     }
 
-
+    /**
+    * @Desc TODO(获取发送付费照片的快照预览时间)
+    * @author 彭石林
+    * @parame []
+    * @return long
+    * @Date 2022/9/21
+    */
+    public long mediaGallerySnapshotUnLockTime() {
+        long snapshotTime = 2;
+        int multiply = 2;
+        //当前用户信息
+        UserDataEntity userDataEntity = getAppRepository().readUserData();
+        if(userDataEntity==null){
+            return snapshotTime;
+        }
+        //配置标
+        SystemConfigEntity readSystemConfig = getAppRepository().readSystemConfig();
+        if(readSystemConfig==null){
+            return snapshotTime;
+        }
+        //普通预览时间
+        Integer localSnapshotTime = readSystemConfig.getPhotoSnapshotTime();
+        //vip预览时间
+        Integer localSnapshotVIPTime = readSystemConfig.getPhotoSnapshotVIPTime();
+        if(userDataEntity.getSex() != null && userDataEntity.getSex()==1){//男性
+            if(userDataEntity.getIsVip()!=null && userDataEntity.getIsVip()==1){//是vip
+                //VIP预览快照过期时间
+                if(localSnapshotVIPTime == null){
+                    //普通预览时间不存在 vip可预览时间 = 普通时间*3
+                    return localSnapshotTime == null ? snapshotTime : snapshotTime * multiply;
+                }else{
+                    return localSnapshotVIPTime;
+                }
+            }else{
+                return localSnapshotTime == null ? snapshotTime : localSnapshotTime;
+            }
+        }else{//女性
+            return localSnapshotTime == null ? snapshotTime : localSnapshotTime;
+        }
+    }
 
     /**
      * 返回用户上级ID
