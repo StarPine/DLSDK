@@ -50,7 +50,7 @@ public class ConversationListLayout extends RecyclerView implements IConversatio
 
     public void init() {
         setLayoutFrozen(false);
-        setItemViewCacheSize(0);
+        setItemViewCacheSize(500);
         setHasFixedSize(true);
         setFocusableInTouchMode(false);
         CustomLinearLayoutManager linearLayoutManager = new CustomLinearLayoutManager(getContext());

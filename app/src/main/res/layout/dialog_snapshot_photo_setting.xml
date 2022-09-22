@@ -18,8 +18,8 @@
         android:layout_height="wrap_content">
         <RelativeLayout
             android:id="@+id/rl_layout"
-            android:layout_marginTop="14dp"
-            android:layout_marginStart="19dp"
+            android:layout_marginTop="19dp"
+            android:layout_marginStart="14dp"
             android:layout_width="match_parent"
             android:layout_height="34dp">
             <androidx.appcompat.widget.AppCompatImageView
@@ -28,16 +28,18 @@
                 android:layout_height="34dp"
                 android:src="@drawable/img_diamond_photo"
                 />
+
             <androidx.appcompat.widget.AppCompatTextView
-                android:layout_centerInParent="true"
-                android:layout_marginStart="10dp"
-                android:includeFontPadding="false"
-                android:layout_toEndOf="@+id/img_logo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="設置解鎖價格"
-                android:textColor="#ff333333"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@+id/img_logo"
+                android:includeFontPadding="false"
+                android:text="@string/playfun_text_set_unlock_price"
+                android:textColor="@color/toolbar_title_color"
                 android:textSize="15sp"
+                android:textStyle="bold"
                 />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -80,7 +82,8 @@
         </LinearLayout>
         <LinearLayout
             android:layout_below="@+id/rl_layout"
-            android:layout_marginStart="272dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="14dp"
             android:orientation="horizontal"
             android:layout_marginTop="25dp"
             android:layout_width="wrap_content"
@@ -108,7 +111,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/ll_layout_coin">
 
-            <com.dl.playfun.widget.custom.PCustomSeekbar
+            <com.dl.playfun.widget.custom.PCustomSeekbar2
                 android:id="@+id/seekbar_photo"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
@@ -152,7 +155,7 @@
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 android:button="@null"
-                android:drawableStart="@drawable/snapshot_checkbox_selector"
+                android:drawableStart="@drawable/snapshot_checkbox_selectors"
                 tools:ignore="TouchTargetSizeCheck" />
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_marginStart="5dp"

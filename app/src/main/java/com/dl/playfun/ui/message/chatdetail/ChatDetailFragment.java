@@ -9,7 +9,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,17 +39,12 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.data.source.local.LocalDataSourceImpl;
 import com.dl.playfun.databinding.FragmentChatDetailBinding;
-import com.dl.playfun.entity.ApiConfigManagerEntity;
 import com.dl.playfun.entity.CrystalDetailsConfigEntity;
 import com.dl.playfun.entity.EvaluateItemEntity;
 import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.entity.LocalMessageIMEntity;
 import com.dl.playfun.entity.MediaGallerySwitchEntity;
 import com.dl.playfun.entity.MediaPayPerConfigEntity;
-import com.dl.playfun.ui.message.mediagallery.MediaGalleryVideoSettingActivity;
-import com.dl.playfun.ui.message.mediagallery.photo.MediaGalleryPhotoPayActivity;
-import com.dl.playfun.ui.message.mediagallery.video.MediaGalleryVideoPayActivity;
-import com.tencent.qcloud.tuicore.custom.entity.MediaGalleryEditEntity;
 import com.dl.playfun.entity.PhotoAlbumEntity;
 import com.dl.playfun.entity.TagEntity;
 import com.dl.playfun.entity.TaskRewardReceiveEntity;
@@ -62,18 +56,17 @@ import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFr
 import com.dl.playfun.ui.certification.certificationmale.CertificationMaleFragment;
 import com.dl.playfun.ui.dialog.GiftBagDialog;
 import com.dl.playfun.ui.message.chatdetail.notepad.NotepadActivity;
-import com.dl.playfun.ui.message.photoreview.PhotoReviewFragment;
-import com.dl.playfun.ui.message.sendcoinredpackage.SendCoinRedPackageFragment;
+import com.dl.playfun.ui.message.mediagallery.MediaGalleryVideoSettingActivity;
 import com.dl.playfun.ui.message.mediagallery.SnapshotPhotoActivity;
+import com.dl.playfun.ui.message.mediagallery.photo.MediaGalleryPhotoPayActivity;
+import com.dl.playfun.ui.message.mediagallery.video.MediaGalleryVideoPayActivity;
 import com.dl.playfun.ui.mine.myphotoalbum.MyPhotoAlbumFragment;
-import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
 import com.dl.playfun.ui.mine.wallet.girl.TwDollarMoneyFragment;
 import com.dl.playfun.ui.mine.webview.WebViewFragment;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.ui.userdetail.report.ReportUserFragment;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.AutoSizeUtils;
-import com.dl.playfun.utils.ImageUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.PictureSelectorUtil;
@@ -84,7 +77,6 @@ import com.dl.playfun.widget.dialog.MMAlertDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.dl.playfun.widget.dialog.MessageDetailDialog;
 import com.dl.playfun.widget.dialog.TraceDialog;
-import com.dl.playfun.widget.dialog.WebViewDialog;
 import com.google.gson.Gson;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.listener.OnResultCallbackListener;
@@ -105,10 +97,9 @@ import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuicore.Status;
 import com.tencent.qcloud.tuicore.custom.CustomConstants;
+import com.tencent.qcloud.tuicore.custom.entity.MediaGalleryEditEntity;
 import com.tencent.qcloud.tuicore.custom.entity.SystemTipsEntity;
-import com.tencent.qcloud.tuicore.custom.CustomConstants;
 import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
-import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
@@ -123,14 +114,13 @@ import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
+import me.goldze.mvvmhabit.utils.ToastUtils;
 import me.yokeyword.fragmentation.ISupportFragment;
 
 /**
@@ -185,7 +175,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        AutoSizeUtils.applyAdapt(this.getResources());
         return R.layout.fragment_chat_detail;
     }
 
@@ -664,7 +653,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         //存储追踪成功改变样式
         MessageRecyclerView.setAddLikeMsgId(viewModel.readKeyValue(key));
         MessageRecyclerView.setFlagTipMoney(ConfigManager.getInstance().getTipMoneyShowFlag());
-        if (mChatInfo.getId() != null && mChatInfo.getId().equals(AppConfig.CHAT_SERVICE_USER_ID)) {
+        if (mChatInfo.getId() != null && isAdministrator()) {
             messageLayout.setIsVip(true);
             messageLayout.setSend_num(-1);
             messageLayout.setRead_sum(-1);
@@ -937,6 +926,10 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         });
         viewModel.uc.mediaGalleryPayEvent.observe(this, mediaGalleryEditEntity -> {
             if(mediaGalleryEditEntity.isVideoSetting()){
+                if(Status.mIsShowFloatWindow){
+                    me.goldze.mvvmhabit.utils.ToastUtils.showShort(R.string.audio_in_call);
+                    return;
+                }
                 startActivity(MediaGalleryVideoPayActivity.createIntent(getContext(),mediaGalleryEditEntity));
             }else{
                 startActivity(MediaGalleryPhotoPayActivity.createIntent(getContext(),mediaGalleryEditEntity));
@@ -1021,7 +1014,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                         }
                     }
                 }
-                toSnapshotPhotoIntent.launch(SnapshotPhotoActivity.createIntent(mActivity,snapshot,result.get(0).getCompressPath(),mediaPriceTmpConfig));
+                toSnapshotPhotoIntent.launch(SnapshotPhotoActivity.createIntent(mActivity,snapshot,result.get(0).getCompressPath(),isAdministrator(),mediaPriceTmpConfig));
             }
 
             @Override
@@ -1077,8 +1070,13 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         }
     });
 
-
-
+    //是否是客服
+    private boolean isAdministrator(){
+        if(mChatInfo!=null && mChatInfo.getId()!=null){
+            return mChatInfo.getId().startsWith(AppConfig.CHAT_SERVICE_USER_ID);
+        }
+        return false;
+    }
 
     //选择视频 snapshot 是否是付费
     public void onVideoActionClick(boolean snapshot) {
@@ -1167,12 +1165,15 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
 
     @Override
     public void onClickPhoneVideo() {//点击选中图片、视频
-
+        if (Status.mIsShowFloatWindow){
+            ToastUtils.showShort(R.string.audio_in_call);
+            return;
+        }
         MediaGallerySwitchEntity mediaGallerySwitchEntity = null;
         if(viewModel.priceConfigEntityField!=null && viewModel.priceConfigEntityField.getCurrent()!=null){
             mediaGallerySwitchEntity = viewModel.priceConfigEntityField.getCurrent().getMediaPayDenyPer();
         }
-        MessageDetailDialog.CheckImgViewFile(mActivity, true,mediaGallerySwitchEntity, new MessageDetailDialog.SelectedSnapshotListener() {
+        MessageDetailDialog.CheckImgViewFile(mActivity, true,mChatInfo.getId().startsWith(AppConfig.CHAT_SERVICE_USER_ID),mediaGallerySwitchEntity, new MessageDetailDialog.SelectedSnapshotListener() {
             @Override
             public void checkPhoto(boolean snapshot) {
                 //选择图片
@@ -1189,13 +1190,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                 onVideoActionClick(snapshot);
             }
         }).show();
-//        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-//        intent.addCategory(Intent.CATEGORY_OPENABLE);
-//        intent.setType("*/*");
-//        String[] mimetypes = {"image/*", "video/*"};
-//        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes);
-//
-//        startActivityForResult(intent, InputMoreFragment.REQUEST_CODE_PHOTO);
     }
 
     @Override
@@ -1379,48 +1373,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                                 });
                     }
                 }).show();
-    }
-
-    //弹出钻石充值
-    private void showWebRecharge(boolean isGiftSend) {
-        if (!isGiftSend) {
-            AppContext.instance().logEvent(AppsFlyerEvent.im_topup);
-        }
-        ApiConfigManagerEntity apiConfigManagerEntity = ConfigManager.getInstance().getAppRepository().readApiConfigManagerEntity();
-        if(apiConfigManagerEntity!=null && apiConfigManagerEntity.getPlayFunWebUrl()!=null){
-            String url = apiConfigManagerEntity.getPlayFunWebUrl() + AppConfig.PAY_RECHARGE_URL;
-            new WebViewDialog(getContext(), mActivity, url, new WebViewDialog.ConfirmOnclick() {
-                @Override
-                public void webToVipRechargeVC(Dialog dialog) {
-                    if (dialog != null) {
-                        dialog.dismiss();
-                    }
-                    viewModel.start(VipSubscribeFragment.class.getCanonicalName());
-                }
-
-                @Override
-                public void vipRechargeDiamondSuccess(Dialog dialog, Integer coinValue) {
-                    if (dialog != null) {
-                        this.cancel();
-                        dialog.dismiss();
-                    }
-                }
-
-                @Override
-                public void moreRechargeDiamond(Dialog dialog) {
-                    dialog.dismiss();
-                    if(mActivity!=null && !mActivity.isFinishing()){
-                        mActivity.runOnUiThread(() -> showLoaclRecharge(false));
-                    }
-                }
-
-                @Override
-                public void cancel() {
-                }
-            }).noticeDialog().show();
-        }else{
-            showLoaclRecharge(false);
-        }
     }
 
     private void showLoaclRecharge(boolean isGiftSend) {

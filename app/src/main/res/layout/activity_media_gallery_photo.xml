@@ -121,6 +121,7 @@
             <LinearLayout
                 android:visibility="@{photoViewModel.isReadLook ? View.VISIBLE : View.GONE}"
                 android:gravity="center"
+                android:elevation="9999dp"
                 android:layout_centerInParent="true"
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
@@ -143,7 +144,7 @@
             </LinearLayout>
 
             <LinearLayout
-                tools:visibility="gone"
+                tools:visibility="visible"
                 android:layout_width="match_parent"
                 android:layout_height="86dp"
                 android:elevation="99dp"
@@ -157,6 +158,7 @@
                     android:layout_width="144dp"
                     android:layout_height="38dp"
                     android:layout_gravity="center"
+                    android:gravity="center"
                     android:orientation="horizontal"
                     binding:drawable_color="@{@color/black}"
                     binding:drawable_cornersRadius="@{22}"
@@ -167,7 +169,6 @@
                         android:layout_width="28dp"
                         android:layout_height="28dp"
                         android:layout_gravity="center"
-                        android:layout_marginStart="30dp"
                         android:rotationX="180"
                         android:src="@drawable/img_give_like" />
 
@@ -187,6 +188,7 @@
                     android:layout_width="144dp"
                     android:layout_height="38dp"
                     android:layout_gravity="center"
+                    android:gravity="center"
                     android:layout_marginStart="28dp"
                     android:orientation="horizontal"
                     binding:drawable_cornersRadius="@{22}"
@@ -197,8 +199,6 @@
                         android:layout_width="28dp"
                         android:layout_height="28dp"
                         android:layout_gravity="center"
-                        android:layout_marginStart="30dp"
-
                         android:src="@drawable/img_give_like" />
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -229,7 +229,7 @@
                 android:layout_height="115dp"
                 tools:ignore="UselessParent">
                 <com.dl.playfun.widget.progress.MPCircleProgressBar
-                    android:id="@+id/progress"
+                    android:id="@+id/mp_progress"
                     android:layout_gravity="center"
                     android:layout_width="72dp"
                     android:layout_height="72dp"

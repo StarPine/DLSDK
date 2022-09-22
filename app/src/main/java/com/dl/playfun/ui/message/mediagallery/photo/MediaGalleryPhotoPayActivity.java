@@ -1,5 +1,6 @@
 package com.dl.playfun.ui.message.mediagallery.photo;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -30,11 +31,15 @@ import com.dl.playfun.widget.glide.GlideCache;
 import com.dl.playfun.widget.glide.GlideProgressListener;
 import com.dl.playfun.widget.glide.GlideProgressManager;
 import com.gyf.immersionbar.ImmersionBar;
+import com.jakewharton.rxbinding2.view.RxView;
 import com.tencent.qcloud.tuicore.custom.CustomDrawableUtils;
 import com.tencent.qcloud.tuicore.custom.entity.MediaGalleryEditEntity;
 
 import java.io.File;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.functions.Consumer;
 
 /**
  * Author: 彭石林
@@ -114,7 +119,7 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
         if(progress>=100){
             binding.processLayout.setVisibility(View.GONE);
         }else{
-            binding.progress.SetCurrent(progress);
+            binding.mpProgress.SetCurrent(progress);
             if (binding.processLayout.getVisibility() == View.GONE) {
                 binding.processLayout.setVisibility(View.VISIBLE);
             }
@@ -178,30 +183,65 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
             //不是自己发送
             if(!mediaGalleryEditEntity.isSelfSend()){
                 //付费照片才查看评价
-                if( mediaGalleryEditEntity.isStatePay() && mediaGalleryEditEntity.isReadLook()){
-                    //是否已经看过
-                    viewModel.isReadLook.set(mediaGalleryEditEntity.isReadLook());
-                    viewModel.mediaGalleryEvaluationQry(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId());
+                if(mediaGalleryEditEntity.isStatePay()){
+                    //已经解锁
+                    if(mediaGalleryEditEntity.isStateUnlockPhoto()){
+                        //快照
+                        if(mediaGalleryEditEntity.isStateSnapshot()){
+
+                        }else{
+                            //查询评价
+                            viewModel.mediaGalleryEvaluationQry(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId());
+                        }
+                    }
                 }
+                viewModel.isReadLook.set(mediaGalleryEditEntity.isReadLook());
             }
         }
         //好评
         binding.llLike.setOnClickListener(v -> {
-            Integer evaluationType = viewModel.evaluationLikeEvent.getValue();
-            if(evaluationType !=null){
-                if(evaluationType == 0 || evaluationType == 1){
-                    viewModel.mediaGalleryEvaluationPut(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId(),2);
-                }
-            }
+            doubleClick(v);
+//            Integer evaluationType = viewModel.evaluationLikeEvent.getValue();
+//            if(evaluationType !=null){
+//                if(evaluationType == 0 || evaluationType == 1){
+//                    viewModel.mediaGalleryEvaluationPut(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId(),2);
+//                }
+//            }
         });
         binding.llNoLike.setOnClickListener(v -> {
-            Integer evaluationType = viewModel.evaluationLikeEvent.getValue();
-            if(evaluationType !=null && evaluationType == 0){
-                //差评
-                viewModel.mediaGalleryEvaluationPut(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId(),1);
-            }
+            doubleClick(v);
+//            Integer evaluationType = viewModel.evaluationLikeEvent.getValue();
+//            if(evaluationType !=null && evaluationType == 0){
+//                //差评
+//                viewModel.mediaGalleryEvaluationPut(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId(),1);
+//            }
         });
     }
+    @SuppressLint("CheckResult")
+    public void doubleClick(View view){
+        RxView.clicks(view)
+                .throttleFirst(1, TimeUnit.SECONDS)//1秒钟内只允许点击1次
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        if (view.getId() == binding.llLike.getId()) {
+                            Integer evaluationType = viewModel.evaluationLikeEvent.getValue();
+                            if(evaluationType !=null){
+                                if(evaluationType == 0 || evaluationType == 1){
+                                    viewModel.mediaGalleryEvaluationPut(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId(),2);
+                                }
+                            }
+                        }else if(view.getId() == binding.llNoLike.getId()){
+                            Integer evaluationType = viewModel.evaluationLikeEvent.getValue();
+                            if(evaluationType !=null && evaluationType == 0){
+                                //差评
+                                viewModel.mediaGalleryEvaluationPut(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId(),1);
+                            }
+                        }
+                    }
+                });
+    }
+
 
     @Override
     public void initViewObservable() {
@@ -316,12 +356,12 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
         }
         //倒计时补可见
         viewModel.snapshotTimeState.set(false);
+        //是否已经看过
+        viewModel.isReadLook.set(true);
         //查询评价接口失败。不让继续评价
         if(viewModel.evaluationLikeEvent.getValue()!=null){
             //评价弹出
             viewModel.evaluationState.set(false);
-            //是否已经看过
-            viewModel.isReadLook.set(true);
         }
     }
 

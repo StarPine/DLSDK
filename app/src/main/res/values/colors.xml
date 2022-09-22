@@ -22,6 +22,7 @@
     <color name="hud_background">#96000000</color>
     <color name="black_558">#424558</color>
     <color name="black_848">#353848</color>
+    <color name="black_434">#43435E</color>
     <color name="view_bar_color">#F8F8F8</color>
 
     <color name="gray_dark">#4F4F4F</color>

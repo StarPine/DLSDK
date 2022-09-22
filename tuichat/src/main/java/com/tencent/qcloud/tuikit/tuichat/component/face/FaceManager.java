@@ -81,8 +81,8 @@ public class FaceManager {
         new Thread() {
             @Override
             public void run() {
-                for (int i = 0; i < emojiFilters.length; i++) {
-                    loadAssetBitmap(emojiFilters[i], "emoji/" + emojiFilters[i] + "@2x.png", true);
+                for (String emojiFilter : emojiFilters) {
+                    loadAssetBitmap(emojiFilter, "emoji/" + emojiFilter + "@2x.png", true);
                 }
                 CustomFaceConfig config = TUIChatService.getChatConfig().getCustomFaceConfig();
                 if (config == null) {

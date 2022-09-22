@@ -16,8 +16,10 @@
         android:layout_height="96dp">
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/img_icon"
+            android:src="@drawable/img_pc_default_load"
             android:layout_width="match_parent"
             android:layout_height="72dp"
+            android:scaleType="centerCrop"
             />
         <TextView
             android:id="@+id/tv_coin"

@@ -59,7 +59,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:paddingLeft="30dp"
+                            android:paddingStart="30dp"
                             android:src="@{viewModel.onLineDrawables(viewModel.tagEntitys)}"
                             android:visibility="@{viewModel.tagEntitys.isOnline == 1? View.VISIBLE:View.GONE}" />
 
@@ -68,7 +68,7 @@
                             android:layout_height="9dp"
                             android:layout_alignParentBottom="true"
                             android:layout_marginBottom="4dp"
-                            android:layout_toLeftOf="@+id/tag_title"
+                            android:layout_toStartOf="@+id/tag_title"
                             android:src="@drawable/tag_invite"
                             android:visibility="@{viewModel.isTagShow?View.VISIBLE:View.GONE}" />
 
@@ -90,8 +90,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="20dp"
-                        android:layout_toLeftOf="@+id/iv_setting"
+                        android:layout_marginEnd="20dp"
+                        android:layout_toStartOf="@+id/iv_setting"
                         android:src="@drawable/icon_notepad"
                         android:visibility="gone"
                         binding:onClickCommand="@{viewModel.noteOnClickCommand}" />
@@ -101,7 +101,7 @@
                         android:visibility="gone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:src="@drawable/ic_toolbar_more"
                         binding:onClickCommand="@{viewModel.moreOnClickCommand}" />
@@ -113,8 +113,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:orientation="vertical">
 
             <TextView
                 style="@style/TopWarn"
@@ -176,9 +175,9 @@
         <ImageView
             android:id="@+id/iv_close"
             android:layout_alignTop="@+id/rl_layout"
-            android:layout_alignRight="@+id/rl_layout"
+            android:layout_alignEnd="@+id/rl_layout"
             android:layout_marginTop="-10dp"
-            android:layout_marginRight="-10dp"
+            android:layout_marginEnd="-10dp"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@drawable/icon_close"
@@ -196,8 +195,8 @@
             android:layout_width="36dp"
             android:layout_height="56dp"
             android:layout_marginTop="@dimen/dp_145"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="13dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="13dp"
             android:visibility="@{viewModel.isHideExchangeRules?View.GONE:View.VISIBLE}"
             binding:onClickCommand="@{viewModel.crystalOnClick}"
             >

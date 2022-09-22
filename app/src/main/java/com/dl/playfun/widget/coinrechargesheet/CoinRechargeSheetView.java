@@ -1,6 +1,7 @@
 package com.dl.playfun.widget.coinrechargesheet;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
@@ -50,7 +51,7 @@ import me.goldze.mvvmhabit.utils.ToastUtils;
 public class CoinRechargeSheetView extends BasePopupWindow implements View.OnClickListener, CoinRechargeAdapter.CoinRechargeAdapterListener{
     public static final String TAG = "CoinRechargeSheetView";
 
-    private final AppCompatActivity mActivity;
+    private final Activity mActivity;
     private BillingClientLifecycle billingClientLifecycle;
     private View mPopView;
     private RecyclerView recyclerView;
@@ -68,7 +69,7 @@ public class CoinRechargeSheetView extends BasePopupWindow implements View.OnCli
         this.clickListener = clickListener;
     }
 
-    public CoinRechargeSheetView(AppCompatActivity activity) {
+    public CoinRechargeSheetView(Activity activity) {
         super(activity);
         this.mActivity = activity;
         init(activity);

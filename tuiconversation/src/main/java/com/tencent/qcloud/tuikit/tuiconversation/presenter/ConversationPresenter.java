@@ -1060,10 +1060,10 @@ public class ConversationPresenter {
         try {
             ThreadHelper.INST.execute(() -> {
                 try{
-                    int conversationSize = dataInfoList.size();
                     int totalUnreadCounts = 0;
-                    for (int i = 0; i < conversationSize; i++) {
-                        totalUnreadCounts += dataInfoList.get(i).getUnRead();
+                    //这里用增强for
+                    for (ConversationInfo conversationInfo : dataInfoList) {
+                        totalUnreadCounts += conversationInfo.getUnRead();
                     }
                     if(loadConversationCallback!=null){
                         loadConversationCallback.totalUnreadCount(totalUnreadCounts);

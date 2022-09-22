@@ -25,6 +25,7 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.databinding.ActivityCoinpusherGameBinding;
 import com.dl.playfun.entity.CoinPusherBalanceDataEntity;
 import com.dl.playfun.entity.CoinPusherDataInfoEntity;
+import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.manager.LocaleManager;
 import com.dl.playfun.ui.base.BaseActivity;
 import com.dl.playfun.ui.coinpusher.dialog.CoinPusherConvertDialog;
@@ -32,6 +33,7 @@ import com.dl.playfun.ui.coinpusher.dialog.CoinPusherDialogAdapter;
 import com.dl.playfun.ui.coinpusher.dialog.CoinPusherGameHistoryDialog;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
+import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 import com.misterp.toast.SnackUtils;
 import com.tencent.liteav.trtccalling.ui.floatwindow.FloatWindowService;
 import com.tencent.qcloud.tuicore.custom.CustomConstants;
@@ -68,6 +70,9 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
     private boolean downTimeMillisHintFlag = false;
 
     private CoinPusherDataInfoEntity coinPusherDataInfoEntity;
+
+    //充值弹窗
+    private CoinRechargeSheetView coinRechargeSheetView;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -188,7 +193,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
 
             @Override
             public void onPortalReport(WsWebRTCPortalReport wsWebRTCPortalReport) {
-                Log.e(TAG,"onPortalReport："+wsWebRTCPortalReport.toString());
+                //Log.e(TAG,"onPortalReport："+wsWebRTCPortalReport.toString());
             }
 
             @Override
@@ -223,30 +228,8 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
             }
             dialogCoinPusherHelp.show();
         });
-        binding.imgConvert.setOnClickListener(v ->{
-            //购买兑换金币
-            if(coinPusherConvertDialog == null){
-                coinPusherConvertDialog = new CoinPusherConvertDialog(this);
-                coinPusherConvertDialog.setItemConvertListener(new CoinPusherConvertDialog.ItemConvertListener() {
-                    @Override
-                    public void convertSuccess(CoinPusherBalanceDataEntity coinPusherBalanceDataEntity) {
-                        viewModel.totalMoney.set(coinPusherBalanceDataEntity.getTotalGold());
-                        //取消倒计时
-                        cancelDownTimer();
-                        //重新开始倒计时
-                        downTime();
-                    }
-
-                    @Override
-                    public void buyError() {
-
-                    }
-                });
-            }else{
-                coinPusherConvertDialog.loadData();
-            }
-            coinPusherConvertDialog.show();
-
+        binding.rlCoin.setOnClickListener(v ->{
+            coinPusherConvertDialogShow();
         });
         binding.imgHistroy.setOnClickListener(v ->{
             if(coinPusherGameHistoryDialog == null){
@@ -271,9 +254,39 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
         downTime();
     }
 
+    private void coinPusherConvertDialogShow(){
+        //购买兑换金币
+        if(coinPusherConvertDialog == null){
+            coinPusherConvertDialog = new CoinPusherConvertDialog(this);
+            coinPusherConvertDialog.setItemConvertListener(new CoinPusherConvertDialog.ItemConvertListener() {
+                @Override
+                public void convertSuccess(CoinPusherBalanceDataEntity coinPusherBalanceDataEntity) {
+                    viewModel.totalMoney.set(coinPusherBalanceDataEntity.getTotalGold());
+                    //取消倒计时
+                    cancelDownTimer();
+                    //重新开始倒计时
+                    downTime();
+                }
+
+                @Override
+                public void buyError() {
+                    //购买充值
+                    payCoinRechargeDialog();
+                }
+            });
+        }else{
+            coinPusherConvertDialog.loadData();
+        }
+        coinPusherConvertDialog.show();
+    }
+
     @Override
     public void initViewObservable() {
         super.initViewObservable();
+        //返回上一页
+        viewModel.gameUI.backViewApply.observe(this, unused -> {
+            interceptBackPressed();
+        });
         //取消倒计时
         viewModel.gameUI.resetDownTimeEvent.observe(this, unused -> {
             //取消倒计时
@@ -286,8 +299,6 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
             binding.flLayoutLoading.post(()->{
                 if(binding.flLayoutLoading.getVisibility() != View.VISIBLE){
                     binding.flLayoutLoading.setVisibility(View.VISIBLE);
-                    binding.btnPlaying.setEnabled(false);
-                    binding.btnPlaying.setTextColor(ColorUtils.getColor(R.color.yellow_548));
                 }
 
             });
@@ -297,8 +308,6 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
             binding.flLayoutLoading.post(()->{
                 if(binding.flLayoutLoading.getVisibility() != View.GONE){
                     binding.flLayoutLoading.setVisibility(View.GONE);
-                    binding.btnPlaying.setEnabled(true);
-                    binding.btnPlaying.setTextColor(ColorUtils.getColor(R.color.black));
                 }
 
             });
@@ -309,20 +318,23 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
         });
         //是否禁用投币按钮
         viewModel.gameUI.playingBtnEnable.observe(this, flag ->{
+            binding.btnPlaying.setEnabled(flag);
             if(flag){
-                binding.btnPlaying.setEnabled(false);
-                binding.btnPlaying.setTextColor(ColorUtils.getColor(R.color.yellow_548));
-            }else{
-                binding.btnPlaying.setEnabled(true);
                 binding.btnPlaying.setTextColor(ColorUtils.getColor(R.color.black));
+            }else{
+                binding.btnPlaying.setTextColor(ColorUtils.getColor(R.color.yellow_548));
             }
         });
         //取消倒计时
-        viewModel.gameUI.cancelDownTimeEvent.observe(this, new Observer<Void>() {
+        viewModel.gameUI.cancelDownTimeEvent.observe(this, unused -> {
+            //取消倒计时
+            cancelDownTimer();
+        });
+        //拉起充值弹窗
+        viewModel.gameUI.payDialogViewEvent.observe(this, new Observer<Void>() {
             @Override
             public void onChanged(Void unused) {
-                //取消倒计时
-                cancelDownTimer();
+                coinPusherConvertDialogShow();
             }
         });
     }
@@ -330,8 +342,16 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
     @Override
     public  void onDestroy() {
         AutoSizeUtils.closeAdapt(getResources());
+        if(downTimer!=null){
+            downTimer.cancel();
+            downTimer = null;
+        }
         viewModel.playingCoinPusherClose(viewModel.coinPusherDataInfoEntity.getRoomInfo().getRoomId());
         try {
+            if(coinRechargeSheetView!=null && coinRechargeSheetView.isShowing()){
+                coinRechargeSheetView.dismiss();
+                coinRechargeSheetView = null;
+            }
             if(dialogCoinPusherHelp != null && dialogCoinPusherHelp.isShowing() ){
                 dialogCoinPusherHelp.dismiss();
                 dialogCoinPusherHelp = null;
@@ -362,6 +382,10 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
     */
     @Override
     public void onBackPressed() {
+        interceptBackPressed();
+    }
+
+    private void interceptBackPressed(){
         if(viewModel!=null){
             if(viewModel.gamePlayingState==null){ //状态为空
                 super.onBackPressed();
@@ -406,7 +430,9 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
 
             @Override
             public void onFinish() {
-                AppConfig.CoinPusherGameNotPushed = true;
+                if(downTimeMillisHintFlag){
+                    AppConfig.CoinPusherGameNotPushed = true;
+                }
                 finish();
             }
         };
@@ -418,6 +444,22 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
         if(downTimer!=null){
             downTimer.cancel();
             downTimer = null;
+        }
+    }
+    //充值弹窗
+    private void payCoinRechargeDialog(){
+        if (coinRechargeSheetView == null){
+            coinRechargeSheetView = new CoinRechargeSheetView(this);
+            coinRechargeSheetView.setClickListener(new CoinRechargeSheetView.ClickListener() {
+                @Override
+                public void paySuccess(GoodsEntity goodsEntity) {
+                    //充值成功  查询当前用户余额
+                    viewModel.qryUserGameBalance();
+                }
+            });
+        }
+        if (!coinRechargeSheetView.isShowing()){
+            coinRechargeSheetView.show();
         }
     }
 }

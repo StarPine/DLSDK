@@ -1,11 +1,14 @@
 package com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -16,6 +19,7 @@ import com.tencent.custom.tmp.CustomDlTempMessage;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.custom.CustomConstants;
 import com.tencent.qcloud.tuikit.tuichat.R;
+import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.dltmpapply.CallingMessageModuleView;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder.dltmpapply.MediaGalleryModuleView;
@@ -87,6 +91,9 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
 
     //默认消息模板
     public void defaultLayout(FrameLayout rootView, boolean isSelf,int position,TUIMessageBean msg){
+        if (msgArea != null) {
+            msgArea.setBackground(null);
+        }
         View defaultView = View.inflate(getContext(), R.layout.tmp_message_default_layout, null);
         FrameLayout frameLayout = defaultView.findViewById(R.id.container);
         TextView textContent = defaultView.findViewById(R.id.tv_content);
@@ -113,13 +120,23 @@ public class CustomDlTempMessageHolder extends MessageContentHolder{
         stringBuilder.setSpan(redSpan, whiteLength, txt.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         stringBuilder.setSpan(new UnderlineSpan(), whiteLength, txt.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         textContent.setText(stringBuilder);
-        rootView.addView(defaultView);
         rootView.setOnLongClickListener(v -> {
             if (onItemClickListener != null) {
                 onItemClickListener.onMessageLongClick(rootView, position, msg);
             }
             return true;
         });
+        rootView.setOnClickListener(v -> {
+            Intent intent = new Intent();
+            intent.setAction("android.intent.action.VIEW");
+            Log.e("当前跳转的链接：","https://play.google.com/store/apps/details?id="+TUIChatService.getAppContext().getPackageName());
+            Uri content_url = Uri.parse("https://play.google.com/store/apps/details?id="+TUIChatService.getAppContext().getPackageName());
+            intent.setData(content_url);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            TUIChatService.getAppContext().startActivity(intent);
+        });
+        rootView.addView(defaultView);
+
     }
 
 

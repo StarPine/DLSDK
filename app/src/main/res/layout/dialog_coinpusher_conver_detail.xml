@@ -52,15 +52,14 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rcv_list"
-                android:layout_centerInParent="true"
                 android:layout_width="wrap_content"
                 android:layout_height="100dp"
                 android:layout_below="@+id/tv_title2"
+                android:layout_centerInParent="true"
                 android:layout_marginTop="20dp"
-                tools:spanCount="3"
                 tools:layoutManager="GridLayoutManager"
                 tools:listitem="@layout/item_coinpusher_conver_capsule_detail"
-                />
+                tools:spanCount="3" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_sub"

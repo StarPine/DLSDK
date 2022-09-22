@@ -1,5 +1,6 @@
 package com.dl.playfun.ui.message.mediagallery.video;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,14 +18,19 @@ import com.dl.playfun.ui.base.BaseActivity;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.StringUtil;
+import com.jakewharton.rxbinding2.view.RxView;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import com.tencent.qcloud.tuicore.custom.CustomDrawableUtils;
 import com.tencent.qcloud.tuicore.custom.entity.MediaGalleryEditEntity;
+import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.functions.Consumer;
 
 /**
  * Author: 彭石林
@@ -59,6 +65,7 @@ public class MediaGalleryVideoPayActivity extends BaseActivity<ActivityMediaGall
     protected void onPause() {
         super.onPause();
         ImmersionBarUtils.setupStatusBar(this, true, false);
+        GSYVideoManager.releaseAllVideos();
     }
 
     /**
@@ -107,26 +114,18 @@ public class MediaGalleryVideoPayActivity extends BaseActivity<ActivityMediaGall
         }
        // setVideoUri(binding.videoPlayer,srcPath);
         //是付费影片
-        if(mediaGalleryEditEntity.isStatePay()){
+        if(!mediaGalleryEditEntity.isSelfSend() && mediaGalleryEditEntity.isStatePay()){
             viewModel.mediaGalleryEvaluationQry(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId());
         }
 
         //好评
         binding.llLike.setOnClickListener(v -> {
-            Integer evaluationType = viewModel.evaluationLikeEvent.getValue();
-            if(evaluationType !=null){
-                if(evaluationType == 0 || evaluationType == 1){
-                    viewModel.mediaGalleryEvaluationPut(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId(),2);
-                }
-            }
+            doubleClick(v);
         });
         binding.llNoLike.setOnClickListener(v -> {
-            Integer evaluationType = viewModel.evaluationLikeEvent.getValue();
-            if(evaluationType !=null && evaluationType == 0){
-                //差评
-                viewModel.mediaGalleryEvaluationPut(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId(),1);
-            }
+            doubleClick(v);
         });
+
 
         //当前评价状态
         viewModel.evaluationLikeEvent.observe(this, state -> {
@@ -144,6 +143,32 @@ public class MediaGalleryVideoPayActivity extends BaseActivity<ActivityMediaGall
         });
 
     }
+
+    @SuppressLint("CheckResult")
+    public void doubleClick(View view){
+        RxView.clicks(view)
+                .throttleFirst(1, TimeUnit.SECONDS)//1秒钟内只允许点击1次
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        if (view.getId() == binding.llLike.getId()) {
+                            Integer evaluationType = viewModel.evaluationLikeEvent.getValue();
+                            if(evaluationType !=null){
+                                if(evaluationType == 0 || evaluationType == 1){
+                                    viewModel.mediaGalleryEvaluationPut(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId(),2);
+                                }
+                            }
+                        }else if(view.getId() == binding.llNoLike.getId()){
+                            Integer evaluationType = viewModel.evaluationLikeEvent.getValue();
+                            if(evaluationType !=null && evaluationType == 0){
+                                //差评
+                                viewModel.mediaGalleryEvaluationPut(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId(),1);
+                            }
+                        }
+                    }
+                });
+    }
+
 
     void generateDrawable(View view,Integer drawableColor,Integer drawableCornersRadius,Integer drawableStrokeColor, Integer drawableStrokeWidth,Integer drawableStartColor, Integer drawableEndColor){
         CustomDrawableUtils.generateDrawable(view, getColorFromResource(drawableColor),
@@ -240,5 +265,6 @@ public class MediaGalleryVideoPayActivity extends BaseActivity<ActivityMediaGall
         super.onDestroy();
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
         AutoSizeUtils.closeAdapt(getResources());
+        GSYVideoManager.releaseAllVideos();
     }
 }
