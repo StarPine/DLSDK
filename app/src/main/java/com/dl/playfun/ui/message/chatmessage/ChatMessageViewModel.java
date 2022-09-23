@@ -157,11 +157,11 @@ public class ChatMessageViewModel extends BaseViewModel<AppRepository> {
                     @Override
                     public void onSuccess(BaseDataResponse<ImUserSigEntity> response) {
                         ImUserSigEntity data = response.getData();
-                        if (data == null || TextUtils.isEmpty(data.getUserSig())){
+                        TokenEntity tokenEntity = model.readLoginInfo();
+                        if (data == null || TextUtils.isEmpty(data.getUserSig()) || tokenEntity == null){
                             RxBus.getDefault().post(new LoginExpiredEvent());
                             return;
                         }
-                        TokenEntity tokenEntity = model.readLoginInfo();
                         tokenEntity.setUserSig(data.getUserSig());
                         TUILogin.login(Utils.getContext(), model.readApiConfigManagerEntity().getImAppId(), tokenEntity.getUserID(), tokenEntity.getUserSig(), new TUICallback() {
                             @Override

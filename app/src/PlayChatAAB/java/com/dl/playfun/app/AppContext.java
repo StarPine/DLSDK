@@ -562,11 +562,11 @@ public class AppContext extends Application {
                     @Override
                     public void onSuccess(BaseDataResponse<ImUserSigEntity> response) {
                         ImUserSigEntity data = response.getData();
-                        if (data == null || TextUtils.isEmpty(data.getUserSig())){
+                        TokenEntity tokenEntity = appRepository.readLoginInfo();
+                        if (data == null || TextUtils.isEmpty(data.getUserSig()) || tokenEntity == null){
                             RxBus.getDefault().post(new LoginExpiredEvent());
                             return;
                         }
-                        TokenEntity tokenEntity = appRepository.readLoginInfo();
                         tokenEntity.setUserSig(data.getUserSig());
                         TUILogin.login(AppContext.this, appRepository.readApiConfigManagerEntity().getImAppId(), tokenEntity.getUserID(), tokenEntity.getUserSig(), new TUICallback() {
                                     @Override

@@ -23,6 +23,7 @@ import com.dl.playfun.entity.ApiConfigManagerEntity;
 import com.dl.playfun.entity.CityAllEntity;
 import com.dl.playfun.entity.TokenEntity;
 import com.dl.playfun.entity.UserDataEntity;
+import com.dl.playfun.event.LoginExpiredEvent;
 import com.dl.playfun.ui.login.LoginFragment;
 import com.dl.playfun.ui.main.MainFragment;
 import com.dl.playfun.utils.ExceptionReportUtils;
@@ -36,6 +37,7 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
+import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.utils.RxUtils;
 
 /**
@@ -135,6 +137,10 @@ public class SplashViewModel extends BaseViewModel<AppRepository> {
                         //更新IM userSig
                         if (!TextUtils.isEmpty(userDataEntity.getUserSig())) {
                             TokenEntity tokenEntity = model.readLoginInfo();
+                            if (tokenEntity == null){
+                                RxBus.getDefault().post(new LoginExpiredEvent());
+                                return;
+                            }
                             tokenEntity.setUserSig(userDataEntity.getUserSig());
                             model.saveLoginInfo(tokenEntity);
                         }
