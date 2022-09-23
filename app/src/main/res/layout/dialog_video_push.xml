@@ -74,13 +74,16 @@
             android:id="@+id/tv_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_toStartOf="@+id/iv_call_reject"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:layout_marginStart="5dp"
             android:layout_marginTop="15dp"
             android:layout_toEndOf="@+id/ll_user_head"
             android:textColor="@color/balck_35e"
             android:textSize="17sp"
             android:textStyle="bold"
-            tools:text="用户昵称" />
+            tools:text="用户昵称gg的点点滴滴" />
 
         <LinearLayout
             android:id="@+id/ll_age"
