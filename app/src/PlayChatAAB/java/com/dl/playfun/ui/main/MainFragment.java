@@ -403,7 +403,9 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         if (videoPushEntity == null || videoPushEntity.getUserProfile() == null || isShowing)return;
         isShowing = true;
         if (videoPushEntity.getIsShake() == 1){
-            mVibrator = (Vibrator) mActivity.getApplication().getSystemService(Service.VIBRATOR_SERVICE);
+            if (mVibrator == null)
+                mVibrator = (Vibrator) mActivity.getApplication().getSystemService(Service.VIBRATOR_SERVICE);
+
             mVibrator.vibrate(new long[]{500, 300, 500, 300}, 0);
         }
 

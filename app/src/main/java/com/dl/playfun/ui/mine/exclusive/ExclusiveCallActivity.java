@@ -14,6 +14,7 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.databinding.ActivityExclusivecallBinding;
 import com.dl.playfun.ui.base.BaseActivity;
 import com.dl.playfun.ui.dialog.ExclusiveAccostDialog;
+import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.widget.BasicToolbar;
@@ -38,6 +39,18 @@ public class ExclusiveCallActivity extends BaseActivity<ActivityExclusivecallBin
     @Override
     public int initContentView(Bundle savedInstanceState) {
         return R.layout.activity_exclusivecall;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ImmersionBarUtils.setupStatusBar(this, true, true);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ImmersionBarUtils.setupStatusBar(this, true, true);
     }
 
     @Override

@@ -434,8 +434,8 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                                 }
                             }
 
+                            Log.e("接收的自定义消息体：",new String(v2TIMCustomElem.getData()));
                         }
-                        Log.e("接收的自定义消息体：",new String(v2TIMCustomElem.getData()));
                         break;
                 }
             }

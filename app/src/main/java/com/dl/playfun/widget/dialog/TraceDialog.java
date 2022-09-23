@@ -1,6 +1,7 @@
 package com.dl.playfun.widget.dialog;
 
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -30,7 +31,9 @@ import com.dl.playfun.app.GlideEngine;
 import com.dl.playfun.entity.MallWithdrawTipsInfoEntity;
 import com.dl.playfun.event.DailyAccostEvent;
 import com.dl.playfun.ui.mine.vipsubscribe.VipPrivilegeItemViewModel;
+import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.StringUtil;
+import com.gyf.immersionbar.ImmersionBar;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
@@ -1173,6 +1176,12 @@ public class TraceDialog {
         TextView userAge = contentView.findViewById(R.id.tv_age);
         TextView tvTime = contentView.findViewById(R.id.tv_time);
         RelativeLayout rl_support = contentView.findViewById(R.id.rl_support);
+        View statusView = contentView.findViewById(R.id.status_bar_view);
+
+        if (statusView != null) {
+            ImmersionBarUtils.setupStatusBar((Activity) context, dialog, true, true);
+            ImmersionBar.setStatusBarView((Activity) context, statusView);
+        }
 
         ivCallReject.setOnClickListener(v -> {
             dialog.dismiss();

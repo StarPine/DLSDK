@@ -21,6 +21,7 @@ import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.ui.base.BaseActivity;
 import com.dl.playfun.ui.base.OtherFragmentActivity;
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
+import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.widget.BasicToolbar;
 import com.dl.playfun.widget.dialog.TraceDialog;
 
@@ -80,6 +81,18 @@ public class DiamondRechargeActivity extends BaseActivity<ActivityDiamondRecharg
         viewModel.getRechargeList();
         binding.rcvDiamondRecharge.setNestedScrollingEnabled(false);
         binding.basicToolbar.setToolbarListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ImmersionBarUtils.setupStatusBar(this, false, true);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ImmersionBarUtils.setupStatusBar(this, true, true);
     }
 
     @Override

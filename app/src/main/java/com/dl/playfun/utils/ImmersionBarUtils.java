@@ -1,6 +1,7 @@
 package com.dl.playfun.utils;
 
 import android.app.Activity;
+import android.app.Dialog;
 
 import androidx.fragment.app.Fragment;
 
@@ -23,4 +24,14 @@ public class ImmersionBarUtils {
                 .keyboardEnable(keyboardEnable)
                 .init();
     }
+
+    public static void setupStatusBar(Activity activity, Dialog dialog, boolean isDarkFont, boolean keyboardEnable) {
+        ImmersionBar.with(activity, dialog)
+                .statusBarDarkFont(isDarkFont, 0.2f)
+                .autoNavigationBarDarkModeEnable(true)
+                .keyboardEnable(keyboardEnable)
+                .init();
+    }
+
+
 }

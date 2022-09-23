@@ -10,6 +10,7 @@ import com.dl.playfun.R;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.databinding.ActivityNotepadBinding;
 import com.dl.playfun.ui.base.BaseActivity;
+import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.widget.BasicToolbar;
 
 import me.tatarka.bindingcollectionadapter2.BR;
@@ -40,6 +41,18 @@ public class NotepadActivity extends BaseActivity<ActivityNotepadBinding, Notepa
         //使用自定义的ViewModelFactory来创建ViewModel，如果不重写该方法，则默认会调用LoginViewModel(@NonNull Application application)构造方法
         AppViewModelFactory factory = AppViewModelFactory.getInstance(getApplication());
         return ViewModelProviders.of(this, factory).get(NotepadViewModel.class);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ImmersionBarUtils.setupStatusBar(this, true, true);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ImmersionBarUtils.setupStatusBar(this, true, true);
     }
 
     @Override
