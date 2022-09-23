@@ -9,6 +9,7 @@ import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.R;
 import com.dl.playfun.data.AppRepository;
+import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
@@ -47,10 +48,8 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
     public CoinPusherGameViewModel(@NonNull Application application, AppRepository model) {
         super(application, model);
     }
-
-    public BindingCommand gameCloseView = new BindingCommand(() -> {
-        finish();
-    });
+    //关闭页面点击
+    public BindingCommand<Void> gameCloseView = new BindingCommand<>(()->gameUI.backViewApply.call());
 
     public BindingCommand playCoinClick = new BindingCommand(() -> {
         playingCoinPusherThrowCoin(coinPusherDataInfoEntity.getRoomInfo().getRoomId());
@@ -66,7 +65,11 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
-                .doOnSubscribe(disposable -> loadingShow())
+                .doOnSubscribe(disposable -> {
+                    loadingShow();
+                    //禁用投币按钮
+                    gameUI.playingBtnEnable.postValue(false);
+                })
                 .subscribe(new BaseObserver<BaseDataResponse<CoinPusherBalanceDataEntity>>() {
                     @Override
                     public void onSuccess(BaseDataResponse<CoinPusherBalanceDataEntity> coinPusherDataEntityResponse) {
@@ -78,9 +81,19 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
                     }
 
                     @Override
+                    public void onError(RequestException e) {
+                        //越不足
+                        if(e.getCode() == 21001){
+                            gameUI.payDialogViewEvent.call();
+                        }
+                        super.onError(e);
+                    }
+
+                    @Override
                     public void onComplete() {
                         loadingHide();
                         gamePlayingState = null;
+                        gameUI.playingBtnEnable.postValue(true);
                     }
                 });
     }
@@ -159,6 +172,10 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
         public SingleLiveEvent<String> toastCenter = new SingleLiveEvent<>();
         //禁止投币按钮操作
         public SingleLiveEvent<Boolean> playingBtnEnable = new SingleLiveEvent<>();
+        //返回上一页
+        public SingleLiveEvent<Void> backViewApply = new SingleLiveEvent<>();
+        //余额不足。弹出充值弹窗
+        public SingleLiveEvent<Void> payDialogViewEvent = new SingleLiveEvent<>();
     }
     //显示loading
     public void loadingShow(){
@@ -179,14 +196,13 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
                                 //开始落币
                                 gamePlayingState = CustomConstants.CoinPusher.START_WINNING;
                                 gameUI.cancelDownTimeEvent.postValue(null);
-                                gameUI.playingBtnEnable.postValue(true);
+                                gameUI.playingBtnEnable.postValue(false);
                                 break;
                             case CustomConstants.CoinPusher.END_WINNING:
                                 //落币结束
                                 gamePlayingState = null;
-                                //重新开始落币
                                 gameUI.resetDownTimeEvent.postValue(null);
-                                gameUI.playingBtnEnable.postValue(false);
+                                gameUI.playingBtnEnable.postValue(true);
                                 break;
                             case CustomConstants.CoinPusher.DROP_COINS:
                                 gamePlayingState = null;

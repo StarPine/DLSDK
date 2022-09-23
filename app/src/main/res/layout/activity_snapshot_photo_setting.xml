@@ -82,7 +82,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp">
                 <LinearLayout
-                    android:visibility="@{!viewModel.isPayState ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewModel.isAdmin ? View.GONE : (!viewModel.isPayState ? View.VISIBLE : View.GONE)}"
                     android:layout_marginStart="14dp"
                     android:orientation="horizontal"
                     android:layout_width="wrap_content"
@@ -108,7 +108,7 @@
                 </LinearLayout>
                 <LinearLayout
                     binding:onClickCommand="@{viewModel.settingClick}"
-                    android:visibility="@{viewModel.isPayState ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewModel.isAdmin ? View.GONE : (viewModel.isPayState ? View.VISIBLE : View.GONE)}"
                     android:layout_gravity="center|top"
                     binding:drawable_cornersRadius="@{22}"
                     binding:drawable_gradient_startColor="@{@color/playfun_shape_radius_start_color}"

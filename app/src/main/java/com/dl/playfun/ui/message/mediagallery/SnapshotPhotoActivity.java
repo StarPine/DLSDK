@@ -3,6 +3,7 @@ package com.dl.playfun.ui.message.mediagallery;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.lifecycle.ViewModelProviders;
 
@@ -52,6 +53,8 @@ public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSet
     private MediaPayPerConfigEntity.ItemEntity checkItemEntity;
     private Integer configId;
 
+    private boolean isAdmin = false;
+
     /**
     * @Desc TODO()
     * @author 彭石林
@@ -59,11 +62,12 @@ public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSet
     * @return android.content.Intent
     * @Date 2022/9/14
     */
-    public static Intent createIntent(Context mContext, boolean isPayState, String srcPath,MediaPayPerConfigEntity.itemTagEntity mediaPriceTmpConfig){
+    public static Intent createIntent(Context mContext, boolean isPayState, String srcPath,boolean isAdmin,MediaPayPerConfigEntity.itemTagEntity mediaPriceTmpConfig){
         Intent snapshotIntent = new Intent(mContext,SnapshotPhotoActivity.class);
         snapshotIntent.putExtra("isPayState",isPayState);
         snapshotIntent.putExtra("srcPath",srcPath);
         snapshotIntent.putExtra("mediaPriceTmpConfig",mediaPriceTmpConfig);
+        snapshotIntent.putExtra("isAdmin",isAdmin);
         return snapshotIntent;
     }
 
@@ -97,6 +101,7 @@ public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSet
         if(intent != null){
             srcLocalPath = intent.getStringExtra("srcPath");
             isPayState = intent.getBooleanExtra("isPayState",false);
+            isAdmin = intent.getBooleanExtra("isAdmin",false);
             mediaPriceTmpConfig = (MediaPayPerConfigEntity.itemTagEntity) intent.getSerializableExtra("mediaPriceTmpConfig");
         }
     }
@@ -112,6 +117,7 @@ public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSet
         super.initData();
         viewModel.srcPath.set(srcLocalPath);
         viewModel.isPayState.set(isPayState);
+        viewModel.isAdmin.set(isAdmin);
         AppRepository appRepository = ConfigManager.getInstance().getAppRepository();
         if(isPayState){
             localSnapshotCheck =  Boolean.parseBoolean(appRepository.readKeyValue(localSnapshotPayCheckSettingKey));
@@ -119,17 +125,20 @@ public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSet
             localSnapshotCheck =  Boolean.parseBoolean(appRepository.readKeyValue(localSnapshotCheckSettingKey));
         }
         viewModel.isBurn.set(localSnapshotCheck);
-        String localPriceValue = appRepository.readKeyValue(localPriceConfigSettingKey);
-        String localConfigId = appRepository.readKeyValue(localSnapshotConfigIdSettingKey);
-        configId = StringUtils.isEmpty(localConfigId) ? null : Integer.parseInt(localConfigId);
-        if(!StringUtils.isEmpty(localPriceValue)){
-            localCheckItemEntity = GsonUtils.fromJson(localPriceValue, MediaPayPerConfigEntity.ItemEntity.class);
-        }
-        if(ObjectUtils.isNotEmpty(localCheckItemEntity)){
-            checkItemEntity = localCheckItemEntity;
-        }else{
-            checkItemEntity = mediaPriceTmpConfig.getContent().get(0);
-            this.configId = mediaPriceTmpConfig.getConfigId();
+        //是付费照片
+        if(isPayState){
+            String localPriceValue = appRepository.readKeyValue(localPriceConfigSettingKey);
+            String localConfigId = appRepository.readKeyValue(localSnapshotConfigIdSettingKey);
+            configId = StringUtils.isEmpty(localConfigId) ? null : Integer.parseInt(localConfigId);
+            if(!StringUtils.isEmpty(localPriceValue)){
+                localCheckItemEntity = GsonUtils.fromJson(localPriceValue, MediaPayPerConfigEntity.ItemEntity.class);
+            }
+            if(ObjectUtils.isNotEmpty(localCheckItemEntity)){
+                checkItemEntity = localCheckItemEntity;
+            }else{
+                checkItemEntity = mediaPriceTmpConfig.getContent().get(0);
+                this.configId = mediaPriceTmpConfig.getConfigId();
+            }
         }
         //选择的是图片
         GlideEngine.createGlideEngine().loadImage(this, srcLocalPath,binding.imgContent,binding.imgLong,R.drawable.playfun_loading_logo_placeholder_max,R.drawable.playfun_loading_logo_error);
@@ -176,7 +185,7 @@ public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSet
                 mediaGalleryEditEntity.setConfigIndex(checkItemEntity.getConfigIndexString());
             }
             mediaGalleryEditEntity.setSrcPath(filePath);
-            mediaGalleryEditEntity.setStateSnapshot(viewModel.isBurn.get());
+            mediaGalleryEditEntity.setStateSnapshot(isAdmin ? false :viewModel.isBurn.get());
             if(isPayState){
                 ConfigManager.getInstance().getAppRepository().putKeyValue(localSnapshotPayCheckSettingKey, String.valueOf(mediaGalleryEditEntity.isStateSnapshot()));
             }else{

@@ -42,7 +42,7 @@
             <com.dl.playfun.widget.videoview.SampleCoverVideo
                 android:id="@+id/video_player"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="360dp"
                 android:layout_above="@+id/fl_layout_bottom"
                 android:layout_below="@+id/img_back"
                 binding:playStatus="@{1}"
@@ -65,6 +65,7 @@
                     android:layout_width="144dp"
                     android:layout_height="38dp"
                     android:layout_gravity="center"
+                    android:gravity="center"
                     android:orientation="horizontal"
                     binding:drawable_color="@{@color/black}"
                     binding:drawable_cornersRadius="@{22}"
@@ -75,7 +76,6 @@
                         android:layout_width="28dp"
                         android:layout_height="28dp"
                         android:layout_gravity="center"
-                        android:layout_marginStart="30dp"
                         android:rotationX="180"
                         android:src="@drawable/img_give_like" />
 
@@ -85,7 +85,7 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="10dp"
                         android:includeFontPadding="false"
-                        android:text="不喜歡"
+                        android:text="@string/playfun_text_dislike"
                         android:textColor="#ffffffff"
                         android:textSize="15sp" />
                 </LinearLayout>
@@ -95,6 +95,7 @@
                     android:layout_width="144dp"
                     android:layout_height="38dp"
                     android:layout_gravity="center"
+                    android:gravity="center"
                     android:layout_marginStart="28dp"
                     android:orientation="horizontal"
                     binding:drawable_cornersRadius="@{22}"
@@ -105,8 +106,6 @@
                         android:layout_width="28dp"
                         android:layout_height="28dp"
                         android:layout_gravity="center"
-                        android:layout_marginStart="30dp"
-
                         android:src="@drawable/img_give_like" />
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -115,7 +114,7 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="10dp"
                         android:includeFontPadding="false"
-                        android:text="喜歡"
+                        android:text="@string/playfun_text_like"
                         android:textColor="#ffffffff"
                         android:textSize="15sp" />
                 </LinearLayout>
@@ -136,7 +135,7 @@
                     android:layout_height="115dp"
                     tools:ignore="UselessParent">
                     <com.dl.playfun.widget.progress.MPCircleProgressBar
-                        android:id="@+id/progress"
+                        android:id="@+id/mp_progress"
                         android:layout_gravity="center"
                         android:layout_width="72dp"
                         android:layout_height="72dp"

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 
 import androidx.lifecycle.ViewModelProviders;
 
@@ -63,6 +64,14 @@ public class MediaGalleryVideoSettingActivity extends BaseActivity<ActivitySnaps
     protected void onPause() {
         super.onPause();
         ImmersionBarUtils.setupStatusBar(this, true, true);
+        GSYVideoManager.releaseAllVideos();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        AutoSizeUtils.closeAdapt(getResources());
+        GSYVideoManager.releaseAllVideos();
     }
 
     /**

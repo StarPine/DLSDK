@@ -29,6 +29,7 @@ import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.FragmentHomeMainBinding;
+import com.dl.playfun.entity.CoinPusherDataInfoEntity;
 import com.dl.playfun.entity.CoinPusherRoomInfoEntity;
 import com.dl.playfun.entity.ConfigItemEntity;
 import com.dl.playfun.entity.GoodsEntity;
@@ -60,6 +61,10 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
     private List<ConfigItemEntity> citys;
 
     private CityChooseDialog cityChooseDialog;
+
+    //充值弹窗
+    private CoinRechargeSheetView coinRechargeSheetView;
+
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         AutoSizeUtils.applyAdapt(this.getResources());
@@ -109,6 +114,21 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
         viewModel.getAdListBannber();
     }
 
+    //充值弹窗
+    private void payCoinRechargeDialog(){
+        if (coinRechargeSheetView == null){
+            coinRechargeSheetView = new CoinRechargeSheetView(mActivity);
+            coinRechargeSheetView.setClickListener(new CoinRechargeSheetView.ClickListener() {
+                @Override
+                public void paySuccess(GoodsEntity goodsEntity) {
+                }
+            });
+        }
+        if (!coinRechargeSheetView.isShowing()){
+            coinRechargeSheetView.show();
+        }
+    }
+
     @Override
     public void initViewObservable() {
         super.initViewObservable();
@@ -116,11 +136,19 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
         viewModel.uc.coinPusherRoomEvent.observe(this,unused->{
             //弹出推币机选择弹窗
             CoinPusherRoomListDialog coinersDialog = new CoinPusherRoomListDialog(mActivity);
-            coinersDialog.setDialogEventListener(itemEntity -> {
-                coinersDialog.dismiss();
-                Intent intent = new Intent(mActivity, CoinPusherGameActivity.class);
-                intent.putExtra("CoinPusherInfo",itemEntity);
-                startActivity(intent);
+            coinersDialog.setDialogEventListener(new CoinPusherRoomListDialog.DialogEventListener() {
+                @Override
+                public void startViewing(CoinPusherDataInfoEntity itemEntity) {
+                        coinersDialog.dismiss();
+                        Intent intent = new Intent(mActivity, CoinPusherGameActivity.class);
+                        intent.putExtra("CoinPusherInfo",itemEntity);
+                        startActivity(intent);
+                }
+
+                @Override
+                public void buyErrorPayView() {
+                    payCoinRechargeDialog();
+                }
             });
             coinersDialog.show();
         });

@@ -45,7 +45,7 @@ public class MessageDetailDialog {
      * @parame [context, touchOutside, audioCallHintOnClickListener]
      * @Date 2022/3/1
      */
-    public static Dialog CheckImgViewFile(Context context, boolean touchOutside, MediaGallerySwitchEntity mediaGallerySwitchEntity, SelectedSnapshotListener selectedSnapshotListener) {
+    public static Dialog CheckImgViewFile(Context context, boolean touchOutside,boolean isAdmin, MediaGallerySwitchEntity mediaGallerySwitchEntity, SelectedSnapshotListener selectedSnapshotListener) {
         Dialog dialog = new Dialog(context);
         dialog.setCanceledOnTouchOutside(touchOutside);
         dialog.setCancelable(true);
@@ -54,6 +54,12 @@ public class MessageDetailDialog {
         //收益开关
         boolean switchMoney = ConfigManager.getInstance().getTipMoneyShowFlag();
         Long endDateTimestamp = null;
+        if(isAdmin){
+            //客服关闭付费照片、影片
+            binding.tvPhotoCoin.setVisibility(View.GONE);
+            binding.tvVideoCoin.setVisibility(View.GONE);
+            binding.coinView.setVisibility(View.GONE);
+        }
         if(!switchMoney){
             //收益开关打开。关闭付费照片、影片
             binding.tvPhotoCoin.setVisibility(View.GONE);

@@ -331,7 +331,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
         mRecycleView = (MessageRecyclerView) recyclerView;
-        mRecycleView.setItemViewCacheSize(5);
+        mRecycleView.setItemViewCacheSize(500);
     }
 
     public void showLoading() {
@@ -454,6 +454,10 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         mDataSource = dataSource;
     }
 
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
     @Override
     public void onScrollToEnd() {

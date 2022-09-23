@@ -73,8 +73,8 @@ public class CoinPusherCapsuleAdapter extends RecyclerView.Adapter<RecyclerView.
                 itemViewHolder.tvCoin.setText(String.valueOf(itemEntity.getCoin()));
 
                 Glide.with(itemViewHolder.imgIcon.getContext()).load(StringUtil.getFullImageUrl(itemEntity.getIcon()))
-                        .error(R.drawable.default_avatar)
-                        .placeholder(R.drawable.default_avatar)
+                        .error(R.drawable.img_pc_default_load)
+                        .placeholder(R.drawable.img_pc_default_load)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(itemViewHolder.imgIcon);
                 if(defaultItemSel!=-1){

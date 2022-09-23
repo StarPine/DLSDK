@@ -63,8 +63,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_above="@+id/fl_layout_bottom"
-                binding:playStatus="@{1}"
                 binding:isLocalFile="@{true}"
+                binding:playStatus="@{1}"
                 binding:videoUri="@{viewModel.srcPath}" />
 
             <View

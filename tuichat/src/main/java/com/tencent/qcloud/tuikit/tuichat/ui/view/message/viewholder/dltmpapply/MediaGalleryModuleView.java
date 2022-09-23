@@ -96,8 +96,6 @@ public class MediaGalleryModuleView extends BaseMessageModuleView {
         }
         View customImageView = View.inflate(getContext(), R.layout.tmp_message_photo_gallery_layout, null);
         FrameLayout flContainer = customImageView.findViewById(R.id.fl_container);
-        customImageView.setBackgroundColor(Color.TRANSPARENT);
-        customImageView.setLayoutParams(new FrameLayout.LayoutParams(-2,-2));
         //快照角标
         FrameLayout fLTlLayout = customImageView.findViewById(R.id.fl_tl_layout);
         //底部布局
@@ -130,15 +128,14 @@ public class MediaGalleryModuleView extends BaseMessageModuleView {
                     String tmpMoneyText = getContext().getString(R.string.dl_tmp_mediagallery_text);
                     tvProfitTipTmp(tvProfitTip,flContainer,imgUnlock,tmpMoneyText,cloudCustomDataMediaGalleryEntity.getRedPackageRenvenue());
                 }else{
-                    fLTlLayout.setVisibility(View.GONE);
                     if(cloudCustomDataMediaGalleryEntity.isRead()){
+                        fLTlLayout.setVisibility(View.GONE);
                         llBurned.setVisibility(View.VISIBLE);
                         imgUnlock.setVisibility(View.GONE);
                     }else{
-                        imgUnlock.setVisibility(View.VISIBLE);
+                        fLTlLayout.setVisibility(stateSnapshot ? View.VISIBLE : View.GONE);
                         llBurned.setVisibility(View.GONE);
                     }
-
                 }
             }else{
                 fLUnlockLayout.setVisibility(View.VISIBLE);
@@ -247,8 +244,6 @@ public class MediaGalleryModuleView extends BaseMessageModuleView {
             cloudCustomDataMediaGalleryEntity = new CloudCustomDataMediaGalleryEntity();
         }
         View customImageView = View.inflate(getContext(), R.layout.tmp_message_video_gallery_layout, null);
-        customImageView.setBackgroundColor(Color.TRANSPARENT);
-        customImageView.setLayoutParams(new FrameLayout.LayoutParams(-2,-2));
         //底部布局
         RelativeLayout rlLayout = customImageView.findViewById(R.id.rl_layout);
         //解锁金额布局

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
+    android:minWidth="86dp"
     android:layout_height="wrap_content"
     android:background="@color/transparent"
     android:orientation="vertical"
@@ -9,7 +10,6 @@
     <FrameLayout
         tools:layout_gravity="end"
         android:id="@+id/fl_container"
-        android:clipChildren="true"
         android:background="@drawable/custom_border_radius_y8"
         android:layout_width="86dp"
         android:layout_height="154dp">
@@ -28,13 +28,16 @@
                 />
         </FrameLayout>
         <com.custom.view.widget.roundedimageview.RoundedImageView
-            android:layout_margin="1dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginStart="1dp"
+            android:layout_marginEnd="1dp"
+            android:layout_marginBottom="1dp"
             android:id="@+id/img_content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="86dp"
+            android:layout_height="154dp"
             android:scaleType="centerCrop"
             tools:src="@drawable/default_avatar"
-            app:riv_corner_radius="7dp"
+            app:riv_corner_radius="9dp"
             />
         <LinearLayout
             android:id="@+id/ll_burned"

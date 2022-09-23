@@ -1267,5 +1267,6 @@
     <string name="playfun_text_dislike">不喜歡</string>
     <string name="playfun_text_like">喜歡</string>
     <string name="playfun_text_disable_the_deadline">禁用期限至：%s</string>
+    <string name="playfun_text_set_unlock_price">設置解鎖價格</string>
     <!--PlayFun-APP-END-->
 </resources>

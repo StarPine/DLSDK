@@ -32,6 +32,8 @@ import me.goldze.mvvmhabit.utils.ToastUtils;
  * Description: This is SnapshotPhotoViewModel
  */
 public class SnapshotPhotoViewModel extends BaseViewModel<AppRepository> {
+    //是否是客服
+    public ObservableBoolean isAdmin = new ObservableBoolean(false);
     //是否付费
     public ObservableBoolean isPayState = new ObservableBoolean(false);
     //快照

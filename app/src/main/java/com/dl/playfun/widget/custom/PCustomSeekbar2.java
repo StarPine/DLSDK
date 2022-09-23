@@ -21,7 +21,7 @@ import java.util.ArrayList;
  * Time: 2022/6/20 10:26
  * Description: This is PCustomSeekbar
  */
-public class PCustomSeekbar extends View {
+public class PCustomSeekbar2 extends View {
     private final String TAG = "CustomSeekbar";
     private final int[] colors = new int[]{R.color.pseekbar_process, R.color.pseekbar_process_off, R.color.pseekbar_process_off2};//进度条的橙色,进度条的灰色,字体的灰色
     private int currentViewWidth;
@@ -56,16 +56,16 @@ public class PCustomSeekbar extends View {
 
     private MeasureWidthCallBack measureWidthCallBack;
 
-    public PCustomSeekbar(Context context) {
+    public PCustomSeekbar2(Context context) {
         super(context);
     }
 
-    public PCustomSeekbar(Context context, AttributeSet attrs) {
+    public PCustomSeekbar2(Context context, AttributeSet attrs) {
         super(context, attrs);
         initView(context, attrs);
     }
 
-    public PCustomSeekbar(Context context, AttributeSet attrs, int defStyleAttr) {
+    public PCustomSeekbar2(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initView(context, attrs);
     }
@@ -247,16 +247,17 @@ public class PCustomSeekbar extends View {
                     }
 
                 }
-                float startTextX = mTextPaint.measureText(section_title.get(count)) / 2;
+                float startTextX = mTextPaint.measureText(section_title.get(count));
                 if (count == 0) {
-                    canvas.drawText(section_title.get(count), (startX + (itemWidthTwo)) - startTextX, (thumbHeight * 2) + thumbHeight + 7, mTextPaint);
+                    canvas.drawText(section_title.get(count), (itemWidth + widths), (thumbHeight * 2) + thumbHeight + 7, mTextPaint);
                 } else if (count == maxIndex) {
-                    canvas.drawText(section_title.get(count), (startX + (itemWidthTwo)) - startTextX, (thumbHeight * 2) + thumbHeight + 7, mTextPaint);
+                    canvas.drawText(section_title.get(count), (startX +widths+itemWidthTwo) - startTextX, (thumbHeight * 2) + thumbHeight + 7, mTextPaint);
                 } else if (count == section_title.size() - 1) {
-                    canvas.drawText(section_title.get(count), (startX + (itemWidthTwo)) - startTextX, (thumbHeight * 2) + thumbHeight + 7, mTextPaint3);
-                } else if (count == cur_sections) {
-                    canvas.drawText(section_title.get(count), (startX + (itemWidthTwo)) - startTextX, (thumbHeight * 2) + thumbHeight + 7, mTextPaint2);
+                    canvas.drawText(section_title.get(count), (startX +widths+itemWidthTwo) - startTextX, (thumbHeight * 2) + thumbHeight + 7, mTextPaint3);
                 }
+//                else if (count == cur_sections) {
+//                    canvas.drawText(section_title.get(count), (startX + (itemWidthTwo)) - (startTextX/2), (thumbHeight * 2) + thumbHeight + 7, mTextPaint2);
+//                }
             }
         }
     }

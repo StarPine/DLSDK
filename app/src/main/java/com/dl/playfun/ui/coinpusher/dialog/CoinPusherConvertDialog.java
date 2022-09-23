@@ -27,10 +27,12 @@ import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.databinding.DialogCoinpusherConverBinding;
 import com.dl.playfun.entity.CoinPusherBalanceDataEntity;
 import com.dl.playfun.entity.CoinPusherConverInfoEntity;
+import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseDialog;
 import com.dl.playfun.ui.coinpusher.dialog.adapter.CoinPusherCapsuleAdapter;
 import com.dl.playfun.ui.coinpusher.dialog.adapter.CoinPusherConvertAdapter;
+import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 
 import me.goldze.mvvmhabit.binding.viewadapter.recyclerview.LayoutManagers;
 import me.goldze.mvvmhabit.utils.RxUtils;
@@ -101,7 +103,7 @@ public class CoinPusherConvertDialog  extends BaseDialog {
         binding.tvTabCapsule.setOnClickListener(v->{
             if(binding.llCapsuleLayout.getVisibility() == View.GONE){
                 binding.tvTabConver.setTextColor(ColorUtils.getColor(R.color.play_chat_gray_3));
-                binding.tvTabCapsule.setTextColor(ColorUtils.getColor(R.color.black));
+                binding.tvTabCapsule.setTextColor(ColorUtils.getColor(R.color.black_434));
                 binding.llCapsuleLayout.setVisibility(View.VISIBLE);
                 binding.llConverLayout.setVisibility(View.GONE);
             }
@@ -109,7 +111,7 @@ public class CoinPusherConvertDialog  extends BaseDialog {
         binding.tvTabConver.setOnClickListener(v->{
             if(binding.llConverLayout.getVisibility() == View.GONE){
                 binding.tvTabCapsule.setTextColor(ColorUtils.getColor(R.color.play_chat_gray_3));
-                binding.tvTabConver.setTextColor(ColorUtils.getColor(R.color.black));
+                binding.tvTabConver.setTextColor(ColorUtils.getColor(R.color.black_434));
                 binding.llConverLayout.setVisibility(View.VISIBLE);
                 binding.llCapsuleLayout.setVisibility(View.GONE);
             }
@@ -122,16 +124,27 @@ public class CoinPusherConvertDialog  extends BaseDialog {
             }
             //选择购买宝盒明细弹窗
             CoinPusherConvertCapsuleDialog pusherConvertCapsuleDialog = new CoinPusherConvertCapsuleDialog(getMActivity(),convertItemTitle,convertItemContent,coinPusherCapsuleAdapter.getItemData(SEL_COIN_PUSHER_CAPSULE).getItem());
-            pusherConvertCapsuleDialog.setItemConvertListener(coinPusherDataEntity -> {
-                ToastUtils.showShort(R.string.playfun_coinpusher_text_5);
-                //购买成功数据相加
-                totalMoney = coinPusherDataEntity.getTotalGold();
-                tvTotalMoneyRefresh();
-                coinPusherConvertAdapter.setMaxValuerSelect(totalMoney);
-                if(getItemConvertListener()!=null){
-                    getItemConvertListener().convertSuccess(coinPusherDataEntity);
+            pusherConvertCapsuleDialog.setItemConvertListener(new CoinPusherConvertCapsuleDialog.ItemConvertListener() {
+                @Override
+                public void success(CoinPusherBalanceDataEntity coinPusherDataEntity) {
+                        ToastUtils.showShort(R.string.playfun_coinpusher_text_5);
+                        //购买成功数据相加
+                        totalMoney = coinPusherDataEntity.getTotalGold();
+                        tvTotalMoneyRefresh();
+                        coinPusherConvertAdapter.setMaxValuerSelect(totalMoney);
+                        if(getItemConvertListener()!=null){
+                            getItemConvertListener().convertSuccess(coinPusherDataEntity);
+                        }
+                        pusherConvertCapsuleDialog.dismiss();
                 }
-                pusherConvertCapsuleDialog.dismiss();
+
+                @Override
+                public void buyError() {
+                    pusherConvertCapsuleDialog.dismiss();
+                    if(getItemConvertListener()!=null){
+                        getItemConvertListener().buyError();
+                    }
+                }
             });
             pusherConvertCapsuleDialog.show();
         });
@@ -259,6 +272,8 @@ public class CoinPusherConvertDialog  extends BaseDialog {
                             coinPusherConvertAdapter.setMaxValuerSelect(totalMoney);
                             tvTotalMoneyRefresh();
                         }
+                        //弹出兑换成功
+                        ToastUtils.showShort(R.string.playfun_coinpusher_text_6);
                     }
 
                     @Override

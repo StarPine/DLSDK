@@ -2,33 +2,26 @@ package com.dl.playfun.ui.message.contact;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.blankj.utilcode.util.SizeUtils;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
-import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.Injection;
 import com.dl.playfun.databinding.FragmentOftenContactBinding;
 import com.dl.playfun.entity.TokenEntity;
-import com.dl.playfun.event.LoginExpiredEvent;
 import com.dl.playfun.event.MessageCountChangeContactEvent;
 import com.dl.playfun.manager.ThirdPushTokenMgr;
-import com.dl.playfun.tim.TUIUtils;
 import com.dl.playfun.ui.base.BaseFragment;
-import com.dl.playfun.ui.message.chatmessage.ChatMessageFragment;
 import com.dl.playfun.utils.ChatUtils;
 import com.dl.playfun.widget.dialog.TraceDialog;
-import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.interfaces.TUICallback;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;

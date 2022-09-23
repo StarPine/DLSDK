@@ -27,15 +27,18 @@ import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.databinding.DialogCoinpusherListBinding;
+import com.dl.playfun.entity.CoinPusherBalanceDataEntity;
 import com.dl.playfun.entity.CoinPusherDataInfoEntity;
 import com.dl.playfun.entity.CoinPusherRoomDeviceInfo;
 import com.dl.playfun.entity.CoinPusherRoomInfoEntity;
 import com.dl.playfun.entity.CoinPusherRoomTagInfoEntity;
+import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseDialog;
 import com.dl.playfun.ui.coinpusher.dialog.adapter.CoinPusherRoomListAdapter;
 import com.dl.playfun.ui.coinpusher.dialog.adapter.CoinPusherRoomTagAdapter;
 import com.dl.playfun.viewadapter.CustomRefreshHeader;
+import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 import com.tencent.qcloud.tuicore.Status;
 
 import java.util.List;
@@ -134,9 +137,17 @@ public class CoinPusherRoomListDialog extends BaseDialog {
 
         binding.imgConvert.setOnClickListener(v ->{
             CoinPusherConvertDialog coinPusherConvertDialog = new CoinPusherConvertDialog(getMActivity());
-            coinPusherConvertDialog.setItemConvertListener(coinPusherDataEntity -> {
-                totalMoney = coinPusherDataEntity.getTotalGold();
-                tvTotalMoneyRefresh();
+            coinPusherConvertDialog.setItemConvertListener(new CoinPusherConvertDialog.ItemConvertListener() {
+                @Override
+                public void convertSuccess(CoinPusherBalanceDataEntity coinPusherDataEntity) {
+                        totalMoney = coinPusherDataEntity.getTotalGold();
+                        tvTotalMoneyRefresh();
+                }
+
+                @Override
+                public void buyError() {
+                    getDialogEventListener().buyErrorPayView();
+                }
             });
             coinPusherConvertDialog.setOnDismissListener(dialog -> CoinPusherRoomListDialog.this.show());
             coinPusherConvertDialog.show();
@@ -180,7 +191,6 @@ public class CoinPusherRoomListDialog extends BaseDialog {
                  .doOnSubscribe(this)
                  .compose(RxUtils.schedulersTransformer())
                  .compose(RxUtils.exceptionTransformer())
-                 .doOnSubscribe(dispose -> showHud())
                  .subscribe(new BaseObserver<BaseDataResponse<CoinPusherRoomTagInfoEntity>>() {
                      @Override
                      public void onSuccess(BaseDataResponse<CoinPusherRoomTagInfoEntity> coinPusherRoomTagInfoEntityResponse) {
@@ -215,6 +225,11 @@ public class CoinPusherRoomListDialog extends BaseDialog {
                          //级别没有数据
                          emptyListState(1);
                      }
+
+                     @Override
+                     public void onComplete() {
+                         super.onComplete();
+                     }
                  });
     }
     /**
@@ -230,7 +245,6 @@ public class CoinPusherRoomListDialog extends BaseDialog {
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
-                .doOnSubscribe(dispose -> showHud())
                 .subscribe(new BaseObserver<BaseDataResponse<CoinPusherRoomInfoEntity>>() {
                     @Override
                     public void onSuccess(BaseDataResponse<CoinPusherRoomInfoEntity> coinPusherRoomInfoEntityResponse) {
@@ -253,7 +267,6 @@ public class CoinPusherRoomListDialog extends BaseDialog {
                     }
                     @Override
                     public void onComplete() {
-                        dismissHud();
                         stopRefreshOrLoadMore();
                     }
                 });
@@ -270,7 +283,6 @@ public class CoinPusherRoomListDialog extends BaseDialog {
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
-                .doOnSubscribe(dispose -> showHud())
                 .subscribe(new BaseObserver<BaseDataResponse<CoinPusherDataInfoEntity>>() {
                     @Override
                     public void onSuccess(BaseDataResponse<CoinPusherDataInfoEntity> coinPusherDataInfoEntityResponse) {
@@ -283,7 +295,6 @@ public class CoinPusherRoomListDialog extends BaseDialog {
                     @Override
                     public void onComplete() {
                         super.onComplete();
-                        dismissHud();
                     }
                 });
     }
@@ -346,5 +357,6 @@ public class CoinPusherRoomListDialog extends BaseDialog {
 
     public interface DialogEventListener{
         void startViewing(CoinPusherDataInfoEntity coinPusherDataInfoEntity);
+        void buyErrorPayView();
     }
 }

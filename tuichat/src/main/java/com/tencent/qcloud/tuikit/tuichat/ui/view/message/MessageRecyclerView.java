@@ -16,6 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.tencent.custom.CustomIMTextEntity;
 import com.tencent.custom.EvaluateItemEntity;
 import com.tencent.custom.PhotoAlbumItemEntity;
@@ -162,7 +163,8 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
     private void init() {
         TUIChatLog.d(TAG, "init()");
         setLayoutFrozen(false);
-        setItemViewCacheSize(0);
+        //设置缓存数量
+        setItemViewCacheSize(500);
         setHasFixedSize(true);
         setFocusableInTouchMode(false);
         setFocusable(true);
@@ -409,16 +411,26 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
                     presenter.resetCurrentChatUnreadCount();
                 }
 
-                if (isDisplayJumpMessageLayout()) {
-                    mHandler.displayBackToLastMessage(true);
-                } else {
-                    mHandler.displayBackToLastMessage(false);
-                }
+                mHandler.displayBackToLastMessage(isDisplayJumpMessageLayout());
             }
+            try {
+                //恢复加载图片
+                Glide.with(this).resumeRequests();
+            }catch (Exception ignored) {}
         } else if (state == RecyclerView.SCROLL_STATE_DRAGGING) {
+            try {
+                //取消加载图片
+                Glide.with(this).pauseRequests();
+            }catch (Exception ignored) {}
             if (mHandler != null) {
                 mHandler.hideBackToAtMessage();
             }
+        }else if(state == RecyclerView.SCROLL_STATE_SETTLING){
+            try {
+                //取消加载图片
+                Glide.with(this).pauseRequests();
+            }catch (Exception ignored) {}
+
         }
     }
 
@@ -921,6 +933,10 @@ public class MessageRecyclerView extends RecyclerView implements IMessageLayout 
     @Override
     public void setAdapter(MessageAdapter adapter) {
         super.setAdapter(adapter);
+        if(mAdapter!=null){
+            //设置id 提高效率。
+            mAdapter.setHasStableIds(true);
+        }
         mAdapter = adapter;
     }
 
