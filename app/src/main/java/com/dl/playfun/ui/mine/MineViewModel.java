@@ -479,8 +479,18 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
                             entryLabelLable.set(systemConfigTaskEntity.getEntryLabel());
                         }
                         uc.entryLabelLableEvent.call();
-                        uc.allowAudio.setValue(userInfoEntity.get().getAllowAudio());
-                        uc.allowVideo.setValue(userInfoEntity.get().getAllowVideo());
+                        boolean allowAudioDef = true;
+                        boolean allowVideoDef = true;
+                        if(userInfoEntity.get()!=null){
+                            if(userInfoEntity.get().getAllowAudio() != null){
+                                allowAudioDef = userInfoEntity.get().getAllowAudio();
+                            }
+                            if(userInfoEntity.get().getAllowVideo() != null){
+                                allowVideoDef = userInfoEntity.get().getAllowVideo();
+                            }
+                        }
+                        uc.allowAudio.setValue(allowAudioDef);
+                        uc.allowVideo.setValue(allowVideoDef);
                     }
 
                     @Override
