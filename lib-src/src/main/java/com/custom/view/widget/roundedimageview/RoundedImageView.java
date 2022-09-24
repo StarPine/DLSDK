@@ -198,9 +198,7 @@ public class RoundedImageView extends AppCompatImageView {
 
     @Override
     public void setScaleType(ScaleType scaleType) {
-        assert scaleType != null;
-
-        if (mScaleType != scaleType) {
+        if (scaleType!=null && mScaleType != scaleType) {
             mScaleType = scaleType;
 
             switch (scaleType) {

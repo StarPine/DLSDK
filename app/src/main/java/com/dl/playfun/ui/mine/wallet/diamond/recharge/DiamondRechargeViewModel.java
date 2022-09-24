@@ -19,7 +19,6 @@ import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.CreateOrderEntity;
 import com.dl.playfun.entity.DiamondInfoEntity;
-import com.dl.playfun.entity.DiamondPaySuccessEntity;
 import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
@@ -32,7 +31,6 @@ import java.util.List;
 
 import me.goldze.mvvmhabit.binding.command.BindingAction;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
-import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.RxUtils;
 import me.goldze.mvvmhabit.utils.ToastUtils;
@@ -154,7 +152,6 @@ public class DiamondRechargeViewModel extends BaseViewModel<AppRepository> {
                         dismissHUD();
                         ToastUtils.showShort(StringUtils.getString(R.string.playfun_pay_success));
                         paySuccess.postValue(selectedGoodsEntity.get());
-                        RxBus.getDefault().post(new DiamondPaySuccessEntity());
                     }
 
                     @Override

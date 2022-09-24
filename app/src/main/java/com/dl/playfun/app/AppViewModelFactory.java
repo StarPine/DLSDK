@@ -44,14 +44,13 @@ public class AppViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         //反射动态实例化ViewModel
         try {
             String className = modelClass.getCanonicalName();
-            assert className != null;
             Class<?> classViewModel = Class.forName(className);
             Constructor<?> cons = classViewModel.getConstructor(Application.class, AppRepository.class);
             ViewModel viewModel = (ViewModel) cons.newInstance(mApplication, mRepository);
             return (T) viewModel;
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
             e.printStackTrace();
-            throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
+            throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName() +"  detail Exception： "+e.getMessage());
         }
     }
 }

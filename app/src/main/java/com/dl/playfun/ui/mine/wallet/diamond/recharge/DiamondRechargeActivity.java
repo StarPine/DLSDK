@@ -17,6 +17,7 @@ import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.BillingClientLifecycle;
 import com.dl.playfun.databinding.ActivityDiamondRechargeBinding;
+import com.dl.playfun.entity.DiamondPaySuccessEntity;
 import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.ui.base.BaseActivity;
 import com.dl.playfun.ui.base.OtherFragmentActivity;
@@ -28,6 +29,7 @@ import com.dl.playfun.widget.dialog.TraceDialog;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.utils.ToastUtils;
 
 /**
@@ -179,6 +181,7 @@ public class DiamondRechargeActivity extends BaseActivity<ActivityDiamondRecharg
                     dialog.dismiss();
                     isFinsh = true;
                     viewModel.getRechargeList();
+                    RxBus.getDefault().post(new DiamondPaySuccessEntity());
                 })
                 .dayRewardDialog(true,
                         viewModel.selectedGoodsEntity.get().getDayGiveCoin(),
