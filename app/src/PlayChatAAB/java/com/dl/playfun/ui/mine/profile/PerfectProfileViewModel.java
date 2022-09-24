@@ -150,6 +150,11 @@ public class PerfectProfileViewModel extends BaseViewModel<AppRepository> {
                         if (UserSex.get() == 1){
                             AppConfig.isRegister = true;
                         }
+                        //注册邀请码
+                        if(!StringUtils.isTrimEmpty(invitationCode.get())){
+                            //绑定用户注册时填写邀请码
+                            AppContext.instance().pushInvite(invitationCode.get(), 2, null);
+                        }
                         model.clearChannelAF();
                         loadProfile(true);
                     }

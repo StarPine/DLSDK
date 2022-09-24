@@ -495,10 +495,16 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
     private void setTimerForCallinfo() {
         timer = new Timer();
         timer.schedule(new TimerTask() {
-
             @Override
             public void run() {
-                viewModel.getCallingStatus(roomId);
+                try {
+                    if(isFinishing() || isDestroyed()){
+                        return;
+                    }
+                    viewModel.getCallingStatus(roomId);
+                }catch (Exception ignored){
+
+                }
             }
         }, 1000,10000);
     }
@@ -919,6 +925,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         }
         if (timer != null){
             timer.cancel();
+            timer = null;
         }
     }
 

@@ -482,10 +482,16 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
     private void setTimerForCallinfo() {
         timer = new Timer();
         timer.schedule(new TimerTask() {
-
             @Override
             public void run() {
-                viewModel.getCallingStatus(viewModel.roomId);
+                try {
+                    if(isFinishing() || isDestroyed()){
+                        return;
+                    }
+                    viewModel.getCallingStatus(viewModel.roomId);
+                }catch (Exception ignored){
+
+                }
             }
         }, 1000,10000);
     }
@@ -961,6 +967,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         }
         if (timer != null){
             timer.cancel();
+            timer = null;
         }
     }
 

@@ -336,5 +336,11 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (popupWindow != null){
+            if(popupWindow.isShowing()){
+                popupWindow.dismiss();
+            }
+            popupWindow = null;
+        }
     }
 }

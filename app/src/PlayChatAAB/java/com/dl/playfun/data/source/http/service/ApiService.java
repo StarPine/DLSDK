@@ -257,7 +257,7 @@ public interface ApiService {
     * @Date 2022/8/24
     */
     @FormUrlEncoded
-    @Headers(RetrofitHeadersConfig.PlayChat_API_URL)
+    @Headers({RetrofitHeadersConfig.CoinPUsherConfig.API_TIMEOUT_HEADER,RetrofitHeadersConfig.PlayChat_API_URL})
     @POST("api/iscan/goldCoin")
     Observable<BaseDataResponse<CoinPusherBalanceDataEntity>> convertCoinPusherGoldsCoin(@Field("id")Integer id, @Field("type") Integer type);
     /**
@@ -268,7 +268,7 @@ public interface ApiService {
     * @Date 2022/8/24
     */
     @POST("api/iscan/diamonds")
-    @Headers(RetrofitHeadersConfig.PlayChat_API_URL)
+    @Headers({RetrofitHeadersConfig.CoinPUsherConfig.API_TIMEOUT_HEADER,RetrofitHeadersConfig.PlayChat_API_URL})
     @FormUrlEncoded
     Observable<BaseDataResponse<CoinPusherBalanceDataEntity>> convertCoinPusherDiamonds(@Field("id") Integer id);
     /**

@@ -2,6 +2,7 @@ package com.dl.playfun.ui.coinpusher.dialog;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Window;
@@ -49,14 +50,9 @@ public class CoinPusherHelpDialog extends BaseDialog {
         binding = DataBindingUtil.inflate(inflater, R.layout.dialog_coinpusher_help, null, false);
         //支持LiveData绑定xml，数据改变，UI自动会更新
         binding.setLifecycleOwner(this);
-        WebViewUtils.initSettings(binding.webView);
         binding.imgClose.setOnClickListener(v -> {
             dismiss();
         });
-
-        binding.webView.setWebChromeClient(webChromeClient);
-        binding.webView.addJavascriptInterface(new ShareJavaScriptInterface(), "Native");
-        binding.webView.loadUrl(webViewUrl);
     }
 
     public void destroy() {
@@ -68,6 +64,11 @@ public class CoinPusherHelpDialog extends BaseDialog {
     }
 
     public void show() {
+        WebViewUtils.initSettings(binding.webView);
+        binding.webView.setWebChromeClient(webChromeClient);
+        binding.webView.addJavascriptInterface(new ShareJavaScriptInterface(), "Native");
+        binding.webView.loadUrl(webViewUrl);
+        Log.e("当前推币机帮助地址：",String.valueOf(webViewUrl));
         //设置背景透明,去四个角
         getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         setContentView(binding.getRoot());

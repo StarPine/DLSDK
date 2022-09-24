@@ -40,6 +40,7 @@ public class WebViewUtils {
         settings.setLoadsImagesAutomatically(true);
         // 本地 DOM 存储（解决加载某些网页出现白板现象）
         settings.setDomStorageEnabled(true);
+        settings.setPluginState(WebSettings.PluginState.ON);//设置是否支持插件
         // 设置 WebView 的缓存模式
         settings.setCacheMode(WebSettings.LOAD_DEFAULT);
         // 支持启用缓存模式

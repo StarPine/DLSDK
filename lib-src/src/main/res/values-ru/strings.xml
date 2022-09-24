@@ -1185,7 +1185,7 @@
     <string name="playfun_their_photo_album_title">Her Photos</string>
     <string name="playfun_trend_detail_title">My Moments</string>
     <string name="playfun_trend_detail_title_other">Moments</string>
-    <string name="playfun_update_face_explain_two">This moment is deleted.</string>
+    <string name="playfun_update_face_explain_two">You should look similar to the last verification!</string>
     <string name="playfun_update_face_record">Can not be too different from before</string>
     <string name="playfun_your_photo">Your Photo</string>
     <string name="playfun_upload_photo_explain">1. Upload a good facial photo.\n
