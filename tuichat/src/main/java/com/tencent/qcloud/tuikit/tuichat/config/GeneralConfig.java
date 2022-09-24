@@ -15,8 +15,8 @@ public class GeneralConfig {
     private boolean excludedFromLastMessage;
 
     private boolean isAndroidPrivateRing;
-    //以读回执
-    private boolean showRead = false;
+    //以读回执  IM发送消息已读回执
+    private boolean showRead = true;
     private boolean reactEnable = false;
     private boolean replyEnable = true;
     private boolean quoteEnable = true;
