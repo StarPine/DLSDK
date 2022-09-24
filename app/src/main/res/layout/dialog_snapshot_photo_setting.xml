@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <import type="android.graphics.drawable.GradientDrawable" />
     </data>
 
     <RelativeLayout
@@ -52,6 +52,7 @@
                 android:text="@string/playfun_confirm"
                 android:textColor="@color/white"
                 android:textSize="13sp"
+                binding:drawable_orientation="@{GradientDrawable.Orientation.LEFT_RIGHT}"
                 binding:drawable_cornersRadius="@{12}"
                 binding:drawable_gradient_endColor="@{@color/playfun_shape_radius_end_color}"
                 binding:drawable_gradient_startColor="@{@color/playfun_shape_radius_start_color}" />
@@ -78,6 +79,7 @@
                 tools:text="200"
                 android:textColor="#ffff1579"
                 android:textSize="15sp"
+                android:textStyle="bold"
                 />
         </LinearLayout>
         <LinearLayout
@@ -91,7 +93,7 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="17dp"
                 android:layout_height="17dp"
-                android:src="@drawable/icon_bigger_crystal"
+                android:src="@drawable/icon_bigger_crystal2"
                 />
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_money"
@@ -102,6 +104,7 @@
                 tools:text="200"
                 android:textColor="#ffff1579"
                 android:textSize="15sp"
+                android:textStyle="bold"
                 />
         </LinearLayout>
 
@@ -115,7 +118,7 @@
                 android:id="@+id/seekbar_photo"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
-                android:layout_marginTop="29dp"
+                android:layout_marginTop="15dp"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
                 app:imgSpotHeight="9dp"
@@ -134,7 +137,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="3dp"
-                android:layout_marginTop="42dp"
+                android:layout_marginTop="28dp"
                 android:max="0"
                 android:progress="0"
                 android:progressDrawable="@color/transparent"

@@ -135,7 +135,7 @@ public class CoinPusherRoomListDialog extends BaseDialog {
         binding.refreshLayout.setEnableLoadMore(false);
         binding.refreshLayout.setOnRefreshListener(v->startRefreshDataInfo());
 
-        binding.imgConvert.setOnClickListener(v ->{
+        binding.rlCoin.setOnClickListener(v ->{
             CoinPusherConvertDialog coinPusherConvertDialog = new CoinPusherConvertDialog(getMActivity());
             coinPusherConvertDialog.setItemConvertListener(new CoinPusherConvertDialog.ItemConvertListener() {
                 @Override

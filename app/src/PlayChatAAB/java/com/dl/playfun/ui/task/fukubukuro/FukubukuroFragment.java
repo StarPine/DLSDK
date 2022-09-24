@@ -40,8 +40,6 @@ import com.dl.playfun.entity.ExchangeIntegraOuterEntity;
 import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.event.TaskMainTabEvent;
 import com.dl.playfun.ui.base.BaseFragment;
-import com.dl.playfun.ui.task.golddetail.GoldDetailFragment;
-import com.dl.playfun.ui.task.record.TaskExchangeRecordFragment;
 import com.dl.playfun.ui.task.webview.FukuokaViewFragment;
 import com.dl.playfun.ui.webview.BrowserView;
 import com.dl.playfun.utils.ApiUitl;
@@ -453,9 +451,6 @@ public class FukubukuroFragment extends BaseFragment<FragmentFukubukuroBinding, 
 
         @JavascriptInterface
         public void ToExchangeRecord(int idx) {
-            Bundle bundle = new Bundle();
-            bundle.putInt("sel_idx", idx);
-            viewModel.start(TaskExchangeRecordFragment.class.getCanonicalName(), bundle);
         }
 
         @JavascriptInterface
@@ -465,7 +460,6 @@ public class FukubukuroFragment extends BaseFragment<FragmentFukubukuroBinding, 
 
         @JavascriptInterface
         public void ToGoldDetail() {
-            viewModel.start(GoldDetailFragment.class.getCanonicalName());
         }
 
         @JavascriptInterface

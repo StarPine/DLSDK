@@ -17,7 +17,6 @@
         android:gravity="center_horizontal"
         android:padding="5dp"
         android:textSize="11sp"
-        tools:text="dsaga阿公会开关华控股哈好看暗示法咖啡加快发哈拒绝好看暗示法咖啡加快发哈拒绝好看暗示法咖啡加快发哈拒绝好看暗示法咖啡加快发哈拒绝"
         />
 
 </LinearLayout>

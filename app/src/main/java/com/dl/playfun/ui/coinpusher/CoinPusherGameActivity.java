@@ -16,7 +16,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.blankj.utilcode.util.ColorUtils;
-import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
@@ -26,14 +25,18 @@ import com.dl.playfun.databinding.ActivityCoinpusherGameBinding;
 import com.dl.playfun.entity.CoinPusherBalanceDataEntity;
 import com.dl.playfun.entity.CoinPusherDataInfoEntity;
 import com.dl.playfun.entity.GoodsEntity;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocaleManager;
 import com.dl.playfun.ui.base.BaseActivity;
 import com.dl.playfun.ui.coinpusher.dialog.CoinPusherConvertDialog;
 import com.dl.playfun.ui.coinpusher.dialog.CoinPusherDialogAdapter;
 import com.dl.playfun.ui.coinpusher.dialog.CoinPusherGameHistoryDialog;
+import com.dl.playfun.ui.coinpusher.dialog.CoinPusherHelpDialog;
 import com.dl.playfun.utils.AutoSizeUtils;
+import com.dl.playfun.utils.CoinPusherApiUtil;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
+import com.jakewharton.rxbinding2.view.RxView;
 import com.misterp.toast.SnackUtils;
 import com.tencent.liteav.trtccalling.ui.floatwindow.FloatWindowService;
 import com.tencent.qcloud.tuicore.custom.CustomConstants;
@@ -43,6 +46,10 @@ import com.wangsu.libwswebrtc.WsWebRTCPortalReport;
 import com.wangsu.libwswebrtc.WsWebRTCView;
 
 import java.nio.ByteBuffer;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.functions.Consumer;
+import me.goldze.mvvmhabit.utils.StringUtils;
 
 /**
  * Author: 彭石林
@@ -56,7 +63,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
 
     private final String TAG = "CoinPusherGameActivity";
     //玩法说明
-    private Dialog dialogCoinPusherHelp = null;
+    private CoinPusherHelpDialog dialogCoinPusherHelp = null;
     //兑换列表
     private CoinPusherConvertDialog coinPusherConvertDialog = null;
     //历史记录
@@ -153,7 +160,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
         //设置是否使用 dtls 加密，默认加密，false：加密；true：不加密
         webrtcParam.disableDTLS(false);
         //设置视频是否使用硬解，默认硬解，false：软解；true：硬解
-        webrtcParam.enableHw(true);
+        webrtcParam.enableHw(false);
         //设置音频使用格式,默认 OPUS,音频格式类型见 WsWebRTCParameters 类定义
         webrtcParam.setAudioFormat(WsWebRTCParameters.OPUS);
         //设置连接超时时间，默认 5s，单位 ms
@@ -222,23 +229,9 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
         viewModel.coinPusherDataInfoEntity = coinPusherDataInfoEntity;
         viewModel.totalMoney.set(coinPusherDataInfoEntity.getTotalGold());
         binding.tvMoneyHint.setText(String.format(StringUtils.getString(R.string.playfun_coinpusher_game_text_2),coinPusherDataInfoEntity.getRoomInfo().getMoney()));
-        binding.imgHelp.setOnClickListener(v->{
-            if(dialogCoinPusherHelp==null){
-                dialogCoinPusherHelp = CoinPusherDialogAdapter.getDialogCoinPusherHelp(this,null,null);
-            }
-            dialogCoinPusherHelp.show();
-        });
-        binding.rlCoin.setOnClickListener(v ->{
-            coinPusherConvertDialogShow();
-        });
-        binding.imgHistroy.setOnClickListener(v ->{
-            if(coinPusherGameHistoryDialog == null){
-                coinPusherGameHistoryDialog = new CoinPusherGameHistoryDialog(this,viewModel.coinPusherDataInfoEntity.getRoomInfo().getRoomId());
-            }else{
-                coinPusherGameHistoryDialog.loadData(viewModel.coinPusherDataInfoEntity.getRoomInfo().getRoomId());
-            }
-            coinPusherGameHistoryDialog.show();
-        });
+        doubleClick(binding.imgHelp);
+        doubleClick(binding.rlCoin);
+        doubleClick(binding.imgHistroy);
         binding.btnPlaying.setOnTouchListener((v, event) -> {
             if(event.getAction() == MotionEvent.ACTION_DOWN){
                 binding.svgaPlayer.setVisibility(View.VISIBLE);
@@ -252,6 +245,32 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
         gameInit();
         //开始倒计时
         downTime();
+    }
+
+
+    @SuppressLint("CheckResult")
+    public void doubleClick(View view){
+        RxView.clicks(view)
+                .throttleFirst(1, TimeUnit.SECONDS)//1秒钟内只允许点击1次
+                .subscribe(o -> {
+                    if (view.getId() == binding.imgHelp.getId()) {
+                        if(dialogCoinPusherHelp==null){
+                            String helpWebUrl = ConfigManager.getInstance().getAppRepository().readApiConfigManagerEntity().getPlayChatWebUrl()+"/coinPusherGame/helpExplain/";
+                            dialogCoinPusherHelp = new CoinPusherHelpDialog(CoinPusherGameActivity.this,helpWebUrl );
+                        }
+                        dialogCoinPusherHelp.show();
+                    }else if(view.getId() == binding.imgHistroy.getId()){
+                        if(coinPusherGameHistoryDialog == null){
+                            coinPusherGameHistoryDialog = new CoinPusherGameHistoryDialog(CoinPusherGameActivity.this,viewModel.coinPusherDataInfoEntity.getRoomInfo().getRoomId());
+                        }else{
+                            coinPusherGameHistoryDialog.loadData(viewModel.coinPusherDataInfoEntity.getRoomInfo().getRoomId());
+                        }
+                        coinPusherGameHistoryDialog.show();
+                    }else if(view.getId() == binding.rlCoin.getId()){
+                        //弹出兑换
+                        coinPusherConvertDialogShow();
+                    }
+                });
     }
 
     private void coinPusherConvertDialogShow(){
@@ -270,6 +289,8 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
 
                 @Override
                 public void buyError() {
+                    //关闭当前弹窗
+                    coinPusherConvertDialog.dismiss();
                     //购买充值
                     payCoinRechargeDialog();
                 }
@@ -313,8 +334,12 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
             });
         });
         //toast弹窗居中
-        viewModel.gameUI.toastCenter.observe(this,value->{
-            SnackUtils.showCenterShort(binding.getRoot(),value);
+        viewModel.gameUI.toastCenter.observe(this,coinPusherGamePlayingEvent->{
+            //中奖落币
+            String textContent = com.blankj.utilcode.util.StringUtils.getString(R.string.playfun_coinpusher_coin_text_reward);
+            String valueText = String.format(textContent, coinPusherGamePlayingEvent.getGoldNumber());
+            viewModel.totalMoney.set(coinPusherGamePlayingEvent.getTotalGold());
+            SnackUtils.showCenterShort(binding.getRoot(),valueText);
         });
         //是否禁用投币按钮
         viewModel.gameUI.playingBtnEnable.observe(this, flag ->{
@@ -346,22 +371,32 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
             downTimer.cancel();
             downTimer = null;
         }
-        viewModel.playingCoinPusherClose(viewModel.coinPusherDataInfoEntity.getRoomInfo().getRoomId());
+        CoinPusherApiUtil.endGamePaying(viewModel.coinPusherDataInfoEntity.getRoomInfo().getRoomId());
         try {
-            if(coinRechargeSheetView!=null && coinRechargeSheetView.isShowing()){
-                coinRechargeSheetView.dismiss();
+            if(coinRechargeSheetView!=null){
+                if(coinRechargeSheetView.isShowing()){
+                    coinRechargeSheetView.dismiss();
+                }
                 coinRechargeSheetView = null;
             }
-            if(dialogCoinPusherHelp != null && dialogCoinPusherHelp.isShowing() ){
-                dialogCoinPusherHelp.dismiss();
+            if(dialogCoinPusherHelp != null){
+                dialogCoinPusherHelp.destroy();
+                if(dialogCoinPusherHelp.isShowing()){
+                    dialogCoinPusherHelp.dismiss();
+                }
                 dialogCoinPusherHelp = null;
             }
-            if(coinPusherConvertDialog != null && coinPusherConvertDialog.isShowing() ){
+            if(coinPusherConvertDialog != null){
+                if(coinPusherConvertDialog.isShowing()){
+                    coinPusherConvertDialog.dismiss();
+                }
                 coinPusherConvertDialog.dismiss();
                 coinPusherConvertDialog = null;
             }
-            if(coinPusherGameHistoryDialog != null && coinPusherGameHistoryDialog.isShowing() ){
-                coinPusherGameHistoryDialog.dismiss();
+            if(coinPusherGameHistoryDialog != null){
+                if(coinPusherGameHistoryDialog.isShowing()){
+                    coinPusherGameHistoryDialog.dismiss();
+                }
                 coinPusherGameHistoryDialog = null;
             }
             //暂停播放。释放资源
@@ -454,7 +489,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
                 @Override
                 public void paySuccess(GoodsEntity goodsEntity) {
                     //充值成功  查询当前用户余额
-                    viewModel.qryUserGameBalance();
+                    //viewModel.qryUserGameBalance();
                 }
             });
         }

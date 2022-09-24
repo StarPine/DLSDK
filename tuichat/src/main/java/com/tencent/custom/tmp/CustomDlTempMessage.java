@@ -18,7 +18,20 @@ public class CustomDlTempMessage extends TUIMessageBean implements Serializable 
     private final String businessID = CustomConstants.Message.CUSTOM_BUSINESS_ID_KEY;
     //当前业务的模块
     private MsgModuleInfo contentBody;
+    //当前用户的语言
+    private String language;
 
+    public String getBusinessID() {
+        return businessID;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
 
     public MsgModuleInfo getContentBody() {
         return contentBody;

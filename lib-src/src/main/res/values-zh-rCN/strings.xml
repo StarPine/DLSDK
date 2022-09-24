@@ -16,10 +16,6 @@
     <string name="alivc_media_resolution_3_4">540*720</string>
     <string name="alivc_media_resolution_9_16">540*960</string>
     <string name="alivc_media_video_quality">質量</string>
-    <string name="alivc_media_aliyun_video_codec">編碼</string>
-    <string name="alivc_media__hardware_encoder">硬件</string>
-    <string name="alivc_media__openh264_encoder">OpenH264 軟件</string>
-    <string name="alivc_media__ffmpeg_encoder">FFmpeg 軟件</string>
     <string name="alivc_media_video_quality_low">低的</string>
     <string name="alivc_media_video_quality_meidan">中等的</string>
     <string name="alivc_media_video_quality_high">高的</string>
@@ -35,8 +31,12 @@
     <string name="alivc_media_film_tail">學分</string>
     <string name="alivc_media_film_denoise">去噪</string>
     <string name="alivc_media_film_transcode">轉碼</string>
-    <string name="alivc_media_film_transcode_tip">1080P以上分辨率轉碼</string>
-    <string name="alivc_media_mix_recorder_film_transcode_tip">分辨率超過 540P 時轉碼視頻</string>
+    <string name="alivc_media_film_transcode_tip">視頻大於1080P時，轉碼到1080P以下</string>
+    <string name="alivc_media_mix_recorder_film_transcode_tip">影片大於540P時，轉碼到540P以下</string>
+    <string name="alivc_media__hardware_encoder">硬連線</string>
+    <string name="alivc_media__openh264_encoder">OpenH264 軟件</string>
+    <string name="alivc_media__ffmpeg_encoder">FFmpeg 軟件</string>
+    <string name="alivc_media_aliyun_video_codec">編碼</string>
     <!--AlivcMedia-END-->
 
     <!--AliyunCrop-Start-->
@@ -48,9 +48,8 @@
     <string name="alivc_video_duration">%1$02d:%2$02d:%3$02d</string>
     <string name="alivc_next_camera_roll_import">下一步</string>
     <string name="alivc_total_duration_label_import">總時長</string>
-    <string name="alivc_video_param_error">Failed to crop the video</string>
+    <string name="alivc_video_param_error">未能裁剪視頻</string>
     <string name="alivc_crop_setting_frame_rate_1">幀率</string>
-    <!--裁剪設置界面 -->
     <string name="alivc_crop_setting_tittle">裁剪參數</string>
     <string name="alivc_crop_setting_bps">碼率(kbps)</string>
     <string name="alivc_crop_setting_bps_hint">默認值為0, 根據視頻質量參數計算</string>
@@ -81,24 +80,21 @@
     <string name="alivc_crop_setting_quality_high">良好</string>
     <string name="alivc_crop_setting_quality_meidan">一般</string>
     <string name="alivc_crop_setting_quality_low">較差</string>
-    <!--end-->
-    <!--裁剪媒體選擇頁面-->
     <string name="alivc_crop_media_tittle">相機膠捲</string>
     <string name="alivc_crop_media_sdcard_not_ready">SDCARD 沒有準備好</string>
     <string name="alivc_crop_media_gif_not_support">暫時不支持gif文件裁剪</string>
-    <!--end-->
-    <!--視頻裁剪頁面-->
     <string name="alivc_crop_video_tip_not_supported_audio">音頻格式不支持</string>
     <string name="alivc_crop_video_tip_not_supported_video">視頻格式不支持</string>
     <string name="alivc_crop_video_tip_crop_failed">裁剪失敗</string>
     <string name="alivc_crop_video_tip_error">視頻錯誤</string>
     <string name="alivc_crop_video_tip_error2">視頻剪輯時長不能超過20秒</string>
     <string name="alivc_crop_video_tip_error3">1. 拉動紅色框邊緣選擇視頻剪輯長度\n2. 剪輯視頻長度為3秒-20秒</string>
-    <!--AliyunCrop-END-->
+    <string name="alivc_crop_video_tip_error4">原尺寸輸出時，圖片寬高不能超過3840</string>
+    <string name="alivc_crop_video_tip_error5">HEIF圖片轉化失敗，請重試</string>
 
+    <!--AliyunCrop-END-->
     <!--AliyunSVideoBase-Start-->
     <string name="alivc_base_version">SDK版本信息</string>
-    <!-- 美颜相关  start -->
     <string name="alivc_base_beauty">美颜</string>
     <string name="alivc_base_beauty_face">美肌</string>
     <string name="alivc_base_beauty_shape">美型</string>
@@ -121,7 +117,6 @@
     <string name="alivc_base_beauty_cutcheek">颧骨</string>
     <string name="alivc_base_beauty_level_advanced">高级</string>
     <string name="alivc_base_beauty_level_normal">普通</string>
-    <!--美颜脸型-->
     <string name="alivc_base_beauty_natural_face">自然脸</string>
     <string name="alivc_base_beauty_square_face">方脸</string>
     <string name="alivc_base_beauty_round_face">圆脸</string>
@@ -134,7 +129,6 @@
     <string name="alivc_base_beauty_lovely_face">可爱</string>
     <string name="alivc_base_beauty_baby_face">婴儿</string>
     <string name="alivc_base_beauty_custom_face">自定义</string>
-    <!-- 美颜相关  end   -->
     <string name="alivc_base_tips_fine_tuning">点击可微调</string>
     <string name="alivc_base_beauty_copyright">高级美颜美型由faceunity提供</string>
     <string name="alivc_base_beauty_race_copyright">高级美颜美型由race提供</string>
@@ -164,6 +158,7 @@
     <string name="aliyun_common_cancel">取消</string>
     <string name="aliyun_common_update_app">發現新版本，請升級</string>
     <string name="aliyun_common_updating">升級中</string>
+
     <string name="alivc_common_operate_success">操作成功</string>
     <string name="alivc_common_operate_fail">操作失敗</string>
     <string name="alivc_common_loading">正在加載</string>
@@ -382,7 +377,12 @@
     <string name="trtccalling_video_call">視訊通話</string>
     <string name="trtccalling_audio_call">語音通話</string>
     <string name="trtccalling_user_kicked_offline">您已被踢下線，請重新登入</string>
+
     <string name="trtccalling_user_sig_expired">您的用戶簽名資訊已過期</string>
+    <string name="trtccalling_user_exceed_limit">TUICalling 目前支持最多 9 人通話。對於較大的電話會議，請嘗試使用 TUIRoom</string>
+    <string name="trtccalling_wait_resonse">等待</string>
+    <string name="trtccalling_float_permission">請打開[顯示在其他應用程序]權限</string>
+    <string name="trtccalling_is_calling">無法重新開始通話</string>
     <!-- tuicalling-END -->
 
     <!-- tuichat-Start -->
@@ -446,10 +446,11 @@
     <string name="downloading">下載中...</string>
     <string name="sended">已傳送</string>
     <string name="send_failed">傳送失敗</string>
+    <string name="open_file_tips">選擇應用程序以打開此文件</string>
     <string name="sending">傳送中...</string>
     <string name="download_file_error">下載視頻失敗: </string>
     <string name="voice_play_tip">語音檔還未下載完成</string>
-    <string name="permission_content">使用該功能，需要開啟權限，鑒於您禁用相關權限，請手動設置開啟權限</string>
+    <string name="permission_content">使用該功能，需要開啟權限，鑒於您禁用相關權限，請手動設定開啟權限</string>
     <string name="setting">設定</string>
     <string name="no_event_cancle_tip">瀏覽狀態下，沒有 cancel 事件</string>
     <string name="no_event_confirm_tip">瀏覽狀態下，沒有 confirm 事件</string>
@@ -470,33 +471,84 @@
     <string name="custom_send_error_message">發送失敗</string>
     <string name="custom_send_error_message_txt1">鑽石餘額不足，獲取鑽石繼續聊天</string>
     <string name="custom_send_error_message_txt2">馬上獲取>></string>
-    <string name="custom_message_txt1">收入+%s，真人認證後收入翻倍 去認證>></string>
+    <string name="custom_message_txt1">獎勵+%s，真人認證後獎勵翻倍 去認證>></string>
     <string name="custom_message_txt1_key">去認證>></string>
-    <string name="custom_message_txt2_test2">C+%s，真人認證後收入翻倍 去認證>></string>
     <string name="custom_message_txt2">C+%s</string>
+    <string name="custom_message_txt2_test2">C+%s，真人認證後獎勵翻倍 去認證>></string>
     <string name="custom_message_txt3">對方餘額不足，請提示他儲值</string>
     <string name="custom_message_txt4">追蹤了</string>
     <string name="custom_message_txt5">妳</string>
     <string name="custom_message_txt6">你</string>
-    <string name="custom_message_txt7">你的收入+%s鑽石</string>
-    <string name="custom_message_txt_male">對方未及時回復，費用退回</string>
-    <string name="custom_message_txt_girl">收益失效</string>
+    <string name="custom_message_txt7">你的獎勵+%s鑽石</string>
+    <string name="custom_message_txt_male">對方未及時回復，獎勵退回</string>
+    <string name="custom_message_txt_girl">獎勵失效</string>
     <string name="custom_send_violation_message_tip">系统提示：為防止詐騙，建議您先發起視訊通話，確認對方身份</string>
     <string name="custom_message_book_next_call">給他發送私訊預訂下一次通話時間</string>
     <string name="custom_message_busy_missed">忙線未接聽</string>
     <string name="custom_message_other_busy">對方忙線中</string>
     <string name="opponent_in_game">在遊戲中</string>
     <string name="call_ended">通話結束</string>
+    <!--C为水晶icon占位符	-->
+    <string name="profit">C+%s</string>
+
+    <string name="modify_introduction">將群組介紹改為</string>
+    <string name="save_tips">保存成功</string>
+    <string name="saving_tips">保存</string>
+    <string name="reply_button">回復</string>
+    <string name="resend_tips">您確定要重新發送嗎？</string>
+    <string name="locate_origin_msg_failed_tip">無法找到原始訊息</string>
+    <string name="has_all_read">全部已讀</string>
+    <string name="someone_has_read">%d 已讀</string>
+    <string name="back_to_lastmessage">轉到最新消息</string>
+    <string name="back_to_newmessage">新訊息</string>
+    <string name="back_to_atmessage_all">\@ 所有人</string>
+    <string name="back_to_atmessage_me">有人 @ 我</string>
     <string name="chat_delete_msg_tip">立即刪除</string>
+    <string name="copy_success_tip">複製成功</string>
+    <string name="chat_message_read_receipt">消息閱讀回執</string>
+    <string name="chat_i_know">我知道了</string>
+    <string name="chat_no_more_reminders">沒有更多的提醒</string>
+    <string name="chat_im_flagship">旗艦版</string>
+    <string name="chat_buying_guidelines">購買指南</string>
+    <string name="chat_im_flagship_edition_update_tip">%s 功能為IM旗艦版功能，購買旗艦版後即可使用。 如果您當前使用的是專業版，則需要先對專業版進行退款，然後再購買旗艦版。 有關詳細信息，請參閱購買指南。</string>
+    <string name="chat_permission_mic_reason_title">%s 申請使用麥克風</string>
+    <string name="chat_permission_mic_reason">為了讓您發送語音訊息、進行語音和視訊通話，請允許我們使用麥克風。</string>
+    <string name="chat_permission_camera_reason_title">%s 申請攝像許可</string>
+    <string name="chat_permission_camera_reason">為了讓您拍攝照片或影片發送給朋友，以及進行視訊通話，請允許我們訪問網路攝像頭。</string>
+    <string name="chat_permission_storage_reason_title">%s 申請存儲許可</string>
+    <string name="chat_permission_mic_dialog_alert">在設定->應用軟體->%s 中允許麥克風訪問以正常使用語音信息、攝像機以及語音和視訊通話</string>
+    <string name="chat_permission_camera_dialog_alert">在設定->應用軟體->%s中允許相機訪問，以正常使用照片、影片和視訊通話功能</string>
+    <string name="chat_message_detail">留言詳情</string>
+    <string name="someone_unread">%d 未讀</string>
+    <string name="someone_have_read">%d 已讀</string>
+    <string name="location_extra">[地點]</string>
+    <string name="forward_chat_record">聊天記錄</string>
+    <string name="reedit_msg">重新編輯</string>
+
+    <string name="quote_button">引用</string>
+    <string name="send_failed_file_not_exists">發送失敗，文件不存在</string>
+    <string name="chat_calling_switch_to_audio">切換到語音通話</string>
+    <string name="chat_calling_switch_to_audio_accept">確認視訊轉語音</string>
+    <string name="chat_calling_unknown_invitation">未知邀請</string>
+    <string name="save_success">保存成功</string>
+    <string name="save_failed">保存失敗</string>
+    <string name="chat_permission_storage_reason">為了讓您將照片和影片保存到您的設備，請允許我們將照片和影片寫入您的設備。</string>
+    <string name="chat_permission_storage_dialog_alert">在設定->應用軟體->%s中允許存儲訪問以正常使用保存照片和影片的功能</string>
+    <string name="chat_reply_num">%d 回復</string>
+    <string name="chat_reply_detail">回復詳情</string>
+
+    <string name="chat_not_read">未讀</string>
     <string name="playfun_in_game">對方在遊戲中</string>
-    <string name="playfun_in_game_missed">遊戲中未接聽</string>
+    <string name="playfun_in_game_missed">遊戲中未接通</string>
     <string name="custom_message_txt8">餘額不足，請儲值</string>
     <string name="custom_message_call_message_deatail_time_msg">結束通話，通話時長:  %02d:%02d:%02d</string>
-    <string name="save_success">保存成功</string>
     <string name="playfun_im_photo_burned">照片已刪除</string>
     <!-- tuichat-END -->
 
     <!-- tuiconversation-Start -->
+    <string name="forward_select_new_chat">創建新聊天</string>
+    <string name="forward_select_from_contact">從聯繫人中選擇</string>
+    <string name="message_num">訊息</string>
     <string name="date_tommorow">明天</string>
     <string name="date_year">年</string>
     <string name="date_month">月</string>
@@ -510,8 +562,6 @@
     <string name="chat_delete">刪除聊天</string>
     <string name="quit_chat_top">取消置頂</string>
     <string name="clear_conversation_message">清空消息</string>
-    <string name="forward_select_new_chat">創建新聊天</string>
-    <string name="forward_select_from_contact">從通訊錄選擇</string>
     <string name="titlebar_cancle">取消</string>
     <string name="titlebar_close">關閉</string>
     <string name="forward_alert_title">您確定進行轉發嗎?</string>
@@ -542,7 +592,7 @@
     <string name="invite_joined_group">被邀請進群</string>
     <string name="quit_group">退出群組</string>
     <string name="kick_group_tip">被踢出群組</string>
-    <string name="be_group_manager">被設置管理員</string>
+    <string name="be_group_manager">被設定管理員</string>
     <string name="cancle_group_manager">被取消管理員</string>
     <string name="modify_group_name_is">修改群名稱為</string>
     <string name="modify_notice">修改群公告為</string>
@@ -573,7 +623,6 @@
 
     <!-- tuicore-Start -->
     <string name="drafts">[草稿]</string>
-    <string name="open_file_tips">選擇要打開此文件的應用</string>
     <string name="date_year_short">年</string>
     <string name="date_month_short">月</string>
     <string name="date_day_short">天</string>
@@ -584,6 +633,8 @@
     <string name="sure">確定</string>
     <string name="cancel">取消</string>
     <string name="group_apply_click_handle">點擊處理</string>
+    <string name="core_permission_dialog_title">授權請求</string>
+    <string name="core_permission_dialog_positive_setting_text">設定</string>
     <string name="text_read_unlock">解鎖訊息>></string>
     <string name="text_message">收到一則訊息</string>
     <string name="im_evaluation_text1">你對Ta的印象是？</string>
@@ -593,7 +644,7 @@
     <string name="default_message_content3">傳送了一則訊息！</string>
     <string name="custom_gift_right_title">收到禮物</string>
     <string name="custom_gift_left_title">禮物</string>
-    <string name="text_message2">回復對方即可得到收入喔！</string>
+    <string name="text_message2">回復對方即可得到獎勵喔！</string>
     <string name="audio_in_call">語音通話中，無法使用此功能</string>
     <string name="dl_tmp_default_text">當前版本暫不支持該類型消息，\n請升級至最新版本查看\n立即升級>></string>
     <string name="dl_tmp_default_text2">立即升級>></string>
@@ -903,6 +954,7 @@
     <string name="playfun_tab_male_1">附近</string>
     <string name="playfun_tab_male_2">VIP</string>
     <string name="playfun_tab_male_3">活躍</string>
+    <string name="playfun_tab_male_3_audit">熱門</string>
     <string name="playfun_tab_message_1">聊天</string>
     <string name="playfun_tab_message_2">官方訊息</string>
     <string name="playfun_tab_message_3">常聯繫</string>
@@ -1021,7 +1073,7 @@
     <string name="playfun_fragment_certification_female_chat_man">兌換資格</string>
     <string name="playfun_fragment_certification_female_sing_man">報名男士活動</string>
     <string name="playfun_fragment_certification_female_read_phone">紅包照片</string>
-    <string name="playfun_fragment_certification_female_charge_phone">鑽石相冊</string>
+    <string name="playfun_fragment_certification_female_charge_phone">收費相冊</string>
     <string name="playfun_start_certification">開始</string>
     <string name="playfun_fragment_certification_male_one">通過臉部辨識進行真人認證</string>
     <string name="playfun_fragment_certification_male_two">通過認證後可免費報名女士活動</string>
@@ -1036,7 +1088,7 @@
     <string name="playfun_fragment_choose_program_site_title">請選擇活動地點</string>
     <string name="playfun_fragment_custom_chat_input_title">留言</string>
     <string name="playfun_fragment_coin_explain_one">你可以通過儲值等途\n徑獲得鑽石。</string>
-    <string name="playfun_fragment_coin_explain_two">鑽石可用於私訊、語音、視訊和送禮。</string>
+    <string name="playfun_fragment_coin_explain_two">鑽石可用於與心儀的她私訊、語音、視訊和送禮。</string>
     <string name="playfun_fragment_coin_jewel_numble">鑽石</string>
     <string name="playfun_chat_redpackage_detail_desc">“ %s ”</string>
     <string name="playfun_empty_state_no_data">沒有數據</string>
@@ -1076,7 +1128,7 @@
     <string name="playfun_fragment_face_verify_success_explain_man">你現在可以免費報名男士活動了</string>
     <string name="playfun_fragment_give_list_title">Like</string>
     <string name="playfun_fragment_goddess_certification_explain_one">可進行女神認證，獲得女神標識</string>
-    <string name="playfun_fragment_goddess_certification_explain_two">請上傳妳的照片或影片，你會在12小時內收到審核結果</string>
+    <string name="playfun_fragment_goddess_certification_explain_two">請上傳您的照片或影片，您會在12小時內收到審核結果</string>
     <string name="playfun_fragment_home_on_line">查看在線用戶</string>
     <string name="playfun_fragment_issuance_program_title">動態</string>
     <string name="playfun_address">活動地點</string>
@@ -1086,7 +1138,7 @@
     <string name="playfun_fragment_message_main_setting">推送設定</string>
     <string name="playfun_my_program_no_show">暫時沒有活動記錄</string>
     <string name="playfun_my_trends_no_issuance">暫時沒有動態記錄</string>
-    <string name="playfun_phono_setting_reading_burn">快照（查看後焚毀）</string>
+    <string name="playfun_phono_setting_reading_burn">快照（查看2秒後焚毀）</string>
     <string name="playfun_chat_redpackage_detail_name">%s的紅包</string>
     <string name="playfun_profit_message_title">獎勵通知</string>
     <string name="playfun_program_detail_title">活動詳情</string>
@@ -1135,7 +1187,9 @@
     <string name="playfun_update_face_explain_two">你的樣子要與上一次驗證相似！</string>
     <string name="playfun_update_face_record">更新臉部記錄</string>
     <string name="playfun_your_photo">你的照片</string>
-    <string name="playfun_upload_photo_explain">1.請上傳1張正臉照片\n2.保證照片五官清晰\n3.我們嚴格保護您的信息</string>
+    <string name="playfun_upload_photo_explain">1. 請上傳1張正臉照片\n
+        2. 保證照片五官清晰\n
+        3. 我們嚴格保護您的信息</string>
     <string name="playfun_wallet_title">錢包</string>
     <string name="playfun_end_sign_up_close">結束</string>
     <string name="playfun_reject">拒絕</string>
@@ -1159,7 +1213,7 @@
     <string name="playfun_insufficient_diamonds">抱歉，你的鑽石不足</string>
     <string name="playfun_top_up_to_pay">請儲值後再完成支付</string>
     <string name="playfun_he_true_evaluation">他的真實評價</string>
-    <string name="playfun_your_true_evaluation">你的真實評價</string>
+    <string name="playfun_your_true_evaluation">我的真實評價</string>
     <string name="playfun_model_please_input_explain_female">請輸入用戶昵稱/職業進行搜尋</string>
     <string name="playfun_model_please_input_explain_male">請輸入用戶昵稱/職業進行搜尋</string>
     <string name="playfun_name_nust">昵稱為必填項</string>
@@ -1236,7 +1290,7 @@
     <string name="playfun_certified_man">VIP男士</string>
     <string name="playfun_lady">女士</string>
     <string name="playfun_man">男士</string>
-    <string name="playfun_mine_contrnt_one">%s需要解鎖才能查看你的相冊，解鎖鑽石由你定；%s可以消耗壹次查看機會解鎖你的相冊。</string>
+    <string name="playfun_mine_contrnt_one">%s需要付費解鎖才能查看你的相冊，費用由你定；%s可以消耗壹次查看機會解鎖你的相冊。</string>
     <string name="playfun_mine_contrnt_two">所有%s都必須發照片讓你認證身份後才能瀏覽你的主頁，確定嗎？</string>
     <string name="playfun_setting_red_video">設定紅包影片</string>
     <string name="playfun_public_open">公開</string>
@@ -1332,7 +1386,7 @@
     <string name="playfun_month_ago">%d月前</string>
     <string name="playfun_year_ago">%d年前</string>
     <string name="playfun_please_input">請輸入</string>
-    <string name="playfun_amount">數額</string>
+    <string name="playfun_amount">數值</string>
     <string name="playfun_withdraw">兌換</string>
     <string name="playfun_you_receive_red_envelope_on_that_chat">每當你在聊天頁面收到紅包:</string>
     <string name="playfun_authentication_privilege">認證特權</string>
@@ -1416,7 +1470,7 @@
     <string name="playfun_x_coin">%s個</string>
     <string name="playfun_pay_success">支付成功</string>
     <string name="playfun_dialog_title_apply_withdraw">兌換申請</string>
-    <string name="playfun_dialog_content_apply_withdraw">你有%s個鑽石可兌換水晶%s，兌換後剩餘%s個鑽石。確定申請兌換嗎？</string>
+    <string name="playfun_dialog_content_apply_withdraw">你有%s個鑽石可兌換現金%s，兌換後剩餘%s個鑽石。確定申請兌換嗎？</string>
     <string name="playfun_dialog_title_withdraw_complete">兌換申請已提交</string>
     <string name="playfun_dialog_content_withdraw_complete">我們將在2個工作日內向你的PayPal賬號轉賬。</string>
     <string name="playfun_setting_terms_of_service">服務條款</string>
@@ -1466,8 +1520,8 @@
     <string name="playfun_upgrade_vip">升级VIP尊享特权</string>
     <string name="playfun_end_time">将于%s到期</string>
     <string name="playfun_x_count">%s</string>
-    <string name="playfun_dialog_agree_content">Hi,歡迎來到PlayChat！我們提醒您：\n
-    1） 請遵守《平臺使用規範》和《廣播發布須知》，若發布違規內容（如：色情低俗裸露內容等），PlayChat有權對賬號作出限制權限，甚至凍結賬號處理。\n
+    <string name="playfun_dialog_agree_content">Hi,歡迎！我們提醒您：\n
+    1） 請遵守《平臺使用規範》和《廣播發布須知》，若發布違規內容（如：色情低俗裸露內容等），平臺有權對賬號作出限制權限，甚至凍結賬號處理。\n
     2） 在使用平臺過程中 ，若遇到任何問題需要幫助或者提供寶貴意見，請在個人中心—聯系客服專員，進行處理。</string>
     <string name="playfun_recharge_coin_success">儲值成功</string>
     <string name="playfun_recharge_coin_success2">兌換?</string>
@@ -1565,13 +1619,15 @@
     <string name="playfun_error_google_22">重新連接時連接超時</string>
     <string name="playfun_error_google_12500">升級最新的google play 服務才可以使用</string>
     <string name="playfun_please_select_location">請選擇城市</string>
-    <string name="playfun_user_message_tag1">通過商店加入 PlayChat</string>
-    <string name="playfun_user_message_tag2">通過邀請碼加入 PlayChat</string>
+
+    <string name="playfun_user_message_tag1">通過商店加入平台</string>
+    <string name="playfun_user_message_tag2">通過邀請碼加入平台</string>
     <string name="playfun_alert_invite_write_title">為了提供最可信的交友環境，我們將審查您的詳細信息並保密</string>
+
     <string name="playfun_dialog_coin_pay_user_detail_title">購買次數</string>
     <string name="playfun_reg_user_sex_error">請先選擇性別</string>
     <string name="playfun_reg_user_dating_ok">開始活動</string>
-    <string name="playfun_user_proflt">Поздравляю с усовершенствованием данных</string>
+    <string name="playfun_user_proflt">恭喜！ 您已完成您的個人檔案。</string>
     <string name="playfun_user_proflt1">10鑽石已放入你的錢包</string>
     <string name="playfun_mine_trace_live">已追蹤</string>
     <string name="playfun_mine_trace_live2">追蹤</string>
@@ -1644,7 +1700,7 @@
     <string name="playfun_address_delete_title">確認刪除地址？</string>
     <string name="playfun_address_detail">詳細地址</string>
     <string name="playfun_address_detail_hint">街道、房屋、門牌號等。</string>
-    <string name="playfun_address_default">設置為默認地址</string>
+    <string name="playfun_address_default">設定為默認地址</string>
     <string name="playfun_address_list">郵寄地址</string>
     <string name="playfun_address_edit1">默認地址</string>
     <string name="playfun_address_edit2">使用</string>
@@ -1684,7 +1740,7 @@
     <string name="playfun_tape_audio_error_text">錄製時長不可小於5秒</string>
     <string name="playfun_my_all_broadcast_empty">你還沒發佈哦，趕快來一發吧！</string>
     <string name="playfun_alert_audio_btn_text">獲取更多積分</string>
-    <string name="playfun_regis_completed_btn_text">馬上去聊天獲取獎勵</string>
+    <string name="playfun_regis_completed_btn_text">馬上去聊天得獎勵</string>
     <string name="playfun_cancel_zuizong">取消追蹤</string>
     <string name="playfun_cancel_zuizong_2">已取消追蹤</string>
     <string name="playfun_cancel_zuizong_3">追蹤成功</string>
@@ -1772,8 +1828,8 @@
     <string name="playfun_fragment_edit_profile_gender">性別</string>
     <string name="playfun_fragment_edit_profile_male">男性</string>
     <string name="playfun_fragment_edit_profile_female">女性</string>
-    <string name="playfun_chat_detail_tool_bar_title">輸入PlayChat邀請碼</string>
-    <string name="playfun_homt_main_lication_title">PlayChat 無法在未啟用位置服務的情況下計算您與其他用戶之間的距離</string>
+    <string name="playfun_chat_detail_tool_bar_title">輸入邀請碼</string>
+    <string name="playfun_homt_main_lication_title">平台無法在未啟用位置服務的情況下計算您與其他用戶之間的距離</string>
     <string name="playfun_message_hint_all">Hi，在結交新朋友前，我們溫馨提醒您：\n
 1） 請遵守《平臺使用規範》和《廣播發佈須知》，若發佈違規內容（如：色情低俗裸露內容等），平臺有權對帳號作出限制許可權，甚至凍結帳號處理。\n
 2） 在使用平臺過程中 ，若遇到任何問題需要幫助或者提供寶貴意見，請在個人中心—聯繫人工客服，進行處理。</string>
@@ -1821,7 +1877,7 @@
     <string name="playfun_coin_custom_text">鑽石稍後到賬！</string>
     <string name="playfun_coustom_time_picker_text">活動時間衹能選擇一周內</string>
     <string name="playfun_fragment_issuance_program_explain">若發佈裸露低俗等違規照片，平台將做封號處置。</string>
-    <string name="auth_external_login_facebook">Facebook</string>
+    <string name="auth_external_login_facebook">FaceBook</string>
     <string name="auth_external_login_google">Google</string>
     <string name="auth_external_login_line">Line</string>
     <string name="auth_external_login_vk">VK</string>
@@ -1895,7 +1951,7 @@
     <string name="playfun_delet_banned_account">一鍵刪除被封賬號</string>
     <string name="playfun_del_banned_account_content">確認一鍵刪除與所有已封禁用戶的聊天？</string>
     <string name="playfun_txt_exchange_apply_game_coin">兌換申請</string>
-    <string name="playfun_txt_diamond_exchange">兌換</string>
+    <string name="playfun_txt_diamond_exchange">鑽石兌換</string>
     <string name="playfun_crystal_details_text">水晶明細</string>
     <string name="playfun_recharge_text">储值</string>
     <string name="playfun_smart_header_text">青春最好的度過方式就是要和朋友們在一起</string>
@@ -1919,10 +1975,10 @@
     <string name="playfun_mine_wallet">錢包</string>
     <string name="playfun_mine_my_visitors_man">誰看過我</string>
     <string name="fragment_perfect_hint">未滿18歲不可註冊</string>
-    <string name="setting_photo_cover_hint">可將其設置為通話封面</string>
-    <string name="playfun_setting_text">設置</string>
+    <string name="setting_photo_cover_hint">可將其設定為通話封面</string>
+    <string name="playfun_setting_text">設定</string>
     <string name="playfun_phone_cover_text">通話封面</string>
-    <string name="playfun_photo_cover_content_text">1、您可以設置一張圖片或影片作為您的通話封面\n2、該照片、影片被刪除後，已設置的通話封面會被取消</string>
+    <string name="playfun_photo_cover_content_text">1、您可以設定一張圖片或影片作為您的通話封面\n2、該照片、影片被刪除後，已設定的通話封面會被取消</string>
     <string name="playfun_points_balance">積分餘額</string>
     <string name="playfun_task_center">任務中心</string>
     <string name="playfun_lucky_bag">天天福袋</string>
@@ -2007,7 +2063,7 @@
     <string name="task_fragment_bonus_dialog_9">請在“兌換紀錄”，填寫收穫地址</string>
     <string name="task_fragment_bonus_dialog_10">免費VIP 7天後，若未取消，將以$990/月續訂</string>
     <string name="task_fragment_bonus_dialog_11">僅限非VIP兌換</string>
-    <string name="task_fragment_bonus_dialog_12">僅限非VIP男用戶兌換</string>
+    <string name="task_fragment_bonus_dialog_12">Redemption is restricted to non-VIP male users</string>
     <string name="task_fragment_bonus_dialog_13">明日再來簽到可得更多獎勵</string>
     <string name="task_fragment_bonus_dialog_14">恭喜獲得積分翻倍獎勵</string>
 
@@ -2084,9 +2140,10 @@
     <string name="server_exception">伺服器异常</string>
     <string name="radio_daily_atendance_day_text">签到成功，积分+10</string>
 
+
     <string name="playchat_choose_area_title">地區</string>
     <string name="playfun_contact_empty_text">暫無常聯繫，快去聊天吧</string>
-    <string name="playfun_contact_text1">設置常聯繫成功</string>
+    <string name="playfun_contact_text1">設定常聯繫成功</string>
     <string name="playfun_contact_text2">已取消常聯繫</string>
     <string name="playfun_mine_title_btn_exclusive">專屬招呼</string>
     <string name="playfun_mine_title_my_exclusive">我的專屬招呼</string>
@@ -2095,9 +2152,13 @@
     <string name="playfun_audio_chat_up">語音招呼</string>
     <string name="playfun_text_chat_up_hint">好的搭訕語更能獲得回復</string>
     <string name="playfun_text_accost_number_of_fonts">%s/40</string>
+    <string name="playfun_coinpusher_text_5">購買成功</string>
+    <string name="playfun_coinpusher_text_6">兌換成功</string>
+    <string name="playfun_coinpusher_text_7">兌換失敗</string>
+
     <string name="playfun_text_accost_tips">請輸入搭訕語</string>
-    <string name="playfun_text_accost_tips2">搭訕語含有不當內容，請重新設置</string>
-    <string name="playfun_text_accost_tips3">搭訕語設置成功</string>
+    <string name="playfun_text_accost_tips2">搭訕語含有不當內容，請重新設定</string>
+    <string name="playfun_text_accost_tips3">搭訕語設定成功</string>
     <string name="playfun_audio_accost_tips2">搭訕語音设置成功</string>
     <string name="playfun_audio_accost_long_click">長按錄音</string>
     <string name="playfun_audio_accost_recording">錄製中</string>
@@ -2105,7 +2166,7 @@
     <string name="playfun_deadline_is_up">期限至：\n%s</string>
     <string name="playfun_buy_now">立即購買</string>
     <string name="playfun_continue_to_now">繼續購買</string>
-    <string name="playfun_vip_service_tips">自動訂閱，隨時取消。\n購買訂閱的費用將從您的Google帳戶收取，並意味著您同意我們的用戶協議及隱私政策。可以隨時在設置中管理或取消自動訂閱。</string>
+    <string name="playfun_vip_service_tips">自動訂閱，隨時取消。\n購買訂閱的費用將從您的Google帳戶收取，並意味著您同意我們的用戶協議及隱私政策。可以隨時在設定中管理或取消自動訂閱。</string>
     <string name="playfun_nonactivated">未開通</string>
     <string name="playfun_reward">獎勵</string>
     <string name="playfun_reward_tips">明日登陸可得%s鑽石、 視訊卡*%s</string>
@@ -2135,26 +2196,64 @@
     <string name="playfun_vip_ratain_title">確認放棄會員專享權益嗎？</string>
     <string name="playfun_vip_retain_give_up">放棄</string>
     <string name="playfun_vip_tips_privilege">特權</string>
+    <string name="playfun_coinpusher_hint_retain">正在進行投幣，此時退出遊戲，投幣將失效\n確認退出遊戲嗎？</string>
+    <string name="playfun_coinpusher_text_playing">投幣</string>
+    <string name="playfun_coinpusher_coin_text_reward">獲得金幣 %s 枚</string>
+    <string name="playfun_coinpusher_hint_retain2">金幣獎勵正在發放，此時退出遊戲，獎勵將丟失\n確認退出遊戲嗎？</string>
+    <string name="playfun_coinpusher_room_empty_text">當前沒有可用的機器</string>
+    <string name="playfun_coinpusher_error_text1">加載失敗，請重試 </string>
+    <string name="playfun_refresh">刷新</string>
+    <string name="playfun_coinpusher_game_state_text">搖擺啟停</string>
+    <string name="playfun_coinpusher_game_text_2">%s 金幣/次</string>
 
+    <string name="playfun_perfect_tips">建議上傳本人真實照片</string>
+    <string name="playfun_perfect_tips_age">年齡</string>
+    <string name="playfun_perfect_age">18歲</string>
     <string name="playfun_coinpusher_hint_title">歡樂推幣機</string>
     <string name="playfun_coinpusher_text_30">您30s內沒有投幣，已自動退出</string>
     <string name="playfun_purchase_text">購買</string>
     <string name="playfun_capsule_tab">寶盒</string>
     <string name="playfun_coinpusher_text_1">熱玩</string>
     <string name="playfun_coinpusher_text_2">空閒</string>
-    <string name="playfun_coinpusher_text_3">%s/次</string>
-    <string name="playfun_coinpusher_hint_retain">正在進行投幣，此時退出遊戲，投幣將失\n效。確認退出遊戲嗎？</string>
-    <string name="playfun_coinpusher_text_playing">投幣</string>
-    <string name="playfun_coinpusher_coin_text_reward">獲得金幣%s枚</string>
-    <string name="playfun_coinpusher_hint_retain2">金幣獎勵正在發放，此時退出遊戲，獎勵\n將丟失。確認退出遊戲嗎？</string>
-    <string name="playfun_coinpusher_room_empty_text">當前沒有可用的機器</string>
-    <string name="playfun_coinpusher_error_text1">加載失敗，請重試 </string>
-    <string name="playfun_refresh">刷新</string>
-    <string name="playfun_coinpusher_game_state_text">搖擺啟停</string>
-    <string name="playfun_coinpusher_game_text_2">%s金幣/次</string>
+    <string name="playfun_coinpusher_text_3">%s /次</string>
+    <string name="playfun_coinpusher_text_4"><![CDATA[已有金幣 <font color=\'#FF1579\' size=\'24\'>%s</font>]]></string>
+    <string name="playfun_coinpusher_text_downtime">將在%ss後退出遊戲，請投幣續時</string>
+    <string name="playfun_duplicate_nickname_tips">輸入的暱稱已被佔用，推薦使用 %s</string>
+    <string name="fragment_perfect_reg_hint3">請選擇真實性別</string>
+    <string name="playfun_last_login">上次登入</string>
+    <string name="playfun_mine_allow_video">允許視訊</string>
+    <string name="playfun_mine_allow_audio">允許語音</string>
+    <string name="playfun_mine_ban_audio_tips">其他用戶將無法對您發起語音通話</string>
+    <string name="playfun_mine_ban_video_tips">其他用戶將無法對您發起視訊通話</string>
+    <string name="playfun_dialog_title_tips">與她聊得愉快嗎？</string>
+    <string name="playfun_evaluation_not_happy">不愉快</string>
+    <string name="playfun_evaluation_happy">愉快</string>
+    <string name="playfun_activated_video">已開啟視訊開關</string>
+    <string name="playfun_activated_audio">已開啟語音開關</string>
     <string name="playfun_text_dislike">不喜歡</string>
     <string name="playfun_text_like">喜歡</string>
-    <string name="playfun_text_disable_the_deadline">禁用期限至：%s</string>
-    <string name="playfun_text_set_unlock_price">設置解鎖價格</string>
+    <string name="playfun_text_disable_the_deadline">已被禁用此功能，禁用期限至：%s</string>
+    <string name="playfun_text_set_unlock_price">設定解鎖價格</string>
+    <string name="playfun_recharge_text1">剩余9999.00水晶</string>
+    <string name="playfun_text_google_play">google play支付</string>
+    <string name="playfun_account_text_cancelled">已註銷帳號</string>
+    <string name="playfun_task_center_text_available">當前可用</string>
+    <string name="playfun_inputview_text1">數據加載異常，請從新打開界面</string>
+    <string name="playfun_certification_title">真人认证</string>
+    <string name="playfun_im_text_tracking">一鍵追蹤她，不再失聯噢 已追蹤</string>
+    <string name="playfun_persession_text_notice_title">檢測到通知權限未開放！</string>
+    <string name="playfun_persession_text_notice_content">如不開放權限會收不到通知喔！</string>
+    <string name="playfun_share_vip_day7_text1">7天VIP免費試用</string>
+    <string name="playfun_share_vip_day7_text2">免費發佈動態</string>
+    <string name="playfun_share_vip_day7_text3">免費訂閱</string>
+    <string name="playfun_share_vip_day7_text4">用戶可免費獲得7天試用，試用期結束後，將以$990/月的價格續訂</string>
+    <string name="playfun_share_vip_day7_text5">你的邀請人</string>
+    <string name="playfun_share_vip_day7_text6">輸入邀請碼</string>
+    <string name="playfun_share_vip_day7_text8">不能填寫自己的邀請碼</string>
+    <string name="playfun_act_text_video_perset">美顏設定</string>
+    <string name="playfun_update_version_text1">檢測到新的版本</string>
+    <string name="playfun_update_version_text2">立即升級</string>
+    <string name="playfun_update_version_text3">是否升級</string>
+    <string name="playfun_update_version_text4">忽略此版本</string>
     <!--PlayFun-APP-END-->
 </resources>

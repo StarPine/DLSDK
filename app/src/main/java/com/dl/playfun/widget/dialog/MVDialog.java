@@ -387,69 +387,6 @@ public class MVDialog {
     }
 
     /**
-     * 获取日期day dialog
-     *
-     * @return
-     */
-    public static Dialog getDayDialog(Context context, ChooseDay chooseDay) {
-        final int[] dayStr = new int[3];
-        Dialog bottomDialog = new Dialog(context, R.style.BottomDialog);
-        View contentView = LayoutInflater.from(context).inflate(R.layout.dialog_day_choose, null);
-        bottomDialog.setContentView(contentView);
-        ViewGroup.LayoutParams layoutParams = contentView.getLayoutParams();
-        layoutParams.width = context.getResources().getDisplayMetrics().widthPixels - (context.getResources().getDisplayMetrics().widthPixels / 5);
-        contentView.setLayoutParams(layoutParams);
-        bottomDialog.getWindow().setGravity(Gravity.CENTER);
-        bottomDialog.getWindow().setWindowAnimations(R.style.BottomDialog_Animation);
-        CustomCalendarView customCalendarView = contentView.findViewById(R.id.cameraView);
-        TextView tvYear = contentView.findViewById(R.id.tv_year);
-        TextView tvDay = contentView.findViewById(R.id.tv_day);
-        dayStr[0] = DateUtil.getYear();
-        dayStr[1] = DateUtil.getMonth();
-        dayStr[2] = DateUtil.getCurrentMonthDay();
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(dayStr[0], dayStr[1] - 1, dayStr[2] - 1);
-        int weekeng = calendar.get(Calendar.DAY_OF_WEEK);
-        tvDay.setText(dayStr[1] + context.getResources().getString(R.string.playfun_month) + dayStr[2] + context.getResources().getString(R.string.playfun_daily) + StringUtil.getWeekengString(weekeng, context));
-        customCalendarView.setListener(new CustomCalendarView.OnCalendarClickListener() {
-            @Override
-            public void calendarClick(int year, int month, int day) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(year, month - 1, day - 1);
-                int weekeng = calendar.get(Calendar.DAY_OF_WEEK);
-                tvYear.setText(year + context.getResources().getString(R.string.playfun_year));
-                tvDay.setText(month + context.getResources().getString(R.string.playfun_month) + day + context.getResources().getString(R.string.playfun_daily) + StringUtil.getWeekengString(weekeng, context));
-                dayStr[0] = year;
-                dayStr[1] = month;
-                dayStr[2] = day;
-            }
-        });
-        contentView.findViewById(R.id.tv_unlimited).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                chooseDay.clickListItem(bottomDialog, context.getString(R.string.playfun_unlimited_time));
-                bottomDialog.dismiss();
-            }
-        });
-        contentView.findViewById(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bottomDialog.dismiss();
-            }
-        });
-        contentView.findViewById(R.id.tv_confirm).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chooseDay.clickListItem(bottomDialog, dayStr[0] + context.getResources().getString(R.string.playfun_year) + dayStr[1] + context.getResources().getString(R.string.playfun_month) + dayStr[2] + context.getResources().getString(R.string.playfun_daily));
-                bottomDialog.dismiss();
-            }
-        });
-
-        return bottomDialog;
-    }
-
-    /**
      * 获取节目时长
      *
      * @return

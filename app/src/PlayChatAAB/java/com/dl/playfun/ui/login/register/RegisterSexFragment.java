@@ -1,16 +1,13 @@
 package com.dl.playfun.ui.login.register;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
@@ -19,8 +16,8 @@ import androidx.lifecycle.ViewModelProviders;
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
+import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.ToastUtils;
-import com.contrarywind.view.WheelView;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
@@ -29,19 +26,11 @@ import com.dl.playfun.databinding.FragmentRegisterSexBinding;
 import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.ui.mine.profile.PerfectProfileViewModel;
 import com.dl.playfun.utils.AutoSizeUtils;
-import com.dl.playfun.utils.DateUtil;
-import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.StringUtil;
-import com.dl.playfun.utils.Utils;
-import com.dl.playfun.widget.dialog.MMAlertDialog;
-import com.dl.playfun.widget.dialog.MVDialog;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 
 /**
@@ -52,7 +41,7 @@ import java.util.Objects;
 public class RegisterSexFragment extends BaseFragment<FragmentRegisterSexBinding, PerfectProfileViewModel>{
     private String avatar;
     private String name;
-    private int age = 18;
+    private int currentAge = 18;
     private final String GIRL_HEAD = "images/avatar/girl.png";
     private final String BOY_HEAD = "images/avatar/boy.png";
 
@@ -126,7 +115,7 @@ public class RegisterSexFragment extends BaseFragment<FragmentRegisterSexBinding
             int day = calendar.get(Calendar.DAY_OF_MONTH);
             String months = month < 10 ? "0" + month : String.valueOf(month);
             String days = day < 10 ? "0" + day : String.valueOf(day);
-            viewModel.UserBirthday.set((calendar.get(Calendar.YEAR) - age) + "-" + months + "-" + days);
+            viewModel.UserBirthday.set((calendar.get(Calendar.YEAR) - currentAge) + "-" + months + "-" + days);
 
             if (StringUtil.isEmpty(avatar)){
                 if (viewModel.UserSex.get() == 1){
@@ -151,39 +140,46 @@ public class RegisterSexFragment extends BaseFragment<FragmentRegisterSexBinding
     //选择年齡
     private void showChooseAge() {// 弹出选择器
         final List<String> options1Items = new ArrayList<>();
-        int posion = 0;
+        int potion = 0;
+        String ageText = "";
+        String localLanguage = StringUtils.getString(R.string.playfun_local_language_val);
+        if(localLanguage.equals("zh")){
+            ageText = StringUtils.getString(R.string.playfun_mine_age);
+        }
         for (int i = 18; i <= 100; i++) {
-            options1Items.add(i+"歲");
-            if (viewModel.userAge.get().equals(i+"歲")) {
-                posion = i -18;
+            if(StringUtil.isEmpty(ageText)){
+                options1Items.add(String.valueOf(i));
+            }else{
+                options1Items.add(String.format(ageText,i));
             }
         }
         OptionsPickerView pvOptions = new OptionsPickerBuilder(this.getContext(), new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
-                age = options1 + 18;
+                //当前options1 第一个等于=0  默认+18岁
+                currentAge = options1 + 18;
                 viewModel.userAge.set(options1Items.get(options1));
             }
         })
-                .setCancelText(getString(R.string.playfun_cancel))//取消按钮文字
-                .setSubmitText(getString(R.string.playfun_confirm))//确认按钮文字
-                .setContentTextSize(14)//滚轮文字大小
-                .setSubCalSize(14)
-                .setTitleSize(14)//标题文字大小
-                .setTitleText(getString(R.string.playfun_perfect_tips_age))//标题文字
-                .setOutSideCancelable(true)//点击屏幕，点在控件外部范围时，是否取消显示
-                .setTitleColor(getResources().getColor(R.color.gray_dark))//标题文字颜色
-                .setSubmitColor(getResources().getColor(R.color.purple))//确定按钮文字颜色
-                .setCancelColor(getResources().getColor(R.color.purple))//取消按钮文字颜色
-                .setTextColorCenter(getResources().getColor(R.color.purple))//设置选中项的颜色
-                .setTextColorOut(getResources().getColor(R.color.gray_light))//设置没有被选中项的颜色
-                .setTitleBgColor(0xffffffff)//标题背景颜色 Night mode
-                .setBgColor(0xffffffff)//滚轮背景颜色 Night mode
-                .setItemVisibleCount(5)//设置最大可见数目
-                .setLineSpacingMultiplier(2.8f)
-                .setSelectOptions(posion)  //设置默认选中项
-                .isDialog(true)//f是否显示为对话框样式
-                .build();
+        .setCancelText(getString(R.string.playfun_cancel))//取消按钮文字
+        .setSubmitText(getString(R.string.playfun_confirm))//确认按钮文字
+        .setContentTextSize(14)//滚轮文字大小
+        .setSubCalSize(14)
+        .setTitleSize(14)//标题文字大小
+        .setTitleText(getString(R.string.playfun_perfect_tips_age))//标题文字
+        .setOutSideCancelable(true)//点击屏幕，点在控件外部范围时，是否取消显示
+        .setTitleColor(getResources().getColor(R.color.gray_dark))//标题文字颜色
+        .setSubmitColor(getResources().getColor(R.color.purple))//确定按钮文字颜色
+        .setCancelColor(getResources().getColor(R.color.purple))//取消按钮文字颜色
+        .setTextColorCenter(getResources().getColor(R.color.purple))//设置选中项的颜色
+        .setTextColorOut(getResources().getColor(R.color.gray_light))//设置没有被选中项的颜色
+        .setTitleBgColor(0xffffffff)//标题背景颜色 Night mode
+        .setBgColor(0xffffffff)//滚轮背景颜色 Night mode
+        .setItemVisibleCount(5)//设置最大可见数目
+        .setLineSpacingMultiplier(2.8f)
+        .setSelectOptions(potion)  //设置默认选中项
+        .isDialog(true)//f是否显示为对话框样式
+        .build();
         pvOptions.setPicker(options1Items);//一级选择器
 
         Dialog mDialog = pvOptions.getDialog();

@@ -35,7 +35,6 @@ import com.dl.playfun.entity.TaskConfigEntity;
 import com.dl.playfun.event.TaskMainTabEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
-import com.dl.playfun.ui.task.record.TaskExchangeRecordFragment;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralDialog;
@@ -261,10 +260,6 @@ public class TaskCenterFragment extends BaseToolbarFragment<TaskCenterFragmentBi
                             @Override
                             public void confirm(Dialog dialog) {
                                 dialog.dismiss();
-                                //跳转到兑换记录
-                                Bundle bundle = new Bundle();
-                                bundle.putInt("sel_idx", 0);
-                                viewModel.start(TaskExchangeRecordFragment.class.getCanonicalName(), bundle);
                             }
                         }).setConfirmTwoOnlick(new TraceDialog.ConfirmTwoOnclick() {
                     @Override

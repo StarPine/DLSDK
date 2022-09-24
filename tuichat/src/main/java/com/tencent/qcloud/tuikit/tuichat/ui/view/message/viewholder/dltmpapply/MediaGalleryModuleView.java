@@ -118,7 +118,7 @@ public class MediaGalleryModuleView extends BaseMessageModuleView {
             if(stateSnapshot){
                 CustomDrawableUtils.generateDrawable(fLTlLayout, Color.parseColor("#717477"),
                         null,8,null,null,8,
-                        null,null,null,null,null);
+                        null,null,null,null,null,null);
             }
             //是否解锁
             if(!cloudCustomDataMediaGalleryEntity.isUnLocked()){
@@ -161,7 +161,7 @@ public class MediaGalleryModuleView extends BaseMessageModuleView {
                 }
                 CustomDrawableUtils.generateDrawable(fLTlLayout, Color.parseColor("#717477"),
                         null,8,null,null,8,
-                        null,null,null,null,null);
+                        null,null,null,null,null,null);
             }else{
                 //隐藏快照标识
                 fLTlLayout.setVisibility(View.GONE);

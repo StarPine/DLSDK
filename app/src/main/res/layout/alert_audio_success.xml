@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/transparent"
     android:gravity="center"
     android:orientation="vertical">
@@ -43,7 +44,7 @@
             android:layout_below="@+id/title_img"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
-            android:text="積分 +10"
+            tools:text="積分 +10"
             android:textColor="#FFFD42D6"
             android:textSize="17sp" />
 

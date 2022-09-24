@@ -47,7 +47,7 @@
                     android:gravity="center"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:text="美顏設置"
+                    android:text="@string/playfun_act_text_video_perset"
                     android:textColor="@color/white"
                     android:textSize="13sp" />
 

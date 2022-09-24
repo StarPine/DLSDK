@@ -4,7 +4,7 @@
     xmlns:binding="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <import type="android.graphics.drawable.GradientDrawable" />
         <import type="android.view.View" />
         <variable
             name="viewModel"
@@ -110,6 +110,7 @@
                     binding:onClickCommand="@{viewModel.settingClick}"
                     android:visibility="@{viewModel.isAdmin ? View.GONE : (viewModel.isPayState ? View.VISIBLE : View.GONE)}"
                     android:layout_gravity="center|top"
+                    binding:drawable_orientation="@{GradientDrawable.Orientation.LEFT_RIGHT}"
                     binding:drawable_cornersRadius="@{22}"
                     binding:drawable_gradient_startColor="@{@color/playfun_shape_radius_start_color}"
                     binding:drawable_gradient_endColor="@{@color/playfun_shape_radius_end_color}"

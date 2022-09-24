@@ -4,12 +4,10 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,15 +18,11 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.blankj.utilcode.constant.PermissionConstants;
 import com.blankj.utilcode.util.GsonUtils;
-import com.blankj.utilcode.util.PermissionUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.dl.playfun.BR;
@@ -39,10 +33,8 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.ActivityWebHomePlayfunBinding;
 import com.dl.playfun.entity.CallingInviteInfo;
-import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.kl.Utils;
 import com.dl.playfun.ui.base.BaseFragment;
-import com.dl.playfun.ui.mine.wallet.recharge.RechargeActivity;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.utils.ChatUtils;
 import com.dl.playfun.widget.action.StatusAction;
@@ -54,8 +46,6 @@ import com.luck.picture.lib.permissions.PermissionChecker;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.tencent.qcloud.tuicore.Status;
-
-import java.util.List;
 
 /**
  * Author: 彭石林

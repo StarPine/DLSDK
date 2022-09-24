@@ -106,7 +106,7 @@ public class SnapshotPhotoDialog extends BaseDialog {
                     checkItemEntity = mediaPriceTmpConfig.getContent().get(0);
                 }
                 binding.tvCoin.setText(checkItemEntity.getCoin());
-                binding.tvMoney.setText("+"+String.valueOf(checkItemEntity.getCoin()));
+                binding.tvMoney.setText("+"+String.valueOf(checkItemEntity.getProfit()));
                 configId = mediaPriceTmpConfig.getConfigId();
 
             }

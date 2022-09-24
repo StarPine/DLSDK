@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxLines="1"
-            android:text="比心吖"
+            tools:text="比心吖"
             android:textColor="#ff333333"
             android:ellipsize="end"
             android:textSize="11sp" />

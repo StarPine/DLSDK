@@ -82,6 +82,7 @@ public class CoinPusherConverInfoEntity {
     }
 
     public class GoldCoinInfo {
+        private int id;
         //礼盒命
         private String name;
         //礼盒图片
@@ -89,6 +90,14 @@ public class CoinPusherConverInfoEntity {
         //价格
         private int coin;
         private List<GoldCoinItem> item;
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
 
         public String getName() {
             return name;

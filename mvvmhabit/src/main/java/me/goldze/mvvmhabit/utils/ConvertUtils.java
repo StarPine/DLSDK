@@ -219,39 +219,6 @@ public final class ConvertUtils {
     }
 
     /**
-     * 毫秒时间戳转合适时间长度
-     *
-     * @param millis    毫秒时间戳
-     *                  <p>小于等于0，返回null</p>
-     * @param precision 精度
-     *                  <ul>
-     *                  <li>precision = 0，返回null</li>
-     *                  <li>precision = 1，返回天</li>
-     *                  <li>precision = 2，返回天和小时</li>
-     *                  <li>precision = 3，返回天、小时和分钟</li>
-     *                  <li>precision = 4，返回天、小时、分钟和秒</li>
-     *                  <li>precision &gt;= 5，返回天、小时、分钟、秒和毫秒</li>
-     *                  </ul>
-     * @return 合适时间长度
-     */
-    @SuppressLint("DefaultLocale")
-    public static String millis2FitTimeSpan(long millis, int precision) {
-        if (millis <= 0 || precision <= 0) return null;
-        StringBuilder sb = new StringBuilder();
-        String[] units = {"天", "小时", "分钟", "秒", "毫秒"};
-        int[] unitLen = {86400000, 3600000, 60000, 1000, 1};
-        precision = Math.min(precision, 5);
-        for (int i = 0; i < precision; i++) {
-            if (millis >= unitLen[i]) {
-                long mode = millis / unitLen[i];
-                millis -= mode * unitLen[i];
-                sb.append(mode).append(units[i]);
-            }
-        }
-        return sb.toString();
-    }
-
-    /**
      * bytes转bits
      *
      * @param bytes 字节数组

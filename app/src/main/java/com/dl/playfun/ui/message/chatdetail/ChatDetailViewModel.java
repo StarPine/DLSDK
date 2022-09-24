@@ -14,7 +14,6 @@ import androidx.databinding.ObservableField;
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.dl.playfun.R;
-import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.Injection;
@@ -37,7 +36,6 @@ import com.dl.playfun.entity.PrivacyEntity;
 import com.dl.playfun.entity.ShowFloatWindowEntity;
 import com.dl.playfun.entity.StatusEntity;
 import com.dl.playfun.entity.TagEntity;
-import com.dl.playfun.entity.TaskRewardReceiveEntity;
 import com.dl.playfun.entity.UserConnMicStatusEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.AddBlackListEvent;
@@ -47,36 +45,21 @@ import com.dl.playfun.event.MineInfoChangeEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.utils.ApiUitl;
-import com.dl.playfun.utils.FileUploadUtils;
 import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.ToastCenterUtils;
-import com.dl.playfun.utils.Utils;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.google.gson.Gson;
-import com.luck.picture.lib.entity.LocalMedia;
-import com.tencent.custom.PhotoGalleryPayEntity;
-import com.tencent.custom.tmp.CustomDlTempMessage;
 import com.tencent.qcloud.tuicore.Status;
-import com.tencent.qcloud.tuicore.custom.CustomConstants;
 import com.tencent.qcloud.tuicore.custom.entity.MediaGalleryEditEntity;
-import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
-import com.tencent.qcloud.tuikit.tuichat.bean.CustomImageMessage;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.event.InsufficientBalanceEvent;
-import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
-import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
 import me.goldze.mvvmhabit.binding.command.BindingAction;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
 import me.goldze.mvvmhabit.bus.RxBus;
@@ -232,32 +215,6 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                 });
     }
 
-    /**
-     * @return void
-     * @Author 彭石林
-     * @Description 查询对方是否为机器人，是否在线
-     * @Date 2021/3/25 18:00
-     * @Phone 16620350375
-     * @email 15616314565@163.com
-     * Param []
-     **/
-    public void loadChatUserDetail(String userId) {
-        model.isOnlineUser(userId)
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .doOnSubscribe(this)
-                .subscribe(new BaseObserver<BaseDataResponse<Map<String, String>>>() {
-                    @Override
-                    public void onSuccess(BaseDataResponse<Map<String, String>> response) {
-                        uc.ChatUserDetailEntity.setValue(response.getData());
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        dismissHUD();
-                    }
-                });
-    }
 
     //获取当前用户数据
     public UserDataEntity getLocalUserDataEntity() {
@@ -356,24 +313,6 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                     public void onComplete() {
                         uc.putPhotoAlbumEntity.setValue(photoAlbumEntity);
 
-                    }
-                });
-    }
-
-    //效验用户是否可以评价
-    public void loadCanEvaluate(Integer userId) {
-        model.evaluateStatus(userId)
-                .doOnSubscribe(this)
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .subscribe(new BaseObserver<BaseDataResponse<StatusEntity>>() {
-                    @Override
-                    public void onSuccess(BaseDataResponse<StatusEntity> response) {
-                        uc.canEvaluate.postValue(response.getData().getStatus() == 1);
-                    }
-                    @Override
-                    public void onError(RequestException e) {
-                        e.printStackTrace();
                     }
                 });
     }
@@ -984,8 +923,6 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<Void> removeEvaluateMessage = new SingleLiveEvent<>();
         //发送礼物失败。充值钻石
         public SingleLiveEvent<Void> sendUserGiftError = new SingleLiveEvent<>();
-        //首次收入弹窗展示
-        public SingleLiveEvent<TaskRewardReceiveEntity> firstImMsgDialog = new SingleLiveEvent<>();
         //追踪成功
         public SingleLiveEvent<String> addLikeSuccess = new SingleLiveEvent<>();
         //播放礼物效果

@@ -36,7 +36,7 @@ public class DialogProgress extends BaseDialog {
         if(flLayout!=null){
             CustomDrawableUtils.generateDrawable(flLayout, getColorFromResource(R.color.black),
                     19,null,null,null,null,
-                    null,null,null,null,49);
+                    null,null,null,null,49,null);
         }
         setCanceledOnTouchOutside(false);
         setCancelable(false);

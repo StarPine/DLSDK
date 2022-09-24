@@ -69,7 +69,6 @@ public class AudioPlayer {
     }
 
     public void stopRecord() {
-        Log.i("starpine", "run: "+ Thread.currentThread().getName());
         stopInternalRecord();
         onRecordCompleted(true);
         mRecordCallback = null;

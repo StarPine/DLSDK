@@ -51,6 +51,7 @@
                 binding:videoUri="@{videoViewModel.srcPath}" />
 
             <LinearLayout
+                android:splitMotionEvents="false"
                 tools:visibility="invisible"
                 android:id="@+id/fl_layout_bottom"
                 android:layout_width="match_parent"

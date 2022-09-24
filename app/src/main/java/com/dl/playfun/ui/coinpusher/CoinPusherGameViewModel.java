@@ -51,11 +51,11 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
     //关闭页面点击
     public BindingCommand<Void> gameCloseView = new BindingCommand<>(()->gameUI.backViewApply.call());
 
-    public BindingCommand playCoinClick = new BindingCommand(() -> {
+    public BindingCommand<Void> playCoinClick = new BindingCommand<>(() -> {
         playingCoinPusherThrowCoin(coinPusherDataInfoEntity.getRoomInfo().getRoomId());
     });
 
-    public BindingCommand playPusherActClick = new BindingCommand(() -> {
+    public BindingCommand<Void> playPusherActClick = new BindingCommand<>(() -> {
         playingCoinPusherAct(coinPusherDataInfoEntity.getRoomInfo().getRoomId());
     });
     //投币
@@ -78,13 +78,28 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
                             totalMoney.set(coinPusherBalanceDataEntity.getTotalGold());
                             gameUI.resetDownTimeEvent.postValue(null);
                         }
+                        gameUI.playingBtnEnable.postValue(true);
+                        gamePlayingState = null;
                     }
 
                     @Override
                     public void onError(RequestException e) {
-                        //越不足
+                        //余额不足
                         if(e.getCode() == 21001){
                             gameUI.payDialogViewEvent.call();
+                            gameUI.playingBtnEnable.postValue(true);
+                            //清除当前投币状态
+                            gamePlayingState = null;
+                        }else if(e.getCode() == 72000){
+                            //中奖--置灰并停止倒计时
+                            gameUI.playingBtnEnable.postValue(false);
+                            //开始落币
+                            gamePlayingState = CustomConstants.CoinPusher.START_WINNING;
+                            gameUI.cancelDownTimeEvent.postValue(null);
+                        }else{
+                            gameUI.playingBtnEnable.postValue(true);
+                            //清除当前投币状态
+                            gamePlayingState = null;
                         }
                         super.onError(e);
                     }
@@ -92,8 +107,6 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
                     @Override
                     public void onComplete() {
                         loadingHide();
-                        gamePlayingState = null;
-                        gameUI.playingBtnEnable.postValue(true);
                     }
                 });
     }
@@ -116,19 +129,7 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
                     }
                 });
     }
-    //结束游戏
-    public void playingCoinPusherClose(Integer roomId){
-        model.playingCoinPusherClose(roomId)
-                .doOnSubscribe(this)
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .subscribe(new BaseObserver<BaseResponse>() {
-                    @Override
-                    public void onSuccess(BaseResponse baseResponse) {
 
-                    }
-                });
-    }
 
     //查询用户当前余额
     public void qryUserGameBalance(){
@@ -169,7 +170,7 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
         //关闭进度条Loading显示
         public SingleLiveEvent<Void> loadingHide = new SingleLiveEvent<>();
         //toast弹窗居中
-        public SingleLiveEvent<String> toastCenter = new SingleLiveEvent<>();
+        public SingleLiveEvent<CoinPusherGamePlayingEvent> toastCenter = new SingleLiveEvent<>();
         //禁止投币按钮操作
         public SingleLiveEvent<Boolean> playingBtnEnable = new SingleLiveEvent<>();
         //返回上一页
@@ -205,10 +206,8 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
                                 gameUI.playingBtnEnable.postValue(true);
                                 break;
                             case CustomConstants.CoinPusher.DROP_COINS:
-                                gamePlayingState = null;
-                                //中奖落币
-                                String textContent = StringUtils.getString(R.string.playfun_coinpusher_coin_text_reward);
-                                gameUI.toastCenter.postValue(String.format(textContent, coinPusherGamePlayingEvent.getGoldNumber()));
+                                //gamePlayingState = null;
+                                gameUI.toastCenter.postValue(coinPusherGamePlayingEvent);
                                 break;
                         }
                     }

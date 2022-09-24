@@ -178,7 +178,7 @@ public class CropMediaActivity extends Activity {
                                 if (pfd != null) {
                                     Bitmap bitmap = BitmapFactory.decodeFileDescriptor(pfd.getFileDescriptor());
                                     if (bitmap != null && (bitmap.getHeight() > 3840 || bitmap.getWidth() > 3840)) {
-                                        ToastUtils.show(CropMediaActivity.this, "原尺寸輸出時，圖片寬高不能超過3840");
+                                        ToastUtils.show(CropMediaActivity.this, getString(R.string.alivc_crop_video_tip_error4));
                                         return;
                                     }
                                 }

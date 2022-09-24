@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -105,7 +106,10 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
         super.onDestroy();
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
         AutoSizeUtils.closeAdapt(getResources());
-        stopTimer();
+        if (downTimer != null) {
+            downTimer.cancel();
+            downTimer = null;
+        }
         GlideProgressManager.getInstance().removeGlideProgressListener(glideProgressListener);
     }
 
@@ -138,6 +142,7 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
         viewModel.mediaGalleryEditEntity = mediaGalleryEditEntity;
         GlideProgressManager.getInstance().setGlideProgressListener(glideProgressListener);
         if(mediaGalleryEditEntity!=null){
+            Log.e(TAG,"当前照片详细信息为："+mediaGalleryEditEntity.toString());
             srcPath = StringUtil.getFullImageUrl(mediaGalleryEditEntity.getSrcPath());
             //本地资源存在
             if(!TextUtils.isEmpty(mediaGalleryEditEntity.getAndroidLocalSrcPath())){
@@ -163,6 +168,13 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
                         if(!mediaGalleryEditEntity.isReadLook()){
                             viewModel.snapshotLockState.set(true);
                         }
+                        //不是自己发送
+                        if(!mediaGalleryEditEntity.isSelfSend()){
+                            //付费照片才查看评价
+                            if(mediaGalleryEditEntity.isStatePay() && mediaGalleryEditEntity.isReadLook()){
+                                viewModel.mediaGalleryEvaluationQry(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId());
+                            }
+                        }
                     }
                 });
             }else{
@@ -177,20 +189,24 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
 
                     @Override
                     public void setResource(boolean imgLong) {
+                        //不是自己发送
+                        if(!mediaGalleryEditEntity.isSelfSend()){
+                            //付费照片才查看评价
+                            if(mediaGalleryEditEntity.isStatePay()){
+                                viewModel.mediaGalleryEvaluationQry(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId());
+                            }
+                        }
                     }
                 });
             }
-            //不是自己发送
+            //进入页面逻辑不是自己发送
             if(!mediaGalleryEditEntity.isSelfSend()){
                 //付费照片才查看评价
                 if(mediaGalleryEditEntity.isStatePay()){
                     //已经解锁
                     if(mediaGalleryEditEntity.isStateUnlockPhoto()){
-                        //快照
-                        if(mediaGalleryEditEntity.isStateSnapshot()){
-
-                        }else{
-                            //查询评价
+                        //不是快照 并且已读 查询评价
+                        if(!mediaGalleryEditEntity.isStateSnapshot() && mediaGalleryEditEntity.isReadLook()){
                             viewModel.mediaGalleryEvaluationQry(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId());
                         }
                     }
@@ -198,24 +214,8 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
                 viewModel.isReadLook.set(mediaGalleryEditEntity.isReadLook());
             }
         }
-        //好评
-        binding.llLike.setOnClickListener(v -> {
-            doubleClick(v);
-//            Integer evaluationType = viewModel.evaluationLikeEvent.getValue();
-//            if(evaluationType !=null){
-//                if(evaluationType == 0 || evaluationType == 1){
-//                    viewModel.mediaGalleryEvaluationPut(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId(),2);
-//                }
-//            }
-        });
-        binding.llNoLike.setOnClickListener(v -> {
-            doubleClick(v);
-//            Integer evaluationType = viewModel.evaluationLikeEvent.getValue();
-//            if(evaluationType !=null && evaluationType == 0){
-//                //差评
-//                viewModel.mediaGalleryEvaluationPut(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId(),1);
-//            }
-        });
+        doubleClick(binding.llLike);
+        doubleClick(binding.llNoLike);
     }
     @SuppressLint("CheckResult")
     public void doubleClick(View view){
@@ -260,12 +260,6 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
 
                 @Override
                 public void setResource(boolean imgLong) {
-                    //是否已经看过
-                    viewModel.isReadLook.set(mediaGalleryEditEntity.isReadLook());
-                    //付费照片才查看评价
-                    if( mediaGalleryEditEntity.isStatePay()){
-                        viewModel.mediaGalleryEvaluationQry(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId());
-                    }
                     viewModel.snapshotLockState.set(false);
                     //图片加载成功开始倒计时
                     startTimer();
@@ -277,26 +271,27 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
             //评价，0未评价，1差评，2好评
             if(state == 1){
                 viewModel.evaluationState.set(true);
-                generateDrawable(binding.llNoLike,null,22,null,null,R.color.playfun_shape_radius_start_color,R.color.playfun_shape_radius_end_color);
-                generateDrawable(binding.llLike,R.color.black,22,R.color.purple_text,1,null,null);
+                generateDrawable(binding.llNoLike,null,22,null,null,R.color.playfun_shape_radius_start_color,R.color.playfun_shape_radius_end_color,GradientDrawable.Orientation.LEFT_RIGHT);
+                generateDrawable(binding.llLike,R.color.black,22,R.color.purple_text,1,null,null,null);
             }else if(state == 2){
-                generateDrawable(binding.llLike,null,22,null,null,R.color.playfun_shape_radius_start_color,R.color.playfun_shape_radius_end_color);
-                generateDrawable(binding.llNoLike,R.color.black,22,R.color.purple_text,1,null,null);
+                generateDrawable(binding.llLike,null,22,null,null,R.color.playfun_shape_radius_start_color,R.color.playfun_shape_radius_end_color,GradientDrawable.Orientation.LEFT_RIGHT);
+                generateDrawable(binding.llNoLike,R.color.black,22,R.color.purple_text,1,null,null,null);
             }else if(state == 0){
                 //没有评价、并且是已经解锁状态
                 if(mediaGalleryEditEntity.isStateUnlockPhoto()){
                     viewModel.evaluationState.set(true);
                 }
-                generateDrawable(binding.llLike,R.color.black,22,R.color.purple_text,1,null,null);
-                generateDrawable(binding.llNoLike,R.color.black,22,R.color.purple_text,1,null,null);
+                generateDrawable(binding.llLike,R.color.black,22,R.color.purple_text,1,null,null,null);
+                generateDrawable(binding.llNoLike,R.color.black,22,R.color.purple_text,1,null,null,null);
             }
         });
     }
 
-    void generateDrawable(View view,Integer drawableColor,Integer drawableCornersRadius,Integer drawableStrokeColor, Integer drawableStrokeWidth,Integer drawableStartColor, Integer drawableEndColor){
+    void generateDrawable(View view,Integer drawableColor,Integer drawableCornersRadius,Integer drawableStrokeColor,
+                          Integer drawableStrokeWidth,Integer drawableStartColor, Integer drawableEndColor,GradientDrawable.Orientation orientation){
         CustomDrawableUtils.generateDrawable(view, getColorFromResource(drawableColor),
                 drawableCornersRadius,null,null,null,null,
-                getColorFromResource(drawableStartColor),getColorFromResource(drawableEndColor),drawableStrokeWidth,getColorFromResource(drawableStrokeColor),null);
+                getColorFromResource(drawableStartColor),getColorFromResource(drawableEndColor),drawableStrokeWidth,getColorFromResource(drawableStrokeColor),null, orientation);
     }
 
     Integer getColorFromResource(Integer resourceId) {
@@ -354,14 +349,18 @@ public class MediaGalleryPhotoPayActivity extends BaseActivity<ActivityMediaGall
             downTimer.cancel();
             downTimer = null;
         }
-        //倒计时补可见
+        //倒计时不可见
         viewModel.snapshotTimeState.set(false);
         //是否已经看过
         viewModel.isReadLook.set(true);
         //查询评价接口失败。不让继续评价
-        if(viewModel.evaluationLikeEvent.getValue()!=null){
-            //评价弹出
-            viewModel.evaluationState.set(false);
+//        if(viewModel.evaluationLikeEvent.getValue()!=null){
+//            //评价弹出
+//            viewModel.evaluationState.set(false);
+//        }
+        //付费照片才查看评价
+        if(mediaGalleryEditEntity.isStatePay()){
+            viewModel.mediaGalleryEvaluationQry(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId());
         }
     }
 

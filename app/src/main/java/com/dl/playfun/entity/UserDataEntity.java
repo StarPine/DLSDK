@@ -5,21 +5,14 @@ import androidx.databinding.Bindable;
 
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
-import com.blankj.utilcode.util.TimeUtils;
 import com.dl.playfun.BR;
-import com.dl.playfun.app.AppContext;
 import com.dl.playfun.data.typeadapter.BooleanTypeAdapter;
-import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.StringUtil;
-import com.dl.playfun.utils.Utils;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.io.Serializable;
 import java.util.List;
-import java.util.Locale;
 
 /**
 * @Desc TODO(用户数据信息+token信息合并)
@@ -28,7 +21,7 @@ import java.util.Locale;
 * @return 
 * @Date 2022/4/4
 */
-public class UserDataEntity extends BaseObservable {
+public class UserDataEntity extends BaseObservable implements Serializable {
     private String token;
     private String userID;
     private String userSig;

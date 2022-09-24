@@ -47,7 +47,6 @@ import com.dl.playfun.entity.MediaGallerySwitchEntity;
 import com.dl.playfun.entity.MediaPayPerConfigEntity;
 import com.dl.playfun.entity.PhotoAlbumEntity;
 import com.dl.playfun.entity.TagEntity;
-import com.dl.playfun.entity.TaskRewardReceiveEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.MessageGiftNewEvent;
 import com.dl.playfun.manager.ConfigManager;
@@ -61,12 +60,10 @@ import com.dl.playfun.ui.message.mediagallery.SnapshotPhotoActivity;
 import com.dl.playfun.ui.message.mediagallery.photo.MediaGalleryPhotoPayActivity;
 import com.dl.playfun.ui.message.mediagallery.video.MediaGalleryVideoPayActivity;
 import com.dl.playfun.ui.mine.myphotoalbum.MyPhotoAlbumFragment;
-import com.dl.playfun.ui.mine.wallet.girl.TwDollarMoneyFragment;
 import com.dl.playfun.ui.mine.webview.WebViewFragment;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.ui.userdetail.report.ReportUserFragment;
 import com.dl.playfun.utils.ApiUitl;
-import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.PictureSelectorUtil;
@@ -522,37 +519,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                 }
 
                 showMoreMenu(userId);
-            }
-        });
-        //首次收入弹窗显示
-        viewModel.uc.firstImMsgDialog.observe(this, new Observer<TaskRewardReceiveEntity>() {
-            @Override
-            public void onChanged(TaskRewardReceiveEntity taskRewardReceiveEntity) {
-                if (taskRewardReceiveEntity != null) {
-                    TraceDialog.getInstance(getContext())
-                            .setConfirmOnlick(new TraceDialog.ConfirmOnclick() {
-                                @Override
-                                public void confirm(Dialog dialog) {
-                                    AppContext.instance().logEvent(AppsFlyerEvent.task_first_profit_toWith);
-                                    dialog.dismiss();
-                                    //女性是否进行过真人认证
-                                    if (!ConfigManager.getInstance().isCertification()) {
-                                        Bundle bundle = new Bundle();
-                                        bundle.putBoolean("dialog_tw_money", true);
-                                        viewModel.start(CertificationFemaleFragment.class.getCanonicalName(), bundle);
-                                    } else {
-                                        viewModel.start(TwDollarMoneyFragment.class.getCanonicalName());
-                                    }
-                                }
-                            })
-                            .setCannelOnclick(new TraceDialog.CannelOnclick() {
-                                @Override
-                                public void cannel(Dialog dialog) {
-                                    dialog.dismiss();
-                                }
-                            })
-                            .AlertTaskMoney(getContext().getDrawable(R.drawable.completed), taskRewardReceiveEntity.getTaskType(), taskRewardReceiveEntity.getTaskName(), taskRewardReceiveEntity.getMsg()).show();
-                }
             }
         });
         //文件上传成功后发送IM消息
@@ -1060,7 +1026,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                 msgModuleInfo.setContentBody(msgBodyInfo);
                 CustomDlTempMessage customDlTempMessage = new CustomDlTempMessage();
                 customDlTempMessage.setContentBody(msgModuleInfo);
-
+                customDlTempMessage.setLanguage(StringUtils.getString(R.string.playfun_local_language));
                 String data = GsonUtils.toJson(customDlTempMessage);
                 TUIMessageBean messageInfo = ChatMessageBuilder.buildCustomMessage(data, null, null);
                 if (messageInfo != null) {

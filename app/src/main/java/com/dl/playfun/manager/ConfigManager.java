@@ -113,7 +113,7 @@ public class ConfigManager {
     */
     public long mediaGallerySnapshotUnLockTime() {
         long snapshotTime = 2;
-        int multiply = 2;
+        int multiply = 3;
         //当前用户信息
         UserDataEntity userDataEntity = getAppRepository().readUserData();
         if(userDataEntity==null){

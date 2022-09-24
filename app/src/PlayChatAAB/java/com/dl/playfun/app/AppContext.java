@@ -25,6 +25,7 @@ import com.appsflyer.deeplink.DeepLinkListener;
 import com.appsflyer.deeplink.DeepLinkResult;
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.ObjectUtils;
+import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.Utils;
 import com.bumptech.glide.Glide;
 import com.dl.playfun.BuildConfig;
@@ -558,12 +559,11 @@ public class AppContext extends Application {
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
                 .subscribe(new BaseObserver<BaseDataResponse<ImUserSigEntity>>() {
-
                     @Override
                     public void onSuccess(BaseDataResponse<ImUserSigEntity> response) {
                         ImUserSigEntity data = response.getData();
                         TokenEntity tokenEntity = appRepository.readLoginInfo();
-                        if (data == null || TextUtils.isEmpty(data.getUserSig()) || tokenEntity == null){
+                        if ((data == null || StringUtils.isEmpty(data.getUserSig())) || tokenEntity == null){
                             RxBus.getDefault().post(new LoginExpiredEvent());
                             return;
                         }

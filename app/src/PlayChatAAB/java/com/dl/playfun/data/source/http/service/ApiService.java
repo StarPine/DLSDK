@@ -221,6 +221,7 @@ public interface ApiService {
     * @Date 2022/8/24
     */
     @POST("api/iscan/end")
+    @Headers(RetrofitHeadersConfig.PlayChat_API_URL)
     @FormUrlEncoded
     Observable<BaseResponse> playingCoinPusherClose(@Field("roomId")Integer roomId);
     /**

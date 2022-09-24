@@ -38,7 +38,7 @@ public class PictureSelectorUtil {
                 .theme(R.style.picture_white_style_custom)
                 .imageEngine(GlideEngine.createGlideEngine())
                 .isCompress(true)
-                .compressQuality(100)// 图片压缩后输出质量 0~ 100
+                .compressQuality(85)// 图片压缩后输出质量 0~ 100
                 .synOrAsy(true)
                 .imageSpanCount(IMAGE_SPAN_COUNT)
                 .compressFocusAlpha(true)
@@ -64,6 +64,7 @@ public class PictureSelectorUtil {
                 .theme(R.style.picture_white_style_custom)
                 .imageEngine(GlideEngine.createGlideEngine())
                 .isCompress(true)
+                .compressQuality(85)// 图片压缩后输出质量 0~ 100
                 .isPreviewImage(false)
                 .imageSpanCount(IMAGE_SPAN_COUNT)
                 .compressFocusAlpha(true)
@@ -115,6 +116,7 @@ public class PictureSelectorUtil {
                 .showCropGrid(true)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false
                 .hideBottomControls(false)// 是否显示uCrop工具栏，默认不显示
                 .minimumCompressSize(200)
+                .compressQuality(85)// 图片压缩后输出质量 0~ 100
                 .maxSelectNum(1)
                 .queryMaxFileSize(6)
                 .isPreviewImage(false)

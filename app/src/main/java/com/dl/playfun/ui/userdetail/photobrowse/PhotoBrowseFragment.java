@@ -1,14 +1,10 @@
 package com.dl.playfun.ui.userdetail.photobrowse;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -17,9 +13,7 @@ import com.dl.playfun.R;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.databinding.FragmentPhotoBrowseBinding;
 import com.dl.playfun.entity.AlbumPhotoEntity;
-import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.ui.base.BaseFragment;
-import com.dl.playfun.ui.mine.wallet.recharge.RechargeActivity;
 import com.dl.playfun.widget.coinpaysheet.CoinPaySheet;
 import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;

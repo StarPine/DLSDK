@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:binding="http://schemas.android.com/apk/res-auto">
+    xmlns:binding="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -37,30 +38,14 @@
                 android:text="玩法說明"
                 android:textColor="#43435E"
                 android:textSize="18sp" />
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_lable"
+            <WebView
+                android:layout_marginTop="10dp"
+                android:id="@+id/web_view"
                 android:layout_below="@+id/tv_title"
-                android:includeFontPadding="false"
-                android:layout_marginTop="35dp"
-                android:layout_marginStart="15dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1枚金幣可兌換10鑽石"
-                android:textColor="#ff333333"
-                android:textSize="18sp"
-                />
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_content"
-                android:layout_below="@+id/tv_lable"
-                android:layout_marginTop="12dp"
-                android:layout_marginStart="15dp"
-                android:layout_width="330dp"
-                android:layout_height="60dp"
-                android:lineHeight="20dp"
-                android:text="1枚金幣可兌換10鑽石1枚金幣可兌換10鑽石1枚金幣可兌換10鑽石1枚金幣可兌換10鑽石1枚金幣可兌換10鑽石1枚金幣可兌換10鑽石1枚金幣可兌換10鑽石"
-                android:textColor="#ff333333"
-                android:textSize="11sp"
-                />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
         </RelativeLayout>
     </FrameLayout>
 </layout>

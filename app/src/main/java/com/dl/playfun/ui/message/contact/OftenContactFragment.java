@@ -143,6 +143,10 @@ public class OftenContactFragment extends BaseFragment<FragmentOftenContactBindi
             if (id.trim().contains(AppConfig.CHAT_SERVICE_USER_ID)) {
                 return;
             }
+            //自己判断
+            if(TUILogin.getLoginUser()!=null && id.trim().equals(TUILogin.getLoginUser())){
+                return;
+            }
             viewModel.transUserIM(id,true);
         });
 
@@ -150,6 +154,9 @@ public class OftenContactFragment extends BaseFragment<FragmentOftenContactBindi
 
         binding.conversationLayoutContact.getConversationList().setOnItemClickListener((view, position, messageInfo) -> {
             String id = messageInfo.getId();
+            if(TUILogin.getLoginUser()!=null && id.trim().equals(TUILogin.getLoginUser())){
+                return;
+            }
             if (id.trim().contains(AppConfig.CHAT_SERVICE_USER_ID)) {
                 ChatUtils.startChatActivity(messageInfo,0,viewModel);
             }else{

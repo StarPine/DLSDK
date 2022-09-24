@@ -812,7 +812,7 @@ public class ConversationPresenter {
                             int level = v2TIMUserFullInfo.getLevel();
                             if (level == 6){
                                 needDelCount++;
-                                String conversational = "c2c_" + v2TIMUserFullInfo.getUserID();
+                                String conversational = TUIConstants.TUIConversation.CONVERSATION_C2C_PREFIX + v2TIMUserFullInfo.getUserID();
                                 if(isFriendConversation){
                                     deleteConversation(conversational, loadedFriendshipInfoList);
                                 }else{

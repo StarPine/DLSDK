@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
             android:gravity="center"
-            android:text="已註銷帳號"
+            android:text="@string/playfun_account_text_cancelled"
             android:textColor="#ff2f2f4d"
             android:textSize="16sp" />
 

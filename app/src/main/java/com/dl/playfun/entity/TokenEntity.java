@@ -3,10 +3,12 @@ package com.dl.playfun.entity;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * @author wulei
  */
-public class TokenEntity {
+public class TokenEntity implements Serializable {
 
     private String token;
     private String userID;

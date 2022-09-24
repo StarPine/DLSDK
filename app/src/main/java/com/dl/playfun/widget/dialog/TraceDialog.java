@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -866,48 +865,6 @@ public class TraceDialog {
         return bottomDialog;
     }
 
-
-
-    /**
-     * @Desc TODO(註冊完成弹窗)
-     * @author lsf
-     * @return android.app.Dialog
-     * @Date 2021/12/28
-     */
-    public Dialog newUserRegisComplete(){
-        Dialog dialog = new Dialog(context, R.style.UpdateAppDialog);
-        View contentView = LayoutInflater.from(context).inflate(R.layout.dialog_new_user_regis_completed, null);
-        dialog.setContentView(contentView);
-        ViewGroup.LayoutParams layoutParams = contentView.getLayoutParams();
-        contentView.setLayoutParams(layoutParams);
-        dialog.getWindow().setGravity(Gravity.CENTER);
-        Button confirmBtn = contentView.findViewById(R.id.btn_confirm);
-        confirmBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (confirmOnclick != null) {
-                    confirmOnclick.confirm(dialog);
-                }else{
-                    dialog.dismiss();
-                }
-            }
-        });
-        ImageView iv_dialog_close = contentView.findViewById(R.id.iv_dialog_close);
-        iv_dialog_close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (cannelOnclick != null) {
-                    cannelOnclick.cannel(dialog);
-                } else {
-                    dialog.dismiss();
-                }
-            }
-        });
-
-
-        return dialog;
-    }
-
     /**
      * vip挽留弹框
      * @return
@@ -1273,56 +1230,6 @@ public class TraceDialog {
             }
         });
         animator.start();
-    }
-
-
-    /**
-     * @Desc TODO(首次收益弹窗)
-     * @author 彭石林
-     * @parame [isCard, text, message]
-     * @return android.app.Dialog
-     * @Date 2021/12/11
-     */
-    public Dialog AlertTaskMoney(Drawable drawable,String tip, String text, String message){
-        Dialog bottomDialog = new Dialog(context, R.style.BottomDialog);
-        View contentView = LayoutInflater.from(context).inflate(R.layout.alert_daily_attendance_success2, null);
-        bottomDialog.setContentView(contentView);
-        ViewGroup.LayoutParams layoutParams = contentView.getLayoutParams();
-        contentView.setLayoutParams(layoutParams);
-        bottomDialog.getWindow().setGravity(Gravity.CENTER);
-        bottomDialog.getWindow().setWindowAnimations(R.style.BottomDialog_Animation);
-        TextView tip_tv = contentView.findViewById(R.id.tip_tv);
-        tip_tv.setText(tip);
-        TextView tip_tv2 = contentView.findViewById(R.id.tip_tv2);
-        tip_tv2.setText(text);
-        TextView title_fen = contentView.findViewById(R.id.title_fen);
-        title_fen.setText(message);
-        RelativeLayout relativeLayout = contentView.findViewById(R.id.no_vip_unlock);
-        relativeLayout.setBackground(drawable);
-
-        Button confirmBtn = contentView.findViewById(R.id.btn_confirm);
-        confirmBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (confirmOnclick != null) {
-                    confirmOnclick.confirm(bottomDialog);
-                }else{
-                    bottomDialog.dismiss();
-                }
-            }
-        });
-        ImageView iv_dialog_close = contentView.findViewById(R.id.iv_dialog_close);
-        iv_dialog_close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (cannelOnclick != null) {
-                    cannelOnclick.cannel(bottomDialog);
-                } else {
-                    bottomDialog.dismiss();
-                }
-            }
-        });
-        return bottomDialog;
     }
 
     /**

@@ -1,18 +1,14 @@
 package com.dl.playfun.ui.home;
 
-import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -20,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.blankj.utilcode.util.IntentUtils;
-import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
 import com.dl.playfun.BR;
@@ -30,7 +25,6 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.FragmentHomeMainBinding;
 import com.dl.playfun.entity.CoinPusherDataInfoEntity;
-import com.dl.playfun.entity.CoinPusherRoomInfoEntity;
 import com.dl.playfun.entity.ConfigItemEntity;
 import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.event.LocationChangeEvent;
@@ -42,12 +36,10 @@ import com.dl.playfun.ui.coinpusher.CoinPusherGameActivity;
 import com.dl.playfun.ui.coinpusher.dialog.CoinPusherRoomListDialog;
 import com.dl.playfun.ui.dialog.CityChooseDialog;
 import com.dl.playfun.ui.home.accost.HomeAccostDialog;
-import com.dl.playfun.ui.mine.wallet.recharge.RechargeActivity;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.viewadapter.CustomRefreshHeader;
 import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
-import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.List;
 

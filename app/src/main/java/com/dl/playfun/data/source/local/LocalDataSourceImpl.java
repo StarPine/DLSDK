@@ -2,6 +2,7 @@ package com.dl.playfun.data.source.local;
 
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.ObjectUtils;
+import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.api.AppGameConfig;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.data.source.LocalDataSource;
@@ -348,13 +349,10 @@ public class LocalDataSourceImpl implements LocalDataSource {
     @Override
     public TokenEntity readLoginInfo() {
         String json = kv.decodeString(KEY_LOGIN_INFO);
-        if (json == null) {
-            return null;
-        } else if (json.isEmpty()) {
+        if (StringUtils.isEmpty(json)) {
             return null;
         }
-        TokenEntity tokenEntity = GsonUtils.fromJson(json, TokenEntity.class);
-        return tokenEntity;
+        return GsonUtils.fromJson(json, TokenEntity.class);
     }
 
     @Override

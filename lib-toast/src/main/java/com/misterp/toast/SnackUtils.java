@@ -34,7 +34,7 @@ public class SnackUtils {
     }
 
     public static void showCenterShort(final View view, final String resValue){
-        Snackbar snackbar = Snackbar.make(view,resValue,Snackbar.LENGTH_SHORT);
+        Snackbar snackbar = Snackbar.make(view,"",Snackbar.LENGTH_SHORT);
         // 设置SnackbarView的padding都为0，避免上图中出现黑色边框背景的情况
         snackbar.getView().setPadding(0,0,0,0);
         // 将SnackbarView的背景颜色设置为透明，避免在自定义布局中有圆角或者自适应宽度的时候显示一块黑色背景的情况
@@ -56,7 +56,7 @@ public class SnackUtils {
         mTextView.setText(resValue);
         // 将获取的自定义布局view添加到SnackbarView中
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            snackbar.getView().setElevation(99);
+            snackbar.getView().setElevation(9999);
         }
         // 将获取的自定义布局view添加到SnackbarView中
         snackbarView.addView(toastRoot);

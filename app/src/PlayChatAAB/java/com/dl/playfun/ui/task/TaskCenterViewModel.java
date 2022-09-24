@@ -12,20 +12,17 @@ import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
-import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
-import com.dl.playfun.data.source.http.response.BaseListDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.ApiConfigManagerEntity;
 import com.dl.playfun.entity.BonusGoodsEntity;
 import com.dl.playfun.entity.EjectEntity;
 import com.dl.playfun.entity.EjectSignInEntity;
-import com.dl.playfun.entity.ExchangeIntegraOuterEntity;
 import com.dl.playfun.entity.SystemConfigTaskEntity;
 import com.dl.playfun.entity.TaskAdEntity;
 import com.dl.playfun.entity.TaskConfigEntity;
@@ -33,12 +30,9 @@ import com.dl.playfun.entity.TaskConfigItemEntity;
 import com.dl.playfun.event.ReceiveNewUserRewardEvent;
 import com.dl.playfun.event.RewardRedDotEvent;
 import com.dl.playfun.event.TaskListEvent;
-import com.dl.playfun.event.TaskMainTabEvent;
 import com.dl.playfun.event.TaskTypeStatusEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.mine.invitewebdetail.InviteWebDetailFragment;
-import com.dl.playfun.ui.task.bonus.TaskBonusItemViewModel;
-import com.dl.playfun.ui.task.record.TaskExchangeRecordFragment;
 import com.dl.playfun.ui.task.webview.FukuokaViewFragment;
 import com.dl.playfun.viewmodel.BaseViewModel;
 
@@ -121,15 +115,6 @@ public class TaskCenterViewModel extends BaseViewModel<AppRepository> {
                     start(FukuokaViewFragment.class.getCanonicalName(), bundle);
                 }
             }
-        }
-    });
-    //跳转兑换记录页面
-    public BindingCommand onClickToExchangeRecord = new BindingCommand(new BindingAction() {
-        @Override
-        public void call() {
-            Bundle bundle = new Bundle();
-            bundle.putInt("sel_idx", 0);
-            start(TaskExchangeRecordFragment.class.getCanonicalName(), bundle);
         }
     });
     //点击签到

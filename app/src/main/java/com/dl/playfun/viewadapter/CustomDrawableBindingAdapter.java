@@ -29,7 +29,8 @@ public class CustomDrawableBindingAdapter {
             "drawable_gradient_endColor",
             "drawable_stroke_width",
             "drawable_stroke_color",
-            "drawable_alpha"
+            "drawable_alpha",
+            "drawable_orientation"
     }, requireAll = false)
     public static void generateDrawable(View view,
                                         Integer drawable_color,
@@ -42,7 +43,8 @@ public class CustomDrawableBindingAdapter {
                                         Integer drawable_gradient_endColor,
                                         Integer drawable_stroke_width,
                                         Integer drawable_stroke_color,
-                                        Integer drawable_alpha
+                                        Integer drawable_alpha,
+                                        GradientDrawable.Orientation orientation
     ) {
         final Context mContext = view.getContext();
         GradientDrawable roundRect = new GradientDrawable();
@@ -91,12 +93,34 @@ public class CustomDrawableBindingAdapter {
             colors[1] = drawable_gradient_endColor;
             roundRect.setColors(colors);
         }
+        if(orientation!=null){
+            roundRect.setOrientation(orientation);
+        }
         //设置透明度
         if(drawable_alpha!=null){
             roundRect.setAlpha(drawable_alpha);
         }
         view.setBackground(roundRect);
 
+    }
+
+    public enum Orientation {
+        /** draw the gradient from the top to the bottom */
+        TOP_BOTTOM,
+        /** draw the gradient from the top-right to the bottom-left */
+        TR_BL,
+        /** draw the gradient from the right to the left */
+        RIGHT_LEFT,
+        /** draw the gradient from the bottom-right to the top-left */
+        BR_TL,
+        /** draw the gradient from the bottom to the top */
+        BOTTOM_TOP,
+        /** draw the gradient from the bottom-left to the top-right */
+        BL_TR,
+        /** draw the gradient from the left to the right */
+        LEFT_RIGHT,
+        /** draw the gradient from the top-left to the bottom-right */
+        TL_BR,
     }
 
     /**

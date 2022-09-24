@@ -46,7 +46,7 @@
             android:layout_alignLeft="@+id/gift_title"
             android:layout_marginTop="6dp"
             android:includeFontPadding="false"
-            android:text="[比心吖]  x99"
+            tools:text="[比心吖]  x99"
             android:textColor="#ff9897b3"
             android:textSize="12sp" />
     </RelativeLayout>

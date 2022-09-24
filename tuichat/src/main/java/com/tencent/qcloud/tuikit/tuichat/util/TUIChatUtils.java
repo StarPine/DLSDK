@@ -170,23 +170,6 @@ public class TUIChatUtils {
         return msgType;
     }
 
-    public static String massageType2Extra(String type) {
-        String extra = "";
-        switch (type) {
-            case TUIChatConstants.CoustomMassageType.MESSAGE_GIFT:
-                extra = "[礼物]";
-                break;
-            case TUIChatConstants.CoustomMassageType.MESSAGE_TAG:
-                extra = "[搭讪]";
-                break;
-            case TUIChatConstants.CoustomMassageType.MESSAGE_COUNTDOWN:
-                extra = "[余额不足]}";
-                break;
-
-        }
-        return extra;
-    }
-
     public static String getFullImageUrl(String imgPath) {
         if (imgPath == null) {
             return "";

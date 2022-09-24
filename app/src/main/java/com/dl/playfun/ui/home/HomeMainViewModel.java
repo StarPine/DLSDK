@@ -138,7 +138,12 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
         if(Boolean.TRUE.equals(gender.get())){
             Map<String,Object> map3 = new HashMap<>();
             map3.put("type",5);
-            map3.put("text",StringUtils.getString(R.string.playfun_tab_male_3));
+            //审核坏境=收益开关
+            if(!ConfigManager.getInstance().getTipMoneyShowFlag()){
+                map3.put("text",StringUtils.getString(R.string.playfun_tab_male_3));
+            }else{
+                map3.put("text",StringUtils.getString(R.string.playfun_tab_male_3_audit));
+            }
             HomeMainTabItemViewModel homeMainItemViewModel3 = new HomeMainTabItemViewModel(this,map3,true);
             listData.add(homeMainItemViewModel3);
             Map<String,Object> map1 = new HashMap<>();

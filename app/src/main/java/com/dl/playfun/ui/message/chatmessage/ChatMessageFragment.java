@@ -180,6 +180,9 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
                 if (id.trim().contains(AppConfig.CHAT_SERVICE_USER_ID)) {
                     return;
                 }
+                if(TUILogin.getLoginUser()!=null && id.trim().equals(TUILogin.getLoginUser())){
+                    return;
+                }
                 viewModel.transUserIM(id,true);
             }
         });
@@ -195,6 +198,9 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
             @Override
             public void onItemClick(View view, int position, ConversationInfo messageInfo) {
                 String id = messageInfo.getId();
+                if(TUILogin.getLoginUser()!=null && id.trim().equals(TUILogin.getLoginUser())){
+                    return;
+                }
                 if (id.trim().contains(AppConfig.CHAT_SERVICE_USER_ID)) {
                     ChatUtils.startChatActivity(messageInfo,0,viewModel);
                 }else{

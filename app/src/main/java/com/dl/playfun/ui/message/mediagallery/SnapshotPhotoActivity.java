@@ -181,7 +181,7 @@ public class SnapshotPhotoActivity extends BaseActivity<ActivitySnapshotPhotoSet
             if(checkItemEntity!=null && isPayState){
                 mediaGalleryEditEntity.setUnlockPrice(new BigDecimal(checkItemEntity.getCoin()));
                 mediaGalleryEditEntity.setMsgRenvenue(checkItemEntity.getProfit());
-                mediaGalleryEditEntity.setConfigId(configId);
+                mediaGalleryEditEntity.setConfigId(this.configId);
                 mediaGalleryEditEntity.setConfigIndex(checkItemEntity.getConfigIndexString());
             }
             mediaGalleryEditEntity.setSrcPath(filePath);

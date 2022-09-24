@@ -47,6 +47,7 @@ public class CoinPusherConvertCapsuleDialog extends BaseDialog {
     //兑换弹窗选择明细
     private String convertItemTitle;
     private String convertItemContent;
+    private Integer convertConfigId;
 
     public ItemConvertListener getItemConvertListener() {
         return itemConvertListener;
@@ -56,12 +57,13 @@ public class CoinPusherConvertCapsuleDialog extends BaseDialog {
         this.itemConvertListener = itemConvertListener;
     }
 
-    public CoinPusherConvertCapsuleDialog(Activity activity,String convertItemTitle,String convertItemContent, List<CoinPusherConverInfoEntity.GoldCoinInfo.GoldCoinItem> itemData) {
+    public CoinPusherConvertCapsuleDialog(Activity activity,Integer convertConfigId,String convertItemTitle,String convertItemContent, List<CoinPusherConverInfoEntity.GoldCoinInfo.GoldCoinItem> itemData) {
         super(activity);
         this.mContext = activity;
         super.setMActivity(activity);
         this.convertItemTitle = convertItemTitle;
         this.convertItemContent = convertItemContent;
+        this.convertConfigId = convertConfigId;
         initView();
         coinPusherCapsuleADetailAdapter.setItemData(itemData);
     }
@@ -90,7 +92,7 @@ public class CoinPusherConvertCapsuleDialog extends BaseDialog {
             if(SEL_COIN_PUSHER_CAPSULE!=-1){
                 CoinPusherConverInfoEntity.GoldCoinInfo.GoldCoinItem itemEntity = coinPusherCapsuleADetailAdapter.getItemData(SEL_COIN_PUSHER_CAPSULE);
                 if(itemEntity!=null){
-                    convertCoinPusherGoldsCoin(itemEntity.getId(),itemEntity.getValue(),itemEntity.getType());
+                    convertCoinPusherGoldsCoin(convertConfigId,itemEntity.getValue(),itemEntity.getType());
                 }
             }
         });

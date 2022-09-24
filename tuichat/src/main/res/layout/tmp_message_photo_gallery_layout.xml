@@ -33,11 +33,11 @@
             android:layout_marginEnd="1dp"
             android:layout_marginBottom="1dp"
             android:id="@+id/img_content"
-            android:layout_width="86dp"
-            android:layout_height="154dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:scaleType="centerCrop"
             tools:src="@drawable/default_avatar"
-            app:riv_corner_radius="9dp"
+            app:riv_corner_radius="8dp"
             />
         <LinearLayout
             android:id="@+id/ll_burned"

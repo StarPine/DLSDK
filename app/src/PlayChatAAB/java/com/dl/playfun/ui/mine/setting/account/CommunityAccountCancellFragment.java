@@ -1,28 +1,20 @@
 package com.dl.playfun.ui.mine.setting.account;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
-import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
-import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.FragmentSettingAccountCancellBinding;
-import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.ui.login.LoginFragment;
-import com.dl.playfun.ui.mine.wallet.recharge.RechargeActivity;
 import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 import com.dl.playfun.widget.dialog.MMAlertDialog;
 

@@ -123,7 +123,7 @@ public class CoinPusherConvertDialog  extends BaseDialog {
                 SEL_COIN_PUSHER_CAPSULE = position;
             }
             //选择购买宝盒明细弹窗
-            CoinPusherConvertCapsuleDialog pusherConvertCapsuleDialog = new CoinPusherConvertCapsuleDialog(getMActivity(),convertItemTitle,convertItemContent,coinPusherCapsuleAdapter.getItemData(SEL_COIN_PUSHER_CAPSULE).getItem());
+            CoinPusherConvertCapsuleDialog pusherConvertCapsuleDialog = new CoinPusherConvertCapsuleDialog(getMActivity(),coinPusherCapsuleAdapter.getItemData(SEL_COIN_PUSHER_CAPSULE).getId(),convertItemTitle,convertItemContent,coinPusherCapsuleAdapter.getItemData(SEL_COIN_PUSHER_CAPSULE).getItem());
             pusherConvertCapsuleDialog.setItemConvertListener(new CoinPusherConvertCapsuleDialog.ItemConvertListener() {
                 @Override
                 public void success(CoinPusherBalanceDataEntity coinPusherDataEntity) {

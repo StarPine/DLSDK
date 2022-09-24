@@ -3,6 +3,7 @@ package com.dl.playfun.ui.message.mediagallery.video;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -118,27 +119,21 @@ public class MediaGalleryVideoPayActivity extends BaseActivity<ActivityMediaGall
             viewModel.mediaGalleryEvaluationQry(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId());
         }
 
-        //好评
-        binding.llLike.setOnClickListener(v -> {
-            doubleClick(v);
-        });
-        binding.llNoLike.setOnClickListener(v -> {
-            doubleClick(v);
-        });
-
+        doubleClick(binding.llLike);
+        doubleClick(binding.llNoLike);
 
         //当前评价状态
         viewModel.evaluationLikeEvent.observe(this, state -> {
             //评价，0未评价，1差评，2好评
             if(state == 1){
-                generateDrawable(binding.llNoLike,null,22,null,null,R.color.playfun_shape_radius_start_color,R.color.playfun_shape_radius_end_color);
-                generateDrawable(binding.llLike,R.color.black,22,R.color.purple_text,1,null,null);
+                generateDrawable(binding.llNoLike,null,22,null,null,R.color.playfun_shape_radius_start_color,R.color.playfun_shape_radius_end_color,GradientDrawable.Orientation.LEFT_RIGHT);
+                generateDrawable(binding.llLike,R.color.black,22,R.color.purple_text,1,null,null,null);
             }else if(state == 2){
-                generateDrawable(binding.llLike,null,22,null,null,R.color.playfun_shape_radius_start_color,R.color.playfun_shape_radius_end_color);
-                generateDrawable(binding.llNoLike,R.color.black,22,R.color.purple_text,1,null,null);
+                generateDrawable(binding.llLike,null,22,null,null,R.color.playfun_shape_radius_start_color,R.color.playfun_shape_radius_end_color,GradientDrawable.Orientation.LEFT_RIGHT);
+                generateDrawable(binding.llNoLike,R.color.black,22,R.color.purple_text,1,null,null,null);
             }else{
-                generateDrawable(binding.llLike,R.color.black,22,R.color.purple_text,1,null,null);
-                generateDrawable(binding.llNoLike,R.color.black,22,R.color.purple_text,1,null,null);
+                generateDrawable(binding.llLike,R.color.black,22,R.color.purple_text,1,null,null,null);
+                generateDrawable(binding.llNoLike,R.color.black,22,R.color.purple_text,1,null,null,null);
             }
         });
 
@@ -147,33 +142,31 @@ public class MediaGalleryVideoPayActivity extends BaseActivity<ActivityMediaGall
     @SuppressLint("CheckResult")
     public void doubleClick(View view){
         RxView.clicks(view)
-                .throttleFirst(1, TimeUnit.SECONDS)//1秒钟内只允许点击1次
-                .subscribe(new Consumer<Object>() {
-                    @Override
-                    public void accept(Object o) throws Exception {
-                        if (view.getId() == binding.llLike.getId()) {
-                            Integer evaluationType = viewModel.evaluationLikeEvent.getValue();
-                            if(evaluationType !=null){
-                                if(evaluationType == 0 || evaluationType == 1){
-                                    viewModel.mediaGalleryEvaluationPut(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId(),2);
-                                }
+                .throttleFirst(2, TimeUnit.SECONDS)//2秒钟内只允许点击1次
+                .subscribe(o -> {
+                    if (view.getId() == binding.llLike.getId()) {
+                        Integer evaluationType = viewModel.evaluationLikeEvent.getValue();
+                        if(evaluationType !=null){
+                            if(evaluationType == 0 || evaluationType == 1){
+                                viewModel.mediaGalleryEvaluationPut(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId(),2);
                             }
-                        }else if(view.getId() == binding.llNoLike.getId()){
-                            Integer evaluationType = viewModel.evaluationLikeEvent.getValue();
-                            if(evaluationType !=null && evaluationType == 0){
-                                //差评
-                                viewModel.mediaGalleryEvaluationPut(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId(),1);
-                            }
+                        }
+                    }else if(view.getId() == binding.llNoLike.getId()){
+                        Integer evaluationType = viewModel.evaluationLikeEvent.getValue();
+                        if(evaluationType !=null && evaluationType == 0){
+                            //差评
+                            viewModel.mediaGalleryEvaluationPut(mediaGalleryEditEntity.getMsgKeyId(),mediaGalleryEditEntity.getToUserId(),1);
                         }
                     }
                 });
     }
 
 
-    void generateDrawable(View view,Integer drawableColor,Integer drawableCornersRadius,Integer drawableStrokeColor, Integer drawableStrokeWidth,Integer drawableStartColor, Integer drawableEndColor){
+    void generateDrawable(View view, Integer drawableColor, Integer drawableCornersRadius, Integer drawableStrokeColor,
+                          Integer drawableStrokeWidth, Integer drawableStartColor, Integer drawableEndColor, GradientDrawable.Orientation orientation){
         CustomDrawableUtils.generateDrawable(view, getColorFromResource(drawableColor),
                 drawableCornersRadius,null,null,null,null,
-                getColorFromResource(drawableStartColor),getColorFromResource(drawableEndColor),drawableStrokeWidth,getColorFromResource(drawableStrokeColor),null);
+                getColorFromResource(drawableStartColor),getColorFromResource(drawableEndColor),drawableStrokeWidth,getColorFromResource(drawableStrokeColor),null, orientation);
     }
     Integer getColorFromResource(Integer resourceId) {
         if (resourceId==null) {

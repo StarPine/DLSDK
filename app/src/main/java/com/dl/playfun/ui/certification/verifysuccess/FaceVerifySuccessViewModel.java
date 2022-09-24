@@ -22,7 +22,6 @@ import me.goldze.mvvmhabit.utils.RxUtils;
 public class FaceVerifySuccessViewModel extends BaseViewModel<AppRepository> {
 
     public SingleLiveEvent<Boolean> isMessageMan = new SingleLiveEvent<Boolean>();
-    public UIChangeObservable uc = new UIChangeObservable();
     public BindingCommand finishOnClickCommand = new BindingCommand(() -> {
         popTo(MainFragment.class.getCanonicalName());
     });
@@ -32,10 +31,4 @@ public class FaceVerifySuccessViewModel extends BaseViewModel<AppRepository> {
         isMessageMan.postValue(ConfigManager.getInstance().isMale());
 
     }
-
-    public class UIChangeObservable {
-        public SingleLiveEvent<TaskRewardReceiveEntity> realPenson = new SingleLiveEvent<>();
-
-    }
-
 }

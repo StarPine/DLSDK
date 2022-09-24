@@ -32,19 +32,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40dp"
-                android:text="7天VIP免費試用"
+                android:text="@string/playfun_share_vip_day7_text1"
                 android:textSize="31sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="55dp">
-
+                android:layout_marginLeft="40dp">
 
                 <FrameLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="40dp">
+                    android:layout_height="wrap_content">
 
                     <ImageView
                         android:layout_width="19dp"
@@ -55,7 +53,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
-                        android:text="免費發佈動態"
+                        android:text="@string/playfun_share_vip_day7_text2"
                         android:textSize="16sp" />
                 </FrameLayout>
             </LinearLayout>
@@ -68,14 +66,14 @@
                 android:layout_marginTop="21dp"
                 android:layout_marginRight="27dp"
                 android:background="@mipmap/share_sub"
-                android:text="免費訂閱"
+                android:text="@string/playfun_share_vip_day7_text3"
                 android:textSize="17sp" />
 
             <TextView
                 android:layout_width="298dp"
-                android:layout_height="17dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="用戶可免費獲得7天試用，試用期結束後，將以$990/月的價格續訂"
+                android:text="@string/playfun_share_vip_day7_text4"
                 android:textColor="#ff90919f"
                 android:textSize="9sp" />
         </LinearLayout>
