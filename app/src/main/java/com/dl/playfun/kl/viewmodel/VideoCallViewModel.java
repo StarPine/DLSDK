@@ -111,6 +111,10 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
     public String mtoUserId;
     //当前用户是否男性
     public boolean isMale = false;
+    //收益开关
+    public boolean isShowTipMoney = false;
+    //当前用户是否为收款人
+    public boolean isPayee = false;
     public boolean videoSuccess = false;
     private String mMyUserId;
     private String mOtherUserId;
@@ -394,6 +398,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
         this.mRole = role;
         this.mCallVideoView = view;
         this.isMale = ConfigManager.getInstance().isMale();
+        this.isShowTipMoney = ConfigManager.getInstance().getTipMoneyShowFlag();
         this.isCalledBinding.set(role == TUICalling.Role.CALLED);
         this.isCalledWaitingBinding.set(role == TUICalling.Role.CALLED);
     }
@@ -535,6 +540,9 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
                         UserDataEntity userDataEntity = model.readUserData();
                         mCallVideoView.acceptCall();
                         sayHiEntityList = callingInviteInfo.getSayHiList().getData();
+                        if (callingInviteInfo.getPaymentRelation().getPayeeImId().equals(ConfigManager.getInstance().getUserImID())){
+                            isPayee = true;
+                        }
                         if (sayHiEntityList.size() > 1) {
                             sayHiEntityHidden.set(false);
                             sayHiEntityField.set(sayHiEntityList.get(0));
@@ -753,15 +761,12 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
                     TUIMessageBean info = ChatMessageBuilder.buildMessage(msg);
                     if (info != null) {
                         if (info.getV2TIMMessage().getSender().equals(callingVideoInviteInfoField.get().getImId())) {
-                            Log.e("确定是聊天对象发送的消息", "==================");
                             String text = String.valueOf(info.getExtra());
-                            Log.e("聊天消息体未", text);
                             if (isJSON2(text) && text.indexOf("type") != -1) {//做自定义通知判断
                                 Map<String, Object> map_data = new Gson().fromJson(text, Map.class);
                                 //礼物消息
                                 if (map_data != null && map_data.get("type") != null && map_data.get("type").equals("message_gift")
                                         && map_data.get("is_accost") == null) {
-                                    Log.e("该消息是聊天消息", "===============");
                                     GiftEntity giftEntity = IMGsonUtils.fromJson(String.valueOf(map_data.get("data")), GiftEntity.class);
                                     uc.acceptUserGift.postValue(giftEntity);
                                     //显示礼物弹幕
@@ -770,7 +775,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
                                     //礼物收益提示
                                     giftIncome(giftEntity);
                                 }else if (map_data != null && map_data.get("type") != null && map_data.get("type").equals("message_countdown")) {//对方余额不足
-                                    if (!isMale && ConfigManager.getInstance().getTipMoneyShowFlag()) {
+                                    if (isPayee && isShowTipMoney) {
                                         String data = (String) map_data.get("data");
                                         Map<String, Object> dataMapCountdown = new Gson().fromJson(data, Map.class);
                                         String isShow = (String) dataMapCountdown.get("is_show");
@@ -783,7 +788,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
                                             girlEarningsText.set(stringBuilder);
 
                                         }else if (isShow != null && isShow.equals("0")){
-                                        isShowCountdown.set(false);
+                                            isShowCountdown.set(false);
                                         }
                                     }
                                 }

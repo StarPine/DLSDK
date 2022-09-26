@@ -1,5 +1,6 @@
 package com.dl.playfun.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -8,7 +9,7 @@ import java.util.List;
  * Time: 2021/12/13 17:57
  * Description: 通话中
  */
-public class CallingInfoEntity {
+public class CallingInfoEntity implements Serializable {
     //钻石余额(仅男用户)
     private Integer coinBalance;
     //可通话时长(剩余分钟数)
@@ -36,6 +37,7 @@ public class CallingInfoEntity {
     private Integer balanceNotEnoughTipsMinutes;
     //通话收益提示间隔秒数
     private Integer profitTipsIntervalSeconds;
+    private PaymentRelationBean paymentRelation;
 
     public Integer getCoinBalance() {
         return coinBalance;
@@ -147,6 +149,53 @@ public class CallingInfoEntity {
 
     public void setProfitTipsIntervalSeconds(Integer profitTipsIntervalSeconds) {
         this.profitTipsIntervalSeconds = profitTipsIntervalSeconds;
+    }
+
+    public PaymentRelationBean getPaymentRelation() {
+        return paymentRelation;
+    }
+
+    public void setPaymentRelation(PaymentRelationBean paymentRelation) {
+        this.paymentRelation = paymentRelation;
+    }
+
+    public class PaymentRelationBean {
+        private int payerUserId;
+        private int payeeUserId;
+        private String payerImId;
+        private String payeeImId;
+
+        public int getPayerUserId() {
+            return payerUserId;
+        }
+
+        public void setPayerUserId(int payerUserId) {
+            this.payerUserId = payerUserId;
+        }
+
+        public int getPayeeUserId() {
+            return payeeUserId;
+        }
+
+        public void setPayeeUserId(int payeeUserId) {
+            this.payeeUserId = payeeUserId;
+        }
+
+        public String getPayerImId() {
+            return payerImId;
+        }
+
+        public void setPayerImId(String payerImId) {
+            this.payerImId = payerImId;
+        }
+
+        public String getPayeeImId() {
+            return payeeImId;
+        }
+
+        public void setPayeeImId(String payeeImId) {
+            this.payeeImId = payeeImId;
+        }
     }
 
     public class FromUserProfile {

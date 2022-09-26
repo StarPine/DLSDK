@@ -849,8 +849,9 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                     //没10秒更新一次破冰文案
                     viewModel.getSayHiList();
                 }
-                if (viewModel.callInfoLoaded){
-                    if (viewModel.isMale) {//男
+                if (viewModel.callInfoLoaded && viewModel.isShowTipMoney){
+                    //判断是否为付费方
+                    if (!viewModel.isPayee) {
                         if (viewModel.totalMinutesRemaining <= viewModel.balanceNotEnoughTipsMinutes * 60) {
                             viewModel.totalMinutesRemaining--;
                             if (viewModel.totalMinutesRemaining < 0) {
@@ -870,23 +871,8 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                                 moneyNoWorthSwich(false);
                             }
                         }
-                    } else {//女性
-                        if (ConfigManager.getInstance().getTipMoneyShowFlag()) {
-                            if (!viewModel.isShowCountdown.get() && viewModel.payeeProfits > 0) {//对方余额不足没有展示
-                                if (!viewModel.girlEarningsField.get()){
-                                    viewModel.girlEarningsField.set(true);
-                                }
-                                String profit = viewModel.payeeProfits + "";
-                                String girlEarningsTex = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt), profit);
-                                SpannableString stringBuilder = new SpannableString(girlEarningsTex);
-                                ForegroundColorSpan blueSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint1));
-                                int index = girlEarningsTex.indexOf(profit);
-                                stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, girlEarningsTex.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                stringBuilder.setSpan(blueSpan, index, index + profit.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                viewModel.girlEarningsText.set(stringBuilder);
-                            }
-
-                        }
+                    }else {
+                        setProfitTips();
                     }
                 }
 
@@ -894,6 +880,25 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
             }
         };
         mHandler.postDelayed(timerRunnable, 1000);
+    }
+
+    /**
+     * 展示右下角收益提示
+     */
+    private void setProfitTips() {
+        if (!viewModel.isShowCountdown.get() && viewModel.payeeProfits > 0) {//对方余额不足没有展示
+            if (!viewModel.girlEarningsField.get()) {
+                viewModel.girlEarningsField.set(true);
+            }
+            String profit = viewModel.payeeProfits + "";
+            String girlEarningsTex = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt), profit);
+            SpannableString stringBuilder = new SpannableString(girlEarningsTex);
+            ForegroundColorSpan blueSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint1));
+            int index = girlEarningsTex.indexOf(profit);
+            stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, girlEarningsTex.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            stringBuilder.setSpan(blueSpan, index, index + profit.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            viewModel.girlEarningsText.set(stringBuilder);
+        }
     }
 
     /**

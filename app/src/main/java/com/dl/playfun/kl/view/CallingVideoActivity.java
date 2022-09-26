@@ -36,9 +36,11 @@ import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
+import com.dl.playfun.databinding.ActivityCallVideoBinding;
 import com.dl.playfun.entity.CallingInviteInfo;
 import com.dl.playfun.entity.CrystalDetailsConfigEntity;
 import com.dl.playfun.entity.GiftBagEntity;
@@ -47,6 +49,7 @@ import com.dl.playfun.event.CallChatingHangupEvent;
 import com.dl.playfun.kl.viewmodel.VideoCallViewModel;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocaleManager;
+import com.dl.playfun.ui.dialog.GiftBagDialog;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.LogUtils;
@@ -59,9 +62,6 @@ import com.faceunity.nama.FURenderer;
 import com.faceunity.nama.data.FaceUnityDataFactory;
 import com.faceunity.nama.ui.FaceUnityView;
 import com.google.gson.Gson;
-import com.dl.playfun.R;
-import com.dl.playfun.databinding.ActivityCallVideoBinding;
-import com.dl.playfun.ui.dialog.GiftBagDialog;
 import com.opensource.svgaplayer.SVGACallback;
 import com.opensource.svgaplayer.SVGAImageView;
 import com.opensource.svgaplayer.SVGAParser;
@@ -894,8 +894,9 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                 if (mTimeCount % 30 == 0){
                     viewModel.getRoomStatus(viewModel.roomId);
                 }
-                if (viewModel.callInfoLoaded){
-                    if (viewModel.isMale) {//男
+                if (viewModel.callInfoLoaded && viewModel.isShowTipMoney){
+                    //判断是否为付费方
+                    if (!viewModel.isPayee) {
                         if (viewModel.totalMinutesRemaining <= viewModel.balanceNotEnoughTipsMinutes * 60) {
                             viewModel.totalMinutesRemaining--;
                             if (viewModel.totalMinutesRemaining < 0) {
@@ -915,20 +916,8 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                                 moneyNoWorthSwich(false);
                             }
                         }
-                    } else {//女性
-                        if (ConfigManager.getInstance().getTipMoneyShowFlag()) {
-                            if (!viewModel.isShowCountdown.get() && viewModel.payeeProfits > 0) {//对方余额不足没有展示
-                                if (!viewModel.girlEarningsField.get()){
-                                    viewModel.girlEarningsField.set(true);
-                                }
-                                String girlEarningsTex = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt), viewModel.payeeProfits);
-                                SpannableString stringBuilder = new SpannableString(girlEarningsTex);
-                                ForegroundColorSpan blueSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint1));
-                                stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                stringBuilder.setSpan(blueSpan, 6, girlEarningsTex.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                viewModel.girlEarningsText.set(stringBuilder);
-                            }
-                        }
+                    }else {
+                        setProfitTips();
                     }
                 }
 
@@ -936,6 +925,25 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
             }
         };
         mHandler.postDelayed(timerRunnable, 1000);
+    }
+
+    /**
+     * 展示右下角收益提示
+     */
+    private void setProfitTips() {
+        if (!viewModel.isShowCountdown.get() && viewModel.payeeProfits > 0) {//对方余额不足没有展示
+            if (!viewModel.girlEarningsField.get()) {
+                viewModel.girlEarningsField.set(true);
+            }
+            String profit = viewModel.payeeProfits + "";
+            String girlEarningsTex = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt), profit);
+            SpannableString stringBuilder = new SpannableString(girlEarningsTex);
+            ForegroundColorSpan blueSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint1));
+            int index = girlEarningsTex.indexOf(profit);
+            stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, girlEarningsTex.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            stringBuilder.setSpan(blueSpan, index, index + profit.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            viewModel.girlEarningsText.set(stringBuilder);
+        }
     }
 
     /**

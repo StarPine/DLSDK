@@ -107,6 +107,10 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
 
     //当前用户是否男性
     public boolean isMale = false;
+    //收益开关
+    public boolean isShowTipMoney = false;
+    //当前用户是否为收款人
+    public boolean isPayee = false;
     //是否已追踪0未追踪1已追踪
     public Integer collected;
     //余额不足临界提示分钟数
@@ -352,6 +356,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
 
     public void init(Ifinish iview) {
         isMale = ConfigManager.getInstance().isMale();
+        isShowTipMoney = ConfigManager.getInstance().getTipMoneyShowFlag();
         mTRTCCalling = TRTCCalling.sharedInstance(AppContext.instance());
         initListener();
         mView = iview;
@@ -527,7 +532,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                                     //礼物收益提示
                                     giftIncome(giftEntity);
                                 }else if (map_data != null && map_data.get("type") != null && map_data.get("type").equals("message_countdown")) {//对方余额不足
-                                    if (!isMale && ConfigManager.getInstance().getTipMoneyShowFlag()) {
+                                    if (isPayee && isShowTipMoney) {
                                         String data = (String) map_data.get("data");
                                         Map<String, Object> dataMapCountdown = new Gson().fromJson(data, Map.class);
                                         String isShow = (String) dataMapCountdown.get("is_show");
@@ -541,7 +546,6 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
 
                                         }else if (isShow != null && isShow.equals("0")){
                                             isShowCountdown.set(false);
-//                                            girlEarningsField.set(false);
                                         }
                                     }
                                 }
@@ -675,6 +679,9 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                         UserDataEntity userDataEntity = model.readUserData();
                         audioUserDataEntity.set(userDataEntity);
                         audioCallingInfoEntity.set(callingInviteInfo);
+                        if (callingInviteInfo.getPaymentRelation().getPayeeImId().equals(ConfigManager.getInstance().getUserImID())){
+                            isPayee = true;
+                        }
 
                         sayHiEntityList = callingInviteInfo.getSayHiList().getData();
                         if (sayHiEntityList.size() > 1) {
