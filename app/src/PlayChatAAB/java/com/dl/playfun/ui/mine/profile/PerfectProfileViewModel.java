@@ -88,7 +88,6 @@ public class PerfectProfileViewModel extends BaseViewModel<AppRepository> {
         }
         checkNickname(UserName.get());
     });
-    private boolean isDuplicate;
 
     public PerfectProfileViewModel(@NonNull Application application, AppRepository model) {
         super(application, model);
@@ -238,8 +237,7 @@ public class PerfectProfileViewModel extends BaseViewModel<AppRepository> {
                     public void onSuccess(BaseDataResponse<CheckNicknameEntity> checkNicknameEntityBaseDataResponse) {
                         CheckNicknameEntity checkNicknameEntity = checkNicknameEntityBaseDataResponse.getData();
                         if (checkNicknameEntity != null && checkNicknameEntity.getStatus() == 1) {
-                            isDuplicate = true;
-                            getNickName();
+                            uc.nicknameDuplicate.postValue(checkNicknameEntity.getRecommend());
                         } else {
                             uc.verifyAvatar.call();
                         }
@@ -262,11 +260,7 @@ public class PerfectProfileViewModel extends BaseViewModel<AppRepository> {
                     @Override
                     public void onSuccess(BaseDataResponse response) {
                         String data = (String) response.getData();
-                        if (isDuplicate){
-                            uc.nicknameDuplicate.postValue(data);
-                        }else {
-                            UserName.set(data);
-                        }
+                        UserName.set(data);
                     }
 
                     @Override
