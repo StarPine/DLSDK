@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.ObjectUtils;
-import com.blankj.utilcode.util.Utils;
 import com.dl.playfun.R;
 import com.dl.playfun.entity.GoodsEntity;
 
@@ -110,7 +109,7 @@ public class CoinRechargeAdapter extends RecyclerView.Adapter<CoinRechargeAdapte
         holder.itemView.setOnClickListener(v -> {
             if (coinRechargeAdapterListener != null) {
                 int p = (int) v.getTag();
-                coinRechargeAdapterListener.onBuyClick(v, p);
+                coinRechargeAdapterListener.itemViewOnClick(v, p);
             }
         });
     }
@@ -137,7 +136,7 @@ public class CoinRechargeAdapter extends RecyclerView.Adapter<CoinRechargeAdapte
     }
 
     public interface CoinRechargeAdapterListener {
-        void onBuyClick(View view, int position);
+        void itemViewOnClick(View view, int position);
     }
 
     class RecyclerHolder extends RecyclerView.ViewHolder {

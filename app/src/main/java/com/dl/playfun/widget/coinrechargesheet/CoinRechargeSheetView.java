@@ -223,10 +223,10 @@ public class CoinRechargeSheetView extends BasePopupWindow implements View.OnCli
                     @Override
                     public void onSuccess(BaseDataResponse<DiamondInfoEntity> response) {
                         mGoodsList = response.getData().getList();
-                        adapter.setData(mGoodsList);
                         if (mGoodsList == null || mGoodsList.size() <= 0){
                             return;
                         }
+                        adapter.setData(mGoodsList);
 
                         //默认选中第一个钻石套餐
                         int type = mGoodsList.get(0).getType();
@@ -251,6 +251,11 @@ public class CoinRechargeSheetView extends BasePopupWindow implements View.OnCli
      * 显示奖励dialog
      */
     private void showRewardDialog() {
+        if (currGoodsInfo == null){
+            isFinsh = true;
+            dismiss();
+            return;
+        }
         int totalReward ;
         if (currGoodsInfo.getType() == 1){
             totalReward = currGoodsInfo.getGiveCoin() + currGoodsInfo.getActualValue() + currGoodsInfo.getGoldPrice();
@@ -287,7 +292,7 @@ public class CoinRechargeSheetView extends BasePopupWindow implements View.OnCli
     }
 
     @Override
-    public void onBuyClick(View view, int position) {
+    public void itemViewOnClick(View view, int position) {
         for (GoodsEntity entity : mGoodsList) {
             entity.setSelected(false);
         }

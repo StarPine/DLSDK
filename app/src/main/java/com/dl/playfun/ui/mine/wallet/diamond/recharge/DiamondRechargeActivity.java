@@ -169,6 +169,11 @@ public class DiamondRechargeActivity extends BaseActivity<ActivityDiamondRecharg
      */
     private void showRewardDialog() {
         GoodsEntity goodsEntity = viewModel.selectedGoodsEntity.get();
+        if (goodsEntity == null) {
+            isFinsh = true;
+            viewModel.getRechargeList();
+            return;
+        }
         int totalReward ;
         if (goodsEntity.getType() == 1){
             totalReward = goodsEntity.getGiveCoin() + goodsEntity.getActualValue() + goodsEntity.getGoldPrice();
