@@ -42,6 +42,7 @@ public class RegisterSexFragment extends BaseFragment<FragmentRegisterSexBinding
     private String avatar;
     private String name;
     private int currentAge = 18;
+    private int oldAgeCheckIdx = 0;
     private final String GIRL_HEAD = "images/avatar/girl.png";
     private final String BOY_HEAD = "images/avatar/boy.png";
 
@@ -140,7 +141,6 @@ public class RegisterSexFragment extends BaseFragment<FragmentRegisterSexBinding
     //选择年齡
     private void showChooseAge() {// 弹出选择器
         final List<String> options1Items = new ArrayList<>();
-        int potion = 0;
         String ageText = "";
         String localLanguage = StringUtils.getString(R.string.playfun_local_language_val);
         if(localLanguage.equals("zh")){
@@ -158,6 +158,8 @@ public class RegisterSexFragment extends BaseFragment<FragmentRegisterSexBinding
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
                 //当前options1 第一个等于=0  默认+18岁
                 currentAge = options1 + 18;
+                //记住当前选择下标。下次重新选择
+                oldAgeCheckIdx = options1;
                 viewModel.userAge.set(options1Items.get(options1));
             }
         })
@@ -177,7 +179,7 @@ public class RegisterSexFragment extends BaseFragment<FragmentRegisterSexBinding
         .setBgColor(0xffffffff)//滚轮背景颜色 Night mode
         .setItemVisibleCount(5)//设置最大可见数目
         .setLineSpacingMultiplier(2.8f)
-        .setSelectOptions(potion)  //设置默认选中项
+        .setSelectOptions(oldAgeCheckIdx)  //设置默认选中项
         .isDialog(true)//f是否显示为对话框样式
         .build();
         pvOptions.setPicker(options1Items);//一级选择器
