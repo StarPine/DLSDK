@@ -209,6 +209,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="200dp"
+                android:visibility="@{viewModel.isShowTipMoney?View.VISIBLE:View.GONE}"
                 android:text="@{viewModel.callHintBinding}"
                 android:textAlignment="center"
                 android:textColor="#FFF300"

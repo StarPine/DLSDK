@@ -190,7 +190,11 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
         SpannableString iconSpannable = matcherSearchText("#A72DFE", format, appContext.getString(R.string.custom_message_txt1_key));
         iconSpannable.setSpan(new MyImageSpan(TUIChatService.getAppContext(), R.drawable.icon_crystal), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         profitTipView.setText(iconSpannable);
-        profitTipView.setVisibility(View.VISIBLE);
+        if (!MessageRecyclerView.isFlagTipMoney()){
+            profitTipView.setVisibility(View.GONE);
+        }else {
+            profitTipView.setVisibility(View.VISIBLE);
+        }
     }
 
 

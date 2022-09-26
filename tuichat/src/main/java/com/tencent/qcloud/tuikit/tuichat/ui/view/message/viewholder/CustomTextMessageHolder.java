@@ -41,7 +41,7 @@ import java.util.Map;
  */
 public class CustomTextMessageHolder extends TextMessageHolder {
     private ImageView mLeftView, mRightView;
-    boolean isCharger = false;//当前账号是否为收款人
+    boolean isPayee = false;//当前账号是否为收款人
     private View tipView;
     private TextView customTipText;
     private CustomIMTextEntity customIMTextEntity;
@@ -209,8 +209,8 @@ public class CustomTextMessageHolder extends TextMessageHolder {
                 } else {//正常收益提示
                     if (Double.parseDouble(price) > 0) {
                         if (customIMTextEntity.getPayeeImId() != null) {
-                            isCharger = customIMTextEntity.getPayeeImId().equals(V2TIMManager.getInstance().getLoginUser());
-                            if (isCharger) {//收款人显示
+                            isPayee = customIMTextEntity.getPayeeImId().equals(V2TIMManager.getInstance().getLoginUser());
+                            if (isPayee) {//收款人显示
                                 setProfitDetails(price, profitTip);
                                 return;
                             }
