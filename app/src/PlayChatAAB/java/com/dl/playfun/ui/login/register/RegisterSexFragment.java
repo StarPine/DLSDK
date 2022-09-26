@@ -140,24 +140,21 @@ public class RegisterSexFragment extends BaseFragment<FragmentRegisterSexBinding
     //选择年齡
     private void showChooseAge() {// 弹出选择器
         final List<String> options1Items = new ArrayList<>();
-        int potion = 0;
-        String ageText = "";
-        String localLanguage = StringUtils.getString(R.string.playfun_local_language_val);
-        if(localLanguage.equals("zh")){
-            ageText = StringUtils.getString(R.string.playfun_mine_age);
-        }
-        for (int i = 18; i <= 100; i++) {
-            if(StringUtil.isEmpty(ageText)){
-                options1Items.add(String.valueOf(i));
-            }else{
-                options1Items.add(String.format(ageText,i));
+        int position = 0;
+        int defAge = 18;
+        String ageText = StringUtils.getString(R.string.playfun_mine_age);
+        for (int i = defAge; i <= 100; i++) {
+            String format = String.format(ageText, i);
+            options1Items.add(format);
+            if (viewModel.userAge.get().equals(format)) {
+                position = i - defAge;
             }
         }
         OptionsPickerView pvOptions = new OptionsPickerBuilder(this.getContext(), new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
                 //当前options1 第一个等于=0  默认+18岁
-                currentAge = options1 + 18;
+                currentAge = options1 + defAge;
                 viewModel.userAge.set(options1Items.get(options1));
             }
         })
@@ -177,7 +174,7 @@ public class RegisterSexFragment extends BaseFragment<FragmentRegisterSexBinding
         .setBgColor(0xffffffff)//滚轮背景颜色 Night mode
         .setItemVisibleCount(5)//设置最大可见数目
         .setLineSpacingMultiplier(2.8f)
-        .setSelectOptions(potion)  //设置默认选中项
+        .setSelectOptions(position)  //设置默认选中项
         .isDialog(true)//f是否显示为对话框样式
         .build();
         pvOptions.setPicker(options1Items);//一级选择器
