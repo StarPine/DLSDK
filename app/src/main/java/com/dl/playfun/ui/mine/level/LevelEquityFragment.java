@@ -86,21 +86,21 @@ public class LevelEquityFragment extends BaseFragment<FragmentLevelEquityBinding
             }
         });
         //文字调整进度条宽度测量
-        binding.seekbarMessage.setMeasureWidthCallBack(width -> {
+        binding.seekbarMessage.setMeasureWidthCallBack((width,width2) -> {
             ViewGroup.LayoutParams layoutParams = binding.seekbarMessageView.getLayoutParams();
-            layoutParams.width = width;
+            layoutParams.width = width2;
             binding.seekbarMessageView.setLayoutParams(layoutParams);
         });
         //文字调整进度条宽度测量
-        binding.seekbarAudio.setMeasureWidthCallBack(width -> {
+        binding.seekbarAudio.setMeasureWidthCallBack((width,width2) -> {
             ViewGroup.LayoutParams layoutParams = binding.seekbarAudioView.getLayoutParams();
-            layoutParams.width = width;
+            layoutParams.width = width2;
             binding.seekbarAudioView.setLayoutParams(layoutParams);
         });
         //文字调整进度条宽度测量
-        binding.seekbarVideo.setMeasureWidthCallBack(width -> {
+        binding.seekbarVideo.setMeasureWidthCallBack((width,width2) -> {
             ViewGroup.LayoutParams layoutParams = binding.seekbarVideoView.getLayoutParams();
-            layoutParams.width = width;
+            layoutParams.width = width2;
             binding.seekbarVideoView.setLayoutParams(layoutParams);
         });
         binding.seekbarMessageView.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

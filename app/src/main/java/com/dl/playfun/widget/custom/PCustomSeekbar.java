@@ -204,7 +204,8 @@ public class PCustomSeekbar extends View {
             int barLineWidth = 0;
             if (measureWidthCallBack != null) {
                 barLineWidth = (processWidth *  (maxIndex)) + ((maxIndex ) * itemWidth) + paddingWidth;
-                measureWidthCallBack.measureWidthCall(barLineWidth);
+                int barLineWidth2 = (processWidth *  (maxIndex+1)) + ((maxIndex+1 ) * itemWidth) + paddingWidth;
+                measureWidthCallBack.measureWidthCall(barLineWidth,barLineWidth2);
             }
 
             //第一条线
@@ -276,7 +277,7 @@ public class PCustomSeekbar extends View {
     }
 
     public interface MeasureWidthCallBack {
-        void measureWidthCall(int width);
+        void measureWidthCall(int width,int width2);
     }
 
 }

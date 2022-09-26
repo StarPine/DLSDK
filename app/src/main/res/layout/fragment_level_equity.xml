@@ -382,12 +382,11 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="7dp"
                                     android:layout_marginTop="42dp"
-                                    android:layout_marginEnd="10dp"
                                     android:max="0"
                                     android:progress="0"
                                     android:progressDrawable="@color/transparent"
                                     android:thumb="@drawable/pseekbar_thumb"
-                                    android:thumbOffset="0dp" />
+                                     />
                             </RelativeLayout>
                         </LinearLayout>
                         <View
@@ -518,12 +517,11 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="7dp"
                                     android:layout_marginTop="42dp"
-                                    android:layout_marginEnd="10dp"
                                     android:max="0"
                                     android:progress="0"
                                     android:progressDrawable="@color/transparent"
                                     android:thumb="@drawable/pseekbar_thumb"
-                                    android:thumbOffset="0dp" />
+                                     />
                             </RelativeLayout>
                         </LinearLayout>
 
@@ -655,12 +653,11 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="7dp"
                                     android:layout_marginTop="42dp"
-                                    android:layout_marginEnd="10dp"
                                     android:max="0"
                                     android:progress="0"
                                     android:progressDrawable="@color/transparent"
                                     android:thumb="@drawable/pseekbar_thumb"
-                                    android:thumbOffset="0dp" />
+                                     />
                             </RelativeLayout>
 
                         </LinearLayout>
