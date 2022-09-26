@@ -418,7 +418,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
 
 
                         byte[] data = v2TIMCustomElem.getData();
-                        if (data != null){
+                        if (data != null && ConfigManager.getInstance().getTipMoneyShowFlag()){
                             String customData = new String(data);
                             if (customData.contains(CustomConstants.PushMessage.VIDEO_CALL_PUSH)){
                                 VideoPushEntity videoPushEntity = V2TIMCustomManagerUtil.videoPushManager(customData);
