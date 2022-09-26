@@ -640,9 +640,9 @@
     <string name="text_message">You\'ve got a message.</string>
     <string name="im_evaluation_text1">What is your impression of him/her?</string>
     <string name="im_evaluation_text2">More...</string>
-    <string name="default_message_content">sent a message</string>
+    <string name="default_message_content">Got a message!</string>
     <string name="default_message_content2">got a system message</string>
-    <string name="default_message_content3">sent a message</string>
+    <string name="default_message_content3">Sent a message!</string>
     <string name="custom_gift_right_title">got a gift</string>
     <string name="custom_gift_left_title">gift</string>
     <string name="text_message2">Reply to get award.</string>
