@@ -20,7 +20,6 @@ import okhttp3.OkHttpClient;
 public final class GlideCache extends AppGlideModule {
     @Override
     public void registerComponents(@NonNull Context context, @NonNull Glide glide, @NonNull Registry registry) {
-        Log.e("当前监听器：","=============================================");
         OkHttpClient.Builder builder = GlideUnsafeOkHttpClient.getUnsafeOkHttpClient();
         builder.addInterceptor(new GlideProgressInterceptor());
         OkHttpClient okHttpClient = builder.build();

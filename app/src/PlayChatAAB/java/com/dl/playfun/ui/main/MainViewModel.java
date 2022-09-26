@@ -404,7 +404,6 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                     case 2: //自定义消息类型
                         V2TIMCustomElem v2TIMCustomElem = info.getV2TIMMessage().getCustomElem();
                         Map<String,Object> contentBody = CustomConvertUtils.CustomMassageConvertMap(v2TIMCustomElem);
-                        Log.e("当前模块转换数据：","==========="+String.valueOf(contentBody));
                         if(ObjectUtils.isNotEmpty(contentBody)){
                             //模块类型--判断
                             if(contentBody.containsKey(CustomConstants.Message.MODULE_NAME_KEY)){
@@ -434,7 +433,6 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                                 }
                             }
 
-                            Log.e("接收的自定义消息体：",new String(v2TIMCustomElem.getData()));
                         }
                         break;
                 }
