@@ -1,7 +1,10 @@
 package com.dl.playfun.ui.coinpusher.dialog;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.os.Build;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -33,6 +36,8 @@ import com.dl.playfun.ui.base.BaseDialog;
 import com.dl.playfun.ui.coinpusher.dialog.adapter.CoinPusherCapsuleAdapter;
 import com.dl.playfun.ui.coinpusher.dialog.adapter.CoinPusherConvertAdapter;
 import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
+
+import java.lang.reflect.Field;
 
 import io.reactivex.Observable;
 import me.goldze.mvvmhabit.binding.viewadapter.recyclerview.LayoutManagers;
@@ -72,10 +77,9 @@ public class CoinPusherConvertDialog  extends BaseDialog {
 
     private int SEL_COIN_PUSHER_CAPSULE  = -1;
 
-    public CoinPusherConvertDialog(Activity activity) {
-        super(activity);
-        this.mContext = activity;
-        super.setMActivity(activity);
+    public CoinPusherConvertDialog(Context context) {
+        super(context);
+        this.mContext = context;
         initView();
         onClickListener();
         loadData();
@@ -124,7 +128,7 @@ public class CoinPusherConvertDialog  extends BaseDialog {
                 SEL_COIN_PUSHER_CAPSULE = position;
             }
             //选择购买宝盒明细弹窗
-            CoinPusherConvertCapsuleDialog pusherConvertCapsuleDialog = new CoinPusherConvertCapsuleDialog(getMActivity(),coinPusherCapsuleAdapter.getItemData(SEL_COIN_PUSHER_CAPSULE).getId(),convertItemTitle,convertItemContent,coinPusherCapsuleAdapter.getItemData(SEL_COIN_PUSHER_CAPSULE).getItem());
+            CoinPusherConvertCapsuleDialog pusherConvertCapsuleDialog = new CoinPusherConvertCapsuleDialog(getContext(),coinPusherCapsuleAdapter.getItemData(SEL_COIN_PUSHER_CAPSULE).getId(),convertItemTitle,convertItemContent,coinPusherCapsuleAdapter.getItemData(SEL_COIN_PUSHER_CAPSULE).getItem());
             pusherConvertCapsuleDialog.setItemConvertListener(new CoinPusherConvertCapsuleDialog.ItemConvertListener() {
                 @Override
                 public void success(CoinPusherBalanceDataEntity coinPusherDataEntity) {
@@ -186,6 +190,24 @@ public class CoinPusherConvertDialog  extends BaseDialog {
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;   //设置宽度充满屏幕
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         window.setAttributes(lp);
+        window.setStatusBarColor(Color.TRANSPARENT);
+        // 解决 状态栏变色的bug
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(Color.TRANSPARENT);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                try {
+                    @SuppressLint("PrivateApi")
+                    Class<?> decorViewClazz = Class.forName("com.android.internal.policy.DecorView");
+                    Field field = decorViewClazz.getDeclaredField("mSemiTransparentStatusBarColor");
+                    field.setAccessible(true);
+                    // 去掉高版本蒙层改为透明
+                    field.setInt(window.getDecorView(), Color.TRANSPARENT);
+                } catch (Exception ignored) {
+                }
+            }
+        }
         super.show();
     }
     @Override
@@ -211,7 +233,7 @@ public class CoinPusherConvertDialog  extends BaseDialog {
                                 binding.tvCapsuleHint.setText(coinPusherConvertInfo.getGoldTips());
                                 tvTotalMoneyRefresh();
                             }
-                            if(StringUtils.isEmpty(coinPusherConvertInfo.getDiamondsTips())){
+                            if(!StringUtils.isEmpty(coinPusherConvertInfo.getDiamondsTips())){
                                 binding.tvConverTitle.setText(coinPusherConvertInfo.getDiamondsTips());
                             }
                             convertItemTitle = coinPusherConvertInfo.getExchangeTips();

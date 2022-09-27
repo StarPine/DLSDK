@@ -80,6 +80,8 @@ public class CoinPusherHelpDialog extends BaseDialog {
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;   //设置宽度充满屏幕
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         window.setAttributes(lp);
+        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.show();
     }
 

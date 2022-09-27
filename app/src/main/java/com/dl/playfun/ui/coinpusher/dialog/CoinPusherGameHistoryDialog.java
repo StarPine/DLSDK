@@ -25,9 +25,9 @@ import com.dl.playfun.widget.recyclerview.LineManagers;
 
 import java.util.List;
 
-import me.goldze.mvvmhabit.binding.viewadapter.recyclerview.LayoutManagers;
 import me.goldze.mvvmhabit.utils.RxUtils;
 import me.goldze.mvvmhabit.utils.StringUtils;
+import me.tatarka.bindingcollectionadapter2.LayoutManagers;
 
 /**
  * Author: 彭石林
@@ -45,10 +45,9 @@ public class CoinPusherGameHistoryDialog extends BaseDialog {
 
     private CoinPusherGameHistoryAdapter coinPusherCapsuleAdapter;
 
-    public CoinPusherGameHistoryDialog(Activity activity,CoinPusherRoomDeviceInfo coinPusherRoomDeviceInfo) {
-        super(activity);
-        super.setMActivity(activity);
-        this.mContext = activity;
+    public CoinPusherGameHistoryDialog(Context context,CoinPusherRoomDeviceInfo coinPusherRoomDeviceInfo) {
+        super(context);
+        this.mContext = context;
         this.roomId = coinPusherRoomDeviceInfo.getRoomId();
         this.coinPusherRoomDeviceInfo = coinPusherRoomDeviceInfo;
         initView();
@@ -66,9 +65,9 @@ public class CoinPusherGameHistoryDialog extends BaseDialog {
         //支持LiveData绑定xml，数据改变，UI自动会更新
         binding.setLifecycleOwner(this);
         //行布局
-        LayoutManagers.LayoutManagerFactory layoutManagerFactory= LayoutManagers.linear(LinearLayoutManager.VERTICAL,false);
+        LayoutManagers.LayoutManagerFactory layoutManagerFactory= LayoutManagers.linear();
         binding.rcvList.setLayoutManager(layoutManagerFactory.create(binding.rcvList));
-        binding.rcvList.addItemDecoration(LineManagers.horizontal(1,55,0).create(binding.rcvList));
+        binding.rcvList.addItemDecoration(LineManagers.horizontal(1,15,0).create(binding.rcvList));
         coinPusherCapsuleAdapter = new CoinPusherGameHistoryAdapter();
         binding.rcvList.setAdapter(coinPusherCapsuleAdapter);
         binding.imgClose.setOnClickListener(v ->dismiss());

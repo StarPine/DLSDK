@@ -1,8 +1,9 @@
 package com.dl.playfun.ui.coinpusher.dialog;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.graphics.Color;
+import android.os.Build;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -12,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import androidx.databinding.DataBindingUtil;
@@ -31,15 +31,14 @@ import com.dl.playfun.entity.CoinPusherDataInfoEntity;
 import com.dl.playfun.entity.CoinPusherRoomDeviceInfo;
 import com.dl.playfun.entity.CoinPusherRoomInfoEntity;
 import com.dl.playfun.entity.CoinPusherRoomTagInfoEntity;
-import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseDialog;
 import com.dl.playfun.ui.coinpusher.dialog.adapter.CoinPusherRoomListAdapter;
 import com.dl.playfun.ui.coinpusher.dialog.adapter.CoinPusherRoomTagAdapter;
 import com.dl.playfun.viewadapter.CustomRefreshHeader;
-import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 import com.tencent.qcloud.tuicore.Status;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import me.goldze.mvvmhabit.binding.viewadapter.recyclerview.LayoutManagers;
@@ -75,10 +74,9 @@ public class CoinPusherRoomListDialog extends BaseDialog {
         this.dialogEventListener = dialogEventListener;
     }
 
-    public CoinPusherRoomListDialog(Activity activity) {
-        super(activity);
-        this.mContext = activity;
-        super.setMActivity(activity);
+    public CoinPusherRoomListDialog(Context context) {
+        super(context);
+        this.mContext = context;
         initView();
         loadData();
     }
@@ -138,7 +136,7 @@ public class CoinPusherRoomListDialog extends BaseDialog {
         binding.refreshLayout.setOnRefreshListener(v->startRefreshDataInfo());
 
         binding.rlCoin.setOnClickListener(v ->{
-            CoinPusherConvertDialog coinPusherConvertDialog = new CoinPusherConvertDialog(getMActivity());
+            CoinPusherConvertDialog coinPusherConvertDialog = new CoinPusherConvertDialog(getContext());
             coinPusherConvertDialog.setItemConvertListener(new CoinPusherConvertDialog.ItemConvertListener() {
                 @Override
                 public void convertSuccess(CoinPusherBalanceDataEntity coinPusherDataEntity) {
@@ -179,6 +177,25 @@ public class CoinPusherRoomListDialog extends BaseDialog {
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;   //设置宽度充满屏幕
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         window.setAttributes(lp);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        window.setStatusBarColor(Color.TRANSPARENT);
+        // 解决 状态栏变色的bug
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(Color.TRANSPARENT);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                try {
+                    @SuppressLint("PrivateApi")
+                    Class<?> decorViewClazz = Class.forName("com.android.internal.policy.DecorView");
+                    Field field = decorViewClazz.getDeclaredField("mSemiTransparentStatusBarColor");
+                    field.setAccessible(true);
+                    // 去掉高版本蒙层改为透明
+                    field.setInt(window.getDecorView(), Color.TRANSPARENT);
+                } catch (Exception ignored) {
+                }
+            }
+        }
         super.show();
     }
     @Override

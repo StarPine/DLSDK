@@ -28,17 +28,7 @@ public class BaseDialog  extends Dialog implements Consumer<Disposable>, Lifecyc
 
     private CompositeDisposable mCompositeDisposable;
 
-    private Activity mActivity;
-
     private final LifecycleRegistry mLifecycle = new LifecycleRegistry(this);
-
-    public Activity getMActivity() {
-        return mActivity;
-    }
-
-    public void setMActivity(Activity mActivity) {
-        this.mActivity = mActivity;
-    }
 
     public BaseDialog(Context context) {
         super(context);

@@ -185,6 +185,9 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
         WsWebRTCObserver observer = new WsWebRTCObserver() {
             @Override
             public void onWsWebrtcError(String s, ErrCode errCode) {
+                if(errCode == ErrCode.ERR_CODE_WEBRTC_DISCONN){
+                    //链接断开
+                }
                 Log.e(TAG,"onWsWebrtcError："+s+"============"+errCode.toString());
             }
 

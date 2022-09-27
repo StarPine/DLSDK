@@ -1,7 +1,10 @@
 package com.dl.playfun.ui.coinpusher.dialog;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.os.Build;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Window;
@@ -22,6 +25,7 @@ import com.dl.playfun.ui.base.BaseDialog;
 import com.dl.playfun.ui.coinpusher.dialog.adapter.CoinPusherCapsuleADetailAdapter;
 import com.misterp.toast.SnackUtils;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import me.goldze.mvvmhabit.binding.viewadapter.recyclerview.LayoutManagers;
@@ -57,10 +61,9 @@ public class CoinPusherConvertCapsuleDialog extends BaseDialog {
         this.itemConvertListener = itemConvertListener;
     }
 
-    public CoinPusherConvertCapsuleDialog(Activity activity,Integer convertConfigId,String convertItemTitle,String convertItemContent, List<CoinPusherConverInfoEntity.GoldCoinInfo.GoldCoinItem> itemData) {
-        super(activity);
-        this.mContext = activity;
-        super.setMActivity(activity);
+    public CoinPusherConvertCapsuleDialog(Context context,Integer convertConfigId,String convertItemTitle,String convertItemContent, List<CoinPusherConverInfoEntity.GoldCoinInfo.GoldCoinItem> itemData) {
+        super(context);
+        this.mContext = context;
         this.convertItemTitle = convertItemTitle;
         this.convertItemContent = convertItemContent;
         this.convertConfigId = convertConfigId;
@@ -112,6 +115,25 @@ public class CoinPusherConvertCapsuleDialog extends BaseDialog {
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;   //设置宽度充满屏幕
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         window.setAttributes(lp);
+        window.setStatusBarColor(Color.TRANSPARENT);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        // 解决 状态栏变色的bug
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(Color.TRANSPARENT);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                try {
+                    @SuppressLint("PrivateApi")
+                    Class<?> decorViewClazz = Class.forName("com.android.internal.policy.DecorView");
+                    Field field = decorViewClazz.getDeclaredField("mSemiTransparentStatusBarColor");
+                    field.setAccessible(true);
+                    // 去掉高版本蒙层改为透明
+                    field.setInt(window.getDecorView(), Color.TRANSPARENT);
+                } catch (Exception ignored) {
+                }
+            }
+        }
         super.show();
     }
     @Override
