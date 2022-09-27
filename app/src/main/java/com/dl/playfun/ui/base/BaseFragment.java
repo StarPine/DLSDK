@@ -3,12 +3,10 @@ package com.dl.playfun.ui.base;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
-import android.widget.ProgressBar;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -20,12 +18,11 @@ import androidx.lifecycle.Observer;
 
 import com.blankj.utilcode.util.KeyboardUtils;
 import com.blankj.utilcode.util.StringUtils;
-import com.dl.playfun.viewmodel.BaseViewModel;
-import com.dl.playfun.widget.dialog.loading.DialogProgress;
-import com.dl.playfun.widget.progress.MPCircleProgressBar;
-import com.gyf.immersionbar.ImmersionBar;
-import com.kaopiz.kprogresshud.KProgressHUD;
 import com.dl.playfun.R;
+import com.dl.playfun.viewmodel.BaseViewModel;
+import com.dl.playfun.widget.dialog.loading.DialogLoading;
+import com.dl.playfun.widget.dialog.loading.DialogProgress;
+import com.gyf.immersionbar.ImmersionBar;
 
 import java.util.Map;
 
@@ -40,8 +37,8 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
     final SupportFragmentDelegate mDelegate = new SupportFragmentDelegate(this);
     protected AppCompatActivity mActivity;
     protected FragmentActivity _mActivity;
-    private KProgressHUD hud;
 
+    private DialogLoading dialogLoading;
     private DialogProgress dialogProgress;
 
     @Override
@@ -199,19 +196,10 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
             dialogProgress.dismiss();
         }
 
-        if (hud == null) {
-            ProgressBar progressBar = new ProgressBar(getContext());
-            progressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
-
-            hud = KProgressHUD.create(this.getContext())
-                    .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
-                    .setBackgroundColor(getResources().getColor(R.color.hud_background))
-                    .setLabel(title)
-                    .setCustomView(progressBar)
-                    .setSize(100, 100)
-                    .setCancellable(false);
+        if (dialogLoading == null) {
+            dialogLoading = new DialogLoading(this.getContext());
         }
-        hud.show();
+        dialogLoading.show();
     }
 
     public void showHud() {
@@ -219,8 +207,8 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
     }
 
     public void showProgressHud(String title, int progress) {
-        if (hud != null && hud.isShowing()) {
-            hud.dismiss();
+        if (dialogLoading != null && dialogLoading.isShowing()) {
+            dialogLoading.dismiss();
         }
         if (dialogProgress == null) {
             dialogProgress = new DialogProgress(this.getContext());
@@ -232,8 +220,8 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
     }
 
     public void dismissHud() {
-        if (hud != null && hud.isShowing()) {
-            hud.dismiss();
+        if (dialogLoading != null && dialogLoading.isShowing()) {
+            dialogLoading.dismiss();
         }
         if (dialogProgress != null && dialogProgress.isShowing()) {
             dialogProgress.dismiss();
@@ -308,9 +296,24 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
         super.onDestroyView();
     }
 
+    public void dismissDestroyHud() {
+        if (dialogLoading != null) {
+            if(dialogLoading.isShowing()){
+                dialogLoading.dismiss();
+            }
+            dialogLoading = null;
+        }
+        if (dialogProgress != null) {
+            if(dialogProgress.isShowing()){
+                dialogProgress.dismiss();
+            }
+            dialogProgress = null;
+        }
+    }
+
     @Override
     public void onDestroy() {
-        dismissHud();
+        dismissDestroyHud();
         mDelegate.onDestroy();
         super.onDestroy();
     }
@@ -320,7 +323,7 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
         super.onHiddenChanged(hidden);
         try {
             mDelegate.onHiddenChanged(hidden);
-        }catch (Exception e) {
+        }catch (Exception ignored) {
 
         }
 

@@ -51,7 +51,7 @@ public class CoinPusherHelpDialog extends BaseDialog {
         //支持LiveData绑定xml，数据改变，UI自动会更新
         binding.setLifecycleOwner(this);
         binding.imgClose.setOnClickListener(v -> {
-            dismiss();
+            cancel();
         });
     }
 
@@ -80,7 +80,6 @@ public class CoinPusherHelpDialog extends BaseDialog {
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;   //设置宽度充满屏幕
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         window.setAttributes(lp);
-        binding.webView.loadUrl(webViewUrl);
         super.show();
     }
 

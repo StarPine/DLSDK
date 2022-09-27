@@ -31,23 +31,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_title"
                     android:includeFontPadding="false"
                     android:layout_marginTop="20dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Lv1 P1號機歷史結果"
+                    android:text="@string/playfun_coinpusher_history_text2"
                     android:textColor="#43435E"
                     android:textSize="18sp"
-                    />
-                <TextView
-                    android:layout_marginTop="11dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="展示近7天中獎歷史結果"
-                    android:textColor="#ff9897b3"
-                    android:textSize="14sp"
                     />
                 <com.scwang.smart.refresh.layout.SmartRefreshLayout
                     android:id="@+id/refresh_layout"

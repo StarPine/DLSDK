@@ -34,6 +34,7 @@ import com.dl.playfun.ui.coinpusher.dialog.adapter.CoinPusherCapsuleAdapter;
 import com.dl.playfun.ui.coinpusher.dialog.adapter.CoinPusherConvertAdapter;
 import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 
+import io.reactivex.Observable;
 import me.goldze.mvvmhabit.binding.viewadapter.recyclerview.LayoutManagers;
 import me.goldze.mvvmhabit.utils.RxUtils;
 import me.goldze.mvvmhabit.utils.ToastUtils;
@@ -242,7 +243,9 @@ public class CoinPusherConvertDialog  extends BaseDialog {
 
     @Override
     public void showHud() {
-        super.showHud();
+        if(isShowing()){
+            super.showHud();
+        }
     }
 
     @Override
@@ -257,10 +260,11 @@ public class CoinPusherConvertDialog  extends BaseDialog {
     }
     //金币兑换砖石礼包
     private void convertCoinPusherDiamonds(final Integer id){
+        Observable<BaseDataResponse<CoinPusherBalanceDataEntity>> convertCoinPusherDiamonds= ConfigManager.getInstance().getAppRepository().convertCoinPusherDiamonds(id);
         ConfigManager.getInstance().getAppRepository().convertCoinPusherDiamonds(id)
-                .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(this)
                 .doOnSubscribe(disposable -> showHud())
                 .subscribe(new BaseObserver<BaseDataResponse<CoinPusherBalanceDataEntity>>(){
 

@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
@@ -22,8 +23,23 @@ import com.scwang.smart.refresh.layout.constant.SpinnerStyle;
  * Description: This is CustomRefreshHeader
  */
 public class CustomRefreshHeader extends RelativeLayout implements RefreshHeader {
+
+    private String tvContent = null;
+
     public CustomRefreshHeader(Context context) {
         this(context,null);
+    }
+
+    public void setTvContent(String tvContent) {
+        this.tvContent = tvContent;
+        if(tvContent!=null){
+            if(getView()!=null){
+                TextView textView = getView().findViewById(R.id.tv_content);
+                if(textView!=null){
+                    textView.post(()->textView.setText(tvContent));
+                }
+            }
+        }
     }
 
     public CustomRefreshHeader(Context context, AttributeSet attrs) {

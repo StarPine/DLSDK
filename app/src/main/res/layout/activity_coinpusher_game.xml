@@ -187,5 +187,28 @@
                 android:layout_height="32dp"
                 android:indeterminateDrawable="@drawable/anim_custom_progress_draw" />
         </FrameLayout>
+
+        <FrameLayout
+            android:elevation="99dp"
+            android:visibility="gone"
+            android:id="@+id/fl_layout_loading_video"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <FrameLayout
+                binding:drawable_cornersRadius="@{8}"
+                binding:drawable_alpha="@{10}"
+                binding:drawable_color="@{@color/white}"
+                android:layout_gravity="center"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                tools:ignore="UselessParent">
+                <ProgressBar
+                    style="@android:style/Widget.ProgressBar"
+                    android:layout_gravity="center"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:indeterminateDrawable="@drawable/anim_custom_progress_draw" />
+            </FrameLayout>
+        </FrameLayout>
     </RelativeLayout>
 </layout>

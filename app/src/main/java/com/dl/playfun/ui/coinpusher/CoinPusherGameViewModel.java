@@ -206,8 +206,14 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
                                 gameUI.playingBtnEnable.postValue(true);
                                 break;
                             case CustomConstants.CoinPusher.DROP_COINS:
+                                //落币奖励
                                 //gamePlayingState = null;
                                 gameUI.toastCenter.postValue(coinPusherGamePlayingEvent);
+                                break;
+                            case CustomConstants.CoinPusher.LITTLE_GAME_WINNING:
+                                //中奖 小游戏（叠叠乐、小玛利）
+                                gamePlayingState = CustomConstants.CoinPusher.START_WINNING;
+                                gameUI.cancelDownTimeEvent.postValue(null);
                                 break;
                         }
                     }

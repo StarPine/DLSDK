@@ -10,33 +10,29 @@ import android.widget.FrameLayout;
 
 import com.dl.playfun.R;
 import com.dl.playfun.ui.base.BaseDialog;
-import com.dl.playfun.widget.progress.MPCircleProgressBar;
 import com.tencent.qcloud.tuicore.custom.CustomDrawableUtils;
 
 /**
  * Author: 彭石林
- * Time: 2022/9/12 18:34
- * Description: This is DialogProgress
+ * Time: 2022/9/27 18:00
+ * Description: This is DialogLoading
  */
-public class DialogProgress extends BaseDialog {
+public class DialogLoading extends BaseDialog {
 
     View contentView;
 
-    MPCircleProgressBar mpCircleProgressBar;
-
-    public DialogProgress(Context context) {
+    public DialogLoading(Context context) {
         super(context);
         initView(context);
     }
 
     void initView(Context context) {
-        contentView = LayoutInflater.from(context).inflate(R.layout.dialog_mp_loading_process, null);
-        mpCircleProgressBar = contentView.findViewById(R.id.progress);
+        contentView = LayoutInflater.from(context).inflate(R.layout.dialog_mp_loading, null);
         FrameLayout flLayout = contentView.findViewById(R.id.fl_layout);
         if(flLayout!=null){
-            CustomDrawableUtils.generateDrawable(flLayout, getColorFromResource(R.color.black),
-                    19,null,null,null,null,
-                    null,null,null,null,49,null);
+            CustomDrawableUtils.generateDrawable(flLayout, getColorFromResource(R.color.white),
+                    8,null,null,null,null,
+                    null,null,null,null,90,null);
         }
         setCanceledOnTouchOutside(false);
         setCancelable(false);
@@ -56,30 +52,17 @@ public class DialogProgress extends BaseDialog {
         //设置宽度充满屏幕
         Window window = getWindow();
         window.setGravity(Gravity.CENTER); //可设置dialog的位置
-        window.setWindowAnimations(R.style.BottomDialog_Animation);
         window.getDecorView().setPadding(0, 0, 0, 0); //消除边距
         WindowManager.LayoutParams lp = window.getAttributes();
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;   //设置宽度充满屏幕
-        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
         window.setAttributes(lp);
         super.show();
-    }
-
-    public void setProgress(int progress){
-        if(progress>=100){
-            dismiss();
-        }else{
-            if(mpCircleProgressBar!=null){
-                mpCircleProgressBar.SetCurrent(progress);
-            }
-            if(!isShowing()){
-                show();
-            }
-        }
     }
 
     @Override
     public void dismiss() {
         super.dismiss();
     }
+
 }

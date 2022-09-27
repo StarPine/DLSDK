@@ -2197,6 +2197,8 @@
     <string name="playfun_coinpusher_text_playing">Coin</string>
     <string name="playfun_coinpusher_coin_text_reward">Get %s coins</string>
     <string name="playfun_coinpusher_hint_retain2">The coin reward is being distributed. If you exit at this time, the reward\nwill be lost. Are you sure to quit?</string>
+    <string name="playfun_coinpusher_hint_retain3">Game is in progress, sure to exit?</string>
+
     <string name="playfun_coinpusher_room_empty_text">There are currently no machines available</string>
     <string name="playfun_coinpusher_error_text1">Loading failed, please try again</string>
     <string name="playfun_refresh">Refresh</string>
@@ -2252,6 +2254,8 @@
     <string name="playfun_update_version_text2">Update now</string>
     <string name="playfun_update_version_text3">Update?</string>
     <string name="playfun_update_version_text4">Ignore this version</string>
+    <string name="playfun_coinpusher_history_text1">展示近7天中獎歷史結果</string>
+    <string name="playfun_coinpusher_history_text2">Lv%s號機歷史結果</string>
 
     <!--PlayFun-APP-END-->
 </resources>

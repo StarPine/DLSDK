@@ -3,28 +3,18 @@ package com.dl.playfun.ui.base;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.ProgressBar;
 
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.Observer;
 
 import com.dl.playfun.R;
 import com.dl.playfun.manager.LocaleManager;
-import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
 import com.dl.playfun.viewmodel.BaseViewModel;
+import com.dl.playfun.widget.dialog.loading.DialogLoading;
 import com.dl.playfun.widget.dialog.loading.DialogProgress;
-import com.dl.playfun.widget.progress.MPCircleProgressBar;
 import com.gyf.immersionbar.ImmersionBar;
-import com.kaopiz.kprogresshud.KProgressHUD;
 
 import java.util.Map;
 
@@ -34,7 +24,7 @@ import java.util.Map;
  * Description: This is BaseActivity
  */
 public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseViewModel> extends me.goldze.mvvmhabit.base.BaseActivity<V, VM> {
-    private KProgressHUD hud;
+    private DialogLoading dialogLoading;
     private DialogProgress dialogProgress;
 
 
@@ -123,24 +113,15 @@ public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseVie
             dialogProgress.dismiss();
         }
 
-        if (hud == null) {
-            ProgressBar progressBar = new ProgressBar(getContext());
-            progressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
-
-            hud = KProgressHUD.create(this.getContext())
-                    .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
-                    .setBackgroundColor(getResources().getColor(R.color.hud_background))
-                    .setLabel(title)
-                    .setCustomView(progressBar)
-                    .setSize(100, 100)
-                    .setCancellable(false);
+        if (dialogLoading == null) {
+            dialogLoading = new DialogLoading(this.getContext());
         }
-        hud.show();
+        dialogLoading.show();
     }
 
     public void showProgressHud(String title, int progress) {
-        if (hud != null && hud.isShowing()) {
-            hud.dismiss();
+        if (dialogLoading != null && dialogLoading.isShowing()) {
+            dialogLoading.dismiss();
         }
         if (dialogProgress == null) {
             dialogProgress = new DialogProgress(this.getContext());
@@ -149,17 +130,32 @@ public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseVie
     }
 
     public void dismissHud() {
-        if (hud != null && hud.isShowing()) {
-            hud.dismiss();
+        if (dialogLoading != null && dialogLoading.isShowing()) {
+            dialogLoading.dismiss();
         }
         if (dialogProgress != null && dialogProgress.isShowing()) {
             dialogProgress.dismiss();
         }
     }
 
+    public void dismissDestroyHud() {
+        if (dialogLoading != null) {
+            if(dialogLoading.isShowing()){
+                dialogLoading.dismiss();
+            }
+            dialogLoading = null;
+        }
+        if (dialogProgress != null) {
+            if(dialogProgress.isShowing()){
+                dialogProgress.dismiss();
+            }
+            dialogProgress = null;
+        }
+    }
+
     @Override
     public void onDestroy() {
-        dismissHud();
+        dismissDestroyHud();
         super.onDestroy();
     }
 

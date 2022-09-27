@@ -2200,6 +2200,7 @@
     <string name="playfun_coinpusher_text_playing">投幣</string>
     <string name="playfun_coinpusher_coin_text_reward">獲得金幣 %s 枚</string>
     <string name="playfun_coinpusher_hint_retain2">金幣獎勵正在發放，此時退出遊戲，獎勵將丟失\n確認退出遊戲嗎？</string>
+    <string name="playfun_coinpusher_hint_retain3">正在進行小遊戲，確認退出遊戲嗎？</string>
     <string name="playfun_coinpusher_room_empty_text">當前沒有可用的機器</string>
     <string name="playfun_coinpusher_error_text1">加載失敗，請重試 </string>
     <string name="playfun_refresh">刷新</string>
@@ -2255,5 +2256,7 @@
     <string name="playfun_update_version_text2">立即升級</string>
     <string name="playfun_update_version_text3">是否升級</string>
     <string name="playfun_update_version_text4">忽略此版本</string>
+    <string name="playfun_coinpusher_history_text1">展示近7天中獎歷史結果</string>
+    <string name="playfun_coinpusher_history_text2">Lv%s號機歷史結果</string>
     <!--PlayFun-APP-END-->
 </resources>

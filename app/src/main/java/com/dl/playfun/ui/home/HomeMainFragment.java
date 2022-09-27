@@ -20,6 +20,7 @@ import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
+import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
@@ -33,6 +34,7 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocationManager;
 import com.dl.playfun.ui.base.BaseRefreshFragment;
 import com.dl.playfun.ui.coinpusher.CoinPusherGameActivity;
+import com.dl.playfun.ui.coinpusher.dialog.CoinPusherDialogAdapter;
 import com.dl.playfun.ui.coinpusher.dialog.CoinPusherRoomListDialog;
 import com.dl.playfun.ui.dialog.CityChooseDialog;
 import com.dl.playfun.ui.home.accost.HomeAccostDialog;
@@ -281,6 +283,27 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
         super.onResume();
         AppContext.isHomePage = true;
         AppContext.isShowNotPaid = true;
+        //30秒没有投币提示
+        if(AppConfig.CoinPusherGameNotPushed){
+            AppConfig.CoinPusherGameNotPushed = false;
+            //弹出推币机选择弹窗
+            CoinPusherRoomListDialog coinersDialog = new CoinPusherRoomListDialog(mActivity);
+            coinersDialog.setDialogEventListener(new CoinPusherRoomListDialog.DialogEventListener() {
+                @Override
+                public void startViewing(CoinPusherDataInfoEntity itemEntity) {
+                    coinersDialog.dismiss();
+                    Intent intent = new Intent(mActivity, CoinPusherGameActivity.class);
+                    intent.putExtra("CoinPusherInfo",itemEntity);
+                    startActivity(intent);
+                }
+                @Override
+                public void buyErrorPayView() {
+                    payCoinRechargeDialog();
+                }
+            });
+            coinersDialog.show();
+            CoinPusherDialogAdapter.getDialogCoinPusherHint(getContext());
+        }
     }
 
     @Override

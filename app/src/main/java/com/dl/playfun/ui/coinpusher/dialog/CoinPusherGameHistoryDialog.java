@@ -15,6 +15,7 @@ import com.dl.playfun.R;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.databinding.DialogCoinpusherListHistoryBinding;
+import com.dl.playfun.entity.CoinPusherRoomDeviceInfo;
 import com.dl.playfun.entity.CoinPusherRoomHistoryEntity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseDialog;
@@ -26,6 +27,7 @@ import java.util.List;
 
 import me.goldze.mvvmhabit.binding.viewadapter.recyclerview.LayoutManagers;
 import me.goldze.mvvmhabit.utils.RxUtils;
+import me.goldze.mvvmhabit.utils.StringUtils;
 
 /**
  * Author: 彭石林
@@ -38,15 +40,17 @@ public class CoinPusherGameHistoryDialog extends BaseDialog {
 
     private final Context mContext;
 
-    private Integer roomId;
+    private final Integer roomId;
+    private final CoinPusherRoomDeviceInfo coinPusherRoomDeviceInfo;
 
     private CoinPusherGameHistoryAdapter coinPusherCapsuleAdapter;
 
-    public CoinPusherGameHistoryDialog(Activity activity,Integer roomId) {
+    public CoinPusherGameHistoryDialog(Activity activity,CoinPusherRoomDeviceInfo coinPusherRoomDeviceInfo) {
         super(activity);
         super.setMActivity(activity);
         this.mContext = activity;
-        this.roomId = roomId;
+        this.roomId = coinPusherRoomDeviceInfo.getRoomId();
+        this.coinPusherRoomDeviceInfo = coinPusherRoomDeviceInfo;
         initView();
         startRefreshDataInfo();
     }
@@ -54,17 +58,23 @@ public class CoinPusherGameHistoryDialog extends BaseDialog {
     private void initView() {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         binding = DataBindingUtil.inflate(inflater, R.layout.dialog_coinpusher_list_history, null, false);
+        if(coinPusherRoomDeviceInfo!=null){
+            int levelId = coinPusherRoomDeviceInfo.getLevelId();
+            String nickname = coinPusherRoomDeviceInfo.getNickname();
+            binding.tvTitle.setText(String.format(StringUtils.getString(R.string.playfun_coinpusher_history_text2),String.valueOf(levelId+" "+nickname)));
+        }
         //支持LiveData绑定xml，数据改变，UI自动会更新
         binding.setLifecycleOwner(this);
         //行布局
         LayoutManagers.LayoutManagerFactory layoutManagerFactory= LayoutManagers.linear(LinearLayoutManager.VERTICAL,false);
         binding.rcvList.setLayoutManager(layoutManagerFactory.create(binding.rcvList));
-        binding.rcvList.addItemDecoration(LineManagers.horizontal(1,15,0).create(binding.rcvList));
+        binding.rcvList.addItemDecoration(LineManagers.horizontal(1,55,0).create(binding.rcvList));
         coinPusherCapsuleAdapter = new CoinPusherGameHistoryAdapter();
         binding.rcvList.setAdapter(coinPusherCapsuleAdapter);
         binding.imgClose.setOnClickListener(v ->dismiss());
-
-        binding.refreshLayout.setRefreshHeader(new CustomRefreshHeader(getContext()));
+        CustomRefreshHeader customRefreshHeader = new CustomRefreshHeader(getContext());
+        customRefreshHeader.setTvContent(StringUtils.getString(R.string.playfun_coinpusher_history_text1));
+        binding.refreshLayout.setRefreshHeader(customRefreshHeader);
         binding.refreshLayout.setEnableLoadMore(false);
         binding.refreshLayout.setOnRefreshListener(v->startRefreshDataInfo());
     }
@@ -103,9 +113,9 @@ public class CoinPusherGameHistoryDialog extends BaseDialog {
 
     public void loadData(Integer roomId){
         ConfigManager.getInstance().getAppRepository().qryCoinPusherRoomHistory(roomId)
-                .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(this)
                 .doOnSubscribe(dismiss -> showHud())
                 .subscribe(new BaseObserver<BaseDataResponse<List<CoinPusherRoomHistoryEntity>>>() {
                     @Override

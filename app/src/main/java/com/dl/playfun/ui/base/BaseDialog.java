@@ -4,17 +4,14 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LifecycleRegistry;
 
-import com.dl.playfun.R;
-import com.kaopiz.kprogresshud.KProgressHUD;
+import com.dl.playfun.widget.dialog.loading.DialogLoading;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -27,7 +24,7 @@ import io.reactivex.functions.Consumer;
  */
 public class BaseDialog  extends Dialog implements Consumer<Disposable>, LifecycleOwner {
 
-    private KProgressHUD hud;
+    private DialogLoading dialogLoading = null;
 
     private CompositeDisposable mCompositeDisposable;
 
@@ -112,22 +109,10 @@ public class BaseDialog  extends Dialog implements Consumer<Disposable>, Lifecyc
     }
 
     private void showHud(String title) {
-        if(getMActivity()==null){
-            return;
+        if (dialogLoading == null) {
+            dialogLoading = new DialogLoading(this.getContext());
         }
-        if (hud == null) {
-            ProgressBar progressBar = new ProgressBar(getMActivity());
-            progressBar.getIndeterminateDrawable().setColorFilter(getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
-
-            hud = KProgressHUD.create(getMActivity())
-                    .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
-                    .setBackgroundColor(getContext().getResources().getColor(R.color.hud_background))
-                    .setLabel(title)
-                    .setCustomView(progressBar)
-                    .setSize(100, 100)
-                    .setCancellable(false);
-        }
-        hud.show();
+        dialogLoading.show();
     }
 
     public void showHud() {
@@ -135,11 +120,8 @@ public class BaseDialog  extends Dialog implements Consumer<Disposable>, Lifecyc
     }
 
     public void dismissHud() {
-        if(getMActivity()==null){
-            return;
-        }
-        if (hud != null && hud.isShowing()) {
-            hud.dismiss();
+        if (dialogLoading != null && dialogLoading.isShowing()) {
+            dialogLoading.dismiss();
         }
     }
 }

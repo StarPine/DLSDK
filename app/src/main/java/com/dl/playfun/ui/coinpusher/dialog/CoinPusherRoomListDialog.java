@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
-import com.blankj.utilcode.util.ToastUtils;
 import com.dl.playfun.R;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
@@ -45,6 +44,7 @@ import java.util.List;
 
 import me.goldze.mvvmhabit.binding.viewadapter.recyclerview.LayoutManagers;
 import me.goldze.mvvmhabit.utils.RxUtils;
+import me.goldze.mvvmhabit.utils.ToastUtils;
 
 /**
  * Author: 彭石林
@@ -64,6 +64,8 @@ public class CoinPusherRoomListDialog extends BaseDialog {
     private int SEL_COIN_PUSHER_TAG_IDX = -1;
 
     private Integer checkedTagId = null;
+
+    private boolean buyErrorDissmiss = false;
 
     public DialogEventListener getDialogEventListener() {
         return dialogEventListener;
@@ -146,10 +148,19 @@ public class CoinPusherRoomListDialog extends BaseDialog {
 
                 @Override
                 public void buyError() {
+                    buyErrorDissmiss = true;
+                    coinPusherConvertDialog.dismissHud();
+                    coinPusherConvertDialog.dismiss();
                     getDialogEventListener().buyErrorPayView();
+                    CoinPusherRoomListDialog.this.dismiss();
                 }
             });
-            coinPusherConvertDialog.setOnDismissListener(dialog -> CoinPusherRoomListDialog.this.show());
+            coinPusherConvertDialog.setOnDismissListener(dialog -> {
+                if(!buyErrorDissmiss){
+                    coinPusherConvertDialog.dismissHud();
+                    CoinPusherRoomListDialog.this.show();
+                }
+            });
             coinPusherConvertDialog.show();
             CoinPusherRoomListDialog.this.dismiss();
         });

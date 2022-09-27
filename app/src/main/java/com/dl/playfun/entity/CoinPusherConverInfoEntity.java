@@ -81,7 +81,7 @@ public class CoinPusherConverInfoEntity {
         this.exchangeSubtitle = exchangeSubtitle;
     }
 
-    public class GoldCoinInfo {
+    public static class GoldCoinInfo {
         private int id;
         //礼盒命
         private String name;
@@ -184,8 +184,8 @@ public class CoinPusherConverInfoEntity {
             }
         }
     }
-    //金币对话钻石
-    public class DiamondsInfo{
+    //金币兑换钻石
+    public static class DiamondsInfo{
         private int id;
         private String name;
         private int value;

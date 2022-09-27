@@ -38,13 +38,17 @@ public class V2TIMCustomManagerUtil {
             if(ObjectUtils.isNotEmpty(pushCoinGame)){
                 //消息类型--判断
                 if(pushCoinGame.containsKey(CustomConstants.Message.CUSTOM_MSG_KEY)){
-                    //开始游戏
-                    if(CustomConvertUtils.ContainsMessageModuleKey(pushCoinGame,CustomConstants.Message.CUSTOM_MSG_KEY,CustomConstants.CoinPusher.START_WINNING)){
+                    if (CustomConvertUtils.ContainsMessageModuleKey(pushCoinGame,CustomConstants.Message.CUSTOM_MSG_KEY,CustomConstants.CoinPusher.LITTLE_GAME_WINNING)){
+                        //中奖 小游戏（叠叠乐、小玛利）
+                        RxBus.getDefault().post(new CoinPusherGamePlayingEvent(CustomConstants.CoinPusher.LITTLE_GAME_WINNING));
+                    }else if(CustomConvertUtils.ContainsMessageModuleKey(pushCoinGame,CustomConstants.Message.CUSTOM_MSG_KEY,CustomConstants.CoinPusher.START_WINNING)){
+                        //开始游戏
                         RxBus.getDefault().post(new CoinPusherGamePlayingEvent(CustomConstants.CoinPusher.START_WINNING));
                     }else if (CustomConvertUtils.ContainsMessageModuleKey(pushCoinGame,CustomConstants.Message.CUSTOM_MSG_KEY,CustomConstants.CoinPusher.END_WINNING)){
                         //落币结束
                         RxBus.getDefault().post(new CoinPusherGamePlayingEvent(CustomConstants.CoinPusher.END_WINNING));
                     }else if(CustomConvertUtils.ContainsMessageModuleKey(pushCoinGame,CustomConstants.Message.CUSTOM_MSG_KEY,CustomConstants.CoinPusher.DROP_COINS)){
+                        //落币奖励
                         Map<String,Object> startWinning = CustomConvertUtils.ConvertMassageModule(pushCoinGame,CustomConstants.Message.CUSTOM_MSG_KEY,CustomConstants.CoinPusher.DROP_COINS,CustomConstants.Message.CUSTOM_MSG_BODY);
                         if(ObjectUtils.isNotEmpty(startWinning)){
                             BigDecimal goldNumberDecimal = new BigDecimal(String.valueOf(ObjectUtils.getOrDefault(startWinning.get("goldNumber"),0)));

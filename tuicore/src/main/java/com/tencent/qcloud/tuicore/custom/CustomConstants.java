@@ -24,6 +24,8 @@ public class CustomConstants {
         public static final String START_WINNING = "startWinning";
         //落币结束
         public static final String END_WINNING = "endWinning";
+        //小游戏： 小玛利、叠叠乐
+        public static final String LITTLE_GAME_WINNING = "littleGameWinning";
         //落币数量
         public static final String DROP_COINS = "dropCoins";
     }
