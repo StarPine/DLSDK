@@ -187,6 +187,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
             public void onWsWebrtcError(String s, ErrCode errCode) {
                 if(errCode == ErrCode.ERR_CODE_WEBRTC_DISCONN){
                     //链接断开
+                    SnackUtils.showCenterShort(getContentShowView(),StringUtils.getString(R.string.playfun_network_text));
                 }
                 Log.e(TAG,"onWsWebrtcError："+s+"============"+errCode.toString());
             }
@@ -198,12 +199,10 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
 
             @Override
             public void onFirstFrameRendered() {
-                Log.e(TAG,"onFirstFrameRendered");
             }
 
             @Override
             public void onResolutionRatioChanged(int i, int i1) {
-                Log.e(TAG,"onResolutionRatioChanged："+i+"========"+i1);
             }
 
             @Override
@@ -218,12 +217,10 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
 
             @Override
             public void onEventSEIReceived(ByteBuffer byteBuffer) {
-                Log.e(TAG,"onEventSEIReceived");
             }
 
             @Override
             public void onEventConnected() {
-                Log.e(TAG,"onEventConnected");
                 LoadingVideoShow(false);
             }
         };
@@ -495,6 +492,9 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
                     stringResId = R.string.playfun_coinpusher_hint_retain;
                 }else if(viewModel.gamePlayingState.equals(CustomConstants.CoinPusher.START_WINNING)){ //落币状态
                     stringResId = R.string.playfun_coinpusher_hint_retain2;
+                }else if(viewModel.gamePlayingState.equals(CustomConstants.CoinPusher.LITTLE_GAME_WINNING)){
+                    //小游戏提示
+                    stringResId = R.string.playfun_coinpusher_hint_retain3;
                 }
                 if(stringResId != null){
                     CoinPusherDialogAdapter.getDialogCoinPusherRetainHint(this, stringResId, new CoinPusherDialogAdapter.CoinPusherDialogListener() {

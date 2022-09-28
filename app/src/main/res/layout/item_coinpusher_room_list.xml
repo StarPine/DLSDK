@@ -34,6 +34,7 @@
                 android:text="@{itemEntity.status == 1 ? @string/playfun_coinpusher_text_1 : @string/playfun_coinpusher_text_2}"
                 android:textColor="@color/white"
                 android:textSize="14sp"
+                android:textStyle="bold"
                 tools:text="@string/playfun_coinpusher_text_1"
                 tools:background="@color/red_9"
                 />
@@ -47,7 +48,9 @@
                 app:riv_corner_radius="10dp"
                 binding:imageErrorPlaceholderRes="@{R.drawable.img_pc_default_load}"
                 binding:imagePath="@{itemEntity.icon}"
-                binding:imagePlaceholderRes="@{R.drawable.img_pc_default_load}" />
+                binding:imagePlaceholderRes="@{R.drawable.img_pc_default_load}"
+                binding:resizeH="@{158}"
+                binding:resizeW="@{163}" />
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/icon_name"
                 android:includeFontPadding="false"

@@ -2257,6 +2257,6 @@
     <string name="playfun_update_version_text3">是否升級</string>
     <string name="playfun_update_version_text4">忽略此版本</string>
     <string name="playfun_coinpusher_history_text1">展示近7天中獎歷史結果</string>
-    <string name="playfun_coinpusher_history_text2">Lv%s號機歷史結果</string>
+    <string name="playfun_coinpusher_history_text2">Lv%s號機</string>
     <!--PlayFun-APP-END-->
 </resources>

@@ -22,9 +22,9 @@ import com.dl.playfun.entity.CallingInviteInfo;
 import com.dl.playfun.entity.DayRewardInfoEntity;
 import com.dl.playfun.entity.MqBroadcastGiftEntity;
 import com.dl.playfun.entity.MqGiftDataEntity;
+import com.dl.playfun.entity.RestartActivityEntity;
 import com.dl.playfun.entity.VersionEntity;
 import com.dl.playfun.event.BubbleTopShowEvent;
-import com.dl.playfun.event.CoinPusherGamePlayingEvent;
 import com.dl.playfun.event.DailyAccostEvent;
 import com.dl.playfun.event.MainTabEvent;
 import com.dl.playfun.event.MessageCountChangeEvent;
@@ -45,7 +45,6 @@ import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
 import com.tencent.imsdk.v2.V2TIMCustomElem;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
-import com.dl.playfun.entity.RestartActivityEntity;
 import com.tencent.qcloud.tuicore.Status;
 import com.tencent.qcloud.tuicore.custom.CustomConstants;
 import com.tencent.qcloud.tuicore.custom.CustomConvertUtils;
@@ -184,7 +183,6 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
     //检测新的版本
     public void versionOnClickCommand() {
         model.detectionVersion("Android").compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
                 .doOnSubscribe(this)
                 .doOnSubscribe(disposable -> showHUD())
@@ -203,22 +201,6 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                         dismissHUD();
                     }
                 });
-    }
-
-    //显示公告
-    public void showAnnouncemnet() {
-        try {
-            boolean versionAlert = model.readVersion();
-            if (ConfigManager.getInstance().isMale()) {//只有男生才弹公告
-                if (!versionAlert) {
-                    model.saveVersion(AppConfig.VERSION_NAME);
-                    uc.versionAlertSl.call();
-                    return;
-                }
-            }
-        }catch (Exception e){
-
-        }
     }
 
     public void loadSendLocation(Double lat, Double lng, String county_name, String province_name) {
@@ -403,19 +385,6 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                         break;
                     case 2: //自定义消息类型
                         V2TIMCustomElem v2TIMCustomElem = info.getV2TIMMessage().getCustomElem();
-                        Map<String,Object> contentBody = CustomConvertUtils.CustomMassageConvertMap(v2TIMCustomElem);
-                        if(ObjectUtils.isNotEmpty(contentBody)){
-                            //模块类型--判断
-                            if(contentBody.containsKey(CustomConstants.Message.MODULE_NAME_KEY)){
-                                V2TIMCustomManagerUtil.CoinPusherManager(contentBody);
-                                //获取moudle-pushCoinGame 推币机
-                                if(CustomConvertUtils.ContainsMessageModuleKey(contentBody, CustomConstants.Message.MODULE_NAME_KEY,CustomConstants.CoinPusher.MODULE_NAME)){
-                                    V2TIMCustomManagerUtil.CoinPusherManager(contentBody);
-                                }
-                            }
-                        }
-
-
                         byte[] data = v2TIMCustomElem.getData();
                         if (data != null && ConfigManager.getInstance().getTipMoneyShowFlag()){
                             String customData = new String(data);
@@ -636,8 +605,6 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<MainTabEvent> mainTab = new SingleLiveEvent<>();
         //更新版本
         public SingleLiveEvent<VersionEntity> versionEntitySingl = new SingleLiveEvent<>();
-        //每个新版本只会弹出一次
-        public SingleLiveEvent<Void> versionAlertSl = new SingleLiveEvent<>();
         //未付费弹窗
         public SingleLiveEvent<String> notPaidDialog = new SingleLiveEvent<>();
         public SingleLiveEvent<MqBroadcastGiftEntity> giftBanner = new SingleLiveEvent<>();

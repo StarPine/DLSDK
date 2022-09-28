@@ -37,6 +37,7 @@
                 android:gravity="center"
                 android:includeFontPadding="false"
                 android:textColor="#ff42435e"
+                android:textStyle="bold"
                 android:textSize="18sp" />
             <TextView
                 android:includeFontPadding="false"
@@ -74,7 +75,8 @@
                 android:gravity="center"
                 android:text="@string/playfun_purchase_text"
                 android:textColor="#ff333333"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:textStyle="bold" />
         </RelativeLayout>
     </FrameLayout>
 </layout>

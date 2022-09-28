@@ -109,7 +109,7 @@ public class CoinPusherConvertCapsuleDialog extends BaseDialog {
         //设置宽度充满屏幕
         Window window = getWindow();
         window.setGravity(Gravity.CENTER); //可设置dialog的位置
-        window.setWindowAnimations(R.style.BottomDialog_Animation);
+        window.setWindowAnimations(R.style.NullAnimationDialog);
         window.getDecorView().setPadding(0, 0, 0, 0); //消除边距
         WindowManager.LayoutParams lp = window.getAttributes();
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;   //设置宽度充满屏幕

@@ -157,7 +157,7 @@ public class CoinPusherConvertDialog  extends BaseDialog {
                 if(SEL_COIN_PUSHER_CAPSULE!=position){
                     coinPusherConvertAdapter.setDefaultSelect(position);
                     SEL_COIN_PUSHER_CAPSULE = position;
-                    if(totalMoney >= coinPusherConvertAdapter.getItemData(position).getValue()){
+                    if(totalMoney >= coinPusherConvertAdapter.getItemData(position).getGoldValue()){
                         binding.tvSubConvert.setTextColor(ColorUtils.getColor(R.color.black));
                         binding.tvSubConvert.setEnabled(true);
                     }else{
@@ -184,7 +184,7 @@ public class CoinPusherConvertDialog  extends BaseDialog {
         //设置宽度充满屏幕
         Window window = getWindow();
         window.setGravity(Gravity.BOTTOM); //可设置dialog的位置
-        window.setWindowAnimations(R.style.BottomDialog_Animation);
+        window.setWindowAnimations(R.style.NullAnimationDialog);
         window.getDecorView().setPadding(0, 0, 0, 0); //消除边距
         WindowManager.LayoutParams lp = window.getAttributes();
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;   //设置宽度充满屏幕

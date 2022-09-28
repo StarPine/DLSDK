@@ -68,7 +68,6 @@ public class CoinPusherHelpDialog extends BaseDialog {
         binding.webView.setWebChromeClient(webChromeClient);
         binding.webView.addJavascriptInterface(new ShareJavaScriptInterface(), "Native");
         binding.webView.loadUrl(webViewUrl);
-        Log.e("当前推币机帮助地址：",String.valueOf(webViewUrl));
         //设置背景透明,去四个角
         getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         setContentView(binding.getRoot());

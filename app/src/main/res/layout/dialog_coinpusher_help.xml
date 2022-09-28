@@ -35,7 +35,7 @@
                 android:layout_marginTop="20dp"
                 android:gravity="center"
                 android:includeFontPadding="false"
-                android:text="玩法說明"
+                android:textStyle="bold"
                 android:textColor="#43435E"
                 android:textSize="18sp" />
             <WebView

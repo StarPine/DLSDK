@@ -26,6 +26,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/playfun_dialog_title_prompt"
                 android:textColor="@color/black"
+                android:textStyle="bold"
                 android:gravity="center"
                 android:textSize="18sp"
                 />
@@ -50,6 +51,7 @@
                 android:layout_marginEnd="23dp"
                 android:gravity="center"
                 android:text="@string/playfun_confirm"
+                android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="15sp"
                 />
@@ -68,6 +70,7 @@
                 android:layout_marginBottom="30dp"
                 android:gravity="center"
                 android:text="@string/playfun_cancel"
+                android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="15sp"
                 />

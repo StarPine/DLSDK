@@ -6,8 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.databinding.ObservableInt;
 
 import com.blankj.utilcode.util.ObjectUtils;
-import com.blankj.utilcode.util.StringUtils;
-import com.dl.playfun.R;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
@@ -16,8 +14,18 @@ import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.CoinPusherBalanceDataEntity;
 import com.dl.playfun.entity.CoinPusherDataInfoEntity;
 import com.dl.playfun.event.CoinPusherGamePlayingEvent;
+import com.dl.playfun.manager.V2TIMCustomManagerUtil;
 import com.dl.playfun.viewmodel.BaseViewModel;
+import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
+import com.tencent.imsdk.v2.V2TIMCustomElem;
+import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.custom.CustomConstants;
+import com.tencent.qcloud.tuicore.custom.CustomConvertUtils;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
+
+import java.util.Map;
 
 import io.reactivex.disposables.Disposable;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
@@ -25,6 +33,7 @@ import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.RxUtils;
+import me.goldze.mvvmhabit.utils.StringUtils;
 
 /**
  * Author: 彭石林
@@ -45,6 +54,8 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
     //消费者
     private Disposable coinPusherGamePlayingSubscription;
 
+    private IMAdvancedMsgListener imAdvancedMsgListener;
+
     public CoinPusherGameViewModel(@NonNull Application application, AppRepository model) {
         super(application, model);
     }
@@ -58,9 +69,22 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
     public BindingCommand<Void> playPusherActClick = new BindingCommand<>(() -> {
         playingCoinPusherAct(coinPusherDataInfoEntity.getRoomInfo().getRoomId());
     });
+
+    //是否是小游戏状态
+    private boolean isLittleGameWinning(){
+        if(StringUtils.isEmpty(gamePlayingState)){
+            return false;
+        }
+        return gamePlayingState.equals(CustomConstants.CoinPusher.LITTLE_GAME_WINNING);
+    }
     //投币
     public void playingCoinPusherThrowCoin(Integer roomId){
-        gamePlayingState = loadingPlayer;
+        //当前处于中奖状态、并且是小游戏中奖状态 什么都不处理
+        if(isLittleGameWinning()){
+            gamePlayingState = CustomConstants.CoinPusher.LITTLE_GAME_WINNING;
+        }else{
+            gamePlayingState = loadingPlayer;
+        }
         model.playingCoinPusherThrowCoin(roomId)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
@@ -76,10 +100,18 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
                         CoinPusherBalanceDataEntity coinPusherBalanceDataEntity = coinPusherDataEntityResponse.getData();
                         if(ObjectUtils.isNotEmpty(coinPusherBalanceDataEntity)){
                             totalMoney.set(coinPusherBalanceDataEntity.getTotalGold());
-                            gameUI.resetDownTimeEvent.postValue(null);
                         }
                         gameUI.playingBtnEnable.postValue(true);
-                        gamePlayingState = null;
+                        //当前处于中奖状态、并且是小游戏中奖
+                        if(isLittleGameWinning()){
+                            //取消倒计时
+                            gameUI.cancelDownTimeEvent.postValue(null);
+                        }else{
+                            //否则重新开始倒计时。且清除游戏状态
+                            gameUI.resetDownTimeEvent.postValue(null);
+                            gamePlayingState = null;
+                        }
+
                     }
 
                     @Override
@@ -88,8 +120,10 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
                         if(e.getCode() == 21001){
                             gameUI.payDialogViewEvent.call();
                             gameUI.playingBtnEnable.postValue(true);
-                            //清除当前投币状态
-                            gamePlayingState = null;
+                            if(!isLittleGameWinning()){
+                                //清除当前投币状态
+                                gamePlayingState = null;
+                            }
                         }else if(e.getCode() == 72000){
                             //中奖--置灰并停止倒计时
                             gameUI.playingBtnEnable.postValue(false);
@@ -187,8 +221,46 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
         gameUI.loadingHide.call();
     }
 
+    //添加IM消息监听器
+    public void initIMListener () {
+        if(imAdvancedMsgListener==null){
+            imAdvancedMsgListener = new IMAdvancedMsgListener();
+            V2TIMManager.getMessageManager().addAdvancedMsgListener(imAdvancedMsgListener);
+        }
+    }
+
+    //移除IM消息监听
+    public void removeIMListener(){
+        if(imAdvancedMsgListener!=null){
+            V2TIMManager.getMessageManager().removeAdvancedMsgListener(imAdvancedMsgListener);
+        }
+    }
+
+    private static class IMAdvancedMsgListener extends V2TIMAdvancedMsgListener {
+        @Override
+        public void onRecvNewMessage(V2TIMMessage msg) {
+            TUIMessageBean info = ChatMessageBuilder.buildMessage(msg);
+            if (info != null) {
+                if (info.getMsgType() == 2) { //自定义消息类型
+                    V2TIMCustomElem v2TIMCustomElem = info.getV2TIMMessage().getCustomElem();
+                    Map<String, Object> contentBody = CustomConvertUtils.CustomMassageConvertMap(v2TIMCustomElem);
+                    if (ObjectUtils.isNotEmpty(contentBody)) {
+                        //模块类型--判断
+                        if (contentBody.containsKey(CustomConstants.Message.MODULE_NAME_KEY)) {
+                            //获取moudle-pushCoinGame 推币机
+                            if (CustomConvertUtils.ContainsMessageModuleKey(contentBody, CustomConstants.Message.MODULE_NAME_KEY, CustomConstants.CoinPusher.MODULE_NAME)) {
+                                V2TIMCustomManagerUtil.CoinPusherManager(contentBody);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     @Override
     public void registerRxBus() {
+        initIMListener();
         coinPusherGamePlayingSubscription = RxBus.getDefault().toObservable(CoinPusherGamePlayingEvent.class)
                 .subscribe(coinPusherGamePlayingEvent -> {
                     if(coinPusherGamePlayingEvent!=null){
@@ -212,7 +284,7 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
                                 break;
                             case CustomConstants.CoinPusher.LITTLE_GAME_WINNING:
                                 //中奖 小游戏（叠叠乐、小玛利）
-                                gamePlayingState = CustomConstants.CoinPusher.START_WINNING;
+                                gamePlayingState = CustomConstants.CoinPusher.LITTLE_GAME_WINNING;
                                 gameUI.cancelDownTimeEvent.postValue(null);
                                 break;
                         }
@@ -224,8 +296,7 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
 
     @Override
     public void removeRxBus() {
+        removeIMListener();
         RxSubscriptions.remove(coinPusherGamePlayingSubscription);
     }
-
-
 }

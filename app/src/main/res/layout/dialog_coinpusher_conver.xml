@@ -45,6 +45,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/playfun_capsule_tab"
+                    android:textStyle="bold"
                     android:textColor="@color/black_434"
                     android:textSize="18sp"
                     />
@@ -59,6 +60,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/playfun_exchange_success_toast"
+                    android:textStyle="bold"
                     android:textColor="@color/play_chat_gray_3"
                     android:textSize="18sp"
                     />
@@ -154,7 +156,8 @@
                     android:gravity="center"
                     android:text="@string/playfun_exchange_success_toast"
                     android:textColor="@color/gray_light"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
             </RelativeLayout>
 
             <FrameLayout

@@ -74,7 +74,7 @@ public class CoinPusherConvertAdapter extends RecyclerView.Adapter<RecyclerView.
         if (!ObjectUtils.isEmpty(itemData)) {
             CoinPusherConverInfoEntity.DiamondsInfo itemEntity = itemData.get(position);
             if (!ObjectUtils.isEmpty(itemEntity)) {
-                itemViewHolder.tvCoin.setText(String.valueOf(itemEntity.getName()));
+                itemViewHolder.tvCoin.setText(String.valueOf(itemEntity.getGoldValue()));
                 if(defaultItemSel!=-1){
                     if(defaultItemSel==position){
                         itemViewHolder.flLayout.setBackground(Utils.getApp().getDrawable(R.drawable.shape_radius20_red));
@@ -84,7 +84,7 @@ public class CoinPusherConvertAdapter extends RecyclerView.Adapter<RecyclerView.
                 }else{
                     itemViewHolder.flLayout.setBackground(Utils.getApp().getDrawable(R.drawable.shape_radius20_shade));
                 }
-                if(itemEntity.getValue() > maxValue){
+                if(itemEntity.getGoldValue() > maxValue){
                     itemViewHolder.flLayout.setBackground(Utils.getApp().getDrawable(R.drawable.shape_radius20_shade));
                     itemViewHolder.tvCoin.setTextColor(ColorUtils.getColor(R.color.gray_light));
                 }else{

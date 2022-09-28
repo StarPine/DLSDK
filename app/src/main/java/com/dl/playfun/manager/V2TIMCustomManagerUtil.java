@@ -23,7 +23,7 @@ import me.goldze.mvvmhabit.bus.RxBus;
  * Description: IM自定义消息体处理
  */
 public class V2TIMCustomManagerUtil {
-
+    private static final String TAG = "V2TIMCustomManagerUtil";
     /**
     * @Desc TODO(推币机模块处理)
     * @author 彭石林

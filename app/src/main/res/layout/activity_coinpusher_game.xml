@@ -53,74 +53,79 @@
             android:src="@drawable/img_coinpusher_histroy"
             />
         <RelativeLayout
-            android:layout_above="@+id/tv_money_hint"
+            android:layout_alignTop="@+id/fl_switch_layout"
+            android:layout_marginTop="6dp"
             android:layout_marginStart="15dp"
-            android:layout_marginBottom="8dp"
-            android:id="@+id/rl_coin"
             android:layout_width="108dp"
-            android:layout_height="28dp"
-            binding:drawable_color="@{@color/yellow_e4a}"
-            binding:drawable_cornersRadius="@{14}"
-            binding:drawable_stroke_width="@{1}"
-            binding:drawable_stroke_color="@{@color/yellow_600}"
+            android:layout_height="wrap_content"
             android:clipChildren="false"
             >
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/img_start"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:src="@drawable/img_coinpusher_currency" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_total_money"
+            <RelativeLayout
+                android:id="@+id/rl_coin"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_marginStart="3dp"
-                android:layout_marginEnd="3dp"
-                android:layout_toStartOf="@+id/img_end"
-                android:layout_toEndOf="@+id/img_start"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                android:text="@{gameViewModel.tvTotalMoneyRefresh(gameViewModel.totalMoney)}"
-                android:textColor="@color/coffee"
-                android:textSize="14sp"
-                tools:text="99999+" />
-            <FrameLayout
-                android:id="@+id/img_end"
-                android:layout_width="23dp"
-                android:layout_height="23dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="2dp">
+                android:layout_height="28dp"
+                binding:drawable_color="@{@color/yellow_e4a}"
+                binding:drawable_cornersRadius="@{14}"
+                binding:drawable_stroke_width="@{1}"
+                binding:drawable_stroke_color="@{@color/yellow_600}"
+                >
                 <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/img_start"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:src="@drawable/img_coinpusher_currency" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_total_money"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_toStartOf="@+id/img_end"
+                    android:layout_toEndOf="@+id/img_start"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:text="@{gameViewModel.tvTotalMoneyRefresh(gameViewModel.totalMoney)}"
+                    android:textColor="@color/coffee"
+                    android:textSize="12sp"
+                    tools:text="99999+" />
+                <FrameLayout
+                    android:id="@+id/img_end"
                     android:layout_width="23dp"
                     android:layout_height="23dp"
-                    binding:drawable_cornersRadius="@{50}"
-                    binding:drawable_gradient_startColor="@{@color/playfun_shape_radius_start_color}"
-                    binding:drawable_gradient_endColor="@{@color/playfun_shape_radius_end_color}"
-                    android:scaleType="fitXY" />
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/img_convert"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_gravity="center"
-                    android:background="@drawable/ic_task_add" />
-            </FrameLayout>
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="2dp">
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="23dp"
+                        android:layout_height="23dp"
+                        binding:drawable_cornersRadius="@{50}"
+                        binding:drawable_gradient_startColor="@{@color/playfun_shape_radius_start_color}"
+                        binding:drawable_gradient_endColor="@{@color/playfun_shape_radius_end_color}"
+                        android:scaleType="fitXY" />
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/img_convert"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/ic_task_add" />
+                </FrameLayout>
+            </RelativeLayout>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_money_hint"
+                android:layout_below="@+id/rl_coin"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="10dp"
+                android:includeFontPadding="false"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/playfun_coinpusher_game_text_2"
+                android:textColor="#ffffd84a"
+                android:textSize="13sp"
+                />
         </RelativeLayout>
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_money_hint"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="31dp"
-            android:layout_marginBottom="29dp"
-            android:includeFontPadding="false"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/playfun_coinpusher_game_text_2"
-            android:textColor="#ffffd84a"
-            android:textSize="13sp"
-            />
+
         <FrameLayout
             android:layout_width="101dp"
             android:layout_height="101dp"
@@ -149,6 +154,7 @@
                 binding:onClickCommand="@{gameViewModel.playCoinClick}" />
         </FrameLayout>
         <FrameLayout
+            android:id="@+id/fl_switch_layout"
             binding:onClickCommand="@{gameViewModel.playPusherActClick}"
             android:layout_width="112dp"
             android:layout_height="40dp"
@@ -166,7 +172,6 @@
                 android:includeFontPadding="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:layout_gravity="center|end"
                 android:layout_marginEnd="17dp"
                 android:textSize="11sp"
@@ -196,7 +201,7 @@
             android:layout_height="match_parent">
             <FrameLayout
                 binding:drawable_cornersRadius="@{8}"
-                binding:drawable_alpha="@{10}"
+                binding:drawable_alpha="@{90}"
                 binding:drawable_color="@{@color/white}"
                 android:layout_gravity="center"
                 android:layout_width="70dp"

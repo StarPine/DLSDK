@@ -187,8 +187,8 @@ public class CoinPusherConverInfoEntity {
     //金币兑换钻石
     public static class DiamondsInfo{
         private int id;
-        private String name;
-        private int value;
+        private int goldValue;
+        private int diamondValue;
 
         public int getId() {
             return id;
@@ -198,20 +198,20 @@ public class CoinPusherConverInfoEntity {
             this.id = id;
         }
 
-        public String getName() {
-            return name;
+        public int getGoldValue() {
+            return goldValue;
         }
 
-        public void setName(String name) {
-            this.name = name;
+        public void setGoldValue(int goldValue) {
+            this.goldValue = goldValue;
         }
 
-        public int getValue() {
-            return value;
+        public int getDiamondValue() {
+            return diamondValue;
         }
 
-        public void setValue(int value) {
-            this.value = value;
+        public void setDiamondValue(int diamondValue) {
+            this.diamondValue = diamondValue;
         }
     }
 

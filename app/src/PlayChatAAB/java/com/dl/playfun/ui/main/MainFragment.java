@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Dialog;
 import android.app.Service;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.text.Spannable;
@@ -32,7 +31,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
-import com.dl.playfun.app.AliYunMqttClientLifecycle;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
@@ -40,7 +38,6 @@ import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.Injection;
 import com.dl.playfun.app.config.TbarCenterImgConfig;
 import com.dl.playfun.databinding.FragmentMainBinding;
-import com.dl.playfun.entity.CoinPusherDataInfoEntity;
 import com.dl.playfun.entity.MqBroadcastGiftEntity;
 import com.dl.playfun.entity.MqBroadcastGiftUserEntity;
 import com.dl.playfun.entity.VersionEntity;
@@ -49,9 +46,6 @@ import com.dl.playfun.event.MainTabEvent;
 import com.dl.playfun.event.TaskListEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseFragment;
-import com.dl.playfun.ui.coinpusher.CoinPusherGameActivity;
-import com.dl.playfun.ui.coinpusher.dialog.CoinPusherDialogAdapter;
-import com.dl.playfun.ui.coinpusher.dialog.CoinPusherRoomListDialog;
 import com.dl.playfun.ui.dialog.LockDialog;
 import com.dl.playfun.ui.home.HomeMainFragment;
 import com.dl.playfun.ui.message.MessageMainFragment;
@@ -96,7 +90,6 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
 
     private long TOUCH_TIME = 0;
 
-    private AliYunMqttClientLifecycle aliYunMqttClientLifecycle;
     private Vibrator mVibrator;
     private boolean isShowing;
 
@@ -147,13 +140,6 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         });
 
         AppContext.instance().logEvent(AppsFlyerEvent.main_open);
-//        aliYunMqttClientLifecycle.broadcastGiftEvent.observe(this, new Observer<MqBroadcastGiftEntity>() {
-//            @Override
-//            public void onChanged(MqBroadcastGiftEntity mqBroadcastGiftEntity) {
-//                viewModel.publicScreenBannerGiftEntity.add(mqBroadcastGiftEntity);
-//                viewModel.playBannerGift();
-//            }
-//        });
         //未付费弹窗
         viewModel.uc.notPaidDialog.observe(this,s -> {
             String url = Injection.provideDemoRepository().readApiConfigManagerEntity().getPlayFunWebUrl();
@@ -602,8 +588,6 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         if(ImgSrcPath!=-1){
             binding.navigationRankImg.setImageResource(ImgSrcPath);
         }
-//        aliYunMqttClientLifecycle = ((AppContext)mActivity.getApplication()).getBillingClientLifecycle();
-//        getLifecycle().addObserver(aliYunMqttClientLifecycle);
         initView();
         boolean sexFlag = ConfigManager.getInstance().isMale();
         ConversationCommonHolder.sexMale = sexFlag;
@@ -659,56 +643,17 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         }
     }
 
-    @Override
-    public void onEnterAnimationEnd(Bundle savedInstanceState) {
-        super.onEnterAnimationEnd(savedInstanceState);
-        String homePageName = ConfigManager.getInstance().getAppRepository().readDefaultHomePageConfig();
-        switch (homePageName) {
-            case "home":
-                setSelectedItemId(binding.navigationHomeImg);
-                break;
-            case "broadcast":
-                setSelectedItemId(binding.navigationRadioImg);
-                break;
-            case "navigation_rank":
-                setSelectedItemId(binding.navigationRankImg);
-                break;
-            case "message":
-                setSelectedItemId(binding.navigationMessageImg);
-                break;
-            case "user":
-                setSelectedItemId(binding.navigationMineImg);
-                break;
-            default:
-                break;
-        }
-    }
-
     private void showFaceRecognitionDialog() {
         Animation animation = AnimationUtils.loadAnimation(MainFragment.this.getContext(), R.anim.pop_enter_anim);
         animation.setFillAfter(true);
     }
 
     private void initView() {
-
-
-        BaseFragment firstFragment = findChildFragment(HomeMainFragment.class);
-        if (firstFragment == null) {
-            mFragments[FIRST] = new HomeMainFragment();
-            mFragments[SECOND] = new RadioFragment();
-            mFragments[THIRD] = new TaskCenterFragment();
-            mFragments[FOURTH] = new MessageMainFragment();
-            mFragments[FIFTH] = new MineFragment();
-        } else {
-            // 这里库已经做了Fragment恢复,所有不需要额外的处理了, 不会出现重叠问题
-
-            // 这里我们需要拿到mFragments的引用
-            mFragments[FIRST] = firstFragment;
-            mFragments[SECOND] = findChildFragment(RadioFragment.class);
-            mFragments[THIRD] = findChildFragment(TaskCenterFragment.class);
-            mFragments[FOURTH] = findChildFragment(MessageMainFragment.class);
-            mFragments[FIFTH] = findChildFragment(MineFragment.class);
-        }
+        mFragments[FIRST] = new HomeMainFragment();
+        mFragments[SECOND] = new RadioFragment();
+        mFragments[THIRD] = new TaskCenterFragment();
+        mFragments[FOURTH] = new MessageMainFragment();
+        mFragments[FIFTH] = new MineFragment();
         tvBadgeNum = binding.tvMsgCount;
         //添加到Tab上
 
