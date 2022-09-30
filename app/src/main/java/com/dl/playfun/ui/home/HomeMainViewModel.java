@@ -95,7 +95,6 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
 
     public int lastTabClickIdx = -1;
     public String accostKey = "";
-    public boolean isShowedAccost = true;//今日是否显示过奖励
 
 
     public Integer userSex = null;
@@ -196,12 +195,7 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
         list_chooseCityItem.addAll(model.readCityConfig());
         //一键搭讪
         accostKey =  StringUtil.getDailyFlag("dailyAccost");
-        String value = model.readKeyValue(accostKey);
-        if (value == null){
-            isShowedAccost = false;
-        }else {
-            isShowedAccost = true;
-        }
+
     }
 
     public void titleRcvItemClick(int idx, int checkType) {
@@ -309,7 +303,8 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
     }
 
     private void showDailyAccost() {
-        if (!isShowedAccost) {
+        String value = model.readKeyValue(accostKey);
+        if (value == null) {
             model.putKeyValue(accostKey, "true");
             uc.clickAccountDialog.setValue("0");
         }
