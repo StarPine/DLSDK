@@ -715,18 +715,10 @@ public interface ApiService {
      * @param device_code 设备序列号
      * @return
      */
-    @Headers(RetrofitHeadersConfig.NO_TOKEN_CHECK)
+    @Headers({RetrofitHeadersConfig.NO_TOKEN_CHECK,"Content-Type: application/json"})
     @FormUrlEncoded
     @POST("api/auth/login")
-    Observable<BaseDataResponse<Map<String, String>>> authLoginPost(
-            @Field("id") String id,
-            @Field("type") String type,
-            @Field("email") String email,
-            @Field("avatar") String avatar,
-            @Field("nickname") String nickName,
-            @Field("device_code") String device_code,
-            @Field("business_token") String business
-    );
+    Observable<BaseDataResponse<Map<String, String>>> authLoginPost(@Body RequestBody requestBody);
 
     /**
      * @return io.reactivex.Observable<com.dl.play.chat.data.source.http.response.BaseDataResponse < com.dl.play.chat.entity.LevelApiEntity>>
@@ -1552,8 +1544,9 @@ public interface ApiService {
      * @email 15616314565@163.com
      * Param [phone, code]
      **/
+    @Headers("Content-Type: application/json")
     @POST("api/v2/login")
-    Observable<BaseDataResponse<UserDataEntity>> v2Login(@Query("phone") String phone, @Query("code") String code, @Query("device_code") String device_code, @Query("region_code") String region_code);
+    Observable<BaseDataResponse<UserDataEntity>> v2Login(@Body RequestBody requestBody);
 
     /**
      * @return io.reactivex.Observable<com.dl.playfun.entity.VersionEntity>

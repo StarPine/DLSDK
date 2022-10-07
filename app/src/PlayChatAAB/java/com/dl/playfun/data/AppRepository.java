@@ -350,8 +350,8 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
-    public Observable<BaseDataResponse<UserDataEntity>> v2Login(String phone, String code, String device_code, String region_code) {
-        return mHttpDataSource.v2Login(phone, code, device_code,region_code);
+    public Observable<BaseDataResponse<UserDataEntity>> v2Login(RequestBody requestBody) {
+        return mHttpDataSource.v2Login(requestBody);
     }
 
     @Override
@@ -1428,8 +1428,8 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
-    public Observable<BaseDataResponse<Map<String, String>>> authLoginPost(String id, String type, String email, String avatar, String nickName, String device_code, String business) {
-        return mHttpDataSource.authLoginPost(id, type, email, avatar, nickName, device_code, business);
+    public Observable<BaseDataResponse<Map<String, String>>> authLoginPost(RequestBody requestBody) {
+        return mHttpDataSource.authLoginPost(requestBody);
     }
 
     @Override

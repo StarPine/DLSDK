@@ -439,8 +439,8 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
-    public Observable<BaseDataResponse<UserDataEntity>> v2Login(String phone, String code, String device_code, String region_code) {
-        return apiService.v2Login(phone, code, device_code,region_code);
+    public Observable<BaseDataResponse<UserDataEntity>> v2Login(RequestBody requestBody) {
+        return apiService.v2Login(requestBody);
     }
 
     @Override
@@ -1224,8 +1224,8 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
-    public Observable<BaseDataResponse<Map<String, String>>> authLoginPost(String id, String type, String email, String avatar, String nickName, String device_code, String business) {
-        return apiService.authLoginPost(id, type, email, avatar, nickName, device_code, business);
+    public Observable<BaseDataResponse<Map<String, String>>> authLoginPost(RequestBody requestBody) {
+        return apiService.authLoginPost(requestBody);
     }
 
     @Override

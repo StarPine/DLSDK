@@ -1,5 +1,6 @@
 package com.dl.playfun.viewadapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
@@ -27,6 +28,7 @@ import me.goldze.mvvmhabit.utils.StringUtils;
  * @author wulei
  */
 public class ImageViewAdapter {
+    @SuppressLint("CheckResult")
     @BindingAdapter(value = {"imagePath", "imageThumbPath", "LocalImagePath", "imagePlaceholderRes", "imageErrorPlaceholderRes", "resizeH", "resizeW","imgRadius", "addWaterMark"}, requireAll = false)
     public static void setImageUri(ImageView imageView, String imagePath, String imageThumbPath, String LocalImagePath, int imagePlaceholderRes, int imageErrorPlaceholderRes,Integer resizeH,Integer resizeW,Integer imgRadius, boolean addWaterMark) {
 
@@ -49,10 +51,14 @@ public class ImageViewAdapter {
             if(imgRadius!=null){
                 //设置图片圆角角度
                 RoundedCorners roundedCorners = new RoundedCorners(dp2px(imageView.getContext(),imgRadius));
-                //通过RequestOptions扩展功能,override:采样率,因为ImageView就这么大,可以压缩图片,降低内存消耗
                 overrideOptions = RequestOptions.bitmapTransform(roundedCorners);
             }else{
                 overrideOptions = new RequestOptions();
+                if(resizeW != null && resizeW > 0 && resizeH != null && resizeH > 0){
+                    //通过RequestOptions扩展功能,override:采样率,因为ImageView就这么大,可以压缩图片,降低内存消耗
+                    overrideOptions.override(dp2px(imageView.getContext(),resizeW), dp2px(imageView.getContext(),resizeH));
+                }
+
             }
 
 
@@ -137,12 +143,19 @@ public class ImageViewAdapter {
     }
 
     //针对附近页面单独提供。解决缩放问题
+    @SuppressLint("CheckResult")
     @BindingAdapter(value = {"imageItemPath", "imageItemPlaceholderRes", "imageItemErrorPlaceholderRes", "resizeH", "resizeW"}, requireAll = true)
     public static void setHomeListItemImageUrl(ImageView imageView, String imagePath, int imageItemPlaceholderRes, int imageItemErrorPlaceholderRes,Integer resizeH,Integer resizeW){
         String oosResize = checkResizeProper(imageView.getContext(),resizeH, resizeW);
+        RequestOptions overrideOptions = new RequestOptions();
+        if(resizeW != null && resizeW > 0 && resizeH != null && resizeH > 0){
+            //通过RequestOptions扩展功能,override:采样率,因为ImageView就这么大,可以压缩图片,降低内存消耗
+            overrideOptions.override(dp2px(imageView.getContext(),resizeW), dp2px(imageView.getContext(),resizeH));
+        }
         Glide.with(imageView.getContext()).load(StringUtil.getFullImageUrl(imagePath)+oosResize)
                 .error(imageItemErrorPlaceholderRes)
                 .placeholder(imageItemPlaceholderRes)
+                .apply(overrideOptions)
                 .into(imageView);
     }
 

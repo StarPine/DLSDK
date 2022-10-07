@@ -33,6 +33,7 @@ import com.dl.playfun.ui.main.MainFragment;
 import com.dl.playfun.ui.mine.profile.PerfectProfileFragment;
 import com.dl.playfun.ui.mine.webdetail.WebDetailFragment;
 import com.dl.playfun.utils.ApiUitl;
+import com.dl.playfun.utils.MPDeviceUtils;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
@@ -50,6 +51,8 @@ import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.KLog;
 import me.goldze.mvvmhabit.utils.RxUtils;
 import me.goldze.mvvmhabit.utils.ToastUtils;
+import retrofit2.http.Field;
+import retrofit2.http.Query;
 
 
 /**
@@ -120,8 +123,13 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
             ToastUtils.showShort(R.string.playfun_please_input_code);
             return;
         }
-
-        model.v2Login(mobile.get(), code.get(), ApiUitl.getAndroidId(),areaCode.get().getCode())
+        Map<String, Object> mapData = new HashMap<>();
+        mapData.put("phone", mobile.get());
+        mapData.put("code", code.get());
+        mapData.put("device_code", ApiUitl.getAndroidId());
+        mapData.put("region_code", areaCode.get().getCode());
+        mapData.put("AndroidDeviceInfo", MPDeviceUtils.getDeviceInfo());
+        model.v2Login(ApiUitl.getBody(GsonUtils.toJson(mapData)))
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
@@ -174,7 +182,16 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
             return;
         }
         id += type;
-        model.authLoginPost(id, type, email, avatar, nickname, ApiUitl.getAndroidId(), business)
+        Map<String, Object> mapData = new HashMap<>();
+        mapData.put("id", id);
+        mapData.put("type", type);
+        mapData.put("email", email);
+        mapData.put("avatar", avatar);
+        mapData.put("nickname", nickname);
+        mapData.put("device_code", ApiUitl.getAndroidId());
+        mapData.put("business_token", business);
+        mapData.put("AndroidDeviceInfo", MPDeviceUtils.getDeviceInfo());
+        model.authLoginPost(ApiUitl.getBody(GsonUtils.toJson(mapData)))
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())

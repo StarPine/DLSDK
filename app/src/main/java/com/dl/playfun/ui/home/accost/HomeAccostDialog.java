@@ -294,6 +294,13 @@ public class HomeAccostDialog extends BaseDialog {
 
     @Override
     public void dismiss() {
+        //页面销毁的时候。回收定时器。避免回调操作主线程抛出ANR
+        if(downTimer != null){
+            downTimer.cancel();
+        }
+        if(downChangeTimer != null){
+            downChangeTimer.cancel();
+        }
         super.dismiss();
     }
 

@@ -612,15 +612,7 @@ public interface HttpDataSource {
      *                 String device_code 设备序列号
      * @return
      */
-    Observable<BaseDataResponse<Map<String, String>>> authLoginPost(
-            String id,
-            String type,
-            String email,
-            String avatar,
-            String nickName,
-            String device_code,
-            String business
-    );
+    Observable<BaseDataResponse<Map<String, String>>> authLoginPost(RequestBody requestBody);
 
     /**
      * @return io.reactivex.Observable<com.dl.play.chat.data.source.http.response.BaseDataResponse < com.dl.play.chat.entity.LevelApiEntity>>
@@ -1268,7 +1260,7 @@ public interface HttpDataSource {
      * @email 15616314565@163.com
      * Param [phone, code]
      **/
-    Observable<BaseDataResponse<UserDataEntity>> v2Login(String phone, String code, String device_code, String region_code);
+    Observable<BaseDataResponse<UserDataEntity>> v2Login(RequestBody requestBody);
 
     /**
      * 真人人脸图片
