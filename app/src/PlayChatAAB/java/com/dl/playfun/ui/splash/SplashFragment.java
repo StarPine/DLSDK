@@ -12,6 +12,8 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.blankj.utilcode.util.ColorUtils;
+import com.dl.lib.elk.StatisticsAnalysis;
+import com.dl.lib.elk.StatisticsManager;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppViewModelFactory;
@@ -44,7 +46,9 @@ public class SplashFragment extends BaseFragment<FragmentSplashBinding, SplashVi
 
     @Override
     public void initViewObservable() {
-        super.initViewObservable();
+
+        StatisticsAnalysis.commonClick("splashView","init",null);
+
         String txt = getString(R.string.splash_init_tv);
         String txt2 = getString(R.string.splash_init_tv2);
         int whiteLength = txt.length() - txt2.length();

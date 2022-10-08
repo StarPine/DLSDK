@@ -1,8 +1,9 @@
-package com.dl.playfun.utils;
+package com.dl.lib.util;
 
 import android.os.Build;
 
 import com.blankj.utilcode.util.GsonUtils;
+import com.blankj.utilcode.util.ObjectUtils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -59,6 +60,13 @@ public class MPDeviceUtils {
     //系统的API级别，int数值类型
     static int SDK_INT;
 
+    static String CPU_ABI;
+
+    static String CPU_ABI2;
+
+    //elk上报当前设备信息
+    static volatile Map<String,String> elkAndroidDevices = new HashMap<>();
+
     static {
         BOARD = Build.BOARD;
         BOOTLOADER = Build.BOOTLOADER;
@@ -81,6 +89,9 @@ public class MPDeviceUtils {
         CODENAME = Build.VERSION.CODENAME;
         INCREMENTAL = Build.VERSION.INCREMENTAL;
         SDK_INT = Build.VERSION.SDK_INT;
+
+        CPU_ABI = Build.CPU_ABI;
+        CPU_ABI2 = Build.CPU_ABI2;
     }
 
     /**
@@ -129,8 +140,8 @@ public class MPDeviceUtils {
     */
     public static Map<String,String> getDeviceCpuInfo() {
         Map<String,String> deviceCpuInfo = new HashMap<>();
-        deviceCpuInfo.put("CPU_ABI",Build.CPU_ABI);
-        deviceCpuInfo.put("CPU_ABI2",Build.CPU_ABI2);
+        deviceCpuInfo.put("CPU_ABI",CPU_ABI);
+        deviceCpuInfo.put("CPU_ABI2",CPU_ABI2);
         try {
             FileReader fr = new FileReader("/proc/cpuinfo");
             BufferedReader br = new BufferedReader(fr);
@@ -156,5 +167,21 @@ public class MPDeviceUtils {
             e.printStackTrace();
         }
         return deviceCpuInfo;
+    }
+
+    /**
+    * @Desc TODO(ELK打点上报当前设备信息)
+    * @author 彭石林
+    * @parame []
+    * @return java.util.Map<java.lang.String,java.lang.String>
+    * @Date 2022/10/8
+    */
+    public static Map<String,String> getElkAndroidData() {
+        if(ObjectUtils.isEmpty(elkAndroidDevices)){
+            elkAndroidDevices.put("devi",MODEL);
+            elkAndroidDevices.put("bd",BRAND);
+            elkAndroidDevices.put("plat","Android");
+        }
+        return elkAndroidDevices;
     }
 }

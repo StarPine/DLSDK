@@ -41,16 +41,6 @@ public class DialogLoading extends BaseDialog {
         }
         setCanceledOnTouchOutside(false);
         setCancelable(false);
-    }
-
-    Integer getColorFromResource(Integer resourceId) {
-        if (resourceId==null) {
-            return null;
-        } else {
-            return getContext().getResources().getColor(resourceId);
-        }
-    }
-    public void show() {
         //设置背景透明,去四个角
         getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         setContentView(contentView);
@@ -82,6 +72,16 @@ public class DialogLoading extends BaseDialog {
                 }
             }
         }
+    }
+
+    Integer getColorFromResource(Integer resourceId) {
+        if (resourceId==null) {
+            return null;
+        } else {
+            return getContext().getResources().getColor(resourceId);
+        }
+    }
+    public void show() {
         super.show();
     }
 

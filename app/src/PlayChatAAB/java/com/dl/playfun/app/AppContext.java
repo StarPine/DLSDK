@@ -28,6 +28,9 @@ import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.Utils;
 import com.bumptech.glide.Glide;
+import com.dl.lib.elk.IStatisticsConfig;
+import com.dl.lib.elk.StatisticsAnalysis;
+import com.dl.lib.elk.StatisticsManager;
 import com.dl.playfun.BuildConfig;
 import com.dl.playfun.R;
 import com.dl.playfun.data.AppRepository;
@@ -139,6 +142,8 @@ public class AppContext extends Application {
                 return footer;
             }
         });
+        StatisticsAnalysis.init(false);
+        StatisticsManager.getInstance().setStatisticsConfig(new IStatisticsConfig());
     }
 
     public AppRepository appRepository;

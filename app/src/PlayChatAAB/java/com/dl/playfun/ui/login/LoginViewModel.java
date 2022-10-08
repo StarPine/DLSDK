@@ -13,6 +13,7 @@ import com.appsflyer.AppsFlyerLib;
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
+import com.dl.lib.util.MPDeviceUtils;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
@@ -33,7 +34,6 @@ import com.dl.playfun.ui.main.MainFragment;
 import com.dl.playfun.ui.mine.profile.PerfectProfileFragment;
 import com.dl.playfun.ui.mine.webdetail.WebDetailFragment;
 import com.dl.playfun.utils.ApiUitl;
-import com.dl.playfun.utils.MPDeviceUtils;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
@@ -51,8 +51,6 @@ import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.KLog;
 import me.goldze.mvvmhabit.utils.RxUtils;
 import me.goldze.mvvmhabit.utils.ToastUtils;
-import retrofit2.http.Field;
-import retrofit2.http.Query;
 
 
 /**

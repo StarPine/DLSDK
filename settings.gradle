@@ -9,6 +9,7 @@ include ':AliyunCrop'
 include ':QueenBeauty'
 include ':faceunity'
 include ':lib-toast'
+include ':lib-elk'
 //include ':_demo'
 
 /*IM聊天组件*/
@@ -18,3 +19,4 @@ include ':tuichat'
 include ':tuiconversation'
 include ':tuicalling'
 /*IM聊天组件*/
+include ':lib-util'

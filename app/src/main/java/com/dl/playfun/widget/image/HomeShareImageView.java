@@ -1,5 +1,6 @@
 package com.dl.playfun.widget.image;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -70,6 +71,7 @@ public class HomeShareImageView extends androidx.appcompat.widget.AppCompatImage
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int action = event.getAction();

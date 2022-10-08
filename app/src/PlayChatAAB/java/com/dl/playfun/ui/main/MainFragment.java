@@ -29,6 +29,7 @@ import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.dl.lib.elk.StatisticsAnalysis;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
@@ -701,20 +702,24 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                 binding.navigationHomeImgLottie.setVisibility(View.VISIBLE);
                 binding.navigationHomeImgLottie.playAnimation();
                 binding.navigationHomeImg.setImageResource(R.drawable.tab_home_checked);
+                StatisticsAnalysis.commonClick("MainAct","tabBottom","openMainPage");
             } else if (id == R.id.navigation_radio_img) {
                 mainViewPager.setCurrentItem(1, false);
                 binding.navigationRadioImg.setVisibility(View.INVISIBLE);
                 binding.navigationRadioImgLottie.setVisibility(View.VISIBLE);
                 binding.navigationRadioImgLottie.playAnimation();
                 binding.navigationRadioImg.setImageResource(R.drawable.tab_radio_checked);
+                StatisticsAnalysis.commonClick("MainAct","tabBottom","openRadioPage");
             } else if (id == R.id.navigation_rank_img) {
                 mainViewPager.setCurrentItem(2, false);
+                StatisticsAnalysis.commonClick("MainAct","tabBottom","openTaskPage");
             } else if (id == R.id.navigation_message_img) {
                 mainViewPager.setCurrentItem(3, false);
                 binding.navigationMessageImg.setVisibility(View.INVISIBLE);
                 binding.navigationMessageImgLottie.setVisibility(View.VISIBLE);
                 binding.navigationMessageImgLottie.playAnimation();
                 binding.navigationMessageImg.setImageResource(R.drawable.tab_message_checked);
+                StatisticsAnalysis.commonClick("MainAct","tabBottom","openMessagePage");
             } else if (id == R.id.navigation_mine_img) {
                 mainViewPager.setCurrentItem(4, false);
                 binding.navigationMineImg.setVisibility(View.INVISIBLE);
@@ -725,6 +730,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                 } else {
                     binding.navigationMineImg.setImageResource(R.drawable.tab_mine_female_checked);
                 }
+                StatisticsAnalysis.commonClick("MainAct","tabBottom","openMinePage");
             }
             selTabImgLayout = view;
         }
