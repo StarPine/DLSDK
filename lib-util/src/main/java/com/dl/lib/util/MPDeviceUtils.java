@@ -22,7 +22,7 @@ public class MPDeviceUtils {
     //获取设备引导程序版本号
     static String BOOTLOADER;
     //获取设备品牌
-    static String BRAND;
+    public static String BRAND;
     //获取设备驱动名称
     static String DEVICE;
     //获取设备显示的版本包（在系统设置中显示为版本号）和ID一样
@@ -36,7 +36,7 @@ public class MPDeviceUtils {
     //设备版本号
     static String ID;
     //获取手机的型号 设备名称。如：SM-N9100（三星Note4）
-    static String MODEL;
+    public static String MODEL;
     //获取设备制造商。如：samsung
     static String MANUFACTURER;
     //产品的名称
@@ -180,6 +180,7 @@ public class MPDeviceUtils {
         if(ObjectUtils.isEmpty(elkAndroidDevices)){
             elkAndroidDevices.put("devi",MODEL);
             elkAndroidDevices.put("bd",BRAND);
+            //当前专属平台
             elkAndroidDevices.put("plat","Android");
         }
         return elkAndroidDevices;

@@ -222,6 +222,15 @@
             android:theme="@style/AppTheme.NoActionBar"
             />
 
+
+        <!-- IM快照 or 普通照片查看-->
+        <activity android:name=".ui.mine.language.LanguageSwitchActivity"
+            android:requestLegacyExternalStorage="true"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            android:exported="true"
+            android:theme="@style/AppTheme.NoActionBar"
+            />
         <activity
             android:name="com.dl.playfun.kl.view.AudioCallChatingActivity"
             android:launchMode="singleTop"

@@ -2256,6 +2256,9 @@
     <string name="playfun_update_version_text4">Ignore this version</string>
     <string name="playfun_coinpusher_history_text1">Display the historical results of winning in the past 7 days</string>
     <string name="playfun_coinpusher_history_text2">Lv%s player</string>
+    <string name="playfun_languae_switch_en">English</string>
+    <string name="playfun_languae_switch_zh">中文繁體</string>
+    <string name="playfun_languae_switch_title">語言設定</string>
 
     <!--PlayFun-APP-END-->
 </resources>

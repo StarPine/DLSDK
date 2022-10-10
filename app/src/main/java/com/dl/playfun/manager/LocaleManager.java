@@ -4,8 +4,9 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
-import android.util.Log;
 
+import com.blankj.utilcode.util.StringUtils;
+import com.dl.lib.util.MMKVUtil;
 import com.dl.playfun.R;
 
 import java.util.Locale;
@@ -13,20 +14,32 @@ import java.util.Locale;
 import me.goldze.mvvmhabit.utils.Utils;
 
 public class LocaleManager {
+    public static final String dlAppLanguageLocal = "dlAppLanguageLocal";
 
     /**
      * 获取系统的locale
      *
      * @return Locale对象
      */
-    public static Locale getSystemLocale() {
-        String text = Utils.getContext().getString(R.string.playfun_local_language_val);
-        return new Locale(text);
+    public static Locale getSystemLocale(Context mContext) {
+        String localeText = readLocalCache();
+        if(StringUtils.isEmpty(localeText)){
+            localeText = mContext.getString(R.string.playfun_local_language_val);
+        }
+        return new Locale(localeText);
+    }
+
+    public static void putLocalCacheApply(String local){
+        MMKVUtil.getInstance().putKeyValue(dlAppLanguageLocal,local);
+    }
+
+    public static String readLocalCache(){
+        return MMKVUtil.getInstance().readKeyValue(dlAppLanguageLocal);
     }
 
 
     public static Context setLocal(Context context) {
-        return updateResources(context, getSystemLocale());
+        return updateResources(context, getSystemLocale(context));
     }
 
     private static Context updateResources(Context context, Locale locale) {

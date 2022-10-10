@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.http.HttpResponseCache;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -24,6 +25,7 @@ import com.appsflyer.deeplink.DeepLink;
 import com.appsflyer.deeplink.DeepLinkListener;
 import com.appsflyer.deeplink.DeepLinkResult;
 import com.blankj.utilcode.util.GsonUtils;
+import com.blankj.utilcode.util.LanguageUtils;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.Utils;
@@ -44,6 +46,7 @@ import com.dl.playfun.entity.TokenEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.LoginExpiredEvent;
 import com.dl.playfun.manager.ConfigManager;
+import com.dl.playfun.manager.LocaleManager;
 import com.dl.playfun.manager.ThirdPushTokenMgr;
 import com.dl.playfun.tim.TUIUtils;
 import com.dl.playfun.ui.MainContainerActivity;
@@ -79,6 +82,7 @@ import com.tencent.qcloud.tuicore.interfaces.TUICallback;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -101,6 +105,7 @@ public class AppContext extends Application {
     public static boolean isCalling = false;
     public static boolean isShowNotPaid = false;
 
+    private final boolean initMMKVFlag = false;
     private static AppContext instance;
     //谷歌支付购买工具累
     private BillingClientLifecycle billingClientLifecycle;
@@ -166,10 +171,25 @@ public class AppContext extends Application {
         // 根据手机内存剩余情况清理图片内存缓存
         Glide.get(this).onTrimMemory(level);
     }
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        if(newBase!=null){
+            MMKV.initialize(newBase);
+            LocaleManager.setLocal(newBase);
+        }
+        super.attachBaseContext(LocaleManager.setLocal(newBase));
+    }
 
     @Override
     public void onCreate() {
+        Locale localeCache = LocaleManager.getSystemLocale(this);
+        Configuration config = new Configuration();
+        config.locale = localeCache;
+        LocaleManager.setLocal(this);
+        getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
         super.onCreate();
+        //初始化创建后。再次执行设置当前应用语言。确保部分机型不兼容问题
+        LocaleManager.setLocal(this);
         //注册美颜渲染
         FURenderer.getInstance().setup(this);
         try {
@@ -180,7 +200,7 @@ public class AppContext extends Application {
         }
         instance = this;
         BaseApplication.setApplication(this);
-
+        Utils.init(this);
         FirebaseApp.initializeApp(this);
 
         billingClientLifecycle = BillingClientLifecycle.getInstance(this);
@@ -191,10 +211,6 @@ public class AppContext extends Application {
 
         //是否开启日志打印
         KLog.init(BuildConfig.DEBUG);
-
-        Utils.init(this);
-
-        MMKV.initialize(this);
 
 //        if (BuildConfig.DEBUG) {
 //            com.facebook.stetho.Stetho.initializeWithDefaults(this);

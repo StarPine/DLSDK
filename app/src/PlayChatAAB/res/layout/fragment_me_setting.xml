@@ -81,6 +81,34 @@
                         android:layout_alignParentRight="true" />
                 </RelativeLayout>
 
+                <RelativeLayout
+                    style="@style/ProfileItem"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/profile_item_height"
+                    binding:onClickCommand="@{viewModel.clickLanguageView}">
+                    <ImageView
+                        android:id="@+id/languae_switch"
+                        android:layout_width="19dp"
+                        android:layout_height="19dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/icon_beauty"/>
+                    <TextView
+                        style="@style/ProfileItemTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_toEndOf="@+id/languae_switch"
+                        android:text="@string/playfun_languae_switch_title"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        style="@style/ProfileItemTitleNormal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true" />
+                </RelativeLayout>
+
 
                 <RelativeLayout
                     style="@style/ProfileItem"

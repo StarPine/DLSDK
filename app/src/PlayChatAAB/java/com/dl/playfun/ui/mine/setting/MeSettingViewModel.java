@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
 
 import com.blankj.utilcode.util.AppUtils;
+import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.data.AppRepository;
@@ -13,14 +14,17 @@ import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.entity.VersionEntity;
 import com.dl.playfun.ui.mine.blacklist.BlacklistFragment;
+import com.dl.playfun.ui.mine.language.LanguageSwitchActivity;
 import com.dl.playfun.ui.mine.privacysetting.PrivacySettingFragment;
 import com.dl.playfun.viewmodel.BaseViewModel;
+import com.tencent.qcloud.tuicore.Status;
 
 import org.jetbrains.annotations.NotNull;
 
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.RxUtils;
+import me.goldze.mvvmhabit.utils.ToastUtils;
 
 /**
  * Author: 彭石林
@@ -35,6 +39,15 @@ public class MeSettingViewModel extends BaseViewModel<AppRepository> {
     //美顏跳转
     public BindingCommand facebeauty = new BindingCommand(() -> {
         uc.starFacebeautyActivity.call();
+    });
+    //语言设定跳转
+    public BindingCommand clickLanguageView = new BindingCommand(() -> {
+        //拨打语音小窗口不允许打电话
+        if (Status.mIsShowFloatWindow){
+            ToastUtils.showShort(R.string.audio_in_call);
+            return;
+        }
+        startActivity(LanguageSwitchActivity.class);
     });
     //黑名单按钮的点击事件
     public BindingCommand blacklistOnClickCommand = new BindingCommand(() -> {

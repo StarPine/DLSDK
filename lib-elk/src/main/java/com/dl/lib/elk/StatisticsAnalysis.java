@@ -102,7 +102,7 @@ public class StatisticsAnalysis {
      * @param ct   页面上的哪一个模块
      */
     public static void commonClick(String dt, String et, String ct) {
-        doSendStatistics(AppLogPackHelper.getCommonEventMessage(dt, et, ct));
+        //doSendStatistics(AppLogPackHelper.getCommonEventMessage(dt, et, ct));
     }
 
 }

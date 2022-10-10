@@ -29,5 +29,6 @@ android {
 
 dependencies {
     api project(":mvvmhabit")
+    api rootProject.ext.dependenciesID["mmkv"]
     api rootProject.ext.dependenciesID["utilcode"]
 }

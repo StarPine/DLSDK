@@ -9,7 +9,9 @@ import com.dl.lib.util.MPThreadManager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -101,6 +103,22 @@ public class AppLogStoreHelper {
             }
         }
         return entity;
+    }
+    //取出所有缓存文件
+    public synchronized List<AppLogEntity> pollListAppLogEntity(){
+        List<AppLogEntity> listData = new ArrayList<>();
+        if (appAlive) {
+            listData.addAll(cacheList);
+            cacheList.clear();
+        }
+        return listData;
+    }
+
+    public synchronized void cacheListAppLogEntity(List<AppLogEntity> entity) {
+        if (appAlive && entity != null) {
+            cacheList.addAll(entity);
+            updateStoreFile();
+        }
     }
 
 

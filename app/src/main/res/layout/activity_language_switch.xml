@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:binding="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="com.dl.playfun.ui.mine.language.LanguageSwitchViewModel" />
+    </data>
+
+    <LinearLayout
+        android:splitMotionEvents="false"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <View
+            android:id="@+id/status_bar_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/white" />
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay"
+            app:elevation="0dp">
+
+            <com.dl.playfun.widget.BasicToolbar
+                android:id="@+id/basic_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                app:toolbar_title="@string/playfun_languae_switch_title">
+
+            </com.dl.playfun.widget.BasicToolbar>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <FrameLayout
+            binding:onClickCommand="@{viewModel.clickEnLangSwitch}"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:layout_width="match_parent"
+            android:layout_height="55dp">
+            <androidx.appcompat.widget.AppCompatTextView
+                android:includeFontPadding="false"
+                android:layout_gravity="start|center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/playfun_languae_switch_en"
+                android:textColor="@color/toolbar_title_color"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:visibility="@{viewModel.checkLanguage == 0 ? View.VISIBLE : View.GONE}"
+                android:layout_gravity="end|center"
+                android:layout_width="21dp"
+                android:layout_height="21dp"
+                android:src="@drawable/icon_submit_white"
+                android:tint="@color/colorAccent"
+                />
+        </FrameLayout>
+        <View
+            android:layout_marginStart="14dp"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/text_default"
+            android:alpha="0.1"
+            />
+        <FrameLayout
+            binding:onClickCommand="@{viewModel.clickZhLangSwitch}"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:layout_width="match_parent"
+            android:layout_height="55dp">
+            <androidx.appcompat.widget.AppCompatTextView
+                android:includeFontPadding="false"
+                android:layout_gravity="start|center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/playfun_languae_switch_zh"
+                android:textColor="@color/toolbar_title_color"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:visibility="@{viewModel.checkLanguage == 1 ? View.VISIBLE : View.GONE}"
+                android:layout_gravity="end|center"
+                android:layout_width="21dp"
+                android:layout_height="21dp"
+                android:src="@drawable/icon_submit_white"
+                android:tint="@color/colorAccent"
+                />
+        </FrameLayout>
+    </LinearLayout>
+</layout>
