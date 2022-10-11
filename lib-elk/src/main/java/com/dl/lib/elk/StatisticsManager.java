@@ -49,11 +49,6 @@ public class StatisticsManager {
     }
 
     public void sendStatistics(String statisticsString) {
-        sendStatistics(statisticsString, false);
-    }
-
-    public void sendStatistics(String statisticsString, boolean withHbArg) {
-        withHbArg = true;
 
         String postString = "lt=sx`" + "\n" + statisticsString;
         try {

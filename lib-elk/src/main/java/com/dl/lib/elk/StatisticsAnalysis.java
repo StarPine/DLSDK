@@ -1,17 +1,12 @@
 package com.dl.lib.elk;
 
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.text.TextUtils;
-import android.util.Log;
 
-import com.blankj.utilcode.util.StringUtils;
-import com.dl.lib.elk.log.AppLogPackHelper;
-import com.dl.lib.util.MPDeviceUtils;
-
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 统计分析上报
@@ -23,33 +18,31 @@ public class StatisticsAnalysis {
     private static boolean SEND_IMMEDIATELY = true;
     private static final List<String> statisticsList = new ArrayList<>();
 
+    static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
     public static void init(boolean immediately) {
         SEND_IMMEDIATELY = immediately;
         COLLECT_COUNT = COLLECT_COUNT_DEFAULT;
     }
 
-    public static void doSendStatistics(final Map<String, String> statisticsMap) {
-        addOccurTime(statisticsMap);
-        doSendStatistics(SEND_IMMEDIATELY, statisticsMap);
+    public static String transferLongToDate() {
+        @SuppressLint("SimpleDateFormat")
+        Date date = new Date(Long.parseLong(System.currentTimeMillis() + ""));
+        return sdf.format(date);
     }
 
-    private static void doSendStatistics(boolean immediately, Map<String, String> statisticsMap) {
-
-        doSendStatistics(immediately, statisticsMap, false);
+    public static void doSendStatistics(String statisticsParam) {
+        String localTime = transferLongToDate();
+        statisticsParam += "`otm="+localTime+"`rtm="+localTime+"";
+        doSendStatistics(SEND_IMMEDIATELY, statisticsParam);
     }
 
-    private static void doSendStatistics(boolean immediately, Map<String, String> statisticsMap, boolean withHbArg) {
-        if ( statisticsMap == null || statisticsMap.size() == 0) {
-            return;
-        }
-        statisticsMap.putAll(MPDeviceUtils.getElkAndroidData());
-        String statisticsString = AppLogPackHelper.getStatisticsString(statisticsMap);
+    private static void doSendStatistics(boolean immediately, String statisticsString) {
         if (TextUtils.isEmpty(statisticsString)) {
             return;
         }
 
         if (immediately) {
-            StatisticsManager.getInstance().sendStatistics( statisticsString, withHbArg);
+            StatisticsManager.getInstance().sendStatistics( statisticsString);
         } else {
             saveStatistics(statisticsString);
         }
@@ -81,28 +74,6 @@ public class StatisticsAnalysis {
             StatisticsManager.getInstance().sendStatistics(statisticsString);
             statisticsList.clear();
         }
-    }
-
-    private static void addOccurTime(Map<String, String> statisticsMap) {
-        if (statisticsMap != null && statisticsMap.size() > 0) {
-            String otm = statisticsMap.get("otm");
-            if (StringUtils.isEmpty(otm)) {
-                statisticsMap.put("otm", String.valueOf(System.currentTimeMillis()));
-            }
-        }
-    }
-
-    // 通用模块-----------------------------------------------------------------
-
-    /**
-     * 点击事件
-     *
-     * @param dt   当前在哪个页面
-     * @param et   页面上的哪一个分类
-     * @param ct   页面上的哪一个模块
-     */
-    public static void commonClick(String dt, String et, String ct) {
-        //doSendStatistics(AppLogPackHelper.getCommonEventMessage(dt, et, ct));
     }
 
 }

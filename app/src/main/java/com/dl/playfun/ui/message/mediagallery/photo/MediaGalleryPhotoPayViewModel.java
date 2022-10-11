@@ -7,6 +7,7 @@ import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableInt;
 
+import com.dl.playfun.app.ElkLogEventReport;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
@@ -99,6 +100,7 @@ public class MediaGalleryPhotoPayViewModel extends BaseViewModel<AppRepository> 
     }
     //调整当前评价
     public void mediaGalleryEvaluationPut(String msgKey,Integer toUserId,Integer type) {
+        ElkLogEventReport.reportMediaGallery.reportEvaluteMediaGallery(false,toUserId,String.valueOf(type),msgKey);
         model.mediaGalleryEvaluationPut(msgKey, toUserId, type)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())

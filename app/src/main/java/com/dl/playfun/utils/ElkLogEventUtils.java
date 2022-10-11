@@ -4,11 +4,15 @@ import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.Utils;
 import com.dl.lib.util.MPDeviceUtils;
 import com.dl.playfun.app.AppConfig;
+import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocaleManager;
 
 import java.util.Locale;
+import java.util.Map;
+
+import me.goldze.mvvmhabit.http.NetworkUtil;
 
 /**
  * Author: 彭石林
@@ -24,7 +28,7 @@ public class ElkLogEventUtils {
     * @return java.lang.String
     * @Date 2022/10/10
     */
-    public String getUserDataEvent(){
+    public static String getUserDataEvent(){
         StringBuilder value = new StringBuilder();
         UserDataEntity userDataEntity = ConfigManager.getInstance().getAppRepository().readUserData();
         if(ObjectUtils.isNotEmpty(userDataEntity)){
@@ -63,12 +67,10 @@ public class ElkLogEventUtils {
                 .append("plat=Android")
                 //app版本
                 .append("`build_v=" + AppConfig.VERSION_CODE)
-                //app编译版本
-                .append("`project_v=1.4.5")
-                //型号
-                .append("`devi").append(MPDeviceUtils.MODEL)
                 //playFun版本号
-                .append("`devi="+AppConfig.SDK_VERSION_NAME_PUSH)
+                .append("`project_v="+AppConfig.SDK_VERSION_NAME_PUSH)
+                //型号
+                .append("`devi=").append(MPDeviceUtils.MODEL)
                 //手机名称	和plat相似，iOS使用Apple
                 .append("`bd=").append(MPDeviceUtils.BRAND)
                 //当前app的渠道id
@@ -80,24 +82,33 @@ public class ElkLogEventUtils {
                 //是测试服还是正式服，“test”/"master"
                 .append("`envir="+(AppConfig.isDebug ? "test" : "master"))
                 //当前移动端所属的网络状况，例如wifi或者wwan
-                .append("`nt=")
+                .append("`nt="+ NetworkUtil.getAPNType(Utils.getApp()))
                 //当前移动端所属的ip地址
-                .append("`ip=");
+                .append("`ip="+NetworkUtil.getIPAddress(Utils.getApp()));
         return stringBuilder.toString();
     }
 
     public static String getMediaSource(){
-
+        AppRepository appRepository = ConfigManager.getInstance().getAppRepository();
+        Map<String, String> mapData = appRepository.readOneLinkCode();
+        if (ObjectUtils.isEmpty(mapData)) {
+            return "";
+        }
+        //当前邀请码
+        String code = mapData.get("code");
+        //用户的来源信息
+        String channel = mapData.get("channel");
+        return "`code="+isNullConverterSky(code)+"`channel="+isNullConverterSky(channel);
     }
 
     /**
-    * @Desc TODO(讲空指针转成空字符串)
+    * @Desc TODO(空指针转成空字符串)
     * @author 彭石林
     * @parame [obj]
     * @return java.lang.String
     * @Date 2022/10/10
     */
-    String isNullConverterSky(Object obj){
+    public static String isNullConverterSky(Object obj){
         if(ObjectUtils.isEmpty(obj)){
             return "";
         }

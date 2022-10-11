@@ -47,8 +47,6 @@ public class SplashFragment extends BaseFragment<FragmentSplashBinding, SplashVi
     @Override
     public void initViewObservable() {
 
-        StatisticsAnalysis.commonClick("splashView","init",null);
-
         String txt = getString(R.string.splash_init_tv);
         String txt2 = getString(R.string.splash_init_tv2);
         int whiteLength = txt.length() - txt2.length();

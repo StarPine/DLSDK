@@ -3,7 +3,6 @@ package com.dl.playfun.ui.message.mediagallery;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.lifecycle.ViewModelProviders;
 
@@ -17,13 +16,12 @@ import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.databinding.ActivitySnapshotPhotoSettingBinding;
 import com.dl.playfun.entity.MediaPayPerConfigEntity;
 import com.dl.playfun.manager.ConfigManager;
-import com.tencent.qcloud.tuicore.custom.entity.MediaGalleryEditEntity;
 import com.dl.playfun.ui.base.BaseActivity;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
+import com.tencent.qcloud.tuicore.custom.entity.MediaGalleryEditEntity;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 
 import me.goldze.mvvmhabit.utils.StringUtils;
 
