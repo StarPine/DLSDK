@@ -139,6 +139,11 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
+    public Observable<BaseDataResponse<UserDataEntity>> oldUserTokenLogin(RequestBody requestBody){
+        return apiService.oldUserTokenLogin(requestBody);
+    }
+
+    @Override
     public Observable<BaseDataResponse<IMTransUserEntity>> transUserIM(String IMUserId) {
         return apiService.transUserIM(IMUserId);
     }

@@ -16,6 +16,10 @@ public interface RetrofitHeadersConfig {
     String PlayChat_API_URL = "PlayChat_API_URL:PlayChat_API_URL";
     String PlayChat_API_URL_KEY = "PlayChat_API_URL";
 
+    //以旧的token置换登录
+    String OLD_USER_TOKEN = "OLD_USER_TOKEN:OLD_USER_TOKEN";
+    String OLD_USER_TOKEN_KEY = "OLD_USER_TOKEN";
+
     //推币机请求头配置
     interface CoinPUsherConfig{
         //超时时间

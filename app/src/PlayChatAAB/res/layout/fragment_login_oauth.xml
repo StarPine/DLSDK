@@ -4,10 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="android.graphics.drawable.GradientDrawable" />
+        <import type="com.dl.playfun.R" />
         <variable
             name="viewModel"
-            type="com.dl.playfun.ui.login.LoginViewModel" />
+            type="com.dl.playfun.ui.login.LoginOauthViewModel" />
     </data>
 
     <RelativeLayout
@@ -15,13 +16,13 @@
         android:layout_height="match_parent"
         tools:context=".ui.login.login.LoginFragment">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:src="@drawable/login_backdrop_img" />
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/title_logo"
             android:layout_width="190dp"
             android:layout_height="53dp"
@@ -30,70 +31,90 @@
             android:layout_marginTop="80dp"
             android:scaleType="fitXY"
             android:src="@drawable/login_title" />
-
-        <ImageView
-            android:id="@+id/login_button"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_above="@+id/ll_hint"
-            android:layout_marginStart="50dp"
-            android:layout_marginEnd="50dp"
-            android:layout_marginBottom="75dp"
-            android:src="@drawable/login_facebook_bg" />
-
         <LinearLayout
-            android:id="@+id/ll_hint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_above="@+id/auth_login_layout"
-            android:layout_centerInParent="true"
-            android:layout_marginBottom="30dp"
-            android:gravity="center_horizontal">
-
-            <View
-                android:layout_width="40dp"
-                android:layout_height="1dp"
+            android:orientation="vertical"
+            android:layout_marginStart="55dp"
+            android:layout_marginEnd="55dp"
+            android:layout_marginBottom="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <FrameLayout
                 android:layout_gravity="center"
-                android:background="#E0E0E0" />
+                android:id="@+id/me_avatar"
+                android:layout_width="69dp"
+                android:layout_height="69dp">
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="69dp"
+                    android:layout_height="69dp"
+                    android:background="@drawable/circle_white" />
+                <com.dl.playfun.widget.image.CircleImageView
+                    android:layout_width="67dp"
+                    android:layout_height="67dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginTop="1dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/default_address_user"
+                    binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
+                    binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
+                    binding:imageThumbPath="@{viewModel.currentUserData.avatar}"
 
-            <TextView
-                android:layout_width="wrap_content"
+                    tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
+            </FrameLayout>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:text="@string/register_bom_title2"
-                android:textColor="#E0E0E0" />
+                android:text="@{viewModel.currentUserData.nickname}"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                />
 
-            <View
-                android:layout_width="40dp"
-                android:layout_height="1dp"
-                android:layout_gravity="center"
-                android:background="#E0E0E0" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_marginTop="29dp"
+                android:includeFontPadding="false"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="登入此帳號"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                binding:onClickCommand="@{viewModel.clickLoginOnClickCommand}"
+                binding:drawable_orientation="@{GradientDrawable.Orientation.LEFT_RIGHT}"
+                binding:drawable_cornersRadius="@{24}"
+                binding:drawable_gradient_startColor="@{@color/playfun_shape_radius_start_color}"
+                binding:drawable_gradient_endColor="@{@color/playfun_shape_radius_end_color}"
+                />
         </LinearLayout>
-
         <LinearLayout
+            binding:onClickCommand="@{viewModel.clickOtherLoginView}"
             android:id="@+id/auth_login_layout"
             android:layout_above="@+id/bottom_layout"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="27dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/iv_google_login"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:background="@drawable/login_google_bg_min"
-                android:orientation="vertical" />
-
-            <ImageView
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="其他帳號"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                />
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/iv_phone_login"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginStart="40dp"
-                android:background="@drawable/login_in_moblie2"
-                binding:onClickCommand="@{viewModel.registerOnClickCommand}" />
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_marginStart="1dp"
+                android:src="@drawable/ic_arrow_right"
+                android:tint="@color/white"
+                />
 
 
         </LinearLayout>
@@ -142,8 +163,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:paddingEnd="0dp"
-                android:paddingRight="0dp"
                 android:text="@string/privacy_policy"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_middle2"

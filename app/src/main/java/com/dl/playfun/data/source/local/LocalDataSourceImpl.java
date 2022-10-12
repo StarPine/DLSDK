@@ -65,6 +65,8 @@ public class LocalDataSourceImpl implements LocalDataSource {
     private static final String KEY_DEFAULT_HOME_PAGE_NAME = "default_home_page_name";
     private static final String KEY_API_CONFIG_MANAGER = "api_config_manager";
     private static final String KEY_CITY_CONFIG_ALL = "key_city_config_all";
+
+    private static final String KEY_OLD_USER_DATA = "key_old_user_data";
     private static final String KEY_IS_FIRST = "is_first";
     private volatile static LocalDataSourceImpl INSTANCE = null;
     private final String cryptKey = "playfun@2022";
@@ -665,17 +667,6 @@ public class LocalDataSourceImpl implements LocalDataSource {
         return list;
     }
 
-    @Override
-    public void savePassword(String password) {
-        boolean b = kv.encode(KEY_LOCK_PASSWORD, password);
-        System.out.println(b);
-    }
-
-    @Override
-    public String readPassword() {
-        String password = kv.decodeString(KEY_LOCK_PASSWORD);
-        return password;
-    }
 
     @Override
     public void saveChatCustomMessageStatus(String msgId, int status) {

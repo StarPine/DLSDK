@@ -8,9 +8,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.http.HttpResponseCache;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.os.Handler;
-import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -25,7 +22,6 @@ import com.appsflyer.deeplink.DeepLink;
 import com.appsflyer.deeplink.DeepLinkListener;
 import com.appsflyer.deeplink.DeepLinkResult;
 import com.blankj.utilcode.util.GsonUtils;
-import com.blankj.utilcode.util.LanguageUtils;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.Utils;
@@ -50,10 +46,7 @@ import com.dl.playfun.manager.LocaleManager;
 import com.dl.playfun.manager.ThirdPushTokenMgr;
 import com.dl.playfun.tim.TUIUtils;
 import com.dl.playfun.ui.MainContainerActivity;
-import com.dl.playfun.ui.login.LoginFragment;
-import com.dl.playfun.ui.main.MainFragment;
 import com.dl.playfun.utils.StringUtil;
-import com.facebook.FacebookSdk;
 import com.faceunity.nama.FURenderer;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -80,7 +73,6 @@ import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.interfaces.TUICallback;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -651,16 +643,12 @@ public class AppContext extends Application {
     }
 
     /**
-    * @Desc TODO(获取阿里云mqtt实列)
-    * @author 彭石林
-    * @parame []
-    * @return com.dl.playfun.app.AliYunMqttClientLifecycle
-    * @Date 2022/7/5
-    */
-    public AliYunMqttClientLifecycle getBqttClientLifecycle() {
-        return AliYunMqttClientLifecycle.getInstance(this);
-    }
-
+     * @Desc TODO(获取谷歌支付实列)
+     * @author 彭石林
+     * @parame []
+     * @return com.dl.playfun.app.AliYunMqttClientLifecycle
+     * @Date 2022/7/5
+     */
     public BillingClientLifecycle getBillingClientLifecycle() {
         if(billingClientLifecycle==null){
             synchronized(BillingClientLifecycle.class){

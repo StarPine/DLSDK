@@ -1,5 +1,6 @@
 package com.dl.playfun.data.source;
 
+import com.dl.playfun.data.RetrofitHeadersConfig;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseListDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
@@ -105,14 +106,23 @@ import java.util.Map;
 
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
+import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface HttpDataSource {
+
+    /**
+     * @Desc TODO(一键登录(以本地token进行登录))
+     * @author 彭石林
+     * @Date 2022/10/12
+     */
+    Observable<BaseDataResponse<UserDataEntity>> oldUserTokenLogin(RequestBody requestBody);
 
     /**
      * @Desc TODO(支付购买聊天中的付费资源)

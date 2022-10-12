@@ -336,55 +336,6 @@ public class MVDialog {
         return bottomDialog;
     }
 
-    /**
-     * 获取手势解锁dialog
-     *
-     * @return
-     */
-    public static Dialog getLockDialog(Activity context, LockOnclick lockOnclick) {
-        final int[] dayStr = new int[3];
-        Dialog bottomDialog = new Dialog(context, R.style.BottomDialog);
-        View contentView = LayoutInflater.from(context).inflate(R.layout.dialog_lock, null);
-        bottomDialog.setContentView(contentView);
-        ViewGroup.LayoutParams layoutParams = contentView.getLayoutParams();
-        layoutParams.width = context.getResources().getDisplayMetrics().widthPixels;
-        contentView.setLayoutParams(layoutParams);
-        bottomDialog.getWindow().setGravity(Gravity.CENTER);
-        bottomDialog.getWindow().setWindowAnimations(R.style.MyDialog);
-        bottomDialog.setCanceledOnTouchOutside(false);
-        bottomDialog.setCancelable(false);
-        NineGridLockView lockView = contentView.findViewById(R.id.lock);
-        ImageView ivContent = contentView.findViewById(R.id.iv_content);
-        TextView tvExpain = contentView.findViewById(R.id.tv_expain);
-
-        View mainContainerView = context.getWindow().getDecorView();
-        mainContainerView.setDrawingCacheEnabled(true);
-        mainContainerView.buildDrawingCache();
-        Bitmap bp = Bitmap.createBitmap(mainContainerView.getDrawingCache(), 0, 0, mainContainerView.getMeasuredWidth(),
-                mainContainerView.getMeasuredHeight());
-        Blurry.with(context)
-                .radius(5)//模糊半径
-                .sampling(8)//缩放大小，先缩小再放大
-                .color(Color.argb(78, 255, 255, 255))//颜色
-                .async()//是否异步
-                .animate(300)
-                .from(bp)//传入bitmap
-                .into(ivContent);//显示View
-        lockView.setBack(password -> {
-            if (lockOnclick != null) {
-                lockOnclick.checkinfpassword(bottomDialog, password, tvExpain);
-            }
-        });
-        contentView.findViewById(R.id.tv_logout).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (lockOnclick != null) {
-                    lockOnclick.logout(bottomDialog);
-                }
-            }
-        });
-        return bottomDialog;
-    }
 
     /**
      * 获取节目时长

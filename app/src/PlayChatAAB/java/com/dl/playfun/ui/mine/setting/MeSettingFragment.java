@@ -21,9 +21,13 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.databinding.FragmentMeSettingBinding;
 import com.dl.playfun.entity.VersionEntity;
 import com.dl.playfun.kl.view.VideoPresetActivity;
+import com.dl.playfun.tim.TUIUtils;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
+import com.dl.playfun.utils.ImmersionBarUtils;
+import com.dl.playfun.widget.dialog.MVDialog;
 import com.dl.playfun.widget.dialog.version.view.UpdateDialogView;
 import com.luck.picture.lib.permissions.PermissionChecker;
+import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.qcloud.tuicore.util.BackgroundTasks;
 
 import me.goldze.mvvmhabit.utils.ToastUtils;
@@ -104,5 +108,22 @@ public class MeSettingFragment extends BaseToolbarFragment<FragmentMeSettingBind
                 });
             }
         });
+        viewModel.uc.clickLogout.observe(this, aVoid -> MVDialog.getInstance(this.getContext())
+                .setContent(getString(R.string.playfun_conflirm_log_out))
+                .setConfirmOnlick(dialog -> {
+                    TUIUtils.logout(new V2TIMCallback() {
+                        @Override
+                        public void onSuccess() {
+                            viewModel.logout();
+                        }
+
+                        @Override
+                        public void onError(int i, String s) {
+                            viewModel.logout();
+                        }
+                    });
+                })
+                .chooseType(MVDialog.TypeEnum.CENTERWARNED)
+                .show());
     }
 }

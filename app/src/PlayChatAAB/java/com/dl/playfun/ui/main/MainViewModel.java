@@ -100,10 +100,6 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
     public void onEnterAnimationEnd() {
         super.onEnterAnimationEnd();
         initIMListener();
-        lockPassword.set(model.readPassword());
-        if (!StringUtil.isEmpty(lockPassword.get())) {
-            uc.lockDialog.call();
-        }
         if (model.readNeedVerifyFace()) {
             uc.showFaceRecognitionDialog.call();
         }
@@ -173,11 +169,6 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         RxSubscriptions.remove(ResatrtActSubscription2);
         RxSubscriptions.remove(videoEvaluationSubscription);
         removeIMListener();
-    }
-
-    public void logout() {
-        model.logout();
-        //startWithPopTo(LoginFragment.class.getCanonicalName(), MainFragment.class.getCanonicalName(), true);
     }
 
     //检测新的版本
@@ -602,9 +593,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<Void> showDayRewardDialog = new SingleLiveEvent<>();
         //注册奖励
         public SingleLiveEvent<Void> showRegisterRewardDialog = new SingleLiveEvent<>();
-        public SingleLiveEvent<String> startFace = new SingleLiveEvent<>();
         public SingleLiveEvent<Integer> allMessageCountChange = new SingleLiveEvent<>();
-        public SingleLiveEvent<Void> lockDialog = new SingleLiveEvent<>();
         public ObservableField<Boolean> gender = new ObservableField<>(false);
         public SingleLiveEvent<MainTabEvent> mainTab = new SingleLiveEvent<>();
         //更新版本

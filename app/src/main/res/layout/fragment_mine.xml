@@ -120,15 +120,6 @@
                                 binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
                                 binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
                                 binding:imageThumbPath="@{viewModel.userInfoEntity.avatar}" />
-
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="@drawable/radius_layout_mine"
-                                android:elevation="99dp"
-                                android:scaleType="fitXY"
-                                android:src="@{viewModel.userInfoEntity.sex==1?@drawable/mine_default_back_img_male:@drawable/mine_default_back_img}"
-                                tools:src="@drawable/mine_default_back_img_male" />
                         </FrameLayout>
 
                         <RelativeLayout
@@ -229,243 +220,7 @@
                                 android:layout_marginEnd="6dp"
                                 android:text="@{SystemDictUtils.getOccupationById(safeUnbox(viewModel.userInfoEntity.occupationId))}" />
 
-                            <LinearLayout
-                                android:id="@+id/list_profile_layout"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentBottom="true"
-                                android:orientation="vertical">
 
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginBottom="18dp"
-                                    android:gravity="center_horizontal"
-                                    android:layout_marginRight="10dp"
-                                    android:layout_marginLeft="10dp"
-                                    >
-
-                                    <RelativeLayout
-                                        android:id="@+id/profile_layout"
-                                        android:layout_width="0dp"
-                                        android:layout_weight="1"
-                                        android:layout_height="60dp"
-                                        android:elevation="1dp"
-                                        binding:onClickCommand="@{viewModel.editProfileOnClickCommand}">
-
-                                        <ImageView
-                                            android:id="@+id/user_profile_img"
-                                            android:layout_width="22dp"
-                                            android:layout_height="22dp"
-                                            android:layout_centerHorizontal="true"
-                                            android:layout_marginBottom="9dp"
-                                            android:layout_above="@+id/user_profile"
-                                            android:src="@drawable/ic_mine_profile" />
-                                        <TextView
-                                            android:id="@+id/user_profile"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_centerHorizontal="true"
-                                            android:layout_alignParentBottom="true"
-                                            android:text="@string/playfun_mine_profile"
-                                            android:textColor="@color/white"
-                                            android:textSize="12dp" />
-                                        <TextView
-                                            android:layout_width="9dp"
-                                            android:layout_height="9dp"
-                                            android:layout_marginTop="-5dp"
-                                            android:layout_marginRight="-5dp"
-                                            android:layout_alignEnd="@+id/user_profile_img"
-                                            android:layout_alignTop="@+id/user_profile_img"
-                                            android:background="@drawable/mine_radius"
-                                            android:textColor="@color/white"
-                                            android:visibility="@{viewModel.localUserDataEntity.isPerfect?View.GONE:View.VISIBLE}"
-                                            tools:visibility="visible" />
-
-                                    </RelativeLayout>
-
-                                    <RelativeLayout
-                                        android:id="@+id/mine_wallet_layout"
-                                        android:layout_width="0dp"
-                                        android:layout_weight="1"
-                                        android:layout_height="60dp"
-                                        android:elevation="1dp"
-                                        binding:onClickCommand="@{viewModel.walletOnClickCommand}">
-
-                                        <ImageView
-                                            android:layout_width="22dp"
-                                            android:layout_height="22dp"
-                                            android:layout_centerInParent="true"
-                                            android:layout_marginBottom="9dp"
-                                            android:layout_above="@+id/mine_wallet"
-                                            android:src="@drawable/ic_mine_wallet" />
-                                        <TextView
-                                            android:id="@+id/mine_wallet"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_alignParentBottom="true"
-                                            android:layout_centerInParent="true"
-                                            android:text="@string/playfun_mine_wallet"
-                                            android:textColor="@color/white"
-                                            android:textSize="12sp" />
-                                    </RelativeLayout>
-
-                                    <RelativeLayout
-                                        android:id="@+id/mine_my_likes_layout"
-                                        android:layout_width="0dp"
-                                        android:layout_weight="1"
-                                        android:layout_height="60dp"
-                                        android:elevation="1dp"
-                                        binding:onClickCommand="@{viewModel.fondOnClickCommand}">
-
-                                        <ImageView
-                                            android:layout_width="22dp"
-                                            android:layout_height="22dp"
-                                            android:layout_centerInParent="true"
-                                            android:layout_marginBottom="9dp"
-                                            android:layout_above="@+id/mine_my_likes"
-                                            android:src="@drawable/ic_mine_like" />
-                                        <TextView
-                                            android:id="@+id/mine_my_likes"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_centerHorizontal="true"
-                                            android:layout_alignParentBottom="true"
-                                            android:text="@string/playfun_mine_my_likes"
-                                            android:textColor="@color/white"
-                                            android:textSize="12sp" />
-                                    </RelativeLayout>
-
-                                    <RelativeLayout
-                                        android:layout_width="0dp"
-                                        android:layout_weight="1"
-                                        android:layout_height="60dp"
-                                        android:elevation="1dp"
-                                        binding:onClickCommand="@{viewModel.traceOnClickCommand}">
-
-                                        <TextView
-                                            android:id="@+id/trace_num"
-                                            android:layout_width="23dp"
-                                            android:layout_height="23dp"
-                                            android:layout_above="@+id/trace_text_tv_img"
-                                            android:layout_marginStart="-10dp"
-                                            android:layout_marginBottom="-9dp"
-                                            android:layout_toEndOf="@+id/trace_text_tv_img"
-                                            android:background="@drawable/mine_radius"
-                                            android:elevation="10dp"
-                                            android:gravity="center"
-                                            android:padding="1dp"
-                                            android:text="99+"
-                                            android:textColor="@color/white"
-                                            android:textSize="10sp"
-                                            android:visibility="gone"
-                                            tools:visibility="visible" />
-
-                                        <ImageView
-                                            android:id="@+id/trace_text_tv_img"
-                                            android:layout_width="22dp"
-                                            android:layout_height="22dp"
-                                            android:layout_above="@+id/trace_text_tv"
-                                            android:layout_centerInParent="true"
-                                            android:layout_marginBottom="9dp"
-                                            android:src="@drawable/ic_mine_visitors" />
-
-                                        <TextView
-                                            android:id="@+id/trace_text_tv"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_alignParentBottom="true"
-                                            android:layout_centerInParent="true"
-                                            android:text="@{viewModel.userInfoEntity.sex==1?@string/playfun_mine_my_visitors_man:@string/playfun_mine_my_visitors_many}"
-                                            android:textColor="@color/white"
-                                            android:textSize="12sp"
-                                            tools:hint="@string/playfun_mine_my_visitors_man" />
-                                    </RelativeLayout>
-
-                                </LinearLayout>
-
-                                <RelativeLayout
-                                    android:id="@+id/vip_layout_div"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="108dp"
-                                    android:layout_marginStart="18dp"
-                                    android:layout_marginEnd="18dp"
-                                    android:clickable="true"
-                                    android:visibility="@{safeUnbox(viewModel.sex) == 1 ? View.VISIBLE:View.GONE}">
-
-                                    <ImageView
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:adjustViewBounds="true"
-                                        android:scaleType="fitCenter"
-                                        android:src="@drawable/mine_vip" />
-
-                                    <RelativeLayout
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="13dp">
-
-                                        <ImageView
-                                            android:id="@+id/mine_vip_icon_text"
-                                            android:layout_width="19dp"
-                                            android:layout_height="19dp"
-                                            android:layout_marginStart="13dp"
-                                            android:src="@drawable/mine_vip_text" />
-
-                                        <TextView
-                                            android:id="@+id/mine_vip_hint"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_centerInParent="true"
-                                            android:layout_marginStart="5dp"
-                                            android:layout_toEndOf="@+id/mine_vip_icon_text"
-                                            android:includeFontPadding="false"
-                                            android:text="@string/playfun_mine_vip_hint"
-                                            android:textColor="#ff6b3f24"
-                                            android:textSize="13sp" />
-
-                                        <TextView
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_alignParentRight="true"
-                                            android:layout_centerInParent="true"
-                                            android:layout_marginStart="24dp"
-                                            android:layout_toEndOf="@+id/mine_vip_hint"
-                                            android:includeFontPadding="false"
-                                            android:text="@{viewModel.userInfoEntity.isVip == 1 ? String.format(@string/playfun_end_time,viewModel.userInfoEntity.endTime):@string/playfun_upgrade_vip}"
-                                            android:textColor="@color/white"
-                                            android:textSize="10sp"
-                                            android:visibility="@{viewModel.userInfoEntity.isVip == 1 ? View.VISIBLE:View.GONE}"
-                                            tools:text="expire:2021-09-01" />
-                                    </RelativeLayout>
-
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="26dp"
-                                        android:layout_alignParentRight="true"
-                                        android:layout_marginTop="10dp"
-                                        android:layout_marginRight="30dp"
-                                        android:background="@drawable/mine_vip_button_bg"
-                                        android:gravity="center"
-                                        android:paddingStart="16dp"
-                                        android:paddingEnd="16dp"
-                                        android:text="@string/playfun_buy_vip"
-                                        android:textColor="@color/white"
-                                        android:textSize="11sp"
-                                        android:visibility="@{viewModel.userInfoEntity.isVip == 1 ? View.GONE:View.VISIBLE}"
-                                        binding:onClickCommand="@{viewModel.memberOnClickCommand}" />
-                                </RelativeLayout>
-                            </LinearLayout>
-
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="30dp"
-                                android:layout_alignParentBottom="true"
-                                android:background="@drawable/radius_layout_mine"
-                                android:elevation="99dp"
-                                android:scaleType="fitXY"
-                                android:src="@drawable/mine_default_back_img2" />
                         </RelativeLayout>
                     </RelativeLayout>
                 </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -491,7 +246,236 @@
                         android:layout_height="match_parent"
                         android:orientation="vertical"
                         android:paddingBottom="@dimen/home_bottom_nav_height">
+                        <LinearLayout
+                            android:id="@+id/list_profile_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:orientation="vertical">
 
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="18dp"
+                                android:gravity="center_horizontal"
+                                android:layout_marginRight="10dp"
+                                android:layout_marginLeft="10dp"
+                                >
+
+                                <RelativeLayout
+                                    android:id="@+id/profile_layout"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="60dp"
+                                    android:elevation="1dp"
+                                    binding:onClickCommand="@{viewModel.editProfileOnClickCommand}">
+
+                                    <ImageView
+                                        android:id="@+id/user_profile_img"
+                                        android:layout_width="22dp"
+                                        android:layout_height="22dp"
+                                        android:layout_centerHorizontal="true"
+                                        android:layout_marginBottom="9dp"
+                                        android:layout_above="@+id/user_profile"
+                                        android:src="@drawable/ic_mine_profile" />
+
+                                    <TextView
+                                        android:id="@+id/user_profile"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentBottom="true"
+                                        android:layout_centerHorizontal="true"
+                                        android:text="@string/playfun_mine_profile"
+                                        android:textColor="@color/toolbar_title_color"
+                                        android:textSize="12sp" />
+
+                                    <TextView
+                                        android:layout_width="9dp"
+                                        android:layout_height="9dp"
+                                        android:layout_alignTop="@+id/user_profile_img"
+                                        android:layout_alignEnd="@+id/user_profile_img"
+                                        android:layout_marginTop="-5dp"
+                                        android:layout_marginRight="-5dp"
+                                        android:background="@drawable/mine_radius"
+                                        android:textColor="@color/white"
+                                        android:visibility="@{viewModel.localUserDataEntity.isPerfect?View.GONE:View.VISIBLE}"
+                                        tools:visibility="visible" />
+
+                                </RelativeLayout>
+
+                                <RelativeLayout
+                                    android:id="@+id/mine_wallet_layout"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="60dp"
+                                    android:elevation="1dp"
+                                    binding:onClickCommand="@{viewModel.walletOnClickCommand}">
+
+                                    <ImageView
+                                        android:layout_width="22dp"
+                                        android:layout_height="22dp"
+                                        android:layout_centerInParent="true"
+                                        android:layout_marginBottom="9dp"
+                                        android:layout_above="@+id/mine_wallet"
+                                        android:src="@drawable/ic_mine_wallet" />
+                                    <TextView
+                                        android:id="@+id/mine_wallet"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentBottom="true"
+                                        android:layout_centerInParent="true"
+                                        android:text="@string/playfun_mine_wallet"
+                                        android:textColor="@color/toolbar_title_color"
+                                        android:textSize="12sp" />
+                                </RelativeLayout>
+
+                                <RelativeLayout
+                                    android:id="@+id/mine_my_likes_layout"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="60dp"
+                                    android:elevation="1dp"
+                                    binding:onClickCommand="@{viewModel.fondOnClickCommand}">
+
+                                    <ImageView
+                                        android:layout_width="22dp"
+                                        android:layout_height="22dp"
+                                        android:layout_centerInParent="true"
+                                        android:layout_marginBottom="9dp"
+                                        android:layout_above="@+id/mine_my_likes"
+                                        android:src="@drawable/ic_mine_like" />
+
+                                    <TextView
+                                        android:id="@+id/mine_my_likes"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentBottom="true"
+                                        android:layout_centerHorizontal="true"
+                                        android:text="@string/playfun_mine_my_likes"
+                                        android:textColor="@color/toolbar_title_color"
+                                        android:textSize="12sp" />
+                                </RelativeLayout>
+
+                                <RelativeLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="60dp"
+                                    android:elevation="1dp"
+                                    binding:onClickCommand="@{viewModel.traceOnClickCommand}">
+
+                                    <TextView
+                                        android:id="@+id/trace_num"
+                                        android:layout_width="23dp"
+                                        android:layout_height="23dp"
+                                        android:layout_above="@+id/trace_text_tv_img"
+                                        android:layout_marginStart="-10dp"
+                                        android:layout_marginBottom="-9dp"
+                                        android:layout_toEndOf="@+id/trace_text_tv_img"
+                                        android:background="@drawable/mine_radius"
+                                        android:elevation="10dp"
+                                        android:gravity="center"
+                                        android:padding="1dp"
+                                        android:text="99+"
+                                        android:textColor="@color/white"
+                                        android:textSize="10sp"
+                                        android:visibility="gone"
+                                        tools:visibility="visible" />
+
+                                    <ImageView
+                                        android:id="@+id/trace_text_tv_img"
+                                        android:layout_width="22dp"
+                                        android:layout_height="22dp"
+                                        android:layout_above="@+id/trace_text_tv"
+                                        android:layout_centerInParent="true"
+                                        android:layout_marginBottom="9dp"
+                                        android:src="@drawable/ic_mine_visitors" />
+
+                                    <TextView
+                                        android:id="@+id/trace_text_tv"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentBottom="true"
+                                        android:layout_centerInParent="true"
+                                        android:text="@{viewModel.userInfoEntity.sex==1?@string/playfun_mine_my_visitors_man:@string/playfun_mine_my_visitors_many}"
+                                        android:textColor="@color/toolbar_title_color"
+                                        android:textSize="12sp"
+                                        tools:hint="@string/playfun_mine_my_visitors_man" />
+                                </RelativeLayout>
+
+                            </LinearLayout>
+
+                            <RelativeLayout
+                                android:id="@+id/vip_layout_div"
+                                android:layout_width="match_parent"
+                                android:layout_height="58dp"
+                                android:layout_marginStart="14dp"
+                                android:layout_marginEnd="14dp"
+                                android:clickable="true"
+                                android:visibility="@{safeUnbox(viewModel.sex) == 1 ? View.VISIBLE:View.GONE}">
+
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:scaleType="fitXY"
+                                    android:src="@drawable/mine_vip" />
+
+                                <RelativeLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="13dp">
+
+                                    <ImageView
+                                        android:id="@+id/mine_vip_icon_text"
+                                        android:layout_width="19dp"
+                                        android:layout_height="19dp"
+                                        android:layout_marginStart="13dp"
+                                        android:src="@drawable/mine_vip_text" />
+
+                                    <TextView
+                                        android:id="@+id/mine_vip_hint"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerInParent="true"
+                                        android:layout_marginStart="5dp"
+                                        android:layout_toEndOf="@+id/mine_vip_icon_text"
+                                        android:includeFontPadding="false"
+                                        android:text="@string/playfun_mine_vip_hint"
+                                        android:textColor="#ff6b3f24"
+                                        android:textSize="13sp" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_centerInParent="true"
+                                        android:layout_marginStart="24dp"
+                                        android:layout_toEndOf="@+id/mine_vip_hint"
+                                        android:includeFontPadding="false"
+                                        android:text="@{viewModel.userInfoEntity.isVip == 1 ? String.format(@string/playfun_end_time,viewModel.userInfoEntity.endTime):@string/playfun_upgrade_vip}"
+                                        android:textColor="@color/white"
+                                        android:textSize="10sp"
+                                        android:visibility="@{viewModel.userInfoEntity.isVip == 1 ? View.VISIBLE:View.GONE}"
+                                        tools:text="expire:2021-09-01" />
+                                </RelativeLayout>
+
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="26dp"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_marginRight="30dp"
+                                    android:background="@drawable/mine_vip_button_bg"
+                                    android:gravity="center"
+                                    android:paddingStart="16dp"
+                                    android:paddingEnd="16dp"
+                                    android:text="@string/playfun_buy_vip"
+                                    android:textColor="@color/white"
+                                    android:textSize="11sp"
+                                    android:visibility="@{viewModel.userInfoEntity.isVip == 1 ? View.GONE:View.VISIBLE}"
+                                    binding:onClickCommand="@{viewModel.memberOnClickCommand}" />
+                            </RelativeLayout>
+                        </LinearLayout>
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="11dp"

@@ -46,98 +46,53 @@
             android:fillViewport="true"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
                 android:orientation="vertical"
                 android:paddingBottom="30dp">
-
                 <RelativeLayout
-                    style="@style/ProfileItem"
+                    style="@style/ItemSetting"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/profile_item_height"
-                    binding:onClickCommand="@{viewModel.facebeauty}">
-                    <ImageView
-                        android:id="@+id/face_beauty"
+                    android:visibility="visible"
+                    binding:onClickCommand="@{viewModel.bindingCommunityAccount}"
+                    tools:visibility="visible">
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/img_account"
                         android:layout_width="19dp"
                         android:layout_height="19dp"
                         android:layout_alignParentStart="true"
                         android:layout_centerInParent="true"
-                        android:src="@drawable/icon_beauty"/>
-                    <TextView
+                        android:src="@drawable/ic_mine_account"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
                         style="@style/ProfileItemTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:layout_toEndOf="@+id/face_beauty"
-                        android:text="@string/playfun_mine_face_beauty"
-                        android:textSize="13sp" />
-
-                    <TextView
-                        style="@style/ProfileItemTitleNormal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true" />
-                </RelativeLayout>
+                        android:layout_toEndOf="@+id/img_account"
+                        android:text="@string/playfun_binding_community_account" />
 
-                <RelativeLayout
-                    style="@style/ProfileItem"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/profile_item_height"
-                    binding:onClickCommand="@{viewModel.clickLanguageView}">
-                    <ImageView
-                        android:id="@+id/languae_switch"
-                        android:layout_width="19dp"
-                        android:layout_height="19dp"
-                        android:layout_alignParentStart="true"
-                        android:layout_centerInParent="true"
-                        android:src="@drawable/icon_beauty"/>
-                    <TextView
-                        style="@style/ProfileItemTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_toEndOf="@+id/languae_switch"
-                        android:text="@string/playfun_languae_switch_title"
-                        android:textSize="13sp" />
-
-                    <TextView
-                        style="@style/ProfileItemTitleNormal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true" />
-                </RelativeLayout>
-
-
-                <RelativeLayout
-                    style="@style/ProfileItem"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/profile_item_height"
-                    android:layout_marginTop="10dp"
-                    binding:onClickCommand="@{viewModel.blacklistOnClickCommand}">
-
-                    <TextView
-                        style="@style/ProfileItemTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawableStart="@drawable/ic_mine_block"
-                        android:drawablePadding="8dp"
-                        android:text="@string/playfun_mine_blacklist"
-                        android:textSize="13sp" />
-
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         style="@style/ProfileItemSubTitle"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:text="" />
                 </RelativeLayout>
+                <View
+                    android:background="@color/white"
+                    android:layout_width="14dp"
+                    android:layout_height="1dp"/>
                 <RelativeLayout
-                    style="@style/ProfileItem"
+                    style="@style/ItemSetting"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/profile_item_height"
                     binding:onClickCommand="@{viewModel.privacySettingOnClickCommand}">
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         style="@style/ProfileItemTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -146,63 +101,176 @@
                         android:text="@string/playfun_setting_privacy_setting"
                         android:textSize="13sp" />
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         style="@style/ProfileItemSubTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="" />
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         style="@style/ProfileItemSubTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/playfun_mine_setting_desc" />
                 </RelativeLayout>
                 <RelativeLayout
-                    style="@style/ProfileItem"
+                    style="@style/ItemSetting"
+                    android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/profile_item_height"
-                    binding:onClickCommand="@{viewModel.settingOnClickCommand}">
-
-                    <ImageView
-                        android:id="@+id/mine_setting"
+                    binding:onClickCommand="@{viewModel.facebeauty}">
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/face_beauty"
                         android:layout_width="19dp"
                         android:layout_height="19dp"
                         android:layout_alignParentStart="true"
                         android:layout_centerInParent="true"
-                        android:src="@drawable/ic_mine_setting" />
+                        android:src="@drawable/icon_beauty"/>
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         style="@style/ProfileItemTitle"
-                        android:layout_toEndOf="@+id/mine_setting"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="@string/playfun_mine_setting"
+                        android:layout_toEndOf="@+id/face_beauty"
+                        android:text="@string/playfun_mine_face_beauty"
                         android:textSize="13sp" />
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         style="@style/ProfileItemSubTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="" />
+                </RelativeLayout>
+                <View
+                    android:background="@color/white"
+                    android:layout_width="14dp"
+                    android:layout_height="1dp"/>
+                <RelativeLayout
+                    style="@style/ItemSetting"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/profile_item_height"
+                    binding:onClickCommand="@{viewModel.clickLanguageView}">
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/languae_switch"
+                        android:layout_width="19dp"
+                        android:layout_height="19dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_mine_language"/>
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/ProfileItemTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_toEndOf="@+id/languae_switch"
+                        android:text="@string/playfun_languae_switch_title"
+                        android:textSize="13sp" />
 
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/ProfileItemSubTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="" />
+                </RelativeLayout>
+                <View
+                    android:background="@color/white"
+                    android:layout_width="14dp"
+                    android:layout_height="1dp"/>
+                <RelativeLayout
+                    style="@style/ItemSetting"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/profile_item_height"
+                    binding:onClickCommand="@{viewModel.pushSettingOnClickCommand}">
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/img_push"
+                        android:layout_width="19dp"
+                        android:layout_height="19dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_mine_push"/>
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/ProfileItemTitle"
+                        android:layout_toEndOf="@+id/img_push"
+                        android:layout_marginStart="8dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/playfun_push_setting_title" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/ProfileItemSubTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="" />
+                </RelativeLayout>
+                <View
+                    android:background="@color/white"
+                    android:layout_width="14dp"
+                    android:layout_height="1dp"/>
+                <RelativeLayout
+                    style="@style/ItemSetting"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/profile_item_height"
+                    binding:onClickCommand="@{viewModel.blacklistOnClickCommand}">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/ProfileItemTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_mine_block"
+                        android:drawablePadding="8dp"
+                        android:text="@string/playfun_mine_blacklist"
+                        android:textSize="13sp" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/ProfileItemSubTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </RelativeLayout>
+                <View
+                    android:background="@color/white"
+                    android:layout_width="14dp"
+                    android:layout_height="1dp"/>
+                <RelativeLayout
+                    style="@style/ItemSetting"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/profile_item_height"
+                    binding:onClickCommand="@{viewModel.clearCacheOnClickCommand}">
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/img_clear"
+                        android:layout_width="19dp"
+                        android:layout_height="19dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_mine_clear"/>
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/ProfileItemTitle"
+                        android:layout_toEndOf="@+id/img_clear"
+                        android:layout_marginStart="8dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/playfun_setting_clear_catck" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/ProfileItemSubTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{viewModel.cacheSize}" />
                 </RelativeLayout>
                 <RelativeLayout
-                    style="@style/ProfileItem"
+                    style="@style/ItemSetting"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/profile_item_height"
                     android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
                     binding:onClickCommand="@{viewModel.versionOnClickCommand}">
-                    <ImageView
+                    <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/setting_version"
                         android:layout_width="19dp"
                         android:layout_height="19dp"
                         android:layout_alignParentStart="true"
                         android:layout_centerInParent="true"
                         android:src="@drawable/icon_setting_version"/>
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         style="@style/ProfileItemTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -211,7 +279,7 @@
                         android:text="@string/playfun_mine_current_version"
                         android:textSize="13sp" />
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         style="@style/ProfileItemTitleNormal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -219,7 +287,21 @@
                         android:text="@{viewModel.currentVersion}" />
                 </RelativeLayout>
 
+                <RelativeLayout
+                    style="@style/ItemSetting"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/profile_item_height"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    binding:onClickCommand="@{viewModel.logoutOnClickCommand}">
 
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/ProfileItemTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/playfun_setting_sign_out" />
+                </RelativeLayout>
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>

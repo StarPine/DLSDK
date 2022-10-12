@@ -299,6 +299,12 @@
         <item name="android:paddingRight">14.32dp</item>
     </style>
 
+    <style name="ItemSetting">
+        <item name="android:background">@color/white</item>
+        <item name="android:paddingStart">14dp</item>
+        <item name="android:paddingEnd">14dp</item>
+    </style>
+
     <style name="ProfileItemTitle">
         <item name="android:textColor">@color/text_default</item>
         <item name="android:textSize">@dimen/text_size_middle</item>

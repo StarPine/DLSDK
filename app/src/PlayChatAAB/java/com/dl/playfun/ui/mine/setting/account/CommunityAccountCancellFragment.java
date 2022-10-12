@@ -51,7 +51,7 @@ public class CommunityAccountCancellFragment extends BaseToolbarFragment<Fragmen
                 if (type) {
                     MMAlertDialog.AlertAccountCancell(mActivity, (dialog, which) -> {
                         //跳转到登录界面
-                        startWithPopTo(new LoginFragment(), CommunityAccountCancellFragment.class, true);
+                        viewModel.startLoginView();
                     }).show();
                 } else {
                     //调用充值钻石弹窗

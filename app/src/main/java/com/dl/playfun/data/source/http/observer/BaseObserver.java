@@ -18,7 +18,8 @@ public abstract class BaseObserver<T extends BaseResponse> extends BaseDisposabl
 
     @Override
     public void onError(RequestException e) {
-        if (e.getCode() == 10103) {
+        if (e.getCode() == 50000) {
+            //冻结账号
             RxBus.getDefault().post(new UserDisableEvent());
         } else if (e.getCode() == 10100) {
             //Log.e("接收服务器的登录过期数据",e.getClass().getCanonicalName());

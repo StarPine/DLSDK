@@ -12,8 +12,11 @@ import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.databinding.ActivityLanguageSwitchBinding;
+import com.dl.playfun.event.LanguageChangeEvent;
 import com.dl.playfun.ui.base.BaseActivity;
 import com.dl.playfun.utils.ImmersionBarUtils;
+
+import me.goldze.mvvmhabit.bus.RxBus;
 
 /**
  * Author: 彭石林
@@ -69,5 +72,7 @@ public class LanguageSwitchActivity extends BaseActivity<ActivityLanguageSwitchB
         startActivity(intent);
         android.os.Process.killProcess(android.os.Process.myPid());
         System.exit(0);
+//        recreate();
+//        RxBus.getDefault().post(new LanguageChangeEvent());
     }
 }

@@ -129,7 +129,14 @@ import retrofit2.http.Query;
  */
 
 public interface ApiService {
-
+    /**
+    * @Desc TODO(一键登录(以本地token进行登录))
+    * @author 彭石林
+    * @Date 2022/10/12
+    */
+    @Headers({"Content-Type: application/json",RetrofitHeadersConfig.OLD_USER_TOKEN})
+    @POST("api/tokenLogin")
+    Observable<BaseDataResponse<UserDataEntity>> oldUserTokenLogin(@Body RequestBody requestBody);
     /*=====================================推币机模块=====================================*/
     /**
     * @Desc TODO(查询用户当前余额)

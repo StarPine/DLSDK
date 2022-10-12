@@ -404,20 +404,6 @@ public interface LocalDataSource {
     List<ConfigItemEntity> readCityConfig();
 
     /**
-     * 保存手势密码
-     *
-     * @param password
-     */
-    void savePassword(String password);
-
-    /**
-     * 获取手势密码
-     *
-     * @return
-     */
-    String readPassword();
-
-    /**
      * 保存自定义消息状态
      *
      * @param msgId  消息ID

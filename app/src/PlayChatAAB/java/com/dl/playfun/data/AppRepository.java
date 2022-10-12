@@ -54,6 +54,11 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
+    public Observable<BaseDataResponse<UserDataEntity>> oldUserTokenLogin(RequestBody requestBody){
+        return mHttpDataSource.oldUserTokenLogin(requestBody);
+    }
+
+    @Override
     public Observable<BaseDataResponse<IMTransUserEntity>> transUserIM(String IMUserId) {
         return mHttpDataSource.transUserIM(IMUserId);
     }
@@ -739,16 +744,6 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     @Override
     public String readDefaultHomePageConfig() {
         return mLocalDataSource.readDefaultHomePageConfig();
-    }
-
-    @Override
-    public void savePassword(String password) {
-        mLocalDataSource.savePassword(password);
-    }
-
-    @Override
-    public String readPassword() {
-        return mLocalDataSource.readPassword();
     }
 
 

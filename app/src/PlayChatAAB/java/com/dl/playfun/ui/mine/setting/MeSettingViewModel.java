@@ -7,20 +7,27 @@ import androidx.databinding.ObservableField;
 
 import com.blankj.utilcode.util.AppUtils;
 import com.dl.playfun.R;
+import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.entity.VersionEntity;
+import com.dl.playfun.manager.GlideCacheManager;
+import com.dl.playfun.ui.login.LoginOauthFragment;
+import com.dl.playfun.ui.main.MainFragment;
+import com.dl.playfun.ui.message.pushsetting.PushSettingFragment;
 import com.dl.playfun.ui.mine.blacklist.BlacklistFragment;
 import com.dl.playfun.ui.mine.language.LanguageSwitchActivity;
 import com.dl.playfun.ui.mine.privacysetting.PrivacySettingFragment;
+import com.dl.playfun.ui.mine.setting.account.CommunityAccountFragment;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.tencent.qcloud.tuicore.Status;
 
 import org.jetbrains.annotations.NotNull;
 
+import me.goldze.mvvmhabit.binding.command.BindingAction;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.RxUtils;
@@ -36,6 +43,11 @@ public class MeSettingViewModel extends BaseViewModel<AppRepository> {
    public UIChangeObservable uc = new UIChangeObservable();
 
     public ObservableField<String> currentVersion = new ObservableField<>();
+    public ObservableField<String> cacheSize = new ObservableField<>();
+    //绑定社群账号
+    public BindingCommand bindingCommunityAccount = new BindingCommand(() ->{
+        start(CommunityAccountFragment.class.getCanonicalName());
+    });
     //美顏跳转
     public BindingCommand facebeauty = new BindingCommand(() -> {
         uc.starFacebeautyActivity.call();
@@ -49,21 +61,23 @@ public class MeSettingViewModel extends BaseViewModel<AppRepository> {
         }
         startActivity(LanguageSwitchActivity.class);
     });
+    //推送设置按钮的点击事件
+    public BindingCommand pushSettingOnClickCommand = new BindingCommand(() -> start(PushSettingFragment.class.getCanonicalName()));
     //黑名单按钮的点击事件
     public BindingCommand blacklistOnClickCommand = new BindingCommand(() -> {
         AppContext.instance().logEvent(AppsFlyerEvent.Blocked_List);
         start(BlacklistFragment.class.getCanonicalName());
     });
     //隐私设置按钮的点击事件
+    public BindingCommand clearCacheOnClickCommand = new BindingCommand(() -> {
+        GlideCacheManager.getInstance().clearImageDiskCache(getApplication());
+        cacheSize.set("0.00KB");
+        ToastUtils.showShort(R.string.playfun_cleared_image_cache);
+    });
+    //隐私设置按钮的点击事件
     public BindingCommand privacySettingOnClickCommand = new BindingCommand(() -> {
         AppContext.instance().logEvent(AppsFlyerEvent.Privacy_Settings);
         start(PrivacySettingFragment.class.getCanonicalName());
-    }
-    );
-    //设置按钮的点击事件
-    public BindingCommand settingOnClickCommand = new BindingCommand(() -> {
-        AppContext.instance().logEvent(AppsFlyerEvent.System_Settings);
-        start(SettingFragment.class.getCanonicalName());
     });
     //当前版本按钮的点击事件
     public BindingCommand versionOnClickCommand = new BindingCommand(() -> {
@@ -93,15 +107,34 @@ public class MeSettingViewModel extends BaseViewModel<AppRepository> {
         super(application, model);
     }
 
+    //退出登录
+    public BindingCommand logoutOnClickCommand = new BindingCommand(new BindingAction() {
+        @Override
+        public void call() {
+            uc.clickLogout.call();
+        }
+    });
+
     @Override
     public void onViewCreated() {
         super.onViewCreated();
         String appVersionName = AppUtils.getAppVersionName();
         currentVersion.set(appVersionName);
+        String strCacheSize = GlideCacheManager.getInstance().getCacheSize(getApplication());
+        cacheSize.set(strCacheSize);
+    }
+
+    public void logout() {
+        //友盟用户统计
+        // MobclickAgent.onProfileSignOff();
+        AppConfig.userClickOut = true;
+        //model.logout();
+        startWithPopTo(LoginOauthFragment.class.getCanonicalName(), MainFragment.class.getCanonicalName(), true);
     }
 
     public class UIChangeObservable {
         public SingleLiveEvent<VersionEntity> versionEntitySingl = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> starFacebeautyActivity = new SingleLiveEvent<>();
+        public SingleLiveEvent<Void> clickLogout = new SingleLiveEvent<>();
     }
 }

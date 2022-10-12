@@ -197,7 +197,7 @@ android {
                 // 服务端接口HOST
                // buildConfigField "String", "DEFAULT_API_URL", "\"http://t-config.play-chat.net/\""
                 // 服务端接口HOST
-                buildConfigField "String", "DEFAULT_API_URL", "\"http://config.play-chat.net/\""
+                buildConfigField "String", "DEFAULT_API_URL", "\"https://config.play-chat.net/\""
                 applicationId "com.ld.play.chat"
                 manifestPlaceholders = [package_name: applicationId]
                 //正式包配置

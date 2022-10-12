@@ -8,6 +8,8 @@ import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseResponse;
+import com.dl.playfun.ui.login.LoginFragment;
+import com.dl.playfun.ui.splash.SplashFragment;
 import com.dl.playfun.viewmodel.BaseViewModel;
 
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
@@ -47,6 +49,12 @@ public class CommunityAccountCancellViewModel extends BaseViewModel<AppRepositor
                         }
                     }
                 });
+    }
+
+    public void startLoginView() {
+        model.logout();
+        //跳转到登录界面
+        startWithPopTo(LoginFragment.class.getCanonicalName(), CommunityAccountCancellFragment.class.getCanonicalName(), true);
     }
 
 }

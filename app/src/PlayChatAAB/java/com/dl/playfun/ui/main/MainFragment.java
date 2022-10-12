@@ -46,7 +46,6 @@ import com.dl.playfun.event.MainTabEvent;
 import com.dl.playfun.event.TaskListEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseFragment;
-import com.dl.playfun.ui.dialog.LockDialog;
 import com.dl.playfun.ui.home.HomeMainFragment;
 import com.dl.playfun.ui.message.MessageMainFragment;
 import com.dl.playfun.ui.mine.MineFragment;
@@ -57,7 +56,6 @@ import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
-import com.dl.playfun.widget.dialog.MVDialog;
 import com.dl.playfun.widget.dialog.TraceDialog;
 import com.dl.playfun.widget.dialog.WebViewDialog;
 import com.dl.playfun.widget.dialog.version.view.UpdateDialogView;
@@ -297,33 +295,6 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
             public void onChanged(Void aVoid) {
                 showFaceRecognitionDialog();
             }
-        });
-        viewModel.uc.lockDialog.observe(this, aVoid -> {
-            LockDialog dialog = new LockDialog();
-            dialog.setPassword(viewModel.lockPassword.get());
-            dialog.setLockDialogListener(new LockDialog.LockDialogListener() {
-                @Override
-                public void onLogoutClick(LockDialog lockDialog) {
-                    MVDialog.getInstance(MainFragment.this.getContext())
-                            .setContent(getString(R.string.playfun_conflirm_log_out))
-                            .setConfirmOnlick(dialog -> {
-                                lockDialog.dismiss();
-                                dialog.dismiss();
-                                viewModel.logout();
-                            })
-                            .chooseType(MVDialog.TypeEnum.CENTERWARNED)
-                            .show();
-                }
-
-                @Override
-                public void onVerifySuccess(LockDialog dialog) {
-                    dialog.dismiss();
-                }
-            });
-            dialog.show(getChildFragmentManager(), LockDialog.class.getCanonicalName());
-        });
-        viewModel.uc.startFace.observe(this, verifyToken -> {
-
         });
 
         viewModel.uc.mainTab.observe(this, new Observer<MainTabEvent>() {

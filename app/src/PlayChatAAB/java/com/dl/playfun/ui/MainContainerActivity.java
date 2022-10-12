@@ -16,16 +16,19 @@ import androidx.lifecycle.Observer;
 import com.aliyun.svideo.crop.bean.AlivcCropOutputParam;
 import com.android.billingclient.api.BillingClient;
 import com.blankj.utilcode.util.KeyboardUtils;
+import com.blankj.utilcode.util.ObjectUtils;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.BillingClientLifecycle;
+import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.LoginExpiredEvent;
 import com.dl.playfun.event.UserDisableEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocaleManager;
 import com.dl.playfun.ui.base.MySupportActivity;
 import com.dl.playfun.ui.login.LoginFragment;
+import com.dl.playfun.ui.login.LoginOauthFragment;
 import com.dl.playfun.ui.main.MainFragment;
 import com.dl.playfun.ui.splash.SplashFragment;
 import com.dl.playfun.utils.AutoSizeUtils;
@@ -127,7 +130,7 @@ public class MainContainerActivity extends MySupportActivity {
             if (ev != null) {
                 return super.dispatchTouchEvent(ev);
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
 
@@ -209,7 +212,7 @@ public class MainContainerActivity extends MySupportActivity {
                     if(this.isFinishing() || this.isDestroyed()){
                         return;
                     }
-                    ConfigManager.getInstance().getAppRepository().logout();
+                    //ConfigManager.getInstance().getAppRepository().logout();
                     if (loginExpiredDialog == null) {
                         loginExpiredDialog = MVDialog.getInstance(this)
                                 .setContent(getString(R.string.playfun_again_login))
@@ -221,12 +224,13 @@ public class MainContainerActivity extends MySupportActivity {
                                     TUILogin.logout(new TUICallback() {
                                         @Override
                                         public void onSuccess() {
-                                            startWithPopTo(new LoginFragment(), MainFragment.class, true);
+                                            startLoginView();
+
                                         }
 
                                         @Override
                                         public void onError(int errorCode, String errorMessage) {
-                                            startWithPopTo(new LoginFragment(), MainFragment.class, true);
+                                            startLoginView();
                                         }
                                     });
                                 })
@@ -240,6 +244,16 @@ public class MainContainerActivity extends MySupportActivity {
                     }
                 });
         RxSubscriptions.add(loginExpiredRe);
+    }
+
+    void startLoginView(){
+        UserDataEntity localUserEntity = ConfigManager.getInstance().getAppRepository().readUserData();
+        if(ObjectUtils.isEmpty(localUserEntity)){
+            startWithPopTo(new LoginFragment(), MainFragment.class, true);
+        }else{
+            startWithPopTo(new LoginOauthFragment(), MainFragment.class, true);
+        }
+
     }
 
     @Override

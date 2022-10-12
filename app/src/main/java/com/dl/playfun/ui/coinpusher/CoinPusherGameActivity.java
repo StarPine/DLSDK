@@ -84,28 +84,6 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
     //充值弹窗
     private CoinRechargeSheetView coinRechargeSheetView;
 
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleManager.setLocal(newBase));
-    }
-
-    /**
-     * 就算你在Manifest.xml设置横竖屏切换不重走生命周期。横竖屏切换还是会走这里
-
-     */
-    @Override
-    public void onConfigurationChanged(@NonNull Configuration newConfig) {
-        if(newConfig!=null){
-            LocaleManager.setLocal(this);
-        }
-        super.onConfigurationChanged(newConfig);
-        LocaleManager.setLocal(this);
-    }
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        LocaleManager.setLocal(this);
-    }
 
     @Override
     protected void onResume() {
