@@ -17,6 +17,7 @@ import java.util.Map;
 import io.reactivex.Observable;
 import me.goldze.mvvmhabit.base.BaseModel;
 import okhttp3.RequestBody;
+import retrofit2.http.Body;
 
 /**
  * MVVM的Model层，统一模块的数据仓库，包含网络数据和本地数据（一个应用可以有多个Repositor）
@@ -51,6 +52,11 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     @VisibleForTesting
     public static void destroyInstance() {
         INSTANCE = null;
+    }
+
+    @Override
+    public Observable<BaseDataResponse<UserBindInfoEntity>> getUserBindInfo(){
+        return mHttpDataSource.getUserBindInfo();
     }
 
     @Override
@@ -350,8 +356,8 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
-    public Observable<BaseResponse> bindAccount(String id, String type) {
-        return mHttpDataSource.bindAccount(id, type);
+    public Observable<BaseResponse> bindAccount(RequestBody requestBody) {
+        return mHttpDataSource.bindAccount(requestBody);
     }
 
     @Override

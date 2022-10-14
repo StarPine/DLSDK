@@ -27,8 +27,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -155,16 +154,10 @@
                                             android:src="@drawable/default_avatar"
                                             binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
                                             binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
-                                            binding:imageThumbPath="@{viewModel.detailEntity.avatar}" />
-
-                                        <ImageView
-                                            android:layout_width="match_parent"
-                                            android:layout_height="match_parent"
-                                            android:background="@drawable/radius_layout_mine"
-                                            android:elevation="99dp"
-                                            android:scaleType="fitXY"
-                                            android:src="@{viewModel.detailEntity.sex==1?@drawable/user_detail_default_back_img_male:@drawable/user_detail_default_back_img}"
-                                            tools:src="@drawable/user_detail_default_back_img_male" />
+                                            binding:imagePath="@{viewModel.detailEntity.avatar}"
+                                            binding:resizeW="@{360}"
+                                            binding:resizeH="@{360}"
+                                            />
                                     </FrameLayout>
 
                                     <RelativeLayout
@@ -202,41 +195,12 @@
                                             android:src="@drawable/ic_toolbar_more_white"
                                             binding:onClickCommand="@{viewModel.moreOnClickCommand}" />
 
-                                        <FrameLayout
-                                            android:id="@+id/me_avatar"
-                                            android:layout_width="69dp"
-                                            android:layout_height="69dp"
-                                            android:layout_marginStart="24dp"
-                                            android:layout_marginTop="243dp">
-
-                                            <ImageView
-                                                android:layout_width="69dp"
-                                                android:layout_height="69dp"
-                                                android:background="@drawable/circle_white" />
-
-                                            <com.dl.playfun.widget.image.CircleImageView
-                                                android:layout_width="67dp"
-                                                android:layout_height="67dp"
-                                                android:layout_marginStart="1dp"
-                                                android:layout_marginTop="1dp"
-                                                android:clickable="true"
-                                                android:scaleType="centerCrop"
-                                                android:src="@drawable/default_address_user"
-                                                app:riv_corner_radius="8dp"
-                                                binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
-                                                binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
-                                                binding:imageThumbPath="@{viewModel.detailEntity.avatar}"
-                                                binding:resizeH="@{67}"
-                                                binding:resizeW="@{67}"
-                                                tools:ignore="MissingConstraints" />
-                                        </FrameLayout>
-
                                         <RelativeLayout
                                             android:layout_width="67dp"
                                             android:layout_height="24dp"
-                                            android:layout_below="@+id/me_avatar"
-                                            android:layout_marginStart="24dp"
-                                            android:layout_marginTop="-19dp"
+                                            android:layout_alignParentBottom="true"
+                                            android:layout_marginBottom="34dp"
+                                            android:layout_marginStart="14dp"
                                             android:visibility="@{viewModel.getSoundShow(viewModel.detailEntity.soundStatus)}">
 
                                             <ImageView
@@ -246,10 +210,9 @@
 
                                             <ImageView
                                                 android:id="@+id/audio_start"
-                                                android:layout_width="29dp"
-                                                android:layout_height="29dp"
-                                                android:layout_marginStart="5dp"
-                                                android:layout_marginTop="2dp"
+                                                android:layout_width="24dp"
+                                                android:layout_height="24dp"
+                                                android:layout_marginStart="1dp"
                                                 android:src="@drawable/mine_audio_start_img" />
 
                                             <TextView
@@ -272,78 +235,6 @@
                                                 android:layout_toEndOf="@+id/audio_time"
                                                 android:src="@drawable/icon_mine_audio_dian" />
                                         </RelativeLayout>
-
-                                        <RelativeLayout
-                                            android:id="@+id/tv_title_layout"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_alignTop="@+id/me_avatar"
-                                            android:layout_marginTop="6dp"
-                                            android:layout_toEndOf="@+id/me_avatar">
-
-                                            <TextView
-                                                android:id="@+id/tv_title"
-                                                android:layout_width="wrap_content"
-                                                android:layout_height="wrap_content"
-                                                android:layout_marginStart="16dp"
-                                                android:ellipsize="end"
-                                                android:includeFontPadding="false"
-                                                android:lines="1"
-                                                android:maxWidth="109dp"
-                                                android:text="@{viewModel.detailEntity.nickname}"
-                                                android:textColor="@color/white"
-                                                android:textSize="19sp"
-                                                tools:text="艾希lovexi666" />
-
-                                            <ImageView
-                                                android:layout_width="wrap_content"
-                                                android:layout_height="wrap_content"
-                                                android:layout_centerInParent="true"
-                                                android:layout_marginStart="5dp"
-                                                android:layout_toEndOf="@+id/tv_title"
-                                                android:src="@drawable/ic_vip"
-                                                android:visibility="@{(viewModel.detailEntity.sex == 1 &amp;&amp; viewModel.detailEntity.isVip == 1) ? View.VISIBLE:View.GONE}" />
-
-                                        </RelativeLayout>
-
-                                        <LinearLayout
-                                            android:id="@+id/ll_tag_group"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_below="@+id/tv_title_layout"
-                                            android:layout_marginStart="16dp"
-                                            android:layout_marginTop="10dp"
-                                            android:layout_toEndOf="@+id/me_avatar"
-                                            android:orientation="horizontal">
-
-                                            <TextView
-                                                style="@style/MineTagPrimary"
-                                                android:layout_width="wrap_content"
-                                                android:layout_height="21dp"
-                                                android:layout_marginEnd="6dp"
-                                                android:text="@{StringUtils.isEmpty(viewModel.detailEntity.city) ? @string/playfun_unknown_region : viewModel.detailEntity.city}"
-                                                tools:text="城市" />
-
-
-                                            <TextView
-                                                style="@style/MineTagPrimary"
-                                                android:layout_width="wrap_content"
-                                                android:layout_height="21dp"
-                                                android:layout_marginEnd="6dp"
-                                                android:text="@{@string/playfun_mine_age(viewModel.detailEntity.age)}"
-                                                android:visibility="@{viewModel.detailEntity.age == null ? View.GONE : View.VISIBLE}"
-                                                tools:text="26" />
-                                        </LinearLayout>
-
-                                        <TextView
-                                            style="@style/MineTagPrimary"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="21dp"
-                                            android:layout_below="@+id/ll_tag_group"
-                                            android:layout_alignStart="@+id/ll_tag_group"
-                                            android:layout_marginTop="5dp"
-                                            android:layout_marginEnd="6dp"
-                                            android:text="@{SystemDictUtils.getOccupationById(safeUnbox(viewModel.detailEntity.occupationId))}" />
                                     </RelativeLayout>
                                 </RelativeLayout>
                             </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -355,31 +246,27 @@
                             android:layout_marginTop="-28dp"
                             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-                            <RelativeLayout
+                            <androidx.appcompat.widget.AppCompatImageView
                                 android:id="@+id/zuizong"
-                                android:layout_width="45dp"
-                                android:layout_height="45dp"
+                                android:layout_width="53dp"
+                                android:layout_height="53dp"
                                 android:layout_alignParentEnd="true"
                                 android:layout_marginEnd="24dp"
                                 android:elevation="20dp"
-                                android:visibility="@{viewModel.detailEntity.collect?View.INVISIBLE:View.VISIBLE}">
+                                android:src="@drawable/icon_user_detail_like"
+                                android:visibility="@{viewModel.detailEntity.collect?View.INVISIBLE:View.VISIBLE}"
+                                binding:onClickCommand="@{viewModel.collectOnClickCommand}" />
 
-                                <ImageView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:src="@drawable/icon_user_detail_like"
-                                    android:visibility="@{viewModel.detailEntity.collect?View.GONE:View.VISIBLE}"
-                                    binding:onClickCommand="@{viewModel.collectOnClickCommand}" />
 
-                            </RelativeLayout>
-
-                            <androidx.cardview.widget.CardView
+                            <FrameLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_below="@+id/zuizong"
-                                android:layout_marginTop="-35dp"
+                                android:layout_marginTop="-30dp"
                                 android:visibility="@{viewModel.detailEntity.blacklistStatus == 0 ? View.VISIBLE : View.GONE}"
-                                app:cardCornerRadius="20dp"
+                                binding:drawable_radius_leftTop="@{20}"
+                                binding:drawable_radius_rightTop="@{20}"
+                                binding:drawable_color="@{@color/white}"
                                 app:cardElevation="0dp">
 
                                 <LinearLayout
@@ -388,7 +275,75 @@
                                     android:layout_marginTop="22dp"
                                     android:background="@color/container_background"
                                     android:orientation="vertical">
+                                    <RelativeLayout
+                                        android:background="@color/white"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:paddingBottom="15dp"
+                                        >
 
+                                        <com.dl.playfun.widget.image.CircleImageView
+                                            android:id="@+id/me_avatar"
+                                            android:layout_width="67dp"
+                                            android:layout_height="67dp"
+                                            android:layout_marginStart="14dp"
+                                            android:clickable="true"
+                                            android:scaleType="centerCrop"
+                                            android:src="@drawable/default_avatar"
+                                            app:riv_corner_radius="8dp"
+                                            binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
+                                            binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
+                                            binding:imageThumbPath="@{viewModel.detailEntity.avatar}"
+                                            binding:resizeH="@{69}"
+                                            binding:resizeW="@{69}"
+                                            tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
+
+                                        <TextView
+                                            android:id="@+id/tv_title"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_alignTop="@+id/me_avatar"
+                                            android:layout_marginStart="14dp"
+                                            android:layout_marginTop="12dp"
+                                            android:layout_toEndOf="@+id/me_avatar"
+                                            android:ellipsize="end"
+                                            android:includeFontPadding="false"
+                                            android:lines="1"
+                                            android:maxWidth="129dp"
+                                            android:text="@{viewModel.detailEntity.nickname}"
+                                            android:textColor="@color/toolbar_title_color"
+                                            android:textSize="17sp"
+                                            tools:text="艾希lovexi666" />
+                                        <LinearLayout
+                                            android:layout_below="@+id/tv_title"
+                                            android:layout_alignStart="@+id/tv_title"
+                                            android:layout_marginTop="10dp"
+                                            android:orientation="horizontal"
+                                            android:layout_width="38dp"
+                                            android:layout_height="15dp"
+                                            binding:drawable_cornersRadius="@{8}"
+                                            binding:drawable_color="@{viewModel.detailEntity.sex ==0 ?@color/pseekbar_process : @color/blue_1375}"
+                                            >
+                                            <androidx.appcompat.widget.AppCompatImageView
+                                                android:id="@+id/img_icon_gender"
+                                                android:layout_gravity="center|start"
+                                                android:layout_marginStart="5dp"
+                                                android:layout_width="12dp"
+                                                android:layout_height="12dp"
+                                                android:src="@drawable/icon_gender"
+                                                />
+                                            <androidx.appcompat.widget.AppCompatTextView
+                                                android:includeFontPadding="false"
+                                                android:layout_gravity="center"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginStart="3dp"
+                                                android:text="@{String.valueOf(viewModel.detailEntity.age)}"
+                                                android:textColor="@color/white"
+                                                android:textSize="12dp"
+                                                />
+                                        </LinearLayout>
+                                    </RelativeLayout>
                                     <RelativeLayout
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
@@ -863,7 +818,17 @@
                                         </LinearLayout>
 
                                     </RelativeLayout>
-
+                                    <androidx.appcompat.widget.AppCompatTextView
+                                        android:layout_marginTop="10dp"
+                                        android:layout_marginBottom="10dp"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:includeFontPadding="false"
+                                        android:gravity="center"
+                                        android:text="請勿通過PlayFun進行不法交易，如被檢舉核實將做封鎖處理"
+                                        android:textColor="@color/gray_light"
+                                        android:textSize="11sp"
+                                        />
                                     <RelativeLayout
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
@@ -884,7 +849,7 @@
 
                                     </RelativeLayout>
                                 </LinearLayout>
-                            </androidx.cardview.widget.CardView>
+                            </FrameLayout>
 
                             <androidx.cardview.widget.CardView
                                 android:layout_width="match_parent"
@@ -932,7 +897,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@drawable/bottom_navigation_backgroup_user_detail"
             android:visibility="@{viewModel.detailEntity.blacklistStatus == 0 ? View.VISIBLE : View.GONE}">
 
             <include

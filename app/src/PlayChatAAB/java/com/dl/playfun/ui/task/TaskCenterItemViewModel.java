@@ -20,6 +20,7 @@ import com.dl.playfun.ui.certification.certificationmale.CertificationMaleFragme
 import com.dl.playfun.ui.mine.audio.TapeAudioFragment;
 import com.dl.playfun.ui.mine.myphotoalbum.MyPhotoAlbumFragment;
 import com.dl.playfun.ui.mine.profile.EditProfileFragment;
+import com.dl.playfun.ui.mine.setting.account.bind.CommunityAccountBindFragment;
 import com.dl.playfun.ui.radio.issuanceprogram.IssuanceProgramFragment;
 import com.dl.playfun.utils.ExceptionReportUtils;
 
@@ -105,6 +106,8 @@ public class TaskCenterItemViewModel extends MultiItemViewModel<TaskCenterViewMo
                     }
                 } else if (link.trim().equals("userSound")) {
                     taskCenterViewModel.start(TapeAudioFragment.class.getCanonicalName());
+                }else if (link.trim().equals("bindPhone")){
+                    taskCenterViewModel.start(CommunityAccountBindFragment.class.getCanonicalName());
                 }
             }
         }

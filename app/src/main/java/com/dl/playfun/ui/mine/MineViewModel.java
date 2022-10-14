@@ -68,6 +68,7 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import me.goldze.mvvmhabit.binding.command.BindingAction;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
+import me.goldze.mvvmhabit.binding.command.BindingConsumer;
 import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
@@ -191,6 +192,10 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    });
+    //调单查询
+    public BindingCommand<Void> payBugHistoryReporter = new BindingCommand<>(() -> {
+
     });
 
     //会员按钮的点击事件
@@ -704,6 +709,15 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
         }else{
             return View.GONE;
         }
+    }
+
+    public String getVipTimeText(boolean flag) {
+        if(userInfoEntity.get()!=null){
+            String validTime =  StringUtils.getString(R.string.playfun_valid_time);
+            validTime += "\n"+userInfoEntity.get().getEndTime();
+            return validTime;
+        }
+       return "";
     }
 
     //是否现实等级权益入口

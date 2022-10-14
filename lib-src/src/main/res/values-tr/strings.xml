@@ -1518,7 +1518,6 @@
     <string name="playfun_goddess_unlock_payalbum">Get the Queen verification, unlock albums for free</string>
     <string name="playfun_goddess_unlock_redpackage_photo">Get Queen Verification, unlock paid photo for free.</string>
     <string name="playfun_confirm_pay">Confirm</string>
-    <string name="playfun_upgrade_vip">Upgrade to VIP</string>
     <string name="playfun_end_time">Expires on %s</string>
     <string name="playfun_x_count">%s</string>
     <string name="playfun_dialog_agree_content">Hi, welcome to PlayChat. Before making new friends. We warmly inform you:\n\n
@@ -1568,7 +1567,7 @@
     <string name="playfun_call_female_im">Chat with them (%s diamonds)</string>
     <string name="playfun_age_and_city">%s %s</string>
     <string name="playfun_message_sended">Message sent.</string>
-    <string name="playfun_buy_vip">Subscribe</string>
+    <string name="playfun_buy_vip">立即開通</string>
     <string name="playfun_valid_time">Expires</string>
     <string name="playfun_account_hidden_tip_male">The social account is hidden. Recommended to direct message.</string>
     <string name="playfun_account_hidden_tip_female">The social account is hidden. Recommended to direct message.</string>
@@ -1892,7 +1891,7 @@
     <string name="playfun_blocked_each_other">They\'ve been blocked and you can\'t view their Page content</string>
     <string name="playfun_accost_same_sex">Can\'t talk to the same sex</string>
     <string name="playfun_name_number_too_long2">Can\'t exceed 10 words</string>
-    <string name="playfun_mine_vip_hint">VIP Privileges</string>
+    <string name="playfun_mine_vip_hint">Enjoy exclusive tags, free diamonds, more exposure, \nand so on</string>
     <string name="playfun_vipsubscribe_item_vip_txt_currency">$</string>
     <string name="playfun_version_latest">Already the latest version!</string>
     <string name="playfun_mine_setting_desc">Invisible and hidden</string>
@@ -2259,6 +2258,10 @@
     <string name="playfun_languae_switch_en">English</string>
     <string name="playfun_languae_switch_zh">中文繁體</string>
     <string name="playfun_languae_switch_title">語言設定</string>
+    <string name="playfun_mine_apply_pay_buy">恢復購買</string>
+    <string name="playfun_mine_apply_pay_buy_text1">已支付但未生效請點擊這裡</string>
+    <string name="playfun_bind_text">已綁定</string>
+    <string name="playfun_bind_text_un">未綁定</string>
 
     <!--PlayFun-APP-END-->
 </resources>

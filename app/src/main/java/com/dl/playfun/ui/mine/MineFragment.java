@@ -8,6 +8,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -18,12 +19,14 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
@@ -36,11 +39,13 @@ import com.dl.playfun.entity.EvaluateEntity;
 import com.dl.playfun.entity.EvaluateItemEntity;
 import com.dl.playfun.entity.EvaluateObjEntity;
 import com.dl.playfun.entity.UserInfoEntity;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseRefreshFragment;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
 import com.dl.playfun.ui.dialog.MyEvaluateDialog;
 import com.dl.playfun.ui.mine.setredpackagephoto.SetRedPackagePhotoFragment;
 import com.dl.playfun.ui.mine.setredpackagevideo.SetRedPackageVideoFragment;
+import com.dl.playfun.ui.task.TaskCenterFragment;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.PictureSelectorUtil;
@@ -69,6 +74,9 @@ public class MineFragment extends BaseRefreshFragment<FragmentMineBinding, MineV
 
     protected InputMethodManager inputMethodManager;
     private boolean SoftKeyboardShow = false;
+
+    private int toolbarHeight = -1;
+    private boolean toolbarUp = false;
 
     @Override
     public void onSupportVisible() {
@@ -137,6 +145,10 @@ public class MineFragment extends BaseRefreshFragment<FragmentMineBinding, MineV
     @Override
     public void initData() {
         super.initData();
+        toolbarHeight = binding.imgTopAvatar.getHeight();
+        boolean isMale = ConfigManager.getInstance().isMale();
+        binding.imgIconGender.setRotationX(isMale ? 0 : 180);
+        binding.imgIconGender.setRotationY(isMale ? 0 : 180);
         binding.refreshLayout.setEnableLoadMore(false);
         //允许语音开关
         binding.shAudio.setOnCheckedChangeListener((buttonView, isChecked) ->
@@ -144,21 +156,27 @@ public class MineFragment extends BaseRefreshFragment<FragmentMineBinding, MineV
         //允许视讯开关
         binding.shVideo.setOnCheckedChangeListener((buttonView, isChecked) ->
                 viewModel.setAllowPrivacy(viewModel.ALLOW_TYPE_VIDEO, isChecked));
-
-        binding.appbarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {
-            @Override
-            public void onStateChanged(AppBarLayout appBarLayout, State state) {
-                if (state == State.EXPANDED) {
-                    //展开状态
-                    binding.layoutTitle.setVisibility(View.GONE);
-                    ImmersionBarUtils.setupStatusBar(MineFragment.this, false, true);
-                } else if (state == State.COLLAPSED) {
-                    //折叠状态
-                    binding.layoutTitle.setVisibility(View.VISIBLE);
-                    ImmersionBarUtils.setupStatusBar(MineFragment.this, true, true);
-                } else {
-                    //中间状态
-//                    Toast.makeText(getActivity(),"中间状态",Toast.LENGTH_SHORT).show();
+        binding.viewNestedScroll.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+            if (scrollY > oldScrollY) {
+                //判断版本 大于安卓7
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (!toolbarUp) {
+                        if (scrollX > toolbarHeight || oldScrollY > toolbarHeight) {
+                            toolbarUp = true;
+                            //折叠状态
+                            binding.layoutTitle.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+            }
+            if (scrollY == 0) {
+                //Log.e("=====", "滑倒顶部");
+                //判断版本 大于安卓7
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (toolbarUp) {
+                        toolbarUp = false;
+                        binding.layoutTitle.setVisibility(View.GONE);
+                    }
                 }
             }
         });

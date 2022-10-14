@@ -71,7 +71,7 @@ public class LoginOauthViewModel extends BaseViewModel<AppRepository> {
     * @Date 2022/10/12
     */
     public BindingCommand<Void> clickOtherLoginView = new BindingCommand<>(() -> {
-        start(LoginFragment.class.getCanonicalName());
+        startWithPop(LoginFragment.class.getCanonicalName());
         //startWithPopTo(LoginFragment.class.getCanonicalName(), LoginOauthFragment.class.getCanonicalName(), true);
     });
 

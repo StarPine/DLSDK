@@ -91,6 +91,7 @@ import com.dl.playfun.entity.TokenEntity;
 import com.dl.playfun.entity.TopicalListEntity;
 import com.dl.playfun.entity.TraceEntity;
 import com.dl.playfun.entity.UnReadMessageNumEntity;
+import com.dl.playfun.entity.UserBindInfoEntity;
 import com.dl.playfun.entity.UserCoinItemEntity;
 import com.dl.playfun.entity.UserConnMicStatusEntity;
 import com.dl.playfun.entity.UserDataEntity;
@@ -116,6 +117,15 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface HttpDataSource {
+
+    /**
+     * @Desc TODO(获取当前用户绑定的账户信息)
+     * @author 彭石林
+     * @parame []
+     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse<com.dl.playfun.entity.UserDataEntity>>
+     * @Date 2022/10/13
+     */
+    Observable<BaseDataResponse<UserBindInfoEntity>> getUserBindInfo();
 
     /**
      * @Desc TODO(一键登录(以本地token进行登录))
@@ -1259,7 +1269,7 @@ public interface HttpDataSource {
      * @email 15616314565@163.com
      * Param [id, type]
      **/
-    Observable<BaseResponse> bindAccount(String id, String type);
+    Observable<BaseResponse> bindAccount(RequestBody requestBody);
 
     /**
      * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse < com.dl.playfun.entity.UserDataEntity>>

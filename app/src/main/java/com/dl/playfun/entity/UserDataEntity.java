@@ -115,6 +115,28 @@ public class UserDataEntity extends BaseObservable implements Serializable {
     //是否开启语音
     private boolean allowAudio;
 
+    //是否绑定手机号
+    private int bindPhone;
+    //2021/4/29新增。 是否绑定第三方
+    @SerializedName("is_auth")
+    private int isAuth;
+
+    public int getBindPhone() {
+        return bindPhone;
+    }
+
+    public void setBindPhone(int bindPhone) {
+        this.bindPhone = bindPhone;
+    }
+
+    public int getIsAuth() {
+        return isAuth;
+    }
+
+    public void setIsAuth(int isAuth) {
+        this.isAuth = isAuth;
+    }
+
     public int getAnchor() {
         return anchor;
     }

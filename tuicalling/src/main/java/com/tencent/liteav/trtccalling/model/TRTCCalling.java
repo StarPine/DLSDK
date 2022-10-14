@@ -949,6 +949,15 @@ public class TRTCCalling {
         @Override
         public void onExitRoom(int reason) {
             TRTCLogger.d(TAG, "onExitRoom reason:" + reason);
+            //1 后台执行踢出房间。 2 后台解散房间
+            if (reason == 1 || reason == 2) {
+                //执行挂断 变量值初始化
+                stopCall();
+                //执行挂断，返回上一页
+                if (mTRTCInternalListenerManager != null) {
+                    mTRTCInternalListenerManager.onCallEnd();
+                }
+            }
         }
 
         @Override
@@ -1359,16 +1368,17 @@ public class TRTCCalling {
      */
     private void enterTRTCRoom() {
         if (mCurCallType == TYPE_VIDEO_CALL) {
-            // 开启基础美颜
-            TXBeautyManager txBeautyManager = mTRTCCloud.getBeautyManager();
-            // 自然美颜
-            txBeautyManager.setBeautyStyle(1);
-            txBeautyManager.setBeautyLevel(6);
+//            // 开启基础美颜
+//            TXBeautyManager txBeautyManager = mTRTCCloud.getBeautyManager();
+//            // 自然美颜
+//            txBeautyManager.setBeautyStyle(1);
+//            txBeautyManager.setBeautyLevel(6);
             // 进房前需要设置一下关键参数
             TRTCCloudDef.TRTCVideoEncParam encParam = new TRTCCloudDef.TRTCVideoEncParam();
-            encParam.videoResolution = TRTCCloudDef.TRTC_VIDEO_RESOLUTION_960_540;
+            encParam.videoResolution = TRTCCloudDef.TRTC_VIDEO_RESOLUTION_1280_720;
             encParam.videoFps = 15;
-            encParam.videoBitrate = 1000;
+            //encParam.videoBitrate = 1000;
+            encParam.minVideoBitrate = 1200;
             encParam.videoResolutionMode = TRTCCloudDef.TRTC_VIDEO_RESOLUTION_MODE_PORTRAIT;
             encParam.enableAdjustRes = true;
             mTRTCCloud.setVideoEncoderParam(encParam);
@@ -1379,7 +1389,8 @@ public class TRTCCalling {
         trtcParams.role = TRTCCloudDef.TRTCRoleAnchor;
         mTRTCCloud.enableAudioVolumeEvaluation(300);
         mTRTCCloud.setAudioRoute(TRTCCloudDef.TRTC_AUDIO_ROUTE_SPEAKER);
-        mTRTCCloud.startLocalAudio();
+        //mTRTCCloud.startLocalAudio();
+        mTRTCCloud.startLocalAudio(3);
         // 收到来电，开始监听 trtc 的消息
         setFramework();
         // 输出版本日志

@@ -1517,7 +1517,6 @@
     <string name="playfun_goddess_unlock_payalbum">認證女神可設定付費相冊</string>
     <string name="playfun_goddess_unlock_redpackage_photo">認證女神可設定紅包照片</string>
     <string name="playfun_confirm_pay">確認支付</string>
-    <string name="playfun_upgrade_vip">升级VIP尊享特权</string>
     <string name="playfun_end_time">将于%s到期</string>
     <string name="playfun_x_count">%s</string>
     <string name="playfun_dialog_agree_content">Hi,歡迎！我們提醒您：\n
@@ -1567,8 +1566,8 @@
     <string name="playfun_call_female_im">跟她們聊天(%s鑽石)</string>
     <string name="playfun_age_and_city">%s歲 %s</string>
     <string name="playfun_message_sended">訊息已發送</string>
-    <string name="playfun_buy_vip">成為VIP</string>
-    <string name="playfun_valid_time">有效期：</string>
+    <string name="playfun_buy_vip">立即開通</string>
+    <string name="playfun_valid_time">有效期</string>
     <string name="playfun_account_hidden_tip_male">社群賬號已隱藏，可先與他私訊</string>
     <string name="playfun_account_hidden_tip_female">社群賬號已隱藏，可先與她私訊</string>
     <string name="playfun_today_recommand">今天配對</string>
@@ -1895,7 +1894,7 @@
     <string name="playfun_blocked_each_other">已將對方封鎖，您無法查看其主頁內容</string>
     <string name="playfun_accost_same_sex">無法搭訕同性</string>
     <string name="playfun_name_number_too_long2">不能超出10個字</string>
-    <string name="playfun_mine_vip_hint">會員特權</string>
+    <string name="playfun_mine_vip_hint">暢享專屬標籤、免費鑽石、更多\n曝光等</string>
     <string name="playfun_vipsubscribe_item_vip_txt_currency">$</string>
     <string name="playfun_version_latest">已是最新版本!</string>
     <string name="playfun_mine_setting_desc">無痕與隱藏</string>
@@ -1939,7 +1938,7 @@
     <string name="fragment_level_text_video">每分鐘視訊價格%1$s～%2$s鑽石</string>
     <string name="fragment_level_text_video2">視訊%s鑽石/分鐘</string>
     <string name="playfun_accont_bind_hint">社群賬戶綁定</string>
-    <string name="playfun_accont_bind_hint2">綁定社群賬戶後可直接登入PlayChat</string>
+    <string name="playfun_accont_bind_hint2">綁定後，可通過綁定方式登入APP</string>
     <string name="playfun_setting_account_hint2">1、註銷PlayChat賬號是不可恢復的操作。為了保護你的合法權益，在註銷賬號前，請你自行備份擬註銷PlayChat賬號相關的信息和數據。若你對賬號註銷有任何提問、意見、建議，可與PlayChat客服聯繫，我們會給予你必要的幫助。
                                         \n2、如你的PlayChat賬號被他人投訴、被調查或正處於訴訟、仲裁程序中，PlayChat有權自行終止你的PlayChat賬號註銷而無需得到你的同意。
                                         \n3、註銷你的PlayChat賬號並不代表本PlayChat賬號註銷前的賬號行為和相關責任得到豁免或減輕。
@@ -1971,7 +1970,7 @@
     <string name="playfun_text_accost_empty2">無可搭訕用戶</string>
     <string name="playfun_setting_account_cancell">註銷帳號</string>
     <string name="playfun_visitor_total_count">訪客 %s</string>
-    <string name="playfun_mine_profile">個人檔案</string>
+    <string name="playfun_mine_profile">檔案</string>
     <string name="playfun_mine_wallet">錢包</string>
     <string name="playfun_mine_my_visitors_man">誰看過我</string>
     <string name="fragment_perfect_hint">未滿18歲不可註冊</string>
@@ -2261,5 +2260,9 @@
     <string name="playfun_languae_switch_en">English</string>
     <string name="playfun_languae_switch_zh">中文繁體</string>
     <string name="playfun_languae_switch_title">語言設定</string>
+    <string name="playfun_mine_apply_pay_buy">恢復購買</string>
+    <string name="playfun_mine_apply_pay_buy_text1">已支付但未生效請點擊這裡</string>
+    <string name="playfun_bind_text">已綁定</string>
+    <string name="playfun_bind_text_un">未綁定</string>
     <!--PlayFun-APP-END-->
 </resources>

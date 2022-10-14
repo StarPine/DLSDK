@@ -1,18 +1,23 @@
 package com.dl.playfun.ui.mine.setting.account;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
+import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppViewModelFactory;
+import com.dl.playfun.app.AppsFlyerEvent;
+import com.dl.playfun.entity.OverseasUserEntity;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.ui.login.GoogleApiError;
 import com.dl.playfun.databinding.FragmentSettingAccountBinding;
@@ -20,6 +25,9 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -28,6 +36,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -101,7 +111,27 @@ public class CommunityAccountFragment extends BaseToolbarFragment<FragmentSettin
                     public void onSuccess(LoginResult loginResult) {
                         // App code
                         String userId = loginResult.getAccessToken().getUserId();
-                        viewModel.bindAccount(userId, "facebook");
+                        // App code
+                        GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(@Nullable JSONObject jsonObject, @Nullable GraphResponse graphResponse) {
+                                try {
+                                    String token_for_business = null;
+                                    if (!jsonObject.isNull("token_for_business")) {
+                                        token_for_business = jsonObject.getString("token_for_business");
+                                    }
+                                    viewModel.bindAccount(userId, "facebook", token_for_business);
+                                } catch (Exception e) {
+                                    Log.e("获取facebook关键资料", "异常原因: " + e.getMessage());
+                                    // App code
+                                    ToastUtils.showShort(R.string.playfun_error_facebook);
+                                }
+                            }
+                        });
+                        Bundle paramters = new Bundle();
+                        paramters.putString("fields", "token_for_business,email");
+                        request.setParameters(paramters);
+                        request.executeAsync();
                     }
 
                     @Override
@@ -111,7 +141,7 @@ public class CommunityAccountFragment extends BaseToolbarFragment<FragmentSettin
                     }
 
                     @Override
-                    public void onError(FacebookException exception) {
+                    public void onError(@NonNull FacebookException exception) {
                         // App code
                         ToastUtils.showShort(R.string.playfun_error_facebook);
                     }
@@ -149,7 +179,7 @@ public class CommunityAccountFragment extends BaseToolbarFragment<FragmentSettin
         try {
             GoogleSignInAccount signInAccount = googleData.getResult(ApiException.class);
             if (signInAccount != null) {
-                viewModel.bindAccount(signInAccount.getId(), "google");
+                viewModel.bindAccount(signInAccount.getId(), "google",null);
             } else {
                 ToastUtils.showShort(R.string.playfun_error_google);
             }

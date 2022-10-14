@@ -70,11 +70,11 @@
 
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/ProfileItemTitle"
-                        android:layout_marginStart="8dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
                         android:layout_toEndOf="@+id/img_account"
-                        android:text="@string/playfun_binding_community_account" />
+                        android:text="賬戶與安全" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/ProfileItemSubTitle"

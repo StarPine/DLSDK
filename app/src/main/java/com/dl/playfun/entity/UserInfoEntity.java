@@ -92,6 +92,17 @@ public class UserInfoEntity extends BaseObservable {
     @JsonAdapter(BooleanTypeAdapter.class)
     private Boolean allowAudio;
 
+    //是否绑定手机号
+    private int bindPhone;
+
+    public int isBindPhone() {
+        return bindPhone;
+    }
+
+    public void setBindPhone(int bindPhone) {
+        this.bindPhone = bindPhone;
+    }
+
     public Boolean getAllowVideo() {
         return allowVideo;
     }

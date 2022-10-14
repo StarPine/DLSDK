@@ -93,6 +93,7 @@ import com.dl.playfun.entity.TokenEntity;
 import com.dl.playfun.entity.TopicalListEntity;
 import com.dl.playfun.entity.TraceEntity;
 import com.dl.playfun.entity.UnReadMessageNumEntity;
+import com.dl.playfun.entity.UserBindInfoEntity;
 import com.dl.playfun.entity.UserCoinItemEntity;
 import com.dl.playfun.entity.UserConnMicStatusEntity;
 import com.dl.playfun.entity.UserDataEntity;
@@ -110,6 +111,7 @@ import java.util.Map;
 
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
+import retrofit2.http.GET;
 
 /**
  * @author goldze
@@ -136,6 +138,11 @@ public class HttpDataSourceImpl implements HttpDataSource {
 
     public static void destroyInstance() {
         INSTANCE = null;
+    }
+
+    @Override
+    public Observable<BaseDataResponse<UserBindInfoEntity>> getUserBindInfo(){
+        return apiService.getUserBindInfo();
     }
 
     @Override
@@ -439,8 +446,8 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
-    public Observable<BaseResponse> bindAccount(String id, String type) {
-        return apiService.bindAccount(id, type);
+    public Observable<BaseResponse> bindAccount(RequestBody requestBody) {
+        return apiService.bindAccount(requestBody);
     }
 
     @Override

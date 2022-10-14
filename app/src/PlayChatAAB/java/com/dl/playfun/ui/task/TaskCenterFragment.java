@@ -38,6 +38,7 @@ import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.widget.coinrechargesheet.CoinExchargeItegralDialog;
+import com.dl.playfun.widget.dialog.DensityUtils;
 import com.dl.playfun.widget.dialog.TraceDialog;
 
 import java.util.List;
@@ -141,7 +142,7 @@ public class TaskCenterFragment extends BaseToolbarFragment<TaskCenterFragmentBi
     @Override
     public void initData() {
         super.initData();
-        toolbarHeight = binding.taskTitle1.getHeight();
+        toolbarHeight = DensityUtils.dip2px(getContext(),84);
         AppContext.instance().logEvent(AppsFlyerEvent.task_center);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext()) {
             @Override
