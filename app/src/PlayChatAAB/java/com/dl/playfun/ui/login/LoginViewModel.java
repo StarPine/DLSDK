@@ -141,12 +141,43 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
                         model.saveLoginInfo(tokenEntity);
                         model.putKeyValue("areaCode",new Gson().toJson(areaCode.get()));
                         model.putKeyValue(AppConfig.LOGIN_TYPE,"phone");
+                        model.saveUserData(authLoginUserEntity);
                         if (response.getData() != null && response.getData().getIsNewUser() != null && response.getData().getIsNewUser().intValue() == 1) {
                             AppContext.instance().logEvent(AppsFlyerEvent.register_start);
                             model.saveIsNewUser(true);
                         }
                         AppContext.instance().logEvent(AppsFlyerEvent.LOG_IN_WITH_PHONE_NUMBER);
-                        loadProfile();
+                        FirebaseMessaging.getInstance().getToken()
+                                .addOnCompleteListener(task -> {
+                                    if (!task.isSuccessful()) {
+                                        KLog.w(LoginViewModel.class.getCanonicalName(), "getInstanceId failed exception = " + task.getException());
+                                        return;
+                                    }
+                                    // Get new Instance ID token
+                                    String token = task.getResult();
+                                    KLog.d(LoginViewModel.class.getCanonicalName(), "google fcm getToken = " + token);
+                                    ThirdPushTokenMgr.getInstance().setThirdPushToken(token);
+                                    AppContext.instance().pushDeviceToken(token);
+                                });
+                        //友盟登录统计
+                        // MobclickAgent.onProfileSignIn(String.valueOf(userDataEntity.getId()));
+                        AppsFlyerLib.getInstance().setCustomerUserId(String.valueOf(authLoginUserEntity.getId()));
+                        AppContext.instance().mFirebaseAnalytics.setUserId(String.valueOf(authLoginUserEntity.getId()));
+                        try {
+                            //添加崩溃人员id
+                            FirebaseCrashlytics.getInstance().setUserId(String.valueOf(authLoginUserEntity.getId()));
+                        }catch (Exception crashErr){
+                            Log.e("Crashlytics setUserid ",crashErr.getMessage());
+                        }
+                        if (authLoginUserEntity.getCertification() == 1) {
+                            model.saveNeedVerifyFace(true);
+                        }
+                        AppConfig.userClickOut = false;
+                        if (authLoginUserEntity.getSex() != null && authLoginUserEntity.getSex() >= 0 && !StringUtil.isEmpty(authLoginUserEntity.getNickname()) && !StringUtil.isEmpty(authLoginUserEntity.getBirthday()) && !StringUtil.isEmpty(authLoginUserEntity.getAvatar())) {
+                            startWithPopTo(MainFragment.class.getCanonicalName(), LoginFragment.class.getCanonicalName(), true);
+                        } else {
+                            start(PerfectProfileFragment.class.getCanonicalName());
+                        }
                     }
 
                     @Override
@@ -242,28 +273,7 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
                     @Override
                     public void onSuccess(BaseDataResponse<UserDataEntity> response) {
                         dismissHUD();
-                        UserDataEntity userDataEntity = response.getData();
-                        //友盟登录统计
-                        // MobclickAgent.onProfileSignIn(String.valueOf(userDataEntity.getId()));
-                        AppsFlyerLib.getInstance().setCustomerUserId(String.valueOf(userDataEntity.getId()));
-                        AppContext.instance().mFirebaseAnalytics.setUserId(String.valueOf(userDataEntity.getId()));
-                        try {
-                            //添加崩溃人员id
-                            FirebaseCrashlytics.getInstance().setUserId(String.valueOf(userDataEntity.getId()));
-                        }catch (Exception crashErr){
-                            Log.e("Crashlytics setUserid ",crashErr.getMessage());
-                        }
-                        model.saveUserData(userDataEntity);
-                        if (userDataEntity.getCertification() == 1) {
-                            model.saveNeedVerifyFace(true);
-                        }
-                        dismissHUD();
-                        AppConfig.userClickOut = false;
-                        if (userDataEntity.getSex() != null && userDataEntity.getSex() >= 0 && !StringUtil.isEmpty(userDataEntity.getNickname()) && !StringUtil.isEmpty(userDataEntity.getBirthday()) && !StringUtil.isEmpty(userDataEntity.getAvatar())) {
-                            startWithPopTo(MainFragment.class.getCanonicalName(), LoginFragment.class.getCanonicalName(), true);
-                        } else {
-                            start(PerfectProfileFragment.class.getCanonicalName());
-                        }
+
                     }
 
                     @Override

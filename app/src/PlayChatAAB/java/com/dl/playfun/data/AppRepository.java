@@ -556,6 +556,16 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
+    public void saveOldUserData() {
+        mLocalDataSource.saveOldUserData();
+    }
+
+    @Override
+    public UserDataEntity readOldUserData() {
+        return mLocalDataSource.readOldUserData();
+    }
+
+    @Override
     public void saveIsVerifyFace(Boolean isVerifyFace) {
         mLocalDataSource.saveIsVerifyFace(isVerifyFace);
     }

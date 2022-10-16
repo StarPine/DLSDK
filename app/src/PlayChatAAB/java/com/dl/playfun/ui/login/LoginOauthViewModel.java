@@ -46,7 +46,7 @@ public class LoginOauthViewModel extends BaseViewModel<AppRepository> {
     }
 
     public void initData() {
-        UserDataEntity userDataEntity = model.readUserData();
+        UserDataEntity userDataEntity = model.readOldUserData();
         if(userDataEntity!=null){
             currentUserData.set(userDataEntity);
         }

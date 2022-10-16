@@ -189,6 +189,9 @@ public interface LocalDataSource {
      */
     UserDataEntity readUserData();
 
+    void saveOldUserData();
+    UserDataEntity readOldUserData();
+
     /**
      * 保存是否已认证
      *

@@ -25,6 +25,7 @@ import com.dl.playfun.entity.TokenEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.LoginExpiredEvent;
 import com.dl.playfun.ui.login.LoginFragment;
+import com.dl.playfun.ui.login.LoginOauthFragment;
 import com.dl.playfun.ui.main.MainFragment;
 import com.dl.playfun.utils.ExceptionReportUtils;
 import com.dl.playfun.utils.StringUtil;
@@ -59,6 +60,20 @@ public class SplashViewModel extends BaseViewModel<AppRepository> {
         initApiConfig();
     }
     private void initData() {
+        UserDataEntity oldUserData = model.readOldUserData();
+        //上次登录信息不为空。进入上次登录信息页面
+        if(oldUserData!=null && oldUserData.getSex() != null && oldUserData.getSex() != -1 && !StringUtil.isEmpty(oldUserData.getNickname())){
+            Observable.just("")
+                    .delay(300, TimeUnit.MILLISECONDS)
+                    .subscribeOn(Schedulers.io())
+                    // Be notified on the main thread
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(s -> {
+                        initIM();
+                        startWithPopTo(LoginOauthFragment.class.getCanonicalName(), SplashFragment.class.getCanonicalName(), true);
+                    });
+            return;
+        }
         if (model.readLoginInfo() != null && !StringUtils.isEmpty(model.readLoginInfo().getToken()) && model.readUserData() != null && model.readUserData().getSex() != null && model.readUserData().getSex() != -1 && !StringUtil.isEmpty(model.readUserData().getNickname())) {
             loadProfile();
         } else {
@@ -132,7 +147,9 @@ public class SplashViewModel extends BaseViewModel<AppRepository> {
                 .subscribe(new BaseObserver<BaseDataResponse<UserDataEntity>>() {
                     @Override
                     public void onSuccess(BaseDataResponse<UserDataEntity> response) {
+                        UserDataEntity cacheUserData = model.readUserData();
                         UserDataEntity userDataEntity = response.getData();
+                        userDataEntity.setToken(cacheUserData.getToken());
                         model.saveUserData(userDataEntity);
                         //更新IM userSig
                         if (!TextUtils.isEmpty(userDataEntity.getUserSig())) {

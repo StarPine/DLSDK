@@ -359,6 +359,7 @@ public class LocalDataSourceImpl implements LocalDataSource {
 
     @Override
     public void logout() {
+        saveOldUserData();
         kv.remove(KEY_LOGIN_INFO);
         kv.remove(KEY_USER_DATA);
         kv.remove(KEY_LOCK_PASSWORD);
@@ -368,18 +369,34 @@ public class LocalDataSourceImpl implements LocalDataSource {
     public void saveUserData(UserDataEntity userDataEntity) {
         String json = GsonUtils.toJson(userDataEntity);
         kv.encode(KEY_USER_DATA, json);
+        kv.remove(KEY_OLD_USER_DATA);
     }
 
     @Override
     public UserDataEntity readUserData() {
         String json = kv.decodeString(KEY_USER_DATA);
-        if (json == null) {
-            return null;
-        } else if (json.isEmpty()) {
+        if (StringUtils.isEmpty(json)) {
             return null;
         }
-        UserDataEntity userDataEntity = GsonUtils.fromJson(json, UserDataEntity.class);
-        return userDataEntity;
+        return GsonUtils.fromJson(json, UserDataEntity.class);
+    }
+
+    @Override
+    public void saveOldUserData() {
+        UserDataEntity localUser = readUserData();
+        if(localUser!=null){
+            String json = GsonUtils.toJson(localUser);
+            kv.encode(KEY_OLD_USER_DATA, json);
+        }
+    }
+
+    @Override
+    public UserDataEntity readOldUserData() {
+        String json = kv.decodeString(KEY_OLD_USER_DATA);
+        if (StringUtils.isEmpty(json)) {
+            return null;
+        }
+        return GsonUtils.fromJson(json, UserDataEntity.class);
     }
 
     @Override

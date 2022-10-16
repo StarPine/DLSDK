@@ -1,11 +1,14 @@
 package com.dl.playfun.data.source.http.interceptor;
 
+import android.util.Log;
+
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.data.RetrofitHeadersConfig;
 import com.dl.playfun.data.source.LocalDataSource;
 import com.dl.playfun.data.source.local.LocalDataSourceImpl;
 import com.dl.playfun.entity.ApiConfigManagerEntity;
+import com.dl.playfun.entity.UserDataEntity;
 
 import java.io.IOException;
 import java.net.URI;
@@ -57,11 +60,25 @@ public class TokenInterceptor implements Interceptor {
                     upUrlFlag = 1;
                 }
                 if(upUrlFlag == 1 || upUrlFlag == 2){
-                    if (localDataSource != null && localDataSource.readLoginInfo() != null && !StringUtils.isEmpty(localDataSource.readLoginInfo().getToken())) {
-                        String token = localDataSource.readLoginInfo().getToken();
-                        builder.removeHeader(RetrofitHeadersConfig.NO_TOKEN_CHECK_KEY);
-                        builder.addHeader("Authorization", "Bearer " + token);
+
+                    UserDataEntity oldLocalUserData = localDataSource.readOldUserData();
+                    if(oldLocalUserData != null){
+                        if(!StringUtils.isEmpty(oldLocalUserData.getToken())){
+                            String token = oldLocalUserData.getToken();
+                            builder.removeHeader(RetrofitHeadersConfig.NO_TOKEN_CHECK_KEY);
+                            builder.addHeader("Authorization", "Bearer " + token);
+                        }
                     }
+
+                    UserDataEntity newsLocalUserData = localDataSource.readUserData();
+                    if (newsLocalUserData != null ) {
+                        if(!StringUtils.isEmpty(newsLocalUserData.getToken())){
+                            String token = newsLocalUserData.getToken();
+                            builder.removeHeader(RetrofitHeadersConfig.NO_TOKEN_CHECK_KEY);
+                            builder.addHeader("Authorization", "Bearer " + token);
+                        }
+                    }
+
                 }
             }
         }

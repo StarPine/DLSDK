@@ -37,10 +37,10 @@ android {
             v2SigningEnabled true
         }
         playChatDebug{
-            storeFile file('../../keystore/PlayChat.jks')
-            storePassword 'playchat'
-            keyAlias 'playchat'
-            keyPassword 'playchat'
+            storeFile file('../../keystore/Pshilin.keystore')
+            storePassword 'pengshilin'
+            keyAlias 'Pshilin.keystore'
+            keyPassword 'pengshilin'
             v1SigningEnabled true
             v2SigningEnabled true
         }
