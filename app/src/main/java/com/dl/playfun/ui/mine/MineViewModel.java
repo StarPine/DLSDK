@@ -361,7 +361,13 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
         mAvatarChangeSubscription = RxBus.getDefault().toObservable(AvatarChangeEvent.class)
                 .subscribe(event -> userInfoEntity.get().setAvatar(event.getAvatarPath()));
         mProfileChangeSubscription = RxBus.getDefault().toObservable(ProfileChangeEvent.class)
-                .subscribe(event -> loadUserInfo());
+                .subscribe(event -> {
+                    UserDataEntity user = model.readUserData();
+                    if(user !=null && !user.isBindPhone()){
+                        uc.dialogUserBindEvent.call();
+                    }
+                    loadUserInfo();
+                });
         mPhotoAlbumChangeSubscription = RxBus.getDefault().toObservable(MyPhotoAlbumChangeEvent.class)
                 .subscribe(event -> {
                     if (event.getType() == MyPhotoAlbumChangeEvent.TYPE_REFRESH) {
@@ -743,5 +749,7 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
         public SingleLiveEvent<Void> removeAudioAlert = new SingleLiveEvent<>();
         public SingleLiveEvent<Boolean> allowAudio = new SingleLiveEvent<>();
         public SingleLiveEvent<Boolean> allowVideo = new SingleLiveEvent<>();
+        //提示用户绑定手机号码弹窗
+        public SingleLiveEvent<Void> dialogUserBindEvent = new SingleLiveEvent<>();
     }
 }

@@ -31,6 +31,17 @@ import retrofit2.http.Query;
  */
 
 public interface ApiService {
+
+    /**
+    * @Desc TODO(常联系推荐列表)
+    * @author 彭石林
+    * @parame []
+    * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseListDataResponse<com.dl.playfun.entity.ParkItemEntity>>
+    * @Date 2022/10/17
+    */
+    @GET("calling/recommend/frequentContact")
+    Observable<BaseDataResponse<FrequentContactEntity>> getFrequentContact();
+
     /**
     * @Desc TODO(获取当前用户绑定的账户信息)
     * @author 彭石林

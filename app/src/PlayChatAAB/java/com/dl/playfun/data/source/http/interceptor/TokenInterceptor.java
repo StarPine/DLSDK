@@ -8,6 +8,7 @@ import com.dl.playfun.data.RetrofitHeadersConfig;
 import com.dl.playfun.data.source.LocalDataSource;
 import com.dl.playfun.data.source.local.LocalDataSourceImpl;
 import com.dl.playfun.entity.ApiConfigManagerEntity;
+import com.dl.playfun.entity.TokenEntity;
 import com.dl.playfun.entity.UserDataEntity;
 
 import java.io.IOException;
@@ -70,10 +71,10 @@ public class TokenInterceptor implements Interceptor {
                         }
                     }
 
-                    UserDataEntity newsLocalUserData = localDataSource.readUserData();
-                    if (newsLocalUserData != null ) {
-                        if(!StringUtils.isEmpty(newsLocalUserData.getToken())){
-                            String token = newsLocalUserData.getToken();
+                    TokenEntity tokenEntity = localDataSource.readLoginInfo();
+                    if (tokenEntity != null ) {
+                        if(!StringUtils.isEmpty(tokenEntity.getToken())){
+                            String token = tokenEntity.getToken();
                             builder.removeHeader(RetrofitHeadersConfig.NO_TOKEN_CHECK_KEY);
                             builder.addHeader("Authorization", "Bearer " + token);
                         }

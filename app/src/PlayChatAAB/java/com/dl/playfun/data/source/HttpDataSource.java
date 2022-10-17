@@ -50,6 +50,7 @@ import com.dl.playfun.entity.ExchangeEntity;
 import com.dl.playfun.entity.ExchangeIntegraOuterEntity;
 import com.dl.playfun.entity.ExclusiveAccostInfoEntity;
 import com.dl.playfun.entity.FaceVerifyResultEntity;
+import com.dl.playfun.entity.FrequentContactEntity;
 import com.dl.playfun.entity.GameCoinBuy;
 import com.dl.playfun.entity.GameCoinWalletEntity;
 import com.dl.playfun.entity.GamePhotoAlbumEntity;
@@ -117,6 +118,16 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface HttpDataSource {
+
+    /**
+     * @Desc TODO(常联系推荐列表)
+     * @author 彭石林
+     * @parame []
+     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseListDataResponse<com.dl.playfun.entity.ParkItemEntity>>
+     * @Date 2022/10/17
+     */
+    @GET("calling/recommend/frequentContact")
+    Observable<BaseDataResponse<FrequentContactEntity>> getFrequentContact();
 
     /**
      * @Desc TODO(获取当前用户绑定的账户信息)

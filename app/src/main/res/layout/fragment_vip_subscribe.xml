@@ -90,6 +90,7 @@
                             android:id="@+id/iv_vip_banner"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:scaleType="fitXY"
                             android:src="@drawable/bg_vip_title_image"
                             binding:imageErrorPlaceholderRes="@{R.drawable.bg_vip_title_image}"
                             binding:imagePlaceholderRes="@{R.drawable.bg_vip_title_image}"

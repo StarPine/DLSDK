@@ -7,13 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.dl.playfun.app.AppContext;
 import com.blankj.utilcode.util.SizeUtils;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppViewModelFactory;
+import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.Injection;
 import com.dl.playfun.databinding.FragmentOftenContactBinding;
 import com.dl.playfun.entity.TokenEntity;
@@ -21,6 +24,7 @@ import com.dl.playfun.event.MessageCountChangeContactEvent;
 import com.dl.playfun.manager.ThirdPushTokenMgr;
 import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.utils.ChatUtils;
+import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 import com.dl.playfun.widget.dialog.TraceDialog;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.interfaces.TUICallback;
@@ -85,6 +89,9 @@ public class OftenContactFragment extends BaseFragment<FragmentOftenContactBindi
                 });
             }
 
+        }
+        if(viewModel.observableList.isEmpty()){
+            viewModel.getFrequentContact();
         }
     }
     private void initIM(){
@@ -210,5 +217,21 @@ public class OftenContactFragment extends BaseFragment<FragmentOftenContactBindi
             initIM();
             ThirdPushTokenMgr.getInstance().setPushTokenToTIM();
         });
+        //搭讪相关
+        viewModel.uc.sendAccostFirstError.observe(this, new Observer<Void>() {
+            @Override
+            public void onChanged(Void unused) {
+                AppContext.instance().logEvent(AppsFlyerEvent.Top_up);
+                toRecharge();
+            }
+        });
+    }
+
+    /**
+     * 去充值
+     */
+    private void toRecharge() {
+        CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(mActivity);
+        coinRechargeFragmentView.show();
     }
 }

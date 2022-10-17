@@ -97,13 +97,16 @@ public class CommunityAccountFragment extends BaseToolbarFragment<FragmentSettin
         if (account != null && googleSignInClient != null) {
             googleSignInClient.signOut();
         }
-        binding.facebookLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Collection<String> collection = new ArrayList<String>();
-                collection.add("email");
-                loginManager.logIn(CommunityAccountFragment.this, collection);
+        binding.facebookLogin.setOnClickListener(view -> {
+            if(viewModel.userBindInfoEntity.get() ==null){
+                return;
             }
+            if(viewModel.userBindInfoEntity.get().getBindAuth()>0){
+                return;
+            }
+            Collection<String> collection = new ArrayList<>();
+            collection.add("email");
+            loginManager.logIn(CommunityAccountFragment.this, collection);
         });
         LoginManager.getInstance().registerCallback(callbackManager,
                 new FacebookCallback<LoginResult>() {
@@ -120,7 +123,7 @@ public class CommunityAccountFragment extends BaseToolbarFragment<FragmentSettin
                                     if (!jsonObject.isNull("token_for_business")) {
                                         token_for_business = jsonObject.getString("token_for_business");
                                     }
-                                    viewModel.bindAccount(userId, "facebook", token_for_business);
+                                    viewModel.bindAccount(2,userId, "facebook", token_for_business);
                                 } catch (Exception e) {
                                     Log.e("获取facebook关键资料", "异常原因: " + e.getMessage());
                                     // App code
@@ -147,12 +150,15 @@ public class CommunityAccountFragment extends BaseToolbarFragment<FragmentSettin
                     }
                 });
         GoogleLogin();
-        binding.googleLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = googleSignInClient.getSignInIntent();
-                startActivityForResult(intent, Google_Code);
+        binding.googleLogin.setOnClickListener(v -> {
+            if(viewModel.userBindInfoEntity.get() ==null){
+                return;
             }
+            if(viewModel.userBindInfoEntity.get().getBindAuth()>0){
+                return;
+            }
+            Intent intent = googleSignInClient.getSignInIntent();
+            startActivityForResult(intent, Google_Code);
         });
 
     }
@@ -179,7 +185,7 @@ public class CommunityAccountFragment extends BaseToolbarFragment<FragmentSettin
         try {
             GoogleSignInAccount signInAccount = googleData.getResult(ApiException.class);
             if (signInAccount != null) {
-                viewModel.bindAccount(signInAccount.getId(), "google",null);
+                viewModel.bindAccount(3,signInAccount.getId(), "google",null);
             } else {
                 ToastUtils.showShort(R.string.playfun_error_google);
             }

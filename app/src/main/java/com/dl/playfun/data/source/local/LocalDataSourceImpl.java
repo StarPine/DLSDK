@@ -384,7 +384,12 @@ public class LocalDataSourceImpl implements LocalDataSource {
     @Override
     public void saveOldUserData() {
         UserDataEntity localUser = readUserData();
+        TokenEntity tokenEntity = readLoginInfo();
         if(localUser!=null){
+            if(tokenEntity!=null){
+                localUser.setToken(tokenEntity.getToken());
+                localUser.setUserSig(tokenEntity.getUserSig());
+            }
             String json = GsonUtils.toJson(localUser);
             kv.encode(KEY_OLD_USER_DATA, json);
         }

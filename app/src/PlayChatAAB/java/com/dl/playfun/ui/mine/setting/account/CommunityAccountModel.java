@@ -1,6 +1,7 @@
 package com.dl.playfun.ui.mine.setting.account;
 
 import android.app.Application;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,7 @@ import com.dl.lib.util.MPDeviceUtils;
 import com.dl.playfun.R;
 import com.dl.playfun.app.EaringlSwitchUtil;
 import com.dl.playfun.data.AppRepository;
+import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
@@ -64,7 +66,6 @@ public class CommunityAccountModel extends BaseViewModel<AppRepository> {
                 start(CommunityAccountBindFragment.class.getCanonicalName());
             }
         }
-
     });
 
     @Override
@@ -89,6 +90,14 @@ public class CommunityAccountModel extends BaseViewModel<AppRepository> {
                         userBindInfoEntity.set(response.getData());
                     }
 
+
+                    @Override
+                    public void onError(RequestException e) {
+                        super.onError(e);
+                        dismissHUD();
+                        pop();
+                    }
+
                     @Override
                     public void onComplete() {
                         super.onComplete();
@@ -97,7 +106,7 @@ public class CommunityAccountModel extends BaseViewModel<AppRepository> {
                 });
     }
 
-    public void bindAccount(String id, String type,String business_token) {
+    public void bindAccount(int authType, String id, String type,String business_token) {
         id += type;
         Map<String, Object> mapData = new HashMap<>();
         mapData.put("type",type);
@@ -149,22 +158,24 @@ public class CommunityAccountModel extends BaseViewModel<AppRepository> {
         return null;
     }
 
-    public Integer getIsAuthBindShow(int type,UserBindInfoEntity userBindInfo){
-        int isAuth = model.readUserData().getIsAuth();
-        //绑定第三方
-        if(isAuth ==1){
-            if(!ObjectUtils.isEmpty(userBindInfo)){
-                int isBind = userBindInfo.getBindAuth();
-                if(type == isBind){
-                    return View.VISIBLE;
-                }else{
-                    return View.GONE;
-                }
-            }
-            return View.GONE;
-        }else{
-            return View.VISIBLE;
+    public boolean phoneShow(UserBindInfoEntity userDataEntity){
+        if(userDataEntity != null){
+            return !StringUtils.isEmpty(userDataEntity.getPhone());
         }
+        return false;
+    }
+
+    public Integer getIsAuthBindShow(int type,UserBindInfoEntity userBindInfo){
+        //绑定第三方
+        if(!ObjectUtils.isEmpty(userBindInfo)){
+            int isBind = userBindInfo.getBindAuth();
+            if(type == isBind){
+                return View.VISIBLE;
+            }else{
+                return View.GONE;
+            }
+        }
+        return View.GONE;
     }
 
 

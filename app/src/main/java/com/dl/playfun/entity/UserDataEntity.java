@@ -486,4 +486,8 @@ public class UserDataEntity extends BaseObservable implements Serializable {
         }
         return true;
     }
+
+    public boolean isBindPhone(){
+        return bindPhone == 1;
+    }
 }

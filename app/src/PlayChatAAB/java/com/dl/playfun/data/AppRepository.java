@@ -54,6 +54,10 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
         INSTANCE = null;
     }
 
+    public Observable<BaseDataResponse<FrequentContactEntity>> getFrequentContact(){
+        return mHttpDataSource.getFrequentContact();
+    }
+
     @Override
     public Observable<BaseDataResponse<UserBindInfoEntity>> getUserBindInfo(){
         return mHttpDataSource.getUserBindInfo();

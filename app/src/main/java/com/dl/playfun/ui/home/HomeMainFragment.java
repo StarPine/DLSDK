@@ -216,33 +216,6 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
                 toRecharge();
             }
         });
-        //播放搭讪动画
-        viewModel.uc.loadLoteAnime.observe(this, new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer position) {
-                LinearLayoutManager layoutManager = (LinearLayoutManager) binding.rcvLayout.getLayoutManager();
-                final View child = layoutManager.findViewByPosition(position);
-                if (child != null) {
-                    LottieAnimationView itemLottie = child.findViewById(R.id.item_lottie);
-                    if (itemLottie != null) {
-                        itemLottie.setImageAssetsFolder("images/");
-                        itemLottie.addAnimatorListener(new AnimatorListenerAdapter() {
-
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                itemLottie.removeAnimatorListener(this);
-                                itemLottie.setVisibility(View.GONE);
-                            }
-                        });
-                        if (!itemLottie.isAnimating()) {
-                            itemLottie.setVisibility(View.VISIBLE);
-                            itemLottie.setAnimation(R.raw.accost_animation);
-                            itemLottie.playAnimation();
-                        }
-                    }
-                }
-            }
-        });
     }
 
     /**

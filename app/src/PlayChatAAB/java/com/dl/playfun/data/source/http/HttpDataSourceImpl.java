@@ -52,6 +52,7 @@ import com.dl.playfun.entity.ExchangeEntity;
 import com.dl.playfun.entity.ExchangeIntegraOuterEntity;
 import com.dl.playfun.entity.ExclusiveAccostInfoEntity;
 import com.dl.playfun.entity.FaceVerifyResultEntity;
+import com.dl.playfun.entity.FrequentContactEntity;
 import com.dl.playfun.entity.GameCoinBuy;
 import com.dl.playfun.entity.GameCoinWalletEntity;
 import com.dl.playfun.entity.GamePhotoAlbumEntity;
@@ -138,6 +139,10 @@ public class HttpDataSourceImpl implements HttpDataSource {
 
     public static void destroyInstance() {
         INSTANCE = null;
+    }
+
+    public Observable<BaseDataResponse<FrequentContactEntity>> getFrequentContact(){
+        return apiService.getFrequentContact();
     }
 
     @Override

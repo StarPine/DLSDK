@@ -45,6 +45,7 @@ import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFr
 import com.dl.playfun.ui.dialog.MyEvaluateDialog;
 import com.dl.playfun.ui.mine.setredpackagephoto.SetRedPackagePhotoFragment;
 import com.dl.playfun.ui.mine.setredpackagevideo.SetRedPackageVideoFragment;
+import com.dl.playfun.ui.mine.setting.account.bind.CommunityAccountBindFragment;
 import com.dl.playfun.ui.task.TaskCenterFragment;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
@@ -56,6 +57,7 @@ import com.dl.playfun.widget.animate.JumpingSpan;
 import com.dl.playfun.widget.bottomsheet.BottomSheet;
 import com.dl.playfun.widget.dialog.MMAlertDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
+import com.dl.playfun.widget.dialog.UserBehaviorDialog;
 import com.google.android.material.appbar.AppBarLayout;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.listener.OnResultCallbackListener;
@@ -77,6 +79,8 @@ public class MineFragment extends BaseRefreshFragment<FragmentMineBinding, MineV
 
     private int toolbarHeight = -1;
     private boolean toolbarUp = false;
+
+    static String KEY_USER_BIND_PHONE_HINT = "key_user_bind_phone_hint";
 
     @Override
     public void onSupportVisible() {
@@ -219,6 +223,14 @@ public class MineFragment extends BaseRefreshFragment<FragmentMineBinding, MineV
         super.initViewObservable();
         AppContext.instance().logEvent(AppsFlyerEvent.Me);
         inputMethodManager = (InputMethodManager) this.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        viewModel.uc.dialogUserBindEvent.observe(this, unused -> {
+            String value = ConfigManager.getInstance().getAppRepository().readKeyValue(KEY_USER_BIND_PHONE_HINT);
+            if(StringUtils.isEmpty(value)){
+                UserBehaviorDialog.getUserBindPhonesDialog(getContext(), () -> startFragment(CommunityAccountBindFragment.class.getCanonicalName())).show();
+                ConfigManager.getInstance().getAppRepository().putKeyValue(KEY_USER_BIND_PHONE_HINT,KEY_USER_BIND_PHONE_HINT);
+            }
+
+        });
         viewModel.uc.allowAudio.observe(this,aBoolean -> {
             binding.shAudio.setChecked(aBoolean);
         });
