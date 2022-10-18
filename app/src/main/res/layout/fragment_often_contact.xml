@@ -127,7 +127,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
                     android:layout_marginBottom="30dp"
-                    android:text="網路錯誤，點擊重試"
+                    android:text="@string/playfun_network_error_text_click"
                     android:textColor="@color/gray_middle"
                     android:textSize="12sp" />
             </LinearLayout>

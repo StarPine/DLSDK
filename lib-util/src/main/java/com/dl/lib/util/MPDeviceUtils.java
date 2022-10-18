@@ -1,9 +1,13 @@
 package com.dl.lib.util;
 
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
+import android.text.TextUtils;
 
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.ObjectUtils;
+import com.blankj.utilcode.util.Utils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -64,6 +68,8 @@ public class MPDeviceUtils {
 
     static String CPU_ABI2;
 
+    static String GOOGLE_ID;
+
     //elk上报当前设备信息
     static volatile Map<String,String> elkAndroidDevices = new HashMap<>();
 
@@ -92,6 +98,7 @@ public class MPDeviceUtils {
 
         CPU_ABI = Build.CPU_ABI;
         CPU_ABI2 = Build.CPU_ABI2;
+        GOOGLE_ID = getGoogleId();
     }
 
     /**
@@ -123,7 +130,8 @@ public class MPDeviceUtils {
         deviceInfo.put("CODENAME",CODENAME);
         deviceInfo.put("INCREMENTAL",INCREMENTAL);
         deviceInfo.put("SDK_INT",SDK_INT);
-
+        deviceInfo.put("GOOGLE_ID",GOOGLE_ID);
+        BRAND+ MANUFACTURER + MODEL + BOARD
         //设备信息存放集合
         Map<String,String > deviceData = new HashMap<>();
         deviceData.put("cpuInfo", GsonUtils.toJson(getDeviceCpuInfo()));
@@ -167,6 +175,32 @@ public class MPDeviceUtils {
             e.printStackTrace();
         }
         return deviceCpuInfo;
+    }
+
+    /* renamed from: a */
+    public static String getGoogleId() {
+        Uri parse = Uri.parse("content://com.google.android.gsf.gservices");
+        String str = "";
+        try {
+            Cursor query = Utils.getApp().getContentResolver().query(parse, null, null, new String[]{"android_id"}, null);
+            if (query == null) {
+                return str;
+            }
+            if (query.moveToFirst()) {
+                if (query.getColumnCount() >= 2) {
+                    String string = Long.toHexString(Long.parseLong(query.getString(1)));
+                    query.close();
+                    if (!TextUtils.isEmpty(string)) {
+                        str = string.toUpperCase().trim();
+                    }
+                    return str;
+                }
+            }
+            query.close();
+            return str;
+        } catch (NoClassDefFoundError | NullPointerException unused) {
+            return str;
+        }
     }
 
     /**
