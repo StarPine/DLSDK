@@ -38,6 +38,7 @@ import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.ElkLogEventReport;
+import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.local.LocalDataSourceImpl;
 import com.dl.playfun.databinding.FragmentChatDetailBinding;
 import com.dl.playfun.entity.CrystalDetailsConfigEntity;
@@ -75,6 +76,7 @@ import com.dl.playfun.widget.dialog.MMAlertDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.dl.playfun.widget.dialog.MessageDetailDialog;
 import com.dl.playfun.widget.dialog.TraceDialog;
+import com.dl.playfun.widget.dialog.UserBehaviorDialog;
 import com.google.gson.Gson;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.listener.OnResultCallbackListener;
@@ -112,6 +114,8 @@ import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -126,6 +130,8 @@ import me.yokeyword.fragmentation.ISupportFragment;
  */
 public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBinding, ChatDetailViewModel> implements InputView.SendOnClickCallback {
     public static final String CHAT_INFO = "chatInfo";
+    //首次付费解锁引导
+    static String KEY_USER_MEDIA_GALLERY_LOCK = "key_user_media_gallery_lock_";
 
     public static final String TAG = "ChatDetailFragment";
     private ChatInfo mChatInfo;
@@ -884,7 +890,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                         if(mediaGalleryEditEntity.isSelfSend() || mediaGalleryEditEntity.isStateUnlockPhoto()){
                             viewModel.uc.mediaGalleryPayEvent.setValue(mediaGalleryEditEntity);
                         }else{
-                            viewModel.mediaGalleryPay(mediaGalleryEditEntity);
+                            isUserMediaGalleryDialog(mediaGalleryEditEntity);
                         }
                     }else{
                         viewModel.uc.mediaGalleryPayEvent.setValue(mediaGalleryEditEntity);
@@ -942,6 +948,29 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             custom_local_data.put("text", toSendMessageText);
             String str = GsonUtils.toJson(custom_local_data);
             inputLayout.getMessageHandler().sendMessage(ChatMessageBuilder.buildTextMessage(str));
+        }
+    }
+
+    //付费首次弹窗引导提示
+    private  void isUserMediaGalleryDialog(MediaGalleryEditEntity mediaGalleryEditEntity){
+        AppRepository appRepository = ConfigManager.getInstance().getAppRepository();
+        if(appRepository != null){
+            String cacheKey = appRepository.readKeyValue(KEY_USER_MEDIA_GALLERY_LOCK+getUserIdIM());
+            if(StringUtils.isEmpty(cacheKey)){
+                BigDecimal redPackageRevenue = mediaGalleryEditEntity.getUnlockPrice();
+                if(redPackageRevenue!=null && redPackageRevenue.doubleValue()>0){
+                    int coin = redPackageRevenue.setScale(2, RoundingMode.HALF_UP).intValue();
+                    String title = mediaGalleryEditEntity.isVideoSetting() ? getString(R.string.playfun_message_deatail_check_img_coin):getString(R.string.playfun_message_deatail_check_video_coin);
+                    UserBehaviorDialog.getUserMediaGalleryDialog(getContext(), title, String.valueOf(coin), mediaGalleryEditEntity.isStateSnapshot(), () -> {
+                        viewModel.mediaGalleryPay(mediaGalleryEditEntity);
+                    }).show();
+                    appRepository.putKeyValue(KEY_USER_MEDIA_GALLERY_LOCK+getUserIdIM(),KEY_USER_MEDIA_GALLERY_LOCK+getUserIdIM());
+                }
+            }else{
+                viewModel.mediaGalleryPay(mediaGalleryEditEntity);
+            }
+        }else{
+            viewModel.mediaGalleryPay(mediaGalleryEditEntity);
         }
     }
 
@@ -1032,7 +1061,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                 customDlTempMessage.setLanguage(StringUtils.getString(R.string.playfun_local_language));
                 String data = GsonUtils.toJson(customDlTempMessage);
                 TUIMessageBean messageInfo = ChatMessageBuilder.buildCustomMessage(data, null, null);
-                ElkLogEventReport.reportMediaGallery.reportSendMediaGallery(false,getTaUserIdIM(),String.valueOf(mediaGalleryEditEntity.isStateSnapshot()),mediaGalleryEditEntity.isStatePay(),String.valueOf(mediaGalleryEditEntity.getUnlockPrice()),mediaGalleryEditEntity.getConfigId(),mediaGalleryEditEntity.getConfigIndex());
+                ElkLogEventReport.reportMediaGallery.reportSendMediaGallery(false,getTaUserIdIM(),String.valueOf(mediaGalleryEditEntity.isStateSnapshot()),mediaGalleryEditEntity.isStatePay(),mediaGalleryEditEntity.getUnlockPrice(),mediaGalleryEditEntity.getConfigId(),mediaGalleryEditEntity.getConfigIndex());
                 if (messageInfo != null) {
                     binding.chatLayout.sendMessage(messageInfo, false);
                 }

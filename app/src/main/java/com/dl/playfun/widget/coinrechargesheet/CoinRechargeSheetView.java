@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -34,12 +35,18 @@ import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.CreateOrderEntity;
 import com.dl.playfun.entity.DiamondInfoEntity;
 import com.dl.playfun.entity.GoodsEntity;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BasePopupWindow;
+import com.dl.playfun.ui.coinpusher.CoinPusherGameActivity;
+import com.dl.playfun.ui.coinpusher.dialog.CoinPusherGameHistoryDialog;
+import com.dl.playfun.ui.coinpusher.dialog.CoinPusherHelpDialog;
 import com.dl.playfun.ui.dialog.adapter.CoinRechargeAdapter;
 import com.dl.playfun.widget.dialog.TraceDialog;
+import com.jakewharton.rxbinding2.view.RxView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import me.goldze.mvvmhabit.utils.RxUtils;
 import me.goldze.mvvmhabit.utils.ToastUtils;
@@ -95,6 +102,13 @@ public class CoinRechargeSheetView extends BasePopupWindow implements View.OnCli
         adapter.setCoinRechargeAdapterListener(this);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);
+        TextView tvReport = mPopView.findViewById(R.id.tv_report);
+        RxView.clicks(tvReport)
+                .throttleFirst(1, TimeUnit.SECONDS)//1秒钟内只允许点击1次
+                .subscribe(o -> {
+                    billingClientLifecycle.queryPurchasesAsync(BillingClient.SkuType.INAPP);
+                    billingClientLifecycle.queryPurchasesAsync(BillingClient.SkuType.SUBS);
+                });
 
         initData();
         initListener();

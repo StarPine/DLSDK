@@ -34,6 +34,7 @@ import com.dl.playfun.entity.CallingInviteInfo;
 import com.dl.playfun.entity.ConfigItemEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.BadioEvent;
+import com.dl.playfun.event.CoinPusherRoomEvent;
 import com.dl.playfun.event.LikeChangeEvent;
 import com.dl.playfun.event.RadioadetailEvent;
 import com.dl.playfun.event.TaskListEvent;
@@ -134,12 +135,13 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
             AdItemEntity adItemEntity = itemBannerEntity.get().get(index);
             int typeAct = adItemEntity.getType();
             if(typeAct!=0){
-                switch (typeAct){
-                    case 5:
-                        startActivity(DiamondRechargeActivity.class);
-                        break;
+                if (typeAct ==4){
+                    //弹出推币机
+                    RxBus.getDefault().post(new CoinPusherRoomEvent());
+                } else if (typeAct == 5) {
+                    startActivity(DiamondRechargeActivity.class);
                 }
-            }else if(adItemEntity!=null && adItemEntity.getLink()!=null){
+            }else if(adItemEntity.getLink() != null){
                 Bundle bundle = new Bundle();
                 bundle.putString("link", adItemEntity.getLink());
                 start(FukuokaViewFragment.class.getCanonicalName(), bundle);

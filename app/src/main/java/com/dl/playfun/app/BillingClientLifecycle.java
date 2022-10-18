@@ -405,6 +405,7 @@ public class BillingClientLifecycle implements LifecycleObserver, BillingClientS
             if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                 Log.i(TAG, "onConsumeResponse,code=BillingResponseCode.OK");
                 PurchaseHistory.postValue(getBillingPurchasesState(0,BillingPurchasesState.BillingFlowNode.queryPurchaseHistory,purchase));
+                reportOrderPurchase(purchase);
             } else {
                 //如果消耗不成功，那就再消耗一次
                 Log.i(TAG, "onConsumeResponse=getDebugMessage==" + billingResult.getDebugMessage());
@@ -421,6 +422,7 @@ public class BillingClientLifecycle implements LifecycleObserver, BillingClientS
             //确认购买成功
             if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                 Log.i(TAG, "Acknowledge purchase success");
+                reportOrderPurchase(purchase);
                 PurchaseHistory.postValue(getBillingPurchasesState(0,BillingPurchasesState.BillingFlowNode.acknowledgePurchase,purchase));
             } else {
                 //上架确认购买消耗失败 原因多种：掉线、超时、无网络、用户主动关闭支付处理窗体
@@ -457,6 +459,33 @@ public class BillingClientLifecycle implements LifecycleObserver, BillingClientS
             }
         };
         billingClient.queryPurchasesAsync(SkuType,mPurchasesResponseListener);
+    }
+
+    /**
+    * @Desc TODO(调单-上报订单)
+    * @author 彭石林
+    * @parame [purchase]
+    * @return void
+    * @Date 2022/10/18
+    */
+    public void reportOrderPurchase(Purchase purchase){
+        Date endTime = new Date();
+        Date beginTime = ApiUitl.toDayMinTwo(endTime);
+        Date date = new Date();
+        date.setTime(purchase.getPurchaseTime());
+        if (purchase.isAcknowledged()) {
+            if (ApiUitl.belongCalendar(date, beginTime, endTime)) {
+                String pack = purchase.getPackageName();
+                if (StringUtil.isEmpty(pack)) {
+                    pack = BuildConfig.APPLICATION_ID;
+                }
+                Map<String, Object> mapData = new HashMap<>();
+                mapData.put("token", purchase.getPurchaseToken());
+                mapData.put("sku", purchase.getSkus().toString());
+                mapData.put("package", pack);
+                ConfigManager.getInstance().localeOrderReport(mapData);
+            }
+        }
     }
 
 }

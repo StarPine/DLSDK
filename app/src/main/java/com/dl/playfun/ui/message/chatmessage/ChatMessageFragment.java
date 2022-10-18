@@ -74,8 +74,7 @@ public class ChatMessageFragment extends BaseFragment<FragmentChatMessageBinding
     @Override
     public ChatMessageViewModel initViewModel() {
         AppViewModelFactory factory = AppViewModelFactory.getInstance(mActivity.getApplication());
-        ChatMessageViewModel viewModel = ViewModelProviders.of(this, factory).get(ChatMessageViewModel.class);
-        return viewModel;
+        return ViewModelProviders.of(this, factory).get(ChatMessageViewModel.class);
     }
 
     @Override

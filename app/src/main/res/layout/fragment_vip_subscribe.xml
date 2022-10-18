@@ -207,7 +207,6 @@
                         android:text="@string/playfun_vip_service_tips"
                         android:textColor="@color/pseekbar_process_off"
                         android:textSize="12sp" />
-
                 </LinearLayout>
 
             </LinearLayout>
@@ -215,9 +214,9 @@
 
         <LinearLayout
             android:id="@+id/ll_vip_buy"
+            android:layout_above="@+id/ll_restore"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:background="@color/black_848"
             android:paddingTop="15dp"
             android:paddingBottom="15dp"
@@ -236,6 +235,34 @@
                 android:textStyle="bold"
                 binding:onClickCommand="@{viewModel.confirmOnClickCommand}" />
         </LinearLayout>
-
+        <LinearLayout
+            android:id="@+id/ll_restore"
+            android:background="@color/black_848"
+            android:layout_alignParentBottom="true"
+            android:padding="5dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:includeFontPadding="false"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/playfun_payment_text_2"
+                android:textColor="@color/play_chat_gray_3"
+                android:textSize="13sp"
+                />
+            <TextView
+                android:id="@+id/tv_report"
+                binding:onClickCommand="@{viewModel.clickLocalReport}"
+                android:includeFontPadding="false"
+                android:layout_marginStart="3dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/playfun_payment_text_3"
+                android:textColor="@color/read_4840"
+                android:textSize="13sp"
+                />
+        </LinearLayout>
     </RelativeLayout>
 </layout>

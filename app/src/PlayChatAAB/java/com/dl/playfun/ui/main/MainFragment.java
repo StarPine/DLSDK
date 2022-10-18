@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Dialog;
 import android.app.Service;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.text.Spannable;
@@ -38,6 +39,8 @@ import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.Injection;
 import com.dl.playfun.app.config.TbarCenterImgConfig;
 import com.dl.playfun.databinding.FragmentMainBinding;
+import com.dl.playfun.entity.CoinPusherDataInfoEntity;
+import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.entity.MqBroadcastGiftEntity;
 import com.dl.playfun.entity.MqBroadcastGiftUserEntity;
 import com.dl.playfun.entity.VersionEntity;
@@ -46,6 +49,9 @@ import com.dl.playfun.event.MainTabEvent;
 import com.dl.playfun.event.TaskListEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseFragment;
+import com.dl.playfun.ui.coinpusher.CoinPusherGameActivity;
+import com.dl.playfun.ui.coinpusher.dialog.CoinPusherDialogAdapter;
+import com.dl.playfun.ui.coinpusher.dialog.CoinPusherRoomListDialog;
 import com.dl.playfun.ui.home.HomeMainFragment;
 import com.dl.playfun.ui.message.MessageMainFragment;
 import com.dl.playfun.ui.mine.MineFragment;
@@ -91,6 +97,9 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
     private Vibrator mVibrator;
     private boolean isShowing;
 
+    //充值弹窗
+    private CoinRechargeSheetView coinRechargeSheetView;
+
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ImmersionBarUtils.setupStatusBar(this, true, true);
@@ -113,6 +122,31 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         super.onViewCreated(view, savedInstanceState);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        //30秒没有投币提示
+        if(AppConfig.CoinPusherGameNotPushed){
+            AppConfig.CoinPusherGameNotPushed = false;
+            //弹出推币机选择弹窗
+            CoinPusherRoomListDialog coinersDialog = new CoinPusherRoomListDialog(mActivity);
+            coinersDialog.setDialogEventListener(new CoinPusherRoomListDialog.DialogEventListener() {
+                @Override
+                public void startViewing(CoinPusherDataInfoEntity itemEntity) {
+                    coinersDialog.dismiss();
+                    Intent intent = new Intent(mActivity, CoinPusherGameActivity.class);
+                    intent.putExtra("CoinPusherInfo",itemEntity);
+                    startActivity(intent);
+                }
+                @Override
+                public void buyErrorPayView() {
+                    payCoinRechargeDialog();
+                }
+            });
+            coinersDialog.show();
+            CoinPusherDialogAdapter.getDialogCoinPusherHint(getContext());
+        }
+    }
     //异步移除view
     private void postRemoveView(ViewGroup viewGroup, View IiageTrans) {
         viewGroup.post(new Runnable() {
@@ -344,6 +378,41 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                 }
             }
         });
+        //弹出推币机
+        viewModel.uc.coinPusherRoomEvent.observe(this,unused->{
+            //弹出推币机选择弹窗
+            CoinPusherRoomListDialog coinersDialog = new CoinPusherRoomListDialog(mActivity);
+            coinersDialog.setDialogEventListener(new CoinPusherRoomListDialog.DialogEventListener() {
+                @Override
+                public void startViewing(CoinPusherDataInfoEntity itemEntity) {
+                    coinersDialog.dismiss();
+                    Intent intent = new Intent(mActivity, CoinPusherGameActivity.class);
+                    intent.putExtra("CoinPusherInfo",itemEntity);
+                    startActivity(intent);
+                }
+
+                @Override
+                public void buyErrorPayView() {
+                    payCoinRechargeDialog();
+                }
+            });
+            coinersDialog.show();
+        });
+    }
+
+    //充值弹窗
+    private void payCoinRechargeDialog(){
+        if (coinRechargeSheetView == null){
+            coinRechargeSheetView = new CoinRechargeSheetView(mActivity);
+            coinRechargeSheetView.setClickListener(new CoinRechargeSheetView.ClickListener() {
+                @Override
+                public void paySuccess(GoodsEntity goodsEntity) {
+                }
+            });
+        }
+        if (!coinRechargeSheetView.isShowing()){
+            coinRechargeSheetView.show();
+        }
     }
 
     //视讯评价

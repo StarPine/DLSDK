@@ -31,6 +31,16 @@ import retrofit2.http.Query;
  */
 
 public interface ApiService {
+    /**
+    * @Desc TODO(查询本地未消耗订单进行消耗上报-单条)
+    * @author 彭石林
+    * @parame [body]
+    * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
+    * @Date 2022/10/18
+    */
+    @Headers("Content-Type: application/json")
+    @POST("api/v2/order/orderRemedy")
+    Observable<BaseResponse> localeOrderReport(@Body RequestBody body);
 
     /**
     * @Desc TODO(常联系推荐列表)

@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableArrayList;
+import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableList;
 
 import com.blankj.utilcode.util.ObjectUtils;
@@ -49,6 +50,8 @@ public class OftenContactViewModel extends BaseViewModel<AppRepository> {
     public BindingRecyclerViewAdapter<ItemOftenContactViewModel> adapter = new BindingRecyclerViewAdapter<>();
     public ObservableList<ItemOftenContactViewModel> observableList = new ObservableArrayList<>();
     public ItemBinding<ItemOftenContactViewModel> itemBinding = ItemBinding.of(BR.viewModel, R.layout.item_contact_park);
+
+    public ObservableBoolean emptyRcvView = new ObservableBoolean(false);
 
     //跳转进入私聊页面
     public SingleLiveEvent<Integer> startChatUserView = new SingleLiveEvent<>();
@@ -192,7 +195,18 @@ public class OftenContactViewModel extends BaseViewModel<AppRepository> {
                                     ItemOftenContactViewModel itemOftenContactViewModel = new ItemOftenContactViewModel(OftenContactViewModel.this,itemEntity);
                                     observableList.add(itemOftenContactViewModel);
                                 }
+                                if(!observableList.isEmpty()){
+                                    emptyRcvView.set(false);
+                                }
                             }
+                    }
+
+                    @Override
+                    public void onError(RequestException e) {
+                        super.onError(e);
+                        if(observableList.isEmpty()){
+                            emptyRcvView.set(true);
+                        }
                     }
 
                     @Override

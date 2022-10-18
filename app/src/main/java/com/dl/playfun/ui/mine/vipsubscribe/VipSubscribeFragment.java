@@ -185,6 +185,9 @@ public class VipSubscribeFragment extends BaseToolbarFragment<FragmentVipSubscri
         viewModel.uc.successBack.observe(this, aBoolean -> {
             showRewardDialog();
         });
+        viewModel.uc.localReportEvent.observe(this , unused->{
+            billingClientLifecycle.queryPurchasesAsync(BillingClient.SkuType.SUBS);
+        });
         initServiceTips();
 
     }

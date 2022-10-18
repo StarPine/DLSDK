@@ -1,12 +1,9 @@
 package com.dl.playfun.ui.home;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
@@ -14,28 +11,21 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.blankj.utilcode.util.IntentUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
-import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.FragmentHomeMainBinding;
-import com.dl.playfun.entity.CoinPusherDataInfoEntity;
 import com.dl.playfun.entity.ConfigItemEntity;
-import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.event.LocationChangeEvent;
 import com.dl.playfun.kl.view.VideoPresetActivity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocationManager;
 import com.dl.playfun.ui.base.BaseRefreshFragment;
-import com.dl.playfun.ui.coinpusher.CoinPusherGameActivity;
-import com.dl.playfun.ui.coinpusher.dialog.CoinPusherDialogAdapter;
-import com.dl.playfun.ui.coinpusher.dialog.CoinPusherRoomListDialog;
 import com.dl.playfun.ui.dialog.CityChooseDialog;
 import com.dl.playfun.ui.home.accost.HomeAccostDialog;
 import com.dl.playfun.utils.AutoSizeUtils;
@@ -55,9 +45,6 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
     private List<ConfigItemEntity> citys;
 
     private CityChooseDialog cityChooseDialog;
-
-    //充值弹窗
-    private CoinRechargeSheetView coinRechargeSheetView;
 
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -108,44 +95,10 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
         viewModel.getAdListBannber();
     }
 
-    //充值弹窗
-    private void payCoinRechargeDialog(){
-        if (coinRechargeSheetView == null){
-            coinRechargeSheetView = new CoinRechargeSheetView(mActivity);
-            coinRechargeSheetView.setClickListener(new CoinRechargeSheetView.ClickListener() {
-                @Override
-                public void paySuccess(GoodsEntity goodsEntity) {
-                }
-            });
-        }
-        if (!coinRechargeSheetView.isShowing()){
-            coinRechargeSheetView.show();
-        }
-    }
 
     @Override
     public void initViewObservable() {
         super.initViewObservable();
-        //弹出推币机
-        viewModel.uc.coinPusherRoomEvent.observe(this,unused->{
-            //弹出推币机选择弹窗
-            CoinPusherRoomListDialog coinersDialog = new CoinPusherRoomListDialog(mActivity);
-            coinersDialog.setDialogEventListener(new CoinPusherRoomListDialog.DialogEventListener() {
-                @Override
-                public void startViewing(CoinPusherDataInfoEntity itemEntity) {
-                        coinersDialog.dismiss();
-                        Intent intent = new Intent(mActivity, CoinPusherGameActivity.class);
-                        intent.putExtra("CoinPusherInfo",itemEntity);
-                        startActivity(intent);
-                }
-
-                @Override
-                public void buyErrorPayView() {
-                    payCoinRechargeDialog();
-                }
-            });
-            coinersDialog.show();
-        });
         //选择城市
         viewModel.uc.clickRegion.observe(this, unused -> {
             if(cityChooseDialog==null){
@@ -256,27 +209,6 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
         super.onResume();
         AppContext.isHomePage = true;
         AppContext.isShowNotPaid = true;
-        //30秒没有投币提示
-        if(AppConfig.CoinPusherGameNotPushed){
-            AppConfig.CoinPusherGameNotPushed = false;
-            //弹出推币机选择弹窗
-            CoinPusherRoomListDialog coinersDialog = new CoinPusherRoomListDialog(mActivity);
-            coinersDialog.setDialogEventListener(new CoinPusherRoomListDialog.DialogEventListener() {
-                @Override
-                public void startViewing(CoinPusherDataInfoEntity itemEntity) {
-                    coinersDialog.dismiss();
-                    Intent intent = new Intent(mActivity, CoinPusherGameActivity.class);
-                    intent.putExtra("CoinPusherInfo",itemEntity);
-                    startActivity(intent);
-                }
-                @Override
-                public void buyErrorPayView() {
-                    payCoinRechargeDialog();
-                }
-            });
-            coinersDialog.show();
-            CoinPusherDialogAdapter.getDialogCoinPusherHint(getContext());
-        }
     }
 
     @Override

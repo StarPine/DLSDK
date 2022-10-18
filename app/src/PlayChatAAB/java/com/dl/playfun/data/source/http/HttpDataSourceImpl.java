@@ -141,6 +141,10 @@ public class HttpDataSourceImpl implements HttpDataSource {
         INSTANCE = null;
     }
 
+    public Observable<BaseResponse> localeOrderReport(RequestBody requestBody){
+        return apiService.localeOrderReport(requestBody);
+    }
+
     public Observable<BaseDataResponse<FrequentContactEntity>> getFrequentContact(){
         return apiService.getFrequentContact();
     }

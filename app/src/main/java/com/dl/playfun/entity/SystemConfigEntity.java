@@ -35,6 +35,8 @@ public class SystemConfigEntity implements Serializable {
     private Integer photoSnapshotTime = 2;
     //VIP快照可看时间--2022-09-21
     private Integer photoSnapshotVIPTime;
+    //交友意愿入口开关 0 关 1开
+    private Integer interest;
 
     //会话列表限制数量
     @SerializedName("conversation_astrict_count")
@@ -58,6 +60,13 @@ public class SystemConfigEntity implements Serializable {
     @SerializedName("registerFemaleAccost")
     private int registerFemaleAccost;
 
+    public Integer getInterest() {
+        return interest;
+    }
+
+    public void setInterest(Integer interest) {
+        this.interest = interest;
+    }
 
     public Integer getPhotoSnapshotVIPTime() {
         return photoSnapshotVIPTime;

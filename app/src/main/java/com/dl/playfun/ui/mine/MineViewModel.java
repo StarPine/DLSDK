@@ -82,6 +82,8 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
 
     public final String ALLOW_TYPE_VIDEO = "video";
     public final String ALLOW_TYPE_AUDIO = "audio";
+    UIChangeObservable uc = new UIChangeObservable();
+
     //积分夺宝右侧提示
     public ObservableField<String> entryLabelLable = new ObservableField<>();
     //本地UserData
@@ -195,7 +197,7 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
     });
     //调单查询
     public BindingCommand<Void> payBugHistoryReporter = new BindingCommand<>(() -> {
-
+        uc.localReportEvent.postValue(null);
     });
 
     //会员按钮的点击事件
@@ -250,7 +252,7 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
             ToastUtils.showShort(R.string.playfun_mine_complaint_service);
         }
     });
-    UIChangeObservable uc = new UIChangeObservable();
+
     //我的评价按钮的点击事件
     public BindingCommand evaluateOnClickCommand = new BindingCommand(() -> getMyEvaluate());
     //专属招呼
@@ -751,5 +753,6 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
         public SingleLiveEvent<Boolean> allowVideo = new SingleLiveEvent<>();
         //提示用户绑定手机号码弹窗
         public SingleLiveEvent<Void> dialogUserBindEvent = new SingleLiveEvent<>();
+        public SingleLiveEvent<Void> localReportEvent = new SingleLiveEvent<>();
     }
 }

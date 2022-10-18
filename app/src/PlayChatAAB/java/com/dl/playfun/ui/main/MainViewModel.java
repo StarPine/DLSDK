@@ -25,6 +25,7 @@ import com.dl.playfun.entity.MqGiftDataEntity;
 import com.dl.playfun.entity.RestartActivityEntity;
 import com.dl.playfun.entity.VersionEntity;
 import com.dl.playfun.event.BubbleTopShowEvent;
+import com.dl.playfun.event.CoinPusherRoomEvent;
 import com.dl.playfun.event.DailyAccostEvent;
 import com.dl.playfun.event.MainTabEvent;
 import com.dl.playfun.event.MessageCountChangeEvent;
@@ -87,6 +88,8 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
     UIChangeObservable uc = new UIChangeObservable();
     private Disposable mSubscription, taskMainTabEventReceive, mainTabEventReceive, rewardRedDotEventReceive, BubbleTopShowEventSubscription, ResatrtActSubscription2, videoEvaluationSubscription;
 
+    private Disposable mCoinPusherRoomEvent;
+
     private IMAdvancedMsgListener imAdvancedMsgListener;
 
     public MainViewModel(@NonNull Application application, AppRepository appRepository) {
@@ -148,7 +151,10 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                 .compose(RxUtils.exceptionTransformer())
                 .compose(RxUtils.schedulersTransformer())
                 .subscribe(o -> uc.taskCenterclickTab.postValue(((TaskMainTabEvent) o)));
-
+        //推币机弹出展示
+        mCoinPusherRoomEvent = RxBus.getDefault().toObservable(CoinPusherRoomEvent.class).subscribe(event -> {
+            uc.coinPusherRoomEvent.postValue(null);
+        });
         //将订阅者加入管理站
         RxSubscriptions.add(taskMainTabEventReceive);
         RxSubscriptions.add(mainTabEventReceive);
@@ -156,6 +162,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         RxSubscriptions.add(BubbleTopShowEventSubscription);
         RxSubscriptions.add(ResatrtActSubscription2);
         RxSubscriptions.add(videoEvaluationSubscription);
+        RxSubscriptions.add(mCoinPusherRoomEvent);
     }
 
     @Override
@@ -168,6 +175,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         RxSubscriptions.remove(BubbleTopShowEventSubscription);
         RxSubscriptions.remove(ResatrtActSubscription2);
         RxSubscriptions.remove(videoEvaluationSubscription);
+        RxSubscriptions.remove(mCoinPusherRoomEvent);
         removeIMListener();
     }
 
@@ -605,6 +613,8 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<TaskMainTabEvent> taskCenterclickTab = new SingleLiveEvent<>();
         public SingleLiveEvent<VideoEvaluationEntity> videoEvaluation = new SingleLiveEvent<>();
         public SingleLiveEvent<VideoPushEntity> videoPush = new SingleLiveEvent<>();
+        //推币机弹窗
+        public SingleLiveEvent<Void> coinPusherRoomEvent = new SingleLiveEvent<>();
 
     }
 

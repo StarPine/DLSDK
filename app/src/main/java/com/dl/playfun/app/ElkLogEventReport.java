@@ -4,6 +4,8 @@ import com.blankj.utilcode.util.ObjectUtils;
 import com.dl.lib.elk.StatisticsAnalysis;
 import com.dl.playfun.utils.ElkLogEventUtils;
 
+import java.math.BigDecimal;
+
 /**
  * Author: 彭石林
  * Time: 2022/10/11 10:25
@@ -82,7 +84,7 @@ public class ElkLogEventReport {
         * @parame [dt=image/video判断是视频还是图片, toUserId=发送给谁, stateSnapshot=是否是快照, statePhotoPay=是否是付费照片, unlockPrice=当前付费资源解锁价格, stateVideoPay=是否是付费视频, configId, configIndexString]
         * @Date 2022/10/11
         */
-        public static void reportSendMediaGallery(boolean isVideo, Object toUserId, String stateSnapshot, boolean statePay, String unlockPrice,Integer configId, String configIndexString){
+        public static void reportSendMediaGallery(boolean isVideo, Object toUserId, String stateSnapshot, boolean statePay, BigDecimal unlockPrice, Integer configId, String configIndexString){
             String doSendStatistics = commonClickString(lt,"sourceSend","click",isVideoStr(isVideo)) +
                     "`unlockPrice="+isNullConverterSky(unlockPrice)
                     +"`stateSnapshot="+isNullConverterSky(stateSnapshot)

@@ -23,6 +23,7 @@ import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.android.billingclient.api.BillingClient;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
@@ -32,6 +33,7 @@ import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
+import com.dl.playfun.app.BillingClientLifecycle;
 import com.dl.playfun.app.Injection;
 import com.dl.playfun.databinding.FragmentMineBinding;
 import com.dl.playfun.entity.BrowseNumberEntity;
@@ -80,7 +82,7 @@ public class MineFragment extends BaseRefreshFragment<FragmentMineBinding, MineV
     private int toolbarHeight = -1;
     private boolean toolbarUp = false;
 
-    static String KEY_USER_BIND_PHONE_HINT = "key_user_bind_phone_hint";
+    static String KEY_USER_BIND_PHONE_HINT = "key_user_bind_phone_hint_";
 
     @Override
     public void onSupportVisible() {
@@ -223,13 +225,26 @@ public class MineFragment extends BaseRefreshFragment<FragmentMineBinding, MineV
         super.initViewObservable();
         AppContext.instance().logEvent(AppsFlyerEvent.Me);
         inputMethodManager = (InputMethodManager) this.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        viewModel.uc.dialogUserBindEvent.observe(this, unused -> {
-            String value = ConfigManager.getInstance().getAppRepository().readKeyValue(KEY_USER_BIND_PHONE_HINT);
-            if(StringUtils.isEmpty(value)){
-                UserBehaviorDialog.getUserBindPhonesDialog(getContext(), () -> startFragment(CommunityAccountBindFragment.class.getCanonicalName())).show();
-                ConfigManager.getInstance().getAppRepository().putKeyValue(KEY_USER_BIND_PHONE_HINT,KEY_USER_BIND_PHONE_HINT);
-            }
 
+        viewModel.uc.localReportEvent.observe(this , unused->{
+            try {
+                BillingClientLifecycle billingClientLifecycle = ((AppContext) mActivity.getApplication()).getBillingClientLifecycle();
+                billingClientLifecycle.queryPurchasesAsync(BillingClient.SkuType.INAPP);
+                billingClientLifecycle.queryPurchasesAsync(BillingClient.SkuType.SUBS);
+            }catch (Exception ignored) {
+
+            }
+        });
+
+        viewModel.uc.dialogUserBindEvent.observe(this, unused -> {
+            if(viewModel.userInfoEntity.get()!=null){
+                int userId = viewModel.userInfoEntity.get().getId();
+                String value = ConfigManager.getInstance().getAppRepository().readKeyValue(KEY_USER_BIND_PHONE_HINT+userId);
+                if(StringUtils.isEmpty(value)){
+                    UserBehaviorDialog.getUserBindPhonesDialog(getContext(), () -> startFragment(CommunityAccountBindFragment.class.getCanonicalName())).show();
+                    ConfigManager.getInstance().getAppRepository().putKeyValue(KEY_USER_BIND_PHONE_HINT+userId,KEY_USER_BIND_PHONE_HINT);
+                }
+            }
         });
         viewModel.uc.allowAudio.observe(this,aBoolean -> {
             binding.shAudio.setChecked(aBoolean);

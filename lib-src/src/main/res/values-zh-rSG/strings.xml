@@ -2264,5 +2264,9 @@
     <string name="playfun_mine_apply_pay_buy_text1">已支付但未生效請點擊這裡</string>
     <string name="playfun_bind_text">已綁定</string>
     <string name="playfun_bind_text_un">未綁定</string>
+    <string name="playfun_payment_text_2">已支付未生效點擊</string>
+    <string name="playfun_payment_text_3">恢復訂單</string>
+    <string name="playfun_login_text_facekbook">使用Facekbook登入</string>
+    <string name="playfun_login_text_google">使用Google登入</string>
     <!--PlayFun-APP-END-->
 </resources>

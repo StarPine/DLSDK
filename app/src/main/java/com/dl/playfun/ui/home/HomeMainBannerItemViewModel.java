@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
 
 import com.dl.playfun.entity.AdItemEntity;
+import com.dl.playfun.event.CoinPusherRoomEvent;
 import com.dl.playfun.event.TaskMainTabEvent;
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
 import com.dl.playfun.ui.mine.wallet.diamond.recharge.DiamondRechargeActivity;
@@ -47,7 +48,8 @@ public class HomeMainBannerItemViewModel extends MultiItemViewModel<HomeMainView
                         RxBus.getDefault().post(new TaskMainTabEvent(true,true));
                         break;
                     case 4:
-                        viewModel.uc.coinPusherRoomEvent.postValue(null);
+                        //弹出推币机
+                        RxBus.getDefault().post(new CoinPusherRoomEvent());
                         break;
                     case 5:
                         viewModel.startActivity(DiamondRechargeActivity.class);

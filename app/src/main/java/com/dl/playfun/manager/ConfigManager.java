@@ -1,19 +1,26 @@
 package com.dl.playfun.manager;
 
 
+import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.EaringlSwitchUtil;
 import com.dl.playfun.app.Injection;
 import com.dl.playfun.data.AppRepository;
+import com.dl.playfun.data.source.http.observer.BaseObserver;
+import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.EvaluateObjEntity;
 import com.dl.playfun.entity.GameConfigEntity;
 import com.dl.playfun.entity.SystemConfigContentEntity;
 import com.dl.playfun.entity.SystemConfigEntity;
 import com.dl.playfun.entity.SystemConfigTaskEntity;
 import com.dl.playfun.entity.UserDataEntity;
+import com.dl.playfun.utils.ApiUitl;
 
 import java.util.List;
+import java.util.Map;
+
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 配置管理
@@ -143,6 +150,25 @@ public class ConfigManager {
         }else{//女性
             return localSnapshotTime == null ? snapshotTime : localSnapshotTime;
         }
+    }
+    /**
+    * @Desc TODO(交友意愿入口开关)
+    * @author 彭石林
+    * @return boolean
+    * @Date 2022/10/18
+    */
+    public boolean interestSwitch(){
+        //配置标
+        SystemConfigEntity readSystemConfig = getAppRepository().readSystemConfig();
+        if(readSystemConfig==null){
+            return false;
+        }
+        //交友意愿
+        Integer interestSwitch = readSystemConfig.getInterest();
+        if(interestSwitch != null){
+            return interestSwitch == 1;
+        }
+        return false;
     }
 
     /**
@@ -508,5 +534,23 @@ public class ConfigManager {
         } catch (Exception e) {
             return "";
         }
+    }
+
+    /**
+    * @Desc TODO(上报)
+    * @author 彭石林
+    * @parame [mapData]
+    * @return void
+    * @Date 2022/10/18
+    */
+    public void localeOrderReport(Map mapData){
+        getAppRepository().localeOrderReport(ApiUitl.getBody(GsonUtils.toJson(mapData)))
+                .subscribeOn(Schedulers.io())
+                .subscribe(new BaseObserver<BaseResponse>(){
+                    @Override
+                    public void onSuccess(BaseResponse baseResponse) {
+
+                    }
+                });
     }
 }

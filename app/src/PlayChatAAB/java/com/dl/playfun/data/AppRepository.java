@@ -54,6 +54,10 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
         INSTANCE = null;
     }
 
+    public Observable<BaseResponse> localeOrderReport(RequestBody requestBody){
+        return mHttpDataSource.localeOrderReport(requestBody);
+    }
+
     public Observable<BaseDataResponse<FrequentContactEntity>> getFrequentContact(){
         return mHttpDataSource.getFrequentContact();
     }

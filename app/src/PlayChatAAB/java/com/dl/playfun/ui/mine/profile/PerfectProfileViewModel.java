@@ -1,6 +1,7 @@
 package com.dl.playfun.ui.mine.profile;
 
 import android.app.Application;
+import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -18,10 +19,11 @@ import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.CheckNicknameEntity;
-import com.dl.playfun.entity.NoteInfoEntity;
 import com.dl.playfun.entity.UserDataEntity;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.ThirdPushTokenMgr;
 import com.dl.playfun.ui.login.LoginViewModel;
+import com.dl.playfun.ui.login.register.FriendsWillWebViewFragment;
 import com.dl.playfun.ui.main.MainFragment;
 import com.dl.playfun.utils.FileUploadUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
@@ -35,7 +37,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
-import me.goldze.mvvmhabit.binding.command.BindingAction;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.KLog;
@@ -215,7 +216,16 @@ public class PerfectProfileViewModel extends BaseViewModel<AppRepository> {
                         if (goMain) {
                             AppContext.instance().logEvent(AppsFlyerEvent.LOG_Edit_Profile);
                             ToastUtils.showShort(R.string.playfun_submit_success);
-                            startWithPopTo(MainFragment.class.getCanonicalName(), PerfectProfileFragment.class.getCanonicalName(), true);
+                            boolean interestSwitch = ConfigManager.getInstance().interestSwitch();
+                            if(interestSwitch){
+                                Bundle bundle = new Bundle();
+                                bundle.putString("link",ConfigManager.getInstance().getAppRepository().readApiConfigManagerEntity().getPlayChatWebUrl()+"/friendsWill/");
+                                Log.e("开始跳转交友意愿",String.valueOf(ConfigManager.getInstance().getAppRepository().readApiConfigManagerEntity().getPlayChatWebUrl()+"/friendsWil/"));
+                                start(FriendsWillWebViewFragment.class.getCanonicalName(),bundle);
+                                //startWithPopTo(FriendsWillWebViewFragment.class.getCanonicalName(), PerfectProfileFragment.class.getCanonicalName(), true);
+                            }else{
+                                startWithPopTo(MainFragment.class.getCanonicalName(), PerfectProfileFragment.class.getCanonicalName(), true);
+                            }
                         }
                     }
 

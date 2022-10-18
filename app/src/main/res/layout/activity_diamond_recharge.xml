@@ -219,22 +219,46 @@
             android:background="@color/white"
             android:elevation="20dp"
             android:gravity="center"
-            android:orientation="horizontal"
-            android:paddingLeft="10dp"
-            android:paddingTop="20dp"
-            android:paddingRight="10dp"
-            android:paddingBottom="20dp">
+            android:orientation="vertical">
 
             <Button
                 style="@style/ButtonPrimary"
-                onClickCommand="@{viewModel.confirmPayOnClick}"
-                android:layout_width="220dp"
+                binding:onClickCommand="@{viewModel.confirmPayOnClick}"
+                android:layout_width="match_parent"
+                android:layout_marginTop="17dp"
+                android:layout_marginStart="55dp"
+                android:layout_marginEnd="55dp"
                 android:layout_height="42dp"
                 android:text="@string/playfun_btn_now_buy"
                 android:textSize="@dimen/text_size_14"
                 android:textStyle="normal" />
+            <LinearLayout
+                android:id="@+id/ll_restore"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:includeFontPadding="false"
+                    android:text="@string/playfun_payment_text_2"
+                    android:textColor="@color/play_chat_gray_3"
+                    android:textSize="13sp" />
+
+                <TextView
+                    binding:onClickCommand="@{viewModel.clickLocalReport}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:includeFontPadding="false"
+                    android:text="@string/playfun_payment_text_3"
+                    android:textColor="@color/read_4840"
+                    android:textSize="13sp" />
+            </LinearLayout>
         </LinearLayout>
-
     </RelativeLayout>
 </layout>

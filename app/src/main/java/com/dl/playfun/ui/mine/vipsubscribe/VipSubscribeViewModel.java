@@ -75,6 +75,10 @@ public class VipSubscribeViewModel extends BaseViewModel<AppRepository> {
     public Integer pay_good_day = 0;
     UIChangeObservable uc = new UIChangeObservable();
     private Integer ActualValue;
+
+    //点击查询上报未消耗订单
+    public BindingCommand<Void> clickLocalReport = new BindingCommand<>(()->{uc.localReportEvent.call();});
+
     public BindingCommand confirmOnClickCommand = new BindingCommand(() -> rechargeCreateOrder());
 
     public VipPackageItemEntity $vipPackageItemEntity;
@@ -292,6 +296,7 @@ public class VipSubscribeViewModel extends BaseViewModel<AppRepository> {
     public class UIChangeObservable {
         public SingleLiveEvent<String> clickPay = new SingleLiveEvent<>();
         public SingleLiveEvent<Integer> successBack = new SingleLiveEvent<>();
+        public SingleLiveEvent<Void> localReportEvent = new SingleLiveEvent<>();
     }
 
 

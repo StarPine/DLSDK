@@ -7,8 +7,9 @@
     </data>
 
     <FrameLayout
+        android:layout_gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
         <LinearLayout
             android:background="@drawable/img_mediagallery_lock_backdrop"
             android:layout_gravity="center"
@@ -16,7 +17,7 @@
             android:layout_marginStart="33dp"
             android:layout_marginEnd="33dp"
             android:layout_width="match_parent"
-            android:layout_height="315dp"
+            android:layout_height="320dp"
             >
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_marginTop="19dp"
@@ -39,12 +40,36 @@
                     android:text="鑽石照片"
                     android:textColor="#ff000000"
                     android:textSize="15sp"
+                    android:visibility="gone"
                     />
                 <LinearLayout
+                    android:id="@+id/ll_snapoet"
                     android:orientation="horizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
-
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/icon_snapshot"
+                        />
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:includeFontPadding="false"
+                        android:layout_marginStart="5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="鑽石快照"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        />
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:includeFontPadding="false"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="(查看後焚毀)"
+                        android:textColor="@color/gray_middle"
+                        android:textSize="11sp"
+                        />
                 </LinearLayout>
             </FrameLayout>
 
@@ -61,6 +86,7 @@
                     />
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_coin"
+                    android:layout_marginStart="5dp"
                     android:includeFontPadding="false"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -69,7 +95,8 @@
                     android:textSize="23sp"
                     />
             </LinearLayout>
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_btn"
                 android:layout_marginTop="33dp"
                 android:layout_marginStart="22dp"
                 android:layout_marginEnd="22dp"
@@ -84,6 +111,16 @@
                 binding:drawable_cornersRadius="@{24}"
                 binding:drawable_gradient_startColor="@{@color/playfun_shape_radius_start_color}"
                 binding:drawable_gradient_endColor="@{@color/playfun_shape_radius_end_color}"
+                />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_cancel"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="此後不再提示"
+                android:textColor="#ff828282"
+                android:textSize="13sp"
                 />
         </LinearLayout>
     </FrameLayout>
