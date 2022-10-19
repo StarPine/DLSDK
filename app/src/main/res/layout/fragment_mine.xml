@@ -160,6 +160,7 @@
                                 android:text="@{viewModel.userInfoEntity.nickname}"
                                 android:textColor="@color/toolbar_title_color"
                                 android:textSize="17sp"
+                                android:textStyle="bold"
                                 tools:text="艾希lovexi666" />
                             <LinearLayout
                                 android:layout_below="@+id/tv_title"
@@ -196,7 +197,6 @@
                             android:orientation="horizontal"
                             android:layout_width="match_parent"
                             android:layout_height="77dp"
-                            android:layout_marginBottom="18dp"
                             android:layout_marginRight="10dp"
                             android:layout_marginLeft="10dp"
                             >
@@ -301,15 +301,15 @@
                             <RelativeLayout
                                 android:layout_width="0dp"
                                 android:layout_weight="1"
-                                android:gravity="center"
                                 android:layout_height="match_parent"
                                 android:elevation="1dp"
                                 binding:onClickCommand="@{viewModel.traceOnClickCommand}">
 
                                 <TextView
+                                    android:includeFontPadding="false"
                                     android:id="@+id/trace_num"
-                                    android:layout_width="22dp"
-                                    android:layout_height="22dp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
                                     android:layout_above="@+id/trace_text_tv_img"
                                     android:layout_marginStart="3dp"
                                     android:layout_toEndOf="@+id/trace_text_tv_img"
@@ -317,8 +317,9 @@
                                     android:text="99+"
                                     android:textColor="@color/pseekbar_process"
                                     android:textSize="10sp"
-                                    android:visibility="gone"
-                                    tools:visibility="invisible" />
+                                    android:visibility="invisible"
+                                    tools:visibility="visible"
+                                    />
 
                                 <ImageView
                                     android:id="@+id/trace_text_tv_img"
@@ -351,6 +352,7 @@
                             android:layout_height="58dp"
                             android:layout_marginStart="14dp"
                             android:layout_marginEnd="14dp"
+                            tools:visibility="visible"
                             android:clickable="true"
                             android:visibility="@{safeUnbox(viewModel.sex) == 1 ? View.VISIBLE:View.GONE}">
 
@@ -461,7 +463,7 @@
                             android:layout_marginStart="8dp"
                             android:layout_toEndOf="@+id/mine_item_1"
                             android:text="@string/playfun_mine_certification_center"
-                            android:textSize="12sp" />
+                            android:textSize="13sp" />
 
                         <ImageView
                             android:id="@+id/iv_arrow_right"
@@ -512,14 +514,15 @@
                             android:layout_alignParentStart="true"
                             android:layout_centerInParent="true"
                             android:src="@mipmap/ic_mine_item_img_3" />
+
                         <TextView
                             style="@style/ProfileItemTitle"
-                            android:layout_toEndOf="@+id/mine_item_3"
-                            android:layout_marginStart="8dp"
-                            android:textSize="13sp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/playfun_mine_apply_invitation_code" />
+                            android:layout_marginStart="8dp"
+                            android:layout_toEndOf="@+id/mine_item_3"
+                            android:text="@string/playfun_mine_apply_invitation_code"
+                            android:textSize="13sp" />
 
                         <TextView
                             android:layout_width="wrap_content"

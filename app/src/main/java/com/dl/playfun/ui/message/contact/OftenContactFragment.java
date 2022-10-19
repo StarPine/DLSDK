@@ -21,6 +21,7 @@ import com.dl.playfun.app.Injection;
 import com.dl.playfun.databinding.FragmentOftenContactBinding;
 import com.dl.playfun.entity.TokenEntity;
 import com.dl.playfun.event.MessageCountChangeContactEvent;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.ThirdPushTokenMgr;
 import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.utils.ChatUtils;
@@ -68,6 +69,10 @@ public class OftenContactFragment extends BaseFragment<FragmentOftenContactBindi
     @Override
     public void initData() {
         super.initData();
+        String contact_empty_text = getString(R.string.playfun_contact_empty_text);
+        boolean isMale = ConfigManager.getInstance().isMale();
+        String taText = getString(isMale ? R.string.custom_message_txt6:R.string.custom_message_txt5);
+        binding.tvTitle.setText(String.format(contact_empty_text,taText));
         //腾讯IM登录
         TokenEntity tokenEntity = Injection.provideDemoRepository().readLoginInfo();
         if (tokenEntity != null) {

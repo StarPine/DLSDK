@@ -146,6 +146,12 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
 
     @Override
     public void initViewObservable() {
+        //加载用户资料成功。页面布局联动显示
+        viewModel.uc.loadUserEvent.observe(this, unused -> {
+            boolean isMale = viewModel.detailEntity.get().isMale();
+            binding.imgIconGender.setRotationX(isMale ? 0 : 180);
+            binding.imgIconGender.setRotationY(isMale ? 0 : 180);
+        });
         //搭讪相关
         viewModel.uc.sendAccostFirstError.observe(this, new Observer<Void>() {
             @Override

@@ -4,10 +4,13 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.Utils;
+import com.dl.lib.util.emulator.EmulatorDetector;
+import com.facebook.internal.AttributionIdentifiers;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -70,6 +73,12 @@ public class MPDeviceUtils {
 
     static String GOOGLE_ID;
 
+    static String GL_RENDERER;
+    static String GL_VENDOR;
+    static String GL_VERSION;
+    static String GL_EXTENSIONS;
+
+
     //elk上报当前设备信息
     static volatile Map<String,String> elkAndroidDevices = new HashMap<>();
 
@@ -99,6 +108,10 @@ public class MPDeviceUtils {
         CPU_ABI = Build.CPU_ABI;
         CPU_ABI2 = Build.CPU_ABI2;
         GOOGLE_ID = getGoogleId();
+        GL_RENDERER = android.opengl.GLES20.glGetString(android.opengl.GLES20.GL_RENDERER);
+        GL_VENDOR = android.opengl.GLES20.glGetString(android.opengl.GLES20.GL_VENDOR);
+        GL_VERSION = android.opengl.GLES20.glGetString(android.opengl.GLES20.GL_VERSION);
+        GL_EXTENSIONS = android.opengl.GLES20.glGetString(android.opengl.GLES20.GL_EXTENSIONS);
     }
 
     /**
@@ -131,11 +144,18 @@ public class MPDeviceUtils {
         deviceInfo.put("INCREMENTAL",INCREMENTAL);
         deviceInfo.put("SDK_INT",SDK_INT);
         deviceInfo.put("GOOGLE_ID",GOOGLE_ID);
-        BRAND+ MANUFACTURER + MODEL + BOARD
+        deviceInfo.put("EmulatorAbsolute", EmulatorDetector.isEmulatorAbsolute());
+        deviceInfo.put("isEmulator",EmulatorDetector.isEmulator());
+        deviceInfo.put("GL_RENDERER",GL_RENDERER);
+        deviceInfo.put("GL_VENDOR",GL_VENDOR);
+        deviceInfo.put("GL_VERSION",GL_VERSION);
+        deviceInfo.put("GL_EXTENSIONS",GL_EXTENSIONS);
+        //AttributionIdentifiers.getAttributionIdentifiers(Utils.getApp()).
         //设备信息存放集合
         Map<String,String > deviceData = new HashMap<>();
         deviceData.put("cpuInfo", GsonUtils.toJson(getDeviceCpuInfo()));
         deviceData.put("deviceInfo",GsonUtils.toJson(deviceInfo));
+        Log.e("当前设备信息为：",deviceData.toString());
         return deviceData;
     }
 

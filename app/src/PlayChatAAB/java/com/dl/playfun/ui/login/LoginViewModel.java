@@ -174,7 +174,7 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
                         }
                         AppConfig.userClickOut = false;
                         if (authLoginUserEntity.getSex() != null && authLoginUserEntity.getSex() >= 0 && !StringUtil.isEmpty(authLoginUserEntity.getNickname()) && !StringUtil.isEmpty(authLoginUserEntity.getBirthday()) && !StringUtil.isEmpty(authLoginUserEntity.getAvatar())) {
-                            startWithPopTo(MainFragment.class.getCanonicalName(), LoginFragment.class.getCanonicalName(), true);
+                            popAllTo(new MainFragment());
                         } else {
                             start(PerfectProfileFragment.class.getCanonicalName());
                         }

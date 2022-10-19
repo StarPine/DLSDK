@@ -32,13 +32,13 @@ public class FaceBeautySource {
     public static FaceBeauty getDefaultFaceBeauty() {
         FaceBeauty recommendFaceBeauty = new FaceBeauty(new FUBundleData(BUNDLE_FACE_BEAUTIFICATION));
         //滤镜名称
-        recommendFaceBeauty.setFilterName(FaceBeautyFilterEnum.ZIRAN_1);
-        //滤镜程度 /范围0~1 0表示不显示滤镜
-        recommendFaceBeauty.setFilterIntensity(0.4);
+        recommendFaceBeauty.setFilterName(FaceBeautyFilterEnum.ZIRAN_4);
+        //滤镜强度
+        recommendFaceBeauty.setFilterIntensity(0.25);
         /*美肤*/
         recommendFaceBeauty.setBlurType(FaceBeautyBlurTypeEnum.FineSkin);
         //锐化程度 范围 [0-1]
-        recommendFaceBeauty.setSharpenIntensity(0.2);
+        recommendFaceBeauty.setSharpenIntensity(0.5);
         //美白程度 范围 [0-2]
         recommendFaceBeauty.setColorIntensity(0.7);
         //红润程度 范围 [0-2]
@@ -60,6 +60,52 @@ public class FaceBeautySource {
         recommendFaceBeauty.setMouthIntensityV2(0.4);
         //下巴调整程度 范围 [0-1]，0-0.5是变小，0.5-1是变大
         recommendFaceBeauty.setChinIntensity(0.15);
+
+        //亮眼 50
+        recommendFaceBeauty.setEyeBrightIntensity(0.5);
+        //美牙 50
+        recommendFaceBeauty.setToothIntensity(0.5);
+        //去黑眼圈 100
+        recommendFaceBeauty.setRemovePouchIntensity(1);
+        //去法令纹 100
+        recommendFaceBeauty.setRemoveLawPatternIntensity(1);
+
+        //【美型】
+        //窄脸 50
+        recommendFaceBeauty.setCheekNarrowIntensity(0.5);
+        recommendFaceBeauty.setCheekNarrowIntensityV2(0.5);
+        //短脸 10
+        recommendFaceBeauty.setCheekShortIntensity(0.1);
+        //瘦颧骨 50
+        recommendFaceBeauty.setCheekBonesIntensity(0.5);
+        //瘦下颌骨 20
+        recommendFaceBeauty.setLowerJawIntensity(0.2);
+        //大眼 50
+        recommendFaceBeauty.setEyeEnlargingIntensity(0.5);
+        recommendFaceBeauty.setEyeEnlargingIntensityV2(0.5);
+        //圆眼 20
+        recommendFaceBeauty.setEyeCircleIntensity(0.2);
+        //下巴 15
+        recommendFaceBeauty.setChinIntensity(0.15);
+        //额头 20
+        recommendFaceBeauty.setForHeadIntensity(0.2);
+        recommendFaceBeauty.setForHeadIntensityV2(0.2);
+        //瘦鼻 50
+        recommendFaceBeauty.setNoseIntensity(0.5);
+        recommendFaceBeauty.setNoseIntensityV2(0.5);
+       // 嘴型 15
+        recommendFaceBeauty.setMouthIntensity(0.15);
+        recommendFaceBeauty.setMouthIntensityV2(0.15);
+        //开眼角 30
+        recommendFaceBeauty.setCanthusIntensity(0.3);
+        //眼距 -10
+        recommendFaceBeauty.setEyeSpaceIntensity(0.4);
+        //缩人中 -10
+        recommendFaceBeauty.setPhiltrumIntensity(0.4);
+        //微笑嘴角 40
+        recommendFaceBeauty.setSmileIntensity(0.4);
+        //【滤镜】
+        //自然4 25
         return recommendFaceBeauty;
     }
 
@@ -332,6 +378,8 @@ public class FaceBeautySource {
      */
     public static ArrayList<FaceBeautyFilterBean> buildFilters() {
         ArrayList<FaceBeautyFilterBean> filters = new ArrayList<>();
+        //【滤镜】
+        //自然4 25
         filters.add(new FaceBeautyFilterBean(FaceBeautyFilterEnum.ORIGIN, R.mipmap.icon_beauty_filter_cancel, R.string.origin, 0.0));
         filters.add(new FaceBeautyFilterBean(FaceBeautyFilterEnum.ZIRAN_1, R.mipmap.icon_beauty_filter_natural_1, R.string.ziran_1));
         filters.add(new FaceBeautyFilterBean(FaceBeautyFilterEnum.ZIRAN_2, R.mipmap.icon_beauty_filter_natural_2, R.string.ziran_2));

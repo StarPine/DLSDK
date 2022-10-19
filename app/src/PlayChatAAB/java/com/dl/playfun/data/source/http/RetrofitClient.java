@@ -90,7 +90,7 @@ public class RetrofitClient {
         headers.put("Accept-Language", mContext.getString(R.string.playfun_local_language));
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .cookieJar(new CookieJarImpl(new PersistentCookieStore(mContext)))
-                .cache(cache)
+                //.cache(cache)
                 .addInterceptor(new BaseInterceptor(headers))
                 .addInterceptor(new CacheInterceptor(mContext))
                 .addInterceptor(new TokenInterceptor())

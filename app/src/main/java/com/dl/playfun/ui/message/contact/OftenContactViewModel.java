@@ -204,9 +204,9 @@ public class OftenContactViewModel extends BaseViewModel<AppRepository> {
                     @Override
                     public void onError(RequestException e) {
                         super.onError(e);
-                        if(observableList.isEmpty()){
+                        //if(observableList.isEmpty()){
                             emptyRcvView.set(true);
-                        }
+                        //}
                     }
 
                     @Override

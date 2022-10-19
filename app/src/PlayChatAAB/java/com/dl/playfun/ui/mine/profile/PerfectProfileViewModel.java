@@ -220,7 +220,7 @@ public class PerfectProfileViewModel extends BaseViewModel<AppRepository> {
                             if(interestSwitch && !StringUtils.isEmpty(ConfigManager.getInstance().getInterestWebUrl())){
                                 popAllTo(new FriendsWillWebViewFragment());
                             }else{
-                                startWithPopTo(MainFragment.class.getCanonicalName(), PerfectProfileFragment.class.getCanonicalName(), true);
+                                popAllTo(new MainFragment());
                             }
                         }
                     }

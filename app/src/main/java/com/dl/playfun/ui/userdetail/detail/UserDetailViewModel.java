@@ -321,6 +321,9 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
         onlineStatusText.set(onlineStatus);
     }
 
+    /**
+     * 加载用户资料
+     */
     public void loadData() {
         model.userMain(userId.get(), LocationManager.getInstance().getLng(), LocationManager.getInstance().getLat())
                 .doOnSubscribe(this)
@@ -331,15 +334,8 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
                     @Override
                     public void onSuccess(BaseDataResponse<UserDetailEntity> response) {
                         super.onSuccess(response);
-//                        if (response.getData().getMoreNumber() <= 0) {
-//                            uc.todayCheckNumber.postValue(0);
-//                            if (!response.getData().isBrowse()) {
-//                                return;
-//                            }
-//                        } else if (response.getData().getMoreNumber() <= 4) {
-//                            uc.todayCheckNumber.postValue(response.getData().getMoreNumber());
-//                        }
                         detailEntity.set(response.getData());
+                        uc.loadUserEvent.postValue(null);
                         isShowCanTrack();
 //                        onLineDrawables();
                         if (response.getData().isBrowse()) {
@@ -990,5 +986,6 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
         //钻石不足。唤起充值
         public SingleLiveEvent<Void> sendDialogViewEvent = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> sendAccostFirstError = new SingleLiveEvent<>();
+        public SingleLiveEvent<Void> loadUserEvent = new SingleLiveEvent<>();
     }
 }

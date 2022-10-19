@@ -49,7 +49,7 @@ public class FaceBeautyDataFactory extends AbstractFaceBeautyDataFactory {
     public FaceBeauty defaultFaceBeauty = FaceBeautySource.getDefaultFaceBeauty();
 
     /*默认滤镜选中下标*/
-    private int currentFilterIndex = 0;
+    private int currentFilterIndex = 4;
 
     /**
      * 获取美肤参数列表

@@ -2138,7 +2138,7 @@
 
 
     <string name="playchat_choose_area_title">Region</string>
-    <string name="playfun_contact_empty_text">There is no frequent contact, let\'s chat!</string>
+    <string name="playfun_contact_empty_text">No contact, recommend for %s</string>
     <string name="playfun_contact_text1">Set up frequent contact success</string>
     <string name="playfun_contact_text2">Frequent contact cancelled</string>
     <string name="playfun_mine_title_btn_exclusive">Exclusive greeting</string>
@@ -2256,17 +2256,17 @@
     <string name="playfun_coinpusher_history_text1">Display the historical results of winning in the past 7 days</string>
     <string name="playfun_coinpusher_history_text2">Lv%s player</string>
     <string name="playfun_languae_switch_en">English</string>
-    <string name="playfun_languae_switch_zh">中文繁體</string>
-    <string name="playfun_languae_switch_title">語言設定</string>
-    <string name="playfun_mine_apply_pay_buy">恢復購買</string>
-    <string name="playfun_mine_apply_pay_buy_text1">已支付但未生效請點擊這裡</string>
-    <string name="playfun_bind_text">已綁定</string>
-    <string name="playfun_bind_text_un">未綁定</string>
-    <string name="playfun_payment_text_2">已支付未生效點擊</string>
-    <string name="playfun_payment_text_3">恢復訂單</string>
-    <string name="playfun_login_text_facekbook">使用Facekbook登入</string>
-    <string name="playfun_login_text_google">使用Google登入</string>
-    <string name="playfun_network_error_text_click">網路錯誤，點擊重試</string>
+    <string name="playfun_languae_switch_zh">Traditional Chinese</string>
+    <string name="playfun_languae_switch_title">Language setting</string>
+    <string name="playfun_mine_apply_pay_buy">Restore purchase</string>
+    <string name="playfun_mine_apply_pay_buy_text1">Paid and click to active</string>
+    <string name="playfun_bind_text">Bound</string>
+    <string name="playfun_bind_text_un">Unbind</string>
+    <string name="playfun_payment_text_2">Paid and click to active</string>
+    <string name="playfun_payment_text_3">Restore order</string>
+    <string name="playfun_login_text_facekbook">Log in via FaceBook</string>
+    <string name="playfun_login_text_google">Log in via Google</string>
+    <string name="playfun_network_error_text_click">Network error, try again.</string>
 
     <!--PlayFun-APP-END-->
 </resources>

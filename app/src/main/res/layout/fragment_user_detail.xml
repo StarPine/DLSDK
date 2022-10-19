@@ -322,6 +322,7 @@
                                             android:layout_alignStart="@+id/tv_title"
                                             android:layout_marginTop="10dp"
                                             android:orientation="horizontal"
+                                            android:visibility="@{viewModel.detailEntity!=null ? View.VISIBLE:View.INVISIBLE}"
                                             binding:drawable_color="@{viewModel.detailEntity.sex ==0 ?@color/pseekbar_process : @color/blue_1375}"
                                             binding:drawable_cornersRadius="@{8}">
 

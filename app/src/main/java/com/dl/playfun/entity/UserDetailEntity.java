@@ -511,6 +511,9 @@ public class UserDetailEntity extends BaseObservable {
     }
 
     public boolean isMale() {
+        if(sex==null){
+            return true;
+        }
         return sex == 1;
     }
 
