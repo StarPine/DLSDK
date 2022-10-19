@@ -2266,6 +2266,7 @@
     <string name="playfun_payment_text_3">恢復訂單</string>
     <string name="playfun_login_text_facekbook">使用Facekbook登入</string>
     <string name="playfun_login_text_google">使用Google登入</string>
+    <string name="playfun_network_error_text_click">網路錯誤，點擊重試</string>
 
     <!--PlayFun-APP-END-->
 </resources>

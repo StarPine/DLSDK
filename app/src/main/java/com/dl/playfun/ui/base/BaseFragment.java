@@ -63,7 +63,7 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         this.mActivity = (AppCompatActivity) context;
     }
