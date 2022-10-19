@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import me.goldze.mvvmhabit.base.BaseModel;
+import me.yokeyword.fragmentation.ISupportFragment;
 
 /**
  * @author wulei
@@ -35,6 +36,17 @@ public class BaseViewModel<M extends BaseModel> extends me.goldze.mvvmhabit.base
             muc = new MvUIChangeObservable();
         }
         return muc;
+    }
+
+    /**
+    * @Desc TODO(删除栈内所有的Fragment只保留1个并且跳转)
+    * @author 彭石林
+    * @parame []
+    * @return void
+    * @Date 2022/10/19
+    */
+    public void popAllTo(@NonNull ISupportFragment iSupportFragment){
+        muc.popAllToFragmentEvent.postValue(iSupportFragment);
     }
 
     public void start(String targetFragmentClass) {

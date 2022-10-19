@@ -314,10 +314,10 @@ public class HomeAccostDialog extends BaseDialog {
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHud())
                 .subscribe(new BaseObserver<BaseDataResponse<AccostEntity>>() {
                     @Override
                     public void onSuccess(BaseDataResponse<AccostEntity> accostEntityBaseDataResponse) {
-                        RxBus.getDefault().post(new LoadEvent(false));
                         AccostEntity accostEntity = accostEntityBaseDataResponse.getData();
                         if (!ObjectUtils.isEmpty(accostEntity)) {
                             submit = accostEntity.getSubmit() == 1;
@@ -484,7 +484,7 @@ public class HomeAccostDialog extends BaseDialog {
                     @Override
                     public void onError(RequestException e) {
                         super.onError(e);
-                        RxBus.getDefault().post(new LoadEvent(false));
+                        dismissHud();
                     }
                 });
     }
@@ -535,7 +535,6 @@ public class HomeAccostDialog extends BaseDialog {
         }
         if (!ObjectUtils.isEmpty(dataAccessList) && dataAccessList.size() > 0) {
             if (dialogAccostClicksListener != null) {
-                RxBus.getDefault().post(new LoadEvent(true));
                 putAccostList(dataAccessList);
                 //dialogAccostClicksListener.onSubmitClick(this, dataAccessList);
             } else {
@@ -545,6 +544,16 @@ public class HomeAccostDialog extends BaseDialog {
             ToastUtils.showShort(R.string.playfun_text_accost_error2);
         }
 
+    }
+
+    @Override
+    public void showHud() {
+        super.showHud();
+    }
+
+    @Override
+    public void dismissHud() {
+        super.dismissHud();
     }
 
     //倒计时开始
@@ -568,12 +577,13 @@ public class HomeAccostDialog extends BaseDialog {
             public void onFinish() {
                 isCountdown = false;
                 submit = true;
-                exp_time.setVisibility(View.GONE);
-                Glide.with(getContext()).asGif().load(R.drawable.btn_gif_accost)
-                        .error(R.drawable.btn_gif_accost)
-                        .placeholder(R.drawable.btn_gif_accost)
-                        .into(btn_submit);
-                //RxBus.getDefault().post(new MessageTagEvent(null, false));
+                if(isShowing()){
+                    exp_time.setVisibility(View.GONE);
+                    Glide.with(getContext()).asGif().load(R.drawable.btn_gif_accost)
+                            .error(R.drawable.btn_gif_accost)
+                            .placeholder(R.drawable.btn_gif_accost)
+                            .into(btn_submit);
+                }
             }
         };
         downTimer.start();
@@ -595,7 +605,6 @@ public class HomeAccostDialog extends BaseDialog {
             public void onFinish() {
                 isChangeDownTime = false;
                 changeText.setTextColor(ColorUtils.getColor(R.color.accost_down_time_change));
-                //RxBus.getDefault().post(new MessageTagEvent(null, false));
             }
         };
         downChangeTimer.start();
@@ -653,6 +662,7 @@ public class HomeAccostDialog extends BaseDialog {
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHud())
                 .subscribe(new BaseObserver<BaseResponse>() {
                     @Override
                     public void onSuccess(BaseResponse baseResponse) {
@@ -663,8 +673,9 @@ public class HomeAccostDialog extends BaseDialog {
                     }
 
                     @Override
-                    public void onError(RequestException e) {
-                        RxBus.getDefault().post(new LoadEvent(false));
+                    public void onComplete() {
+                        super.onComplete();
+                        dismissHud();
                     }
                 });
     }

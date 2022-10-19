@@ -179,9 +179,6 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
         observableListTab.addAll(listData);
     }
 
-    //消费者
-    private Disposable loadReceive;
-
     public HomeMainViewModel(@NonNull Application application, AppRepository repository) {
         super(application, repository);
         try {
@@ -248,10 +245,6 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
     @Override
     public void registerRxBus() {
         super.registerRxBus();
-        loadReceive = RxBus.getDefault().toObservable(LoadEvent.class)
-                .subscribe(countDownTimerEvent -> {
-                    uc.isLoad.postValue(countDownTimerEvent.isLoad());
-                });
         mLocationSubscription = RxBus.getDefault().toObservable(LocationChangeEvent.class)
                 .subscribe(event -> {
                     startRefresh();
@@ -313,7 +306,6 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
     @Override
     public void removeRxBus() {
         super.removeRxBus();
-        RxSubscriptions.remove(loadReceive);
         RxSubscriptions.remove(mLocationSubscription);
         RxSubscriptions.remove(mCitySubscription);
         RxSubscriptions.remove(mAddBlackListSubscription);
@@ -331,10 +323,9 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
     public void AccostFirstSuccess(ParkItemEntity itemEntity, int position) {
         if (itemEntity == null) {//提醒充值钻石
             uc.sendAccostFirstError.call();
-        } else {
-            //loadLoteAnime.postValue(position);
-//            ChatUtils.chatUser(itemEntity.getId(), itemEntity.getNickname(), HomeListViewModel.this);
-        }
+        }  //loadLoteAnime.postValue(position);
+        //            ChatUtils.chatUser(itemEntity.getId(), itemEntity.getNickname(), HomeListViewModel.this);
+
     }
 
     //批量搭讪
@@ -447,7 +438,6 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
         public SingleLiveEvent<Void> clickRegion = new SingleLiveEvent<>();
         //打开批量搭讪接口
         public SingleLiveEvent<String> clickAccountDialog = new SingleLiveEvent<>();
-        public SingleLiveEvent<Boolean> isLoad = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> starActivity = new SingleLiveEvent<>();
         //搭讪失败。充值钻石
         public SingleLiveEvent<Void> sendAccostFirstError = new SingleLiveEvent<>();

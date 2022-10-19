@@ -72,11 +72,7 @@ public class FriendsWillWebViewFragment extends BaseFragment<FragmentFriendswilL
 
     @Override
     public void initParam() {
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            webUrl = bundle.getString("link");
-        }
-
+            webUrl = ConfigManager.getInstance().getInterestWebUrl();
     }
 
     @Override
@@ -174,7 +170,7 @@ public class FriendsWillWebViewFragment extends BaseFragment<FragmentFriendswilL
                     if (purchase != null) {
                         try {
                             AppContext.instance().logEvent(novice_items_successful, viewModel.goodsEntity.getPrice(), purchase);
-                        } catch (Exception e) {
+                        } catch (Exception ignored) {
 
                         }
                         String packageName = purchase.getPackageName();
@@ -347,7 +343,7 @@ public class FriendsWillWebViewFragment extends BaseFragment<FragmentFriendswilL
                 if(!StringUtils.isEmpty(keyValue)){
                     AppContext.instance().logEvent(keyValue);
                     //结束当前页面去往主页
-                    viewModel.startWithPopTo(MainFragment.class.getCanonicalName(), FriendsWillWebViewFragment.class.getCanonicalName(), true);
+                    viewModel.popAllTo(new MainFragment());
                 }
             }
         }

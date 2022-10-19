@@ -8,22 +8,30 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 
 import com.blankj.utilcode.util.KeyboardUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.R;
+import com.dl.playfun.ui.MainContainerActivity;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.dl.playfun.widget.dialog.loading.DialogLoading;
 import com.dl.playfun.widget.dialog.loading.DialogProgress;
+import com.github.lzyzsd.jsbridge.BridgeWebView;
 import com.gyf.immersionbar.ImmersionBar;
 
+import java.lang.ref.WeakReference;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import me.yokeyword.fragmentation.ExtraTransaction;
@@ -189,6 +197,8 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
                 }
             }
         });
+
+        viewModel.getMuc().popAllToFragmentEvent.observe(this, this::popAllTo);
     }
 
     private void showHud(String title) {
@@ -220,11 +230,17 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
     }
 
     public void dismissHud() {
-        if (dialogLoading != null && dialogLoading.isShowing()) {
-            dialogLoading.dismiss();
-        }
-        if (dialogProgress != null && dialogProgress.isShowing()) {
-            dialogProgress.dismiss();
+        try {
+            post(()->{
+                if (dialogLoading != null && dialogLoading.isShowing()) {
+                    dialogLoading.dismiss();
+                }
+                if (dialogProgress != null && dialogProgress.isShowing()) {
+                    dialogProgress.dismiss();
+                }
+            });
+        }catch (Exception ignored){
+
         }
     }
 
@@ -495,6 +511,31 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
 
     /****************************************以下为可选方法(Optional methods)******************************************************/
     // 自定制Support时，可移除不必要的方法
+
+
+    /**
+     * @Desc TODO(删除栈内所有的Fragment只保留1个并且跳转)
+     * @author 彭石林
+     * @parame
+     * @return
+     * @Date 2022/10/19
+     */
+    public void popAllTo(@NonNull ISupportFragment toFragment){
+        FragmentManager fragmentManager = mDelegate.getActivity().getSupportFragmentManager();
+        List<Fragment> listFragment = fragmentManager.getFragments();
+        if(!listFragment.isEmpty()){
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            for(Fragment childFragment : listFragment){
+                fragmentTransaction.remove(childFragment);
+            }
+            fragmentTransaction.commit();
+        }
+        if(mActivity != null){
+            if (mActivity instanceof MainContainerActivity){
+                ((MainContainerActivity) mActivity).popAllTo(toFragment);
+            }
+        }
+    }
 
     /**
      * 隐藏软键盘

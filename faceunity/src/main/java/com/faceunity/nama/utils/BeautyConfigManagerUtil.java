@@ -19,9 +19,9 @@ import java.util.List;
 public class BeautyConfigManagerUtil {
     private static BeautyConfigManagerUtil mCacheManager;
     private final String cryptKey = "playfun@2020";
-    private static final String KEY_FACE_BEAUTY = "key_face_beauty";
-    private static final String KEY_FACE_BEAUTY_FILTERS = "key_face_beauty_filters";
-    private static final String KEY_FACE_BEAUTY_FILTERS_INDEX = "key_face_beauty_filters_index";
+    private static final String KEY_FACE_BEAUTY = "key_face_beauty_new";
+    private static final String KEY_FACE_BEAUTY_FILTERS = "key_face_beauty_filters_new";
+    private static final String KEY_FACE_BEAUTY_FILTERS_INDEX = "key_face_beauty_filters_index_new";
     private final MMKV kv = MMKV.mmkvWithID("cache", MMKV.SINGLE_PROCESS_MODE, cryptKey);
     private Gson gson;
 

@@ -49,7 +49,8 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="31dp"
                 android:layout_height="31dp"
-                android:src="@drawable/ic_user_detail_accost"
+                tools:src="@drawable/ic_user_detail_accost"
+                android:src="@{viewModel.detailEntity.isAccost == 0?@drawable/ic_user_detail_accost:@drawable/ic_user_detail_send_message}"
                 binding:onClickCommand="@{viewModel.chatOnClickCommand}"
                 />
         </LinearLayout>

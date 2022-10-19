@@ -32,8 +32,8 @@ dependencies {
     }
     implementation externalAndroidAppCompatV7
     implementation externalAndroidRecyclerView
-    api 'com.faceunity:core:8.1.0'
-    api 'com.faceunity:model:8.1.0'
+    api 'com.faceunity:core:8.3.1'
+    api 'com.faceunity:model:8.3.1'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'com.tencent:mmkv-static:1.1.2'
     implementation 'com.google.code.gson:gson:2.8.7'

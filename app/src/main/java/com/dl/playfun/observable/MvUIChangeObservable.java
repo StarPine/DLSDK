@@ -3,6 +3,7 @@ package com.dl.playfun.observable;
 import java.util.Map;
 
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
+import me.yokeyword.fragmentation.ISupportFragment;
 
 public class MvUIChangeObservable {
 
@@ -23,4 +24,6 @@ public class MvUIChangeObservable {
     public SingleLiveEvent<Void> popFragmentEvent = new SingleLiveEvent<>();
 
     public SingleLiveEvent<Map<String, Object>> popToFragmentEvent = new SingleLiveEvent<>();
+
+    public SingleLiveEvent<ISupportFragment> popAllToFragmentEvent = new SingleLiveEvent<>();
 }

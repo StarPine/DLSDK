@@ -308,8 +308,8 @@
 
                                 <TextView
                                     android:id="@+id/trace_num"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
                                     android:layout_above="@+id/trace_text_tv_img"
                                     android:layout_marginStart="3dp"
                                     android:layout_toEndOf="@+id/trace_text_tv_img"
@@ -318,7 +318,7 @@
                                     android:textColor="@color/pseekbar_process"
                                     android:textSize="10sp"
                                     android:visibility="gone"
-                                    tools:visibility="visible" />
+                                    tools:visibility="invisible" />
 
                                 <ImageView
                                     android:id="@+id/trace_text_tv_img"
@@ -339,7 +339,7 @@
                                     android:text="@{viewModel.userInfoEntity.sex==1?@string/playfun_mine_my_visitors_man:@string/playfun_mine_my_visitors_many}"
                                     android:textColor="@color/toolbar_title_color"
                                     android:textSize="12sp"
-                                    tools:hint="@string/playfun_mine_my_visitors_man" />
+                                    tools:hint="@string/playfun_mine_my_visitors_many" />
                             </RelativeLayout>
 
                         </LinearLayout>

@@ -78,8 +78,8 @@ ext {
             // facebook
             "facebook-core"                : 'com.facebook.android:facebook-core:14.1.1',
             "facebook-login"               : 'com.facebook.android:facebook-login:14.1.1',
-            "faceunity-core"               : 'com.faceunity:core:8.1.0',
-            "faceunity-model"               : 'com.faceunity:model:8.1.0',
+            "faceunity-core"               : 'com.faceunity:core:8.3.1',
+            "faceunity-model"               : 'com.faceunity:model:8.3.1',
 
             //firebase
             "firebase-core"                : 'com.google.firebase:firebase-core:18.0.0',

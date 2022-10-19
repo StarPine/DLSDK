@@ -132,6 +132,9 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     public static final String CHAT_INFO = "chatInfo";
     //首次付费解锁引导
     static String KEY_USER_MEDIA_GALLERY_LOCK = "key_user_media_gallery_lock_";
+    static String local_photo = "photo";
+    static String local_snapshot = "snphoto";
+    static String local_video = "video";
 
     public static final String TAG = "ChatDetailFragment";
     private ChatInfo mChatInfo;
@@ -955,19 +958,32 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     private  void isUserMediaGalleryDialog(MediaGalleryEditEntity mediaGalleryEditEntity){
         AppRepository appRepository = ConfigManager.getInstance().getAppRepository();
         if(appRepository != null){
-            String cacheKey = appRepository.readKeyValue(KEY_USER_MEDIA_GALLERY_LOCK+getUserIdIM());
-            if(StringUtils.isEmpty(cacheKey)){
-                BigDecimal redPackageRevenue = mediaGalleryEditEntity.getUnlockPrice();
-                if(redPackageRevenue!=null && redPackageRevenue.doubleValue()>0){
+            BigDecimal redPackageRevenue = mediaGalleryEditEntity.getUnlockPrice();
+            if(redPackageRevenue!=null && redPackageRevenue.doubleValue()>0){
+                String localCacheKey = "";
+                //这里分别有3次提示。 付费视频、付费照片、付费快照
+                //视频
+                if(mediaGalleryEditEntity.isVideoSetting()){
+                    localCacheKey = KEY_USER_MEDIA_GALLERY_LOCK+getUserIdIM() + local_video;
+                }else{
+                    //照片
+                    if(mediaGalleryEditEntity.isStateSnapshot()){
+                        localCacheKey = KEY_USER_MEDIA_GALLERY_LOCK+getUserIdIM() + local_snapshot;
+                    }else{
+                        localCacheKey = KEY_USER_MEDIA_GALLERY_LOCK + getUserIdIM() + local_photo;
+                    }
+                }
+                String cacheKey = appRepository.readKeyValue(localCacheKey);
+                if(StringUtils.isEmpty(cacheKey)){
                     int coin = redPackageRevenue.setScale(2, RoundingMode.HALF_UP).intValue();
-                    String title = mediaGalleryEditEntity.isVideoSetting() ? getString(R.string.playfun_message_deatail_check_img_coin):getString(R.string.playfun_message_deatail_check_video_coin);
+                    String title = !mediaGalleryEditEntity.isVideoSetting() ? getString(R.string.playfun_message_deatail_check_img_coin):getString(R.string.playfun_message_deatail_check_video_coin);
                     UserBehaviorDialog.getUserMediaGalleryDialog(getContext(), title, String.valueOf(coin), mediaGalleryEditEntity.isStateSnapshot(), () -> {
                         viewModel.mediaGalleryPay(mediaGalleryEditEntity);
                     }).show();
-                    appRepository.putKeyValue(KEY_USER_MEDIA_GALLERY_LOCK+getUserIdIM(),KEY_USER_MEDIA_GALLERY_LOCK+getUserIdIM());
+                    appRepository.putKeyValue(localCacheKey,localCacheKey);
+                }else{
+                    viewModel.mediaGalleryPay(mediaGalleryEditEntity);
                 }
-            }else{
-                viewModel.mediaGalleryPay(mediaGalleryEditEntity);
             }
         }else{
             viewModel.mediaGalleryPay(mediaGalleryEditEntity);

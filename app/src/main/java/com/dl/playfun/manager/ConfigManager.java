@@ -172,6 +172,21 @@ public class ConfigManager {
     }
 
     /**
+    * @Desc TODO(获取交友意愿跳转H5)
+    * @author 彭石林
+    * @parame []
+    * @return java.lang.String
+    * @Date 2022/10/19
+    */
+    public String getInterestWebUrl(){
+        try {
+            return getAppRepository().readApiConfigManagerEntity().getPlayChatWebUrl()+"/friendsWill/";
+        }catch(Exception e){
+            return null;
+        }
+    }
+
+    /**
      * 返回用户上级ID
      *
      * @return

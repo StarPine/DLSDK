@@ -217,12 +217,8 @@ public class PerfectProfileViewModel extends BaseViewModel<AppRepository> {
                             AppContext.instance().logEvent(AppsFlyerEvent.LOG_Edit_Profile);
                             ToastUtils.showShort(R.string.playfun_submit_success);
                             boolean interestSwitch = ConfigManager.getInstance().interestSwitch();
-                            if(interestSwitch){
-                                Bundle bundle = new Bundle();
-                                bundle.putString("link",ConfigManager.getInstance().getAppRepository().readApiConfigManagerEntity().getPlayChatWebUrl()+"/friendsWill/");
-                                Log.e("开始跳转交友意愿",String.valueOf(ConfigManager.getInstance().getAppRepository().readApiConfigManagerEntity().getPlayChatWebUrl()+"/friendsWil/"));
-                                start(FriendsWillWebViewFragment.class.getCanonicalName(),bundle);
-                                //startWithPopTo(FriendsWillWebViewFragment.class.getCanonicalName(), PerfectProfileFragment.class.getCanonicalName(), true);
+                            if(interestSwitch && !StringUtils.isEmpty(ConfigManager.getInstance().getInterestWebUrl())){
+                                popAllTo(new FriendsWillWebViewFragment());
                             }else{
                                 startWithPopTo(MainFragment.class.getCanonicalName(), PerfectProfileFragment.class.getCanonicalName(), true);
                             }

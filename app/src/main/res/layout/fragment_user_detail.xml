@@ -243,7 +243,7 @@
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_marginTop="-28dp"
+                            android:layout_marginTop="-38dp"
                             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
                             <androidx.appcompat.widget.AppCompatImageView
@@ -264,10 +264,10 @@
                                 android:layout_below="@+id/zuizong"
                                 android:layout_marginTop="-30dp"
                                 android:visibility="@{viewModel.detailEntity.blacklistStatus == 0 ? View.VISIBLE : View.GONE}"
-                                binding:drawable_radius_leftTop="@{20}"
-                                binding:drawable_radius_rightTop="@{20}"
+                                app:cardElevation="0dp"
                                 binding:drawable_color="@{@color/white}"
-                                app:cardElevation="0dp">
+                                binding:drawable_radius_leftTop="@{20}"
+                                binding:drawable_radius_rightTop="@{20}">
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
@@ -275,12 +275,12 @@
                                     android:layout_marginTop="22dp"
                                     android:background="@color/container_background"
                                     android:orientation="vertical">
+
                                     <RelativeLayout
-                                        android:background="@color/white"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
-                                        android:paddingBottom="15dp"
-                                        >
+                                        android:background="@color/white"
+                                        android:paddingBottom="15dp">
 
                                         <com.dl.playfun.widget.image.CircleImageView
                                             android:id="@+id/me_avatar"
@@ -314,36 +314,37 @@
                                             android:textColor="@color/toolbar_title_color"
                                             android:textSize="17sp"
                                             tools:text="艾希lovexi666" />
+
                                         <LinearLayout
+                                            android:layout_width="38dp"
+                                            android:layout_height="15dp"
                                             android:layout_below="@+id/tv_title"
                                             android:layout_alignStart="@+id/tv_title"
                                             android:layout_marginTop="10dp"
                                             android:orientation="horizontal"
-                                            android:layout_width="38dp"
-                                            android:layout_height="15dp"
-                                            binding:drawable_cornersRadius="@{8}"
                                             binding:drawable_color="@{viewModel.detailEntity.sex ==0 ?@color/pseekbar_process : @color/blue_1375}"
-                                            >
+                                            binding:drawable_cornersRadius="@{8}">
+
                                             <androidx.appcompat.widget.AppCompatImageView
                                                 android:id="@+id/img_icon_gender"
-                                                android:layout_gravity="center|start"
-                                                android:layout_marginStart="5dp"
                                                 android:layout_width="12dp"
                                                 android:layout_height="12dp"
-                                                android:src="@drawable/icon_gender"
-                                                />
+                                                android:layout_gravity="center|start"
+                                                android:layout_marginStart="5dp"
+                                                android:src="@drawable/icon_gender" />
+
                                             <androidx.appcompat.widget.AppCompatTextView
-                                                android:includeFontPadding="false"
-                                                android:layout_gravity="center"
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
+                                                android:layout_gravity="center"
                                                 android:layout_marginStart="3dp"
+                                                android:includeFontPadding="false"
                                                 android:text="@{String.valueOf(viewModel.detailEntity.age)}"
                                                 android:textColor="@color/white"
-                                                android:textSize="12dp"
-                                                />
+                                                android:textSize="12dp" />
                                         </LinearLayout>
                                     </RelativeLayout>
+
                                     <RelativeLayout
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
@@ -818,17 +819,7 @@
                                         </LinearLayout>
 
                                     </RelativeLayout>
-                                    <androidx.appcompat.widget.AppCompatTextView
-                                        android:layout_marginTop="10dp"
-                                        android:layout_marginBottom="10dp"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:includeFontPadding="false"
-                                        android:gravity="center"
-                                        android:text="請勿通過PlayFun進行不法交易，如被檢舉核實將做封鎖處理"
-                                        android:textColor="@color/gray_light"
-                                        android:textSize="11sp"
-                                        />
+
                                     <RelativeLayout
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"

@@ -381,7 +381,11 @@ public class CoinRechargeSheetView extends BasePopupWindow implements View.OnCli
                     @Override
                     public void onSuccess(BaseResponse response) {
                         ToastUtils.showShort(StringUtils.getString(R.string.playfun_pay_success));
-                        showRewardDialog();
+                        //只有当前页面还是可见的情况下再弹出弹窗。否则会出现异常
+                        if(isShowing()){
+                            showRewardDialog();
+                        }
+
                     }
 
                     @Override

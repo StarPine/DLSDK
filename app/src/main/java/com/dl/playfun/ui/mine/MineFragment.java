@@ -275,7 +275,7 @@ public class MineFragment extends BaseRefreshFragment<FragmentMineBinding, MineV
                 if (!ObjectUtils.isEmpty(viewModel.userInfoEntity.get()) && !ObjectUtils.isEmpty(browseNumberEntity)) {
                     if (viewModel.userInfoEntity.get().getSex() == 0) {
                         if (ObjectUtils.isEmpty(browseNumberEntity.getFansNumber()) || browseNumberEntity.getFansNumber().intValue() < 1) {
-                            binding.traceNum.setVisibility(View.GONE);
+                            binding.traceNum.setVisibility(View.INVISIBLE);
                         } else {
                             int fensi = browseNumberEntity.getFansNumber().intValue();
                             String total = fensi > 99 ? "99+" : String.valueOf(fensi);
@@ -294,7 +294,7 @@ public class MineFragment extends BaseRefreshFragment<FragmentMineBinding, MineV
                         }
                     } else if (viewModel.userInfoEntity.get().getSex() == 1) {
                         if (ObjectUtils.isEmpty(browseNumberEntity.getBrowseNumber()) || browseNumberEntity.getBrowseNumber().intValue() < 1) {
-                            binding.traceNum.setVisibility(View.GONE);
+                            binding.traceNum.setVisibility(View.INVISIBLE);
                         } else {
                             int fensi = browseNumberEntity.getBrowseNumber().intValue();
                             String total = fensi > 99 ? "99+" : String.valueOf(fensi);
@@ -314,7 +314,7 @@ public class MineFragment extends BaseRefreshFragment<FragmentMineBinding, MineV
                     }
 
                 } else {
-                    binding.traceNum.setVisibility(View.GONE);
+                    binding.traceNum.setVisibility(View.INVISIBLE);
                 }
 
             }

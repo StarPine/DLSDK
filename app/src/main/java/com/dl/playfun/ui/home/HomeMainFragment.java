@@ -129,16 +129,6 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
                 mActivity.startActivity(intent);
             }
         });
-        viewModel.uc.isLoad.observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                if (aBoolean) {
-                    showHud();
-                } else {
-                    dismissHud();
-                }
-            }
-        });
 
         //tab 搭讪弹窗
         viewModel.uc.clickAccountDialog.observe(this, new Observer<String>() {

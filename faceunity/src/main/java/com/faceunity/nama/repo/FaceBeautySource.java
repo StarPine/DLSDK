@@ -31,22 +31,35 @@ public class FaceBeautySource {
      */
     public static FaceBeauty getDefaultFaceBeauty() {
         FaceBeauty recommendFaceBeauty = new FaceBeauty(new FUBundleData(BUNDLE_FACE_BEAUTIFICATION));
+        //滤镜名称
         recommendFaceBeauty.setFilterName(FaceBeautyFilterEnum.ZIRAN_1);
+        //滤镜程度 /范围0~1 0表示不显示滤镜
         recommendFaceBeauty.setFilterIntensity(0.4);
         /*美肤*/
         recommendFaceBeauty.setBlurType(FaceBeautyBlurTypeEnum.FineSkin);
+        //锐化程度 范围 [0-1]
         recommendFaceBeauty.setSharpenIntensity(0.2);
-        recommendFaceBeauty.setColorIntensity(0.3);
-        recommendFaceBeauty.setRedIntensity(0.3);
-        recommendFaceBeauty.setBlurIntensity(4.2);
+        //美白程度 范围 [0-2]
+        recommendFaceBeauty.setColorIntensity(0.7);
+        //红润程度 范围 [0-2]
+        recommendFaceBeauty.setRedIntensity(0.5);
+        //磨皮程度 范围[0-6]
+        recommendFaceBeauty.setBlurIntensity(1.8);
         /*美型*/
+        //变形程度  范围 [0-1]
         recommendFaceBeauty.setFaceShapeIntensity(1.0);
-        recommendFaceBeauty.setEyeEnlargingIntensityV2(0.4);
+        //大眼程度 范围 [0-1]
+        recommendFaceBeauty.setEyeEnlargingIntensityV2(0.5);
+        //V脸程度 范围 [0-1]
         recommendFaceBeauty.setCheekVIntensity(0.5);
+        //瘦鼻程度 范围 [0-1]
         recommendFaceBeauty.setNoseIntensityV2(0.5);
-        recommendFaceBeauty.setForHeadIntensityV2(0.3);
+        //额头调整程度V2 /范围[0-1]，0-0.5 是变小，0.5-1 是变大
+        recommendFaceBeauty.setForHeadIntensityV2(0.2);
+        //嘴巴调整程度 [0-1]，0-0.5是变小，0.5-1是变大
         recommendFaceBeauty.setMouthIntensityV2(0.4);
-        recommendFaceBeauty.setChinIntensity(0.3);
+        //下巴调整程度 范围 [0-1]，0-0.5是变小，0.5-1是变大
+        recommendFaceBeauty.setChinIntensity(0.15);
         return recommendFaceBeauty;
     }
 
@@ -240,37 +253,75 @@ public class FaceBeautySource {
     public static HashMap<String, ModelAttributeData> buildModelAttributeRange() {
         HashMap<String, ModelAttributeData> params = new HashMap<>();
         /*美肤*/
-        params.put(FaceBeautyParam.COLOR_INTENSITY, new ModelAttributeData(0.3, 0.0, 0.0, 1.0));
-        params.put(FaceBeautyParam.BLUR_INTENSITY, new ModelAttributeData(4.2, 0.0, 0.0, 6.0));
-        params.put(FaceBeautyParam.RED_INTENSITY, new ModelAttributeData(0.3, 0.0, 0.0, 1.0));
-        params.put(FaceBeautyParam.SHARPEN_INTENSITY, new ModelAttributeData(0.2, 0.0, 0.0, 1.0));
-        params.put(FaceBeautyParam.EYE_BRIGHT_INTENSITY, new ModelAttributeData(0.0, 0.0, 0.0, 1.0));
-        params.put(FaceBeautyParam.TOOTH_WHITEN_INTENSITY, new ModelAttributeData(0.0, 0.0, 0.0, 1.0));
-        params.put(FaceBeautyParam.REMOVE_POUCH_INTENSITY, new ModelAttributeData(0.0, 0.0, 0.0, 1.0));
-        params.put(FaceBeautyParam.REMOVE_NASOLABIAL_FOLDS_INTENSITY, new ModelAttributeData(0.0, 0.0, 0.0, 1.0));
+        //美白程度 (8.2.0之后不维护) 范围 [0-2]，推荐 0.2
+        params.put(FaceBeautyParam.COLOR_INTENSITY, new ModelAttributeData(0.7, 0.0, 0.0, 1.0));
+        params.put(FaceBeautyParam.COLOR_INTENSITY_M2,new ModelAttributeData(0.7, 0.0, 0.0, 1.0));
+        //磨皮程度
+        params.put(FaceBeautyParam.BLUR_INTENSITY, new ModelAttributeData(1.8, 0.0, 0.0, 6.0));
+        //红润程度
+        params.put(FaceBeautyParam.RED_INTENSITY, new ModelAttributeData(0.5, 0.0, 0.0, 1.0));
+        //锐化程度
+        params.put(FaceBeautyParam.SHARPEN_INTENSITY, new ModelAttributeData(0.5, 0.0, 0.0, 1.0));
+        //亮眼程度
+        params.put(FaceBeautyParam.EYE_BRIGHT_INTENSITY, new ModelAttributeData(0.5, 0.0, 0.0, 1.0));
+        //美牙程度
+        params.put(FaceBeautyParam.TOOTH_WHITEN_INTENSITY, new ModelAttributeData(0.5, 0.0, 0.0, 1.0));
+        //去黑眼圈强度
+        params.put(FaceBeautyParam.REMOVE_POUCH_INTENSITY, new ModelAttributeData(1.0, 0.0, 0.0, 1.0));
+        params.put(FaceBeautyParam.REMOVE_POUCH_INTENSITY_M2,new ModelAttributeData(1.0, 0.0, 0.0, 1.0));
+        //去法令纹强度
+        params.put(FaceBeautyParam.REMOVE_NASOLABIAL_FOLDS_INTENSITY, new ModelAttributeData(1.0, 0.0, 0.0, 1.0));
+        params.put(FaceBeautyParam.REMOVE_NASOLABIAL_FOLDS_INTENSITY_M2, new ModelAttributeData(1.0, 0.0, 0.0, 1.0));
         /*美型*/
+        //变形程度
         params.put(FaceBeautyParam.FACE_SHAPE_INTENSITY, new ModelAttributeData(1.0, 0.0, 0.0, 1.0));
+        //瘦脸程度
         params.put(FaceBeautyParam.CHEEK_THINNING_INTENSITY, new ModelAttributeData(0.0, 0.0, 0.0, 1.0));
+        //长脸程度
         params.put(FaceBeautyParam.CHEEK_LONG_INTENSITY, new ModelAttributeData(0.0, 0.0, 0.0, 1.0));
+        //圆脸程度
         params.put(FaceBeautyParam.CHEEK_CIRCLE_INTENSITY, new ModelAttributeData(0.0, 0.0, 0.0, 1.0));
+        //V脸程度
         params.put(FaceBeautyParam.CHEEK_V_INTENSITY, new ModelAttributeData(0.5, 0.0, 0.0, 1.0));
-        params.put(FaceBeautyParam.CHEEK_NARROW_INTENSITY_V2, new ModelAttributeData(0.0, 0.0, 0.0, 1.0));
-        params.put(FaceBeautyParam.CHEEK_SHORT_INTENSITY, new ModelAttributeData(0.0, 0.0, 0.0, 1.0));
-        params.put(FaceBeautyParam.CHEEK_SMALL_INTENSITY_V2, new ModelAttributeData(0.0, 0.0, 0.0, 1.0));
-        params.put(FaceBeautyParam.INTENSITY_CHEEKBONES_INTENSITY, new ModelAttributeData(0.0, 0.0, 0.0, 1.0));
-        params.put(FaceBeautyParam.INTENSITY_LOW_JAW_INTENSITY, new ModelAttributeData(0.0, 0.0, 0.0, 1.0));
-        params.put(FaceBeautyParam.EYE_ENLARGING_INTENSITY_V2, new ModelAttributeData(0.4, 0.0, 0.0, 1.0));
-        params.put(FaceBeautyParam.EYE_CIRCLE_INTENSITY, new ModelAttributeData(0.0, 0.0, 0.0, 1.0));
-        params.put(FaceBeautyParam.CHIN_INTENSITY, new ModelAttributeData(0.3, 0.5, 0.0, 1.0));
-        params.put(FaceBeautyParam.FOREHEAD_INTENSITY_V2, new ModelAttributeData(0.3, 0.5, 0.0, 1.0));
+        //窄脸程度 V2 历史问题窄脸V2不删
+        params.put(FaceBeautyParam.CHEEK_NARROW_INTENSITY_V2, new ModelAttributeData(0.5, 0.0, 0.0, 1.0));
+        //短脸程度
+        params.put(FaceBeautyParam.CHEEK_SHORT_INTENSITY, new ModelAttributeData(0.1, 0.0, 0.0, 1.0));
+        //小脸程度 V2 历史问题小脸V2
+        params.put(FaceBeautyParam.CHEEK_SMALL_INTENSITY_V2, new ModelAttributeData(0.1, 0.0, 0.0, 1.0));
+        //瘦颧骨
+        params.put(FaceBeautyParam.INTENSITY_CHEEKBONES_INTENSITY, new ModelAttributeData(0.5, 0.0, 0.0, 1.0));
+        //瘦下颌骨
+        params.put(FaceBeautyParam.INTENSITY_LOW_JAW_INTENSITY, new ModelAttributeData(0.2, 0.0, 0.0, 1.0));
+        //大眼程度V2
+        params.put(FaceBeautyParam.EYE_ENLARGING_INTENSITY, new ModelAttributeData(0.5, 0.0, 0.0, 1.0));
+        params.put(FaceBeautyParam.EYE_ENLARGING_INTENSITY_V2, new ModelAttributeData(0.5, 0.0, 0.0, 1.0));
+        params.put(FaceBeautyParam.EYE_ENLARGING_INTENSITY_M3, new ModelAttributeData(0.5, 0.0, 0.0, 1.0));
+        //圆眼程度
+        params.put(FaceBeautyParam.EYE_CIRCLE_INTENSITY, new ModelAttributeData(0.2, 0.0, 0.0, 1.0));
+        //下巴调整程度
+        params.put(FaceBeautyParam.CHIN_INTENSITY, new ModelAttributeData(0.15, 0.5, 0.0, 1.0));
+        //额头调整程度 V2 历史遗留问题额头V2需要保留
+        params.put(FaceBeautyParam.FOREHEAD_INTENSITY_V2, new ModelAttributeData(0.2, 0.5, 0.0, 1.0));
+        params.put(FaceBeautyParam.FOREHEAD_INTENSITY_M2, new ModelAttributeData(0.2, 0.5, 0.0, 1.0));
+        //瘦鼻程度 历史遗留问题瘦鼻V2需要保留
         params.put(FaceBeautyParam.NOSE_INTENSITY_V2, new ModelAttributeData(0.5, 0.0, 0.0, 1.0));
-        params.put(FaceBeautyParam.MOUTH_INTENSITY_V2, new ModelAttributeData(0.4, 0.5, 0.0, 1.0));
-        params.put(FaceBeautyParam.CANTHUS_INTENSITY, new ModelAttributeData(0.0, 0.0, 0.0, 1.0));
-        params.put(FaceBeautyParam.EYE_SPACE_INTENSITY, new ModelAttributeData(0.5, 0.5, 0.0, 1.0));
+        params.put(FaceBeautyParam.NOSE_INTENSITY_M2, new ModelAttributeData(0.5, 0.0, 0.0, 1.0));
+        //嘴巴调整程度V2 (8.2.0之后不维护) 历史遗留问题嘴巴调整程度V2需要保留
+        params.put(FaceBeautyParam.MOUTH_INTENSITY_V2, new ModelAttributeData(0.15, 0.5, 0.0, 1.0));
+        params.put(FaceBeautyParam.MOUTH_INTENSITY_M3, new ModelAttributeData(0.15, 0.5, 0.0, 1.0));
+        //开眼角强度
+        params.put(FaceBeautyParam.CANTHUS_INTENSITY, new ModelAttributeData(0.3, 0.0, 0.0, 1.0));
+        //眼睛间距
+        params.put(FaceBeautyParam.EYE_SPACE_INTENSITY, new ModelAttributeData(0.4, 0.5, 0.0, 1.0));
+        //眼睛角度
         params.put(FaceBeautyParam.EYE_ROTATE_INTENSITY, new ModelAttributeData(0.5, 0.5, 0.0, 1.0));
+        //鼻子长度
         params.put(FaceBeautyParam.LONG_NOSE_INTENSITY, new ModelAttributeData(0.5, 0.5, 0.0, 1.0));
-        params.put(FaceBeautyParam.PHILTRUM_INTENSITY, new ModelAttributeData(0.5, 0.5, 0.0, 1.0));
-        params.put(FaceBeautyParam.SMILE_INTENSITY, new ModelAttributeData(0.0, 0.0, 0.0, 1.0));
+        //调节人中
+        params.put(FaceBeautyParam.PHILTRUM_INTENSITY, new ModelAttributeData(0.4, 0.5, 0.0, 1.0));
+        //微笑嘴角强度
+        params.put(FaceBeautyParam.SMILE_INTENSITY, new ModelAttributeData(0.4, 0.0, 0.0, 1.0));
         return params;
     }
 

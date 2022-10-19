@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 
@@ -81,6 +82,17 @@ public class MainContainerActivity extends MySupportActivity {
     protected void onRestart() {
         super.onRestart();
         LocaleManager.setLocal(this);
+    }
+
+    /**
+    * @Desc TODO(清楚栈内所有的Fragment。并且跳转到指定的fragment)
+    * @author 彭石林
+    * @parame [toFragment]
+    * @return void
+    * @Date 2022/10/19
+    */
+    public void popAllTo(@NonNull ISupportFragment toFragment){
+        loadRootFragment(R.id.fl_container,toFragment);
     }
 
     @Override
@@ -212,7 +224,7 @@ public class MainContainerActivity extends MySupportActivity {
                     if(this.isFinishing() || this.isDestroyed()){
                         return;
                     }
-                    //ConfigManager.getInstance().getAppRepository().logout();
+                    ConfigManager.getInstance().getAppRepository().logout();
                     if (loginExpiredDialog == null) {
                         loginExpiredDialog = MVDialog.getInstance(this)
                                 .setContent(getString(R.string.playfun_again_login))
@@ -247,6 +259,11 @@ public class MainContainerActivity extends MySupportActivity {
     }
 
     void startLoginView(){
+        UserDataEntity oldUserData = ConfigManager.getInstance().getAppRepository().readOldUserData();
+        if(ObjectUtils.isNotEmpty(oldUserData)){
+            startWithPopTo(new LoginOauthFragment(), MainFragment.class, true);
+            return;
+        }
         UserDataEntity localUserEntity = ConfigManager.getInstance().getAppRepository().readUserData();
         if(ObjectUtils.isEmpty(localUserEntity)){
             startWithPopTo(new LoginFragment(), MainFragment.class, true);

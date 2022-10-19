@@ -15,6 +15,7 @@ import com.dl.playfun.databinding.ActivityLanguageSwitchBinding;
 import com.dl.playfun.event.LanguageChangeEvent;
 import com.dl.playfun.ui.base.BaseActivity;
 import com.dl.playfun.utils.ImmersionBarUtils;
+import com.dl.playfun.widget.BasicToolbar;
 
 import me.goldze.mvvmhabit.bus.RxBus;
 
@@ -56,6 +57,10 @@ public class LanguageSwitchActivity extends BaseActivity<ActivityLanguageSwitchB
     @Override
     public void initData() {
         viewModel.initData();
+        //返回按键返回页面
+        binding.basicToolbar.setToolbarListener(toolbar -> {
+            finish();
+        });
     }
 
     @Override

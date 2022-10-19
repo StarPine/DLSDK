@@ -169,10 +169,14 @@ public class CommunityAccountModel extends BaseViewModel<AppRepository> {
         //绑定第三方
         if(!ObjectUtils.isEmpty(userBindInfo)){
             int isBind = userBindInfo.getBindAuth();
-            if(type == isBind){
+            if(isBind == 0){
                 return View.VISIBLE;
             }else{
-                return View.GONE;
+                if(type == isBind){
+                    return View.VISIBLE;
+                }else{
+                    return View.GONE;
+                }
             }
         }
         return View.GONE;
