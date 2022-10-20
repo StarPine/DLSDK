@@ -174,7 +174,6 @@ public class AppContext extends Application {
 
     @Override
     public void onCreate() {
-
         Locale localeCache = LocaleManager.getSystemLocale(this);
         Configuration config = new Configuration();
         config.locale = localeCache;

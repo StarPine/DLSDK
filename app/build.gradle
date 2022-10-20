@@ -157,10 +157,10 @@ android {
             if(!isReleaseBuildType()){
                 // 服务端接口HOST
                 buildConfigField "String", "DEFAULT_API_URL", "\"http://t-config.play-chat.net/\""
-                applicationId "com.test.demo.chat"
+                applicationId "com.ld.play.chat"
                 manifestPlaceholders = [package_name: applicationId]
-                //测试包配置
-                signingConfig signingConfigs.playChatDebug
+                //正式包配置
+                signingConfig signingConfigs.playChatRelease
                 //客服id聊天
                 buildConfigField "String", "CHAT_SERVICE_USER_ID_SEND", "\"administrator\""
                 //buildConfigField "int", "IM_APP_KEY", "1400369342"
@@ -195,9 +195,9 @@ android {
                 versionName "1.4.7-beta"
             }else{
                 // 服务端接口HOST
-               // buildConfigField "String", "DEFAULT_API_URL", "\"http://t-config.play-chat.net/\""
+                buildConfigField "String", "DEFAULT_API_URL", "\"http://t-config.play-chat.net/\""
                 // 服务端接口HOST
-                buildConfigField "String", "DEFAULT_API_URL", "\"https://config.play-chat.net/\""
+                //buildConfigField "String", "DEFAULT_API_URL", "\"https://config.play-chat.net/\""
                 applicationId "com.ld.play.chat"
                 manifestPlaceholders = [package_name: applicationId]
                 //正式包配置
@@ -230,7 +230,7 @@ android {
 //                 版本
                 versionCode 29
                 // 版本名
-                versionName "1.4.62"
+                versionName "1.4.7-beta-Release"
             }
         }
     }

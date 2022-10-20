@@ -2272,5 +2272,7 @@
     <string name="playfun_account_bind_phone_text_3">Not now</string>
     <string name="playfun_account_security_text">Account and security</string>
     <string name="playfun_account_bind_phone_title">Link to phone number</string>
+    <string name="playfun_login_oauth_text1">Log in this account</string>
+    <string name="playfun_login_oauth_text2">Other account</string>
     <!--PlayFun-APP-END-->
 </resources>

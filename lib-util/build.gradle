@@ -31,4 +31,5 @@ dependencies {
     api project(":mvvmhabit")
     api rootProject.ext.dependenciesID["mmkv"]
     api rootProject.ext.dependenciesID["utilcode"]
+    api rootProject.ext.dependenciesID["facebook-core"]
 }

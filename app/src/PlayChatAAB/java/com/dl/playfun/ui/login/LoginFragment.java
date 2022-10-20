@@ -238,7 +238,7 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
                     popupWindow.showAsDropDown(binding.loginButton, binding.loginButton.getHeight() + popWidth / 2, -binding.loginButton.getHeight() - popHeight / 2);
                     break;
                 case "google":
-                    popupWindow.showAsDropDown(binding.ivGoogleLogin, -popWidth / 2 + binding.ivGoogleLogin.getHeight() / 2, -binding.ivGoogleLogin.getHeight() - popHeight);
+                    popupWindow.showAsDropDown(binding.ivGoogleLogin, binding.loginButton.getHeight() + popWidth / 2, -binding.ivGoogleLogin.getHeight() - popHeight /2);
                     break;
                 case "phone":
                     popupWindow.showAsDropDown(binding.ivPhoneLogin, -popWidth / 2 + binding.ivPhoneLogin.getHeight() / 2, -binding.ivPhoneLogin.getHeight() - popHeight);

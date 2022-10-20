@@ -35,7 +35,7 @@ public class LanguageSwitchViewModel extends BaseViewModel<AppRepository> {
 
     public BindingCommand<Void> clickEnLangSwitch = new BindingCommand<>(() -> {
         if(checkLanguage.get()!= 0){
-            LocaleManager.putLocalCacheApply("en");
+            LocaleManager.putLocalCacheApply(getApplication(),"en");
             languageSwitchEvent.call();
         }
 
@@ -43,7 +43,7 @@ public class LanguageSwitchViewModel extends BaseViewModel<AppRepository> {
 
     public BindingCommand<Void> clickZhLangSwitch = new BindingCommand<>(() -> {
         if(checkLanguage.get()!= 1){
-            LocaleManager.putLocalCacheApply("zh");
+            LocaleManager.putLocalCacheApply(getApplication(),"zh");
             languageSwitchEvent.call();
         }
     });

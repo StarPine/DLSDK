@@ -54,7 +54,7 @@
                     android:layout_marginStart="1dp"
                     android:layout_marginTop="1dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/default_address_user"
+                    android:src="@drawable/default_avatar"
                     binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
                     binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
                     binding:imageThumbPath="@{viewModel.currentUserData.avatar}"
@@ -68,7 +68,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{viewModel.currentUserData.nickname}"
-                android:textColor="@color/white"
+                android:textColor="@color/toolbar_title_color"
                 android:textSize="17sp"
                 android:textStyle="bold"
                 />
@@ -79,7 +79,7 @@
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:text="登入此帳號"
+                android:text="@string/playfun_login_oauth_text1"
                 android:textColor="@color/white"
                 android:textSize="15sp"
                 android:textStyle="bold"
@@ -103,7 +103,7 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="其他帳號"
+                android:text="@string/playfun_login_oauth_text2"
                 android:textColor="@color/white"
                 android:textSize="13sp"
                 />
@@ -140,15 +140,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/agree"
-                android:textColor="@color/pseekbar_process_off2"
+                android:textColor="@color/toolbar_title_color"
                 android:textSize="@dimen/text_size_middle2" />
 
             <TextView
+                android:autoLink="all"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 android:text="@string/terms_of_service"
-                android:textColor="@color/white"
+                android:textColor="@color/purple_text"
                 android:textSize="@dimen/text_size_middle2"
                 binding:onClickCommand="@{viewModel.termsOfServiceOnClickCommand}" />
 
@@ -156,15 +157,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/and"
-                android:textColor="@color/pseekbar_process_off2"
+                android:textColor="@color/toolbar_title_color"
                 android:textSize="@dimen/text_size_middle2" />
 
             <TextView
+                android:autoLink="all"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 android:text="@string/privacy_policy"
-                android:textColor="@color/white"
+                android:textColor="@color/purple_text"
                 android:textSize="@dimen/text_size_middle2"
                 binding:onClickCommand="@{viewModel.usageSpecificationOnClickCommand}" />
         </LinearLayout>
