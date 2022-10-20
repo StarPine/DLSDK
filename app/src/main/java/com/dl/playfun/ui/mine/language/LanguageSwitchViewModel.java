@@ -1,11 +1,14 @@
 package com.dl.playfun.ui.mine.language;
 
 import android.app.Application;
+import android.content.res.Resources;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableInt;
 
 import com.blankj.utilcode.util.StringUtils;
+import com.dl.playfun.R;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.manager.LocaleManager;
 import com.dl.playfun.viewmodel.BaseViewModel;
@@ -49,6 +52,13 @@ public class LanguageSwitchViewModel extends BaseViewModel<AppRepository> {
         String localCache = model.readKeyValue(LocaleManager.dlAppLanguageLocal);
         if(!StringUtils.isEmpty(localCache)){
             if ("zh".equals(localCache)) {
+                checkLanguage.set(1);
+            } else {
+                checkLanguage.set(0);
+            }
+        }else{
+            String CurrentDefLanguage = StringUtils.getString(R.string.playfun_local_language_val);
+            if ("zh".equals(CurrentDefLanguage)) {
                 checkLanguage.set(1);
             } else {
                 checkLanguage.set(0);

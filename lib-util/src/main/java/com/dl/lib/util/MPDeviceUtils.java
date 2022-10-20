@@ -10,7 +10,6 @@ import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.Utils;
 import com.dl.lib.util.emulator.EmulatorDetector;
-import com.facebook.internal.AttributionIdentifiers;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

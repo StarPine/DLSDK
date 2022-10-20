@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
@@ -158,19 +160,24 @@ public class CommunityAccountFragment extends BaseToolbarFragment<FragmentSettin
                 return;
             }
             Intent intent = googleSignInClient.getSignInIntent();
-            startActivityForResult(intent, Google_Code);
+            toGoogleLoginIntent.launch(intent);
         });
 
     }
 
+    ActivityResultLauncher<Intent> toGoogleLoginIntent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+
+        if (result.getData() != null) {
+            Task<GoogleSignInAccount> signedInAccountFromIntent = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
+            handleResult(signedInAccountFromIntent);
+        }
+    });
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        callbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Google_Code) {
-            Task<GoogleSignInAccount> signedInAccountFromIntent = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleResult(signedInAccountFromIntent);
-
+        if (callbackManager != null) {
+            callbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
 

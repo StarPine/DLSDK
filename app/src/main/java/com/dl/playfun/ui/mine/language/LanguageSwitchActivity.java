@@ -38,7 +38,7 @@ public class LanguageSwitchActivity extends BaseActivity<ActivityLanguageSwitchB
     @Override
     protected void onResume() {
         super.onResume();
-        ImmersionBarUtils.setupStatusBar(this, false, true);
+        ImmersionBarUtils.setupStatusBar(this, true, true);
     }
 
     @Override
