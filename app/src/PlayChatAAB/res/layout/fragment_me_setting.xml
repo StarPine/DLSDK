@@ -74,7 +74,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:layout_toEndOf="@+id/img_account"
-                        android:text="賬戶與安全" />
+                        android:text="@string/playfun_account_security_text" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/ProfileItemSubTitle"

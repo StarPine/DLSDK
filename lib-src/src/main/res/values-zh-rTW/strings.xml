@@ -2269,5 +2269,9 @@
     <string name="playfun_login_text_facekbook">使用Facekbook登入</string>
     <string name="playfun_login_text_google">使用Google登入</string>
     <string name="playfun_network_error_text_click">網路錯誤，點擊重試</string>
+    <string name="playfun_account_bind_phone_text_1">邀請您綁定手機號</string>
+    <string name="playfun_account_bind_phone_text_2">綁定後可使用手機號登入軟體\n保護您的賬戶安全</string>
+    <string name="playfun_account_bind_phone_text_3">暫不</string>
+    <string name="playfun_account_security_text">賬戶與安全</string>
     <!--PlayFun-APP-END-->
 </resources>

@@ -2,6 +2,7 @@ package com.dl.playfun.ui.mine.profile;
 
 import android.app.Dialog;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -26,6 +27,8 @@ import com.luck.picture.lib.listener.OnResultCallbackListener;
 
 import java.util.List;
 
+import me.goldze.mvvmhabit.utils.StringUtils;
+
 
 /**
  * Author: 彭石林
@@ -34,6 +37,8 @@ import java.util.List;
  */
 public class PerfectProfileFragment extends BaseFragment<FragmentPerfectProfileBinding, PerfectProfileViewModel> {
 
+    //记录是否有触发 临时值
+    private boolean flagSelectAvatar = false;
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return R.layout.fragment_perfect_profile;
@@ -47,6 +52,7 @@ public class PerfectProfileFragment extends BaseFragment<FragmentPerfectProfileB
     @Override
     public void initData() {
         super.initData();
+        flagSelectAvatar = false;
         viewModel.getNickName();
     }
 
@@ -54,6 +60,13 @@ public class PerfectProfileFragment extends BaseFragment<FragmentPerfectProfileB
     public PerfectProfileViewModel initViewModel() {
         AppViewModelFactory factory = AppViewModelFactory.getInstance(mActivity.getApplication());
         return ViewModelProviders.of(this, factory).get(PerfectProfileViewModel.class);
+    }
+
+    public void startRegisterSexFragment(String localAvatarPath){
+        Bundle bundle = new Bundle();
+        bundle.putString("avatar", !StringUtils.isEmpty(localAvatarPath) ? localAvatarPath : viewModel.UserAvatar.get());
+        bundle.putString("name", viewModel.UserName.get());
+        viewModel.start(RegisterSexFragment.class.getCanonicalName(), bundle);
     }
 
     @Override
@@ -71,15 +84,19 @@ public class PerfectProfileFragment extends BaseFragment<FragmentPerfectProfileB
             }
         });
 
-        viewModel.uc.verifyAvatar.observe(this, new Observer() {
-            @Override
-            public void onChanged(Object o) {
-                Bundle bundle = new Bundle();
-                bundle.putString("avatar", viewModel.UserAvatar.get());
-                bundle.putString("name", viewModel.UserName.get());
-                viewModel.start(RegisterSexFragment.class.getCanonicalName(), bundle);
+        viewModel.uc.verifyAvatar.observe(this, o -> {
+            //有记录手动选择过头像
+            if(flagSelectAvatar){
+                startRegisterSexFragment(null);
+            }else{
+                if(AppConfig.overseasUserEntity != null && StringUtils.isEmpty(AppConfig.overseasUserEntity.getPhoto())){
+                    saveOverseas();
+                }else{
+                    startRegisterSexFragment(null);
+                }
             }
         });
+
         viewModel.uc.nicknameDuplicate.observe(this, name -> {
             TraceDialog.getInstance(mActivity)
                     .setTitle(String.format(getString(R.string.playfun_duplicate_nickname_tips), name))
@@ -107,16 +124,14 @@ public class PerfectProfileFragment extends BaseFragment<FragmentPerfectProfileB
      * @Date 2022/7/15
      */
     public void saveOverseas() {
+        binding.imgAvatar.setDrawingCacheBackgroundColor(Color.TRANSPARENT);
         binding.imgAvatar.buildDrawingCache(true);
         binding.imgAvatar.buildDrawingCache();
         Bitmap bitmap = binding.imgAvatar.getDrawingCache();
         String filename = ApiUitl.getDiskCacheDir(getContext()) + "/Overseas" + ApiUitl.getDateTimeFileName() + ".jpg";
         ApiUitl.saveBitmap(bitmap, filename, flag -> {
             if (flag) {
-                Bundle bundle = new Bundle();
-                bundle.putString("avatar", filename);
-                bundle.putString("name", viewModel.UserName.get());
-                viewModel.start(RegisterSexFragment.class.getCanonicalName(), bundle);
+                startRegisterSexFragment(filename);
             } else {
                 ToastUtils.showShort(R.string.playfun_fragment_perfect_avatar1);
             }
@@ -130,6 +145,7 @@ public class PerfectProfileFragment extends BaseFragment<FragmentPerfectProfileB
             public void onResult(List<LocalMedia> result) {
                 clearNicknameFocus();
                 viewModel.UserAvatar.set(result.get(0).getCutPath());
+                flagSelectAvatar = true;
             }
 
             @Override

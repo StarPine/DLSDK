@@ -21,7 +21,9 @@ import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.PrivacyEntity;
 import com.dl.playfun.entity.UserBindInfoEntity;
 import com.dl.playfun.entity.UserDataEntity;
+import com.dl.playfun.event.BindAccountPhotoEvent;
 import com.dl.playfun.event.IsAuthBindingEvent;
+import com.dl.playfun.event.MessageCountChangeEvent;
 import com.dl.playfun.ui.mine.setting.account.bind.CommunityAccountBindFragment;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.viewmodel.BaseViewModel;
@@ -29,9 +31,11 @@ import com.dl.playfun.viewmodel.BaseViewModel;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.reactivex.disposables.Disposable;
 import me.goldze.mvvmhabit.binding.command.BindingAction;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
 import me.goldze.mvvmhabit.bus.RxBus;
+import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.RxUtils;
 import me.goldze.mvvmhabit.utils.ToastUtils;
@@ -52,6 +56,8 @@ public class CommunityAccountModel extends BaseViewModel<AppRepository> {
     public ObservableField<UserBindInfoEntity> userBindInfoEntity = new ObservableField<>();
 
     public UIChangeObservable UC = new UIChangeObservable();
+
+    private Disposable bindAccountPhoneSubscription;
 
     public CommunityAccountModel(@NonNull Application application, AppRepository repository) {
         super(application, repository);
@@ -182,6 +188,25 @@ public class CommunityAccountModel extends BaseViewModel<AppRepository> {
         return View.GONE;
     }
 
+    @Override
+    public void registerRxBus() {
+        super.registerRxBus();
+        bindAccountPhoneSubscription = RxBus.getDefault().toObservable(BindAccountPhotoEvent.class)
+                .subscribe(event -> {
+                    if(event!=null && event.getPhone()!=null){
+                        UserBindInfoEntity userBindInfo = userBindInfoEntity.get();
+                        userBindInfo.setPhone(event.getPhone());
+                        userBindInfoEntity.set(userBindInfo);
+                    }
+                });
+        RxSubscriptions.remove(bindAccountPhoneSubscription);
+    }
+
+    @Override
+    public void removeRxBus() {
+        super.removeRxBus();
+        RxSubscriptions.remove(bindAccountPhoneSubscription);
+    }
 
     public class UIChangeObservable {
         SingleLiveEvent<Boolean> loadUserFlag = new SingleLiveEvent<>();

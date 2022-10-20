@@ -227,39 +227,7 @@ public class SplashViewModel extends BaseViewModel<AppRepository> {
                         } catch (Exception e) {
                             ExceptionReportUtils.report(e);
                         }
-                        initCityConfigAll();
-                    }
-
-                    @Override
-                    public void onError(RequestException e) {
-                        e.printStackTrace();
-                        hintRetryShow.set(true);
-                    }
-
-                });
-    }
-
-    public void initCityConfigAll() {
-        model.getCityConfigAll()
-                .doOnSubscribe(this)
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseDataResponse<CityAllEntity>>() {
-                    @Override
-                    public void onComplete() {
-                        dismissHUD();
-                    }
-
-                    @Override
-                    public void onSuccess(BaseDataResponse<CityAllEntity> response) {
-                        CityAllEntity cityData = response.getData();
-                        if (ObjectUtils.isNotEmpty(cityData.getCityAll())) {
-                            model.saveCityConfigAll(cityData.getCityAll());
-                            initData();
-                        } else {
-                            hintRetryShow.set(true);
-                        }
+                        initData();
                     }
 
                     @Override

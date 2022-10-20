@@ -2267,5 +2267,9 @@
     <string name="playfun_login_text_facekbook">Log in via FaceBook</string>
     <string name="playfun_login_text_google">Log in via Google</string>
     <string name="playfun_network_error_text_click">Network error, try again.</string>
+    <string name="playfun_account_bind_phone_text_1">Invite you to link your phone number</string>
+    <string name="playfun_account_bind_phone_text_2">Link and login in with your phone number\nProtect your account</string>
+    <string name="playfun_account_bind_phone_text_3">Not now</string>
+    <string name="playfun_account_security_text">Account and security</string>
     <!--PlayFun-APP-END-->
 </resources>

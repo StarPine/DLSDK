@@ -22,6 +22,7 @@ import com.dl.playfun.entity.ChooseAreaItemEntity;
 import com.dl.playfun.entity.SystemConfigEntity;
 import com.dl.playfun.entity.TokenEntity;
 import com.dl.playfun.entity.UserDataEntity;
+import com.dl.playfun.event.BindAccountPhotoEvent;
 import com.dl.playfun.ui.login.choose.ChooseAreaFragment;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.viewmodel.BaseViewModel;
@@ -31,6 +32,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
+import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.RxUtils;
 import me.goldze.mvvmhabit.utils.ToastUtils;
@@ -174,10 +176,13 @@ public class CommunityAccountViewModel extends BaseViewModel<AppRepository> {
                 .subscribe(new BaseObserver<BaseDataResponse<UserDataEntity>>() {
                     @Override
                     public void onSuccess(BaseDataResponse<UserDataEntity> response) {
-                        dismissHUD();
+                        ToastUtils.showShort(R.string.playfun_binding_auth_success);
                         UserDataEntity userDataEntity = model.readUserData();
                         userDataEntity.setBindPhone(1);
                         model.saveUserData(userDataEntity);
+                        RxBus.getDefault().post(new BindAccountPhotoEvent(mobile.get()));
+                        pop();
+
                     }
 
                     @Override
