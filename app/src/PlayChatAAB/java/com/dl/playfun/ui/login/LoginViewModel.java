@@ -272,8 +272,29 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
                 .subscribe(new BaseObserver<BaseDataResponse<UserDataEntity>>() {
                     @Override
                     public void onSuccess(BaseDataResponse<UserDataEntity> response) {
-                        dismissHUD();
-
+                        UserDataEntity authLoginUserEntity = response.getData();
+                        if(ObjectUtils.isNotEmpty(authLoginUserEntity)){
+                            model.saveUserData(authLoginUserEntity);
+                            AppsFlyerLib.getInstance().setCustomerUserId(String.valueOf(authLoginUserEntity.getId()));
+                            AppContext.instance().mFirebaseAnalytics.setUserId(String.valueOf(authLoginUserEntity.getId()));
+                            try {
+                                //添加崩溃人员id
+                                FirebaseCrashlytics.getInstance().setUserId(String.valueOf(authLoginUserEntity.getId()));
+                            }catch (Exception crashErr){
+                                Log.e("Crashlytics setUserid ",crashErr.getMessage());
+                            }
+                            if (authLoginUserEntity.getCertification() == 1) {
+                                model.saveNeedVerifyFace(true);
+                            }
+                            AppConfig.userClickOut = false;
+                            if (authLoginUserEntity.getSex() != null && authLoginUserEntity.getSex() >= 0 && !StringUtil.isEmpty(authLoginUserEntity.getNickname()) && !StringUtil.isEmpty(authLoginUserEntity.getBirthday()) && !StringUtil.isEmpty(authLoginUserEntity.getAvatar())) {
+                                popAllTo(new MainFragment());
+                            } else {
+                                start(PerfectProfileFragment.class.getCanonicalName());
+                            }
+                        }else{
+                            ToastUtils.showShort(StringUtils.getString(R.string.error_unknown));
+                        }
                     }
 
                     @Override
