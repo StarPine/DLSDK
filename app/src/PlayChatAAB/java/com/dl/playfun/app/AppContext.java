@@ -166,14 +166,15 @@ public class AppContext extends Application {
     @Override
     protected void attachBaseContext(Context newBase) {
         if(newBase!=null){
-            MMKV.initialize(newBase);
             LocaleManager.setLocal(newBase);
         }
         super.attachBaseContext(LocaleManager.setLocal(newBase));
+        LocaleManager.setLocal(newBase);
     }
 
     @Override
     public void onCreate() {
+
         Locale localeCache = LocaleManager.getSystemLocale(this);
         Configuration config = new Configuration();
         config.locale = localeCache;
@@ -182,6 +183,7 @@ public class AppContext extends Application {
         super.onCreate();
         //初始化创建后。再次执行设置当前应用语言。确保部分机型不兼容问题
         LocaleManager.setLocal(this);
+        MMKV.initialize(this);
         //注册美颜渲染
         FURenderer.getInstance().setup(this);
         try {

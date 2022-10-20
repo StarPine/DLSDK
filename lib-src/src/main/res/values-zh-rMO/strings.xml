@@ -1145,7 +1145,7 @@
     <string name="playfun_program_detail_title_other">活動詳情</string>
     <string name="playfun_program_detail_detele">該活動已被刪除</string>
     <string name="playfun_issuance_tends">發動態</string>
-    <string name="playfun_push_setting_title">新訊息通知</string>
+    <string name="playfun_push_setting_title">推送設定</string>
     <string name="playfun_binding_community_account">賬戶管理</string>
     <string name="playfun_push_setting_chat">私訊通知</string>
     <string name="playfun_push_setting_broadcast">活動報名通知</string>
@@ -2272,5 +2272,6 @@
     <string name="playfun_account_bind_phone_text_2">綁定後可使用手機號登入軟體\n保護您的賬戶安全</string>
     <string name="playfun_account_bind_phone_text_3">暫不</string>
     <string name="playfun_account_security_text">賬戶與安全</string>
+    <string name="playfun_account_bind_phone_title">綁定手機號</string>
     <!--PlayFun-APP-END-->
 </resources>

@@ -23,6 +23,7 @@ import com.dl.playfun.entity.SystemConfigEntity;
 import com.dl.playfun.entity.TokenEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.BindAccountPhotoEvent;
+import com.dl.playfun.event.ItemChooseAreaEvent;
 import com.dl.playfun.ui.login.choose.ChooseAreaFragment;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.viewmodel.BaseViewModel;
@@ -31,8 +32,10 @@ import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.reactivex.disposables.Disposable;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
 import me.goldze.mvvmhabit.bus.RxBus;
+import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.RxUtils;
 import me.goldze.mvvmhabit.utils.ToastUtils;
@@ -65,6 +68,8 @@ public class CommunityAccountViewModel extends BaseViewModel<AppRepository> {
      * 发送短信按钮点击事件
      */
     public BindingCommand<Void> sendRegisterSmsOnClickCommand = new BindingCommand<>(this::reqVerifyCode);
+
+    private Disposable ItemChooseAreaSubscription;
 
     /**
      * 注册按钮的点击事件
@@ -190,5 +195,23 @@ public class CommunityAccountViewModel extends BaseViewModel<AppRepository> {
                         dismissHUD();
                     }
                 });
+    }
+    @Override
+    public void registerRxBus() {
+        super.registerRxBus();
+        ItemChooseAreaSubscription = RxBus.getDefault().toObservable(ItemChooseAreaEvent.class)
+                .subscribe(event -> {
+                    if (event.getChooseAreaItemEntity() != null) {
+                        areaCode.set(event.getChooseAreaItemEntity());
+                    }
+                    setAreaSuccess.call();
+                });
+        RxSubscriptions.add(ItemChooseAreaSubscription);
+    }
+
+    @Override
+    public void removeRxBus() {
+        super.removeRxBus();
+        RxSubscriptions.remove(ItemChooseAreaSubscription);
     }
 }

@@ -178,7 +178,7 @@
                                     android:layout_marginStart="5dp"
                                     android:layout_width="12dp"
                                     android:layout_height="12dp"
-                                    android:src="@drawable/icon_gender"
+                                    android:src="@{viewModel.userInfoEntity.sex ==0 ? @drawable/icon_gender2: @drawable/icon_gender}"
                                     />
                                 <androidx.appcompat.widget.AppCompatTextView
                                     android:includeFontPadding="false"
@@ -328,7 +328,7 @@
                                     android:layout_above="@+id/trace_text_tv"
                                     android:layout_centerInParent="true"
                                     android:layout_marginBottom="9dp"
-                                    android:src="@drawable/ic_mine_visitors" />
+                                    android:src="@{viewModel.userInfoEntity.sex==1 ? @drawable/ic_mine_visitors2 : @drawable/ic_mine_visitors}" />
 
                                 <TextView
                                     android:id="@+id/trace_text_tv"

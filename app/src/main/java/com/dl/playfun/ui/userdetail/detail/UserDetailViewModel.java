@@ -335,7 +335,6 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
                     public void onSuccess(BaseDataResponse<UserDetailEntity> response) {
                         super.onSuccess(response);
                         detailEntity.set(response.getData());
-                        uc.loadUserEvent.postValue(null);
                         isShowCanTrack();
 //                        onLineDrawables();
                         if (response.getData().isBrowse()) {

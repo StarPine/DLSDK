@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 
 import com.blankj.utilcode.util.GsonUtils;
@@ -57,6 +58,8 @@ public class CommunityAccountModel extends BaseViewModel<AppRepository> {
 
     public UIChangeObservable UC = new UIChangeObservable();
 
+    public ObservableBoolean isUserBindPhoneLead = new ObservableBoolean(false);
+
     private Disposable bindAccountPhoneSubscription;
 
     public CommunityAccountModel(@NonNull Application application, AppRepository repository) {
@@ -93,7 +96,11 @@ public class CommunityAccountModel extends BaseViewModel<AppRepository> {
                 .subscribe(new BaseObserver<BaseDataResponse<UserBindInfoEntity>>(){
                     @Override
                     public void onSuccess(BaseDataResponse<UserBindInfoEntity> response) {
-                        userBindInfoEntity.set(response.getData());
+                        UserBindInfoEntity userBindInfo =  response.getData();
+                        userBindInfoEntity.set(userBindInfo);
+                        if(ObjectUtils.isNotEmpty(userBindInfo)){
+                            isUserBindPhoneLead.set(StringUtils.isEmpty(userBindInfo.getPhone()));
+                        }
                     }
 
 
@@ -197,6 +204,7 @@ public class CommunityAccountModel extends BaseViewModel<AppRepository> {
                         UserBindInfoEntity userBindInfo = userBindInfoEntity.get();
                         userBindInfo.setPhone(event.getPhone());
                         userBindInfoEntity.set(userBindInfo);
+                        isUserBindPhoneLead.set(false);
                     }
                 });
         RxSubscriptions.remove(bindAccountPhoneSubscription);

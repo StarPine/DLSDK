@@ -51,7 +51,8 @@
                 android:layout_marginTop="32dp"
                 android:gravity="center"
                 android:includeFontPadding="false"
-                android:textColor="#ffbfbfbf"
+                android:textColor="@color/toolbar_title_color"
+                android:textStyle="bold"
                 android:textSize="16sp" />
             <RelativeLayout
                 android:visibility="@{!viewModel.emptyRcvView ? View.VISIBLE : View.GONE}"
@@ -95,6 +96,7 @@
                         android:includeFontPadding="false"
                         android:text="@string/playfun_text_accost_hint"
                         android:textColor="@color/play_chat_purple_1"
+                        android:textStyle="bold"
                         android:textSize="13sp" />
                 </LinearLayout>
             </RelativeLayout>

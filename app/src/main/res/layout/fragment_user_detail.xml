@@ -332,7 +332,8 @@
                                                 android:layout_height="12dp"
                                                 android:layout_gravity="center|start"
                                                 android:layout_marginStart="5dp"
-                                                android:src="@drawable/icon_gender" />
+                                                android:src="@{viewModel.detailEntity.sex ==0 ? @drawable/icon_gender2: @drawable/icon_gender}"
+                                                />
 
                                             <androidx.appcompat.widget.AppCompatTextView
                                                 android:layout_width="wrap_content"

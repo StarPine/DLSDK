@@ -6,8 +6,10 @@ import android.content.res.Resources;
 import android.os.Build;
 
 import com.blankj.utilcode.util.StringUtils;
+import com.dl.lib.util.CommSharedUtil;
 import com.dl.lib.util.MMKVUtil;
 import com.dl.playfun.R;
+import com.dl.playfun.app.AppContext;
 
 import java.util.Locale;
 
@@ -22,7 +24,7 @@ public class LocaleManager {
      * @return Locale对象
      */
     public static Locale getSystemLocale(Context mContext) {
-        String localeText = readLocalCache();
+        String localeText = readLocalCache(mContext);
         if(StringUtils.isEmpty(localeText)){
             localeText = mContext.getString(R.string.playfun_local_language_val);
         }
@@ -30,11 +32,13 @@ public class LocaleManager {
     }
 
     public static void putLocalCacheApply(String local){
-        MMKVUtil.getInstance().putKeyValue(dlAppLanguageLocal,local);
+       // MMKVUtil.getInstance().putKeyValue(dlAppLanguageLocal,local);
+        CommSharedUtil.getInstance(AppContext.instance()).putString(dlAppLanguageLocal,local);
     }
 
-    public static String readLocalCache(){
-        return MMKVUtil.getInstance().readKeyValue(dlAppLanguageLocal);
+    public static String readLocalCache(Context mContext){
+        return CommSharedUtil.getInstance(mContext).getString(dlAppLanguageLocal);
+        //return MMKVUtil.getInstance().readKeyValue(dlAppLanguageLocal);
     }
 
 

@@ -49,7 +49,7 @@ public class LanguageSwitchViewModel extends BaseViewModel<AppRepository> {
     });
 
     public void initData() {
-        String localCache = model.readKeyValue(LocaleManager.dlAppLanguageLocal);
+        String localCache = LocaleManager.readLocalCache(getApplication());
         if(!StringUtils.isEmpty(localCache)){
             if ("zh".equals(localCache)) {
                 checkLanguage.set(1);

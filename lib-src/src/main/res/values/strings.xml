@@ -1146,7 +1146,7 @@
     <string name="playfun_program_detail_title_other">Event details</string>
     <string name="playfun_program_detail_detele">The event has been deleted</string>
     <string name="playfun_issuance_tends">Post</string>
-    <string name="playfun_push_setting_title">Notification</string>
+    <string name="playfun_push_setting_title">Push setting</string>
     <string name="playfun_binding_community_account">Account management</string>
     <string name="playfun_push_setting_chat">Private message</string>
     <string name="playfun_push_setting_broadcast">Event request</string>
@@ -2256,7 +2256,7 @@
     <string name="playfun_coinpusher_history_text1">Display the historical results of winning in the past 7 days</string>
     <string name="playfun_coinpusher_history_text2">Lv%s player</string>
     <string name="playfun_languae_switch_en">English</string>
-    <string name="playfun_languae_switch_zh">Traditional Chinese</string>
+    <string name="playfun_languae_switch_zh">中文繁體</string>
     <string name="playfun_languae_switch_title">Language setting</string>
     <string name="playfun_mine_apply_pay_buy">Restore purchase</string>
     <string name="playfun_mine_apply_pay_buy_text1">Paid and click to active</string>
@@ -2271,5 +2271,6 @@
     <string name="playfun_account_bind_phone_text_2">Link and login in with your phone number\nProtect your account</string>
     <string name="playfun_account_bind_phone_text_3">Not now</string>
     <string name="playfun_account_security_text">Account and security</string>
+    <string name="playfun_account_bind_phone_title">Link to phone number</string>
     <!--PlayFun-APP-END-->
 </resources>

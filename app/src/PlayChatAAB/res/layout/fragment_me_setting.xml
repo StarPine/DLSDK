@@ -75,8 +75,18 @@
                         android:layout_marginStart="8dp"
                         android:layout_toEndOf="@+id/img_account"
                         android:text="@string/playfun_account_security_text" />
-
+                    <View
+                        android:layout_centerInParent="true"
+                        android:layout_toStartOf="@+id/img_right"
+                        android:layout_marginEnd="5dp"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:visibility="@{viewModel.isUserBindPhoneLead ? View.VISIBLE : View.GONE }"
+                        binding:drawable_cornersRadius="@{50}"
+                        binding:drawable_color="@{@color/pseekbar_process}"
+                        />
                     <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/img_right"
                         style="@style/ProfileItemSubTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

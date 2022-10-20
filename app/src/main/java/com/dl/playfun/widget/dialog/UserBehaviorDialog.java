@@ -30,12 +30,11 @@ public class UserBehaviorDialog {
     */
     public static Dialog getUserBindPhonesDialog(Context mContext,ClickListener clickListener) {
         Dialog bottomDialog = new Dialog(mContext);
-        bottomDialog.setCanceledOnTouchOutside(true);
-        bottomDialog.setCancelable(true);
         LayoutInflater inflater = LayoutInflater.from(mContext);
         DialogAccountBindPhoneHintBinding binding = DataBindingUtil.inflate(inflater, R.layout.dialog_account_bind_phone_hint, null, false);
         bottomDialog.setContentView(binding.getRoot());
         bottomDialog.getWindow().setGravity(Gravity.CENTER);
+        bottomDialog.setCanceledOnTouchOutside(false);
 
         binding.tvBtn.setOnClickListener(v -> {
             if(clickListener!=null){

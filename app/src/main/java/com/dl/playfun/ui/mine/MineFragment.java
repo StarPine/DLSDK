@@ -152,9 +152,6 @@ public class MineFragment extends BaseRefreshFragment<FragmentMineBinding, MineV
     public void initData() {
         super.initData();
         toolbarHeight = binding.imgTopAvatar.getHeight();
-        boolean isMale = ConfigManager.getInstance().isMale();
-        binding.imgIconGender.setRotationX(isMale ? 0 : 180);
-        binding.imgIconGender.setRotationY(isMale ? 0 : 180);
         binding.refreshLayout.setEnableLoadMore(false);
         //允许语音开关
         binding.shAudio.setOnCheckedChangeListener((buttonView, isChecked) ->
@@ -278,7 +275,7 @@ public class MineFragment extends BaseRefreshFragment<FragmentMineBinding, MineV
                             binding.traceNum.setVisibility(View.INVISIBLE);
                         } else {
                             int fensi = browseNumberEntity.getFansNumber().intValue();
-                            String total = fensi > 99 ? "99+" : String.valueOf(fensi);
+                            String total = fensi > 99 ? "+99" : "+"+fensi;
                             binding.traceNum.setText(total);
                             binding.traceNum.setVisibility(View.VISIBLE);
                             binding.traceNum.setAlpha(0.1f);
@@ -297,7 +294,7 @@ public class MineFragment extends BaseRefreshFragment<FragmentMineBinding, MineV
                             binding.traceNum.setVisibility(View.INVISIBLE);
                         } else {
                             int fensi = browseNumberEntity.getBrowseNumber().intValue();
-                            String total = fensi > 99 ? "99+" : String.valueOf(fensi);
+                            String total = fensi > 99 ? "+99" : "+"+fensi;
                             binding.traceNum.setText(total);
                             binding.traceNum.setVisibility(View.VISIBLE);
                             binding.traceNum.setAlpha(0.1f);

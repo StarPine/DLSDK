@@ -3,6 +3,7 @@ package com.dl.playfun.ui.mine.setting;
 import android.app.Application;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 
 import com.blankj.utilcode.util.AppUtils;
@@ -13,7 +14,9 @@ import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
+import com.dl.playfun.entity.UserBindInfoEntity;
 import com.dl.playfun.entity.VersionEntity;
+import com.dl.playfun.event.BindAccountPhotoEvent;
 import com.dl.playfun.manager.GlideCacheManager;
 import com.dl.playfun.ui.login.LoginOauthFragment;
 import com.dl.playfun.ui.main.MainFragment;
@@ -27,8 +30,11 @@ import com.tencent.qcloud.tuicore.Status;
 
 import org.jetbrains.annotations.NotNull;
 
+import io.reactivex.disposables.Disposable;
 import me.goldze.mvvmhabit.binding.command.BindingAction;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
+import me.goldze.mvvmhabit.bus.RxBus;
+import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.RxUtils;
 import me.goldze.mvvmhabit.utils.ToastUtils;
@@ -40,7 +46,11 @@ import me.goldze.mvvmhabit.utils.ToastUtils;
  */
 public class MeSettingViewModel extends BaseViewModel<AppRepository> {
 
-   public UIChangeObservable uc = new UIChangeObservable();
+    public UIChangeObservable uc = new UIChangeObservable();
+
+    private Disposable bindAccountPhoneSubscription;
+
+    public ObservableBoolean isUserBindPhoneLead = new ObservableBoolean(false);
 
     public ObservableField<String> currentVersion = new ObservableField<>();
     public ObservableField<String> cacheSize = new ObservableField<>();
@@ -122,6 +132,12 @@ public class MeSettingViewModel extends BaseViewModel<AppRepository> {
         currentVersion.set(appVersionName);
         String strCacheSize = GlideCacheManager.getInstance().getCacheSize(getApplication());
         cacheSize.set(strCacheSize);
+        try {
+            isUserBindPhoneLead.set(!model.readUserData().isBindPhone());
+        }catch (Exception ignored){
+
+        }
+
     }
 
     public void logout() {
@@ -130,6 +146,24 @@ public class MeSettingViewModel extends BaseViewModel<AppRepository> {
         AppConfig.userClickOut = true;
         model.logout();
         startWithPopTo(LoginOauthFragment.class.getCanonicalName(), MainFragment.class.getCanonicalName(), true);
+    }
+
+    @Override
+    public void registerRxBus() {
+        super.registerRxBus();
+        bindAccountPhoneSubscription = RxBus.getDefault().toObservable(BindAccountPhotoEvent.class)
+                .subscribe(event -> {
+                    if(event!=null && event.getPhone()!=null){
+                        isUserBindPhoneLead.set(false);
+                    }
+                });
+        RxSubscriptions.remove(bindAccountPhoneSubscription);
+    }
+
+    @Override
+    public void removeRxBus() {
+        super.removeRxBus();
+        RxSubscriptions.remove(bindAccountPhoneSubscription);
     }
 
     public class UIChangeObservable {
