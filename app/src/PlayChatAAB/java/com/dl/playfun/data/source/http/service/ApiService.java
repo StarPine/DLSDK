@@ -656,7 +656,6 @@ public interface ApiService {
      * @return
      */
     @Headers({RetrofitHeadersConfig.NO_TOKEN_CHECK,"Content-Type: application/json"})
-    @FormUrlEncoded
     @POST("api/auth/login")
     Observable<BaseDataResponse<Map<String, String>>> authLoginPost(@Body RequestBody requestBody);
 
