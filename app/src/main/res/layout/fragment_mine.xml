@@ -89,9 +89,9 @@
 
             <androidx.core.widget.NestedScrollView
                 android:id="@+id/view_nested_scroll"
-                android:descendantFocusability="blocksDescendants"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:descendantFocusability="blocksDescendants"
                 android:fillViewport="true"
                 android:scrollbars="none">
 
@@ -99,7 +99,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:paddingBottom="@dimen/home_bottom_nav_height">
+                    android:paddingBottom="80dp">
+
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/img_top_avatar"
                         android:layout_width="match_parent"
@@ -107,23 +108,22 @@
                         android:scaleType="centerCrop"
                         android:src="@drawable/default_avatar"
                         binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
-                        binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
                         binding:imagePath="@{viewModel.userInfoEntity.avatar}"
-                        binding:resizeW="@{360}"
+                        binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
                         binding:resizeH="@{360}"
-                        />
+                        binding:resizeW="@{360}" />
+
                     <LinearLayout
-                        tools:background="@color/white"
                         android:id="@+id/list_profile_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="-20dp"
                         android:layout_marginBottom="10dp"
                         android:orientation="vertical"
+                        binding:drawable_color="@{@color/white}"
                         binding:drawable_radius_leftTop="@{19}"
                         binding:drawable_radius_rightTop="@{19}"
-                        binding:drawable_color="@{@color/white}"
-                        >
+                        tools:background="@color/white">
 
                         <RelativeLayout
                             android:layout_width="match_parent"
@@ -162,61 +162,61 @@
                                 android:textSize="17sp"
                                 android:textStyle="bold"
                                 tools:text="艾希lovexi666" />
+
                             <LinearLayout
+                                android:layout_width="38dp"
+                                android:layout_height="15dp"
                                 android:layout_below="@+id/tv_title"
                                 android:layout_alignStart="@+id/tv_title"
                                 android:layout_marginTop="10dp"
                                 android:orientation="horizontal"
-                                android:layout_width="38dp"
-                                android:layout_height="15dp"
-                                binding:drawable_cornersRadius="@{8}"
                                 binding:drawable_color="@{viewModel.userInfoEntity.sex ==0 ?@color/pseekbar_process : @color/blue_1375}"
-                                >
+                                binding:drawable_cornersRadius="@{8}">
+
                                 <androidx.appcompat.widget.AppCompatImageView
                                     android:id="@+id/img_icon_gender"
-                                    android:layout_gravity="center|start"
-                                    android:layout_marginStart="5dp"
                                     android:layout_width="12dp"
                                     android:layout_height="12dp"
-                                    android:src="@{viewModel.userInfoEntity.sex ==0 ? @drawable/icon_gender2: @drawable/icon_gender}"
-                                    />
+                                    android:layout_gravity="center|start"
+                                    android:layout_marginStart="5dp"
+                                    android:src="@{viewModel.userInfoEntity.sex ==0 ? @drawable/icon_gender2: @drawable/icon_gender}" />
+
                                 <androidx.appcompat.widget.AppCompatTextView
-                                    android:includeFontPadding="false"
-                                    android:layout_gravity="center"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
                                     android:layout_marginStart="3dp"
+                                    android:includeFontPadding="false"
                                     android:text="@{String.valueOf(viewModel.userInfoEntity.age)}"
                                     android:textColor="@color/white"
-                                    android:textSize="12dp"
-                                    />
+                                    android:textSize="12dp" />
                             </LinearLayout>
                         </RelativeLayout>
+
                         <LinearLayout
-                            android:layout_marginTop="10dp"
-                            android:orientation="horizontal"
                             android:layout_width="match_parent"
                             android:layout_height="77dp"
-                            android:layout_marginRight="10dp"
                             android:layout_marginLeft="10dp"
-                            >
+                            android:layout_marginTop="10dp"
+                            android:layout_marginRight="10dp"
+                            android:orientation="horizontal">
 
                             <RelativeLayout
                                 android:id="@+id/profile_layout"
                                 android:layout_width="0dp"
-                                android:layout_weight="1"
                                 android:layout_height="match_parent"
-                                android:gravity="center"
+                                android:layout_weight="1"
                                 android:elevation="1dp"
+                                android:gravity="center"
                                 binding:onClickCommand="@{viewModel.editProfileOnClickCommand}">
 
                                 <ImageView
                                     android:id="@+id/user_profile_img"
                                     android:layout_width="22dp"
                                     android:layout_height="22dp"
+                                    android:layout_above="@+id/user_profile"
                                     android:layout_centerHorizontal="true"
                                     android:layout_marginBottom="9dp"
-                                    android:layout_above="@+id/user_profile"
                                     android:src="@drawable/ic_mine_profile" />
 
                                 <TextView
@@ -246,19 +246,20 @@
                             <RelativeLayout
                                 android:id="@+id/mine_wallet_layout"
                                 android:layout_width="0dp"
-                                android:layout_weight="1"
-                                android:gravity="center"
                                 android:layout_height="match_parent"
+                                android:layout_weight="1"
                                 android:elevation="1dp"
+                                android:gravity="center"
                                 binding:onClickCommand="@{viewModel.walletOnClickCommand}">
 
                                 <ImageView
                                     android:layout_width="22dp"
                                     android:layout_height="22dp"
+                                    android:layout_above="@+id/mine_wallet"
                                     android:layout_centerInParent="true"
                                     android:layout_marginBottom="9dp"
-                                    android:layout_above="@+id/mine_wallet"
                                     android:src="@drawable/ic_mine_wallet" />
+
                                 <TextView
                                     android:id="@+id/mine_wallet"
                                     android:layout_width="wrap_content"
@@ -271,20 +272,20 @@
                             </RelativeLayout>
 
                             <RelativeLayout
-                                android:gravity="center"
                                 android:id="@+id/mine_my_likes_layout"
                                 android:layout_width="0dp"
-                                android:layout_weight="1"
                                 android:layout_height="match_parent"
+                                android:layout_weight="1"
                                 android:elevation="1dp"
+                                android:gravity="center"
                                 binding:onClickCommand="@{viewModel.fondOnClickCommand}">
 
                                 <ImageView
                                     android:layout_width="22dp"
                                     android:layout_height="22dp"
+                                    android:layout_above="@+id/mine_my_likes"
                                     android:layout_centerInParent="true"
                                     android:layout_marginBottom="9dp"
-                                    android:layout_above="@+id/mine_my_likes"
                                     android:src="@drawable/ic_mine_like" />
 
                                 <TextView
@@ -300,13 +301,12 @@
 
                             <RelativeLayout
                                 android:layout_width="0dp"
-                                android:layout_weight="1"
                                 android:layout_height="match_parent"
+                                android:layout_weight="1"
                                 android:elevation="1dp"
                                 binding:onClickCommand="@{viewModel.traceOnClickCommand}">
 
                                 <TextView
-                                    android:includeFontPadding="false"
                                     android:id="@+id/trace_num"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -314,12 +314,12 @@
                                     android:layout_marginStart="3dp"
                                     android:layout_toEndOf="@+id/trace_text_tv_img"
                                     android:elevation="10dp"
+                                    android:includeFontPadding="false"
                                     android:text="99+"
                                     android:textColor="@color/pseekbar_process"
                                     android:textSize="10sp"
                                     android:visibility="invisible"
-                                    tools:visibility="visible"
-                                    />
+                                    tools:visibility="visible" />
 
                                 <ImageView
                                     android:id="@+id/trace_text_tv_img"
@@ -335,8 +335,8 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_alignParentBottom="true"
-                                    android:layout_marginBottom="14dp"
                                     android:layout_centerInParent="true"
+                                    android:layout_marginBottom="14dp"
                                     android:text="@{viewModel.userInfoEntity.sex==1?@string/playfun_mine_my_visitors_man:@string/playfun_mine_my_visitors_many}"
                                     android:textColor="@color/toolbar_title_color"
                                     android:textSize="12sp"
@@ -347,14 +347,14 @@
 
                         <RelativeLayout
                             android:id="@+id/vip_layout_div"
-                            android:layout_marginBottom="19dp"
                             android:layout_width="match_parent"
                             android:layout_height="58dp"
                             android:layout_marginStart="14dp"
                             android:layout_marginEnd="14dp"
-                            tools:visibility="visible"
+                            android:layout_marginBottom="19dp"
                             android:clickable="true"
-                            android:visibility="@{safeUnbox(viewModel.sex) == 1 ? View.VISIBLE:View.GONE}">
+                            android:visibility="@{safeUnbox(viewModel.sex) == 1 ? View.VISIBLE:View.GONE}"
+                            tools:visibility="visible">
 
                             <ImageView
                                 android:layout_width="match_parent"
@@ -375,21 +375,20 @@
                                 android:textColor="#ff6b3f24"
                                 android:textSize="11sp" />
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentEnd="true"
-                                    android:layout_centerInParent="true"
-                                    android:layout_marginEnd="14dp"
-                                    android:includeFontPadding="false"
-                                    android:gravity="end"
-                                    android:text="@{viewModel.getVipTimeText(viewModel.userInfoEntity.isVip == 1) }"
-                                    android:textColor="@color/toolbar_title_color"
-                                    android:textSize="11sp"
-                                    android:visibility="@{viewModel.userInfoEntity.isVip == 1 ? View.VISIBLE:View.GONE}"
-                                    tools:text="expire\n2021-09-01"
-                                    tools:elevation="11dp"
-                                    />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerInParent="true"
+                                android:layout_marginEnd="14dp"
+                                android:gravity="end"
+                                android:includeFontPadding="false"
+                                android:text="@{viewModel.getVipTimeText(viewModel.userInfoEntity.isVip == 1) }"
+                                android:textColor="@color/toolbar_title_color"
+                                android:textSize="11sp"
+                                android:visibility="@{viewModel.userInfoEntity.isVip == 1 ? View.VISIBLE:View.GONE}"
+                                tools:elevation="11dp"
+                                tools:text="expire\n2021-09-01" />
 
 
                             <androidx.appcompat.widget.AppCompatTextView
@@ -409,6 +408,7 @@
                                 binding:onClickCommand="@{viewModel.memberOnClickCommand}" />
                         </RelativeLayout>
                     </LinearLayout>
+
                     <RelativeLayout
                         style="@style/ProfileItem"
                         android:layout_width="match_parent"
@@ -500,6 +500,7 @@
                         </LinearLayout>
 
                     </RelativeLayout>
+
                     <RelativeLayout
                         style="@style/ProfileItem"
                         android:layout_width="match_parent"
@@ -531,10 +532,10 @@
                             android:layout_marginEnd="5dp"
                             android:layout_toStartOf="@+id/invitation_code_right_img"
                             android:gravity="center"
-                            android:visibility="@{viewModel.userInfoEntity.sex==1 ? View.VISIBLE:View.GONE}"
                             android:text="@string/mine_fragment_invitation_code_title"
                             android:textColor="@color/purple1"
-                            android:textSize="12sp" />
+                            android:textSize="12sp"
+                            android:visibility="@{viewModel.userInfoEntity.sex==1 ? View.VISIBLE:View.GONE}" />
 
                         <TextView
                             android:id="@+id/invitation_code_right_img"
@@ -542,6 +543,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
                     </RelativeLayout>
+
                     <TextView
                         android:id="@+id/tv_tip"
                         style="@style/TopWarn"
@@ -550,11 +552,12 @@
                         android:text="@{viewModel.banner.text}"
                         android:visibility="@{viewModel.banner == null ? View.GONE:View.VISIBLE}"
                         binding:onClickCommand="@{viewModel.bannerOnClickCommand}" />
+
                     <RelativeLayout
                         style="@style/ProfileItem"
-                        android:layout_marginTop="10dp"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/profile_item_height"
+                        android:layout_marginTop="10dp"
                         android:visibility="@{viewModel.getLevelViewShow(viewModel.userInfoEntity.isLevel)}"
                         binding:onClickCommand="@{viewModel.levelEquityOnClickCommand}">
 
@@ -580,6 +583,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
                     </RelativeLayout>
+
                     <RelativeLayout
                         style="@style/ProfileItem"
                         android:layout_width="match_parent"
@@ -1021,12 +1025,13 @@
                             android:id="@+id/sh_video"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
                             android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
                             android:thumb="@drawable/switch_thumb"
-                            android:track="@drawable/switch_track"/>
+                            android:track="@drawable/switch_track" />
 
                     </RelativeLayout>
+
                     <RelativeLayout
                         style="@style/ProfileItem"
                         android:layout_width="match_parent"
@@ -1053,12 +1058,13 @@
                             android:id="@+id/sh_audio"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
                             android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
                             android:thumb="@drawable/switch_thumb"
                             android:track="@drawable/switch_track" />
 
                     </RelativeLayout>
+
                     <RelativeLayout
                         style="@style/ProfileItem"
                         android:layout_width="match_parent"
@@ -1128,6 +1134,7 @@
                             android:layout_height="wrap_content"
                             android:text="" />
                     </RelativeLayout>
+
                     <RelativeLayout
                         style="@style/ProfileItem"
                         android:layout_width="match_parent"
@@ -1141,14 +1148,16 @@
                             android:layout_alignParentStart="true"
                             android:layout_centerInParent="true"
                             android:src="@mipmap/ic_mine_item_img_10" />
+
                         <TextView
                             style="@style/ProfileItemTitle"
-                            android:layout_toEndOf="@+id/mine_item_play"
-                            android:layout_marginStart="8dp"
-                            android:textSize="13sp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/playfun_mine_apply_pay_buy" />
+                            android:layout_marginStart="8dp"
+                            android:layout_toEndOf="@+id/mine_item_play"
+                            android:text="@string/playfun_mine_apply_pay_buy"
+                            android:textSize="13sp" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -1159,6 +1168,7 @@
                             android:text="@string/playfun_mine_apply_pay_buy_text1"
                             android:textColor="@color/gray_light"
                             android:textSize="12sp" />
+
                         <TextView
                             android:id="@+id/pay_right_img"
                             style="@style/ProfileItemSubTitle"
