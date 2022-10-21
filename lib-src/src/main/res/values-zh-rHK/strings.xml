@@ -1011,7 +1011,7 @@
     <string name="playfun_mine_set_redpackage_photo">設定紅包照片</string>
     <string name="playfun_mine_burn">快照</string>
     <string name="playfun_mine_burn_recover">恢復</string>
-    <string name="playfun_set_red_package_photo_tip">只可以設定一張紅包照片，用戶支付%s鑽石查看</string>
+    <string name="playfun_set_red_package_photo_tip">可選一張照片設定為紅包照片，用戶瀏覽後將獲得水晶獎勵</string>
     <string name="playfun_mine_burn_total">%s個人看過</string>
     <string name="playfun_mine_once_ertification">讓你更受歡迎</string>
     <string name="playfun_chat_action_location">位置</string>
@@ -1176,7 +1176,7 @@
     <string name="playfun_jewel_read_explain">24小時內紅包未被領取，鑽石退回錢包。</string>
     <string name="playfun_red_package_photo_title">紅包照片</string>
     <string name="playfun_red_package_video">紅包影片</string>
-    <string name="playfun_red_package_video_explain">只可以設定一個紅包影片，用戶支付%s鑽石查看</string>
+    <string name="playfun_red_package_video_explain">可選一張照片設定為紅包影片，用戶瀏覽後將獲得水晶獎勵</string>
     <string name="playfun_phone">手機號碼</string>
     <string name="playfun_setting_clear_catck">清除圖片快取</string>
     <string name="playfun_setting_sign_out">登出</string>
@@ -2276,5 +2276,6 @@
     <string name="playfun_account_bind_phone_title">綁定手機號</string>
     <string name="playfun_login_oauth_text1">登入此帳號</string>
     <string name="playfun_login_oauth_text2">其他帳號</string>
+    <string name="playfun_pay_buy_reports">已進行恢復訂單處理，請稍待片刻</string>
     <!--PlayFun-APP-END-->
 </resources>

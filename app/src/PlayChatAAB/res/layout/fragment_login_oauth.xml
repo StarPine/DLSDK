@@ -21,16 +21,14 @@
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:src="@drawable/login_backdrop_img" />
-
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/title_logo"
-            android:layout_width="190dp"
-            android:layout_height="53dp"
+            android:layout_width="212dp"
+            android:layout_height="163dp"
             android:layout_alignParentTop="true"
             android:layout_centerInParent="true"
             android:layout_marginTop="80dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/login_title" />
+            android:src="@drawable/splash_top" />
         <LinearLayout
             android:layout_above="@+id/auth_login_layout"
             android:orientation="vertical"
@@ -101,10 +99,11 @@
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:includeFontPadding="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/playfun_login_oauth_text2"
-                android:textColor="@color/white"
+                android:textColor="@color/toolbar_title_color"
                 android:textSize="13sp"
                 />
             <androidx.appcompat.widget.AppCompatImageView
@@ -113,7 +112,7 @@
                 android:layout_height="15dp"
                 android:layout_marginStart="1dp"
                 android:src="@drawable/ic_arrow_right"
-                android:tint="@color/white"
+                android:tint="@color/toolbar_title_color"
                 />
 
 

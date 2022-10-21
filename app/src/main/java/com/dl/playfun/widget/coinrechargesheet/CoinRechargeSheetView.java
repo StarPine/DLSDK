@@ -108,6 +108,7 @@ public class CoinRechargeSheetView extends BasePopupWindow implements View.OnCli
                 .subscribe(o -> {
                     billingClientLifecycle.queryPurchasesAsync(BillingClient.SkuType.INAPP);
                     billingClientLifecycle.queryPurchasesAsync(BillingClient.SkuType.SUBS);
+                    ToastUtils.showShort(R.string.playfun_pay_buy_reports);
                 });
 
         initData();

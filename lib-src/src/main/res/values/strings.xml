@@ -950,7 +950,7 @@
     <string name="playfun_face_detect_auth_begin_ok">Start verifying</string>
     <string name="playfun_face_detect_dialog_btn_sure">Confirm</string>
     <string name="playfun_tab_female_1">Nearby</string>
-    <string name="playfun_tab_female_2">New users</string>
+    <string name="playfun_tab_female_2">New</string>
     <string name="playfun_tab_female_3">Queen</string>
     <string name="playfun_tab_male_1">Nearby</string>
     <string name="playfun_tab_male_2">VIP</string>
@@ -994,7 +994,7 @@
     <string name="playfun_mine_certification_center">Verify Your Profile</string>
     <string name="playfun_mine_my_adoui">My Voice</string>
     <string name="playfun_mine_my_borcast">My Moments</string>
-    <string name="playfun_mine_my_album">Photos</string>
+    <string name="playfun_mine_my_album">Album</string>
     <string name="playfun_mine_upload_photo">Upload photos</string>
     <string name="playfun_mine_upload_photo_or_video">Upload</string>
     <string name="playfun_mine_album_privacy">Album settings</string>
@@ -1012,7 +1012,7 @@
     <string name="playfun_mine_set_redpackage_photo">Paid Photo</string>
     <string name="playfun_mine_burn">Snapshots</string>
     <string name="playfun_mine_burn_recover">Recover</string>
-    <string name="playfun_set_red_package_photo_tip">Only one photo can be selected as a paid photo. Others must pay %s diamonds to view it.</string>
+    <string name="playfun_set_red_package_photo_tip">Select a photo as paid photo, you\'ll get crystals after being viewed</string>
     <string name="playfun_mine_burn_total">%s people viewed</string>
     <string name="playfun_mine_once_ertification">Verify now.</string>
     <string name="playfun_chat_action_location">Location</string>
@@ -1177,7 +1177,7 @@
     <string name="playfun_jewel_read_explain">Diamonds will be returned to your wallet if not claimed within 24 hours.</string>
     <string name="playfun_red_package_photo_title">Paid Photo</string>
     <string name="playfun_red_package_video">Paid Video</string>
-    <string name="playfun_red_package_video_explain">Only one video can be selected as the paid photo, and users must pay %s diamonds to unlock it.</string>
+    <string name="playfun_red_package_video_explain">Select a photo as paid video, you\'ll get crystals after being viewed</string>
     <string name="playfun_phone">Phone Number</string>
     <string name="playfun_setting_clear_catck">Clear image cache</string>
     <string name="playfun_setting_sign_out">Log out</string>
@@ -1634,15 +1634,15 @@
     <string name="playfun_mine_trace_delike">Sure to unfollow?</string>
     <string name="playfun_mine_trace_delike_cannel">Cancel</string>
     <string name="playfun_mine_trace_delike_confirm">Confirm</string>
-    <string name="playfun_mine_trace_man_title">My visitors</string>
+    <string name="playfun_mine_trace_man_title">Visitors</string>
     <string name="playfun_mine_trace_man_title2">Following %s users</string>
-    <string name="playfun_mine_trace_man_title3">See all people who are interested in me %s</string>
-    <string name="playfun_mine_trace_man_title4">Unlock 24 hours real-time view of all the people who are interested in me</string>
-    <string name="playfun_mine_trace_man_title_dialog">See all people who are interested in me</string>
+    <string name="playfun_mine_trace_man_title3">See all people who are attracted to you %s</string>
+    <string name="playfun_mine_trace_man_title4">Unlock 24 hours real-time view of all the people who are attracted to you</string>
+    <string name="playfun_mine_trace_man_title_dialog">See all people who are attracted to you</string>
     <string name="playfun_mine_trace_man_unlocks">Once unlocked, you can view all people who are interested in you within 24 hours</string>
     <string name="playfun_mine_trace_man_play_title">Unlock Who visited me</string>
     <string name="playfun_mine_trace_man_play_confirm">Unlock now (%s diamonds)</string>
-    <string name="playfun_mine_trace_man_title1">%s users are interested in me.</string>
+    <string name="playfun_mine_trace_man_title1">%s users are attracted to you.</string>
     <string name="playfun_mine_trace_man_hint">%s times</string>
     <string name="playfun_mine_trace_time_exp">Visited just now</string>
     <string name="playfun_mine_trace_time_exp2">Visited 1 hour ago</string>
@@ -1921,7 +1921,7 @@
     <string name="notepad_word_count">0/200</string>
     <string name="playfun_mine_shop">Shop</string>
     <string name="playfun_coin_electronic_wallet">Wallet</string>
-    <string name="fragment_level_title">Level privilege</string>
+    <string name="fragment_level_title">Privilege</string>
     <string name="fragment_level_text3">* The final interpretation right belongs to the platform</string>
     <string name="fragment_level_text4">Grade</string>
     <string name="fragment_level_text5">Privilege</string>
@@ -1935,7 +1935,7 @@
     <string name="fragment_level_text_video">Video price %1$s～%2$s diamonds/min</string>
     <string name="fragment_level_text_video2">Video %s diamonds/min</string>
     <string name="playfun_accont_bind_hint">Bind the social account</string>
-    <string name="playfun_accont_bind_hint2">Use social account to login</string>
+    <string name="playfun_accont_bind_hint2">Log in to the APP through this binding</string>
     <string name="playfun_setting_account_hint2">1. Canceling your PlayChat account is an unrecoverable operation. In order to protect your legitimate rights and interests, before canceling your account, please back up the information and data related to the proposed cancellation of your PlayChat account. If you have any questions, comments and suggestions for account cancellation, you can contact PlayChat customer service and we will give you the necessary help.
                                         \n2. If your PlayChat account is complained about by others, investigated, or is in litigation or arbitration proceedings, PlayChat has the right to terminate the cancellation of your PlayChat account without your consent.
                                         \n3. Canceling your PlayChat account does not mean that the account behavior and related liabilities before the cancellation of the PlayChat account have been waived or reduced.
@@ -1969,7 +1969,7 @@
     <string name="playfun_visitor_total_count">See all visitors %s</string>
     <string name="playfun_mine_profile">Profile</string>
     <string name="playfun_mine_wallet">Wallet</string>
-    <string name="playfun_mine_my_visitors_man">My visitors</string>
+    <string name="playfun_mine_my_visitors_man">Visitors</string>
     <string name="fragment_perfect_hint">At least 18 years old to register</string>
     <string name="setting_photo_cover_hint">Set as cover</string>
     <string name="playfun_setting_text">Setting</string>
@@ -2141,8 +2141,8 @@
     <string name="playfun_contact_empty_text">No contact, recommend for %s</string>
     <string name="playfun_contact_text1">Set up frequent contact success</string>
     <string name="playfun_contact_text2">Frequent contact cancelled</string>
-    <string name="playfun_mine_title_btn_exclusive">Exclusive greeting</string>
-    <string name="playfun_mine_title_my_exclusive">Exclusive greeting</string>
+    <string name="playfun_mine_title_btn_exclusive">Custom greet</string>
+    <string name="playfun_mine_title_my_exclusive">Custom greet</string>
     <string name="playfun_my_exclusive_tips_content">1. Greeting text and sweet voice is a perfect greeting combination\n2. You can modify greeting words and voice greetings once a day</string>
     <string name="playfun_text_chat_up">Greeting</string>
     <string name="playfun_audio_chat_up">Voice greeting</string>
@@ -2161,9 +2161,9 @@
     <string name="playfun_audio_accost_tip">Within 15 seconds</string>
     <string name="playfun_deadline_is_up">Deadline until:\n%s</string>
     <string name="playfun_buy_now">Buy now</string>
-    <string name="playfun_continue_to_now">Continue to buy</string>
+    <string name="playfun_continue_to_now">Purchase</string>
     <string name="playfun_vip_service_tips">Automatic subscription, cancel anytime. \nPurchasing a subscription will be charged to your Google account and signifies your agreement to our User Agreement and Privacy Policy. Automatic subscriptions can be managed or cancelled at any time in the settings.</string>
-    <string name="playfun_nonactivated">Nonactivated</string>
+    <string name="playfun_nonactivated">Unactivated</string>
     <string name="playfun_reward">award</string>
     <string name="playfun_reward_tips">Log in tomorrow to get %s diamonds, video card*%s</string>
     <string name="playfun_reward_tips2">Log in tomorrow to get %s diamonds</string>
@@ -2208,7 +2208,7 @@
     <string name="playfun_perfect_tips_age">Age</string>
     <string name="playfun_perfect_age">18</string>
     <string name="playfun_coinpusher_hint_title">Happy Coin Factory</string>
-    <string name="playfun_coinpusher_text_30">You have not inserted coins within 30s, and quit out</string>
+    <string name="playfun_coinpusher_text_30">You have not inserted coins, and quit out</string>
     <string name="playfun_purchase_text">Buy</string>
     <string name="playfun_capsule_tab">Treasure box</string>
     <string name="playfun_coinpusher_text_1">Occupied</string>
@@ -2264,8 +2264,8 @@
     <string name="playfun_bind_text_un">Unbind</string>
     <string name="playfun_payment_text_2">Paid and click to active</string>
     <string name="playfun_payment_text_3">Restore order</string>
-    <string name="playfun_login_text_facekbook">Log in via FaceBook</string>
-    <string name="playfun_login_text_google">Log in via Google</string>
+    <string name="playfun_login_text_facekbook">Log in with FaceBook</string>
+    <string name="playfun_login_text_google">Log in with Google</string>
     <string name="playfun_network_error_text_click">Network error, try again.</string>
     <string name="playfun_account_bind_phone_text_1">Invite you to link your phone number</string>
     <string name="playfun_account_bind_phone_text_2">Link and login in with your phone number\nProtect your account</string>
@@ -2274,5 +2274,6 @@
     <string name="playfun_account_bind_phone_title">Link to phone number</string>
     <string name="playfun_login_oauth_text1">Log in this account</string>
     <string name="playfun_login_oauth_text2">Other account</string>
+    <string name="playfun_pay_buy_reports">Restoring order, please wait</string>
     <!--PlayFun-APP-END-->
 </resources>

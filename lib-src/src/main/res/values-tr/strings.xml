@@ -1012,7 +1012,7 @@
     <string name="playfun_mine_set_redpackage_photo">Paid Photo</string>
     <string name="playfun_mine_burn">Snapshots</string>
     <string name="playfun_mine_burn_recover">Recover</string>
-    <string name="playfun_set_red_package_photo_tip">Only one photo can be selected as a paid photo. Others must pay %s diamonds to view it.</string>
+    <string name="playfun_set_red_package_photo_tip">Select a photo as paid photo, you\'ll get crystals after being viewed</string>
     <string name="playfun_mine_burn_total">%s people viewed</string>
     <string name="playfun_mine_once_ertification">Verify now.</string>
     <string name="playfun_chat_action_location">Location</string>
@@ -1177,7 +1177,7 @@
     <string name="playfun_jewel_read_explain">Diamonds will be returned to your wallet if not claimed within 24 hours.</string>
     <string name="playfun_red_package_photo_title">Paid Photo</string>
     <string name="playfun_red_package_video">Paid Video</string>
-    <string name="playfun_red_package_video_explain">Only one video can be selected as the paid photo, and users must pay %s diamonds to unlock it.</string>
+    <string name="playfun_red_package_video_explain">Select a photo as paid video, you\'ll get crystals after being viewed</string>
     <string name="playfun_phone">Phone Number</string>
     <string name="playfun_setting_clear_catck">Clear image cache</string>
     <string name="playfun_setting_sign_out">Log out</string>
@@ -1935,7 +1935,7 @@
     <string name="fragment_level_text_video">Video price %1$s～%2$s diamonds/min</string>
     <string name="fragment_level_text_video2">Video %s diamonds/min</string>
     <string name="playfun_accont_bind_hint">Bind the social account</string>
-    <string name="playfun_accont_bind_hint2">Use social account to login</string>
+    <string name="playfun_accont_bind_hint2">Log in to the APP through this binding</string>
     <string name="playfun_setting_account_hint2">1. Canceling your PlayChat account is an unrecoverable operation. In order to protect your legitimate rights and interests, before canceling your account, please back up the information and data related to the proposed cancellation of your PlayChat account. If you have any questions, comments and suggestions for account cancellation, you can contact PlayChat customer service and we will give you the necessary help.
                                         \n2. If your PlayChat account is complained about by others, investigated, or is in litigation or arbitration proceedings, PlayChat has the right to terminate the cancellation of your PlayChat account without your consent.
                                         \n3. Canceling your PlayChat account does not mean that the account behavior and related liabilities before the cancellation of the PlayChat account have been waived or reduced.
@@ -2264,8 +2264,8 @@
     <string name="playfun_bind_text_un">Unbind</string>
     <string name="playfun_payment_text_2">Paid and click to active</string>
     <string name="playfun_payment_text_3">Restore order</string>
-    <string name="playfun_login_text_facekbook">Log in via FaceBook</string>
-    <string name="playfun_login_text_google">Log in via Google</string>
+    <string name="playfun_login_text_facekbook">Log in with FaceBook</string>
+    <string name="playfun_login_text_google">Log in with Google</string>
     <string name="playfun_network_error_text_click">Network error, try again.</string>
     <string name="playfun_account_bind_phone_text_1">Invite you to link your phone number</string>
     <string name="playfun_account_bind_phone_text_2">Link and login in with your phone number\nProtect your account</string>
@@ -2274,5 +2274,6 @@
     <string name="playfun_account_bind_phone_title">Link to phone number</string>
     <string name="playfun_login_oauth_text1">Log in this account</string>
     <string name="playfun_login_oauth_text2">Other account</string>
+    <string name="playfun_pay_buy_reports">Restoring order, please wait</string>
     <!--PlayFun-APP-END-->
 </resources>

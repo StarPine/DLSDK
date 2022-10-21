@@ -37,8 +37,8 @@ import me.goldze.mvvmhabit.utils.StringUtils;
  */
 public class PerfectProfileFragment extends BaseFragment<FragmentPerfectProfileBinding, PerfectProfileViewModel> {
 
-    //记录是否有触发 临时值
-    private boolean flagSelectAvatar = false;
+    private boolean currentSelectPhoto = false;
+
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return R.layout.fragment_perfect_profile;
@@ -52,7 +52,6 @@ public class PerfectProfileFragment extends BaseFragment<FragmentPerfectProfileB
     @Override
     public void initData() {
         super.initData();
-        flagSelectAvatar = false;
         viewModel.getNickName();
     }
 
@@ -62,9 +61,9 @@ public class PerfectProfileFragment extends BaseFragment<FragmentPerfectProfileB
         return ViewModelProviders.of(this, factory).get(PerfectProfileViewModel.class);
     }
 
-    public void startRegisterSexFragment(String localAvatarPath){
+    public void startRegisterSexFragment(){
         Bundle bundle = new Bundle();
-        bundle.putString("avatar", !StringUtils.isEmpty(localAvatarPath) ? localAvatarPath : viewModel.UserAvatar.get());
+        bundle.putString("avatar", !currentSelectPhoto ? null : viewModel.UserAvatar.get());
         bundle.putString("name", viewModel.UserName.get());
         viewModel.start(RegisterSexFragment.class.getCanonicalName(), bundle);
     }
@@ -74,7 +73,6 @@ public class PerfectProfileFragment extends BaseFragment<FragmentPerfectProfileB
         super.initViewObservable();
         if (AppConfig.overseasUserEntity != null) {
             viewModel.UserName.set(AppConfig.overseasUserEntity.getName());
-            viewModel.UserAvatar.set(AppConfig.overseasUserEntity.getPhoto());
         }
         viewModel.uc.clickAvatar.observe(this, new Observer<Void>() {
             @Override
@@ -85,16 +83,7 @@ public class PerfectProfileFragment extends BaseFragment<FragmentPerfectProfileB
         });
 
         viewModel.uc.verifyAvatar.observe(this, o -> {
-            //有记录手动选择过头像
-            if(flagSelectAvatar){
-                startRegisterSexFragment(null);
-            }else{
-                if(AppConfig.overseasUserEntity != null && StringUtils.isEmpty(AppConfig.overseasUserEntity.getPhoto())){
-                    saveOverseas();
-                }else{
-                    startRegisterSexFragment(null);
-                }
-            }
+                startRegisterSexFragment();
         });
 
         viewModel.uc.nicknameDuplicate.observe(this, name -> {
@@ -115,29 +104,6 @@ public class PerfectProfileFragment extends BaseFragment<FragmentPerfectProfileB
 
     }
 
-
-    /**
-     * @return void
-     * @Desc TODO(讲第三方头像转成本地头像)
-     * @author 彭石林
-     * @parame []
-     * @Date 2022/7/15
-     */
-    public void saveOverseas() {
-        binding.imgAvatar.setDrawingCacheBackgroundColor(Color.TRANSPARENT);
-        binding.imgAvatar.buildDrawingCache(true);
-        binding.imgAvatar.buildDrawingCache();
-        Bitmap bitmap = binding.imgAvatar.getDrawingCache();
-        String filename = ApiUitl.getDiskCacheDir(getContext()) + "/Overseas" + ApiUitl.getDateTimeFileName() + ".jpg";
-        ApiUitl.saveBitmap(bitmap, filename, flag -> {
-            if (flag) {
-                startRegisterSexFragment(filename);
-            } else {
-                ToastUtils.showShort(R.string.playfun_fragment_perfect_avatar1);
-            }
-        });
-    }
-
     //选择头像
     private void chooseAvatar() {
         PictureSelectorUtil.selectImageAndCrop(mActivity, true, 1, 1, new OnResultCallbackListener<LocalMedia>() {
@@ -145,7 +111,7 @@ public class PerfectProfileFragment extends BaseFragment<FragmentPerfectProfileB
             public void onResult(List<LocalMedia> result) {
                 clearNicknameFocus();
                 viewModel.UserAvatar.set(result.get(0).getCutPath());
-                flagSelectAvatar = true;
+                currentSelectPhoto = true;
             }
 
             @Override

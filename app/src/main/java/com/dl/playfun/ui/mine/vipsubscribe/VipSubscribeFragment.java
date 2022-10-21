@@ -43,6 +43,8 @@ import com.dl.playfun.widget.dialog.TraceDialog;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.goldze.mvvmhabit.utils.ToastUtils;
+
 /**
  * @author wulei
  */
@@ -187,6 +189,7 @@ public class VipSubscribeFragment extends BaseToolbarFragment<FragmentVipSubscri
         });
         viewModel.uc.localReportEvent.observe(this , unused->{
             billingClientLifecycle.queryPurchasesAsync(BillingClient.SkuType.SUBS);
+            ToastUtils.showShort(R.string.playfun_pay_buy_reports);
         });
         initServiceTips();
 

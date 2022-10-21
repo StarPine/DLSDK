@@ -135,6 +135,12 @@ public class OftenContactViewModel extends BaseViewModel<AppRepository> {
                         super.onError(e);
                         dismissHUD();
                     }
+
+                    @Override
+                    public void onComplete() {
+                        super.onComplete();
+                        dismissHUD();
+                    }
                 });
     }
 

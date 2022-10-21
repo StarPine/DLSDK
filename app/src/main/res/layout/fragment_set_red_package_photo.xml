@@ -73,7 +73,7 @@
                 style="@style/TopWarn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{@string/playfun_set_red_package_photo_tip(viewModel.redPackagePrice)}" />
+                android:text="@string/playfun_set_red_package_photo_tip" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"

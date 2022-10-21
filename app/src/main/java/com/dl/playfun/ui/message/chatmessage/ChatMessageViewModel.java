@@ -110,6 +110,11 @@ public class ChatMessageViewModel extends BaseViewModel<AppRepository> {
                     @Override
                     public void onError(RequestException e) {
                         super.onError(e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        super.onComplete();
                         dismissHUD();
                     }
                 });
