@@ -188,8 +188,7 @@ public class VipSubscribeFragment extends BaseToolbarFragment<FragmentVipSubscri
             showRewardDialog();
         });
         viewModel.uc.localReportEvent.observe(this , unused->{
-            billingClientLifecycle.queryPurchasesAsync(BillingClient.SkuType.SUBS);
-            ToastUtils.showShort(R.string.playfun_pay_buy_reports);
+            billingClientLifecycle.queryPurchasesAsyncToast(BillingClient.SkuType.SUBS);
         });
         initServiceTips();
 

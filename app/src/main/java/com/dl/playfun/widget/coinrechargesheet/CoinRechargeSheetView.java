@@ -106,8 +106,8 @@ public class CoinRechargeSheetView extends BasePopupWindow implements View.OnCli
         RxView.clicks(tvReport)
                 .throttleFirst(1, TimeUnit.SECONDS)//1秒钟内只允许点击1次
                 .subscribe(o -> {
-                    billingClientLifecycle.queryPurchasesAsync(BillingClient.SkuType.INAPP);
-                    billingClientLifecycle.queryPurchasesAsync(BillingClient.SkuType.SUBS);
+                    billingClientLifecycle.queryPurchasesAsyncToast(BillingClient.SkuType.INAPP);
+                    billingClientLifecycle.queryPurchasesAsyncToast(BillingClient.SkuType.SUBS);
                     ToastUtils.showShort(R.string.playfun_pay_buy_reports);
                 });
 

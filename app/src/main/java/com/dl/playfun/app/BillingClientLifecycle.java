@@ -28,6 +28,7 @@ import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.dl.playfun.BuildConfig;
+import com.dl.playfun.R;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.UserDataEntity;
@@ -50,6 +51,7 @@ import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.RxUtils;
+import me.goldze.mvvmhabit.utils.ToastUtils;
 
 /**
  * Author: 彭石林
@@ -456,6 +458,33 @@ public class BillingClientLifecycle implements LifecycleObserver, BillingClientS
                         }
                     }
                 }
+            }
+        };
+        billingClient.queryPurchasesAsync(SkuType,mPurchasesResponseListener);
+    }
+
+    /**
+     * 补单操作 查询已支付的商品，并通知服务器后消费（google的支付里面，没有消费的商品，不能再次购买）
+     */
+    public void queryPurchasesAsyncToast(String SkuType){
+        PurchasesResponseListener mPurchasesResponseListener = (billingResult, purchasesResult) -> {
+            if(billingResult.getResponseCode() != BillingClient.BillingResponseCode.OK) return;
+            if(purchasesResult!=null && !purchasesResult.isEmpty()){
+                for (Purchase purchase : purchasesResult) {
+                    if(purchase!=null){
+                        if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
+                            //消耗品 开始消耗
+                            consumePurchaseHistory(purchase);
+                            //确认购买交易
+                            if (!purchase.isAcknowledged()) {
+                                acknowledgeHistoryPurchase(purchase);
+                            }
+                        }
+                    }
+                }
+                ToastUtils.showShort(R.string.playfun_pay_buy_reports);
+            }else {
+                ToastUtils.showShort(R.string.playfun_pay_buy_reports_empty);
             }
         };
         billingClient.queryPurchasesAsync(SkuType,mPurchasesResponseListener);

@@ -226,9 +226,8 @@ public class MineFragment extends BaseRefreshFragment<FragmentMineBinding, MineV
         viewModel.uc.localReportEvent.observe(this , unused->{
             try {
                 BillingClientLifecycle billingClientLifecycle = ((AppContext) mActivity.getApplication()).getBillingClientLifecycle();
-                billingClientLifecycle.queryPurchasesAsync(BillingClient.SkuType.INAPP);
-                billingClientLifecycle.queryPurchasesAsync(BillingClient.SkuType.SUBS);
-                ToastUtils.showShort(R.string.playfun_pay_buy_reports);
+                billingClientLifecycle.queryPurchasesAsyncToast(BillingClient.SkuType.INAPP);
+                billingClientLifecycle.queryPurchasesAsyncToast(BillingClient.SkuType.SUBS);
             }catch (Exception ignored) {
 
             }

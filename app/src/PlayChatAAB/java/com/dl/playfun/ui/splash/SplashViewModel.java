@@ -200,7 +200,7 @@ public class SplashViewModel extends BaseViewModel<AppRepository> {
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
                 .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseDisposableObserver<BaseDataResponse<AllConfigEntity>>() {
+                .subscribe(new BaseObserver<BaseDataResponse<AllConfigEntity>>() {
 
                     @Override
                     public void onComplete() {
@@ -233,8 +233,7 @@ public class SplashViewModel extends BaseViewModel<AppRepository> {
 
                     @Override
                     public void onError(RequestException t) {
-                        ApiFailException apiFailException = new ApiFailException(t.getCode(), t.getMessage());
-                        super.onError(apiFailException);
+                        super.onError(t);
                         hintRetryShow.set(true);
                     }
                 });

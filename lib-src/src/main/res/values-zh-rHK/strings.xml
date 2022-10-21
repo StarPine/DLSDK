@@ -2277,5 +2277,6 @@
     <string name="playfun_login_oauth_text1">登入此帳號</string>
     <string name="playfun_login_oauth_text2">其他帳號</string>
     <string name="playfun_pay_buy_reports">已進行恢復訂單處理，請稍待片刻</string>
+    <string name="playfun_pay_buy_reports_empty">沒有找到可恢復購買的訂單</string>
     <!--PlayFun-APP-END-->
 </resources>

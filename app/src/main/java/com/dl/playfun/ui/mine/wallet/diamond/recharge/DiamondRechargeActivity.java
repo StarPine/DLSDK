@@ -102,9 +102,8 @@ public class DiamondRechargeActivity extends BaseActivity<ActivityDiamondRecharg
         super.initViewObservable();
 
         viewModel.localReportEvent.observe(this , unused->{
-            billingClientLifecycle.queryPurchasesAsync(BillingClient.SkuType.INAPP);
-            billingClientLifecycle.queryPurchasesAsync(BillingClient.SkuType.SUBS);
-            ToastUtils.showShort(R.string.playfun_pay_buy_reports);
+            billingClientLifecycle.queryPurchasesAsyncToast(BillingClient.SkuType.INAPP);
+            billingClientLifecycle.queryPurchasesAsyncToast(BillingClient.SkuType.SUBS);
         });
 
         viewModel.payOnClick.observe(this, payCode -> {
