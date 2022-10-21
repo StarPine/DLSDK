@@ -14,6 +14,7 @@ import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.EaringlSwitchUtil;
 import com.dl.playfun.data.AppRepository;
+import com.dl.playfun.data.source.http.exception.ApiFailException;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseDisposableObserver;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
@@ -231,11 +232,11 @@ public class SplashViewModel extends BaseViewModel<AppRepository> {
                     }
 
                     @Override
-                    public void onError(RequestException e) {
-                        e.printStackTrace();
+                    public void onError(RequestException t) {
+                        ApiFailException apiFailException = new ApiFailException(t.getCode(), t.getMessage());
+                        super.onError(apiFailException);
                         hintRetryShow.set(true);
                     }
-
                 });
     }
 }
