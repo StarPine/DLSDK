@@ -145,7 +145,8 @@ public class MeSettingViewModel extends BaseViewModel<AppRepository> {
         // MobclickAgent.onProfileSignOff();
         AppConfig.userClickOut = true;
         model.logout();
-        startWithPopTo(LoginOauthFragment.class.getCanonicalName(), MainFragment.class.getCanonicalName(), true);
+        popAllTo(new LoginOauthFragment());
+        //startWithPopTo(LoginOauthFragment.class.getCanonicalName(), MainFragment.class.getCanonicalName(), true);
     }
 
     @Override

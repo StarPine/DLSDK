@@ -267,9 +267,11 @@ public class MainContainerActivity extends MySupportActivity {
         }
         UserDataEntity localUserEntity = ConfigManager.getInstance().getAppRepository().readUserData();
         if(ObjectUtils.isEmpty(localUserEntity)){
-            startWithPopTo(new LoginFragment(), MainFragment.class, true);
+            popAllTo(new LoginFragment());
+            //startWithPopTo(new LoginFragment(), MainFragment.class, true);
         }else{
-            startWithPopTo(new LoginOauthFragment(), MainFragment.class, true);
+            popAllTo(new LoginFragment());
+            //startWithPopTo(new LoginOauthFragment(), MainFragment.class, true);
         }
 
     }
