@@ -132,9 +132,9 @@ public class CommunityAccountModel extends BaseViewModel<AppRepository> {
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
                 .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseDataResponse<UserDataEntity>>() {
+                .subscribe(new BaseObserver<BaseResponse>() {
                     @Override
-                    public void onSuccess(BaseDataResponse<UserDataEntity> response) {
+                    public void onSuccess(BaseResponse baseResponse) {
                         dismissHUD();
                         UserDataEntity userDataEntity = model.readUserData();
                         userDataEntity.setIsAuth(1);
@@ -199,11 +199,13 @@ public class CommunityAccountModel extends BaseViewModel<AppRepository> {
         super.registerRxBus();
         bindAccountPhoneSubscription = RxBus.getDefault().toObservable(BindAccountPhotoEvent.class)
                 .subscribe(event -> {
-                    if(event!=null && event.getPhone()!=null){
+                    if(event!=null && event.getPhone()!=null) {
                         UserBindInfoEntity userBindInfo = userBindInfoEntity.get();
-                        userBindInfo.setPhone(event.getPhone());
-                        userBindInfoEntity.set(userBindInfo);
-                        isUserBindPhoneLead.set(false);
+                        if (userBindInfo != null){
+                            userBindInfo.setPhone(event.getPhone());
+                            userBindInfoEntity.set(userBindInfo);
+                            isUserBindPhoneLead.set(false);
+                        }
                     }
                 });
         RxSubscriptions.remove(bindAccountPhoneSubscription);

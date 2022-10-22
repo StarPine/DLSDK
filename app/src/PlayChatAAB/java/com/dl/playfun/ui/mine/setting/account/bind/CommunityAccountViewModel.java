@@ -178,16 +178,16 @@ public class CommunityAccountViewModel extends BaseViewModel<AppRepository> {
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
                 .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseDataResponse<UserDataEntity>>() {
+                .subscribe(new BaseObserver<BaseResponse>() {
                     @Override
-                    public void onSuccess(BaseDataResponse<UserDataEntity> response) {
+                    public void onSuccess(BaseResponse baseResponse) {
+                        dismissHUD();
                         ToastUtils.showShort(R.string.playfun_binding_auth_success);
                         UserDataEntity userDataEntity = model.readUserData();
                         userDataEntity.setBindPhone(1);
                         model.saveUserData(userDataEntity);
                         RxBus.getDefault().post(new BindAccountPhotoEvent(mobile.get()));
                         pop();
-
                     }
 
                     @Override
