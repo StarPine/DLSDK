@@ -93,11 +93,18 @@ public class OftenContactFragment extends BaseFragment<FragmentOftenContactBindi
                     }
                 });
             }
+        }
+        if (!ConfigManager.getInstance().getTipMoneyShowFlag()) {
+            if(binding.conversationLayoutContact.getVisibility()!=View.VISIBLE){
+                binding.conversationLayoutContact.setVisibility(View.VISIBLE);
+                binding.rlEmptyLayout.setVisibility(View.GONE);
+            }
+        }else{
+            if(viewModel.observableList.isEmpty()){
+                viewModel.getFrequentContact();
+            }
+        }
 
-        }
-        if(viewModel.observableList.isEmpty()){
-            viewModel.getFrequentContact();
-        }
     }
     private void initIM(){
         ConversationPresenter presenter = new ConversationPresenter();

@@ -64,21 +64,24 @@ public class TokenInterceptor implements Interceptor {
                     upUrlFlag = 1;
                 }
                 if(upUrlFlag == 1 || upUrlFlag == 2){
-
+                    boolean flagToken = false;
                     UserDataEntity oldLocalUserData = localDataSource.readOldUserData();
                     if(oldLocalUserData != null){
                         if(!StringUtils.isEmpty(oldLocalUserData.getToken())){
                             String token = oldLocalUserData.getToken();
+                            builder.removeHeader("Authorization");
                             builder.removeHeader(RetrofitHeadersConfig.NO_TOKEN_CHECK_KEY);
                             token = new String(token.getBytes(), StandardCharsets.UTF_8);
                             token = URLEncoder.encode(token, "utf-8");
                             builder.addHeader("Authorization", "Bearer " + token);
+                            flagToken = true;
                         }
                     }
 
                     TokenEntity tokenEntity = localDataSource.readLoginInfo();
-                    if (tokenEntity != null ) {
+                    if (tokenEntity != null && !flagToken) {
                         if(!StringUtils.isEmpty(tokenEntity.getToken())){
+                            builder.removeHeader("Authorization");
                             String token = tokenEntity.getToken();
                             builder.removeHeader(RetrofitHeadersConfig.NO_TOKEN_CHECK_KEY);
                             token = new String(token.getBytes(), StandardCharsets.UTF_8);

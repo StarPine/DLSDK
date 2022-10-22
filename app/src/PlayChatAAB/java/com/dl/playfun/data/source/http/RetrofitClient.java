@@ -1,5 +1,6 @@
 package com.dl.playfun.data.source.http;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
 
@@ -12,9 +13,19 @@ import com.ihsanbal.logging.Level;
 import com.ihsanbal.logging.LoggingInterceptor;
 
 import java.io.File;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -89,10 +100,10 @@ public class RetrofitClient {
         headers.put("deviceCode", ApiUitl.getAndroidId());
         headers.put("Accept-Language", mContext.getString(R.string.playfun_local_language));
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
-                .cookieJar(new CookieJarImpl(new PersistentCookieStore(mContext)))
+                //.cookieJar(new CookieJarImpl(new PersistentCookieStore(mContext)))
                 //.cache(cache)
                 .addInterceptor(new BaseInterceptor(headers))
-                .addInterceptor(new CacheInterceptor(mContext))
+                //.addInterceptor(new CacheInterceptor(mContext))
                 .addInterceptor(new TokenInterceptor())
                 .addInterceptor(new ApiTimeOutInterceptor())
                 .addInterceptor(new LoggingInterceptor
@@ -162,4 +173,5 @@ public class RetrofitClient {
     private static class SingletonHolder {
         private static final RetrofitClient INSTANCE = new RetrofitClient();
     }
+
 }

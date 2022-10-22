@@ -106,6 +106,8 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
         super(application, repository);
     }
 
+    public SingleLiveEvent<Void> hideViewPropEvent = new SingleLiveEvent<>();
+
     /**
      * 手机号码直接登录
      */
@@ -174,6 +176,7 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
                         if (authLoginUserEntity.getCertification() == 1) {
                             model.saveNeedVerifyFace(true);
                         }
+                        hideViewPropEvent.postValue(null);
                         AppConfig.userClickOut = false;
                         if (authLoginUserEntity.getSex() != null && authLoginUserEntity.getSex() >= 0 && !StringUtil.isEmpty(authLoginUserEntity.getNickname()) && !StringUtil.isEmpty(authLoginUserEntity.getBirthday()) && !StringUtil.isEmpty(authLoginUserEntity.getAvatar())) {
                             popAllTo(new MainFragment());
@@ -194,6 +197,7 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
             ToastUtils.showShort(R.string.playfun_warn_agree_terms);
             return;
         }
+        hideViewPropEvent.postValue(null);
         ElkLogEventReport.reportLoginModule.reportClickLoginPage(ElkLogEventReport._click,"phone");
         start(RegisterFragment.class.getCanonicalName());
     }
@@ -290,6 +294,7 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
                             if (authLoginUserEntity.getCertification() == 1) {
                                 model.saveNeedVerifyFace(true);
                             }
+                            hideViewPropEvent.postValue(null);
                             AppConfig.userClickOut = false;
                             if (authLoginUserEntity.getSex() != null && authLoginUserEntity.getSex() >= 0 && !StringUtil.isEmpty(authLoginUserEntity.getNickname()) && !StringUtil.isEmpty(authLoginUserEntity.getBirthday()) && !StringUtil.isEmpty(authLoginUserEntity.getAvatar())) {
                                 popAllTo(new MainFragment());
@@ -331,7 +336,6 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
                         @Override
                         public void onSuccess(BaseResponse baseResponse) {
                             ToastUtils.showShort(R.string.code_sended);
-
                             /**
                              * 倒计时60秒，一次1秒
                              */

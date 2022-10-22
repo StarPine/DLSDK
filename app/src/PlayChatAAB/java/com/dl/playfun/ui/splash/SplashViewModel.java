@@ -22,12 +22,15 @@ import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.entity.AllConfigEntity;
 import com.dl.playfun.entity.ApiConfigManagerEntity;
 import com.dl.playfun.entity.CityAllEntity;
+import com.dl.playfun.entity.FrequentContactEntity;
 import com.dl.playfun.entity.TokenEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.LoginExpiredEvent;
 import com.dl.playfun.ui.login.LoginFragment;
 import com.dl.playfun.ui.login.LoginOauthFragment;
 import com.dl.playfun.ui.main.MainFragment;
+import com.dl.playfun.ui.message.contact.ItemOftenContactViewModel;
+import com.dl.playfun.ui.message.contact.OftenContactViewModel;
 import com.dl.playfun.utils.ExceptionReportUtils;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.viewmodel.BaseViewModel;
@@ -195,6 +198,7 @@ public class SplashViewModel extends BaseViewModel<AppRepository> {
      * @Date 2022/5/16
      */
     public void initSettingConfig () {
+        getFrequentContact();
         model.getAllConfig()
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
@@ -235,6 +239,32 @@ public class SplashViewModel extends BaseViewModel<AppRepository> {
                     public void onError(RequestException t) {
                         super.onError(t);
                         hintRetryShow.set(true);
+                    }
+                });
+    }
+
+    public void getFrequentContact(){
+        model.getFrequentContact()
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .subscribe(new BaseObserver<BaseDataResponse<FrequentContactEntity>>(){
+
+                    @Override
+                    public void onSuccess(BaseDataResponse<FrequentContactEntity> dataResponse) {
+                        FrequentContactEntity frequentContact = dataResponse.getData();
+                    }
+
+                    @Override
+                    public void onError(RequestException e) {
+                        super.onError(e);
+                        //if(observableList.isEmpty()){
+                        //}
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        super.onComplete();
                     }
                 });
     }

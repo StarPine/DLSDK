@@ -467,8 +467,11 @@ public class BillingClientLifecycle implements LifecycleObserver, BillingClientS
      * 补单操作 查询已支付的商品，并通知服务器后消费（google的支付里面，没有消费的商品，不能再次购买）
      */
     public void queryPurchasesAsyncToast(String SkuType){
+        Log.e("开始查询调单类型商品:",SkuType);
         PurchasesResponseListener mPurchasesResponseListener = (billingResult, purchasesResult) -> {
-            if(billingResult.getResponseCode() != BillingClient.BillingResponseCode.OK) return;
+            if(billingResult.getResponseCode() != BillingClient.BillingResponseCode.OK) {
+                Log.e("当前异常类型：",billingResult.getResponseCode()+"========"+billingResult.toString());
+            }
             if(purchasesResult!=null && !purchasesResult.isEmpty()){
                 for (Purchase purchase : purchasesResult) {
                     if(purchase!=null){

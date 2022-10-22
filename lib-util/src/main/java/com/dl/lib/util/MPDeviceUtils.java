@@ -143,7 +143,7 @@ public class MPDeviceUtils {
         deviceInfo.put("INCREMENTAL",INCREMENTAL);
         deviceInfo.put("SDK_INT",SDK_INT);
         deviceInfo.put("GOOGLE_ID",GOOGLE_ID);
-        deviceInfo.put("EmulatorAbsolute", EmulatorDetector.isEmulatorAbsolute());
+        deviceInfo.put("isEmulatorAbsolute", EmulatorDetector.isEmulatorAbsolute());
         deviceInfo.put("isEmulator",EmulatorDetector.isEmulator());
         deviceInfo.put("GL_RENDERER",GL_RENDERER);
         deviceInfo.put("GL_VENDOR",GL_VENDOR);

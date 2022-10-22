@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.dl.playfun.BR;
@@ -91,10 +92,15 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
     }
 
     @Override
+    public void initData() {
+        super.initData();
+        setLastLoginBubble();
+    }
+
+    @Override
     public void onEnterAnimationEnd(Bundle savedInstanceState) {
         super.onEnterAnimationEnd(savedInstanceState);
         callbackManager = CallbackManager.Factory.create();
-        setLastLoginBubble();
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
         boolean isLoggedIn = accessToken != null && !accessToken.isExpired();
         if (isLoggedIn && loginManager != null) {
@@ -189,6 +195,7 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
                 ElkLogEventReport.reportLoginModule.reportClickLoginPage(ElkLogEventReport._click,"google");
             }
         });
+        viewModel.hideViewPropEvent.observe(this, unused -> dismissLastLoginBubble());
     }
 
     @Override
@@ -199,11 +206,10 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
         }
     }
 
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if (hidden){
-            hideLastLoginBubble();
+    void dismissLastLoginBubble(){
+        if (popupWindow != null){
+            popupWindow.dismiss();
+            popupWindow = null;
         }
     }
 
@@ -217,18 +223,13 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
         if (TextUtils.isEmpty(loginType)){
             return;
         }
-        View view = getLayoutInflater().inflate(R.layout.pop_last_login_bubble, null);
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        View view = inflater.inflate(R.layout.pop_last_login_bubble, null);
         popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         popupWindow.setOutsideTouchable(false);
         popupWindow.setFocusable(false);
         showLastLoginBubble();
 
-    }
-
-    private void hideLastLoginBubble(){
-        if (popupWindow != null){
-            popupWindow.dismiss();
-        }
     }
 
     private void showLastLoginBubble(){
@@ -342,13 +343,7 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
 
     @Override
     public void onDestroy() {
-
         super.onDestroy();
-        if (popupWindow != null){
-            if(popupWindow.isShowing()){
-                popupWindow.dismiss();
-            }
-            popupWindow = null;
-        }
+        dismissLastLoginBubble();
     }
 }

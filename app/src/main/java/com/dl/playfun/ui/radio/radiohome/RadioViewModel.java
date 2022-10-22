@@ -585,7 +585,7 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
                     }
                     @Override
                     public void onComplete() {
-                        dismiss();
+                        dismissHUD();
                     }
 
                 });

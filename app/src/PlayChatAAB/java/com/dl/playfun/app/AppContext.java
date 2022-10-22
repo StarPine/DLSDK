@@ -182,7 +182,6 @@ public class AppContext extends Application {
         super.onCreate();
         //初始化创建后。再次执行设置当前应用语言。确保部分机型不兼容问题
         LocaleManager.setLocal(this);
-        MMKV.initialize(this);
         //注册美颜渲染
         FURenderer.getInstance().setup(this);
         try {
@@ -194,6 +193,7 @@ public class AppContext extends Application {
         instance = this;
         BaseApplication.setApplication(this);
         Utils.init(this);
+        MMKV.initialize(this);
         FirebaseApp.initializeApp(this);
 
         billingClientLifecycle = BillingClientLifecycle.getInstance(this);

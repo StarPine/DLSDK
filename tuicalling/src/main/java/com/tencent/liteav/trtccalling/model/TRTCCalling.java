@@ -631,10 +631,10 @@ public class TRTCCalling {
         //如果应用在后台,且没有允许后台拉起应用的权限时返回
         if (!isAppRunningForeground(mContext) && !PermissionUtil.hasPermission(mContext)) {
             TRTCLogger.d(TAG, "isAppRunningForeground is false");
-            //后台播被叫铃声
-            startRing();
             return;
         }
+        //后台播被叫铃声
+        startRing();
         processInvite(inviteID, inviter, groupID, inviteeList, signallingData);
     }
 
@@ -2137,28 +2137,28 @@ public class TRTCCalling {
                             mFURenderer.setDeviceOrientation(y > 0 ? 90 : 270);
                     }
                 }
-//                switch (event.sensor.getType()) {
-//                    case Sensor.TYPE_PROXIMITY:
-//                        // 靠近手机
-//                        if (event.values[0] == 0.0) {
-//                            if (wakeLock.isHeld()) {
-//                                // 检查WakeLock是否被占用
-//                                return;
-//                            } else {
-//                                // 申请设备电源锁
-//                                wakeLock.acquire();
-//                            }
-//                        } else {
-//                            if (!wakeLock.isHeld()) {
-//                                return;
-//                            } else {
-//                                wakeLock.setReferenceCounted(false);
-//                                // 释放设备电源锁
-//                                wakeLock.release();
-//                            }
-//                            break;
-//                        }
-//                }
+                switch (event.sensor.getType()) {
+                    case Sensor.TYPE_PROXIMITY:
+                        // 靠近手机
+                        if (event.values[0] == 0.0) {
+                            if (wakeLock.isHeld()) {
+                                // 检查WakeLock是否被占用
+                                return;
+                            } else {
+                                // 申请设备电源锁
+                                wakeLock.acquire();
+                            }
+                        } else {
+                            if (!wakeLock.isHeld()) {
+                                return;
+                            } else {
+                                wakeLock.setReferenceCounted(false);
+                                // 释放设备电源锁
+                                wakeLock.release();
+                            }
+                            break;
+                        }
+                }
             }
 
             @Override
@@ -2196,11 +2196,12 @@ public class TRTCCalling {
             mCallingBellPath = SPUtils.getInstance(PROFILE_TUICALLING).getString(PROFILE_CALL_BELL, "");
         }
         TRTCLogger.d(TAG, "mCallingBellPath : " + mCallingBellPath);
-        if (TextUtils.isEmpty(mCallingBellPath)) {
-            mMediaPlayHelper.start(R.raw.phone_ringing);
-        } else {
-            mMediaPlayHelper.start(mCallingBellPath);
-        }
+//        if (TextUtils.isEmpty(mCallingBellPath)) {
+//            mMediaPlayHelper.start(R.raw.phone_ringing);
+//        } else {
+//            mMediaPlayHelper.start(mCallingBellPath);
+//        }
+        mMediaPlayHelper.start(R.raw.phone_dialing);
     }
 
     private void stopRing() {

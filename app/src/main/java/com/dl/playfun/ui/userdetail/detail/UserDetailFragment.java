@@ -53,7 +53,6 @@ import com.dl.playfun.widget.custom.FlowAdapter;
 import com.dl.playfun.widget.dialog.MMAlertDialog;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.dl.playfun.widget.dialog.TraceDialog;
-import com.dl.playfun.widget.dialog.WebViewDialog;
 import com.dl.playfun.widget.emptyview.EmptyState;
 import com.google.android.material.appbar.AppBarLayout;
 import com.luck.picture.lib.entity.LocalMedia;
@@ -751,7 +750,7 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
             if (ConfigManager.getInstance().isVip()) {
                 googleCoinValueBox();
             } else {
-                dialogRechargeShow();
+                googleCoinValueBox();
             }
         } else {
             googleCoinValueBox();
@@ -761,44 +760,4 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
     private void googleCoinValueBox() {
         toRecharge();
     }
-
-    //弹出钻石充值
-    private void dialogRechargeShow() {
-        ApiConfigManagerEntity apiConfigManagerEntity = ConfigManager.getInstance().getAppRepository().readApiConfigManagerEntity();
-        if(apiConfigManagerEntity!=null && apiConfigManagerEntity.getPlayFunWebUrl()!=null){
-            String url = apiConfigManagerEntity.getPlayFunWebUrl() + AppConfig.PAY_RECHARGE_URL;
-            new WebViewDialog(getContext(), mActivity, url, new WebViewDialog.ConfirmOnclick() {
-                @Override
-                public void webToVipRechargeVC(Dialog dialog) {
-                    if (dialog != null) {
-                        dialog.dismiss();
-                    }
-                    viewModel.start(VipSubscribeFragment.class.getCanonicalName());
-                }
-
-                @Override
-                public void vipRechargeDiamondSuccess(Dialog dialog, Integer coinValue) {
-                    if (dialog != null) {
-                        this.cancel();
-                        dialog.dismiss();
-                    }
-                }
-
-                @Override
-                public void moreRechargeDiamond(Dialog dialog) {
-                    dialog.dismiss();
-                    if(mActivity!=null && !mActivity.isFinishing()){
-                        mActivity.runOnUiThread(() -> googleCoinValueBox());
-                    }
-                }
-
-                @Override
-                public void cancel() {
-                }
-            }).noticeDialog().show();
-        }else{
-            googleCoinValueBox();
-        }
-    }
-
 }
