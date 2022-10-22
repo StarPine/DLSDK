@@ -13,6 +13,7 @@ import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.entity.AdItemEntity;
 import com.dl.playfun.entity.ParkItemEntity;
 import com.dl.playfun.entity.TaskAdEntity;
+import com.dl.playfun.event.CoinPusherRoomEvent;
 import com.dl.playfun.event.TaskMainTabEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
@@ -96,6 +97,10 @@ public class BaseParkItemViewModel extends MultiItemViewModel<BaseParkViewModel>
             int typeAct = adItemEntity.getType();
             if(typeAct!=0){
                 switch (typeAct){
+                    case 4:
+                        //弹出推币机
+                        RxBus.getDefault().post(new CoinPusherRoomEvent());
+                        break;
                     case 5:
                         viewModel.startActivity(DiamondRechargeActivity.class);
                         break;

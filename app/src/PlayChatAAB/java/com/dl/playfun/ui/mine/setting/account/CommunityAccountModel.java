@@ -56,8 +56,6 @@ public class CommunityAccountModel extends BaseViewModel<AppRepository> {
 
     public ObservableField<UserBindInfoEntity> userBindInfoEntity = new ObservableField<>();
 
-    public UIChangeObservable UC = new UIChangeObservable();
-
     public ObservableBoolean isUserBindPhoneLead = new ObservableBoolean(false);
 
     private Disposable bindAccountPhoneSubscription;
@@ -119,7 +117,7 @@ public class CommunityAccountModel extends BaseViewModel<AppRepository> {
                 });
     }
 
-    public void bindAccount(int authType, String id, String type,String business_token) {
+    public void bindAccount(int authType, String id, String type,String email,String business_token) {
         id += type;
         Map<String, Object> mapData = new HashMap<>();
         mapData.put("type",type);
@@ -128,6 +126,7 @@ public class CommunityAccountModel extends BaseViewModel<AppRepository> {
         //	当type为phone时，该字段必填，验证码
         mapData.put("business_token", business_token);
         mapData.put("AndroidDeviceInfo", MPDeviceUtils.getDeviceInfo());
+        mapData.put("email",email);
         model.bindAccount(ApiUitl.getBody(GsonUtils.toJson(mapData)))
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
@@ -216,8 +215,4 @@ public class CommunityAccountModel extends BaseViewModel<AppRepository> {
         RxSubscriptions.remove(bindAccountPhoneSubscription);
     }
 
-    public class UIChangeObservable {
-        SingleLiveEvent<Boolean> loadUserFlag = new SingleLiveEvent<>();
-        SingleLiveEvent<Boolean> loginAuth = new SingleLiveEvent<>();
-    }
 }

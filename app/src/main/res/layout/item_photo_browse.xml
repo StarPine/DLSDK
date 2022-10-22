@@ -93,15 +93,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/tv_1"
+                    android:gravity="center"
                     android:layout_centerHorizontal="true">
 
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/img_icon"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/ic_coin" />
                     <TextView
                         android:id="@+id/tv_price"
+                        android:layout_toEndOf="@+id/img_icon"
+                        android:layout_marginStart="5dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
-                        android:drawableLeft="@drawable/ic_coin"
-                        android:drawablePadding="5dp"
                         android:text="@{String.valueOf(viewModel.redPackagePrice)}"
                         android:textColor="#F4B56F"
                         android:textSize="22sp" />

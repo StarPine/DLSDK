@@ -166,7 +166,7 @@ public class CommunityAccountViewModel extends BaseViewModel<AppRepository> {
             return;
         }
         Map<String, Object> mapData = new HashMap<>();
-        mapData.put("type","line");
+        mapData.put("type","phone");
         //当type为phone时，该字段必填，手机号码
         mapData.put("phone", mobile.get());
         //	当type为phone时，该字段必填，验证码

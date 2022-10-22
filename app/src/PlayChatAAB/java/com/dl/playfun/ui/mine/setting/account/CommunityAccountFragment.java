@@ -125,7 +125,11 @@ public class CommunityAccountFragment extends BaseToolbarFragment<FragmentSettin
                                     if (!jsonObject.isNull("token_for_business")) {
                                         token_for_business = jsonObject.getString("token_for_business");
                                     }
-                                    viewModel.bindAccount(2,userId, "facebook", token_for_business);
+                                    String email = null;
+                                    if (!jsonObject.isNull("email")) {
+                                        email = jsonObject.getString("email");
+                                    }
+                                    viewModel.bindAccount(2,userId, "facebook", email,token_for_business);
                                 } catch (Exception e) {
                                     Log.e("获取facebook关键资料", "异常原因: " + e.getMessage());
                                     // App code
@@ -192,7 +196,7 @@ public class CommunityAccountFragment extends BaseToolbarFragment<FragmentSettin
         try {
             GoogleSignInAccount signInAccount = googleData.getResult(ApiException.class);
             if (signInAccount != null) {
-                viewModel.bindAccount(3,signInAccount.getId(), "google",null);
+                viewModel.bindAccount(3,signInAccount.getId(), "google",signInAccount.getEmail(),null);
             } else {
                 ToastUtils.showShort(R.string.playfun_error_google);
             }

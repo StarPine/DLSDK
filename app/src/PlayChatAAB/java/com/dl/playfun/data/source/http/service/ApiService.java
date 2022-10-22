@@ -1461,7 +1461,7 @@ public interface ApiService {
      * Param [id, type]
      **/
     @Headers("Content-Type: application/json")
-    @POST("/api/auth/bindAccount")
+    @POST("api/auth/bindAccount")
     Observable<BaseResponse> bindAccount(@Body RequestBody requestBody);
 
     /**
