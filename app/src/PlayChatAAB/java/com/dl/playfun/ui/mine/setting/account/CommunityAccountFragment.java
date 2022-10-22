@@ -12,6 +12,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.dl.playfun.BR;
@@ -20,6 +21,7 @@ import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.entity.OverseasUserEntity;
+import com.dl.playfun.entity.UserBindInfoEntity;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.ui.login.GoogleApiError;
 import com.dl.playfun.databinding.FragmentSettingAccountBinding;
@@ -165,6 +167,16 @@ public class CommunityAccountFragment extends BaseToolbarFragment<FragmentSettin
             }
             Intent intent = googleSignInClient.getSignInIntent();
             toGoogleLoginIntent.launch(intent);
+        });
+
+        viewModel.livePhoneEvent.observe(this, phone -> {
+            UserBindInfoEntity userBindInfo = viewModel.userBindInfoEntity.get();
+            if (userBindInfo != null){
+                viewModel.userBindInfoEntity.set(null);
+                userBindInfo.setPhone(phone);
+                viewModel.userBindInfoEntity.set(userBindInfo);
+                viewModel.isUserBindPhoneLead.set(false);
+            }
         });
 
     }

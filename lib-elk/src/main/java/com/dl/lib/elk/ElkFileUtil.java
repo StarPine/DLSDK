@@ -65,7 +65,7 @@ public class ElkFileUtil {
         File file = new File(cacheFilePath);
         if (!file.exists()) {
             try {
-                if(file.createNewFile()){
+                if(file.isFile()){
                     BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(file,false));
                     bufferedOutputStream.write(byteData);
                     bufferedOutputStream.flush();

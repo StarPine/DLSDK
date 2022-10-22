@@ -12,6 +12,7 @@ import com.blankj.utilcode.util.GsonUtils;
 import com.dl.lib.util.MPDeviceUtils;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
+import com.dl.playfun.app.ElkLogEventReport;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
@@ -78,6 +79,7 @@ public class LoginOauthViewModel extends BaseViewModel<AppRepository> {
     public BindingCommand<Void> clickLoginOnClickCommand = new BindingCommand<>(this::tokenLogin);
 
     private void tokenLogin(){
+        ElkLogEventReport.reportLoginModule.reportClickLoginPage(ElkLogEventReport._click,"oneClickLogin");
         Map<String,Object> mapData = new HashMap<>();
         mapData.put("AndroidDeviceInfo", MPDeviceUtils.getDeviceInfo());
         model.oldUserTokenLogin(ApiUitl.getBody(GsonUtils.toJson(mapData)))

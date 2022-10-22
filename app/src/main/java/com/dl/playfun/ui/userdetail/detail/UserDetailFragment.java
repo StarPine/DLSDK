@@ -23,6 +23,7 @@ import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
+import com.dl.playfun.app.ElkLogEventReport;
 import com.dl.playfun.app.Injection;
 import com.dl.playfun.databinding.FragmentUserDetailBinding;
 import com.dl.playfun.entity.ApiConfigManagerEntity;
@@ -706,6 +707,7 @@ public class UserDetailFragment extends BaseToolbarFragment<FragmentUserDetailBi
      * 去充值
      */
     private void toRecharge() {
+        ElkLogEventReport.reportCoinRecharge.reportSheetViewOpen(4);
         CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(mActivity);
         coinRechargeFragmentView.show();
     }

@@ -223,6 +223,7 @@ public class AppContext extends Application {
                 //.errorActivity(YourCustomErrorActivity.class) //崩溃后的错误activity
                 //.eventListener(new YourCustomEventListener()) //崩溃后的错误监听
                 .apply();
+        ElkLogEventReport.reportSplashModule.reportInit();
     }
 
     public void initIM() {
@@ -300,7 +301,7 @@ public class AppContext extends Application {
                     map.put("code", String.valueOf(code));
                     map.put("channel", String.valueOf(channel));
                     ConfigManager.getInstance().getAppRepository().saveOneLinkCode(GsonUtils.toJson(map));
-
+                    ElkLogEventReport.reportSplashModule.reportAFSources(String.valueOf(code),String.valueOf(channel));
                 }
                 String status = Objects.requireNonNull(conversionDataMap.get("af_status")).toString();
                 if (status.equals("Non-organic")) {
@@ -375,6 +376,7 @@ public class AppContext extends Application {
                         map.put("code", code);
                         map.put("channel", channel);
                         ConfigManager.getInstance().getAppRepository().saveOneLinkCode(GsonUtils.toJson(map));
+                        ElkLogEventReport.reportSplashModule.reportAFSources(String.valueOf(code),String.valueOf(channel));
                     }
                     Log.e(LOG_TAG, "The DeepLink data is: " + deepLinkObj.toString());
                 } catch (Exception e) {

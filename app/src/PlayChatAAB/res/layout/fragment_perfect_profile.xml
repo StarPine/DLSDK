@@ -107,16 +107,17 @@
                         android:text="@={viewModel.UserName}"
                         android:textSize="14sp"
                         tools:ignore="TouchTargetSizeCheck" />
+
                     <androidx.appcompat.widget.AppCompatImageView
-                        android:elevation="11dp"
-                        android:clickable="true"
                         android:layout_width="22dp"
                         android:layout_height="22dp"
-                        android:layout_marginEnd="15dp"
                         android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="15dp"
+                        android:clickable="true"
+                        android:elevation="11dp"
                         android:scaleType="fitXY"
-                        binding:onClickCommand="@{viewModel.refreshOnClick}"
-                        android:src="@drawable/icon_nickname_refresh" />
+                        android:src="@drawable/icon_nickname_refresh"
+                        binding:onClickCommand="@{viewModel.refreshOnClick}" />
                 </RelativeLayout>
 
                 <View

@@ -18,6 +18,7 @@ import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
+import com.dl.playfun.app.ElkLogEventReport;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
@@ -121,6 +122,7 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
             ToastUtils.showShort(R.string.playfun_please_input_code);
             return;
         }
+        ElkLogEventReport.reportLoginModule.reportClickPhoneLogin(ElkLogEventReport._click,"phoneLoginNext");
         Map<String, Object> mapData = new HashMap<>();
         mapData.put("phone", mobile.get());
         mapData.put("code", code.get());
@@ -192,6 +194,7 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
             ToastUtils.showShort(R.string.playfun_warn_agree_terms);
             return;
         }
+        ElkLogEventReport.reportLoginModule.reportClickLoginPage(ElkLogEventReport._click,"phone");
         start(RegisterFragment.class.getCanonicalName());
     }
 
@@ -210,6 +213,7 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
             ToastUtils.showShort(R.string.get_userdata_defail);
             return;
         }
+        ElkLogEventReport.reportAuthModule.reportLoginAuth(type,email);
         id += type;
         Map<String, Object> mapData = new HashMap<>();
         mapData.put("id", id);
@@ -314,6 +318,7 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
             return;
         }
         if (!isDownTime) {
+            ElkLogEventReport.reportLoginModule.reportClickPhoneLogin(ElkLogEventReport._click,"getCode");
             Map<String, String> mapData = new HashMap<String, String>();
             mapData.put("regionCode", areaCode.get().getCode());
             mapData.put("phone", mobile.get());

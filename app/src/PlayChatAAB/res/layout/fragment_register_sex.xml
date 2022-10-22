@@ -216,7 +216,9 @@
                         android:text="@={viewModel.invitationCode}"
                         android:textColorHint="@color/gray_light"
                         android:textColor="@color/gray_light2"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        binding:onClickCommand="@{viewModel.clickInvite}"
+                        />
 
                     <View
                         android:layout_width="wrap_content"

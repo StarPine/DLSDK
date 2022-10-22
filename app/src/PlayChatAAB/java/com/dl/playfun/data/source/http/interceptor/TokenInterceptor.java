@@ -14,6 +14,9 @@ import com.dl.playfun.entity.UserDataEntity;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import okhttp3.Headers;
 import okhttp3.HttpUrl;
@@ -67,6 +70,8 @@ public class TokenInterceptor implements Interceptor {
                         if(!StringUtils.isEmpty(oldLocalUserData.getToken())){
                             String token = oldLocalUserData.getToken();
                             builder.removeHeader(RetrofitHeadersConfig.NO_TOKEN_CHECK_KEY);
+                            token = new String(token.getBytes(), StandardCharsets.UTF_8);
+                            token = URLEncoder.encode(token, "utf-8");
                             builder.addHeader("Authorization", "Bearer " + token);
                         }
                     }
@@ -76,6 +81,8 @@ public class TokenInterceptor implements Interceptor {
                         if(!StringUtils.isEmpty(tokenEntity.getToken())){
                             String token = tokenEntity.getToken();
                             builder.removeHeader(RetrofitHeadersConfig.NO_TOKEN_CHECK_KEY);
+                            token = new String(token.getBytes(), StandardCharsets.UTF_8);
+                            token = URLEncoder.encode(token, "utf-8");
                             builder.addHeader("Authorization", "Bearer " + token);
                         }
                     }

@@ -1,5 +1,7 @@
 package com.dl.playfun.app;
 
+import android.text.TextUtils;
+
 import com.blankj.utilcode.util.ObjectUtils;
 import com.dl.lib.elk.StatisticsAnalysis;
 import com.dl.playfun.utils.ElkLogEventUtils;
@@ -12,6 +14,9 @@ import java.math.BigDecimal;
  * Description: This is ElkLogEventReport
  */
 public class ElkLogEventReport {
+
+    public final static String _expose = "expose";
+    public final static String _click = "click";
 
     /**
      * 点击事件
@@ -35,7 +40,132 @@ public class ElkLogEventReport {
     private static String getCommentFiled(){
         return ElkLogEventUtils.getCommonFile()+ElkLogEventUtils.getUserDataEvent()+ElkLogEventUtils.getMediaSource();
     }
+    //第三方绑定/登录
+    public static class reportAuthModule{
+        public static void  reportBindAuth(String ct, String email){
+            String doSendStatistics = commonClickString("pageview","email_receive",ct,"bind")+"`email="+isNullConverterSky(email);
+            StatisticsAnalysis.doSendStatistics(doSendStatistics);
+        }
+        public static void  reportLoginAuth(String ct, String email){
+            String doSendStatistics = commonClickString("pageview","email_receive",ct,"login")+"`email="+isNullConverterSky(email);
+            StatisticsAnalysis.doSendStatistics(doSendStatistics);
+        }
+    }
+    //登录模块
+    public static class reportLoginModule{
+        public static final String showPage = "showPage";
+        //登录页面
+        static final String loginPage = "loginPage";
+        //手机号码登录页面
+        static final String phoneLogin = "phoneLogin";
 
+        //注册页面
+        static final String register = "register";
+
+        //交友意愿
+        static final String datingPurpose = "datingPurpose";
+
+        /**
+        * @Desc TODO(登录页面)
+        * @author 彭石林
+        * @parame [lt, et, ct, dt]
+        * @Date 2022/10/22
+        */
+        public static void reportClickLoginPage( String ct, String dt){
+            String doSendStatistics = commonClickString("pageview",loginPage, ct, dt);
+            StatisticsAnalysis.doSendStatistics(doSendStatistics);
+        }
+
+        /**
+         * @Desc TODO(手机号码登录页面)
+         * @author 彭石林
+         * @parame [lt, et, ct, dt]
+         * @Date 2022/10/22
+         */
+        public static void reportClickPhoneLogin (String ct, String dt){
+            String doSendStatistics = commonClickString("pageview",phoneLogin, ct, dt);
+            StatisticsAnalysis.doSendStatistics(doSendStatistics);
+        }
+        /**
+         * @Desc TODO(注册页面)
+         * @author 彭石林
+         * @parame [lt, et, ct, dt]
+         * @Date 2022/10/22
+         */
+        public static void reportClickRegister(String ct, String dt,Integer sex, Integer age){
+            String doSendStatistics = commonClickString("pageview",register,ct, dt);
+            if(sex!=null){
+                doSendStatistics += "`sex="+sex;
+            }
+            if(sex!=null){
+                doSendStatistics += "`age="+age;
+            }
+            StatisticsAnalysis.doSendStatistics(doSendStatistics);
+        }
+        
+        /**
+        * @Desc TODO(交友意愿)
+        * @author 彭石林
+        * @parame [ct, dt, option]
+        * @return void
+        * @Date 2022/10/22
+        */
+        public static void reportClickDatingPurpose(String ct, String dt, String option){
+            String doSendStatistics = commonClickString("pageview",datingPurpose,ct, dt);
+            if(!TextUtils.isEmpty(option)){
+                doSendStatistics += "`option="+option;
+            }
+            StatisticsAnalysis.doSendStatistics(doSendStatistics);
+        }
+
+    }
+    //启动页模块
+    public static class reportSplashModule{
+        public static void reportInit(){
+            String doSendStatistics = commonClickString("pageview","start",_expose,"application");
+            StatisticsAnalysis.doSendStatistics(doSendStatistics);
+        }
+        public static void reportAFSources(String code, String source){
+            String doSendStatistics = commonClickString("pageview","appInvitation",_expose,null)+
+                    "`code="+isNullConverterSky(code)
+                    +"`source="+isNullConverterSky(source);
+            StatisticsAnalysis.doSendStatistics(doSendStatistics);
+        }
+    }
+    //砖石储值模块
+    public static class reportCoinRecharge{
+
+        public static void reportSheetViewOpen(int source){
+            String doSendStatistics = commonClickString("pageview","topUpPage",_expose,"popTopUp")+"`source="+source;
+            StatisticsAnalysis.doSendStatistics(doSendStatistics);
+        }
+
+        public static void reportSheetView(String ct,String dt){
+            String doSendStatistics = commonClickString("pageview","topUpPage",ct,dt);
+            StatisticsAnalysis.doSendStatistics(doSendStatistics);
+        }
+        public static void reportSheetPayView(Object price,int topUpRet,String spend_time,int errorMsg,String payType,String orderNo){
+            String doSendStatistics = commonClickString("pageview","topUpPage",_click,"buy")+
+                    "`price="+price
+                    +"`topUpRet="+topUpRet
+                    +"`spend_time="+spend_time
+                    +"`errorMsg="+errorMsg
+                    +"`payType="+payType
+                    +"`orderNo="+orderNo;
+            StatisticsAnalysis.doSendStatistics(doSendStatistics);
+        }
+        public static void reportSheetPayView(Object price,int topUpRet,String spend_time,String payType,String orderNo){
+            String doSendStatistics = commonClickString("pageview","topUpPage",_click,"buy")+
+                    "`price="+price
+                    +"`topUpRet="+topUpRet
+                    +"`spend_time="+spend_time
+                    +"`payType="+payType
+                    +"`orderNo="+isNullConverterSky(orderNo);
+            StatisticsAnalysis.doSendStatistics(doSendStatistics);
+        }
+
+    }
+    //红包模块打点
     public static class reportMediaGallery{
         //红包照片模块打点
         static final String lt= "redPackage";

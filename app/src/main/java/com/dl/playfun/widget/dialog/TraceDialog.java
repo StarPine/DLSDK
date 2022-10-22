@@ -26,6 +26,7 @@ import com.blankj.utilcode.util.ConvertUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
 import com.dl.playfun.R;
+import com.dl.playfun.app.ElkLogEventReport;
 import com.dl.playfun.app.GlideEngine;
 import com.dl.playfun.entity.MallWithdrawTipsInfoEntity;
 import com.dl.playfun.event.DailyAccostEvent;
@@ -902,6 +903,7 @@ public class TraceDialog {
      * @return
      */
     public Dialog rechargeRetainDialog() {
+        ElkLogEventReport.reportCoinRecharge.reportSheetView(ElkLogEventReport._click,"close");
         Dialog dialog = new Dialog(context, R.style.BottomDialog);
         View contentView = LayoutInflater.from(context).inflate(R.layout.dialog_recharge_retain, null);
         dialog.setContentView(contentView);
@@ -910,9 +912,13 @@ public class TraceDialog {
         dialog.getWindow().setGravity(Gravity.CENTER);
         Button again = contentView.findViewById(R.id.btn_again);
         Button confirm = contentView.findViewById(R.id.btn_confirm);
-        again.setOnClickListener(v -> dialog.dismiss());
+        again.setOnClickListener(v -> {
+            ElkLogEventReport.reportCoinRecharge.reportSheetView(ElkLogEventReport._click,"thinkAgain");
+            dialog.dismiss();
+        });
         confirm.setOnClickListener(v -> {
             if (confirmOnclick != null){
+                ElkLogEventReport.reportCoinRecharge.reportSheetView(ElkLogEventReport._click,"confirm");
                 confirmOnclick.confirm(dialog);
             }
         });

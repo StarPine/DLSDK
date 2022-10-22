@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppViewModelFactory;
+import com.dl.playfun.app.ElkLogEventReport;
 import com.dl.playfun.databinding.FragmentLoginOauthBinding;
 import com.dl.playfun.ui.base.BaseFragment;
 
@@ -38,6 +39,7 @@ public class LoginOauthFragment extends BaseFragment<FragmentLoginOauthBinding,L
     @Override
     public void initData() {
         super.initData();
+        ElkLogEventReport.reportLoginModule.reportClickLoginPage(ElkLogEventReport._expose,"oneClickLoginPage");
         viewModel.initData();
     }
 }

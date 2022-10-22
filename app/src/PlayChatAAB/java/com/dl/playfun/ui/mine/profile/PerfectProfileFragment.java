@@ -16,6 +16,7 @@ import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppViewModelFactory;
+import com.dl.playfun.app.ElkLogEventReport;
 import com.dl.playfun.databinding.FragmentPerfectProfileBinding;
 import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.ui.login.register.RegisterSexFragment;
@@ -87,6 +88,7 @@ public class PerfectProfileFragment extends BaseFragment<FragmentPerfectProfileB
         });
 
         viewModel.uc.nicknameDuplicate.observe(this, name -> {
+            ElkLogEventReport.reportLoginModule.reportClickRegister(ElkLogEventReport._expose,"avatarNameRepeat",null,null);
             TraceDialog.getInstance(mActivity)
                     .setTitle(String.format(getString(R.string.playfun_duplicate_nickname_tips), name))
                     .setCannelText(getString(R.string.cancel))
@@ -106,6 +108,7 @@ public class PerfectProfileFragment extends BaseFragment<FragmentPerfectProfileB
 
     //选择头像
     private void chooseAvatar() {
+        ElkLogEventReport.reportLoginModule.reportClickRegister(ElkLogEventReport._click,"avatar",null,null);
         PictureSelectorUtil.selectImageAndCrop(mActivity, true, 1, 1, new OnResultCallbackListener<LocalMedia>() {
             @Override
             public void onResult(List<LocalMedia> result) {

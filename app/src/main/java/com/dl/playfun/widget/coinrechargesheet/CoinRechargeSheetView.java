@@ -27,6 +27,8 @@ import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.BillingClientLifecycle;
+import com.dl.playfun.app.BillingPurchasesState;
+import com.dl.playfun.app.ElkLogEventReport;
 import com.dl.playfun.app.Injection;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
@@ -72,6 +74,10 @@ public class CoinRechargeSheetView extends BasePopupWindow implements View.OnCli
     private boolean isFinsh = false;
     public String orderNumber = null;
 
+    public long launchBillingTime = 0L;
+    public long elapsedTime = 0L;
+
+    public String payType = null;
     public void setClickListener(ClickListener clickListener) {
         this.clickListener = clickListener;
     }
@@ -108,7 +114,6 @@ public class CoinRechargeSheetView extends BasePopupWindow implements View.OnCli
                 .subscribe(o -> {
                     billingClientLifecycle.queryPurchasesAsyncToast(BillingClient.SkuType.INAPP);
                     billingClientLifecycle.queryPurchasesAsyncToast(BillingClient.SkuType.SUBS);
-                    ToastUtils.showShort(R.string.playfun_pay_buy_reports);
                 });
 
         initData();
@@ -137,10 +142,22 @@ public class CoinRechargeSheetView extends BasePopupWindow implements View.OnCli
                 case querySkuDetails:
                     break;
                 case launchBilling: //启动购买
+                    launchBillingTime = System.currentTimeMillis();
                     break;
                 case purchasesUpdated: //用户购买操作 可在此购买成功 or 取消支付
+                    if(billingPurchasesState.getBillingResponseCode() == BillingPurchasesState.BillingResponseCode.OK){
+                            elapsedTime = System.currentTimeMillis() - launchBillingTime;
+                    }
                     break;
                 case acknowledgePurchase:  // 用户操作购买成功 --> 商家确认操作 需要手动确定收货（消耗这笔订单并且发货（给与用户购买奖励）） 否则 到达一定时间 自动退款
+                    if(currGoodsInfo!=null){
+                        long time = 0;
+                        //购买操作
+                        if(launchBillingTime != 0L){
+                            time = elapsedTime - launchBillingTime;
+                        }
+                        ElkLogEventReport.reportCoinRecharge.reportSheetPayView(currGoodsInfo.getPrice(),1,String.valueOf(time),payType,orderNumber);
+                    }
                     Purchase purchase = billingPurchasesState.getPurchase();
                     if(purchase!=null){
                         String packageName = purchase.getPackageName();
@@ -152,7 +169,14 @@ public class CoinRechargeSheetView extends BasePopupWindow implements View.OnCli
         });
 
         this.billingClientLifecycle.PAYMENT_FAIL.observe(this, billingPurchasesState -> {
-            Log.e("BillingClientLifecycle","支付购买失败回调");
+            if(currGoodsInfo!=null){
+                long time = 0;
+                //购买操作
+                if(launchBillingTime != 0L){
+                    time = elapsedTime - launchBillingTime;
+                }
+                ElkLogEventReport.reportCoinRecharge.reportSheetPayView(currGoodsInfo.getPrice(),0,String.valueOf(time),billingPurchasesState.getBillingResponseCode(),payType,orderNumber);
+            }
             ToastUtils.showShort(StringUtils.getString(R.string.playfun_pay_fail));
             switch (billingPurchasesState.getBillingFlowNode()){
                 //查询商品阶段-->异常
@@ -355,8 +379,10 @@ public class CoinRechargeSheetView extends BasePopupWindow implements View.OnCli
         skuList.add(payCode);
         SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
         if (currGoodsInfo.getType() == 2){
+            payType = BillingClient.SkuType.SUBS;
             params.setSkusList(skuList).setType(BillingClient.SkuType.SUBS);
         }else {
+            payType = BillingClient.SkuType.INAPP;
             params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP);
         }
         billingClientLifecycle.querySkuDetailsLaunchBillingFlow(params,mActivity,orderNumber);

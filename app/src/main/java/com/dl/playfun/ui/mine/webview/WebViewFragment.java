@@ -33,6 +33,7 @@ import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
+import com.dl.playfun.app.ElkLogEventReport;
 import com.dl.playfun.databinding.WebviewFragmentBinding;
 import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.manager.ConfigManager;
@@ -502,6 +503,7 @@ public class WebViewFragment extends BaseFragment<WebviewFragmentBinding, WebVie
      * 去充值
      */
     private void toRecharge() {
+        ElkLogEventReport.reportCoinRecharge.reportSheetViewOpen(6);
         CoinRechargeSheetView coinRechargeFragmentView = new CoinRechargeSheetView(mActivity);
         coinRechargeFragmentView.show();
     }

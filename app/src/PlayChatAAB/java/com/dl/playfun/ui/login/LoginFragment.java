@@ -22,6 +22,7 @@ import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
+import com.dl.playfun.app.ElkLogEventReport;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.databinding.FragmentLoginBinding;
 import com.dl.playfun.entity.OverseasUserEntity;
@@ -81,6 +82,7 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
 
     @Override
     public LoginViewModel initViewModel() {
+        ElkLogEventReport.reportLoginModule.reportClickLoginPage(ElkLogEventReport._expose,ElkLogEventReport.reportLoginModule.showPage);
         AppContext.instance().logEvent(AppsFlyerEvent.Login_screen);
         //faceBook登录管理
         loginManager = LoginManager.getInstance();
@@ -116,7 +118,7 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
                 Collection<String> collection = new ArrayList<String>();
                 collection.add("email");
                 loginManager.logIn(LoginFragment.this, collection);
-
+                ElkLogEventReport.reportLoginModule.reportClickLoginPage(ElkLogEventReport._click,"fb");
             }
         });
         LoginManager.getInstance().registerCallback(callbackManager,
@@ -184,6 +186,7 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
                 }
                 Intent intent = googleSignInClient.getSignInIntent();
                 toGoogleLoginIntent.launch(intent);
+                ElkLogEventReport.reportLoginModule.reportClickLoginPage(ElkLogEventReport._click,"google");
             }
         });
     }

@@ -28,6 +28,7 @@ import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.BillingClientLifecycle;
+import com.dl.playfun.app.ElkLogEventReport;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.databinding.FragmentFriendswilLwebviewBinding;
 import com.dl.playfun.entity.GoodsEntity;
@@ -93,7 +94,7 @@ public class FriendsWillWebViewFragment extends BaseFragment<FragmentFriendswilL
     @Override
     public void initData() {
         super.initData();
-
+        ElkLogEventReport.reportLoginModule.reportClickDatingPurpose(ElkLogEventReport._expose,"enterDatingPurpose",null);
         billingClientLifecycle = ((AppContext) mActivity.getApplication()).getBillingClientLifecycle();
         if (billingClientLifecycle != null) {
             //查询并消耗本地历史订单类型： INAPP 支付购买  SUBS订阅
@@ -180,6 +181,7 @@ public class FriendsWillWebViewFragment extends BaseFragment<FragmentFriendswilL
                         } catch (Exception ignored) {
 
                         }
+                        ElkLogEventReport.reportLoginModule.reportClickDatingPurpose(ElkLogEventReport._click,"noviceItemsSuccessful",null);
                         String packageName = purchase.getPackageName();
                         List<String> sku = purchase.getSkus();
                         String pToken = purchase.getPurchaseToken();
@@ -325,6 +327,7 @@ public class FriendsWillWebViewFragment extends BaseFragment<FragmentFriendswilL
             if(!StringUtils.isEmpty(eventData)){
                 viewModel.goodsEntity = GsonUtils.fromJson(eventData, GoodsEntity.class);
                 if(viewModel.goodsEntity!=null){
+                    ElkLogEventReport.reportLoginModule.reportClickDatingPurpose(ElkLogEventReport._click,"noviceItems",null);
                     AppContext.instance().logEvent(click_novice_items);
                     viewModel.createOrder();
                 }
@@ -333,22 +336,26 @@ public class FriendsWillWebViewFragment extends BaseFragment<FragmentFriendswilL
         //跳过
         @JavascriptInterface
         public void skipFriendsWill(String eventData){
-            startMainFragment(eventData);
+            ElkLogEventReport.reportLoginModule.reportClickDatingPurpose(ElkLogEventReport._click,"jumpOver",null);
+            startMainFragment(eventData,false);
         }
         //下一步
         @JavascriptInterface
         public void setNextAction(String eventData){
-            startMainFragment(eventData);
+            startMainFragment(eventData,true);
         }
     }
 
-    private void startMainFragment(String eventData){
+    private void startMainFragment(String eventData,boolean nextPage){
         if(!StringUtils.isEmpty(eventData)){
             Map<String,String> mapData = GsonUtils.fromJson(eventData, Map.class);
             if(ObjectUtils.isNotEmpty(mapData)){
                 String keyValue = mapData.get("event");
                 if(!StringUtils.isEmpty(keyValue)){
                     AppContext.instance().logEvent(keyValue);
+                    if (nextPage){
+                        ElkLogEventReport.reportLoginModule.reportClickDatingPurpose(ElkLogEventReport._click,"datingPurposeNext",keyValue);
+                    }
                     //结束当前页面去往主页
                     viewModel.popAllTo(new MainFragment());
                 }

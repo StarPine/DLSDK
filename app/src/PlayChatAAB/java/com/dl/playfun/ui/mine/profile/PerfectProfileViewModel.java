@@ -14,6 +14,7 @@ import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
+import com.dl.playfun.app.ElkLogEventReport;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
@@ -68,7 +69,12 @@ public class PerfectProfileViewModel extends BaseViewModel<AppRepository> {
     //done 選擇年齡
     public BindingCommand chooseAge = new BindingCommand(() -> uc.chooseAgeClick.call());
     //done 刷新昵称
-    public BindingCommand refreshOnClick = new BindingCommand(() -> getNickName());
+    public BindingCommand refreshOnClick = new BindingCommand(() -> {
+        ElkLogEventReport.reportLoginModule.reportClickRegister(ElkLogEventReport._click,"changeName",null,null);
+        getNickName();
+    });
+    //点击邀请码打点
+    public BindingCommand<Void> clickInvite = new BindingCommand(() -> ElkLogEventReport.reportLoginModule.reportClickRegister(ElkLogEventReport._click,"InvitationCode",null,null));
     //提交
     public BindingCommand submitClick = new BindingCommand(() -> {
         if (ObjectUtils.isEmpty(UserSex.get())) {

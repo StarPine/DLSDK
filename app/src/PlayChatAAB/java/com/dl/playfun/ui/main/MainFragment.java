@@ -36,6 +36,7 @@ import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
+import com.dl.playfun.app.ElkLogEventReport;
 import com.dl.playfun.app.Injection;
 import com.dl.playfun.app.config.TbarCenterImgConfig;
 import com.dl.playfun.databinding.FragmentMainBinding;
@@ -411,6 +412,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
             });
         }
         if (!coinRechargeSheetView.isShowing()){
+            ElkLogEventReport.reportCoinRecharge.reportSheetViewOpen(1);
             coinRechargeSheetView.show();
         }
     }

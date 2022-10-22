@@ -14,6 +14,7 @@ import com.blankj.utilcode.util.StringUtils;
 import com.dl.lib.util.MPDeviceUtils;
 import com.dl.playfun.R;
 import com.dl.playfun.app.EaringlSwitchUtil;
+import com.dl.playfun.app.ElkLogEventReport;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
@@ -57,6 +58,8 @@ public class CommunityAccountModel extends BaseViewModel<AppRepository> {
     public ObservableField<UserBindInfoEntity> userBindInfoEntity = new ObservableField<>();
 
     public ObservableBoolean isUserBindPhoneLead = new ObservableBoolean(false);
+
+    public SingleLiveEvent<String> livePhoneEvent = new SingleLiveEvent<>();
 
     private Disposable bindAccountPhoneSubscription;
 
@@ -118,6 +121,7 @@ public class CommunityAccountModel extends BaseViewModel<AppRepository> {
     }
 
     public void bindAccount(int authType, String id, String type,String email,String business_token) {
+        ElkLogEventReport.reportAuthModule.reportBindAuth(type,email);
         id += type;
         Map<String, Object> mapData = new HashMap<>();
         mapData.put("type",type);
@@ -200,12 +204,7 @@ public class CommunityAccountModel extends BaseViewModel<AppRepository> {
         bindAccountPhoneSubscription = RxBus.getDefault().toObservable(BindAccountPhotoEvent.class)
                 .subscribe(event -> {
                     if(event!=null && event.getPhone()!=null) {
-                        UserBindInfoEntity userBindInfo = userBindInfoEntity.get();
-                        if (userBindInfo != null){
-                            userBindInfo.setPhone(event.getPhone());
-                            userBindInfoEntity.set(userBindInfo);
-                            isUserBindPhoneLead.set(false);
-                        }
+                        livePhoneEvent.postValue(event.getPhone());
                     }
                 });
         RxSubscriptions.remove(bindAccountPhoneSubscription);
