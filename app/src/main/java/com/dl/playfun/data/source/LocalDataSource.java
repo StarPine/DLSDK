@@ -192,6 +192,8 @@ public interface LocalDataSource {
     void saveOldUserData();
     UserDataEntity readOldUserData();
 
+    void removeOldUserData();
+
     /**
      * 保存是否已认证
      *

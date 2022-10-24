@@ -2,6 +2,7 @@ package com.dl.playfun.ui.message.contact;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,15 +95,17 @@ public class OftenContactFragment extends BaseFragment<FragmentOftenContactBindi
                 });
             }
         }
-        if (!ConfigManager.getInstance().getTipMoneyShowFlag()) {
-            if(binding.conversationLayoutContact.getVisibility()!=View.VISIBLE){
-                binding.conversationLayoutContact.setVisibility(View.VISIBLE);
-                binding.rlEmptyLayout.setVisibility(View.GONE);
-            }
-        }else{
+        if (ConfigManager.getInstance().getTipMoneyShowFlag()) {
+            binding.conversationLayoutContact.setVisibility(View.GONE);
+            binding.rlEmptyLayout.setVisibility(View.VISIBLE);
+            binding.rlDefEmptyLayout.setVisibility(View.GONE);
             if(viewModel.observableList.isEmpty()){
                 viewModel.getFrequentContact();
             }
+        }else{
+            binding.rlDefEmptyLayout.setVisibility(View.VISIBLE);
+            binding.rlEmptyLayout.setVisibility(View.GONE);
+            binding.conversationLayoutContact.setVisibility(View.GONE);
         }
 
     }
@@ -122,7 +125,13 @@ public class OftenContactFragment extends BaseFragment<FragmentOftenContactBindi
                     if(binding.conversationLayoutContact.getVisibility()!=View.GONE){
                         binding.conversationLayoutContact.post(()->{
                             binding.conversationLayoutContact.setVisibility(View.GONE);
-                            binding.rlEmptyLayout.setVisibility(View.VISIBLE);
+                            if(ConfigManager.getInstance().getTipMoneyShowFlag()){
+                                binding.rlEmptyLayout.setVisibility(View.VISIBLE);
+                                binding.rlDefEmptyLayout.setVisibility(View.GONE);
+                            }else{
+                                binding.rlEmptyLayout.setVisibility(View.GONE);
+                                binding.rlDefEmptyLayout.setVisibility(View.VISIBLE);
+                            }
                         });
                     }
                 }else{
@@ -130,6 +139,7 @@ public class OftenContactFragment extends BaseFragment<FragmentOftenContactBindi
                         binding.conversationLayoutContact.post(()->{
                             binding.conversationLayoutContact.setVisibility(View.VISIBLE);
                             binding.rlEmptyLayout.setVisibility(View.GONE);
+                            binding.rlDefEmptyLayout.setVisibility(View.GONE);
                         });
                     }
                 }

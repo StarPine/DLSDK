@@ -346,7 +346,12 @@ public class TaskCenterFragment extends BaseToolbarFragment<TaskCenterFragmentBi
             @Override
             public void onChanged(EjectEntity ejectEntity) {
                 //isFirstSign = ejectEntity.getFirstSign() == 1;
-                initSignDay(ejectEntity);
+                try {
+                    initSignDay(ejectEntity);
+                }catch (Exception ignored){
+                    //异常原因女生任务中心列表空指针。2022-10-24
+                }
+
             }
         });
         //签到成功

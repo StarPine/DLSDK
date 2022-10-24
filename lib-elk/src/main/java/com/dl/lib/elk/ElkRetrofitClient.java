@@ -4,7 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.blankj.utilcode.util.StringUtils;
 import com.dl.lib.elk.Interceptor.BaseElkInterceptor;
+import com.dl.lib.util.MMKVUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +30,7 @@ public class ElkRetrofitClient {
     //缓存时间
     private static final int CACHE_TIMEOUT = 10 * 1024 * 1024;
     //服务端根路径
-    public static String baseUrl = "http://8.219.59.215:7400";
+    public static String baseUrl = "https://log.play-chat.net";
     private static Retrofit retrofit;
 
     private static class SingletonHolder {
@@ -41,13 +43,17 @@ public class ElkRetrofitClient {
     }
 
     private ElkRetrofitClient() {
-        this(baseUrl, null);
+
+        this(null);
     }
 
-    private ElkRetrofitClient(String url, Map<String, String> headers) {
-
-        if (TextUtils.isEmpty(url)) {
-            url = baseUrl;
+    private ElkRetrofitClient( Map<String, String> headers) {
+        String keyElkUrlPath = MMKVUtil.getInstance().readKeyValue(MMKVUtil.KEY_ELK_URL_DATA);
+        if(StringUtils.isEmpty(keyElkUrlPath)){
+            keyElkUrlPath = baseUrl;
+        }
+        if(keyElkUrlPath.equals("null")){
+            keyElkUrlPath = baseUrl;
         }
 
         if (headers == null) {
@@ -66,7 +72,7 @@ public class ElkRetrofitClient {
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .baseUrl(url)
+                .baseUrl(keyElkUrlPath)
                 .build();
 
     }

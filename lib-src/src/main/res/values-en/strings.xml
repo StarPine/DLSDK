@@ -961,10 +961,10 @@
     <string name="playfun_tab_message_3">Contact</string>
     <string name="playfun_tab_wallet_1">Crystal</string>
     <string name="playfun_tab_wallet_2">Diamonds</string>
-    <string name="playfun_detail_link">details ></string>
+    <string name="playfun_detail_link">Details ></string>
     <string name="playfun_txt_exchange_game_coin">Exchange</string>
     <string name="playfun_txt_drawings_apply">Exchange</string>
-    <string name="playfun_btn_game_coin_topup">top up</string>
+    <string name="playfun_btn_game_coin_topup">Top up</string>
     <string name="playfun_tab_broadcast_1">My Moments</string>
     <string name="playfun_user_sex_she">She</string>
     <string name="playfun_user_sex_her">Her</string>
@@ -1021,7 +1021,7 @@
     <string name="playfun_chat_action_redpackage">Red packet</string>
     <string name="playfun_chat_action_coin_redpackage">Red packet with diamonds</string>
     <string name="playfun_chat_action_mic">Voice Call</string>
-    <string name="playfun_chat_detail_warn">Screenshot/video/side recording of private message content is prohibited.</string>
+    <string name="playfun_chat_detail_warn">Forbidden to take screenshots/videos/side record.</string>
     <string name="playfun_setting_privacy_setting">Privacy Settings</string>
     <string name="playfun_setting_allow_link_mic">Allow voice call</string>
     <string name="playfun_chat_red">Leave a word</string>
@@ -1146,17 +1146,17 @@
     <string name="playfun_program_detail_title_other">Event details</string>
     <string name="playfun_program_detail_detele">The event has been deleted</string>
     <string name="playfun_issuance_tends">Post</string>
-    <string name="playfun_push_setting_title">Push setting</string>
+    <string name="playfun_push_setting_title">Notification</string>
     <string name="playfun_binding_community_account">Account management</string>
-    <string name="playfun_push_setting_chat">Private message</string>
-    <string name="playfun_push_setting_broadcast">Event request</string>
-    <string name="playfun_no_open">Push</string>
+    <string name="playfun_push_setting_chat">Message</string>
+    <string name="playfun_push_setting_broadcast">Activity Registration</string>
+    <string name="playfun_no_open">Offline</string>
     <string name="playfun_push_setting_give">New Likes</string>
     <string name="playfun_push_setting_comment">New comments</string>
     <string name="playfun_push_setting_new_broadcast">New posts</string>
-    <string name="playfun_push_setting_check">My profile requests</string>
+    <string name="playfun_push_setting_check">The user approved my view request</string>
     <string name="playfun_push_setting_switch">Invitation code</string>
-    <string name="playfun_open">In-app</string>
+    <string name="playfun_open">Online</string>
     <string name="playfun_push_setting_sound">Sound</string>
     <string name="playfun_push_setting_shock">Vibration</string>
     <string name="playfun_register_alert_hint">Thank you for using PlayChat.\n Our customer service team will review your profile!</string>
@@ -1215,8 +1215,7 @@
     <string name="playfun_top_up_to_pay">Please top up before payment.</string>
     <string name="playfun_he_true_evaluation">His impression</string>
     <string name="playfun_your_true_evaluation">My impression</string>
-    <string name="playfun_model_please_input_explain_female">Search by name or job</string>
-    <string name="playfun_model_please_input_explain_male">Search by name or job</string>
+    <string name="playfun_model_please_input_explain_female">Please enter the full user nickname to search</string>
     <string name="playfun_name_nust">Nick name is required</string>
     <string name="playfun_brithday_must">Birthday is required</string>
     <string name="playfun_occupation_must">Job is required</string>
@@ -1567,7 +1566,7 @@
     <string name="playfun_call_female_im">Chat with them (%s diamonds)</string>
     <string name="playfun_age_and_city">%s %s</string>
     <string name="playfun_message_sended">Message sent.</string>
-    <string name="playfun_buy_vip">立即開通</string>
+    <string name="playfun_buy_vip">Subscribe now</string>
     <string name="playfun_valid_time">Expires</string>
     <string name="playfun_account_hidden_tip_male">The social account is hidden. Recommended to direct message.</string>
     <string name="playfun_account_hidden_tip_female">The social account is hidden. Recommended to direct message.</string>
@@ -2139,6 +2138,7 @@
 
     <string name="playchat_choose_area_title">Region</string>
     <string name="playfun_contact_empty_text">No contact, recommend for %s</string>
+    <string name="playfun_contact_empty_text_2">There is no frequent contact, let\'s chat!</string>
     <string name="playfun_contact_text1">Set up frequent contact success</string>
     <string name="playfun_contact_text2">Frequent contact cancelled</string>
     <string name="playfun_mine_title_btn_exclusive">Custom greet</string>
@@ -2276,5 +2276,7 @@
     <string name="playfun_login_oauth_text2">Other account</string>
     <string name="playfun_pay_buy_reports">Restoring order, please wait</string>
     <string name="playfun_pay_buy_reports_empty">No orders found to restore purchases</string>
+    <string name="playfun_pay_buy_reports_error">Busy, try again later.</string>
+    <string name="playfun_pay_buy_reports_error_2">Frequent operations, try again later.</string>
     <!--PlayFun-APP-END-->
 </resources>

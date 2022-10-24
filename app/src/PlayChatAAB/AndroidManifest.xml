@@ -56,7 +56,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup, android:label"
-        android:usesCleartextTraffic="true"
         tools:targetApi="n">
 
         <meta-data

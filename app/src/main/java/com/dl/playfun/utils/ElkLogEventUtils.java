@@ -21,6 +21,18 @@ import me.goldze.mvvmhabit.http.NetworkUtil;
  */
 public class ElkLogEventUtils {
 
+    public static String DEFAULT_LOCAL_LANGUAGE;
+
+    public static String getDefaultLocalLanguage() {
+        return DEFAULT_LOCAL_LANGUAGE;
+    }
+
+    public static void setDefaultLocalLanguage(String defaultLocalLanguage) {
+        if(DEFAULT_LOCAL_LANGUAGE == null){
+            DEFAULT_LOCAL_LANGUAGE = defaultLocalLanguage;
+        }
+    }
+
     /**
     * @Desc TODO(获取当前用户的公共参数)
     * @author 彭石林
@@ -67,6 +79,7 @@ public class ElkLogEventUtils {
                 .append("plat=Android")
                 //app版本
                 .append("`build_v=" + AppConfig.VERSION_CODE)
+                .append("`version=" + AppConfig.VERSION_NAME)
                 //playFun版本号
                 .append("`project_v="+AppConfig.SDK_VERSION_NAME_PUSH)
                 //型号
@@ -76,7 +89,7 @@ public class ElkLogEventUtils {
                 //当前app的渠道id
                 .append("`appId="+AppConfig.APPID)
                 //当前属于手机语言
-                .append("`la="+ Locale.getDefault().getLanguage())
+                .append("`la="+ DEFAULT_LOCAL_LANGUAGE)
                 //如果是强制使用语言包，可以添加
                 .append("`la_v="+ LocaleManager.getSystemLocale(Utils.getApp()))
                 //是测试服还是正式服，“test”/"master"

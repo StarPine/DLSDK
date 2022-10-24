@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,7 +21,6 @@ import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.ConsumeParams;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchaseHistoryRecord;
-import com.android.billingclient.api.PurchaseHistoryResponseListener;
 import com.android.billingclient.api.PurchasesResponseListener;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
@@ -32,6 +32,7 @@ import com.dl.playfun.R;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.UserDataEntity;
+import com.dl.playfun.event.ToastUIEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.StringUtil;
@@ -49,9 +50,9 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
+import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.RxUtils;
-import me.goldze.mvvmhabit.utils.ToastUtils;
 
 /**
  * Author: 彭石林
@@ -73,6 +74,12 @@ public class BillingClientLifecycle implements LifecycleObserver, BillingClientS
 
     //判断当前谷歌商店服务是否处于连接成功
     private boolean connectionSuccessful = false;
+
+    //点击间隔-记录inapp
+    private boolean queryPurchasesAsyncToastInApp = false;
+    private boolean queryPurchasesAsyncToastSUBS = false;
+    private long queryPurchasesAsyncToastINAppTime = 0L;
+    private long queryPurchasesAsyncToastSUBSTime = 0L;
 
     public boolean isConnectionSuccessful() {
         return connectionSuccessful;
@@ -249,6 +256,7 @@ public class BillingClientLifecycle implements LifecycleObserver, BillingClientS
 
                         }
                         PAYMENT_SUCCESS.postValue(getBillingPurchasesState(0,BillingPurchasesState.BillingFlowNode.purchasesUpdated,purchase));
+                        ElkLogEventReport.reportBillingClientModule.reportBillingClientPayment(String.valueOf(BillingPurchasesState.BillingFlowNode.purchasesUpdated),0);
                         acknowledgePurchase(purchase);
                     }
                 } else if (purchase.getPurchaseState() == Purchase.PurchaseState.PENDING) {
@@ -260,10 +268,12 @@ public class BillingClientLifecycle implements LifecycleObserver, BillingClientS
             //用户取消
             Log.i(TAG, "Purchase cancel");
             PAYMENT_FAIL.postValue(getBillingPurchasesState(billingResult.getResponseCode(),BillingPurchasesState.BillingFlowNode.purchasesUpdated,null));
+            ElkLogEventReport.reportBillingClientModule.reportBillingClientPayment(String.valueOf(BillingPurchasesState.BillingFlowNode.purchasesUpdated),billingResult.getResponseCode());
         } else {
             //支付错误
             Log.i(TAG, "Pay result error,code=" + billingResult.getResponseCode() + "\nerrorMsg=" + billingResult.getDebugMessage());
             PAYMENT_FAIL.postValue(getBillingPurchasesState(billingResult.getResponseCode(),BillingPurchasesState.BillingFlowNode.purchasesUpdated,null));
+            ElkLogEventReport.reportBillingClientModule.reportBillingClientPayment(String.valueOf(BillingPurchasesState.BillingFlowNode.purchasesUpdated),billingResult.getResponseCode());
         }
     }
 
@@ -321,6 +331,7 @@ public class BillingClientLifecycle implements LifecycleObserver, BillingClientS
             if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                 //成功找到商品
                 if (ObjectUtils.isNotEmpty(skuDetailsList)) {
+                    ElkLogEventReport.reportBillingClientModule.reportBillingClientPayment(String.valueOf(BillingPurchasesState.BillingFlowNode.querySkuDetails),0);
                     PAYMENT_SUCCESS.postValue(getBillingPurchasesState(0,BillingPurchasesState.BillingFlowNode.querySkuDetails,null));
                     for (SkuDetails skuDetails : skuDetailsList) {
                         String sku = skuDetails.getSku();
@@ -335,15 +346,19 @@ public class BillingClientLifecycle implements LifecycleObserver, BillingClientS
                         if (responseCode == BillingClient.BillingResponseCode.OK) {
                             Log.i(TAG, "成功啟動google支付");
                             PAYMENT_SUCCESS.postValue(getBillingPurchasesState(responseCode,BillingPurchasesState.BillingFlowNode.launchBilling,null));
+
                         } else {
                             PAYMENT_FAIL.postValue(getBillingPurchasesState(responseCode,BillingPurchasesState.BillingFlowNode.launchBilling,null));
                             Log.i(TAG, "LaunchBillingFlow Fail,code=" + responseCode);
                         }
+                        ElkLogEventReport.reportBillingClientModule.reportBillingClientPayment(String.valueOf(BillingPurchasesState.BillingFlowNode.launchBilling),responseCode);
                     }
                 }else {
                     PAYMENT_FAIL.postValue(getBillingPurchasesState(billingResult.getResponseCode(),BillingPurchasesState.BillingFlowNode.querySkuDetails,null));
+                    ElkLogEventReport.reportBillingClientModule.reportBillingClientPayment(String.valueOf(BillingPurchasesState.BillingFlowNode.querySkuDetails),billingResult.getResponseCode());
                 }
             } else {
+                ElkLogEventReport.reportBillingClientModule.reportBillingClientPayment(String.valueOf(BillingPurchasesState.BillingFlowNode.querySkuDetails),billingResult.getResponseCode());
                 //谷歌api状态
                 PAYMENT_FAIL.postValue(getBillingPurchasesState(billingResult.getResponseCode(),BillingPurchasesState.BillingFlowNode.querySkuDetails,null));
                 Log.i(TAG, "Get SkuDetails Failed,Msg=" + billingResult.getDebugMessage());
@@ -362,10 +377,12 @@ public class BillingClientLifecycle implements LifecycleObserver, BillingClientS
             if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                 Log.i(TAG, "Acknowledge purchase success");
                 PAYMENT_SUCCESS.postValue(getBillingPurchasesState(0,BillingPurchasesState.BillingFlowNode.acknowledgePurchase,purchase));
+                ElkLogEventReport.reportBillingClientModule.reportBillingClientPayment(String.valueOf(BillingPurchasesState.BillingFlowNode.acknowledgePurchase),billingResult.getResponseCode());
             } else {
                 //上架确认购买消耗失败 原因多种：掉线、超时、无网络、用户主动关闭支付处理窗体
                 PAYMENT_FAIL.postValue(getBillingPurchasesState(billingResult.getResponseCode(),BillingPurchasesState.BillingFlowNode.acknowledgePurchase,purchase));
             }
+            ElkLogEventReport.reportBillingClientModule.reportBillingClientPayment(String.valueOf(BillingPurchasesState.BillingFlowNode.acknowledgePurchase),billingResult.getResponseCode());
         };
         billingClient.acknowledgePurchase(acknowledgePurchaseParams, acknowledgePurchaseResponseListener);
     }
@@ -430,6 +447,7 @@ public class BillingClientLifecycle implements LifecycleObserver, BillingClientS
                 //上架确认购买消耗失败 原因多种：掉线、超时、无网络、用户主动关闭支付处理窗体
                 PurchaseHistory.postValue(getBillingPurchasesState(billingResult.getResponseCode(),BillingPurchasesState.BillingFlowNode.acknowledgePurchase,purchase));
             }
+            ElkLogEventReport.reportBillingClientModule.reportBillingClientHistory(String.valueOf(BillingPurchasesState.BillingFlowNode.acknowledgePurchase),billingResult.getResponseCode());
         };
         billingClient.acknowledgePurchase(acknowledgePurchaseParams, acknowledgePurchaseResponseListener);
     }
@@ -467,30 +485,65 @@ public class BillingClientLifecycle implements LifecycleObserver, BillingClientS
      * 补单操作 查询已支付的商品，并通知服务器后消费（google的支付里面，没有消费的商品，不能再次购买）
      */
     public void queryPurchasesAsyncToast(String SkuType){
-        Log.e("开始查询调单类型商品:",SkuType);
-        PurchasesResponseListener mPurchasesResponseListener = (billingResult, purchasesResult) -> {
-            if(billingResult.getResponseCode() != BillingClient.BillingResponseCode.OK) {
-                Log.e("当前异常类型：",billingResult.getResponseCode()+"========"+billingResult.toString());
+        long currentTimeMillis = System.currentTimeMillis() / 1000;
+
+        if(SkuType.equals(BillingClient.SkuType.INAPP)){
+            if(queryPurchasesAsyncToastInApp && currentTimeMillis - queryPurchasesAsyncToastINAppTime<60){
+                RxBus.getDefault().post(new ToastUIEvent(R.string.playfun_pay_buy_reports_error_2,Toast.LENGTH_SHORT));
+                return;
+            }else{
+                queryPurchasesAsyncToastInApp = true;
+                queryPurchasesAsyncToastINAppTime = System.currentTimeMillis() / 1000;
             }
-            if(purchasesResult!=null && !purchasesResult.isEmpty()){
-                for (Purchase purchase : purchasesResult) {
-                    if(purchase!=null){
-                        if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
-                            //消耗品 开始消耗
-                            consumePurchaseHistory(purchase);
-                            //确认购买交易
-                            if (!purchase.isAcknowledged()) {
-                                acknowledgeHistoryPurchase(purchase);
+        }
+        if(SkuType.equals(BillingClient.SkuType.SUBS)){
+            if(queryPurchasesAsyncToastSUBS && currentTimeMillis - queryPurchasesAsyncToastSUBSTime<60){
+                RxBus.getDefault().post(new ToastUIEvent(R.string.playfun_pay_buy_reports_error_2,Toast.LENGTH_SHORT));
+                return;
+            }else{
+                queryPurchasesAsyncToastSUBS = true;
+                queryPurchasesAsyncToastSUBSTime = System.currentTimeMillis() / 1000;
+            }
+        }
+
+        //queryPurchases() 方法会使用 Google Play 商店应用的缓存，而不会发起网络请求
+        billingClient.queryPurchaseHistoryAsync(SkuType,
+                (billingResult, purchaseHistoryRecordList) -> {
+                    if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && purchaseHistoryRecordList != null) {
+                        if(purchaseHistoryRecordList.isEmpty()){
+                            RxBus.getDefault().post(new ToastUIEvent(R.string.playfun_pay_buy_reports_empty,Toast.LENGTH_SHORT));
+                            return;
+                        }
+                        int count = 0;
+                        for (PurchaseHistoryRecord purchaseHistoryRecord : purchaseHistoryRecordList) {
+                            // Process the result.
+                            //确认购买交易，不然三天后会退款给用户
+                            try {
+                                Purchase purchase = new Purchase(purchaseHistoryRecord.getOriginalJson(), purchaseHistoryRecord.getSignature());
+                                if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
+                                    //消耗品 开始消耗
+                                    consumePurchaseHistory(purchase);
+                                    //确认购买交易
+                                    if (!purchase.isAcknowledged()) {
+                                        count ++;
+                                        acknowledgeHistoryPurchase(purchase);
+                                    }
+                                    //TODO：这里可以添加订单找回功能，防止变态用户付完钱就杀死App的这种
+                                }
+                            } catch (JSONException e) {
+                                Log.e(TAG,"Error message："+e.getMessage());
                             }
                         }
+                        if(count > 0){
+                            RxBus.getDefault().post(new ToastUIEvent(R.string.playfun_pay_buy_reports,Toast.LENGTH_SHORT));
+                            queryPurchasesAsync(SkuType);
+                        }else{
+                            RxBus.getDefault().post(new ToastUIEvent(R.string.playfun_pay_buy_reports_empty,Toast.LENGTH_SHORT));
+                        }
+                    }else{
+                        RxBus.getDefault().post(new ToastUIEvent(R.string.playfun_pay_buy_reports_error,Toast.LENGTH_SHORT));
                     }
-                }
-                ToastUtils.showShort(R.string.playfun_pay_buy_reports);
-            }else {
-                ToastUtils.showShort(R.string.playfun_pay_buy_reports_empty);
-            }
-        };
-        billingClient.queryPurchasesAsync(SkuType,mPurchasesResponseListener);
+                });
     }
 
     /**

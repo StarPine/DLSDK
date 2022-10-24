@@ -21,6 +21,7 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.databinding.FragmentMeSettingBinding;
 import com.dl.playfun.entity.VersionEntity;
 import com.dl.playfun.kl.view.VideoPresetActivity;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.tim.TUIUtils;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.utils.ImmersionBarUtils;
@@ -114,11 +115,13 @@ public class MeSettingFragment extends BaseToolbarFragment<FragmentMeSettingBind
                     TUIUtils.logout(new V2TIMCallback() {
                         @Override
                         public void onSuccess() {
+                            ConfigManager.getInstance().getAppRepository().saveOldUserData();
                             viewModel.logout();
                         }
 
                         @Override
                         public void onError(int i, String s) {
+                            ConfigManager.getInstance().getAppRepository().saveOldUserData();
                             viewModel.logout();
                         }
                     });

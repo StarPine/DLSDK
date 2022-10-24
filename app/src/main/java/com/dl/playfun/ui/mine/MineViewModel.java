@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 
 import com.blankj.utilcode.util.ObjectUtils;
@@ -26,6 +27,7 @@ import com.dl.playfun.entity.SystemConfigTaskEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.entity.UserInfoEntity;
 import com.dl.playfun.event.AvatarChangeEvent;
+import com.dl.playfun.event.BindAccountPhotoEvent;
 import com.dl.playfun.event.FaceCertificationEvent;
 import com.dl.playfun.event.MyPhotoAlbumChangeEvent;
 import com.dl.playfun.event.ProfileChangeEvent;
@@ -83,6 +85,8 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
     public final String ALLOW_TYPE_VIDEO = "video";
     public final String ALLOW_TYPE_AUDIO = "audio";
     UIChangeObservable uc = new UIChangeObservable();
+
+    public ObservableBoolean isUserBindPhoneLead = new ObservableBoolean(false);
 
     //积分夺宝右侧提示
     public ObservableField<String> entryLabelLable = new ObservableField<>();
@@ -298,6 +302,7 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
     });
 
     private Disposable mAvatarChangeSubscription, mProfileChangeSubscription, mPhotoAlbumChangeSubscription, mFaceCertificationSubscription, UserUpdateVipEvent, mVipRechargeSubscription, mTraceEmptyEvent,refreshUserDataEvent;
+    private Disposable bindAccountPhoneSubscription;
     //请求谁看过我、粉丝间隔时间
     private Long intervalTime = null;
 
@@ -436,6 +441,13 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
                     userInfoEntity.set(null);
                     userInfoEntity.set(user);
                 });
+        bindAccountPhoneSubscription = RxBus.getDefault().toObservable(BindAccountPhotoEvent.class)
+                .subscribe(event -> {
+                    if(event!=null && event.getPhone()!=null){
+                        isUserBindPhoneLead.set(false);
+                    }
+                });
+        RxSubscriptions.remove(bindAccountPhoneSubscription);
     }
 
     @Override
@@ -446,6 +458,7 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
         RxSubscriptions.remove(mPhotoAlbumChangeSubscription);
         RxSubscriptions.remove(mFaceCertificationSubscription);
         RxSubscriptions.remove(UserUpdateVipEvent);
+        RxSubscriptions.remove(bindAccountPhoneSubscription);
     }
 
     @Override
@@ -453,6 +466,7 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
         loadUserInfo();
         loadAlbumDetail(8);
         newsBrowseNumber();
+
     }
 
     @Override
@@ -478,32 +492,38 @@ public class MineViewModel extends BaseMyPhotoAlbumViewModel<AppRepository> {
                 .subscribe(new BaseObserver<BaseDataResponse<UserInfoEntity>>() {
                     @Override
                     public void onSuccess(BaseDataResponse<UserInfoEntity> response) {
-                        userInfoEntity.set(response.getData());
-                        albumPrivacyText.set(getAlbumPrivacy());
-                        banner.set(response.getData().getMessage());
-                        UserDataEntity userDataEntity = model.readUserData();
-                        userDataEntity.setIsVip(response.getData().getIsVip());
-                        userDataEntity.setCertification(response.getData().getCertification());
-                        userDataEntity.setEndTime(response.getData().getEndTime());
-                        localUserDataEntity.set(userDataEntity);
-                        model.saveUserData(userDataEntity);
-                        SystemConfigTaskEntity systemConfigTaskEntity = ConfigManager.getInstance().getTaskConfig();
-                        if (!ObjectUtils.isEmpty(systemConfigTaskEntity) && !StringUtils.isTrimEmpty(systemConfigTaskEntity.getEntryLabel())) {
-                            entryLabelLable.set(systemConfigTaskEntity.getEntryLabel());
-                        }
-                        uc.entryLabelLableEvent.call();
-                        boolean allowAudioDef = true;
-                        boolean allowVideoDef = true;
-                        if(userInfoEntity.get()!=null){
-                            if(userInfoEntity.get().getAllowAudio() != null){
-                                allowAudioDef = userInfoEntity.get().getAllowAudio();
+                        UserInfoEntity userInfo = response.getData();
+                        if(userInfo!=null){
+                            userInfoEntity.set(userInfo);
+                            albumPrivacyText.set(getAlbumPrivacy());
+                            banner.set(userInfo.getMessage());
+                            UserDataEntity userDataEntity = model.readUserData();
+                            userDataEntity.setIsVip(userInfo.getIsVip());
+                            userDataEntity.setCertification(userInfo.getCertification());
+                            userDataEntity.setEndTime(userInfo.getEndTime());
+                            userDataEntity.setBindPhone(userInfo.isBindPhone());
+                            localUserDataEntity.set(userDataEntity);
+                            model.saveUserData(userDataEntity);
+                            SystemConfigTaskEntity systemConfigTaskEntity = ConfigManager.getInstance().getTaskConfig();
+                            if (!ObjectUtils.isEmpty(systemConfigTaskEntity) && !StringUtils.isTrimEmpty(systemConfigTaskEntity.getEntryLabel())) {
+                                entryLabelLable.set(systemConfigTaskEntity.getEntryLabel());
                             }
-                            if(userInfoEntity.get().getAllowVideo() != null){
-                                allowVideoDef = userInfoEntity.get().getAllowVideo();
+                            uc.entryLabelLableEvent.call();
+                            boolean allowAudioDef = true;
+                            boolean allowVideoDef = true;
+                            if(userInfoEntity.get()!=null){
+                                if(userInfoEntity.get().getAllowAudio() != null){
+                                    allowAudioDef = userInfoEntity.get().getAllowAudio();
+                                }
+                                if(userInfoEntity.get().getAllowVideo() != null){
+                                    allowVideoDef = userInfoEntity.get().getAllowVideo();
+                                }
                             }
+                            isUserBindPhoneLead.set(userInfo.isBindPhone() != 1);
+                            uc.allowAudio.setValue(allowAudioDef);
+                            uc.allowVideo.setValue(allowVideoDef);
                         }
-                        uc.allowAudio.setValue(allowAudioDef);
-                        uc.allowVideo.setValue(allowVideoDef);
+
                     }
 
                     @Override

@@ -224,7 +224,6 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
              */
             @Override
             public void onFriendListAdded(List<V2TIMFriendInfo> v2TIMFriendInfos) {
-                Log.e("当前注册添加好友通知",v2TIMFriendInfos.size()+"=================="+v2TIMFriendInfos);
                 if(!v2TIMFriendInfos.isEmpty()){
                     final List<String> urlList = new ArrayList<>();
                     for (V2TIMFriendInfo v2TIMFriendInfo : v2TIMFriendInfos){
@@ -249,7 +248,6 @@ public class TUIConversationService extends ServiceInitializer  implements ITUIC
              */
             @Override
             public void onFriendListDeleted(List<String> userList) {
-                Log.e("当前注册删除好友通知","=================="+userList);
                 if(!userList.isEmpty()){
                     List<String> removeInfoList = new ArrayList<>();
                     for (String infoData : userList){

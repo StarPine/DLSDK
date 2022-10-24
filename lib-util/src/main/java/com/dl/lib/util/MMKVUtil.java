@@ -9,6 +9,7 @@ import com.tencent.mmkv.MMKV;
  */
 public class MMKVUtil {
     private static final String cryptKey = "playfun@2020";
+    public static final String KEY_ELK_URL_DATA = "key_elk_url_data";
     private static final MMKV kv = MMKV.mmkvWithID("cache", MMKV.SINGLE_PROCESS_MODE, cryptKey);
     private volatile static MMKVUtil INSTANCE = null;
 

@@ -1,6 +1,7 @@
 package com.dl.playfun.ui.mine.setting;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableBoolean;
@@ -17,6 +18,7 @@ import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.entity.UserBindInfoEntity;
 import com.dl.playfun.entity.VersionEntity;
 import com.dl.playfun.event.BindAccountPhotoEvent;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.GlideCacheManager;
 import com.dl.playfun.ui.login.LoginOauthFragment;
 import com.dl.playfun.ui.main.MainFragment;
@@ -133,9 +135,9 @@ public class MeSettingViewModel extends BaseViewModel<AppRepository> {
         String strCacheSize = GlideCacheManager.getInstance().getCacheSize(getApplication());
         cacheSize.set(strCacheSize);
         try {
-            isUserBindPhoneLead.set(!model.readUserData().isBindPhone());
+            isUserBindPhoneLead.set(ConfigManager.getInstance().getAppRepository().readUserData().getBindPhone() != 1);
         }catch (Exception ignored){
-
+            isUserBindPhoneLead.set(false);
         }
 
     }
@@ -144,7 +146,7 @@ public class MeSettingViewModel extends BaseViewModel<AppRepository> {
         //友盟用户统计
         // MobclickAgent.onProfileSignOff();
         AppConfig.userClickOut = true;
-        model.logout();
+        ConfigManager.getInstance().getAppRepository().logout();
         popAllTo(new LoginOauthFragment());
         //startWithPopTo(LoginOauthFragment.class.getCanonicalName(), MainFragment.class.getCanonicalName(), true);
     }

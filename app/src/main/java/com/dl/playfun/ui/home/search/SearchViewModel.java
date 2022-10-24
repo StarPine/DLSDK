@@ -56,7 +56,7 @@ public class SearchViewModel extends BaseParkViewModel<AppRepository> {
 
     public SearchViewModel(@NonNull Application application, AppRepository appRepository) {
         super(application, appRepository);
-        searchBarHint.set(model.readUserData().getSex() == 1 ? StringUtils.getString(R.string.playfun_model_please_input_explain_female) : StringUtils.getString(R.string.playfun_model_please_input_explain_male));
+        searchBarHint.set(StringUtils.getString(R.string.playfun_model_please_input_explain_female));
         onEditorActionListener.set(editorActionListener);
     }
 
@@ -79,7 +79,7 @@ public class SearchViewModel extends BaseParkViewModel<AppRepository> {
     private void search() {
         String s = searchText.get();
         if (TextUtils.isEmpty(searchText.get())) {
-            ToastUtils.showShort(model.readUserData().getSex() == 1 ? StringUtils.getString(R.string.playfun_model_please_input_explain_female) : StringUtils.getString(R.string.playfun_model_please_input_explain_male));
+            ToastUtils.showShort(StringUtils.getString(R.string.playfun_model_please_input_explain_female));
             return;
         }
         keyword = s;

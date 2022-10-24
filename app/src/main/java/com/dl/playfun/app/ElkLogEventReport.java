@@ -3,6 +3,7 @@ package com.dl.playfun.app;
 import android.text.TextUtils;
 
 import com.blankj.utilcode.util.ObjectUtils;
+import com.blankj.utilcode.util.StringUtils;
 import com.dl.lib.elk.StatisticsAnalysis;
 import com.dl.playfun.utils.ElkLogEventUtils;
 
@@ -230,6 +231,25 @@ public class ElkLogEventReport {
         }
     }
 
+    public static class reportBillingClientModule{
+        /**
+        * @Desc TODO(支付流程上报打点)
+        * @author 彭石林
+        * @parame [flowNode, flowCode]
+        * @return void
+        * @Date 2022/10/24
+        */
+        public static void reportBillingClientPayment(String flowNode, int flowCode){
+            String doSendStatistics = commonClickString("googlePlay","lifecycle","Buy","Payment")+"`flowNode="+flowNode+"`flowCode="+flowCode;
+            StatisticsAnalysis.doSendStatistics(doSendStatistics);
+        }
+        
+        public static void reportBillingClientHistory(String flowNode,int flowCode){
+            String doSendStatistics = commonClickString("googlePlay","lifecycle","Buy","History")+"`flowNode="+flowNode+"`flowCode="+flowCode;
+            StatisticsAnalysis.doSendStatistics(doSendStatistics);
+        }
+    }
+
     /**
      * @Desc TODO(空指针转成空字符串)
      * @author 彭石林
@@ -241,6 +261,18 @@ public class ElkLogEventReport {
         if(ObjectUtils.isEmpty(obj)){
             return "";
         }
+        if(obj.equals("null")){
+            return "";
+        }
         return String.valueOf(obj);
+    }
+    public static String isNullConverterSky(String obj){
+        if(StringUtils.isEmpty(obj)){
+            return "";
+        }
+        if(obj.equals("null")){
+            return "";
+        }
+        return obj;
     }
 }

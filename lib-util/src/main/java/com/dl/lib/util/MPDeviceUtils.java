@@ -77,7 +77,6 @@ public class MPDeviceUtils {
     static String GL_VERSION;
     static String GL_EXTENSIONS;
 
-
     //elk上报当前设备信息
     static volatile Map<String,String> elkAndroidDevices = new HashMap<>();
 
@@ -154,7 +153,6 @@ public class MPDeviceUtils {
         Map<String,String > deviceData = new HashMap<>();
         deviceData.put("cpuInfo", GsonUtils.toJson(getDeviceCpuInfo()));
         deviceData.put("deviceInfo",GsonUtils.toJson(deviceInfo));
-        Log.e("当前设备信息为：",deviceData.toString());
         return deviceData;
     }
 

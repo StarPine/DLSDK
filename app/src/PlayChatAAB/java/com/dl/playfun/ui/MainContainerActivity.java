@@ -4,11 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Looper;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,6 +26,7 @@ import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.BillingClientLifecycle;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.LoginExpiredEvent;
+import com.dl.playfun.event.ToastUIEvent;
 import com.dl.playfun.event.UserDisableEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocaleManager;
@@ -59,7 +62,9 @@ public class MainContainerActivity extends MySupportActivity {
     private MVDialog loginExpiredDialog;
     private BillingClientLifecycle billingClientLifecycle;
 
-    private long onCreateTime = 0l ;
+    private long onCreateTime = 0L;
+
+    private FrameLayout flContainer;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -113,7 +118,7 @@ public class MainContainerActivity extends MySupportActivity {
         //改变游戏装填---兼容代码
         ConfigManagerUtil.getInstance().putPlayGameFlag(false);
         registerRxBus();
-
+        flContainer = findViewById(R.id.fl_container);
         this.billingClientLifecycle = ((AppContext)getApplication()).getBillingClientLifecycle();
         if(!billingClientLifecycle.isConnectionSuccessful()){
             queryAndConsumePurchase();
@@ -225,6 +230,7 @@ public class MainContainerActivity extends MySupportActivity {
                     if(this.isFinishing() || this.isDestroyed()){
                         return;
                     }
+                    ConfigManager.getInstance().getAppRepository().saveOldUserData();
                     ConfigManager.getInstance().getAppRepository().logout();
                     if (loginExpiredDialog == null) {
                         loginExpiredDialog = MVDialog.getInstance(this)
@@ -254,6 +260,27 @@ public class MainContainerActivity extends MySupportActivity {
                     }
                     if (!loginExpiredDialog.isShowing()) {
                         loginExpiredDialog.show();
+                    }
+                });
+        RxBus.getDefault().toObservable(ToastUIEvent.class)
+                .compose(RxUtils.schedulersTransformer())
+                .subscribe(event -> {
+                    if(isFinishing() || isDestroyed()){
+                        return;
+                    }
+                    try {
+                        if (flContainer !=null) {
+                            if(event!=null && event instanceof ToastUIEvent){
+                                ToastUIEvent toastUIEvent =(ToastUIEvent) event;
+                                if(toastUIEvent.getResId()!=-1){
+                                    flContainer.post(()->{
+                                        ToastUtils.showShort(toastUIEvent.getResId());
+                                    });
+                                }
+                            }
+                        }
+                    }catch (Exception e) {
+
                     }
                 });
         RxSubscriptions.add(loginExpiredRe);
@@ -330,13 +357,13 @@ public class MainContainerActivity extends MySupportActivity {
         try{
             AppContext.instance().mFirebaseAnalytics.setCurrentScreen(this, "Screen Name", this.getClass().getSimpleName());
             //页面处于可见状态最后依次连接时间
-//            long onResumeLastTime = System.currentTimeMillis() / 1000;
-//            if(onCreateTime != 0L){
-//                //页面可见时间 - 页面创建时间 < 10秒。说明再次进入。继续查询订单
-//                if(onResumeLastTime - onCreateTime  >= 10){
-//                    queryAndConsumePurchase();
-//                }
-//            }
+            long onResumeLastTime = System.currentTimeMillis() / 1000;
+            if(onCreateTime != 0L){
+                //页面可见时间 - 页面创建时间 < 10秒。说明再次进入。继续查询订单
+                if(onResumeLastTime - onCreateTime  >= 60){
+                    queryAndConsumePurchase();
+                }
+            }
         }catch(Exception ignored){
 
         }

@@ -1,6 +1,7 @@
 package com.dl.playfun.ui.login;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -12,6 +13,8 @@ import com.dl.playfun.R;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.ElkLogEventReport;
 import com.dl.playfun.databinding.FragmentLoginOauthBinding;
+import com.dl.playfun.entity.UserDataEntity;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseFragment;
 
 /**
@@ -40,6 +43,7 @@ public class LoginOauthFragment extends BaseFragment<FragmentLoginOauthBinding,L
     public void initData() {
         super.initData();
         ElkLogEventReport.reportLoginModule.reportClickLoginPage(ElkLogEventReport._expose,"oneClickLoginPage");
-        viewModel.initData();
+        UserDataEntity oldUserData = ConfigManager.getInstance().getAppRepository().readOldUserData();
+        viewModel.loadData();
     }
 }

@@ -29,6 +29,7 @@ import com.bumptech.glide.Glide;
 import com.dl.lib.elk.IStatisticsConfig;
 import com.dl.lib.elk.StatisticsAnalysis;
 import com.dl.lib.elk.StatisticsManager;
+import com.dl.lib.util.MPDeviceUtils;
 import com.dl.playfun.BuildConfig;
 import com.dl.playfun.R;
 import com.dl.playfun.data.AppRepository;
@@ -46,6 +47,7 @@ import com.dl.playfun.manager.LocaleManager;
 import com.dl.playfun.manager.ThirdPushTokenMgr;
 import com.dl.playfun.tim.TUIUtils;
 import com.dl.playfun.ui.MainContainerActivity;
+import com.dl.playfun.utils.ElkLogEventUtils;
 import com.dl.playfun.utils.StringUtil;
 import com.faceunity.nama.FURenderer;
 import com.google.firebase.FirebaseApp;
@@ -165,6 +167,7 @@ public class AppContext extends Application {
     }
     @Override
     protected void attachBaseContext(Context newBase) {
+        ElkLogEventUtils.setDefaultLocalLanguage(Locale.getDefault().getLanguage());
         if(newBase!=null){
             LocaleManager.setLocal(newBase);
         }
@@ -174,6 +177,7 @@ public class AppContext extends Application {
 
     @Override
     public void onCreate() {
+        ElkLogEventUtils.setDefaultLocalLanguage(Locale.getDefault().getLanguage());
         Locale localeCache = LocaleManager.getSystemLocale(this);
         Configuration config = new Configuration();
         config.locale = localeCache;

@@ -10,23 +10,26 @@
             type="com.dl.playfun.ui.message.chatdetail.ChatDetailViewModel" />
     </data>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="120dp"
+    <RelativeLayout
+        android:layout_width="95dp"
+        android:layout_height="30dp">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="95dp"
+            android:layout_height="30dp"
+            android:src="@drawable/bg_last_login_bubble"
+            />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_marginTop="6dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"
+            android:includeFontPadding="false"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:background="@drawable/bg_last_login_bubble"
-            android:textSize="13dp"
+            android:textSize="11dp"
             android:gravity="center"
-            android:paddingTop="5dp"
-            android:paddingStart="5dp"
-            android:paddingBottom="15dp"
             android:text="@string/playfun_last_login"/>
 
 
-    </LinearLayout>
+    </RelativeLayout>
 </layout>

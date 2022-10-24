@@ -132,5 +132,31 @@
                     android:textSize="12sp" />
             </LinearLayout>
         </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/rl_def_empty_layout"
+            android:elevation="11dp"
+            android:clickable="true"
+            android:background="@color/white"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_centerInParent="true"
+                android:id="@+id/iv_empty_def"
+                android:layout_width="218dp"
+                android:layout_height="191dp"
+                android:src="@drawable/message_conversation_empty"
+                />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_marginTop="31dp"
+                android:layout_below="@+id/iv_empty_def"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/playfun_contact_empty_text_2"
+                android:textColor="#ffbfbfbf"
+                android:textSize="16sp"
+                />
+        </RelativeLayout>
     </RelativeLayout>
 </layout>

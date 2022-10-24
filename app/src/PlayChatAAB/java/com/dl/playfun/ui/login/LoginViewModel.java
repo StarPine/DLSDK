@@ -28,6 +28,7 @@ import com.dl.playfun.entity.SystemConfigEntity;
 import com.dl.playfun.entity.TokenEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.ItemChooseAreaEvent;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.ThirdPushTokenMgr;
 import com.dl.playfun.ui.login.choose.ChooseAreaFragment;
 import com.dl.playfun.ui.login.register.RegisterFragment;
@@ -141,6 +142,7 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
                     public void onSuccess(BaseDataResponse<UserDataEntity> response) {
                         dismissHUD();
                         UserDataEntity authLoginUserEntity = response.getData();
+                        ConfigManager.getInstance().getAppRepository().removeOldUserData();
                         TokenEntity tokenEntity = new TokenEntity(authLoginUserEntity.getToken(),authLoginUserEntity.getUserID(),authLoginUserEntity.getUserSig(), authLoginUserEntity.getIsContract());
                         model.saveLoginInfo(tokenEntity);
                         model.putKeyValue("areaCode",new Gson().toJson(areaCode.get()));
@@ -283,6 +285,7 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
                         UserDataEntity authLoginUserEntity = response.getData();
                         if(ObjectUtils.isNotEmpty(authLoginUserEntity)){
                             model.saveUserData(authLoginUserEntity);
+                            ConfigManager.getInstance().getAppRepository().removeOldUserData();
                             AppsFlyerLib.getInstance().setCustomerUserId(String.valueOf(authLoginUserEntity.getId()));
                             AppContext.instance().mFirebaseAnalytics.setUserId(String.valueOf(authLoginUserEntity.getId()));
                             try {

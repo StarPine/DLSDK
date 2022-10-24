@@ -1215,7 +1215,6 @@
     <string name="playfun_he_true_evaluation">他的真實評價</string>
     <string name="playfun_your_true_evaluation">我的真實評價</string>
     <string name="playfun_model_please_input_explain_female">請輸入用戶昵稱/職業進行搜尋</string>
-    <string name="playfun_model_please_input_explain_male">請輸入用戶昵稱/職業進行搜尋</string>
     <string name="playfun_name_nust">昵稱為必填項</string>
     <string name="playfun_brithday_must">生日為必填項</string>
     <string name="playfun_occupation_must">職業為必填項</string>
@@ -2142,6 +2141,7 @@
 
     <string name="playchat_choose_area_title">地區</string>
     <string name="playfun_contact_empty_text">暫無常聯繫，為%s推薦</string>
+    <string name="playfun_contact_empty_text_2">暫無常聯繫，快去聊天吧</string>
     <string name="playfun_contact_text1">設定常聯繫成功</string>
     <string name="playfun_contact_text2">已取消常聯繫</string>
     <string name="playfun_mine_title_btn_exclusive">專屬招呼</string>
@@ -2278,5 +2278,7 @@
     <string name="playfun_login_oauth_text2">其它帳號</string>
     <string name="playfun_pay_buy_reports">已進行恢復訂單處理，請稍待片刻</string>
     <string name="playfun_pay_buy_reports_empty">沒有找到可恢復購買的訂單</string>
+    <string name="playfun_pay_buy_reports_error">系統忙碌，請重新載入</string>
+    <string name="playfun_pay_buy_reports_error_2">操作太頻繁，請稍後再試</string>
     <!--PlayFun-APP-END-->
 </resources>

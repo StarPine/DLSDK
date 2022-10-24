@@ -7,6 +7,7 @@ import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.EaringlSwitchUtil;
 import com.dl.playfun.app.Injection;
 import com.dl.playfun.data.AppRepository;
+import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.EvaluateObjEntity;
@@ -101,7 +102,7 @@ public class ConfigManager {
         return getAppRepository().readSystemConfigTask();
     }
 
-    //收益开关
+    //收益开关 打开显示收益
     public boolean getTipMoneyShowFlag() {
         return getAppRepository().readSwitches(EaringlSwitchUtil.KEY_TIPS).intValue() == 1;
     }
@@ -253,7 +254,12 @@ public class ConfigManager {
      * @return
      */
     public boolean isCertification() {
-        return getAppRepository().readUserData().getCertification() == 1;
+        try{
+            return getAppRepository().readUserData().getCertification() == 1;
+        }catch (Exception e){
+            return false;
+        }
+
     }
 
     //    man_user 男性普通用户 man_real 男性真人 man_vip 男性会员 woman_user 女性普通用户 woman_real 女性真人 woman_vip 女神
@@ -565,6 +571,10 @@ public class ConfigManager {
                     @Override
                     public void onSuccess(BaseResponse baseResponse) {
 
+                    }
+
+                    @Override
+                    public void onError(RequestException e) {
                     }
                 });
     }

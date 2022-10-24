@@ -199,12 +199,13 @@
                         android:layout_alignParentStart="true"
                         android:layout_centerInParent="true"
                         android:src="@drawable/ic_mine_push"/>
+
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/ProfileItemTitle"
-                        android:layout_toEndOf="@+id/img_push"
-                        android:layout_marginStart="8dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_toEndOf="@+id/img_push"
                         android:text="@string/playfun_push_setting_title" />
 
                     <androidx.appcompat.widget.AppCompatTextView

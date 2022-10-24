@@ -14,10 +14,12 @@ import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.ElkLogEventReport;
 import com.dl.playfun.data.AppRepository;
+import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.entity.TokenEntity;
 import com.dl.playfun.entity.UserDataEntity;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.main.MainFragment;
 import com.dl.playfun.ui.mine.webdetail.WebDetailFragment;
 import com.dl.playfun.ui.splash.SplashFragment;
@@ -31,6 +33,7 @@ import java.util.Map;
 import me.goldze.mvvmhabit.binding.command.BindingAction;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
 import me.goldze.mvvmhabit.utils.RxUtils;
+import me.goldze.mvvmhabit.utils.ToastUtils;
 
 /**
  * Author: 彭石林
@@ -44,13 +47,6 @@ public class LoginOauthViewModel extends BaseViewModel<AppRepository> {
 
     public LoginOauthViewModel(@NonNull Application application, AppRepository model) {
         super(application, model);
-    }
-
-    public void initData() {
-        UserDataEntity userDataEntity = model.readOldUserData();
-        if(userDataEntity!=null){
-            currentUserData.set(userDataEntity);
-        }
     }
 
     /**
@@ -110,7 +106,56 @@ public class LoginOauthViewModel extends BaseViewModel<AppRepository> {
                         }
                         dismissHUD();
                         AppConfig.userClickOut = false;
+                        ConfigManager.getInstance().getAppRepository().removeOldUserData();
                         startWithPopTo(MainFragment.class.getCanonicalName(), LoginOauthFragment.class.getCanonicalName(), true);
+                    }
+
+                    @Override
+                    public void onError(RequestException e) {
+                        if(e.getCode()==10100){
+                            if(e.getMessage() != null){
+                                ToastUtils.showShort( e.getMessage());
+                            }
+                            popAllTo(new LoginFragment());
+                        }else{
+                            super.onError(e);
+                        }
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        super.onComplete();
+                        dismissHUD();
+                    }
+                });
+    }
+
+    public void loadData(){
+        Map<String,Object> mapData = new HashMap<>();
+        mapData.put("AndroidDeviceInfo", MPDeviceUtils.getDeviceInfo());
+        model.oldUserTokenLogin(ApiUitl.getBody(GsonUtils.toJson(mapData)))
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseDataResponse<UserDataEntity>>() {
+                    @Override
+                    public void onSuccess(BaseDataResponse<UserDataEntity> response) {
+                        UserDataEntity authLoginUserEntity = response.getData();
+                        currentUserData.set(authLoginUserEntity);
+                    }
+                    @Override
+                    public void onError(RequestException e) {
+                        if(e.getCode()==10100){
+                            if(e.getMessage() != null){
+                                ToastUtils.showShort( e.getMessage());
+                            }
+                            popAllTo(new LoginFragment());
+                        }else{
+                            super.onError(e);
+                        }
+
                     }
 
                     @Override

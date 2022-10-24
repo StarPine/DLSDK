@@ -1087,7 +1087,21 @@
                             android:layout_toEndOf="@+id/mine_item_10"
                             android:text="@string/playfun_mine_me_setting"
                             android:textSize="13sp" />
+                        <View
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:layout_centerInParent="true"
+                            android:layout_marginEnd="5dp"
+                            android:layout_toStartOf="@+id/setting_right_img"
+                            android:visibility="@{viewModel.isUserBindPhoneLead ? View.VISIBLE : View.GONE }"
+                            binding:drawable_color="@{@color/pseekbar_process}"
+                            binding:drawable_cornersRadius="@{50}" />
 
+                        <TextView
+                            android:id="@+id/setting_right_img"
+                            style="@style/ProfileItemSubTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
                     </RelativeLayout>
 
                     <RelativeLayout

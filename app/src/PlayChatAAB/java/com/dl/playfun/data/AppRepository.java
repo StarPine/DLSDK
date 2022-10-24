@@ -574,6 +574,11 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
+    public void removeOldUserData() {
+        mLocalDataSource.removeOldUserData();
+    }
+
+    @Override
     public void saveIsVerifyFace(Boolean isVerifyFace) {
         mLocalDataSource.saveIsVerifyFace(isVerifyFace);
     }

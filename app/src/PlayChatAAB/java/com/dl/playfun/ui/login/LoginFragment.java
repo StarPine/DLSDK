@@ -45,6 +45,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.tencent.liteav.trtccalling.ui.audiocall.audiolayout.Utils;
 
 import org.json.JSONObject;
 
@@ -214,7 +215,6 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
     }
 
     private void setLastLoginBubble() {
-
         AppRepository appRepository = ConfigManager.getInstance().getAppRepository();
         loginType = appRepository.readKeyValue(AppConfig.LOGIN_TYPE);
         if (!ConfigManager.getInstance().getTipMoneyShowFlag()) {
@@ -223,6 +223,7 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
         if (TextUtils.isEmpty(loginType)){
             return;
         }
+       // View view = getLayoutInflater().inflate(R.layout.pop_last_login_bubble, null);
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View view = inflater.inflate(R.layout.pop_last_login_bubble, null);
         popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -233,19 +234,16 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
     }
 
     private void showLastLoginBubble(){
-        if (popupWindow != null){
-            popupWindow.getContentView().measure(0, 0);
-            int popWidth = popupWindow.getContentView().getMeasuredWidth();
-            int popHeight = popupWindow.getContentView().getMeasuredHeight();
+        if (loginType != null){
             switch (loginType) {
                 case "facebook":
-                    popupWindow.showAsDropDown(binding.loginButton, binding.loginButton.getHeight() + popWidth / 2, -binding.loginButton.getHeight() - popHeight / 2);
+                    popupWindow.showAsDropDown(binding.loginButton, Utils.dip2px(getContext(),165), -Utils.dip2px(getContext(),65));
                     break;
                 case "google":
-                    popupWindow.showAsDropDown(binding.ivGoogleLogin, binding.loginButton.getHeight() + popWidth / 2, -binding.ivGoogleLogin.getHeight() - popHeight /2);
+                    popupWindow.showAsDropDown(binding.ivGoogleLogin, Utils.dip2px(getContext(),165), -Utils.dip2px(getContext(),65));
                     break;
                 case "phone":
-                    popupWindow.showAsDropDown(binding.ivPhoneLogin, -popWidth / 2 + binding.ivPhoneLogin.getHeight() / 2, -binding.ivPhoneLogin.getHeight() - popHeight);
+                    popupWindow.showAsDropDown(binding.ivPhoneLogin, -Utils.dip2px(getContext(),30) , -(Utils.dip2px(getContext(),65)));
                     break;
             }
         }

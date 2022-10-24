@@ -32,6 +32,16 @@ public class ApiConfigManagerEntity implements Parcelable {
     private Integer offlinePushId;
     //聊天客服ID
     private String customerId;
+    //elk日志打点 http
+    private String appLoggerUrl;
+
+    public String getAppLoggerUrl() {
+        return appLoggerUrl;
+    }
+
+    public void setAppLoggerUrl(String appLoggerUrl) {
+        this.appLoggerUrl = appLoggerUrl;
+    }
 
     protected ApiConfigManagerEntity(Parcel in) {
         playChatWebUrl = in.readString();
