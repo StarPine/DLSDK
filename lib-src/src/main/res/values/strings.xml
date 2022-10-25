@@ -1826,7 +1826,7 @@
     <string name="playfun_fragment_edit_profile_male">Male</string>
     <string name="playfun_fragment_edit_profile_female">Female</string>
     <string name="playfun_chat_detail_tool_bar_title">Enter the invitation code</string>
-    <string name="playfun_homt_main_lication_title">PlayChat can\'t calculate the distance between you and other users without enabling location services</string>
+    <string name="playfun_homt_main_lication_title">Unable to calculate the distance before you enable location.</string>
     <string name="playfun_message_hint_all">Hello, welcome to PlayChat, before we make new friends, we remind you: \n1 Please follow the rules and guidelines of the platform, according to which PlayChat has the right to restrict access to your account and even freeze them. \n2) During the use of the platform, if you need help or valuable advice, please contact the personal customer service of the personal center. Our philosophy is Freeship Powers People! I hope you find valuable friendships and have fun on PlayChat</string>
     <string name="playfun_edit_profile_weight_empty">Weight</string>
     <string name="playfun_edit_profile_height_empty">Height</string>
@@ -1890,7 +1890,7 @@
     <string name="playfun_blocked_each_other">They\'ve been blocked and you can\'t view their Page content</string>
     <string name="playfun_accost_same_sex">Can\'t talk to the same sex</string>
     <string name="playfun_name_number_too_long2">Can\'t exceed 10 words</string>
-    <string name="playfun_mine_vip_hint">Enjoy exclusive tags, free diamonds, more exposure, \nand so on</string>
+    <string name="playfun_mine_vip_hint">Free diamonds, exclusive tag,\nand more exposure etc.</string>
     <string name="playfun_vipsubscribe_item_vip_txt_currency">$</string>
     <string name="playfun_version_latest">Already the latest version!</string>
     <string name="playfun_mine_setting_desc">Invisible and hidden</string>
