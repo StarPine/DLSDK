@@ -238,10 +238,6 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
                 });
     }
 
-    public UserDataEntity loadLocalUserData() {
-        return model.readUserData();
-    }
-
     @Override
     public void registerRxBus() {
         super.registerRxBus();

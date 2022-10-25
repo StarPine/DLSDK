@@ -103,9 +103,6 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
     public void onEnterAnimationEnd() {
         super.onEnterAnimationEnd();
         initIMListener();
-        if (model.readNeedVerifyFace()) {
-            uc.showFaceRecognitionDialog.call();
-        }
         LocationManager.getInstance().initloadLocation(new LocationManager.LocationListener() {
             @Override
             public void onLocationSuccess(double lat, double lng) {
@@ -596,7 +593,6 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<Boolean> bubbleTopShow = new SingleLiveEvent<>();
         public SingleLiveEvent<Intent> restartActivity = new SingleLiveEvent<>();
         //        public SingleLiveEvent<Void> showAgreementDialog = new SingleLiveEvent<>();
-        public SingleLiveEvent<Void> showFaceRecognitionDialog = new SingleLiveEvent<>();
         //每日奖励弹框
         public SingleLiveEvent<Void> showDayRewardDialog = new SingleLiveEvent<>();
         //注册奖励

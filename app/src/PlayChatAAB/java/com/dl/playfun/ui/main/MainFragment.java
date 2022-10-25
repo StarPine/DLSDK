@@ -325,12 +325,6 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                 });
             }
         });
-        viewModel.uc.showFaceRecognitionDialog.observe(this, new Observer<Void>() {
-            @Override
-            public void onChanged(Void aVoid) {
-                showFaceRecognitionDialog();
-            }
-        });
 
         viewModel.uc.mainTab.observe(this, new Observer<MainTabEvent>() {
             @Override
@@ -683,11 +677,6 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                 }
             }
         }
-    }
-
-    private void showFaceRecognitionDialog() {
-        Animation animation = AnimationUtils.loadAnimation(MainFragment.this.getContext(), R.anim.pop_enter_anim);
-        animation.setFillAfter(true);
     }
 
     private void initView() {

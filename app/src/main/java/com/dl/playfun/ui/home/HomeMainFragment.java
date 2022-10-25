@@ -1,5 +1,6 @@
 package com.dl.playfun.ui.home;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.viewadapter.CustomRefreshHeader;
 import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.List;
 
@@ -93,6 +95,28 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
 
         //展示首页广告位
         viewModel.getAdListBannber();
+        try {
+
+            new RxPermissions(this)
+                    .request(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
+                    .subscribe(granted -> {
+                        if (granted) {
+                            viewModel.locationService.set(true);
+//                            if (ConfigManager.getInstance().isLocation()) {
+//                                viewModel.showLocationAlert.set(true);
+//                            } else {
+//                                viewModel.showLocationAlert.set(false);
+//                            }
+                            startLocation();
+                        } else {
+                            viewModel.locationService.set(false);
+                            RxBus.getDefault().post(new LocationChangeEvent(LocationChangeEvent.LOCATION_STATUS_FAILED));
+                            //viewModel.showLocationAlert.set(true);
+                        }
+                    });
+        } catch (Exception ignored) {
+
+        }
     }
 
 
