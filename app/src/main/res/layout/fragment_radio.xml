@@ -144,7 +144,9 @@
                             app:banner_default_image="@drawable/img_banner_default"
                             app:image_scale_type="fit_xy"
                             binding:BannerAdData="@{viewModel.itemBannerEntity}"
-                            binding:onBannerClickCommand="@{viewModel.onBannerClickCommand}" />
+                            binding:onBannerClickCommand="@{viewModel.onBannerClickCommand}"
+                            tools:visibility="gone"
+                            />
                     </LinearLayout>
 
                     <RelativeLayout

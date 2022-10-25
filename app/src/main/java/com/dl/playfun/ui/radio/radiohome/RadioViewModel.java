@@ -573,7 +573,7 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
                         AdBannerEntity adBannerEntity = adBannerEntityDataResponse.getData();
                         if(adBannerEntity!=null){
                             List<AdItemEntity> listData = adBannerEntity.getDataList();
-                            if(listData!=null){
+                            if(listData!=null && !listData.isEmpty()){
                                 itemBannerEntity.set(listData);
                                 itemBannerShow.set(true);
                             }else{
