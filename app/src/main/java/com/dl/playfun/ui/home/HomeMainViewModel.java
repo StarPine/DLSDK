@@ -1,6 +1,7 @@
 package com.dl.playfun.ui.home;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableArrayList;
@@ -416,6 +417,7 @@ public class HomeMainViewModel extends BaseParkViewModel<AppRepository> {
                                     observableBanner.add(homeItemBanner);
                                 }
                             }
+                            Log.e("当前首页Banner是否有数据",String.valueOf(ObjectUtils.isNotEmpty(listData)));
                             rcvBannerDisplay.set(ObjectUtils.isNotEmpty(listData));
                         }else{
                             rcvBannerDisplay.set(false);

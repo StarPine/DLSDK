@@ -50,6 +50,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import me.goldze.mvvmhabit.utils.Utils;
+
 public class MessageTextHolder extends MessageContentHolder {
 
     private TextView msgBodyText;
@@ -476,7 +478,8 @@ public class MessageTextHolder extends MessageContentHolder {
 
                                 }
                             } else {
-                                String likeText = "一鍵追蹤她，不再失聯噢 已追蹤";
+                             //   String likeText = "一鍵追蹤她，不再失聯噢 已追蹤";
+                                String likeText =  Utils.getContext().getString(R.string.playfun_im_text_tracking);
                                 if (MessageRecyclerView.addLikeMsgId != null && msg.getId().equals(MessageRecyclerView.addLikeMsgId)) {
                                     customIMTextEntity.setContent(likeText);
                                     customIMTextEntity.setEvent(-1);

@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
@@ -32,7 +33,9 @@ import com.dl.playfun.ui.home.accost.HomeAccostDialog;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.viewadapter.CustomRefreshHeader;
+import com.dl.playfun.widget.AppBarStateChangeListener;
 import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
+import com.google.android.material.appbar.AppBarLayout;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.List;

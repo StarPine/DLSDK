@@ -31,6 +31,8 @@ import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
 import java.util.Map;
 
+import me.goldze.mvvmhabit.utils.Utils;
+
 /**
  * 修改备注：自定义json文本信息类型
  * @Name： PlayFun_Google
@@ -141,7 +143,8 @@ public class CustomTextMessageHolder extends TextMessageHolder {
             //done 系统提示
             if (!TextUtils.isEmpty(customIMTextEntity.getContent())) {
 
-                String likeText = "一鍵追蹤她，不再失聯噢 已追蹤";
+                String likeText =  Utils.getContext().getString(R.string.playfun_im_text_tracking);
+
                 if (MessageRecyclerView.addLikeMsgId != null && msg.getId().equals(MessageRecyclerView.addLikeMsgId)) {
                     customIMTextEntity.setContent(likeText);
                     customIMTextEntity.setEvent(-1);
