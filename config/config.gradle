@@ -4,7 +4,7 @@ ext {
     externalAndroidAppCompatV7 = 'com.android.support:appcompat-v7:28.0.0'
     externalAlivcConan = 'com.alivc.conan:AlivcConan:1.0.5'
     externalAlivcCore = 'com.aliyun.video.android:core:1.2.2'
-    externalAlivcFFmpeg = 'com.aliyun.video.android:AlivcFFmpeg:4.3.0'
+    externalAlivcFFmpeg = 'com.aliyun.video.android:AlivcFFmpeg:4.3.2.1'
     externalSvideopro = 'com.aliyun.video.android:svideopro:3.24.0'
 
     externalAndroidSupportV4 = "com.android.support:support-v13:28.0.0"
@@ -193,7 +193,7 @@ ext {
             "eventbus"                             : 'org.greenrobot:eventbus:3.2.0',
             "AlivcConan"                           : 'com.alivc.conan:AlivcConan:1.0.5',
             "Alicore"                              : 'com.aliyun.video.android:core:1.2.2',
-            "AlivcFFmpeg"                          : 'com.aliyun.video.android:AlivcFFmpeg:4.3.0',
+            "AlivcFFmpeg"                          : 'com.aliyun.video.android:AlivcFFmpeg:4.3.2.1',
             "svideopro"                            : 'com.aliyun.video.android:svideopro:3.24.0',
     ]
 
