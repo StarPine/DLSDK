@@ -68,7 +68,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/status_bar_view"
-                        android:layout_marginTop="25dp"
+                        android:layout_marginTop="5dp"
                         binding:adapter="@{viewModel.adapterBanner}"
                         binding:itemBinding="@{viewModel.itemBannerBinding}"
                         binding:items="@{viewModel.observableBanner}"
@@ -81,36 +81,7 @@
                         tools:visibility="visible" />
 
                 </RelativeLayout>
-
-                <!--Toolbar放在下面不然会被挡住-->
-<!--                <android.support.v7.widget.Toolbar-->
-<!--                    android:id="@+id/toolbar"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="?attr/actionBarSize"-->
-<!--                    app:layout_collapseMode="pin"-->
-<!--                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"-->
-<!--                    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />-->
-            </com.google.android.material.appbar.CollapsingToolbarLayout>
-
-        </com.google.android.material.appbar.AppBarLayout>
-        <RelativeLayout
-            android:fillViewport="true"
-            android:scrollbars="none"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
-                android:orientation="vertical"
-                binding:drawable_color="@{@color/white}"
-                binding:drawable_radius_leftTop="@{20}"
-                binding:drawable_radius_rightTop="@{20}"
-                tools:context="com.dl.playfun.ui.home.HomeMainFragment">
                 <FrameLayout
-                    android:visibility="@{!viewModel.rcvBannerDisplay ? View.VISIBLE:View.GONE}"
                     app:layout_collapseMode="pin"
                     android:background="@color/white"
                     android:paddingTop="7dp"
@@ -118,12 +89,34 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <androidx.appcompat.widget.AppCompatImageView
+                        android:visibility="@{!viewModel.rcvBannerDisplay ? View.VISIBLE:View.GONE}"
                         android:id="@+id/img_app_logo"
                         android:layout_width="106dp"
                         android:layout_height="29dp"
                         android:layout_gravity="center"
                         android:src="@drawable/ic_playfun_logo" />
                 </FrameLayout>
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        </com.google.android.material.appbar.AppBarLayout>
+        <RelativeLayout
+            android:fillViewport="true"
+            android:scrollbars="none"
+            android:layout_marginTop="-50dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            binding:drawable_color="@{@color/white}"
+            binding:drawable_radius_leftTop="@{20}"
+            binding:drawable_radius_rightTop="@{20}"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                tools:context="com.dl.playfun.ui.home.HomeMainFragment">
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
