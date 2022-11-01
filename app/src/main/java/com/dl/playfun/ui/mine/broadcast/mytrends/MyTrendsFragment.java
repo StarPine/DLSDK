@@ -92,7 +92,7 @@ public class MyTrendsFragment extends BaseRefreshFragment<FragmentMyTrendsBindin
                         //是否允许点击PopupWindow之外的地方消失
                         .setFocusAndOutsideEnable(true)
                         .setDimValue(0)
-                        .setWidth(350)
+                        .setWidth(550)
                         .apply();
 
                 LinearLayoutManager layoutManager = (LinearLayoutManager) binding.rcyTrend.getLayoutManager();

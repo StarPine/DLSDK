@@ -32,6 +32,16 @@ public class AllConfigEntity {
     //动态配置http请求域名
     @SerializedName("api_url")
     private String apiUrl;
+    //广场页屏蔽动态的开关
+    private int squareDislike;
+
+    public int getSquareDislike() {
+        return squareDislike;
+    }
+
+    public void setSquareDislike(int squareDislike) {
+        this.squareDislike = squareDislike;
+    }
 
     public CrystalDetailsConfigEntity getCrystalDetailsConfig() {
         return crystalDetailsConfig;

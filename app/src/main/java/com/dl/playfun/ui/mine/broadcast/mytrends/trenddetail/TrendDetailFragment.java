@@ -132,12 +132,13 @@ public class TrendDetailFragment extends BaseToolbarFragment<FragmentTrendDetail
                         //是否允许点击PopupWindow之外的地方消失
                         .setFocusAndOutsideEnable(true)
                         .setDimValue(0)
-                        .setWidth(350)
+                        .setWidth(550)
                         .apply();
 
 
                 mCirclePop.showAtAnchorView(binding.ivMore, YGravity.BELOW, XGravity.ALIGN_RIGHT, 0, 0);
                 TextView stop = mCirclePop.findViewById(R.id.tv_stop);
+                TextView tvShield = mCirclePop.findViewById(R.id.tv_shield);
                 if (viewModel.newsEntityObservableField.get() == null || viewModel.newsEntityObservableField.get().getUser() == null) {//新增
                     return;
                 }
@@ -147,7 +148,17 @@ public class TrendDetailFragment extends BaseToolbarFragment<FragmentTrendDetail
                 } else {
                     mCirclePop.findViewById(R.id.tv_detele).setVisibility(View.GONE);
                     stop.setText(getString(R.string.playfun_report_user_title));
+                    if(ConfigManager.getInstance().getBroadcastSquareDislikeFlag()){
+                        tvShield.setVisibility(View.VISIBLE);
+                    }else{
+                        tvShield.setVisibility(View.GONE);
+                    }
                 }
+                //屏蔽动态
+                tvShield.setOnClickListener(v -> {
+                    mCirclePop.dismiss();
+                    viewModel.broadcastDisLike();
+                });
 
                 stop.setOnClickListener(new View.OnClickListener() {
                     @Override

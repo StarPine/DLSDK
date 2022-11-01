@@ -141,6 +141,11 @@ public class HttpDataSourceImpl implements HttpDataSource {
         INSTANCE = null;
     }
 
+    @Override
+    public Observable<BaseResponse> broadcastDisLike(RequestBody body) {
+        return apiService.broadcastDisLike(body);
+    }
+
     public Observable<BaseResponse> localeOrderReport(RequestBody requestBody){
         return apiService.localeOrderReport(requestBody);
     }

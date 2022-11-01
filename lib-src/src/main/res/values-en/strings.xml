@@ -2278,5 +2278,6 @@
     <string name="playfun_pay_buy_reports_empty">No orders found to restore purchases</string>
     <string name="playfun_pay_buy_reports_error">Busy, try again later.</string>
     <string name="playfun_pay_buy_reports_error_2">Frequent operations, try again later.</string>
+    <string name="playfun_fragment_issuance_shield">Shield moment</string>
     <!--PlayFun-APP-END-->
 </resources>

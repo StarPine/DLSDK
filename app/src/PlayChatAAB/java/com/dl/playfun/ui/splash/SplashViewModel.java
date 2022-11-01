@@ -215,21 +215,23 @@ public class SplashViewModel extends BaseViewModel<AppRepository> {
                     @Override
                     public void onSuccess(BaseDataResponse<AllConfigEntity> response) {
                         try {
-                            model.saveHeightConfig(response.getData().getHeight());
-                            model.saveWeightConfig(response.getData().getWeight());
-                            model.saveReportReasonConfig(response.getData().getReportReason());
-                            model.saveFemaleEvaluateConfig(response.getData().getEvaluate().getEvaluateFemale());
-                            model.saveMaleEvaluateConfig(response.getData().getEvaluate().getEvaluateMale());
-                            model.saveHopeObjectConfig(response.getData().getHopeObject());
-                            model.saveOccupationConfig(response.getData().getOccupation());
-                            model.saveCityConfig(response.getData().getCity());
-                            model.saveSystemConfig(response.getData().getConfig());
-                            model.saveSystemConfigTask(response.getData().getTask());
-                            model.saveDefaultHomePageConfig(response.getData().getDefaultHomePage());
-                            model.saveGameConfig(response.getData().getGame());
-                            model.saveCrystalDetailsConfig(response.getData().getCrystalDetailsConfig());
-                            model.putSwitches(EaringlSwitchUtil.KEY_TIPS, response.getData().getIsTips());
-                            model.putSwitches(EaringlSwitchUtil.KEY_DELETE_ACCOUNT, response.getData().getConfig().getDeleteAccount());
+                            AllConfigEntity allConfigEntity = response.getData();
+                            model.saveHeightConfig(allConfigEntity.getHeight());
+                            model.saveWeightConfig(allConfigEntity.getWeight());
+                            model.saveReportReasonConfig(allConfigEntity.getReportReason());
+                            model.saveFemaleEvaluateConfig(allConfigEntity.getEvaluate().getEvaluateFemale());
+                            model.saveMaleEvaluateConfig(allConfigEntity.getEvaluate().getEvaluateMale());
+                            model.saveHopeObjectConfig(allConfigEntity.getHopeObject());
+                            model.saveOccupationConfig(allConfigEntity.getOccupation());
+                            model.saveCityConfig(allConfigEntity.getCity());
+                            model.saveSystemConfig(allConfigEntity.getConfig());
+                            model.saveSystemConfigTask(allConfigEntity.getTask());
+                            model.saveDefaultHomePageConfig(allConfigEntity.getDefaultHomePage());
+                            model.saveGameConfig(allConfigEntity.getGame());
+                            model.saveCrystalDetailsConfig(allConfigEntity.getCrystalDetailsConfig());
+                            model.putSwitches(EaringlSwitchUtil.KEY_TIPS, allConfigEntity.getIsTips());
+                            model.putSwitches(EaringlSwitchUtil.KEY_DELETE_ACCOUNT, allConfigEntity.getConfig().getDeleteAccount());
+                            model.putSwitches(EaringlSwitchUtil.KEY_SQUARE_DISLIKE,allConfigEntity.getSquareDislike());
                         } catch (Exception e) {
                             ExceptionReportUtils.report(e);
                         }
