@@ -3,9 +3,11 @@ package com.dl.playfun.ui.radio.issuanceprogram;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -17,11 +19,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.aliyun.svideo.crop.CropMediaActivity;
-import com.aliyun.svideosdk.common.struct.common.AliyunSnapVideoParam;
-import com.aliyun.svideosdk.common.struct.common.VideoDisplayMode;
-import com.aliyun.svideosdk.common.struct.common.VideoQuality;
-import com.aliyun.svideosdk.common.struct.encoder.VideoCodecs;
 import com.bigkoo.pickerview.view.TimePickerView;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.BR;
@@ -34,17 +31,26 @@ import com.dl.playfun.databinding.FragmentIssuanceProgramBinding;
 import com.dl.playfun.entity.ConfigItemEntity;
 import com.dl.playfun.entity.DatingObjItemEntity;
 import com.dl.playfun.entity.GoodsEntity;
+import com.dl.playfun.entity.MediaPayPerConfigEntity;
 import com.dl.playfun.entity.ThemeItemEntity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
 import com.dl.playfun.ui.certification.certificationmale.CertificationMaleFragment;
+import com.dl.playfun.ui.message.mediagallery.SnapshotPhotoActivity;
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
 import com.dl.playfun.utils.AutoSizeUtils;
+import com.dl.playfun.utils.PictureSelectorUtil;
+import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.widget.coinpaysheet.CoinPaySheet;
 import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 import com.dl.playfun.widget.dialog.MVDialog;
+import com.dl.playfun.widget.dialog.MessageDetailDialog;
+import com.luck.picture.lib.entity.LocalMedia;
+import com.luck.picture.lib.listener.OnResultCallbackListener;
 import com.luck.picture.lib.permissions.PermissionChecker;
+
+import java.util.List;
 
 import me.goldze.mvvmhabit.utils.ToastUtils;
 
@@ -135,24 +141,51 @@ public class IssuanceProgramFragment extends BaseToolbarFragment<FragmentIssuanc
 
     ActivityResultLauncher<String> toPermissionIntent = registerForActivityResult(new ActivityResultContracts.RequestPermission(), result -> {
         if (result) {
-            AliyunSnapVideoParam mCropParam = new AliyunSnapVideoParam.Builder()
-                    .setFrameRate(30)
-                    .setGop(250)
-                    .setFilterList(null)
-                    .setCropMode(VideoDisplayMode.SCALE)
-                    .setVideoQuality(VideoQuality.HD)
-                    .setVideoCodec(VideoCodecs.H264_HARDWARE)
-                    .setResolutionMode(0)
-                    .setRatioMode(1)
-                    .setCropMode(VideoDisplayMode.SCALE)
-                    .setNeedRecord(false)
-                    .setMinVideoDuration(3000)
-                    .setMaxVideoDuration(60 * 1000 * 1000)
-                    .setMinCropDuration(3000)
-                    .setSortMode(AliyunSnapVideoParam.SORT_MODE_MERGE)
-                    .build();
-            AppConfig.isCorpAliyun = true;
-            CropMediaActivity.startCropForResult(_mActivity, 2002, mCropParam);
+            MessageDetailDialog.CheckImgViewFile(mActivity, true, true, null, new MessageDetailDialog.SelectedSnapshotListener() {
+                @Override
+                public void checkPhoto(boolean snapshot) {
+                    PictureSelectorUtil.selectImageAndCrop(mActivity, true, 1, 1, new OnResultCallbackListener<LocalMedia>() {
+                        @Override
+                        public void onResult(List<LocalMedia> result) {
+                            viewModel.selectMediaPath.set(result.get(0).getCutPath());
+                            viewModel.isSelectedVideo = false;
+                        }
+
+                        @Override
+                        public void onCancel() {
+                        }
+                    });
+                }
+
+                @Override
+                public void checkVideo(boolean snapshot) {
+                    PictureSelectorUtil.selectVideo(mActivity, true, 1, new OnResultCallbackListener<LocalMedia>() {
+                        @Override
+                        public void onResult(List<LocalMedia> result) {
+                            LocalMedia localMedia = result.get(0);
+                            String path = "";
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                                path = localMedia.getAndroidQToPath();
+                                if (path == null || path.isEmpty()) {
+                                    path = localMedia.getRealPath();
+                                }
+                            } else {
+                                path = localMedia.getRealPath();
+                            }
+                            if (StringUtil.isEmpty(path)) {
+                                path = localMedia.getPath();
+                            }
+                            viewModel.selectMediaPath.set(path);
+                            viewModel.isSelectedVideo = true;
+                        }
+
+                        @Override
+                        public void onCancel() {
+
+                        }
+                    });
+                }
+            }).show();
         } else {
             Toast.makeText(_mActivity, R.string.picture_jurisdiction, Toast.LENGTH_SHORT).show();
             if (!ActivityCompat.shouldShowRequestPermissionRationale(_mActivity, Manifest.permission.READ_EXTERNAL_STORAGE)) {
@@ -169,12 +202,6 @@ public class IssuanceProgramFragment extends BaseToolbarFragment<FragmentIssuanc
             @Override
             public void onChanged(Object o) {
                 toPermissionIntent.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
-            }
-        });
-        viewModel.uc.checkDatingText.observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-
             }
         });
         viewModel.uc.clickNotVip.observe(this, new Observer<Integer>() {
@@ -246,12 +273,6 @@ public class IssuanceProgramFragment extends BaseToolbarFragment<FragmentIssuanc
                             .getTop2BottomDialog()
                             .show();
                 }
-            }
-        });
-        viewModel.uc.clickTheme.observe(this, new Observer() {
-            @Override
-            public void onChanged(@Nullable Object o) {
-
             }
         });
         viewModel.uc.clickAddress.observe(this, new Observer() {

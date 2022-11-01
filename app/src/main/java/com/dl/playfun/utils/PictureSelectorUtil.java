@@ -128,6 +128,40 @@ public class PictureSelectorUtil {
         pictureSelectionModel.forResult(callbackListener);
     }
 
+    public static void selectImageAndVideoCrop(Activity activity, boolean showCamera, int aspectRatioX, int aspectRatioY, OnResultCallbackListener<LocalMedia> callbackListener) {
+        PictureSelectionModel pictureSelectionModel = PictureSelector.create(activity)
+                .openGallery(PictureMimeType.ofAll())
+                .setLanguage(-1)
+                .theme(R.style.picture_white_style_custom)
+                .isCamera(showCamera)
+                .setPictureWindowAnimationStyle(getPictureWindowAnimationStyle())// 自定义相册启动退出动画
+                .imageEngine(GlideEngine.createGlideEngine())
+                .imageSpanCount(IMAGE_SPAN_COUNT)
+                .compressFocusAlpha(true)
+                .isEnableCrop(true)// 是否裁剪
+                .withAspectRatio(aspectRatioX, aspectRatioY)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
+                .freeStyleCropEnabled(true)// 裁剪框是否可拖拽
+                .showCropFrame(true)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false
+                .showCropGrid(true)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false
+                .hideBottomControls(false)// 是否显示uCrop工具栏，默认不显示
+                .minimumCompressSize(200)
+                .compressQuality(85)// 图片压缩后输出质量 0~ 100
+                .maxSelectNum(1)
+                .videoMinSecond(3)//最小三秒
+                .recordVideoSecond(20)
+                .videoQuality(0)
+                .queryMaxFileSize(60)
+                .isPreviewVideo(true)
+                .queryMaxFileSize(6)
+                .isPreviewImage(false)
+                .isSingleDirectReturn(true)
+                .isGif(false)
+                .freeStyleCropEnabled(false)
+                .isAutomaticTitleRecyclerTop(true)
+                .selectionMode(PictureConfig.SINGLE);
+        pictureSelectionModel.forResult(callbackListener);
+    }
+
     public static void previewImage(Activity activity, String img) {
         List<String> imgs = new ArrayList<>();
         imgs.add(img);

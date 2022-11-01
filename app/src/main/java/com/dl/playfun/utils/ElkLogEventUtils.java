@@ -1,8 +1,17 @@
 package com.dl.playfun.utils;
 
+import android.content.Context;
+import android.content.Intent;
+import android.hardware.Sensor;
+import android.net.Uri;
+import android.os.Build;
+import android.telephony.TelephonyManager;
+import android.text.TextUtils;
+
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.Utils;
 import com.dl.lib.util.MPDeviceUtils;
+import com.dl.lib.util.emulator.EmulatorDetector;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.entity.UserDataEntity;
@@ -32,6 +41,8 @@ public class ElkLogEventUtils {
             DEFAULT_LOCAL_LANGUAGE = defaultLocalLanguage;
         }
     }
+
+    private static int rating = -1;
 
     /**
     * @Desc TODO(获取当前用户的公共参数)
@@ -97,8 +108,96 @@ public class ElkLogEventUtils {
                 //当前移动端所属的网络状况，例如wifi或者wwan
                 .append("`nt="+ NetworkUtil.getAPNType(Utils.getApp()))
                 //当前移动端所属的ip地址
-                .append("`ip="+NetworkUtil.getIPAddress(Utils.getApp()));
+                .append("`ip="+NetworkUtil.getIPAddress(Utils.getApp()))
+                .append("`isNoNoEmulator="+isEmulator()) ;
         return stringBuilder.toString();
+    }
+    public static boolean isEmulator() {
+        if (EmulatorDetector.isEmulatorAbsolute()) {
+            return true;
+        }
+        int newRating = 0;
+        if (rating < 0) {
+            if (Build.PRODUCT.contains("sdk") ||
+                    Build.PRODUCT.contains("Andy") ||
+                    Build.PRODUCT.contains("ttVM_Hdragon") ||
+                    Build.PRODUCT.contains("google_sdk") ||
+                    Build.PRODUCT.contains("Droid4X") ||
+                    Build.PRODUCT.contains("nox") ||
+                    Build.PRODUCT.contains("sdk_x86") ||
+                    Build.PRODUCT.contains("sdk_google") ||
+                    Build.PRODUCT.contains("vbox86p")) {
+                newRating++;
+            }
+
+            if (Build.MANUFACTURER.equals("unknown") ||
+                    Build.MANUFACTURER.equals("Genymotion") ||
+                    Build.MANUFACTURER.contains("Andy") ||
+                    Build.MANUFACTURER.contains("MIT") ||
+                    Build.MANUFACTURER.contains("nox") ||
+                    Build.MANUFACTURER.contains("TiantianVM")) {
+                newRating++;
+            }
+
+            if (Build.BRAND.equals("generic") ||
+                    Build.BRAND.equals("generic_x86") ||
+                    Build.BRAND.equals("TTVM") ||
+                    Build.BRAND.contains("Andy")) {
+                newRating++;
+            }
+
+            if (Build.DEVICE.contains("generic") ||
+                    Build.DEVICE.contains("generic_x86") ||
+                    Build.DEVICE.contains("Andy") ||
+                    Build.DEVICE.contains("ttVM_Hdragon") ||
+                    Build.DEVICE.contains("Droid4X") ||
+                    Build.DEVICE.contains("nox") ||
+                    Build.DEVICE.contains("generic_x86_64") ||
+                    Build.DEVICE.contains("vbox86p")) {
+                newRating++;
+            }
+
+            if (Build.MODEL.equals("sdk") ||
+                    Build.MODEL.contains("Emulator") ||
+                    Build.MODEL.equals("google_sdk") ||
+                    Build.MODEL.contains("Droid4X") ||
+                    Build.MODEL.contains("TiantianVM") ||
+                    Build.MODEL.contains("Andy") ||
+                    Build.MODEL.equals("Android SDK built for x86_64") ||
+                    Build.MODEL.equals("Android SDK built for x86")) {
+                newRating++;
+            }
+
+            if (Build.HARDWARE.equals("goldfish") ||
+                    Build.HARDWARE.equals("vbox86") ||
+                    Build.HARDWARE.contains("nox") ||
+                    Build.HARDWARE.contains("ttVM_x86")) {
+                newRating++;
+            }
+
+            if (Build.FINGERPRINT.contains("generic/sdk/generic") ||
+                    Build.FINGERPRINT.contains("generic_x86/sdk_x86/generic_x86") ||
+                    Build.FINGERPRINT.contains("Andy") ||
+                    Build.FINGERPRINT.contains("ttVM_Hdragon") ||
+                    Build.FINGERPRINT.contains("generic_x86_64") ||
+                    Build.FINGERPRINT.contains("generic/google_sdk/generic") ||
+                    Build.FINGERPRINT.contains("vbox86p") ||
+                    Build.FINGERPRINT.contains("generic/vbox86p/vbox86p")) {
+                newRating++;
+            }
+//
+//            try {
+//                File sharedFolder = new File(StorageUtils.getExternalNonoDir(), File.separatorChar + "windows" + File.separatorChar + "BstSharedFolder");
+//                if (sharedFolder.exists()) {
+//                    newRating += 10;
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+
+            rating = newRating;
+        }
+        return rating > 3;//不能再少了，否则有可能误判，若增减了新的嫌疑度判定属性，要重新评估该值
     }
 
     public static String getMediaSource(){

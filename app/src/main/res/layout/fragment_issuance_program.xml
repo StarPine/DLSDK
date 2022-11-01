@@ -178,8 +178,7 @@
                             binding:imagePlaceholderRes="@{R.drawable.clop_img_video_loadding}"
                             binding:imageThumbPath='@{viewModel.selectMediaPath}'
                             binding:resizeH="@{81}"
-                            binding:resizeW="@{81}"
-                            />
+                            binding:resizeW="@{81}" />
 
                         <TextView
                             android:id="@+id/bottom_hint"

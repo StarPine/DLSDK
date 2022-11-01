@@ -157,7 +157,7 @@
                             android:layout_marginStart="5dp"
                             android:text="@{viewModel.getTotalCoin(viewModel.diamondInfo)}"
                             android:textColor="@color/toolbar_title_color"
-                            android:textSize="@dimen/alivc_common_font_22"
+                            android:textSize="22sp"
                             android:textStyle="bold"
                             tools:text="9999999+" />
                     </LinearLayout>

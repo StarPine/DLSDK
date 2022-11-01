@@ -103,13 +103,6 @@ public class AppConfig {
     public static boolean userClickOut = false;
 
     /**
-     * @Desc TODO(阿里云剪辑是否触发)
-     * @author 彭石林
-     * @Date 2021/10/29
-     */
-    public static boolean isCorpAliyun = false;
-
-    /**
      * @Desc TODO(福袋网址)
      * @author 彭石林
      * @parame

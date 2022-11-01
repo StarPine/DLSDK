@@ -1,4 +1,4 @@
-package com.aliyun.svideo.common.utils;
+package com.dl.lib.util;
 
 import android.util.Log;
 
