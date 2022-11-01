@@ -173,16 +173,31 @@ public class IssuanceProgramViewModel extends BaseViewModel<AppRepository> {
                 .doOnSubscribe(this)
                 .doOnSubscribe(disposable -> showHUD())
                 .subscribeOn(Schedulers.io())
-                .map(new Function<String, String>() {
-                    @Override
-                    public String apply(String s) throws Exception {
-                        if (filePath.endsWith(".mp4")) {
-                            return FileUploadUtils.ossUploadFileVideo("Issuance/", FileUploadUtils.FILE_TYPE_IMAGE, s, null);
-                        } else {
-                            return FileUploadUtils.ossUploadFile("Issuance/", FileUploadUtils.FILE_TYPE_IMAGE, s);
-                        }
+                .map((Function<String, String>) s -> {
+                    if (filePath.endsWith(".mp4")) {
+                        return FileUploadUtils.ossUploadFileVideo("Issuance/", FileUploadUtils.FILE_TYPE_IMAGE, s, new FileUploadUtils.FileUploadProgressListener() {
+                            public void fileCompressProgress(int progress) {
+                                showProgressHUD(String.format(StringUtils.getString(R.string.playfun_compressing), progress), progress);
+                            }
 
+                            @Override
+                            public void fileUploadProgress(int progress) {
+                                showProgressHUD(String.format(StringUtils.getString(R.string.playfun_uploading), progress), progress);
+                            }
+                        });
+                    } else {
+                        return FileUploadUtils.ossUploadFile("Issuance/", FileUploadUtils.FILE_TYPE_IMAGE, s, new FileUploadUtils.FileUploadProgressListener() {
+                            public void fileCompressProgress(int progress) {
+                                showProgressHUD(String.format(StringUtils.getString(R.string.playfun_compressing), progress), progress);
+                            }
+
+                            @Override
+                            public void fileUploadProgress(int progress) {
+                                showProgressHUD(String.format(StringUtils.getString(R.string.playfun_uploading), progress), progress);
+                            }
+                        });
                     }
+
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new DisposableObserver<String>() {
