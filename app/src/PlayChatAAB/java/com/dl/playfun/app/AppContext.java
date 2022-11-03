@@ -29,7 +29,8 @@ import com.bumptech.glide.Glide;
 import com.dl.lib.elk.IStatisticsConfig;
 import com.dl.lib.elk.StatisticsAnalysis;
 import com.dl.lib.elk.StatisticsManager;
-import com.dl.lib.util.MPDeviceUtils;
+import com.dl.lib.util.log.DebugLoggerTree;
+import com.dl.lib.util.log.MPTimber;
 import com.dl.playfun.BuildConfig;
 import com.dl.playfun.R;
 import com.dl.playfun.data.AppRepository;
@@ -194,6 +195,8 @@ public class AppContext extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        // 初始化日志打印
+        MPTimber.plant(new DebugLoggerTree());
         instance = this;
         BaseApplication.setApplication(this);
         Utils.init(this);

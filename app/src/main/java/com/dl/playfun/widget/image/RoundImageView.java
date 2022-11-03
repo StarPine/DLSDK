@@ -12,7 +12,7 @@ import android.widget.ImageView;
  * Time: 2021/10/8 17:34
  * Description: This is RoundImageView
  */
-public class RoundImageView extends ImageView {
+public class RoundImageView extends androidx.appcompat.widget.AppCompatImageView {
 
 
     /*圆角的半径，依次为左上角xy半径，右上角，右下角，左下角*/

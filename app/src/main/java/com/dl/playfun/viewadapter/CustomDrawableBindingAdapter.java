@@ -4,11 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.view.View;
 
-import androidx.annotation.IntDef;
 import androidx.databinding.BindingAdapter;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 
 public class CustomDrawableBindingAdapter {
     /**
@@ -104,25 +100,6 @@ public class CustomDrawableBindingAdapter {
 
     }
 
-    public enum Orientation {
-        /** draw the gradient from the top to the bottom */
-        TOP_BOTTOM,
-        /** draw the gradient from the top-right to the bottom-left */
-        TR_BL,
-        /** draw the gradient from the right to the left */
-        RIGHT_LEFT,
-        /** draw the gradient from the bottom-right to the top-left */
-        BR_TL,
-        /** draw the gradient from the bottom to the top */
-        BOTTOM_TOP,
-        /** draw the gradient from the bottom-left to the top-right */
-        BL_TR,
-        /** draw the gradient from the left to the right */
-        LEFT_RIGHT,
-        /** draw the gradient from the top-left to the bottom-right */
-        TL_BR,
-    }
-
     /**
      * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
      */
@@ -131,28 +108,4 @@ public class CustomDrawableBindingAdapter {
         return (dpValue * scale + 0.5f);
     }
 
-
-    @IntDef({
-            ShapeMode.RECTANGLE,
-            ShapeMode.OVAL,
-            ShapeMode.LINE,
-            ShapeMode.RING,
-    })
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface ShapeMode {
-        int RECTANGLE = GradientDrawable.RECTANGLE;
-        int OVAL = GradientDrawable.OVAL;
-        /**
-         * 画线时，有几点特性必须要知道的：
-         * 1. 只能画水平线，画不了竖线；
-         * 2. 线的高度是通过stroke的android:width属性设置的；
-         * 3. size的android:height属性定义的是整个形状区域的高度；
-         * 4. size的height必须大于stroke的width，否则，线无法显示；
-         * 5. 线在整个形状区域中是居中显示的；
-         * 6. 线左右两边会留有空白间距，线越粗，空白越大；
-         * 7. 引用虚线的view需要添加属性android:layerType，值设为"software"，否则显示不了虚线。
-         */
-        int LINE = GradientDrawable.LINE;
-        int RING = GradientDrawable.RING;
-    }
 }
