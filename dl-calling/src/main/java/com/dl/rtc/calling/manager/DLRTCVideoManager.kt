@@ -1,6 +1,8 @@
 package com.dl.rtc.calling.manager
 
+import com.dl.lib.util.log.MPTimber
 import com.dl.rtc.calling.base.DLRTCCallingDelegate
+import com.dl.rtc.calling.base.DLRTCCallingItFace
 import com.dl.rtc.calling.base.impl.DLRTCInternalListenerManager
 import com.tencent.qcloud.tuicore.TUILogin
 import com.tencent.trtc.TRTCCloudDef
@@ -12,7 +14,8 @@ import com.tencent.trtc.TRTCCloudDef.TRTCVideoEncParam
  *Time: 2022/11/3 12:03
  * Description: 视频通话管理类
  */
-class DLRTCVideoManager {
+class DLRTCVideoManager : DLRTCCallingItFace {
+    val TAG_LOG = "DLRTCVideoManager"
 
     private var mTRTCInternalListenerManager : DLRTCInternalListenerManager? = null
 
@@ -26,7 +29,7 @@ class DLRTCVideoManager {
             return sINSTANCE ?: synchronized(this) {
                 //创建对象后。引用apply作用域操作当前对象本身内置方法
                 val instance = DLRTCVideoManager().apply {
-                    mTRTCInternalListenerManager = DLRTCInternalListenerManager()
+                    mTRTCInternalListenerManager = DLRTCInternalListenerManager.instance
                 }
                 sINSTANCE = instance
                 // 返回实例
@@ -51,13 +54,7 @@ class DLRTCVideoManager {
     /**
      * 进入房间
      */
-    fun enterTRTCRoom(mCurRoomID :String){
-
-//            // 开启基础美颜
-//            TXBeautyManager txBeautyManager = mTRTCCloud.getBeautyManager();
-//            // 自然美颜
-//            txBeautyManager.setBeautyStyle(1);
-//            txBeautyManager.setBeautyLevel(6);
+    private fun enterRTCRoom(mCurRoomID :Int){
         // 进房前需要设置一下关键参数
         val encParam = TRTCVideoEncParam()
         encParam.videoResolution = TRTCCloudDef.TRTC_VIDEO_RESOLUTION_1280_720
@@ -77,26 +74,36 @@ class DLRTCVideoManager {
             enableAudioVolumeEvaluation(300)
             setAudioRoute(TRTCCloudDef.TRTC_AUDIO_ROUTE_SPEAKER)
             startLocalAudio(3)
+            enterRoom(trtcParams,TRTCCloudDef.TRTC_APP_SCENE_VIDEOCALL)
         }
-        TRTCLogger.i(
-            TRTCCalling.TAG,
-            "enterTRTCRoom: " + TUILogin.getUserId() + " room:" + mCurRoomID
-        )
-        val trtcParams = TRTCParams(
-            TUILogin.getSdkAppId(), TUILogin.getUserId(),
-            TUILogin.getUserSig(), mCurRoomID, "", ""
-        )
-        trtcParams.role = TRTCCloudDef.TRTCRoleAnchor
-        mTRTCCloud!!.enableAudioVolumeEvaluation(300)
-        mTRTCCloud!!.setAudioRoute(TRTCCloudDef.TRTC_AUDIO_ROUTE_SPEAKER)
-        mTRTCCloud!!.startLocalAudio(3)
-        // 收到来电，开始监听 trtc 的消息
-        // 收到来电，开始监听 trtc 的消息
-        setFramework()
-        // 输出版本日志
-        // 输出版本日志
-        printVersionLog()
-        mTRTCCloud!!.setListener(mTRTCCloudListener)
-        mTRTCCloud!!.enterRoom(trtcParams,TRTCCloudDef.TRTC_APP_SCENE_VIDEOCALL)
+        MPTimber.tag(TAG_LOG).i("enterTRTCRoom: " + TUILogin.getUserId() + " room:" + mCurRoomID)
+    }
+
+    /**
+     * 挂断电话
+     */
+    override fun reject() {
+        DLRTCStartManager.getInstance().reject()
+    }
+
+    /**
+     * 接听电话
+     */
+    override fun accept() {
+        DLRTCStartManager.getInstance().accept()
+    }
+
+    /**
+     * 进入房间
+     */
+    override fun enterRoom(roomId : Int) {
+        enterRTCRoom(roomId)
+    }
+
+    /**
+     * 推出房间
+     */
+    override fun exitRoom() {
+        DLRTCStartManager.getInstance().exitRoom()
     }
 }

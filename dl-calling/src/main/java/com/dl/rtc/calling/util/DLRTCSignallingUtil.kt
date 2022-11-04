@@ -234,6 +234,14 @@ object  DLRTCSignallingUtil {
             .cmd
     }
 
+     fun isLineBusy(signallingData: DLRTCSignallingData): Boolean {
+        if (isNewSignallingVersion(signallingData)) {
+            val dataInfo = signallingData.data?: return false
+            return DLRTCCallModel.VALUE_MSG_LINE_BUSY == dataInfo.message
+        }
+        return DLRTCCallModel.SIGNALING_EXTRA_KEY_LINE_BUSY == signallingData.lineBusy
+    }
+
 
     /**
      * 创建拨打信令模型

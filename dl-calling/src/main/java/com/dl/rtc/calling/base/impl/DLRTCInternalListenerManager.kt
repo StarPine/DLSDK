@@ -7,14 +7,18 @@ import java.lang.ref.WeakReference
 /**
  *Author: 彭石林
  *Time: 2022/11/3 14:51
- * Description: This is DLRTCInternalListenerManager
+ * Description: 这个类用来保存所有的监听个回调
  */
 class DLRTCInternalListenerManager : DLRTCCallingDelegate {
 
     private var mWeakReferenceList: MutableList<WeakReference<DLRTCCallingDelegate>>? = null
 
-    fun TRTCInternalListenerManager() {
-        mWeakReferenceList = java.util.ArrayList<WeakReference<DLRTCCallingDelegate>>()
+    companion object{
+        val instance by lazy {
+            DLRTCInternalListenerManager().apply {
+            mWeakReferenceList = ArrayList()
+            }
+        }
     }
 
     fun addDelegate(listener: DLRTCCallingDelegate) {

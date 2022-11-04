@@ -12,9 +12,9 @@ class DLRTCOfflineMessageBean {
         val REDIRECT_ACTION_CALL = 2
         var version = DEFAULT_VERSION
         //V2TIMConversation.V2TIM_C2C;
-        var chatType: Int = 1
-
     }
+
+    var chatType: Int = 1
 
     var action = REDIRECT_ACTION_CHAT
     var sender = ""

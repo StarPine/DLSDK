@@ -6,9 +6,10 @@ package com.dl.rtc.calling.model.bean
  * Description: This is DLRTCMessageCustom
  */
 class DLRTCMessageCustom {
-    val BUSINESS_ID_GROUP_CREATE = "group_create"
-    val BUSINESS_ID_AV_CALL = "av_call"
-
+    companion object {
+        val BUSINESS_ID_GROUP_CREATE = "group_create"
+        val BUSINESS_ID_AV_CALL = "av_call"
+    }
     var version = 0
     var businessID: String? = null
     var opUser: String? = null

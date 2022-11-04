@@ -16,7 +16,7 @@ import com.blankj.utilcode.util.ServiceUtils
  *Time: 2022/11/3 15:32
  * Description: This is DLRTCCallService
  */
-class DLRTCCallService : Service() {
+object DLRTCCallService : Service() {
 
     private val NOTIFICATION_ID : Int = 1001
 
