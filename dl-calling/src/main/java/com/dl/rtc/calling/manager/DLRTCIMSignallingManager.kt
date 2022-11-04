@@ -11,7 +11,7 @@ import com.tencent.imsdk.v2.V2TIMUserInfo
  *Time: 2022/11/3 17:33
  * Description: This is DLRTCSignallingManager
  */
-class DLRTCSignallingManager {
+class DLRTCIMSignallingManager {
 
     private val TAG_LOG = "DLRTCSignallingManager"
 
@@ -25,7 +25,7 @@ class DLRTCSignallingManager {
         fun getInstance() = InstanceHelper.singleInstance
     }
     object InstanceHelper {
-        val singleInstance = DLRTCSignallingManager()
+        val singleInstance = DLRTCIMSignallingManager()
     }
 
 

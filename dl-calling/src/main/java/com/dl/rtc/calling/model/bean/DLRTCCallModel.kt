@@ -100,21 +100,19 @@ class DLRTCCallModel :Cloneable, Serializable {
          * 拒绝切换为语音通话
          */
         val VIDEO_CALL_ACTION_REJECT_SWITCH_TO_AUDIO = 10
+
+
+        //兼容老版本字段，待废弃字段
+        var SIGNALING_EXTRA_KEY_CALL_TYPE = "call_type"
+        var SIGNALING_EXTRA_KEY_ROOM_ID = "room_id"
+        var SIGNALING_EXTRA_KEY_LINE_BUSY = "line_busy"
+        var SIGNALING_EXTRA_KEY_CALL_END = "call_end"
+        var SIGNALING_EXTRA_KEY_SWITCH_AUDIO_CALL = "switch_to_audio_call"
     }
 
-
-    //兼容老版本字段，待废弃字段
-    var SIGNALING_EXTRA_KEY_CALL_TYPE = "call_type"
-    var SIGNALING_EXTRA_KEY_ROOM_ID = "room_id"
-    var SIGNALING_EXTRA_KEY_LINE_BUSY = "line_busy"
-    var SIGNALING_EXTRA_KEY_CALL_END = "call_end"
-    var SIGNALING_EXTRA_KEY_SWITCH_AUDIO_CALL = "switch_to_audio_call"
 
     @SerializedName("version")
     var version = 0
-    set(value) {
-        field = value
-    }
 
     /**
      * 表示一次通话的唯一ID
@@ -168,7 +166,7 @@ class DLRTCCallModel :Cloneable, Serializable {
     var timeout = 0
     var data: String? = null
 
-    override fun clone(): Any {
+    public override fun clone(): Any {
         var callModel: DLRTCCallModel? = null
         try {
             callModel = super.clone() as DLRTCCallModel

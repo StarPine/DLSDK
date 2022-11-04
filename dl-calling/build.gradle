@@ -35,7 +35,7 @@ dependencies {
     api "com.google.code.gson:gson:2.8.5"
     api rootProject.ext.dependenciesID["appcompat"]
     api rootProject.ext.dependenciesID["utilcode"]
-    api "com.tencent.liteav:LiteAVSDK_TRTC:10.1.0.11109"
+    api "com.tencent.liteav:LiteAVSDK_TRTC:10.8.0.13052"
     api project(':tuicore')
     implementation project(":lib-util")
 }

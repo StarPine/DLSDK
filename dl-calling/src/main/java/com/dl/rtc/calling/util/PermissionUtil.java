@@ -1,4 +1,4 @@
-package com.tencent.liteav.trtccalling.model.util;
+package com.dl.rtc.calling.util;
 
 import android.annotation.SuppressLint;
 import android.app.AppOpsManager;
@@ -96,7 +96,7 @@ public class PermissionUtil {
         int op = 10021;
         try {
             Method method = appOpsManager.getClass().getMethod("checkOpNoThrow",
-                    new Class[]{int.class, int.class, String.class});
+                    int.class, int.class, String.class);
             method.setAccessible(true);
             int result = (int) method.invoke(appOpsManager, op, android.os.Process.myUid(), context.getPackageName());
             return AppOpsManager.MODE_ALLOWED == result;

@@ -9,6 +9,8 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import com.dl.rtc.calling.manager.DLRTCIMSignallingManager
+import com.dl.rtc.calling.manager.DLRTCStartManager
 import com.tencent.qcloud.tuicore.TUIConstants
 import com.tencent.qcloud.tuicore.TUICore
 
@@ -41,7 +43,7 @@ class DLRTCServiceInitializer : ContentProvider() {
                         //应用回到前台,需要主动去查询是否有未处理的通话请求
                         //例如应用在后台时没有拉起应用的权限,当用户听到铃声,从桌面或通知栏进入应用时,主动查询,拉起通话
                         if (com.tencent.qcloud.tuicore.TUILogin.isUserLogined()) {
-                            TUICallingImpl.sharedInstance(context).queryOfflineCalling()
+                            //TUICallingImpl.sharedInstance(context).queryOfflineCalling()
                         }
                     }
                     isChangingConfiguration = false
@@ -66,6 +68,8 @@ class DLRTCServiceInitializer : ContentProvider() {
 
     override fun onCreate(): Boolean {
         val appContext = context!!.applicationContext
+        DLRTCIMSignallingManager.getInstance().init()
+        DLRTCStartManager.getInstance().init(appContext)
         init(appContext)
         return false
     }

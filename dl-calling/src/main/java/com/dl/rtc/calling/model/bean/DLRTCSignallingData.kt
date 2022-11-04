@@ -9,41 +9,43 @@ import com.google.gson.annotations.SerializedName
  */
 class DLRTCSignallingData {
     //版本号
-    private var version = 0
+    var version = 0
+
     //信令ID
-    private var businessID: String? = null
-    private var platform: String? = null
-    private val extInfo: String? = null
-    private var data: DataInfo? = null
+    var businessID: String? = null
+    var platform: String? = null
+    var extInfo: String? = null
+    var data: DataInfo? = null
 
     //多人通话custom message增加字段
     @SerializedName("call_action")
-    private var callAction = 0
+    var callAction = 0
+
     @SerializedName("callid")
-    private var callId: String? = null
-    private var user: String? = null
+    var callId: String? = null
+    var user: String? = null
 
 
     //兼容IM老版本字段，待废弃字段
     @Deprecated("")
     @SerializedName("call_type")
-    private var callType = 0
+    var callType = 0
 
     @Deprecated("")
     @SerializedName("room_id")
-    private var roomId = 0
+    var roomId = 0
 
     @Deprecated("")
     @SerializedName("call_end")
-    private var callEnd = 0
+    var callEnd = 0
 
     @Deprecated("")
     @SerializedName("switch_to_audio_call")
-    private var switchToAudioCall: String? = null
+    var switchToAudioCall: String? = null
 
     @Deprecated("")
     @SerializedName("line_busy")
-    private var lineBusy: String? = null
+    var lineBusy: String? = null
 
     class DataInfo {
         var roomID = 0

@@ -1,0 +1,58 @@
+package com.dl.rtc.calling.model
+
+import com.blankj.utilcode.util.StringUtils
+import com.dl.lib.util.log.MPTimber
+import com.dl.rtc.calling.R
+import com.dl.rtc.calling.model.bean.DLRTCCallModel
+import com.dl.rtc.calling.model.bean.DLRTCOfflineMessageBean
+import com.dl.rtc.calling.model.bean.DLRTCOfflineMessageContainerBean
+import com.google.gson.Gson
+import com.tencent.imsdk.v2.V2TIMOfflinePushInfo
+import com.tencent.qcloud.tuicore.TUICore
+import com.tencent.qcloud.tuicore.TUILogin
+
+/**
+ *Author: 彭石林
+ *Time: 2022/11/4 14:32
+ * Description: This is DLRTCOfflineMessageModel
+ */
+object DLRTCOfflineMessageModel {
+    private val TAG_LOG = "DLRTCOfflineMessageModel"
+
+    /**
+     * 创建离线推送消息
+     */
+    fun createV2TIMOfflinePushInfo(
+        callModel: DLRTCCallModel,
+        userId: String,
+        nickname: String,
+        mFaceUrl : String?
+    ): V2TIMOfflinePushInfo {
+        val containerBean = DLRTCOfflineMessageContainerBean()
+        val entity: DLRTCOfflineMessageBean =
+            DLRTCOfflineMessageBean()
+        callModel.sender = TUILogin.getLoginUser()
+        entity.content = Gson().toJson(callModel)
+        entity.sender = TUILogin.getLoginUser() // 发送者肯定是登录账号
+        entity.action = DLRTCOfflineMessageBean.REDIRECT_ACTION_CALL
+        entity.sendTime = System.currentTimeMillis() / 1000
+        entity.nickname = nickname
+        if (mFaceUrl != null) {
+            entity.faceUrl = mFaceUrl
+        }
+        containerBean.entity = entity
+        val invitedList: MutableList<String> = ArrayList()
+        MPTimber.tag(TAG_LOG).d("createV2TIMOfflinePushInfo: entity = $entity")
+        invitedList.add(userId)
+        val v2TIMOfflinePushInfo = V2TIMOfflinePushInfo()
+        v2TIMOfflinePushInfo.ext = Gson().toJson(containerBean).toByteArray()
+        // OPPO必须设置ChannelID才可以收到推送消息，这个channelID需要和控制台一致
+        v2TIMOfflinePushInfo.setAndroidOPPOChannelID("tuikit")
+        v2TIMOfflinePushInfo.desc =
+            StringUtils.getString(R.string.trtccalling_title_have_a_call_invitation)
+        v2TIMOfflinePushInfo.title = nickname
+        //设置自定义铃声
+        v2TIMOfflinePushInfo.setIOSSound("phone_ringing.mp3")
+        return v2TIMOfflinePushInfo
+    }
+}

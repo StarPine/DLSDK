@@ -55,7 +55,8 @@ ext {
             "lib-src"   : "default",
             "faceunity"       : "default",
             "lib-toast"       : "default",
-            "lib-elk" : "default"
+            "lib-elk" : "default",
+            "dl-calling" : "default"
     ]
 
     dependenciesID = [

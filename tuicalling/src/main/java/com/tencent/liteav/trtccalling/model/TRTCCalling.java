@@ -159,7 +159,7 @@ public class TRTCCalling {
 
     private boolean mIsUseFrontCamera;
 
-    private MediaPlayHelper mMediaPlayHelper;        // 音效
+    private final MediaPlayHelper mMediaPlayHelper;        // 音效
 
     private SensorManager mSensorManager;
     private SensorEventListener mSensorEventListener;

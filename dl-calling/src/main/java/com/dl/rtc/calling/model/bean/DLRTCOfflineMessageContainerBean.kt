@@ -15,5 +15,5 @@ package com.dl.rtc.calling.model.bean
  * OPPO：用bundle.keySet()解析出entity的key，直接就可以获取实际消息OfflineMessageBean
  */
 class DLRTCOfflineMessageContainerBean {
-    var dlrtcOfflineMessageBean : DLRTCOfflineMessageBean ? = null
+    var entity : DLRTCOfflineMessageBean ? = null
 }
