@@ -79,6 +79,10 @@ class DLRTCVideoManager : DLRTCCallingItFace {
         MPTimber.tag(TAG_LOG).i("enterTRTCRoom: " + TUILogin.getUserId() + " room:" + mCurRoomID)
     }
 
+    override fun hangup() {
+        DLRTCStartManager.getInstance().hangup()
+    }
+
     /**
      * 挂断电话
      */
@@ -105,5 +109,25 @@ class DLRTCVideoManager : DLRTCCallingItFace {
      */
     override fun exitRoom() {
         DLRTCStartManager.getInstance().exitRoom()
+    }
+
+    override fun muteLocalAudio(enable : Boolean) {
+        DLRTCStartManager.getInstance().muteLocalAudio(enable)
+    }
+
+    override fun audioRoute(route: Boolean) {
+        DLRTCStartManager.getInstance().audioRoute(route)
+    }
+
+    override fun enableAGC(enable: Boolean) {
+        DLRTCStartManager.getInstance().enableAGC(enable)
+    }
+
+    override fun enableAEC(enable: Boolean) {
+        DLRTCStartManager.getInstance().enableAEC(enable)
+    }
+
+    override fun enableANS(enable: Boolean) {
+        DLRTCStartManager.getInstance().enableANS(enable)
     }
 }

@@ -46,6 +46,8 @@ import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
+import com.dl.rtc.calling.base.DLRTCCallingDelegate;
+import com.dl.rtc.calling.manager.DLRTCAudioManager;
 import com.google.gson.Gson;
 import com.tencent.custom.GiftEntity;
 import com.tencent.custom.IMGsonUtils;
@@ -53,8 +55,6 @@ import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMMessageReceipt;
-import com.tencent.liteav.trtccalling.model.TRTCCalling;
-import com.tencent.liteav.trtccalling.model.TRTCCallingDelegate;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.MyImageSpan;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
@@ -160,34 +160,18 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
 
     public UIChangeObservable uc = new UIChangeObservable();
     //点击文字充值
-    public BindingCommand referMoney = new BindingCommand(new BindingAction() {
-        @Override
-        public void call() {
-            uc.sendUserGiftError.postValue(false);
-        }
-    });
+    public BindingCommand<Void> referMoney = new BindingCommand<>(() -> uc.sendUserGiftError.postValue(false));
     /**
      * 水晶兑换规则
      */
-    public BindingCommand crystalOnClick = new BindingCommand(new BindingAction() {
-        @Override
-        public void call() {
-            getMallWithdrawTipsInfo(1);
-        }
-    });
+    public BindingCommand<Void> crystalOnClick = new BindingCommand<>(() -> getMallWithdrawTipsInfo(1));
 
     protected Ifinish mView;
-    protected TRTCCalling mTRTCCalling;
-    protected TRTCCallingDelegate mTRTCCallingDelegate;
+    protected DLRTCCallingDelegate mTRTCCallingDelegate;
     //    private TUICalling.Role mRole;
-    public View.OnClickListener closeOnclick = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            uc.closeViewHint.call();
-        }
-    };
+    public View.OnClickListener closeOnclick = v -> uc.closeViewHint.call();
     //发送礼物
-    public BindingCommand giftBagOnClickCommand = new BindingCommand(new BindingAction() {
+    public BindingCommand<Void> giftBagOnClickCommand = new BindingCommand<>(new BindingAction() {
         @Override
         public void call() {
             AppContext.instance().logEvent(AppsFlyerEvent.voicecall_gift);
@@ -196,20 +180,12 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
         }
     });
     //关闭男生隐藏余额不足提示
-    public BindingCommand closeMoney = new BindingCommand(new BindingAction() {
-        @Override
-        public void call() {
-            maleTextLayoutSHow.set(false);
-        }
-    });
+    public BindingCommand<Void> closeMoney = new BindingCommand<>(() -> maleTextLayoutSHow.set(false));
 
     //关闭女生界面男生余额不足提示
-    public BindingCommand closeMoney2 = new BindingCommand(new BindingAction() {
-        @Override
-        public void call() {
-            isShowCountdown.set(false);
-            girlEarningsField.set(false);
-        }
+    public BindingCommand<Void> closeMoney2 = new BindingCommand<>(() -> {
+        isShowCountdown.set(false);
+        girlEarningsField.set(false);
     });
 
 
@@ -223,59 +199,44 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     }
 
     //关注
-    public BindingCommand addlikeOnClickCommand = new BindingCommand(new BindingAction() {
-        @Override
-        public void call() {
-            AppContext.instance().logEvent(AppsFlyerEvent.voicecall_follow);
-            addLike(false);
-        }
+    public BindingCommand<Void> addlikeOnClickCommand = new BindingCommand<>(() -> {
+        AppContext.instance().logEvent(AppsFlyerEvent.voicecall_follow);
+        addLike(false);
     });
 
     //禁用麦克风点击
-    public BindingCommand micMuteOnClickCommand = new BindingCommand(new BindingAction() {
-        @Override
-        public void call() {
-            if (micMuteField.get()) {//开启免提
-                ToastUtils.showShort(R.string.playfun_call_message_deatail_txt_4);
-            } else {
-                ToastUtils.showShort(R.string.playfun_call_message_deatail_txt_3);
-            }
-            boolean minMute = !micMuteField.get();
-            micMuteField.set(minMute);
-            mTRTCCalling.setMicMute(minMute);
+    public BindingCommand<Void> micMuteOnClickCommand = new BindingCommand<>(() -> {
+        if (micMuteField.get()) {//开启免提
+            ToastUtils.showShort(R.string.playfun_call_message_deatail_txt_4);
+        } else {
+            ToastUtils.showShort(R.string.playfun_call_message_deatail_txt_3);
         }
+        boolean minMute = !micMuteField.get();
+        micMuteField.set(minMute);
+        DLRTCAudioManager.Companion.getInstance().audioRoute(minMute);
     });
 
     //声音展示
-    public BindingCommand handsFreeOnClickCommand = new BindingCommand(new BindingAction() {
-        @Override
-        public void call() {
-            if (handsFreeField.get()) {//开启免提
-                ToastUtils.showShort(R.string.playfun_call_message_deatail_txt_2);
-            } else {
-                ToastUtils.showShort(R.string.playfun_call_message_deatail_txt_1);
-            }
-            boolean handsFree = !handsFreeField.get();
-            handsFreeField.set(handsFree);
-            mTRTCCalling.setHandsFree(handsFree);
+    public BindingCommand<Void> handsFreeOnClickCommand = new BindingCommand<>(() -> {
+        if (handsFreeField.get()) {//开启免提
+            ToastUtils.showShort(R.string.playfun_call_message_deatail_txt_2);
+        } else {
+            ToastUtils.showShort(R.string.playfun_call_message_deatail_txt_1);
         }
+        boolean handsFree = !handsFreeField.get();
+        handsFreeField.set(handsFree);
+        DLRTCAudioManager.Companion.getInstance().audioRoute(handsFree);
     });
     //切换破冰文案提示
-    public BindingCommand upSayHiEntityOnClickCommand = new BindingCommand(new BindingAction() {
-        @Override
-        public void call() {
-            AppContext.instance().logEvent(AppsFlyerEvent.voicecall_ice_change);
-            uc.startUpSayHiAnimotor.call();
+    public BindingCommand<Void> upSayHiEntityOnClickCommand = new BindingCommand<>(() -> {
+        AppContext.instance().logEvent(AppsFlyerEvent.voicecall_ice_change);
+        uc.startUpSayHiAnimotor.call();
 //            getSayHiList();
-        }
     });
     //关闭破冰文案提示
-    public BindingCommand colseSayHiEntityOnClickCommand = new BindingCommand(new BindingAction() {
-        @Override
-        public void call() {
-            AppContext.instance().logEvent(AppsFlyerEvent.voicecall_ice_close);
-            sayHiEntityHidden.set(true);
-        }
+    public BindingCommand<Void> colseSayHiEntityOnClickCommand = new BindingCommand<>(() -> {
+        AppContext.instance().logEvent(AppsFlyerEvent.voicecall_ice_close);
+        sayHiEntityHidden.set(true);
     });
 
     //发送礼物
@@ -357,7 +318,6 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     public void init(Ifinish iview) {
         isMale = ConfigManager.getInstance().isMale();
         isShowTipMoney = ConfigManager.getInstance().getTipMoneyShowFlag();
-        mTRTCCalling = TRTCCalling.sharedInstance(AppContext.instance());
         initListener();
         mView = iview;
         //监听IM消息
@@ -366,7 +326,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
 
     public void hangup() {
         unListener();
-        mTRTCCalling.hangup();
+        DLRTCAudioManager.Companion.getInstance().hangup();
         mView.finishView();
         Utils.show(AppContext.instance().getString(R.string.playfun_call_ended));
     }
@@ -384,7 +344,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
             @Override
             public void onError(int code, String msg) {
                 Log.e(TAG, "onError: " + code + " " + msg);
-                endChattingAndShowHint(AppContext.instance().getString(com.tencent.liteav.trtccalling.R.string.trtccalling_toast_call_error_msg, code, msg));
+                endChattingAndShowHint(AppContext.instance().getString(R.string.trtccalling_toast_call_error_msg, code, msg));
             }
 
             @Override
@@ -415,18 +375,18 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
             @Override
             public void onCallingCancel() {
                 unListener();
-                mTRTCCalling.hangup();
+                DLRTCAudioManager.Companion.getInstance().hangup();
                 mView.finishView();
                 Utils.show("對方取消通話");
             }
         };
-        mTRTCCalling.addDelegate(mTRTCCallingDelegate);
+        DLRTCAudioManager.Companion.getInstance().addDelegate(mTRTCCallingDelegate);
     }
 
     protected void unListener() {
         Utils.runOnUiThread(() -> {
             if (null != mTRTCCallingDelegate) {
-                mTRTCCalling.removeDelegate(mTRTCCallingDelegate);
+                DLRTCAudioManager.Companion.getInstance().removeDelegate(mTRTCCallingDelegate);
             }
         });
     }
@@ -499,12 +459,12 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
         long currentTime = System.currentTimeMillis();
         if (isSelf) {
             if (currentTime - mSelfLowQualityTime > MIN_DURATION_SHOW_LOW_QUALITY) {
-                Toast.makeText(AppContext.instance(), com.tencent.liteav.trtccalling.R.string.trtccalling_self_network_low_quality, Toast.LENGTH_SHORT).show();
+                Toast.makeText(AppContext.instance(), R.string.trtccalling_self_network_low_quality, Toast.LENGTH_SHORT).show();
                 mSelfLowQualityTime = currentTime;
             }
         } else {
             if (currentTime - mOtherPartyLowQualityTime > MIN_DURATION_SHOW_LOW_QUALITY) {
-                Toast.makeText(AppContext.instance(), com.tencent.liteav.trtccalling.R.string.trtccalling_other_party_network_low_quality, Toast.LENGTH_SHORT).show();
+                Toast.makeText(AppContext.instance(), R.string.trtccalling_other_party_network_low_quality, Toast.LENGTH_SHORT).show();
                 mOtherPartyLowQualityTime = currentTime;
             }
         }
@@ -703,9 +663,9 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                         //价格配置表
                         unitPriceList = callingInviteInfo.getUnitPriceList();
 
-                        mTRTCCalling.enableAGC(true);
-                        mTRTCCalling.enableAEC(true);
-                        mTRTCCalling.enableANS(true);
+                        DLRTCAudioManager.Companion.getInstance().enableAGC(true);
+                        DLRTCAudioManager.Companion.getInstance().enableAEC(true);
+                        DLRTCAudioManager.Companion.getInstance().enableANS(true);
                     }
 
                     @Override

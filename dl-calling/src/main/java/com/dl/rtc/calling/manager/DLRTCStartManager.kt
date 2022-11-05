@@ -1,33 +1,51 @@
 package com.dl.rtc.calling.manager
 
+import android.app.Activity
 import android.app.ActivityManager
 import android.app.ActivityManager.RunningAppProcessInfo
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.hardware.Sensor
+import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.os.PowerManager
 import android.text.TextUtils
 import com.blankj.utilcode.util.ServiceUtils
 import com.dl.lib.util.log.MPTimber
 import com.dl.rtc.calling.DLRTCCallService
 import com.dl.rtc.calling.R
+import com.dl.rtc.calling.base.DLRTCCalling
 import com.dl.rtc.calling.base.impl.DLRTCInternalListenerManager
+import com.dl.rtc.calling.model.DLRTCCallingConstants
 import com.dl.rtc.calling.model.DLRTCOfflineMessageModel
 import com.dl.rtc.calling.model.DLRTCSignalingManager
 import com.dl.rtc.calling.model.bean.DLRTCCallModel
 import com.dl.rtc.calling.model.bean.DLRTCSignallingData
 import com.dl.rtc.calling.util.DLRTCSignallingUtil
 import com.dl.rtc.calling.util.MediaPlayHelper
+import com.dl.rtc.calling.util.PermissionUtil
+import com.faceunity.nama.FURenderer
 import com.google.gson.ExclusionStrategy
 import com.google.gson.FieldAttributes
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.tencent.imsdk.v2.*
 import com.tencent.qcloud.tuicore.TUILogin
+import com.tencent.qcloud.tuicore.util.ConfigManagerUtil
 import com.tencent.trtc.TRTCCloud
-import com.tencent.trtc.TRTCCloudDef.*
+import com.tencent.trtc.TRTCCloudDef
+import com.tencent.trtc.TRTCCloudDef.TRTCQuality
+import com.tencent.trtc.TRTCCloudDef.TRTCVolumeInfo
 import com.tencent.trtc.TRTCCloudListener
+import me.goldze.mvvmhabit.base.AppManager
+import org.json.JSONException
+import org.json.JSONObject
+import kotlin.math.abs
 
 /**
  *Author: 彭石林
@@ -38,7 +56,9 @@ class DLRTCStartManager {
     val TAGLOG = "DLRTCStartManager";
 
     private var mSensorManager: SensorManager? = null
-    private val mSensorEventListener: SensorEventListener? = null
+    private var mSensorEventListener: SensorEventListener? = null
+
+    private val mMainHandler = Handler(Looper.getMainLooper())
 
     /**
      * 超时时间，单位秒
@@ -65,15 +85,11 @@ class DLRTCStartManager {
     //通话邀请缓存,便于查询通话是否有效
     private val mInviteMap: MutableMap<String, DLRTCCallModel> = HashMap()
 
-    val TYPE_UNKNOWN = 0
-    val TYPE_AUDIO_CALL = 1
-    val TYPE_VIDEO_CALL = 2
-
 
     /**
      * 当前通话的类型
      */
-    private var mCurCallType: Int = TYPE_UNKNOWN
+    private var mCurCallType: Int = DLRTCCallingConstants.TYPE_UNKNOWN
 
     private var mIsBeingCalled = true // 默认是被叫
 
@@ -83,6 +99,11 @@ class DLRTCStartManager {
 
     //多端登录增加字段:用于标记当前是否是自己发给自己的请求(多端触发),以及自己是否处理了该请求.
     private var mIsProcessedBySelf = false // 被叫方: 主动操作后标记是否自己处理了请求或回调
+
+
+    private val CHECK_INVITE_PERIOD = 10 //邀请信令的检测周期（毫秒）
+
+    private val CHECK_INVITE_DURATION = 100 //邀请信令的检测总时长（毫秒）
 
 
     /**
@@ -140,19 +161,79 @@ class DLRTCStartManager {
      */
     var mTRTCCloud: TRTCCloud? = null
 
+    private var mIsFuEffect = false
+    private var mFURenderer: FURenderer? = null
+
     /**
      * 进行初始化，程序理应有1个静默式的接收处理逻辑（只调用一次）
      */
-    fun init(mContext: Context) {
+    fun init(mContexts: Context) {
+        mContext = mContexts
         if(initFlag){
             return
         }
         mTRTCInternalListenerManager = DLRTCInternalListenerManager.instance
 
         mTRTCCloud = TRTCCloud.sharedInstance(mContext);
+        mTRTCCloud!!.setListener(mTRTCCloudListener)
         initFlag = false
         DLRTCIMSignallingManager.getInstance().addSignalingListener(mTIMSignallingListener)
         DLRTCIMSignallingManager.getInstance().addSimpleMsgListener(mTIMSimpleMsgListener)
+    }
+
+    fun call(
+        userIDs: Array<String?>?,
+        type: DLRTCCalling.Type,
+        roomId: Int,
+        data: String?
+    ) {
+        //阻断游戏中唤醒
+        if (ConfigManagerUtil.getInstance().isPlayGameFlag) {
+            return
+        }
+        //获取当前正在允许的Activity
+        val activity = AppManager.getAppManager().currentActivity()
+        //验证当前activity是否出现在需要进行音视频通话拦截额外处理的地方
+        val interceptorResult = DLRTCInterceptorCall.instance.containsActivity(activity.javaClass)
+        if(!interceptorResult){
+            mMainHandler.post {
+                val intent = Intent(Intent.ACTION_VIEW)
+                if (DLRTCCalling.Type.AUDIO == type) {
+                    intent.component = ComponentName(mContext!!.applicationContext, DLRTCInterceptorCall.instance.audioCallActivity)
+                } else {
+                    intent.component = ComponentName(mContext!!.applicationContext, DLRTCInterceptorCall.instance.videoCallActivity)
+                }
+                intent.putExtra(
+                    DLRTCCallingConstants.PARAM_NAME_ROLE,
+                    DLRTCCalling.Role.CALL
+                )
+                intent.putExtra("userProfile", data)
+                intent.putExtra(DLRTCCallingConstants.PARAM_NAME_USERIDS, userIDs)
+                intent.putExtra(DLRTCCallingConstants.PARAM_NAME_GROUPID, "")
+                intent.putExtra("roomId", roomId)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                mContext!!.startActivity(intent)
+            }
+        }
+        //可在else处添加业务打点
+
+    }
+
+    /**
+     * 美颜初始化自定义采集和渲染的对象
+     *
+     * @return
+     */
+    fun createCustomRenderer(
+        activity: Activity?,
+        isFrontCamera: Boolean,
+        mIsEffect: Boolean
+    ): FURenderer? {
+        mIsFuEffect = mIsEffect
+        if (mIsFuEffect) {
+            mFURenderer = FURenderer.getInstance()
+        }
+        return mFURenderer
     }
 
 
@@ -224,7 +305,7 @@ class DLRTCStartManager {
         ) {
             MPTimber.tag(TAGLOG).d("onReceiveNewInvitation inviteID:" + inviteID + ", inviter:" + inviter
                     + ", groupID:" + groupID + ", inviteeList:" + inviteeList + " data:" + data)
-            handleRecvCallModel(inviteID, inviter, groupID, inviteeList, data)
+            handleRecvCallModel(inviteID, inviter, groupID, inviteeList as ArrayList, data)
         }
 
         override fun onInviteeAccepted(inviteID: String, invitee: String, data: String) {
@@ -442,9 +523,13 @@ class DLRTCStartManager {
             }
         }
     }
+
+    /**
+     * 收到拨打信令过来
+     */
     private fun handleRecvCallModel(
         inviteID: String, inviter: String, groupID: String,
-        inviteeList: List<String>, data: String
+        inviteeList: ArrayList<String>, data: String
     ) {
         val signallingData: DLRTCSignallingData = DLRTCSignallingUtil.convert2CallingData(data)
         if (!DLRTCSignallingUtil.isCallingData(signallingData)) {
@@ -468,15 +553,210 @@ class DLRTCStartManager {
         callModel.data = data
         mInviteMap.put(inviter, callModel)
 
-//        //如果应用在后台,且没有允许后台拉起应用的权限时返回
-//        if (!isAppRunningForeground(mContext) && !PermissionUtil.hasPermission(mContext)) {
-//            TRTCLogger.d(TRTCCalling.TAG, "isAppRunningForeground is false")
-//            return
-//        }
+        //如果应用在后台,且没有允许后台拉起应用的权限时返回
+        if (!mContext?.let { isAppRunningForeground(it) }!! && !PermissionUtil.hasPermission(mContext)) {
+            MPTimber.tag(TAGLOG).d("isAppRunningForeground is false")
+            return
+        }
 //        //后台播被叫铃声
-//        startRing()
+        startRing()
 //        processInvite(inviteID, inviter, groupID, inviteeList, signallingData)
     }
+
+    private fun processInvite(
+        inviteID: String, inviter: String, groupID: String, inviteeList: ArrayList<String>,
+        signallingData: DLRTCSignallingData
+    ) {
+        //创建对象后调用作用域。持有当前对象本身进行赋值
+        val callModel = DLRTCCallModel().apply {
+            callId = inviteID
+            groupId = groupID
+            action = DLRTCCallModel.VIDEO_CALL_ACTION_DIALING
+            invitedList = inviteeList
+        }
+        if (DLRTCSignallingUtil.isNewSignallingVersion(signallingData)) {
+            handleNewSignallingInvite(signallingData, callModel, inviter)
+        } else {
+            handleOldSignallingInvite(signallingData, callModel, inviter)
+        }
+    }
+
+    private fun handleOldSignallingInvite(
+        signallingData: DLRTCSignallingData,
+        callModel: DLRTCCallModel,
+        inviter: String
+    ) {
+        callModel.callType = signallingData.callType
+        mCurCallType = callModel.callType
+        callModel.roomId = signallingData.roomId
+        if (signallingData.callEnd != 0) {
+            preExitRoom(null)
+            return
+        }
+        if (DLRTCCallModel.SIGNALING_EXTRA_KEY_SWITCH_AUDIO_CALL == signallingData.switchToAudioCall) {
+            handleSwitchToAudio(callModel, inviter)
+            return
+        }
+        handleDialing(callModel, inviter)
+        if (mCurCallID == callModel.callId) {
+            mLastCallModel =
+                callModel.clone() as DLRTCCallModel
+        }
+    }
+
+    private fun handleDialing(
+        callModel: DLRTCCallModel,
+        user: String
+    ) {
+        if (!TextUtils.isEmpty(mCurCallID)) {
+            // 正在通话时，收到了一个邀请我的通话请求,需要告诉对方忙线
+            if (isOnCalling && callModel.invitedList!!.contains(TUILogin.getUserId())) {
+                sendModel(
+                    user,
+                    DLRTCCallModel.VIDEO_CALL_ACTION_LINE_BUSY,
+                    callModel,
+                    null
+                )
+                return
+            }
+            // 与对方处在同一个群中，此时收到了邀请群中其他人通话的请求，界面上展示连接动画
+            if (!TextUtils.isEmpty(mCurGroupId) && !TextUtils.isEmpty(callModel.groupId)) {
+                if (mCurGroupId == callModel.groupId) {
+                    callModel.invitedList?.let { mCurInvitedList.addAll(it) }
+                    if (mTRTCInternalListenerManager != null) {
+                        mTRTCInternalListenerManager!!.onGroupCallInviteeListUpdate(mCurInvitedList)
+                    }
+                    return
+                }
+            }
+        }
+
+        // 虽然是群组聊天，但是对方并没有邀请我，我不做处理
+        if (!TextUtils.isEmpty(callModel.groupId) && !callModel.invitedList?.contains(TUILogin.getUserId())!!) {
+            return
+        }
+
+        // 开始接通电话
+        startCall()
+        mCurCallID = callModel.callId.toString()
+        mCurRoomID = callModel.roomId
+        mCurCallType = callModel.callType
+        mCurSponsorForMe = user
+        mCurGroupId = callModel.groupId
+        // 邀请列表中需要移除掉自己
+        callModel.invitedList?.remove(TUILogin.getUserId())
+        val onInvitedUserListParam: List<String>? = callModel.invitedList
+        callModel.invitedList?.let { mCurInvitedList.addAll(it) }
+        if (mTRTCInternalListenerManager != null) {
+            val startTime = System.currentTimeMillis()
+            val curGroupId = mCurGroupId
+            val callType = mCurCallType
+            val task: Runnable = object : Runnable {
+                override fun run() {
+                    if (mIsBeingCalled && System.currentTimeMillis() - startTime < CHECK_INVITE_DURATION) { // 接听方
+                        MPTimber.tag(TAGLOG).d("check invitation...")
+                        if (isValidInvite()) {
+                            mMainHandler.postDelayed(
+                                this,
+                                CHECK_INVITE_PERIOD.toLong()
+                            ) // 多次检测
+                        } else {
+                            MPTimber.tag(TAGLOG).w("this invitation is invalid")
+                            mMainHandler.removeCallbacks(this)
+                        }
+                        return
+                    }
+                    mMainHandler.removeCallbacks(this)
+                    mTRTCInternalListenerManager!!.onInvited(
+                        user, onInvitedUserListParam,
+                        !TextUtils.isEmpty(curGroupId), callType
+                    )
+                    startRing()
+                }
+            }
+            mMainHandler.post(task)
+        }
+        mCurRoomRemoteUserSet.add(user)
+    }
+    private fun startCall() {
+        isOnCalling = true
+        registerSensorEventListener()
+    }
+
+    fun isValidInvite(): Boolean {
+        if (mInviteMap.isEmpty()) {
+            MPTimber.tag(TAGLOG).d("isValidInvite: mInviteMap = $mInviteMap")
+            return false
+        }
+        MPTimber.tag(TAGLOG).d("isValidInvite mCurCallID = $mCurCallID ,mInviteMap = $mInviteMap")
+        val model: DLRTCCallModel? = mInviteMap[mCurCallID]
+        return model != null
+    }
+    /**
+     * 新消息信令处理
+     */
+    private fun handleNewSignallingInvite(
+        signallingData: DLRTCSignallingData,
+        callModel: DLRTCCallModel,
+        inviter: String
+    ) {
+        val dataInfo: DLRTCSignallingData.DataInfo? = signallingData.data
+        if (dataInfo == null) {
+            MPTimber.tag(TAGLOG).i("signallingData dataInfo is null")
+            return
+        }
+        if (TextUtils.isEmpty(callModel.groupId)) {
+            val list: List<String>? = dataInfo.userIDs
+            callModel.invitedList = (list ?: callModel.invitedList as ArrayList) as ArrayList<String>?
+        }
+        callModel.roomId = dataInfo.roomID
+        if (DLRTCCallModel.VALUE_CMD_AUDIO_CALL == dataInfo.cmd) {
+            callModel.callType = DLRTCCallingConstants.TYPE_AUDIO_CALL
+            mCurCallType = callModel.callType
+        } else if (DLRTCCallModel.VALUE_CMD_VIDEO_CALL == dataInfo.cmd) {
+            callModel.callType = DLRTCCallingConstants.TYPE_VIDEO_CALL
+            mCurCallType = callModel.callType
+        }
+        if (DLRTCCallModel.VALUE_CMD_HAND_UP == dataInfo.cmd) {
+            preExitRoom(null)
+            return
+        }
+        if (DLRTCCallModel.VALUE_CMD_SWITCH_TO_AUDIO == dataInfo.cmd) {
+            handleSwitchToAudio(callModel, inviter)
+            return
+        }
+        handleDialing(callModel, inviter)
+        if (mCurCallID == callModel.callId) {
+            mLastCallModel =
+                callModel.clone() as DLRTCCallModel
+        }
+    }
+
+    private fun handleSwitchToAudio(
+        callModel: DLRTCCallModel,
+        user: String
+    ) {
+        //如果不是在等待接听或通话过程中,不处理视频切语音事件
+        if (!isOnCalling) {
+            return
+        }
+        if (mCurCallType != DLRTCCallingConstants.TYPE_VIDEO_CALL) {
+            sendModel(
+                user,
+                DLRTCCallModel.VIDEO_CALL_ACTION_REJECT_SWITCH_TO_AUDIO,
+                callModel,
+                "reject, remote user call type is not video call"
+            )
+            return
+        }
+        sendModel(
+            user,
+            DLRTCCallModel.VIDEO_CALL_ACTION_ACCEPT_SWITCH_TO_AUDIO,
+            callModel,
+            ""
+        )
+    }
+
 
     /**
      * 播放铃声
@@ -571,10 +851,10 @@ class DLRTCStartManager {
                 signallingData.roomId = realCallModel.roomId
                 val callDataInfo = DLRTCSignallingData.DataInfo()
                 callDataInfo.cmd = when(realCallModel.callType){
-                    TYPE_AUDIO_CALL->{
+                    DLRTCCallingConstants.TYPE_AUDIO_CALL->{
                         DLRTCCallModel.VALUE_CMD_AUDIO_CALL
                     }
-                    TYPE_VIDEO_CALL->{
+                    DLRTCCallingConstants.TYPE_VIDEO_CALL->{
                         DLRTCCallModel.VALUE_CMD_VIDEO_CALL
                     }
                     else -> {
@@ -873,10 +1153,10 @@ class DLRTCStartManager {
     }
 
     private fun realSwitchToAudioCall() {
-        if (mCurCallType == TYPE_VIDEO_CALL) {
+        if (mCurCallType == DLRTCCallingConstants.TYPE_VIDEO_CALL) {
             closeCamera()
             onSwitchToAudio(true, "success")
-            mCurCallType = TYPE_AUDIO_CALL
+            mCurCallType = DLRTCCallingConstants.TYPE_AUDIO_CALL
         }
     }
 
@@ -908,7 +1188,7 @@ class DLRTCStartManager {
         mLastCallModel = DLRTCCallModel()
         mLastCallModel.version = DLRTCCallModel.VALUE_VERSION
         mCurGroupId = ""
-        mCurCallType = TYPE_UNKNOWN
+        mCurCallType = DLRTCCallingConstants.TYPE_UNKNOWN
         stopMusic()
         unregisterSensorEventListener()
         mIsProcessedBySelf = false
@@ -929,6 +1209,58 @@ class DLRTCStartManager {
             unregisterListener(mSensorEventListener,sensor)
             mSensorManager = null
         }
+    }
+
+    private fun registerSensorEventListener() {
+        if (null != mSensorManager) {
+            return
+        }
+        mSensorManager = mContext!!.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        val sensor = mSensorManager!!.getDefaultSensor(Sensor.TYPE_PROXIMITY)
+        val pm = mContext!!.getSystemService(Context.POWER_SERVICE) as PowerManager
+        val wakeLock = pm.newWakeLock(
+            PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK,
+            "TUICalling:TRTCAudioCallWakeLock"
+        )
+        mSensorEventListener = object : SensorEventListener {
+            override fun onSensorChanged(event: SensorEvent) {
+                if (mIsFuEffect && event.sensor.type == Sensor.TYPE_ACCELEROMETER) {
+                    val x = event.values[0]
+                    val y = event.values[1]
+                    val z = event.values[2]
+                    if (abs(x) > 3 || abs(y) > 3) {
+                        if (abs(x) > abs(y)) mFURenderer?.deviceOrientation = if (x > 0) 0 else 180 else mFURenderer?.deviceOrientation = if (y > 0) 90 else 270
+                    }
+                }
+                when (event.sensor.type) {
+                    Sensor.TYPE_PROXIMITY ->                         // 靠近手机
+                        if (event.values[0].toDouble() == 0.0) {
+                            if (wakeLock.isHeld) {
+                                // 检查WakeLock是否被占用
+                                return
+                            } else {
+                                // 申请设备电源锁
+                                wakeLock.acquire(10*60*1000L /*10 minutes*/)
+                            }
+                        } else {
+                            if (!wakeLock.isHeld) {
+                                return
+                            } else {
+                                wakeLock.setReferenceCounted(false)
+                                // 释放设备电源锁
+                                wakeLock.release()
+                            }
+                        }
+                }
+            }
+
+            override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
+        }
+        mSensorManager!!.registerListener(
+            mSensorEventListener,
+            sensor,
+            SensorManager.SENSOR_DELAY_FASTEST
+        )
     }
 
     /**
@@ -1108,5 +1440,106 @@ class DLRTCStartManager {
         stopCall()
     }
 
+    fun hangup() {
+        // 1. 如果还没有在通话中，说明还没有接通，所以直接拒绝了
+        if (!isOnCalling) {
+            reject()
+            return
+        }
+        playHangupMusic()
+        val fromGroup = !TextUtils.isEmpty(mCurGroupId)
+        if (fromGroup) {
+            MPTimber.tag(TAGLOG).d( "groupHangup")
+        } else {
+            MPTimber.tag(TAGLOG).d( "singleHangup")
+            singleHangup()
+        }
+    }
+
+    private fun singleHangup() {
+        for (id in mCurInvitedList) {
+            sendModel(
+                id,
+                DLRTCCallModel.VIDEO_CALL_ACTION_SPONSOR_CANCEL
+            )
+        }
+        stopCall()
+        exitRoom()
+    }
+
+    /**
+     * @return void
+     * @Desc TODO(是否开启自动增益补偿功能, 可以自动调麦克风的收音量到一定的音量水平)
+     * @author 彭石林
+     * @parame [enable]
+     * @Date 2022/2/14
+     */
+    fun enableAGC(enable: Boolean) {
+        val jsonObject = JSONObject()
+        try {
+            jsonObject.put("api", "enableAudioAGC")
+            val params = JSONObject()
+            params.put("enable", if (enable) 1 else 0)
+            params.put("level", "100") //支持的取值有: 0、30、60、100，0 表示关闭 AGC
+            jsonObject.put("params", params)
+            mTRTCCloud?.callExperimentalAPI(jsonObject.toString())
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
+    }
+
+    /**
+     * @return void
+     * @Desc TODO(回声消除器 ， 可以消除各种延迟的回声)
+     * @author 彭石林
+     * @parame [enable]
+     * @Date 2022/2/14
+     */
+    fun enableAEC(enable: Boolean) {
+        val jsonObject = JSONObject()
+        try {
+            jsonObject.put("api", "enableAudioAEC")
+            val params = JSONObject()
+            params.put("enable", if (enable) 1 else 0)
+            params.put("level", "100") //支持的取值有: 0、30、60、100，0 表示关闭 AEC
+            jsonObject.put("params", params)
+            mTRTCCloud?.callExperimentalAPI(jsonObject.toString())
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
+    }
+
+    /**
+     * @return void
+     * @Desc TODO(背景噪音抑制功能 ， 可探测出背景固定频率的杂音并消除背景噪音)
+     * @author 彭石林
+     * @parame [enable]
+     * @Date 2022/2/14
+     */
+    fun enableANS(enable: Boolean) {
+        val jsonObject = JSONObject()
+        try {
+            jsonObject.put("api", "enableAudioANS")
+            val params = JSONObject()
+            params.put("enable", if (enable) 1 else 0)
+            params.put("level", "100") //支持的取值有: 0、30、60、100，0 表示关闭 ANS
+            jsonObject.put("params", params)
+            mTRTCCloud?.callExperimentalAPI(jsonObject.toString())
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
+    }
+
+    fun muteLocalAudio(enable : Boolean){
+        mTRTCCloud?.muteLocalAudio(enable)
+    }
+
+    fun audioRoute(enable : Boolean){
+        if (enable) {
+            mTRTCCloud?.setAudioRoute(TRTCCloudDef.TRTC_AUDIO_ROUTE_SPEAKER)
+        } else {
+            mTRTCCloud?.setAudioRoute(TRTCCloudDef.TRTC_AUDIO_ROUTE_EARPIECE)
+        }
+    }
 
 }

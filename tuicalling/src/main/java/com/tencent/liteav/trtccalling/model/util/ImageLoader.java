@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.widget.ImageView;
 
 import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
 import androidx.annotation.RawRes;
 
 import com.bumptech.glide.Glide;
@@ -133,7 +134,7 @@ public class ImageLoader {
         }
 
         @Override
-        public void updateDiskCacheKey(MessageDigest messageDigest) {
+        public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
 
         }
     }

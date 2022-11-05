@@ -24,6 +24,7 @@ import com.dl.playfun.entity.RestartActivityEntity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.widget.image.CircleImageView;
+import com.dl.rtc.calling.base.DLRTCCalling;
 import com.google.gson.Gson;
 import com.tencent.custom.GiftEntity;
 import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
@@ -55,7 +56,7 @@ public class AudioFloatCallView extends BaseTUICallView {
     private ArrayList<AudioCallingBarrageEntity> audioBarrageList;
 
 
-    public AudioFloatCallView(Context context, TUICalling.Role role, TUICalling.Type type, String[] userIDs,
+    public AudioFloatCallView(Context context, DLRTCCalling.Role role, DLRTCCalling.Type type, String[] userIDs,
                               String sponsorID, String groupID, boolean isFromGroup,
                               CallingInfoEntity.FromUserProfile otherUserProfile, int timeCount,
                               Integer roomId, ArrayList<AudioCallingBarrageEntity> audioBarrageList) {
@@ -182,7 +183,7 @@ public class AudioFloatCallView extends BaseTUICallView {
     }
 
     private void initListener() {
-        setOnClickListener(new OnClickListener() {
+        setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!isRestart) {

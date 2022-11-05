@@ -48,7 +48,7 @@ ext {
             "tuiconversation"  : "default",
            // "tuicontact"       : "default",
             "tuichat"          : "default",
-            "tuicalling"       : "default",
+//            "tuicalling"       : "default",
             "tuicore"          : "default",
             "mvvmhabit"        : "default",
             "jsBridge"         : "default",

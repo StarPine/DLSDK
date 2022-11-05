@@ -151,7 +151,7 @@ class DLRTCCallModel :Cloneable, Serializable {
      * 正在邀请的列表
      */
     @SerializedName("invited_list")
-    var invitedList: List<String>? = null
+    var invitedList: ArrayList<String>? = null
 
     @SerializedName("duration")
     var duration = 0

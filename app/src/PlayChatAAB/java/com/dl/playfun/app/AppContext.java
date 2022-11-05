@@ -43,13 +43,17 @@ import com.dl.playfun.entity.ImUserSigEntity;
 import com.dl.playfun.entity.TokenEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.LoginExpiredEvent;
+import com.dl.playfun.kl.view.CallingVideoActivity;
+import com.dl.playfun.kl.view.DialingAudioActivity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocaleManager;
 import com.dl.playfun.manager.ThirdPushTokenMgr;
 import com.dl.playfun.tim.TUIUtils;
 import com.dl.playfun.ui.MainContainerActivity;
+import com.dl.playfun.ui.coinpusher.CoinPusherGameActivity;
 import com.dl.playfun.utils.ElkLogEventUtils;
 import com.dl.playfun.utils.StringUtil;
+import com.dl.rtc.calling.manager.DLRTCInterceptorCall;
 import com.faceunity.nama.FURenderer;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -231,6 +235,10 @@ public class AppContext extends Application {
                 //.eventListener(new YourCustomEventListener()) //崩溃后的错误监听
                 .apply();
         ElkLogEventReport.reportSplashModule.reportInit();
+        //注入音视频通话默认页面
+        DLRTCInterceptorCall.Companion.getInstance().setAudioCallActivity(DialingAudioActivity.class.getCanonicalName());
+        DLRTCInterceptorCall.Companion.getInstance().setVideoCallActivity(CallingVideoActivity.class.getCanonicalName());
+        DLRTCInterceptorCall.Companion.getInstance().addDelegate(CoinPusherGameActivity.class);
     }
 
     public void initIM() {

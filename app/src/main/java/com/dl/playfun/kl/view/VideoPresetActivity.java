@@ -10,13 +10,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.dl.playfun.R;
 import com.dl.playfun.manager.LocaleManager;
+import com.dl.rtc.calling.manager.DLRTCStartManager;
+import com.dl.rtc.calling.ui.videolayout.DLRTCVideoLayout;
+import com.dl.rtc.calling.ui.videolayout.DLRTCVideoLayoutManager;
+import com.dl.rtc.calling.ui.videolayout.VideoLayoutFactory;
 import com.faceunity.nama.FURenderer;
 import com.faceunity.nama.data.FaceUnityDataFactory;
 import com.faceunity.nama.ui.FaceUnityView;
-import com.tencent.liteav.trtccalling.model.TRTCCalling;
-import com.tencent.liteav.trtccalling.ui.base.VideoLayoutFactory;
-import com.tencent.liteav.trtccalling.ui.videocall.videolayout.TRTCVideoLayout;
-import com.tencent.liteav.trtccalling.ui.videocall.videolayout.TRTCVideoLayoutManager;
+import com.tencent.trtc.TRTCCloudDef;
 
 /**
  * @Name： PlayFun_Google
@@ -28,11 +29,10 @@ import com.tencent.liteav.trtccalling.ui.videocall.videolayout.TRTCVideoLayoutMa
 public class VideoPresetActivity extends AppCompatActivity {
 
     private FaceUnityView faceUnityView;
-    protected TRTCCalling mTRTCCalling;
     private FaceUnityDataFactory mFaceUnityDataFactory;
     private FURenderer mFURenderer;
     private boolean isFuEffect = true;
-    private TRTCVideoLayoutManager mLayoutManagerTrtc;
+    private DLRTCVideoLayoutManager mLayoutManagerTrtc;
     private String userId = "userInfo";
     private ImageView mCameraChange,mBack;
     private boolean isFrontCamera = true; //是否为前置
@@ -72,15 +72,14 @@ public class VideoPresetActivity extends AppCompatActivity {
         initListener();
 
         //1.先打开渲染器
-        mTRTCCalling = TRTCCalling.sharedInstance(this);
         mFURenderer = FURenderer.getInstance();
         mFaceUnityDataFactory = new FaceUnityDataFactory(0);
         faceUnityView.bindDataFactory(mFaceUnityDataFactory);
-        mTRTCCalling.createCustomRenderer(this, true, isFuEffect);
+        DLRTCStartManager.Companion.getInstance().createCustomRenderer(this, true, isFuEffect);
 
         //2.再打开摄像头
         mLayoutManagerTrtc.initVideoFactory(new VideoLayoutFactory(this));
-        TRTCVideoLayout videoLayout = mLayoutManagerTrtc.allocCloudVideoView(userId);
+        DLRTCVideoLayout videoLayout = mLayoutManagerTrtc.allocCloudVideoView(userId);
         mTRTCCalling.openCamera(true, videoLayout.getVideoView());
     }
 
@@ -95,7 +94,7 @@ public class VideoPresetActivity extends AppCompatActivity {
     }
 
     private void stopCameraAndFinish() {
-        mTRTCCalling.closeCamera();
+        DLRTCStartManager.Companion.getInstance().closeCamera();
         finish();
     }
 

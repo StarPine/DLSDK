@@ -45,6 +45,7 @@ import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
+import com.dl.rtc.calling.base.DLRTCCalling;
 import com.google.gson.Gson;
 import com.tencent.custom.GiftEntity;
 import com.tencent.custom.IMGsonUtils;
@@ -52,7 +53,6 @@ import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMMessageReceipt;
-import com.tencent.liteav.trtccalling.TUICalling;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.MyImageSpan;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
@@ -118,7 +118,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
     public boolean videoSuccess = false;
     private String mMyUserId;
     private String mOtherUserId;
-    private TUICalling.Role mRole;
+    private DLRTCCalling.Role mRole;
     //是否是拨打方
     public boolean userCall = false;
     //通话数据加载完成
@@ -181,7 +181,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
             mCallVideoView.acceptCall();
             Log.e("接听电话按钮点击", mMyUserId + "=======" + mOtherUserId);
             //getCallingInfo(roomId, ChatUtils.imUserIdToSystemUserId(mMyUserId), ChatUtils.imUserIdToSystemUserId(mOtherUserId));
-            if (mRole == TUICalling.Role.CALLED) {
+            if (mRole == DLRTCCalling.Role.CALLED) {
                 isCalledWaitingBinding.set(false);
             }
         }
@@ -392,25 +392,25 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
     }
 
     //    protected TRTCCallingDelegate mTRTCCallingDelegate;
-    public void init(String myUserId, String otherUserId, TUICalling.Role role, JMTUICallVideoView view) {
+    public void init(String myUserId, String otherUserId, DLRTCCalling.Role role, JMTUICallVideoView view) {
         this.mMyUserId = myUserId;
         this.mOtherUserId = otherUserId;
         this.mRole = role;
         this.mCallVideoView = view;
         this.isMale = ConfigManager.getInstance().isMale();
         this.isShowTipMoney = ConfigManager.getInstance().getTipMoneyShowFlag();
-        this.isCalledBinding.set(role == TUICalling.Role.CALLED);
-        this.isCalledWaitingBinding.set(role == TUICalling.Role.CALLED);
+        this.isCalledBinding.set(role == DLRTCCalling.Role.CALLED);
+        this.isCalledWaitingBinding.set(role == DLRTCCalling.Role.CALLED);
     }
 
-    public void init(String myUserId, String otherUserId, TUICalling.Role role, JMTUICallVideoView view, Integer roomId) {
+    public void init(String myUserId, String otherUserId, DLRTCCalling.Role role, JMTUICallVideoView view, Integer roomId) {
         this.mMyUserId = myUserId;
         this.mOtherUserId = otherUserId;
         this.mRole = role;
         this.mCallVideoView = view;
         this.isMale = ConfigManager.getInstance().isMale();
-        this.isCalledBinding.set(role == TUICalling.Role.CALLED);
-        this.isCalledWaitingBinding.set(role == TUICalling.Role.CALLED);
+        this.isCalledBinding.set(role == DLRTCCalling.Role.CALLED);
+        this.isCalledWaitingBinding.set(role == DLRTCCalling.Role.CALLED);
         this.roomId = roomId;
     }
 

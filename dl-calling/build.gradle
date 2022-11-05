@@ -38,4 +38,5 @@ dependencies {
     api "com.tencent.liteav:LiteAVSDK_TRTC:10.8.0.13052"
     api project(':tuicore')
     implementation project(":lib-util")
+    implementation project(':faceunity')
 }

@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.blankj.utilcode.util.ObjectUtils;
+import com.dl.playfun.BR;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.entity.CallingInviteInfo;
 import com.dl.playfun.event.AudioCallingCancelEvent;
@@ -19,17 +20,16 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocaleManager;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.widget.dialog.TraceDialog;
+import com.dl.rtc.calling.base.DLRTCCalling;
+import com.dl.rtc.calling.model.DLRTCCallingConstants;
 import com.google.gson.Gson;
 import com.dl.playfun.R;
 import com.dl.playfun.databinding.ActivityCallWaiting2Binding;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.tencent.imsdk.v2.V2TIMManager;
-import com.tencent.liteav.trtccalling.TUICalling;
-import com.tencent.liteav.trtccalling.model.util.TUICallingConstants;
 
 import me.goldze.mvvmhabit.base.BaseActivity;
 import me.goldze.mvvmhabit.bus.RxBus;
-import me.tatarka.bindingcollectionadapter2.BR;
 
 public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Binding, AudioCallingViewModel2> {
 
@@ -38,7 +38,7 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
     private String callUserId;
     private String toId;
     private Integer roomId;
-    private TUICalling.Role role;
+    private DLRTCCalling.Role role;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -96,14 +96,14 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
     public void initParam() {
         super.initParam();
         Intent intent = getIntent();
-        role = (TUICalling.Role) intent.getExtras().get(TUICallingConstants.PARAM_NAME_ROLE);
+        role = (DLRTCCalling.Role) intent.getExtras().get(DLRTCCallingConstants.PARAM_NAME_ROLE);
         //被动接收
-        String[] userIds = intent.getExtras().getStringArray(TUICallingConstants.PARAM_NAME_USERIDS);
+        String[] userIds = intent.getExtras().getStringArray(DLRTCCallingConstants.PARAM_NAME_USERIDS);
         if (userIds != null && userIds.length > 0) {
             toId = userIds[0];
         }
         //主动呼叫
-        callUserId = intent.getExtras().getString(TUICallingConstants.PARAM_NAME_SPONSORID);
+        callUserId = intent.getExtras().getString(DLRTCCallingConstants.PARAM_NAME_SPONSORID);
         String userData = intent.getExtras().getString("userProfile");
         if (userData != null) {
             callingInviteInfo = new Gson().fromJson(userData, CallingInviteInfo.class);
@@ -114,7 +114,7 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
     @Override
     public void initData() {
         super.initData();
-        if (role == TUICalling.Role.CALL) {//主动呼叫
+        if (role == DLRTCCalling.Role.CALL) {//主动呼叫
             callUserId = V2TIMManager.getInstance().getLoginUser();
             if (callingInviteInfo != null) {
                 viewModel.init(callUserId, toId, role, callingInviteInfo.getRoomId());

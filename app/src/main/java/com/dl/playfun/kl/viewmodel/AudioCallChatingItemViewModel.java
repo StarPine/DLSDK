@@ -23,13 +23,10 @@ public class AudioCallChatingItemViewModel extends MultiItemViewModel<AudioCallC
     public ObservableField<String> imgPath = new ObservableField<>();
     public ObservableBoolean sendGiftBag = new ObservableBoolean(false);
 
-    public BindingCommand sendGiftBagOnClick = new BindingCommand(new BindingAction() {
-        @Override
-        public void call() {
-            if (sendGiftBag.get()) {
-                AppContext.instance().logEvent(AppsFlyerEvent.voicecall_public_gift);
-                viewModel.uc.callGiftBagAlert.call();
-            }
+    public BindingCommand<Void> sendGiftBagOnClick = new BindingCommand<>(() -> {
+        if (sendGiftBag.get()) {
+            AppContext.instance().logEvent(AppsFlyerEvent.voicecall_public_gift);
+            viewModel.uc.callGiftBagAlert.call();
         }
     });
 
