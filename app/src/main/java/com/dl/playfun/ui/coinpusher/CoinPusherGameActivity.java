@@ -39,9 +39,9 @@ import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.CoinPusherApiUtil;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
+import com.dl.rtc.calling.DLRTCFloatWindowService;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.misterp.toast.SnackUtils;
-import com.tencent.liteav.trtccalling.ui.floatwindow.FloatWindowService;
 import com.tencent.qcloud.tuicore.custom.CustomConstants;
 import com.wangsu.libwswebrtc.WsWebRTCObserver;
 import com.wangsu.libwswebrtc.WsWebRTCParameters;
@@ -88,7 +88,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
     @Override
     protected void onResume() {
         super.onResume();
-        FloatWindowService.stopService(this);
+        DLRTCFloatWindowService.stopService(this);
         AppContext.isCalling = true;
         ImmersionBarUtils.setupStatusBar(this, false, true);
     }

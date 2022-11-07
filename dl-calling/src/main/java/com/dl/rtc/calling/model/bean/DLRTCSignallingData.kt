@@ -55,5 +55,9 @@ class DLRTCSignallingData {
         var userIDs: List<String>? = null
     }
 
+    override fun toString(): String {
+        return "DLRTCSignallingData(version=$version, businessID=$businessID, platform=$platform, extInfo=$extInfo, data=$data, callAction=$callAction, callId=$callId, user=$user, callType=$callType, roomId=$roomId, callEnd=$callEnd, switchToAudioCall=$switchToAudioCall, lineBusy=$lineBusy)"
+    }
+
 
 }

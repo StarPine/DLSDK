@@ -29,6 +29,7 @@ import com.dl.rtc.calling.model.bean.DLRTCSignallingData
 import com.dl.rtc.calling.util.DLRTCSignallingUtil
 import com.dl.rtc.calling.util.MediaPlayHelper
 import com.dl.rtc.calling.util.PermissionUtil
+import com.faceunity.core.enumeration.CameraFacingEnum
 import com.faceunity.nama.FURenderer
 import com.google.gson.ExclusionStrategy
 import com.google.gson.FieldAttributes
@@ -37,11 +38,12 @@ import com.google.gson.GsonBuilder
 import com.tencent.imsdk.v2.*
 import com.tencent.qcloud.tuicore.TUILogin
 import com.tencent.qcloud.tuicore.util.ConfigManagerUtil
+import com.tencent.rtmp.ui.TXCloudVideoView
 import com.tencent.trtc.TRTCCloud
 import com.tencent.trtc.TRTCCloudDef
-import com.tencent.trtc.TRTCCloudDef.TRTCQuality
-import com.tencent.trtc.TRTCCloudDef.TRTCVolumeInfo
+import com.tencent.trtc.TRTCCloudDef.*
 import com.tencent.trtc.TRTCCloudListener
+import com.tencent.trtc.TRTCCloudListener.TRTCVideoFrameListener
 import me.goldze.mvvmhabit.base.AppManager
 import org.json.JSONException
 import org.json.JSONObject
@@ -143,6 +145,8 @@ class DLRTCStartManager {
 
     private var initFlag = false
 
+    private var mIsUseFrontCamera = false
+
     /**
      * 上层传入回调
      */
@@ -181,6 +185,7 @@ class DLRTCStartManager {
         DLRTCIMSignallingManager.getInstance().addSimpleMsgListener(mTIMSimpleMsgListener)
     }
 
+    //主动拨打
     fun call(
         userIDs: Array<String?>?,
         type: DLRTCCalling.Type,
@@ -191,6 +196,34 @@ class DLRTCStartManager {
         if (ConfigManagerUtil.getInstance().isPlayGameFlag) {
             return
         }
+        mMainHandler.post {
+                val intent = Intent(Intent.ACTION_VIEW)
+                if (DLRTCCalling.Type.AUDIO == type) {
+                    intent.component = ComponentName(mContext!!.applicationContext, DLRTCInterceptorCall.instance.audioCallActivity)
+                } else {
+                    intent.component = ComponentName(mContext!!.applicationContext, DLRTCInterceptorCall.instance.videoCallActivity)
+                }
+                intent.putExtra(DLRTCCallingConstants.PARAM_NAME_ROLE, DLRTCCalling.Role.CALL)
+                intent.putExtra("userProfile", data)
+                intent.putExtra(DLRTCCallingConstants.PARAM_NAME_USERIDS, userIDs)
+                intent.putExtra(DLRTCCallingConstants.PARAM_NAME_GROUPID, "")
+                intent.putExtra("roomId", roomId)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                mContext!!.startActivity(intent)
+        }
+        //可在else处添加业务打点
+
+    }
+    /**
+     * 接听页面回调处理
+     */
+
+    fun receiveCall(userIDs: Array<String?>?,
+                    type: DLRTCCalling.Type,
+                    roomId: Int,
+                    data: String?,
+                    isFromGroup : Boolean,
+                    sponsorID : String){
         //获取当前正在允许的Activity
         val activity = AppManager.getAppManager().currentActivity()
         //验证当前activity是否出现在需要进行音视频通话拦截额外处理的地方
@@ -203,10 +236,9 @@ class DLRTCStartManager {
                 } else {
                     intent.component = ComponentName(mContext!!.applicationContext, DLRTCInterceptorCall.instance.videoCallActivity)
                 }
-                intent.putExtra(
-                    DLRTCCallingConstants.PARAM_NAME_ROLE,
-                    DLRTCCalling.Role.CALL
-                )
+                intent.putExtra(DLRTCCallingConstants.PARAM_NAME_SPONSORID, sponsorID)
+                intent.putExtra(DLRTCCallingConstants.PARAM_NAME_ISFROMGROUP, isFromGroup)
+                intent.putExtra(DLRTCCallingConstants.PARAM_NAME_ROLE, DLRTCCalling.Role.CALLED)
                 intent.putExtra("userProfile", data)
                 intent.putExtra(DLRTCCallingConstants.PARAM_NAME_USERIDS, userIDs)
                 intent.putExtra(DLRTCCallingConstants.PARAM_NAME_GROUPID, "")
@@ -215,8 +247,6 @@ class DLRTCStartManager {
                 mContext!!.startActivity(intent)
             }
         }
-        //可在else处添加业务打点
-
     }
 
     /**
@@ -246,13 +276,14 @@ class DLRTCStartManager {
             sender: V2TIMUserInfo,
             customData: ByteArray
         ) {
-            if (customData == null) return
+            MPTimber.tag(TAGLOG).d("onRecvC2CCustomMessage ：Start")
             val customStr = String(customData)
             if (TextUtils.isEmpty(customStr)) {
                 return
             }
-            val signallingData: DLRTCSignallingData = DLRTCSignallingUtil.convert2CallingData(customStr)
-            if (null == signallingData || null == signallingData.data || null == signallingData.businessID || signallingData.businessID != DLRTCCallModel.VALUE_BUSINESS_ID
+            val signallingData = DLRTCSignallingUtil.convert2CallingData(customStr)
+            MPTimber.tag(TAGLOG).d("信令接收处理：$signallingData")
+            if (null == signallingData.data || null == signallingData.businessID || signallingData.businessID != DLRTCCallModel.VALUE_BUSINESS_ID
             ) {
                 MPTimber.tag(TAGLOG).d("this is not the calling scene")
                 return
@@ -551,7 +582,7 @@ class DLRTCStartManager {
         callModel.groupId = groupID
         callModel.invitedList = inviteeList
         callModel.data = data
-        mInviteMap.put(inviter, callModel)
+        mInviteMap[inviter] = callModel
 
         //如果应用在后台,且没有允许后台拉起应用的权限时返回
         if (!mContext?.let { isAppRunningForeground(it) }!! && !PermissionUtil.hasPermission(mContext)) {
@@ -560,7 +591,7 @@ class DLRTCStartManager {
         }
 //        //后台播被叫铃声
         startRing()
-//        processInvite(inviteID, inviter, groupID, inviteeList, signallingData)
+        processInvite(inviteID, inviter, groupID, inviteeList, signallingData)
     }
 
     private fun processInvite(
@@ -643,6 +674,17 @@ class DLRTCStartManager {
         mCurCallType = callModel.callType
         mCurSponsorForMe = user
         mCurGroupId = callModel.groupId
+        if(mCurCallType != 0){
+            val callType: DLRTCCalling.Type = if(mCurCallType == 1){
+                DLRTCCalling.Type.AUDIO
+            }else{
+                DLRTCCalling.Type.VIDEO
+            }
+            val userLists : Array<String?> = arrayOf(mCurSponsorForMe)
+            MPTimber.tag(TAGLOG).d("当前接听用户数据 ${userLists[0]}")
+            receiveCall(userLists, callType, callModel.roomId, null,false,mCurSponsorForMe);
+
+        }
         // 邀请列表中需要移除掉自己
         callModel.invitedList?.remove(TUILogin.getUserId())
         val onInvitedUserListParam: List<String>? = callModel.invitedList
@@ -692,6 +734,18 @@ class DLRTCStartManager {
         val model: DLRTCCallModel? = mInviteMap[mCurCallID]
         return model != null
     }
+
+    fun groupCall(userIdList: List<String?>?, type: Int, groupId: String?) {
+        if (isCollectionEmpty(userIdList)) {
+            return
+        }
+        //internalCall(userIdList, type, groupId)
+    }
+
+    private fun isCollectionEmpty(coll: Collection<*>?): Boolean {
+        return coll == null || coll.isEmpty()
+    }
+
     /**
      * 新消息信令处理
      */
@@ -1164,6 +1218,78 @@ class DLRTCStartManager {
         mTRTCInternalListenerManager?.onSwitchToAudio(success, message)
     }
 
+    /**
+     * 渲染视频
+     */
+    fun startRemoteView(userId: String?, txCloudVideoView: TXCloudVideoView?) {
+        if (txCloudVideoView == null) {
+            return
+        }
+        mTRTCCloud!!.startRemoteView(userId, txCloudVideoView)
+    }
+
+    /**
+     * 停止渲染视频
+     */
+    fun stopRemoteView(userId: String?) {
+        mTRTCCloud!!.stopRemoteView(userId)
+    }
+
+    /**
+     * 切换相机
+     */
+    fun switchCamera(isFrontCamera: Boolean) {
+        if (mIsUseFrontCamera == isFrontCamera) {
+            return
+        }
+        mIsUseFrontCamera = isFrontCamera
+        mTRTCCloud!!.switchCamera()
+        if (mIsFuEffect) {
+            mFURenderer!!.cameraFacing =
+                if (mIsUseFrontCamera) CameraFacingEnum.CAMERA_FRONT else CameraFacingEnum.CAMERA_BACK
+        }
+    }
+
+    /**
+     * 打开相机流
+     */
+    fun openCamera(isFrontCamera: Boolean, txCloudVideoView: TXCloudVideoView?) {
+        if (txCloudVideoView == null) {
+            return
+        }
+        mIsUseFrontCamera = isFrontCamera
+        if (mIsFuEffect) {
+            mTRTCCloud!!.setLocalVideoProcessListener(
+                TRTC_VIDEO_PIXEL_FORMAT_Texture_2D,
+                TRTC_VIDEO_BUFFER_TYPE_TEXTURE, object : TRTCVideoFrameListener {
+                    override fun onGLContextCreated() {
+                        mFURenderer!!.prepareRenderer(null)
+                    }
+
+                    override fun onProcessVideoFrame(
+                        src: TRTCVideoFrame,
+                        dest: TRTCVideoFrame
+                    ): Int {
+                        mFURenderer!!.cameraFacing =
+                            if (mIsUseFrontCamera) CameraFacingEnum.CAMERA_FRONT else CameraFacingEnum.CAMERA_BACK
+                        val start = System.nanoTime()
+                        dest.texture.textureId = mFURenderer!!.onDrawFrameSingleInput(
+                            src.texture.textureId,
+                            src.width,
+                            src.height
+                        )
+                        return 0
+                    }
+
+                    override fun onGLContextDestory() {
+                        mFURenderer!!.release()
+                    }
+                })
+        }
+        mTRTCCloud!!.startLocalPreview(isFrontCamera, txCloudVideoView)
+    }
+
+    //关闭相机流
     fun closeCamera() {
         mTRTCCloud!!.stopLocalPreview()
     }

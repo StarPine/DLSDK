@@ -156,7 +156,7 @@ android {
             // 服务端接口HOST
             if(!isReleaseBuildType()){
                 // 服务端接口HOST
-                buildConfigField "String", "DEFAULT_API_URL", "\"https://t-api.petmaster.world/\""
+                buildConfigField "String", "DEFAULT_API_URL", "\"http://t-config.play-chat.net/\""
                 applicationId "com.test.demo.chat"
                 manifestPlaceholders = [package_name: applicationId]
                 //测试包配置

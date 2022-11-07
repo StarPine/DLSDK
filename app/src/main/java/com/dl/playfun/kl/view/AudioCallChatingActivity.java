@@ -144,7 +144,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
     @Override
     protected void onResume() {
         super.onResume();
-        FloatWindowService.stopService(this);
+        DLRTCFloatWindowService.stopService(this);
         AppContext.isCalling = true;
         ImmersionBarUtils.setupStatusBar(this, false, true);
     }

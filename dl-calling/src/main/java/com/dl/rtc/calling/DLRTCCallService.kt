@@ -16,7 +16,7 @@ import com.blankj.utilcode.util.ServiceUtils
  *Time: 2022/11/3 15:32
  * Description: This is DLRTCCallService
  */
-object DLRTCCallService : Service() {
+class DLRTCCallService : Service() {
 
     private val NOTIFICATION_ID : Int = 1001
 
@@ -27,22 +27,23 @@ object DLRTCCallService : Service() {
         //将服务置于启动状态 ,NOTIFICATION_ID指的是创建的通知的ID
         startForeground(NOTIFICATION_ID, notification)
     }
-
-    fun start(context: Context) {
-        if (ServiceUtils.isServiceRunning(DLRTCCallService::class.java)) {
-            return
+    companion object{
+        fun start(context: Context) {
+            if (ServiceUtils.isServiceRunning(DLRTCCallService::class.java)) {
+                return
+            }
+            val starter = Intent(context, DLRTCCallService::class.java)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(starter)
+            } else {
+                context.startService(starter)
+            }
         }
-        val starter = Intent(context, DLRTCCallService::class.java)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            context.startForegroundService(starter)
-        } else {
-            context.startService(starter)
-        }
-    }
 
-    fun stop(context: Context) {
-        val intent = Intent(context, DLRTCCallService::class.java)
-        context.stopService(intent)
+        fun stop(context: Context) {
+            val intent = Intent(context, DLRTCCallService::class.java)
+            context.stopService(intent)
+        }
     }
 
     private fun createForegroundNotification(): Notification {

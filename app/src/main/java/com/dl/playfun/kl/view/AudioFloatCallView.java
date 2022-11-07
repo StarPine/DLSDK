@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
@@ -24,19 +26,19 @@ import com.dl.playfun.entity.RestartActivityEntity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.widget.image.CircleImageView;
+import com.dl.rtc.calling.DLRTCFloatWindowService;
 import com.dl.rtc.calling.base.DLRTCCalling;
+import com.dl.rtc.calling.ui.BaseDLRTCCallView;
 import com.google.gson.Gson;
 import com.tencent.custom.GiftEntity;
 import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMMessageReceipt;
-import com.tencent.liteav.trtccalling.TUICalling;
-import com.tencent.liteav.trtccalling.ui.base.BaseTUICallView;
-import com.tencent.liteav.trtccalling.ui.floatwindow.FloatWindowService;
 import com.tencent.qcloud.tuicore.Status;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
+import com.tencent.trtc.TRTCCloudDef;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +47,7 @@ import java.util.Map;
 import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.utils.RxUtils;
 
-public class AudioFloatCallView extends BaseTUICallView {
+public class AudioFloatCallView extends BaseDLRTCCallView {
     private static final String TAG = "AudioFloatCallView";
     private ImageView maximize;
     private CircleImageView ivAvatar;
@@ -87,7 +89,7 @@ public class AudioFloatCallView extends BaseTUICallView {
 
     @Override
     protected void initView() {
-        LayoutInflater.from(mContext).inflate(R.layout.audio_floatwindow_layout, this);
+        LayoutInflater.from(getContext()).inflate(R.layout.audio_floatwindow_layout, this);
         maximize = findViewById(R.id.iv_maximize);
         ivAvatar = findViewById(R.id.iv_avatar);
         mTextViewTimeCount = findViewById(R.id.tv_time);
@@ -100,35 +102,7 @@ public class AudioFloatCallView extends BaseTUICallView {
 
     //通话时长,注意UI更新需要在主线程中进行
     protected void showTimeCount(TextView view, int timeCount) {
-        if (mTimeRunnable != null) {
-            return;
-        }
-        mTimeCount = timeCount;
-        if (null != view) {
-            view.setText(getShowTime(++mTimeCount));
-        }
-        mTimeRunnable = new Runnable() {
-            @Override
-            public void run() {
-                mTimeCount++;
-                if (mTimeCount %10 ==0){
-                    getRoomStatus(roomId);
-                }
-                Status.mBeginTime = mTimeCount;
-                if (null != view) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (Status.mIsShowFloatWindow) {
-                                view.setText(getShowTime(mTimeCount));
-                            }
-                        }
-                    });
-                }
-                mTimeHandler.postDelayed(mTimeRunnable, 1000);
-            }
-        };
-        mTimeHandler.postDelayed(mTimeRunnable, 1000);
+        super.showTimeCount(view);
     }
 
     //监听IM消息
@@ -188,16 +162,16 @@ public class AudioFloatCallView extends BaseTUICallView {
             public void onClick(View v) {
                 if (!isRestart) {
                     isRestart = true;
-                    Intent intent = new Intent(mContext, AudioCallChatingActivity.class);
+                    Intent intent = new Intent(getContext(), AudioCallChatingActivity.class);
                     intent.putExtra("fromUserId", mSponsorID);
                     intent.putExtra("toUserId", mUserIDs[0]);
                     intent.putExtra("mRole", mRole);
                     intent.putExtra("roomId", roomId);
-                    intent.putExtra("timeCount", ++mTimeCount);
+                    //intent.putExtra("timeCount", ++mTimeCount);
                     intent.putExtra("isRestart", isRestart);
                     intent.putExtra("audioCallingBarrage", GsonUtils.toJson(audioBarrageList));
-                    if (isBackground(mContext)) {
-                        mContext.startActivity(intent);
+                    if (isBackground(getContext())) {
+                        getContext().startActivity(intent);
                     } else {
                         RxBus.getDefault().post(new RestartActivityEntity(intent));
                     }
@@ -279,9 +253,13 @@ public class AudioFloatCallView extends BaseTUICallView {
         super.onCallEnd();
         //通话结束,停止悬浮窗显示
         if (Status.mIsShowFloatWindow) {
-            FloatWindowService.stopService(mContext);
+            DLRTCFloatWindowService.stopService(getContext());
             finish();
         }
     }
 
+    @Override
+    public void onNetworkQuality(@Nullable TRTCCloudDef.TRTCQuality localQuality, @Nullable ArrayList<TRTCCloudDef.TRTCQuality> remoteQuality) {
+
+    }
 }

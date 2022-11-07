@@ -4,8 +4,11 @@ import android.text.TextUtils
 import com.dl.lib.util.log.MPTimber
 import com.dl.rtc.calling.model.bean.DLRTCCallModel
 import com.dl.rtc.calling.model.bean.DLRTCSignallingData
+import com.dl.rtc.calling.util.DLRTCSignallingUtil.convert2CallingData
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
+import org.json.JSONException
+import org.json.JSONObject
 
 /**
  *Author: 彭石林
@@ -20,136 +23,10 @@ object  DLRTCSignallingUtil {
          * 信令数据模型转换
          */
         fun convert2CallingData(data : String): DLRTCSignallingData {
-            val signallingData : DLRTCSignallingData = DLRTCSignallingData()
-            val extraMap: Map<String, Any>?
-            try {
-                extraMap = Gson().fromJson<Map<*, *>>(data, MutableMap::class.java) as Map<String, Any>?
-                if (extraMap == null) {
-                    MPTimber.tag(TAG_LOG).e("onReceiveNewInvitation extraMap is null, ignore")
-                    return signallingData
-                }
-                if (extraMap.containsKey(DLRTCCallModel.KEY_VERSION)) {
-                    val version =
-                        extraMap[DLRTCCallModel.KEY_VERSION]
-                    if (version is Double) {
-                        signallingData.version = version.toInt()
-                    } else {
-                        MPTimber.tag(TAG_LOG).e( "version is not Double, value is :$version")
-                    }
-                }
-                if (extraMap.containsKey(DLRTCCallModel.KEY_PLATFORM)) {
-                    val platform =
-                        extraMap[DLRTCCallModel.KEY_PLATFORM]
-                    if (platform is String) {
-                        signallingData.platform = platform
-                    } else {
-                        MPTimber.tag(TAG_LOG).e("platform is not string, value is :$platform")
-                    }
-                }
-                if (extraMap.containsKey(DLRTCCallModel.KEY_BUSINESS_ID)) {
-                    val businessId =
-                        extraMap[DLRTCCallModel.KEY_BUSINESS_ID]
-                    if (businessId is String) {
-                        signallingData.businessID = businessId
-                    } else {
-                        MPTimber.tag(TAG_LOG).e("businessId is not string, value is :$businessId")
-                    }
-                }
-
-                //兼容老版本某些字段
-                if (extraMap.containsKey(DLRTCCallModel.SIGNALING_EXTRA_KEY_CALL_TYPE)) {
-                    val callType =
-                        extraMap[DLRTCCallModel.SIGNALING_EXTRA_KEY_CALL_TYPE]
-                    if (callType is Double) {
-                        signallingData.callType = callType.toInt()
-                    } else {
-                        MPTimber.tag(TAG_LOG).e( "callType is not Double, value is :$callType")
-                    }
-                }
-                if (extraMap.containsKey(DLRTCCallModel.SIGNALING_EXTRA_KEY_ROOM_ID)) {
-                    val roomId =
-                        extraMap[DLRTCCallModel.SIGNALING_EXTRA_KEY_ROOM_ID]
-                    if (roomId is Double) {
-                        signallingData.roomId = roomId.toInt()
-                    } else {
-                        MPTimber.tag(TAG_LOG).e( "roomId is not Double, value is :$roomId")
-                    }
-                }
-                if (extraMap.containsKey(DLRTCCallModel.SIGNALING_EXTRA_KEY_LINE_BUSY)) {
-                    val lineBusy =
-                        extraMap[DLRTCCallModel.SIGNALING_EXTRA_KEY_LINE_BUSY]
-                    if (lineBusy is String) {
-                        signallingData.lineBusy = lineBusy
-                    } else {
-                        MPTimber.tag(TAG_LOG).e( "lineBusy is not string, value is :$lineBusy")
-                    }
-                }
-                if (extraMap.containsKey(DLRTCCallModel.SIGNALING_EXTRA_KEY_CALL_END)) {
-                    val callEnd =
-                        extraMap[DLRTCCallModel.SIGNALING_EXTRA_KEY_CALL_END]
-                    if (callEnd is Double) {
-                        signallingData.callEnd =callEnd.toInt()
-                    } else {
-                        MPTimber.tag(TAG_LOG).e("callEnd is not Double, value is :$callEnd")
-                    }
-                }
-                if (extraMap.containsKey(DLRTCCallModel.SIGNALING_EXTRA_KEY_SWITCH_AUDIO_CALL)) {
-                    val switchToAudioCall =
-                        extraMap[DLRTCCallModel.SIGNALING_EXTRA_KEY_SWITCH_AUDIO_CALL]
-                    if (switchToAudioCall is String) {
-                        signallingData.switchToAudioCall = switchToAudioCall
-                    } else {
-                        MPTimber.tag(TAG_LOG).e(
-                            "switchToAudioCall is not string, value is :$switchToAudioCall"
-                        )
-                    }
-                }
-                if (extraMap.containsKey(DLRTCCallModel.KEY_DATA)) {
-                    val dataMapObj =
-                        extraMap[DLRTCCallModel.KEY_DATA]
-                    if (dataMapObj != null && dataMapObj is Map<*, *>) {
-                        val dataMap = dataMapObj as Map<String, Any>
-                        val dataInfo: DLRTCSignallingData.DataInfo =
-                            convert2DataInfo(dataMap)
-                        signallingData.data = dataInfo
-                    } else {
-                        MPTimber.tag(TAG_LOG).e( "dataMapObj is not map, value is :$dataMapObj")
-                    }
-                }
-                if (extraMap.containsKey(DLRTCCallModel.KEY_CALLACTION)) {
-                    val callAction =
-                        extraMap[DLRTCCallModel.KEY_CALLACTION]
-                    if (callAction is Double) {
-                        signallingData.callAction = callAction.toInt()
-                    } else {
-                        MPTimber.tag(TAG_LOG).e( "callAciton is not Double, value is :$callAction")
-                    }
-                }
-                if (extraMap.containsKey(DLRTCCallModel.KEY_CALLID)) {
-                    val callId =
-                        extraMap[DLRTCCallModel.KEY_CALLID]
-                    if (callId is String) {
-                        signallingData.callId = callId
-                    } else {
-                        MPTimber.tag(TAG_LOG).e("callId is not String, value is :$callId")
-                    }
-                }
-                if (extraMap.containsKey(DLRTCCallModel.KEY_USER)) {
-                    val user =
-                        extraMap[DLRTCCallModel.KEY_USER]
-                    if (user is String) {
-                        signallingData.user = user
-                    } else {
-                        MPTimber.tag(TAG_LOG).e( "user is not String, value is :$user")
-                    }
-                }
-            } catch (e: JsonSyntaxException) {
-                MPTimber.tag(TAG_LOG).e( "convert2CallingDataBean json parse error")
-            }
-            return signallingData
+            return DLRTConversionUtil.convert2CallingData(data)
         }
 
-        fun convert2DataInfo(dataMap: Map<String, Any>): DLRTCSignallingData.DataInfo {
+        private fun convert2DataInfo(dataMap: Map<String, Any>): DLRTCSignallingData.DataInfo {
             val dataInfo: DLRTCSignallingData.DataInfo =
                 DLRTCSignallingData.DataInfo()
             try {
@@ -254,5 +131,24 @@ object  DLRTCSignallingUtil {
         return signallingData
     }
 
+    fun getMap(jsonString: String): HashMap<String, Any> {
+        val jsonObject: JSONObject
+        try {
+            jsonObject = JSONObject(jsonString)
+            val keyIter: Iterator<String> = jsonObject.keys()
+            var key: String
+            var value: Any
+            val valueMap = HashMap<String, Any>()
+            while (keyIter.hasNext()) {
+                key = keyIter.next()
+                value = jsonObject[key] as Any
+                valueMap[key] = value
+            }
+            return valueMap
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
+        return HashMap()
+    }
 
 }

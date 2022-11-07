@@ -30,46 +30,46 @@ import com.tencent.qcloud.tuicore.TUILogin
 import com.tencent.qcloud.tuicore.interfaces.ITUINotification
 import com.tencent.trtc.TRTCCloudDef
 import com.tencent.trtc.TRTCCloudDef.TRTCQuality
+import kotlin.properties.Delegates
 
 /**
  *Author: 彭石林
  *Time: 2022/11/5 12:08
  * Description: This is BaseDLRTCCallView
  */
-abstract class BaseDLRTCCallView @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-):FrameLayout(context, attrs, defStyleAttr), DLRTCCallingDelegate {
+abstract class BaseDLRTCCallView constructor(
+    context: Context
+):FrameLayout(context), DLRTCCallingDelegate {
 
     private val TAG_LOG = "BaseTUICallView"
 
     private val MIN_DURATION_SHOW_LOW_QUALITY = 5000 //显示网络不佳最小间隔时间
 
     //音视频通话基础信息
-    public var mContext: Context? = null
+     var mContext: Context? = null
 
     init {
         mContext = context
     }
 
-    protected var mSelfModel: DLRTCUserModel? = null
-    protected var mRole: DLRTCCalling.Role? = null
-    protected var mCallType: DLRTCCalling.Type? = null
-    protected lateinit var mUserIDs: Array<String>
-    protected var mSponsorID: String? = null
-    protected var mGroupID: String? = null
-    protected var mIsFromGroup = false
-    protected var mMainHandler = Handler(Looper.getMainLooper())
+    open lateinit var mSelfModel: DLRTCUserModel
+     open lateinit var mRole: DLRTCCalling.Role
+     var mCallType: DLRTCCalling.Type? = null
+     lateinit var mUserIDs: Array<String>
+    open lateinit var mSponsorID :String
+
+     var mGroupID: String? = null
+     var mIsFromGroup = false
+     var mMainHandler = Handler(Looper.getMainLooper())
 
     private var mSelfLowQualityTime: Long = 0
     private var mOtherPartyLowQualityTime: Long = 0
 
     //通话时长相关
-    protected var mTimeRunnable: Runnable? = null
-    protected var mTimeCount = 0
-    protected var mTimeHandler: Handler? = null
-    protected var mTimeHandlerThread: HandlerThread? = null
+     var mTimeRunnable: Runnable? = null
+    open  var mTimeCount : Int = 0
+    var mTimeHandler: Handler? = null
+    var mTimeHandlerThread: HandlerThread? = null
 
     //音视频通用字段
     protected var mCallUserInfoList = ArrayList<DLRTCUserModel>() // 主叫方保存的被叫信息
@@ -95,10 +95,13 @@ abstract class BaseDLRTCCallView @JvmOverloads constructor(
     protected var mIsCalling = false // 正在通话中
 
 
+
+
     //公共视图
-    private var mImageBack // 返回按钮,展示悬浮窗
-            : ImageView? = null
-    constructor (context: Context, role: DLRTCCalling.Role, type: DLRTCCalling.Type, userIDs: Array<String>, sponsorID: String, groupID: String, isFromGroup: Boolean) : this.{
+    // 返回按钮,展示悬浮窗
+    private var mImageBack: ImageView? = null
+
+    constructor (context: Context, role: DLRTCCalling.Role, type: DLRTCCalling.Type, userIDs: Array<String>, sponsorID: String, groupID: String?, isFromGroup: Boolean) : this(context){
         mContext = context
         mSelfModel = DLRTCUserModel()
         mSelfModel!!.userId = TUILogin.getUserId()
@@ -114,29 +117,7 @@ abstract class BaseDLRTCCallView @JvmOverloads constructor(
         initData()
         initListener()
     }
-//    open fun BaseDLRTCCallView(
-//        context: Context,
-//        role: DLRTCCalling.Role,
-//        type: DLRTCCalling.Type,
-//        userIDs: Array<String?>,
-//        sponsorID: String,
-//        groupID: String,
-//        isFromGroup: Boolean
-//    ) {
-//        mContext = context
-//        mSelfModel = DLRTCUserModel()
-//        mSelfModel!!.userId = TUILogin.getUserId()
-//        mSelfModel!!.userName = TUILogin.getLoginUser()
-//        mRole = role
-//        mCallType = type
-//        mUserIDs = userIDs.requireNoNulls()
-//        mSponsorID = sponsorID
-//        mGroupID = groupID
-//        mIsFromGroup = isFromGroup
-//        initTimeHandler()
-//        initView()
-//        initData()
-//        initListener()
+
 //    }
 
     //用户是否支持显示悬浮窗:
@@ -456,9 +437,9 @@ abstract class BaseDLRTCCallView @JvmOverloads constructor(
     }
 
     private fun stopTimeCount() {
-        mTimeHandler!!.removeCallbacks(mTimeRunnable!!)
+        mTimeRunnable?.let { mTimeHandler?.removeCallbacks(it) }
         mTimeRunnable = null
-        mTimeHandlerThread!!.quit()
+        mTimeHandlerThread?.quit()
         mTimeCount = 0
     }
 

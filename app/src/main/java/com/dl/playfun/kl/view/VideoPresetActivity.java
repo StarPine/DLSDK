@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.dl.playfun.R;
 import com.dl.playfun.manager.LocaleManager;
 import com.dl.rtc.calling.manager.DLRTCStartManager;
+import com.dl.rtc.calling.manager.DLRTCVideoManager;
 import com.dl.rtc.calling.ui.videolayout.DLRTCVideoLayout;
 import com.dl.rtc.calling.ui.videolayout.DLRTCVideoLayoutManager;
 import com.dl.rtc.calling.ui.videolayout.VideoLayoutFactory;
@@ -80,7 +81,7 @@ public class VideoPresetActivity extends AppCompatActivity {
         //2.再打开摄像头
         mLayoutManagerTrtc.initVideoFactory(new VideoLayoutFactory(this));
         DLRTCVideoLayout videoLayout = mLayoutManagerTrtc.allocCloudVideoView(userId);
-        mTRTCCalling.openCamera(true, videoLayout.getVideoView());
+        DLRTCVideoManager.getInstance().openCamera(true, videoLayout.getVideoView());
     }
 
     private void initListener() {
@@ -89,7 +90,7 @@ public class VideoPresetActivity extends AppCompatActivity {
         });
         mCameraChange.setOnClickListener(v -> {
             isFrontCamera = !isFrontCamera;
-            mTRTCCalling.switchCamera(isFrontCamera);
+            DLRTCVideoManager.getInstance().switchCamera(isFrontCamera);
         });
     }
 

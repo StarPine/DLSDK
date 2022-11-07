@@ -5,6 +5,7 @@ import com.dl.rtc.calling.base.DLRTCCallingDelegate
 import com.dl.rtc.calling.base.DLRTCCallingItFace
 import com.dl.rtc.calling.base.impl.DLRTCInternalListenerManager
 import com.tencent.qcloud.tuicore.TUILogin
+import com.tencent.rtmp.ui.TXCloudVideoView
 import com.tencent.trtc.TRTCCloudDef
 import com.tencent.trtc.TRTCCloudDef.TRTCParams
 import com.tencent.trtc.TRTCCloudDef.TRTCVideoEncParam
@@ -129,5 +130,40 @@ class DLRTCVideoManager : DLRTCCallingItFace {
 
     override fun enableANS(enable: Boolean) {
         DLRTCStartManager.getInstance().enableANS(enable)
+    }
+
+    /**
+     * 打开相机流
+     */
+    fun openCamera(isFrontCamera: Boolean, txCloudVideoView: TXCloudVideoView?) {
+        DLRTCStartManager.getInstance().openCamera(isFrontCamera, txCloudVideoView)
+    }
+
+    /**
+     * 关闭相机流
+     */
+    fun closeCamera(){
+        DLRTCStartManager.getInstance().closeCamera()
+    }
+
+    /**
+     * 渲染视频
+     */
+    fun startRemoteView(userId: String?, txCloudVideoView: TXCloudVideoView?) {
+        DLRTCStartManager.getInstance().startRemoteView(userId,txCloudVideoView)
+    }
+    /**
+     * 关闭渲染视频
+     */
+    fun stopRemoteView(userId: String?) {
+        DLRTCStartManager.getInstance().stopRemoteView(userId)
+    }
+
+    fun setMicMute(enable: Boolean){
+        DLRTCStartManager.getInstance().mTRTCCloud?.muteLocalAudio(enable)
+    }
+
+    fun switchCamera(enable: Boolean){
+        DLRTCStartManager.getInstance().switchCamera(enable)
     }
 }

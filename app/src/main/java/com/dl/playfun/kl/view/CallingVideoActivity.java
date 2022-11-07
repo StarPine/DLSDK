@@ -58,6 +58,10 @@ import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 import com.dl.playfun.widget.dialog.MessageDetailDialog;
 import com.dl.playfun.widget.dialog.TraceDialog;
 import com.dl.playfun.widget.image.CircleImageView;
+import com.dl.rtc.calling.base.DLRTCCalling;
+import com.dl.rtc.calling.manager.DLRTCStartManager;
+import com.dl.rtc.calling.model.DLRTCCallingConstants;
+import com.dl.rtc.calling.ui.videolayout.VideoLayoutFactory;
 import com.faceunity.nama.FURenderer;
 import com.faceunity.nama.data.FaceUnityDataFactory;
 import com.faceunity.nama.ui.FaceUnityView;
@@ -69,11 +73,6 @@ import com.opensource.svgaplayer.SVGASoundManager;
 import com.opensource.svgaplayer.SVGAVideoEntity;
 import com.tencent.custom.GiftEntity;
 import com.tencent.imsdk.v2.V2TIMManager;
-import com.tencent.liteav.trtccalling.TUICalling;
-import com.tencent.liteav.trtccalling.model.TRTCCalling;
-import com.tencent.liteav.trtccalling.model.util.TUICallingConstants;
-import com.tencent.liteav.trtccalling.ui.base.VideoLayoutFactory;
-import com.tencent.liteav.trtccalling.ui.floatwindow.FloatCallView;
 import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
 
 import org.jetbrains.annotations.NotNull;
@@ -93,14 +92,12 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
     /**
      * 美颜相关
      */
-    protected TRTCCalling mTRTCCalling;
     private FaceUnityView mFaceUnityView;
     private FaceUnityDataFactory mFaceUnityDataFactory;
     private FURenderer mFURenderer;
     private final boolean isFuEffect = true;
 
     //视频悬浮框
-    private FloatCallView mFloatView;
     private VideoLayoutFactory mVideoFactory;
 
     private Context mContext;
@@ -115,7 +112,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
     private String callUserId;
     private String toId;
     private Integer roomId;
-    private TUICalling.Role role;
+    private DLRTCCalling.Role role;
     private String[] userIds;
 
     private int mTimeCount;
@@ -202,15 +199,15 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         SVGAParser.Companion.shareParser().init(this);
 
         Intent intent = getIntent();
-        role = (TUICalling.Role) intent.getExtras().get(TUICallingConstants.PARAM_NAME_ROLE);
+        role = (DLRTCCalling.Role) intent.getExtras().get(DLRTCCallingConstants.PARAM_NAME_ROLE);
         roomId = intent.getIntExtra("roomId", 0);
         //被动接收
-        userIds = intent.getExtras().getStringArray(TUICallingConstants.PARAM_NAME_USERIDS);
+        userIds = intent.getExtras().getStringArray(DLRTCCallingConstants.PARAM_NAME_USERIDS);
         if (userIds != null && userIds.length > 0) {
             toId = userIds[0];
         }
         //主动呼叫
-        callUserId = intent.getExtras().getString(TUICallingConstants.PARAM_NAME_SPONSORID);
+        callUserId = intent.getExtras().getString(DLRTCCallingConstants.PARAM_NAME_SPONSORID);
         String userData = intent.getExtras().getString("userProfile");
         if (userData != null) {
             callingInviteInfo = new Gson().fromJson(userData, CallingInviteInfo.class);
@@ -237,12 +234,10 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         hideExchangeRules();
         giftEffects = binding.giftEffects;
         mFaceUnityView = binding.fuView;
-        //1.先打开渲染器
-        mTRTCCalling = TRTCCalling.sharedInstance(this);
         mFURenderer = FURenderer.getInstance();
         mFaceUnityDataFactory = new FaceUnityDataFactory(0);
         mFaceUnityView.bindDataFactory(mFaceUnityDataFactory);
-        mTRTCCalling.createCustomRenderer(this, true, isFuEffect);
+        DLRTCStartManager.Companion.getInstance().createCustomRenderer(this, true, isFuEffect);
 
         mContainerView = findViewById(R.id.container);
         mJMView = findViewById(R.id.jm_view);
@@ -281,8 +276,8 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         mJMView.bringToFront();
         // 不用TRTC sponsor 一套的命名，因为他们那里其实挺混乱的， 这里就用 my 和 other
         String myUserId = V2TIMManager.getInstance().getLoginUser();
-        String otherUserId = (role == TUICalling.Role.CALL ? userIds[0] : callUserId);
-        if (role == TUICalling.Role.CALL) {//主动呼叫
+        String otherUserId = (role == DLRTCCalling.Role.CALL ? userIds[0] : callUserId);
+        if (role == DLRTCCalling.Role.CALL) {//主动呼叫
             callUserId = V2TIMManager.getInstance().getLoginUser();
             viewModel.userCall = true;
             if (callingInviteInfo != null) {

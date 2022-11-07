@@ -5,9 +5,9 @@ import android.os.Looper;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.dl.playfun.app.AppContext;
-import com.tencent.liteav.trtccalling.TUICalling;
-import com.tencent.liteav.trtccalling.TUICallingImpl;
-import com.tencent.liteav.trtccalling.model.TRTCCalling;
+import com.dl.rtc.calling.base.DLRTCCalling;
+import com.dl.rtc.calling.manager.DLRTCStartManager;
+import com.dl.rtc.calling.model.DLRTCCallingConstants;
 
 public class Utils {
     protected static final Handler mMainHandler = new Handler(Looper.getMainLooper());
@@ -16,12 +16,12 @@ public class Utils {
      * 开始呼叫某人
      */
     public static void startCallSomeone(int type, String toUserId, int roomId, String data) {
-        if (type == TRTCCalling.TYPE_VIDEO_CALL) {
+        if (type == DLRTCCallingConstants.TYPE_VIDEO_CALL) {
             String[] userIDs = {toUserId};
-            TUICallingImpl.sharedInstance(AppContext.instance()).call(userIDs, TUICalling.Type.VIDEO, roomId, data);
-        } else if (type == TRTCCalling.TYPE_AUDIO_CALL) {
+            DLRTCStartManager.Companion.getInstance().call(userIDs, DLRTCCalling.Type.VIDEO, roomId, data);
+        } else if (type == DLRTCCallingConstants.TYPE_AUDIO_CALL) {
             String[] userIDs = {toUserId};
-            TUICallingImpl.sharedInstance(AppContext.instance()).call(userIDs, TUICalling.Type.AUDIO, roomId, data);
+            DLRTCStartManager.Companion.getInstance().call(userIDs, DLRTCCalling.Type.AUDIO, roomId, data);
         }
     }
 

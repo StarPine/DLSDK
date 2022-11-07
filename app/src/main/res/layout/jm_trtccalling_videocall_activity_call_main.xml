@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/trtccalling_color_videocall_background">
+    android:background="@color/dlrtccalling_color_videocall_background">
 
-    <com.tencent.liteav.trtccalling.ui.videocall.videolayout.TRTCVideoLayoutManager
+    <com.dl.rtc.calling.ui.videolayout.DLRTCVideoLayoutManager
         android:id="@+id/trtc_layout_manager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -19,7 +19,7 @@
         android:id="@+id/shade_sponsor"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/trtccalling_color_shade" />
+        android:background="@color/dlrtccalling_color_shade" />
 
 
     <androidx.constraintlayout.widget.Group
@@ -67,8 +67,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:visibility="gone"
-        android:textColor="@color/trtccalling_color_white"
-        android:textSize="@dimen/trtccalling_text_size_middle"
+        android:textColor="@color/dlrtccalling_color_white"
+        android:textSize="@dimen/dlrtccalling_text_size_middle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/trtccalling_call_time_default" />

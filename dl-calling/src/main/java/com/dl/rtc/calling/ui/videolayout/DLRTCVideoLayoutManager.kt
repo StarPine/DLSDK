@@ -62,7 +62,7 @@ open class DLRTCVideoLayoutManager
      * ===============================View相关===============================
      */
     init{
-        mContext = mContext
+        mContext = context
     }
 
     open fun initVideoFactory(factory: VideoLayoutFactory) {

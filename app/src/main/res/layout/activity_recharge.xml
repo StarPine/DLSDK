@@ -108,7 +108,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp"
                         android:text="@string/playfun_recharge_text1"
-                        android:textColor="@color/trtccalling_color_main"
+                        android:textColor="@color/toolbar_title_color"
                         android:textSize="@dimen/text_size_1067" />
 
                 </LinearLayout>
@@ -139,7 +139,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp"
                         android:text="@string/playfun_text_google_play"
-                        android:textColor="@color/trtccalling_color_main"
+                        android:textColor="@color/toolbar_title_color"
                         android:textSize="@dimen/text_size_1067" />
 
                 </LinearLayout>
