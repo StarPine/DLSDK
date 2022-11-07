@@ -77,7 +77,7 @@ class DLRTCStartManager {
      */
     private val mRemoteUserInTRTCRoom = ArrayList<String>()
 
-    private val mMediaPlayHelper: MediaPlayHelper? = null
+    private var mMediaPlayHelper: MediaPlayHelper? = null
 
     /**
      * 最近使用的通话信令，用于快速处理
@@ -177,7 +177,7 @@ class DLRTCStartManager {
             return
         }
         mTRTCInternalListenerManager = DLRTCInternalListenerManager.instance
-
+        mMediaPlayHelper = MediaPlayHelper(mContext)
         mTRTCCloud = TRTCCloud.sharedInstance(mContext);
         mTRTCCloud!!.setListener(mTRTCCloudListener)
         initFlag = false
@@ -196,23 +196,105 @@ class DLRTCStartManager {
         if (ConfigManagerUtil.getInstance().isPlayGameFlag) {
             return
         }
-        mMainHandler.post {
-                val intent = Intent(Intent.ACTION_VIEW)
-                if (DLRTCCalling.Type.AUDIO == type) {
-                    intent.component = ComponentName(mContext!!.applicationContext, DLRTCInterceptorCall.instance.audioCallActivity)
-                } else {
-                    intent.component = ComponentName(mContext!!.applicationContext, DLRTCInterceptorCall.instance.videoCallActivity)
-                }
-                intent.putExtra(DLRTCCallingConstants.PARAM_NAME_ROLE, DLRTCCalling.Role.CALL)
-                intent.putExtra("userProfile", data)
-                intent.putExtra(DLRTCCallingConstants.PARAM_NAME_USERIDS, userIDs)
-                intent.putExtra(DLRTCCallingConstants.PARAM_NAME_GROUPID, "")
-                intent.putExtra("roomId", roomId)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                mContext!!.startActivity(intent)
+        val intent = Intent(Intent.ACTION_VIEW)
+        if (DLRTCCalling.Type.AUDIO == type) {
+            mCurCallType =  DLRTCCallingConstants.TYPE_AUDIO_CALL
+            intent.component = ComponentName(mContext!!.applicationContext, DLRTCInterceptorCall.instance.audioCallActivity)
+        } else {
+            mCurCallType =  DLRTCCallingConstants.TYPE_VIDEO_CALL
+            intent.component = ComponentName(mContext!!.applicationContext, DLRTCInterceptorCall.instance.videoCallActivity)
         }
+        intent.putExtra(DLRTCCallingConstants.PARAM_NAME_ROLE, DLRTCCalling.Role.CALL)
+        intent.putExtra("userProfile", data)
+        intent.putExtra(DLRTCCallingConstants.PARAM_NAME_USERIDS, userIDs)
+        intent.putExtra(DLRTCCallingConstants.PARAM_NAME_GROUPID, "")
+        intent.putExtra("roomId", roomId)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+        if (!isOnCalling) {
+            // 首次拨打电话，生成id，并进入trtc房间
+            mCurRoomID = roomId
+
+            mIsBeingCalled = false
+            MPTimber.tag(TAGLOG).d("First calling, generate room id $mCurRoomID")
+            enterTRTCRoom()
+            startCall()
+            startRing()
+        }
+        // 过滤已经邀请的用户id
+        // 过滤已经邀请的用户id
+        val filterInvitedList: MutableList<String> = ArrayList()
+        if (userIDs != null) {
+            for (id in userIDs) {
+                if (!mCurInvitedList.contains(id)) {
+                    if (id != null) {
+                        filterInvitedList.add(id)
+                    }
+                }
+            }
+        }
+        // 如果当前没有需要邀请的id则返回
+        // 如果当前没有需要邀请的id则返回
+        if (isCollectionEmpty(filterInvitedList)) {
+            return
+        }
+
+        mCurInvitedList.addAll(filterInvitedList)
+        mCurRoomRemoteUserSet.addAll(filterInvitedList)
+        MPTimber.tag(TAGLOG).i("groupCall: filter:$filterInvitedList all:$mCurInvitedList , mCurGroupId : $mCurGroupId")
+        // 填充通话信令的model
+        // 填充通话信令的model
+        mLastCallModel.action = DLRTCCallModel.VIDEO_CALL_ACTION_DIALING
+        mLastCallModel.invitedList = mCurInvitedList
+        mLastCallModel.roomId = mCurRoomID
+        mLastCallModel.groupId = mCurGroupId
+        mLastCallModel.callType = mCurCallType
+
+        // 首次拨打电话，生成id
+
+        // 首次拨打电话，生成id
+        if (!TextUtils.isEmpty(mCurGroupId)) {
+            // 群聊发送群消息
+            mCurCallID = sendModel("",DLRTCCallModel.VIDEO_CALL_ACTION_DIALING)!!
+        } else {
+            // 单聊发送C2C消息; 用C2C实现的多人通话,需要保存每个userId对应的callId
+            for (userId in filterInvitedList) {
+                mCurCallID = sendModel(userId!!,DLRTCCallModel.VIDEO_CALL_ACTION_DIALING)!!
+                mUserCallIDMap[userId!!] = mCurCallID
+            }
+        }
+        mContext!!.startActivity(intent)
+        mLastCallModel.callId = mCurCallID
+        DLRTCCallService.start(mContext!!)
         //可在else处添加业务打点
 
+    }
+
+    //应用在后台且没有拉起应用的权限时,上层主动调用该方法,查询有效的通话请求,拉起界面
+    fun queryOfflineCallingInfo() {
+        if (mInviteMap.isEmpty()) {
+            MPTimber.tag(TAGLOG).d("queryOfflineCalledInfo: no offline call request")
+            return
+        }
+        //有权限时,直接在onReceiveNewInvitation邀请回调中处理,这里不再重复处理
+        if (PermissionUtil.hasPermission(mContext)) {
+            MPTimber.tag(TAGLOG).d("queryOfflineCalledInfo: call request has processed")
+            return
+        }
+        var inviteId = ""
+        var model: DLRTCCallModel? = null
+        mInviteMap.iterator().forEach {
+            inviteId = it.key
+            model = it.value
+        }
+        if (null == model) {
+            return
+        }
+        MPTimber.tag(TAGLOG).d("queryOfflineCalledInfo: inviteId = $inviteId ,model = $model")
+        mTIMSignallingListener.onReceiveNewInvitation(
+            inviteId, model!!.sender,
+            model!!.groupId, model!!.invitedList, model!!.data
+        )
     }
     /**
      * 接听页面回调处理
@@ -230,6 +312,7 @@ class DLRTCStartManager {
         val interceptorResult = DLRTCInterceptorCall.instance.containsActivity(activity.javaClass)
         if(!interceptorResult){
             mMainHandler.post {
+                startRing()
                 val intent = Intent(Intent.ACTION_VIEW)
                 if (DLRTCCalling.Type.AUDIO == type) {
                     intent.component = ComponentName(mContext!!.applicationContext, DLRTCInterceptorCall.instance.audioCallActivity)
@@ -819,7 +902,7 @@ class DLRTCStartManager {
         if (null == mMediaPlayHelper || mEnableMuteMode) {
             return
         }
-        mMediaPlayHelper.start(R.raw.phone_dialing)
+        mMediaPlayHelper!!.start(R.raw.phone_dialing)
     }
 
     private fun stopRing() {
@@ -871,8 +954,7 @@ class DLRTCStartManager {
         var callID: String? = null
         val realCallModel: DLRTCCallModel
         if (model != null) {
-            realCallModel =
-                model.clone() as DLRTCCallModel
+            realCallModel = model.clone() as DLRTCCallModel
             realCallModel.action = action
         } else {
             realCallModel = DLRTCSignalingManager.generateModel(action,mLastCallModel)
@@ -1440,6 +1522,7 @@ class DLRTCStartManager {
      * trtc 进房
      */
     private fun enterTRTCRoom() {
+
     }
 
 
@@ -1559,10 +1642,7 @@ class DLRTCStartManager {
 
     fun reject() {
         playHangupMusic()
-        sendModel(
-            mCurSponsorForMe,
-            DLRTCCallModel.VIDEO_CALL_ACTION_REJECT
-        )
+        sendModel(mCurSponsorForMe, DLRTCCallModel.VIDEO_CALL_ACTION_REJECT)
         stopCall()
     }
 
@@ -1573,13 +1653,8 @@ class DLRTCStartManager {
             return
         }
         playHangupMusic()
-        val fromGroup = !TextUtils.isEmpty(mCurGroupId)
-        if (fromGroup) {
-            MPTimber.tag(TAGLOG).d( "groupHangup")
-        } else {
-            MPTimber.tag(TAGLOG).d( "singleHangup")
-            singleHangup()
-        }
+        MPTimber.tag(TAGLOG).d( "singleHangup")
+        singleHangup()
     }
 
     private fun singleHangup() {

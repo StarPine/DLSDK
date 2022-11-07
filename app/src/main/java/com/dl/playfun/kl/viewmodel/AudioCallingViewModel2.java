@@ -67,6 +67,7 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
                 return;
             }
             DLRTCAudioManager.Companion.getInstance().accept();
+            DLRTCAudioManager.Companion.getInstance().enterRoom(roomId);
             unListen();
             startAudioActivity.postValue(roomId);
         }
