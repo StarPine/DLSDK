@@ -149,8 +149,7 @@ class DLRTCFloatWindowService : Service() {
         //标记悬浮窗是否移动，防止移动后松手触发了点击事件
         private var mIsMove = false
         override fun onTouch(v: View, event: MotionEvent): Boolean {
-            val action = event.action
-            when (action) {
+            when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     mIsMove = false
                     mTouchStartX = event.rawX.toInt() //触摸点相对屏幕显示器左上角的坐标
@@ -217,10 +216,7 @@ class DLRTCFloatWindowService : Service() {
             val height: Int = mCallView!!.height
             val screenHeight = mWindowManager!!.defaultDisplay.height
             //获取系统状态栏的高度
-            val resourceId: Int = mContext!!.resources!!.getIdentifier(
-                "status_bar_height",
-                "dimen", "android"
-            )
+            val resourceId: Int = mContext!!.resources!!.getIdentifier("status_bar_height", "dimen", "android")
             val statusBarHeight: Int = mContext!!.resources.getDimensionPixelSize(resourceId)
             if (mWindowLayoutParams!!.y < 0) {
                 mWindowLayoutParams!!.y = 0

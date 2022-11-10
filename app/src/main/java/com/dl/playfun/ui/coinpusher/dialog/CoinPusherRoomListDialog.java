@@ -177,7 +177,6 @@ public class CoinPusherRoomListDialog extends BaseDialog {
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;   //设置宽度充满屏幕
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         window.setAttributes(lp);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         window.setStatusBarColor(Color.TRANSPARENT);
         // 解决 状态栏变色的bug
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

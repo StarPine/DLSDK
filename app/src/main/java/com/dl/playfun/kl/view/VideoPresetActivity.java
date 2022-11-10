@@ -76,7 +76,7 @@ public class VideoPresetActivity extends AppCompatActivity {
         mFURenderer = FURenderer.getInstance();
         mFaceUnityDataFactory = new FaceUnityDataFactory(0);
         faceUnityView.bindDataFactory(mFaceUnityDataFactory);
-        DLRTCStartManager.Companion.getInstance().createCustomRenderer(this, true, isFuEffect);
+        DLRTCStartManager.Companion.getInstance().createCustomRenderer(isFuEffect);
 
         //2.再打开摄像头
         mLayoutManagerTrtc.initVideoFactory(new VideoLayoutFactory(this));

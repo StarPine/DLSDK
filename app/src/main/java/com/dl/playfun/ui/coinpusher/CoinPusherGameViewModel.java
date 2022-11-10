@@ -1,8 +1,10 @@
 package com.dl.playfun.ui.coinpusher;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableInt;
 
 import com.blankj.utilcode.util.ObjectUtils;
@@ -16,6 +18,9 @@ import com.dl.playfun.entity.CoinPusherDataInfoEntity;
 import com.dl.playfun.event.CoinPusherGamePlayingEvent;
 import com.dl.playfun.manager.V2TIMCustomManagerUtil;
 import com.dl.playfun.viewmodel.BaseViewModel;
+import com.dl.rtc.calling.base.DLRTCCalling;
+import com.dl.rtc.calling.manager.DLRTCAudioManager;
+import com.dl.rtc.calling.manager.DLRTCVideoManager;
 import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
 import com.tencent.imsdk.v2.V2TIMCustomElem;
 import com.tencent.imsdk.v2.V2TIMManager;
@@ -56,6 +61,15 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
 
     private IMAdvancedMsgListener imAdvancedMsgListener;
 
+    //默认叠起
+    public boolean triangleSwitch = true;
+    public DLRTCCalling.Type callingType = null;
+    public String callingUserIDs = null;
+    public int roomId = 0;
+
+    //推币机禁音
+    public ObservableBoolean muteEnabled = new ObservableBoolean(false);
+
     public CoinPusherGameViewModel(@NonNull Application application, AppRepository model) {
         super(application, model);
     }
@@ -68,6 +82,44 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
 
     public BindingCommand<Void> playPusherActClick = new BindingCommand<>(() -> {
         playingCoinPusherAct(coinPusherDataInfoEntity.getRoomInfo().getRoomId());
+    });
+
+    //推币机音频开关
+    public BindingCommand<Void> muteEnabledClick = new BindingCommand<>(() -> {
+        boolean enabled = !muteEnabled.get();
+        muteEnabled.set(enabled);
+        gameUI.muteEnabledEvent.postValue(enabled);
+    });
+    //用户头像点击折叠
+    public BindingCommand<Void> triangleClick = new BindingCommand<>(() -> {
+        triangleSwitch = !triangleSwitch;
+        gameUI.triangleEvent.postValue(triangleSwitch);
+    });
+    //点击挂断电话
+    public BindingCommand<Void> callReject = new BindingCommand<>(() -> {
+        Log.e("CoinPusherGameActivity","点击挂断电话======================");
+        if(callingType!=null){
+            if(callingType == DLRTCCalling.Type.AUDIO){
+                DLRTCAudioManager.Companion.getInstance().reject();
+            }else{
+                DLRTCVideoManager.Companion.getInstance().reject();
+            }
+        }
+
+    });
+    //点击接听电话
+    public BindingCommand<Void> callAccept = new BindingCommand<>(() -> {
+        Log.e("CoinPusherGameActivity","点击接听电话======================");
+        if(callingType!=null){
+            if(callingType == DLRTCCalling.Type.AUDIO){
+                DLRTCAudioManager.Companion.getInstance().accept();
+                DLRTCAudioManager.Companion.getInstance().enterRoom(roomId);
+            }else{
+                DLRTCVideoManager.Companion.getInstance().accept();
+                DLRTCAudioManager.Companion.getInstance().enterRoom(roomId);
+            }
+        }
+
     });
 
     //是否是小游戏状态
@@ -211,6 +263,10 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
         public SingleLiveEvent<Void> backViewApply = new SingleLiveEvent<>();
         //余额不足。弹出充值弹窗
         public SingleLiveEvent<Void> payDialogViewEvent = new SingleLiveEvent<>();
+        //开关推币机语音
+        public SingleLiveEvent<Boolean> muteEnabledEvent = new SingleLiveEvent<>();
+        //右上角折叠状态 : 展开、折叠
+        public SingleLiveEvent<Boolean> triangleEvent = new SingleLiveEvent<>();
     }
     //显示loading
     public void loadingShow(){

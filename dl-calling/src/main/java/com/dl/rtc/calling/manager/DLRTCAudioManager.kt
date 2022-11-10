@@ -42,15 +42,15 @@ class DLRTCAudioManager : DLRTCCallingItFace {
     private fun enterRTCRoom(mCurRoomID :Int){
         MPTimber.tag(TAG_LOG).i("enterTRTCRoom: " + TUILogin.getUserId() + " room:" + mCurRoomID)
         DLRTCStartManager.getInstance().mTRTCCloud?.apply {
-            val trtcParams = TRTCCloudDef.TRTCParams(
+            val rtcParams = TRTCCloudDef.TRTCParams(
                 TUILogin.getSdkAppId(), TUILogin.getUserId(),
                 TUILogin.getUserSig(), mCurRoomID, "", ""
             )
-            trtcParams.role = TRTCCloudDef.TRTCRoleAnchor
+            rtcParams.role = TRTCCloudDef.TRTCRoleAnchor
             enableAudioVolumeEvaluation(300)
             setAudioRoute(TRTCCloudDef.TRTC_AUDIO_ROUTE_SPEAKER)
             startLocalAudio(3)
-            enterRoom(trtcParams, TRTCCloudDef.TRTC_APP_SCENE_VIDEOCALL)
+            enterRoom(rtcParams, TRTCCloudDef.TRTC_APP_SCENE_AUDIOCALL)
         }
     }
 

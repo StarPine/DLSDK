@@ -49,13 +49,14 @@ import me.goldze.mvvmhabit.utils.RxUtils;
 
 public class AudioFloatCallView extends BaseDLRTCCallView {
     private static final String TAG = "AudioFloatCallView";
-    private ImageView maximize;
     private CircleImageView ivAvatar;
     private TextView mTextViewTimeCount;
     private boolean isRestart = false;
     private Integer roomId = 0;
     private CallingInfoEntity.FromUserProfile otherUserProfile;
     private ArrayList<AudioCallingBarrageEntity> audioBarrageList;
+
+    public int mTimeCount = 0;
 
 
     public AudioFloatCallView(Context context, DLRTCCalling.Role role, DLRTCCalling.Type type, String[] userIDs,
@@ -68,6 +69,7 @@ public class AudioFloatCallView extends BaseDLRTCCallView {
 
     private void initData(CallingInfoEntity.FromUserProfile otherUserProfile, int timeCount, Integer roomId, ArrayList<AudioCallingBarrageEntity> audioBarrageList) {
         Glide.with(AppContext.instance())
+                .asDrawable()
                 .load(StringUtil.getFullImageUrl(otherUserProfile.getAvatar()))
                 .error(R.drawable.default_avatar) //异常时候显示的图片
                 .placeholder(R.drawable.default_avatar) //加载成功前显示的图片
@@ -90,9 +92,13 @@ public class AudioFloatCallView extends BaseDLRTCCallView {
     @Override
     protected void initView() {
         LayoutInflater.from(getContext()).inflate(R.layout.audio_floatwindow_layout, this);
-        maximize = findViewById(R.id.iv_maximize);
         ivAvatar = findViewById(R.id.iv_avatar);
         mTextViewTimeCount = findViewById(R.id.tv_time);
+    }
+
+    @Override
+    protected void timeCountListener(int times) {
+        mTimeCount = times;
     }
 
     //更新显示
@@ -107,76 +113,73 @@ public class AudioFloatCallView extends BaseDLRTCCallView {
 
     //监听IM消息
     private void initIMListener() {
-        V2TIMManager.getMessageManager().addAdvancedMsgListener(new V2TIMAdvancedMsgListener() {
-            @Override
-            public void onRecvNewMessage(V2TIMMessage msg) {//新消息提醒
-                try {
-                    if (msg != null && otherUserProfile != null) {
-                        TUIMessageBean info = ChatMessageBuilder.buildMessage(msg);
-                        if (info != null) {
-                            if (info.getV2TIMMessage().getSender().equals(otherUserProfile.getImId())) {
-                                String text = String.valueOf(info.getExtra());
-                                if (StringUtil.isJSON2(text) && text.contains("type")) {//做自定义通知判断
-                                    Map<String, Object> map_data = new Gson().fromJson(text, Map.class);
-                                    //礼物消息
-                                    if (map_data != null
-                                            && map_data.get("type") != null
-                                            && map_data.get("type").equals("message_gift")
-                                            && map_data.get("is_accost") == null) {
-                                        GiftEntity giftEntity = new Gson().fromJson(String.valueOf(map_data.get("data")), GiftEntity.class);
-                                        //显示礼物弹幕
-                                        showGiftBarrage(giftEntity);
-                                        //礼物收益提示
-                                        giftIncome(giftEntity);
-                                    }
+        V2TIMManager.getMessageManager().addAdvancedMsgListener(v2TIMAdvancedMsgListener);
+    }
+    V2TIMAdvancedMsgListener v2TIMAdvancedMsgListener = new V2TIMAdvancedMsgListener() {
+        @Override
+        public void onRecvNewMessage(V2TIMMessage msg) {//新消息提醒
+            try {
+                if (msg != null && otherUserProfile != null) {
+                    TUIMessageBean info = ChatMessageBuilder.buildMessage(msg);
+                    if (info != null) {
+                        if (info.getV2TIMMessage().getSender().equals(otherUserProfile.getImId())) {
+                            String text = String.valueOf(info.getExtra());
+                            if (StringUtil.isJSON2(text) && text.contains("type")) {//做自定义通知判断
+                                Map<String, Object> map_data = new Gson().fromJson(text, Map.class);
+                                //礼物消息
+                                if (map_data != null
+                                        && map_data.get("type") != null
+                                        && map_data.get("type").equals("message_gift")
+                                        && map_data.get("is_accost") == null) {
+                                    GiftEntity giftEntity = new Gson().fromJson(String.valueOf(map_data.get("data")), GiftEntity.class);
+                                    //显示礼物弹幕
+                                    showGiftBarrage(giftEntity);
+                                    //礼物收益提示
+                                    giftIncome(giftEntity);
                                 }
                             }
                         }
                     }
-                }catch (Exception e){
-
                 }
+            }catch (Exception e){
 
             }
 
-            @Override
-            public void onRecvC2CReadReceipt(List<V2TIMMessageReceipt> receiptList) {
-                super.onRecvC2CReadReceipt(receiptList);
-            }
+        }
 
-            @Override
-            public void onRecvMessageRevoked(String msgID) {
-                super.onRecvMessageRevoked(msgID);
-            }
+        @Override
+        public void onRecvC2CReadReceipt(List<V2TIMMessageReceipt> receiptList) {
+            super.onRecvC2CReadReceipt(receiptList);
+        }
 
-            @Override
-            public void onRecvMessageModified(V2TIMMessage msg) {
-                super.onRecvMessageModified(msg);
-            }
-        });
-    }
+        @Override
+        public void onRecvMessageRevoked(String msgID) {
+            super.onRecvMessageRevoked(msgID);
+        }
+
+        @Override
+        public void onRecvMessageModified(V2TIMMessage msg) {
+            super.onRecvMessageModified(msg);
+        }
+    };
 
     private void initListener() {
-        setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!isRestart) {
-                    isRestart = true;
-                    Intent intent = new Intent(getContext(), AudioCallChatingActivity.class);
-                    intent.putExtra("fromUserId", mSponsorID);
-                    intent.putExtra("toUserId", mUserIDs[0]);
-                    intent.putExtra("mRole", mRole);
-                    intent.putExtra("roomId", roomId);
-                    //intent.putExtra("timeCount", ++mTimeCount);
-                    intent.putExtra("isRestart", isRestart);
-                    intent.putExtra("audioCallingBarrage", GsonUtils.toJson(audioBarrageList));
-                    if (isBackground(getContext())) {
-                        getContext().startActivity(intent);
-                    } else {
-                        RxBus.getDefault().post(new RestartActivityEntity(intent));
-                    }
+        setOnClickListener(v -> {
+            if (!isRestart) {
+                isRestart = true;
+                Intent intent = new Intent(getContext(), AudioCallChatingActivity.class);
+                intent.putExtra("fromUserId", mSponsorID);
+                intent.putExtra("toUserId", mUserIDs[0]);
+                intent.putExtra("mRole", mRole);
+                intent.putExtra("roomId", roomId);
+                intent.putExtra("timeCount", ++mTimeCount);
+                intent.putExtra("isRestart", isRestart);
+                intent.putExtra("audioCallingBarrage", GsonUtils.toJson(audioBarrageList));
+                if (isBackground(getContext())) {
+                    getContext().startActivity(intent);
+                } else {
+                    RxBus.getDefault().post(new RestartActivityEntity(intent));
                 }
-
             }
         });
     }
@@ -221,11 +224,7 @@ public class AudioFloatCallView extends BaseDLRTCCallView {
         List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
         for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
             if (appProcess.processName.equals(context.getPackageName())) {
-                if (appProcess.importance != ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return appProcess.importance != ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND;
             }
         }
         return false;
@@ -256,6 +255,7 @@ public class AudioFloatCallView extends BaseDLRTCCallView {
             DLRTCFloatWindowService.stopService(getContext());
             finish();
         }
+        V2TIMManager.getMessageManager().removeAdvancedMsgListener(v2TIMAdvancedMsgListener);
     }
 
     @Override

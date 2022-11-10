@@ -97,9 +97,7 @@ object DLRTCSignalingManager {
     }
 
     fun rejectInvite(inviteId: String, data: String, callback: V2TIMCallback?) {
-        MPTimber.tag(TAG_LOG).d(
-            String.format("rejectInvite, inviteId=%s, data=%s", inviteId, data)
-        )
+        MPTimber.tag(TAG_LOG).d(String.format("rejectInvite, inviteId=%s, data=%s", inviteId, data))
         V2TIMManager.getSignalingManager().reject(inviteId, data, object : V2TIMCallback {
             override fun onError(code: Int, desc: String) {
                 callback?.onError(code, desc)

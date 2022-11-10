@@ -237,7 +237,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         mFURenderer = FURenderer.getInstance();
         mFaceUnityDataFactory = new FaceUnityDataFactory(0);
         mFaceUnityView.bindDataFactory(mFaceUnityDataFactory);
-        DLRTCStartManager.Companion.getInstance().createCustomRenderer(this, true, isFuEffect);
+        DLRTCStartManager.Companion.getInstance().createCustomRenderer(isFuEffect);
 
         mContainerView = findViewById(R.id.container);
         mJMView = findViewById(R.id.jm_view);

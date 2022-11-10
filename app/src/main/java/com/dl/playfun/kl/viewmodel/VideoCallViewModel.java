@@ -46,6 +46,7 @@ import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.dl.rtc.calling.base.DLRTCCalling;
+import com.dl.rtc.calling.manager.DLRTCVideoManager;
 import com.google.gson.Gson;
 import com.tencent.custom.GiftEntity;
 import com.tencent.custom.IMGsonUtils;
@@ -179,6 +180,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
             }
             mainVIewShow.set(true);
             mCallVideoView.acceptCall();
+            DLRTCVideoManager.Companion.getInstance().enterRoom(roomId);
             Log.e("接听电话按钮点击", mMyUserId + "=======" + mOtherUserId);
             //getCallingInfo(roomId, ChatUtils.imUserIdToSystemUserId(mMyUserId), ChatUtils.imUserIdToSystemUserId(mOtherUserId));
             if (mRole == DLRTCCalling.Role.CALLED) {
@@ -337,7 +339,6 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
                     public void onSuccess(BaseDataResponse<CallingInviteInfo> callingInviteInfoBaseDataResponse) {
                         CallingInviteInfo callingInviteInfo = callingInviteInfoBaseDataResponse.getData();
                         roomId = callingInviteInfo.getRoomId();
-                        Log.e("当前用户进入房间ID", roomId + "=====================");
                         mfromUserId = fromUserId;
                         mtoUserId = userId;
                         callingInviteInfoField.set(callingInviteInfo);

@@ -238,7 +238,7 @@ public class AppContext extends Application {
         //注入音视频通话默认页面
         DLRTCInterceptorCall.Companion.getInstance().setAudioCallActivity(DialingAudioActivity.class.getCanonicalName());
         DLRTCInterceptorCall.Companion.getInstance().setVideoCallActivity(CallingVideoActivity.class.getCanonicalName());
-        DLRTCInterceptorCall.Companion.getInstance().addDelegate(CoinPusherGameActivity.class);
+        DLRTCInterceptorCall.Companion.getInstance().addDelegateActivity(CoinPusherGameActivity.class);
     }
 
     public void initIM() {

@@ -7,7 +7,6 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
 import android.text.TextUtils
-import android.util.AttributeSet
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
@@ -21,7 +20,6 @@ import com.dl.rtc.calling.base.DLRTCCallingDelegate
 import com.dl.rtc.calling.base.impl.DLRTCInternalListenerManager
 import com.dl.rtc.calling.manager.DLRTCCallingInfoManager
 import com.dl.rtc.calling.manager.DLRTCStartManager
-import com.dl.rtc.calling.model.DLRTCCallingConstants
 import com.dl.rtc.calling.model.bean.DLRTCUserModel
 import com.tencent.qcloud.tuicore.Status
 import com.tencent.qcloud.tuicore.TUIConstants
@@ -30,7 +28,6 @@ import com.tencent.qcloud.tuicore.TUILogin
 import com.tencent.qcloud.tuicore.interfaces.ITUINotification
 import com.tencent.trtc.TRTCCloudDef
 import com.tencent.trtc.TRTCCloudDef.TRTCQuality
-import kotlin.properties.Delegates
 
 /**
  *Author: 彭石林
@@ -52,11 +49,11 @@ abstract class BaseDLRTCCallView constructor(
         mContext = context
     }
 
-    open lateinit var mSelfModel: DLRTCUserModel
-     open lateinit var mRole: DLRTCCalling.Role
+    lateinit var mSelfModel: DLRTCUserModel
+     lateinit var mRole: DLRTCCalling.Role
      var mCallType: DLRTCCalling.Type? = null
-     lateinit var mUserIDs: Array<String>
-    open lateinit var mSponsorID :String
+    lateinit var mUserIDs: Array<String>
+    lateinit var mSponsorID :String
 
      var mGroupID: String? = null
      var mIsFromGroup = false
@@ -66,8 +63,8 @@ abstract class BaseDLRTCCallView constructor(
     private var mOtherPartyLowQualityTime: Long = 0
 
     //通话时长相关
-     var mTimeRunnable: Runnable? = null
-    open  var mTimeCount : Int = 0
+    var mTimeRunnable: Runnable? = null
+    var mTimeCount  = 0
     var mTimeHandler: Handler? = null
     var mTimeHandlerThread: HandlerThread? = null
 
@@ -88,12 +85,7 @@ abstract class BaseDLRTCCallView constructor(
     private var mRemovedUserModel: DLRTCUserModel? = null
 
     //视频相关字段
-    protected var mIsFrontCamera = true
-    protected var mIsCameraOpen = true
-    protected var mIsCalledClick = false // 被叫方点击转换语音
-
     protected var mIsCalling = false // 正在通话中
-
 
 
 
@@ -104,8 +96,8 @@ abstract class BaseDLRTCCallView constructor(
     constructor (context: Context, role: DLRTCCalling.Role, type: DLRTCCalling.Type, userIDs: Array<String>, sponsorID: String, groupID: String?, isFromGroup: Boolean) : this(context){
         mContext = context
         mSelfModel = DLRTCUserModel()
-        mSelfModel!!.userId = TUILogin.getUserId()
-        mSelfModel!!.userName = TUILogin.getLoginUser()
+        mSelfModel.userId = TUILogin.getUserId()
+        mSelfModel.userName = TUILogin.getLoginUser()
         mRole = role
         mCallType = type
         mUserIDs = userIDs
@@ -166,21 +158,8 @@ abstract class BaseDLRTCCallView constructor(
         }
     }
 
-    protected open fun startInviting(type: Int) {
-        if (DLRTCCallingConstants.TYPE_UNKNOWN == type) {
-            MPTimber.tag(TAG_LOG).d("unknown callType")
-            return
-        }
-        val userIds: MutableList<String?> = java.util.ArrayList()
-        for (userInfo in mCallUserInfoList) {
-            userIds.add(userInfo.userId)
-        }
-        if (TextUtils.isEmpty(mGroupID)) {
-            //DLRTCStartManager.getInstance().call(userIds, type)
-        } else {
-            //DLRTCStartManager.getInstance().groupCall(userIds, type, mGroupID)
-        }
-        DLRTCStartManager.getInstance().audioRoute(mIsHandsFree)
+    protected open fun timeCountListener(type: Int) {
+
     }
 
     //判断是否是群聊,群聊有两种情况:
@@ -213,7 +192,7 @@ abstract class BaseDLRTCCallView constructor(
         return mCallType
     }
 
-    protected abstract fun initView()
+     protected abstract fun initView()
 
     //主叫端:展示邀请列表
     protected open fun showInvitingView() {
@@ -419,6 +398,7 @@ abstract class BaseDLRTCCallView constructor(
         }
         mTimeRunnable = Runnable {
             mTimeCount++
+            timeCountListener(mTimeCount)
             Status.mBeginTime = mTimeCount
             if (null != view) {
                 runOnUiThread {

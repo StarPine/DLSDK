@@ -126,7 +126,7 @@ open class DLRTCVideoLayoutManager
      */
     open fun allocCloudVideoView(userId: String?): DLRTCVideoLayout? {
         if (userId == null) return null
-        if (mCount > DLRTCVideoLayoutManager.MAX_USER) {
+        if (mCount > MAX_USER) {
             return null
         }
         val layoutEntity = DLRTCLayoutEntity()
