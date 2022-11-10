@@ -4,15 +4,23 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.databinding.Observable;
+import androidx.databinding.ObservableBoolean;
+import androidx.databinding.ObservableField;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.blankj.utilcode.util.BarUtils;
+import com.blankj.utilcode.util.ConvertUtils;
 import com.blankj.utilcode.util.IntentUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
@@ -30,12 +38,11 @@ import com.dl.playfun.manager.LocationManager;
 import com.dl.playfun.ui.base.BaseRefreshFragment;
 import com.dl.playfun.ui.dialog.CityChooseDialog;
 import com.dl.playfun.ui.home.accost.HomeAccostDialog;
+import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.viewadapter.CustomRefreshHeader;
-import com.dl.playfun.widget.AppBarStateChangeListener;
 import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
-import com.google.android.material.appbar.AppBarLayout;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.List;
@@ -120,6 +127,31 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
         } catch (Exception ignored) {
 
         }
+
+        ViewGroup.LayoutParams staBarSpaLp = (ViewGroup.LayoutParams) binding.staBarSpace.getLayoutParams();
+        staBarSpaLp.height = BarUtils.getStatusBarHeight();
+        binding.staBarSpace.setLayoutParams(staBarSpaLp);
+
+        ViewGroup.LayoutParams lpBar = binding.statusBarView.getLayoutParams();
+        lpBar.height = BarUtils.getStatusBarHeight() + ConvertUtils.dp2px(10);
+        binding.statusBarView.setLayoutParams(lpBar);
+
+        ViewGroup.LayoutParams lpSpacer = binding.spacer.getLayoutParams();
+        int barHg = BarUtils.getStatusBarHeight();
+
+        binding.appBarLayout.addOnOffsetChangedListener((appBarLayout, i) -> {
+
+            i = Math.abs(i);
+
+            double percent = (appBarLayout.getTotalScrollRange() - i) / (double) barHg;
+            if (percent > 1.0) percent = 1.0;
+            lpSpacer.height = (int) (barHg * (1.0 - percent));
+            binding.spacer.setLayoutParams(lpSpacer);
+
+            Log.d("spacer",  String.valueOf(lpSpacer.height));
+            Log.d("spacer",  String.valueOf(barHg));
+            Log.d("spacer",  String.valueOf(i));
+        });
     }
 
 
@@ -184,6 +216,19 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
             public void onChanged(Void unused) {
                 AppContext.instance().logEvent(AppsFlyerEvent.Top_up);
                 toRecharge();
+            }
+        });
+        viewModel.rcvBannerDisplay.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                if (sender instanceof ObservableBoolean) {
+                    if (!((ObservableBoolean) sender).get()) {
+                        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) binding.content.getLayoutParams();
+                        lp.setMargins(0, 0, 0, 0);
+                        binding.content.setLayoutParams(lp);
+                    }
+                }
             }
         });
     }
