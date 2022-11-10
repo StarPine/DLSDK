@@ -63,9 +63,8 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
 
     //默认叠起
     public boolean triangleSwitch = true;
-    public DLRTCCalling.Type callingType = null;
-    public String callingUserIDs = null;
-    public int roomId = 0;
+
+    public GameCallEntity gameCallEntity;
 
     //推币机禁音
     public ObservableBoolean muteEnabled = new ObservableBoolean(false);
@@ -98,8 +97,8 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
     //点击挂断电话
     public BindingCommand<Void> callReject = new BindingCommand<>(() -> {
         Log.e("CoinPusherGameActivity","点击挂断电话======================");
-        if(callingType!=null){
-            if(callingType == DLRTCCalling.Type.AUDIO){
+        if(gameCallEntity != null){
+            if(gameCallEntity.getCallingType() == DLRTCCalling.Type.AUDIO){
                 DLRTCAudioManager.Companion.getInstance().reject();
             }else{
                 DLRTCVideoManager.Companion.getInstance().reject();
@@ -110,13 +109,13 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
     //点击接听电话
     public BindingCommand<Void> callAccept = new BindingCommand<>(() -> {
         Log.e("CoinPusherGameActivity","点击接听电话======================");
-        if(callingType!=null){
-            if(callingType == DLRTCCalling.Type.AUDIO){
+        if(gameCallEntity != null){
+            if(gameCallEntity.getCallingType() == DLRTCCalling.Type.AUDIO){
                 DLRTCAudioManager.Companion.getInstance().accept();
-                DLRTCAudioManager.Companion.getInstance().enterRoom(roomId);
+                DLRTCAudioManager.Companion.getInstance().enterRoom(gameCallEntity.getRoomId());
             }else{
                 DLRTCVideoManager.Companion.getInstance().accept();
-                DLRTCAudioManager.Companion.getInstance().enterRoom(roomId);
+                DLRTCAudioManager.Companion.getInstance().enterRoom(gameCallEntity.getRoomId());
             }
         }
 

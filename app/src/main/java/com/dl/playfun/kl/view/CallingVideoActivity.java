@@ -285,11 +285,11 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                 viewModel.callingInviteInfoField.set(callingInviteInfo);
                 if (callingInviteInfo.getUserProfileInfo().getSex() == 1) {
                     if (!ObjectUtils.isEmpty(callingInviteInfo.getMessages()) && callingInviteInfo.getMessages().size() > 0) {
-                        String valueData = "";
+                        StringBuilder valueData = new StringBuilder();
                         for (String value : callingInviteInfo.getMessages()) {
-                            valueData += value + "\n";
+                            valueData.append(value).append("\n");
                         }
-                        viewModel.callHintBinding.set(valueData);
+                        viewModel.callHintBinding.set(valueData.toString());
                     }
                 }
             }

@@ -127,17 +127,17 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
         } catch (Exception ignored) {
 
         }
-
+        int barHg = BarUtils.getStatusBarHeight();
         ViewGroup.LayoutParams staBarSpaLp = (ViewGroup.LayoutParams) binding.staBarSpace.getLayoutParams();
-        staBarSpaLp.height = BarUtils.getStatusBarHeight();
+        staBarSpaLp.height = barHg;
         binding.staBarSpace.setLayoutParams(staBarSpaLp);
 
         ViewGroup.LayoutParams lpBar = binding.statusBarView.getLayoutParams();
-        lpBar.height = BarUtils.getStatusBarHeight() + ConvertUtils.dp2px(10);
+        lpBar.height = barHg + ConvertUtils.dp2px(10);
         binding.statusBarView.setLayoutParams(lpBar);
 
         ViewGroup.LayoutParams lpSpacer = binding.spacer.getLayoutParams();
-        int barHg = BarUtils.getStatusBarHeight();
+
 
         binding.appBarLayout.addOnOffsetChangedListener((appBarLayout, i) -> {
             if(!viewModel.rcvBannerDisplay.get()){

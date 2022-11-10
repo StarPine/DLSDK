@@ -18,6 +18,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.blankj.utilcode.util.ColorUtils;
+import com.blankj.utilcode.util.GsonUtils;
 import com.dl.lib.util.log.MPTimber;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
@@ -28,6 +29,10 @@ import com.dl.playfun.databinding.ActivityCoinpusherGameBinding;
 import com.dl.playfun.entity.CoinPusherBalanceDataEntity;
 import com.dl.playfun.entity.CoinPusherDataInfoEntity;
 import com.dl.playfun.entity.GoodsEntity;
+import com.dl.playfun.entity.RestartActivityEntity;
+import com.dl.playfun.kl.view.AudioCallChatingActivity;
+import com.dl.playfun.kl.view.CallingVideoActivity;
+import com.dl.playfun.kl.view.VideoPresetActivity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseActivity;
 import com.dl.playfun.ui.coinpusher.dialog.CoinPusherConvertDialog;
@@ -48,6 +53,7 @@ import com.dl.rtc.calling.ui.videolayout.VideoLayoutFactory;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.misterp.toast.SnackUtils;
 import com.tencent.imsdk.v2.V2TIMSignalingListener;
+import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.custom.CustomConstants;
 import com.tencent.rtmp.ui.TXCloudVideoView;
 import com.wangsu.libwswebrtc.WsWebRTCObserver;
@@ -59,6 +65,7 @@ import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.utils.StringUtils;
 
 /**
@@ -509,6 +516,10 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
     private void interceptBackPressed(){
         if(viewModel!=null){
             if(viewModel.gamePlayingState==null){ //状态为空
+
+                if(viewModel.gameCallEntity != null){
+
+                }
                 super.onBackPressed();
             }else{
                 Integer stringResId = null;
@@ -533,6 +544,33 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
             }
         }else{
             super.onBackPressed();
+        }
+    }
+    /**
+    * @Desc TODO(通话中返回页面处理)
+    * @author 彭石林
+    * @parame []
+    * @Date 2022/11/10
+    */
+    private void callingInterceptApply() {
+        if (viewModel.gameCallEntity.getCallingType() == DLRTCCalling.Type.AUDIO) {
+            Intent intent = new Intent(getContext(), AudioCallChatingActivity.class);
+            intent.putExtra("fromUserId", viewModel.gameCallEntity.getFromUserId());
+            intent.putExtra("toUserId", viewModel.gameCallEntity.getToUserId());
+            intent.putExtra("mRole", viewModel.gameCallEntity.getCallingRole());
+            intent.putExtra("roomId", viewModel.gameCallEntity.getRoomId());
+            intent.putExtra("timeCount", 20);
+            intent.putExtra("isRestart", true);
+            getContext().startActivity(intent);
+        } else {
+            Intent intent = new Intent(getContext(), CallingVideoActivity.class);
+            intent.putExtra("fromUserId", viewModel.gameCallEntity.getFromUserId());
+            intent.putExtra("toUserId", viewModel.gameCallEntity.getToUserId());
+            intent.putExtra("mRole", viewModel.gameCallEntity.getCallingRole());
+            intent.putExtra("roomId", viewModel.gameCallEntity.getRoomId());
+            intent.putExtra("timeCount", 20);
+            intent.putExtra("isRestart", true);
+            getContext().startActivity(intent);
         }
     }
 
@@ -599,9 +637,12 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
         public void receiveCall(@Nullable String userIDs, @NonNull DLRTCCalling.Type type, int roomId, @Nullable String data, boolean isFromGroup, @NonNull String sponsorID) {
             MPTimber.tag(TAG).d("音视频接听拦截：receiveCall ");
             MPTimber.tag(TAG).d("音视频接听拦截： roomId = "+roomId+" sponsorID = "+sponsorID+" data = "+data +" userIDs = "+userIDs);
-            viewModel.callingType = type;
-            viewModel.callingUserIDs = userIDs;
-            viewModel.roomId = roomId;
+            GameCallEntity gameCallEntity = new GameCallEntity();
+            gameCallEntity.setRoomId(roomId);
+            gameCallEntity.setCallingRole(DLRTCCalling.Role.CALLED);
+            gameCallEntity.setCallingType(type);
+            gameCallEntity.setFromUserId(userIDs);
+            viewModel.gameCallEntity = gameCallEntity;
             binding.rlReceiveCall.setVisibility(View.VISIBLE);
         }
     }
@@ -612,20 +653,25 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
     * @Date 2022/11/9
     */
     private final V2TIMSignalingListener mTIMSignallingListener = new V2TIMSignalingListener() {
-
+        /**
+        * @Desc TODO(接听信令回调)
+        * @author 彭石林
+        * @parame [inviteID, invitee, data]
+        * @Date 2022/11/10
+        */
         @Override
         public void onInviteeAccepted(String inviteID, String invitee, String data) {
             MPTimber.tag(TAG).d("onInviteeAccepted ");
             MPTimber.tag(TAG).d("onInviteeAccepted inviteID："+inviteID + ",invitee："+invitee +"，data："+data);
             binding.rlReceiveCall.setVisibility(View.GONE);
-            if(viewModel.callingType!=null){
+            if(viewModel.gameCallEntity!=null && viewModel.gameCallEntity.getCallingType()!=null){
                 //视频通话
-                if(viewModel.callingType == DLRTCCalling.Type.VIDEO){
+                if(viewModel.gameCallEntity.getCallingType() == DLRTCCalling.Type.VIDEO){
                     binding.rlVideoCallLayout.setVisibility(View.VISIBLE);
                     VideoLayoutFactory mVideoFactory = new VideoLayoutFactory(getContext());
                     //2.再打开摄像头
                     binding.rtcLayoutManager.initVideoFactory(mVideoFactory);
-                    DLRTCVideoLayout videoLayout = binding.rtcLayoutManager.allocCloudVideoView("user_1331");
+                    DLRTCVideoLayout videoLayout = binding.rtcLayoutManager.allocCloudVideoView(TUILogin.getUserId());
                     if(videoLayout != null){
                         TXCloudVideoView txCloudVideoView = videoLayout.getVideoView();
                         ViewGroup.LayoutParams viewLayoutParams = (ViewGroup.LayoutParams)txCloudVideoView.getLayoutParams();
@@ -633,10 +679,10 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
                         DLRTCVideoManager.getInstance().openCamera(true, txCloudVideoView);
                     }
                     //有用户的视频开启了
-                    DLRTCVideoLayout layout = binding.rtcLayoutManager.allocCloudVideoView(viewModel.callingUserIDs);
-                    MPTimber.tag(TAG).d("onInviteeAccepted 读取用户："+viewModel.callingUserIDs+" 的布局页面"+layout);
+                    DLRTCVideoLayout layout = binding.rtcLayoutManager.allocCloudVideoView(viewModel.gameCallEntity.getFromUserId());
+                    MPTimber.tag(TAG).d("onInviteeAccepted 读取用户："+TUILogin.getUserId()+" 的布局页面"+layout);
                     if (layout != null) {
-                        DLRTCVideoManager.getInstance().startRemoteView(viewModel.callingUserIDs, layout.getVideoView());
+                        DLRTCVideoManager.getInstance().startRemoteView(TUILogin.getUserId(), layout.getVideoView());
                     }
                 }else{//语音通话
 
