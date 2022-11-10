@@ -94,8 +94,7 @@
                 android:orientation="vertical"
                 android:background="@color/white"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="@{viewModel.rcvBannerDisplay? View.GONE: View.VISIBLE}">
+                android:layout_height="wrap_content">
 
                 <View
                     android:id="@+id/staBarSpace"
@@ -109,6 +108,7 @@
                     android:layout_width="106dp"
                     android:layout_height="29dp"
                     android:layout_gravity="center"
+                    android:visibility="@{viewModel.rcvBannerDisplay? View.GONE: View.VISIBLE}"
                     android:src="@drawable/ic_playfun_logo" />
             </LinearLayout>
 

@@ -140,7 +140,9 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
         int barHg = BarUtils.getStatusBarHeight();
 
         binding.appBarLayout.addOnOffsetChangedListener((appBarLayout, i) -> {
-
+            if(!viewModel.rcvBannerDisplay.get()){
+                return;
+            }
             i = Math.abs(i);
 
             double percent = (appBarLayout.getTotalScrollRange() - i) / (double) barHg;
