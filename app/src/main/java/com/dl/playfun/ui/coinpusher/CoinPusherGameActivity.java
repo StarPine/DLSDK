@@ -516,9 +516,8 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
     private void interceptBackPressed(){
         if(viewModel!=null){
             if(viewModel.gamePlayingState==null){ //状态为空
-
                 if(viewModel.gameCallEntity != null){
-
+                    callingInterceptApply();
                 }
                 super.onBackPressed();
             }else{
