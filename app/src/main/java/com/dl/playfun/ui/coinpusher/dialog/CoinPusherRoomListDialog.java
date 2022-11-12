@@ -35,6 +35,7 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseDialog;
 import com.dl.playfun.ui.coinpusher.dialog.adapter.CoinPusherRoomListAdapter;
 import com.dl.playfun.ui.coinpusher.dialog.adapter.CoinPusherRoomTagAdapter;
+import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.viewadapter.CustomRefreshHeader;
 import com.tencent.qcloud.tuicore.Status;
 
@@ -77,6 +78,7 @@ public class CoinPusherRoomListDialog extends BaseDialog {
     public CoinPusherRoomListDialog(Context context) {
         super(context);
         this.mContext = context;
+        AutoSizeUtils.applyAdapt(getContext().getResources());
         initView();
         loadData();
     }

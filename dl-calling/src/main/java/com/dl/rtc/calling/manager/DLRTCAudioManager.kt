@@ -53,16 +53,11 @@ class DLRTCAudioManager : DLRTCCallingItFace {
             enterRoom(rtcParams, TRTCCloudDef.TRTC_APP_SCENE_AUDIOCALL)
         }
     }
-
-    override fun hangup() {
-        DLRTCStartManager.getInstance().hangup()
-    }
-
     /**
      * 挂断电话
      */
-    override fun reject() {
-        DLRTCStartManager.getInstance().reject()
+    override fun hangup() {
+        DLRTCStartManager.getInstance().hangup()
     }
 
     /**

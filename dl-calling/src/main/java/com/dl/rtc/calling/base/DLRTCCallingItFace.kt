@@ -4,11 +4,11 @@ package com.dl.rtc.calling.base
  * 定义接口层统一约束规范
  */
 interface DLRTCCallingItFace {
-    fun hangup()
     /**
      * 挂断
      */
-    fun reject()
+    fun hangup()
+
     /**
      * 接听
      */

@@ -1170,10 +1170,7 @@ class DLRTCStartManager {
             }
             //拒绝切换为语音电话
             DLRTCCallModel.VIDEO_CALL_ACTION_REJECT_SWITCH_TO_AUDIO -> {
-                addFilterKey(
-                    gsonBuilder,
-                    DLRTCCallModel.SIGNALING_EXTRA_KEY_CALL_END
-                )
+                addFilterKey(gsonBuilder, DLRTCCallModel.SIGNALING_EXTRA_KEY_CALL_END)
                 val rejectSwitchAudioCallData = DLRTCSignallingData.DataInfo()
                 rejectSwitchAudioCallData.cmd = (DLRTCCallModel.VALUE_CMD_SWITCH_TO_AUDIO)
                 signallingData.switchToAudioCall = (DLRTCCallModel.VALUE_CMD_SWITCH_TO_AUDIO)
@@ -1247,14 +1244,14 @@ class DLRTCStartManager {
         if (txCloudVideoView == null) {
             return
         }
-        mTRTCCloud!!.startRemoteView(userId,1, txCloudVideoView)
+        mTRTCCloud!!.startRemoteView(userId,0, txCloudVideoView)
     }
 
     /**
      * 停止渲染视频
      */
     fun stopRemoteView(userId: String?) {
-        mTRTCCloud!!.stopRemoteView(userId)
+        mTRTCCloud!!.stopRemoteView(userId,0)
     }
 
     /**
@@ -1288,13 +1285,10 @@ class DLRTCStartManager {
                         mFURenderer!!.prepareRenderer(null)
                     }
 
-                    override fun onProcessVideoFrame(
-                        src: TRTCVideoFrame,
-                        dest: TRTCVideoFrame
-                    ): Int {
-                        mFURenderer!!.cameraFacing =
-                            if (mIsUseFrontCamera) CameraFacingEnum.CAMERA_FRONT else CameraFacingEnum.CAMERA_BACK
+                    override fun onProcessVideoFrame(src: TRTCVideoFrame, dest: TRTCVideoFrame): Int {
+                        mFURenderer!!.cameraFacing = if (mIsUseFrontCamera) CameraFacingEnum.CAMERA_FRONT else CameraFacingEnum.CAMERA_BACK
                         val start = System.nanoTime()
+                        MPTimber.tag(TAGLOG).e("当前IM采集 视频宽高： width： ${src.width}  height： ${src.height}  采集耗时： $start")
                         dest.texture.textureId = mFURenderer!!.onDrawFrameSingleInput(
                             src.texture.textureId,
                             src.width,
@@ -1306,6 +1300,7 @@ class DLRTCStartManager {
                     override fun onGLContextDestory() {
                         mFURenderer!!.release()
                     }
+
                 })
         }
         mTRTCCloud!!.startLocalPreview(isFrontCamera, txCloudVideoView)
@@ -1483,14 +1478,11 @@ class DLRTCStartManager {
                 mIsInRoom = true
                 //如果自己是被叫,接收到通话请求后进房,进房成功后发送accept信令给主叫端;如果自己是主叫,不处理
                 if (mIsBeingCalled) {
-                    sendModel(
-                        mCurSponsorForMe,
-                        DLRTCCallModel.VIDEO_CALL_ACTION_ACCEPT
-                    )
+                    sendModel(mCurSponsorForMe, DLRTCCallModel.VIDEO_CALL_ACTION_ACCEPT)
                 }
             }
         }
-
+        //后台执行解散房间
         override fun onExitRoom(reason: Int) {
             MPTimber.tag(TAGLOG).d( "onExitRoom reason:$reason")
             //1 后台执行踢出房间。 2 后台解散房间
@@ -1573,7 +1565,7 @@ class DLRTCStartManager {
         }
     }
 
-    fun reject() {
+    private fun reject() {
         playHangupMusic()
         sendModel(mCurSponsorForMe, DLRTCCallModel.VIDEO_CALL_ACTION_REJECT)
         stopCall()

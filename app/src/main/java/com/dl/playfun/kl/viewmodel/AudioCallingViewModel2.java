@@ -150,11 +150,12 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
     // 正常拨打等待接听中的挂断， 不涉及界面
     public void endTRTCCalling() {
         Utils.runOnUiThread(() -> {
-            if (DLRTCCalling.Role.CALL == mRole) {
-                DLRTCAudioManager.Companion.getInstance().hangup();
-            } else {
-                DLRTCAudioManager.Companion.getInstance().reject();
-            }
+            DLRTCAudioManager.Companion.getInstance().hangup();
+//            if (DLRTCCalling.Role.CALL == mRole) {
+//                DLRTCAudioManager.Companion.getInstance().hangup();
+//            } else {
+//                DLRTCAudioManager.Companion.getInstance().reject();
+//            }
         });
     }
 

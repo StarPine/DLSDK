@@ -131,7 +131,7 @@ public class JMTUICallVideoView extends BaseDLRTCCallView {
                     }
                     TraceDialog.getInstance(getContext())
                             .setCannelOnclick(dialog -> {
-                                DLRTCVideoManager.getInstance().reject();
+                                DLRTCVideoManager.getInstance().hangup();
                                 ToastUtils.showShort(R.string.trtccalling_tips_start_camera_audio);
                                 finish();
                             })
@@ -146,7 +146,7 @@ public class JMTUICallVideoView extends BaseDLRTCCallView {
 
                                         @Override
                                         public void onDenied(List<String> permissionsDeniedForever, List<String> permissionsDenied) {
-                                            DLRTCVideoManager.getInstance().reject();
+                                            DLRTCVideoManager.getInstance().hangup();
                                             ToastUtils.showShort(R.string.trtccalling_tips_start_camera_audio);
                                             finish();
                                         }
@@ -649,7 +649,7 @@ public class JMTUICallVideoView extends BaseDLRTCCallView {
     // 挂断电话， 绑定给close按钮的，任何时候可以调用
     public void hangup() {
         if (mRole == DLRTCCalling.Role.CALLED && !isChatting) {
-            DLRTCVideoManager.getInstance().reject();
+            DLRTCVideoManager.getInstance().hangup();
         } else {
             DLRTCVideoManager.getInstance().hangup();
         }

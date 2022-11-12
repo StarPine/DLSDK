@@ -327,10 +327,7 @@ open class DLRTCVideoLayoutManager
     private fun makeFloatLayout() {
         // 初始化堆叠布局的参数
         if (mFloatParamList.isNullOrEmpty()) {
-            mFloatParamList =
-                VideoLayoutUtils.initFloatParamList(
-                    context, width, height
-                )
+            mFloatParamList = VideoLayoutUtils.initFloatParamList(context, width, height)
         }
 
         // 根据堆叠布局参数，将每个view放到适当的位置，后加入的放在最大位
@@ -338,7 +335,7 @@ open class DLRTCVideoLayoutManager
         for (i in 0 until size) {
             val entity = mVideoFactory!!.mLayoutEntityList!![size - i - 1]
             val layoutParams = mFloatParamList!!.get(i)
-            entity.layout!!.setLayoutParams(layoutParams)
+            entity.layout!!.layoutParams = layoutParams
             entity.layout!!.setMoveAble(i != 0)
             addFloatViewClickListener(entity)
             bringChildToFront(entity.layout)
@@ -384,7 +381,7 @@ open class DLRTCVideoLayoutManager
      * 切换双方视图层级和位置
      */
     open fun switchVideoView() {
-        Collections.reverse(mVideoFactory!!.mLayoutEntityList)
+        mVideoFactory!!.mLayoutEntityList?.reverse()
         makeFloatLayout()
     }
 }

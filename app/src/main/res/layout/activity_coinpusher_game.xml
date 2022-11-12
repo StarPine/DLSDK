@@ -143,34 +143,27 @@
                 </FrameLayout>
             </RelativeLayout>
         </RelativeLayout>
-        <RelativeLayout
+        <!-- 视频通话中悬浮窗口 -->
+        <FrameLayout
             android:id="@+id/rl_video_call_layout"
+            android:layout_width="115dp"
+            android:layout_height="154dp"
             android:layout_alignParentEnd="true"
             android:layout_below="@+id/rl_layout_coin"
             android:layout_marginEnd="14dp"
             android:layout_marginTop="18dp"
-            android:layout_width="115dp"
-            android:layout_height="154dp"
             android:visibility="gone"
             tools:visibility="visible"
             >
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/img_video_zoom"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="5dp"
-                android:layout_marginTop="5dp"
-                android:layout_width="23dp"
-                android:layout_height="23dp"
-                android:src="@drawable/img_video_zoom_min"
-                />
-            <com.dl.rtc.calling.ui.videolayout.DLRTCVideoLayoutManager
-                android:id="@+id/rtc_layout_manager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                />
-        </RelativeLayout>
+            <include
+                android:id="@+id/game_calling_video_layout"
+                layout="@layout/view_game_calling_video_layout"
+                app:viewModel="@{gameViewModel}" />
+        </FrameLayout>
+
         <!--语音通话下拉折叠-->
         <RelativeLayout
+            android:id="@+id/rl_calling_user_layout"
             android:visibility="gone"
             android:layout_alignParentEnd="true"
             android:layout_below="@+id/rl_layout_coin"
@@ -179,189 +172,30 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             >
-            <FrameLayout
-                android:elevation="2dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                binding:drawable_cornersRadius="@{50}"
-                binding:drawable_color="@{@color/yellow_e4a}"
-                binding:onClickCommand="@{gameViewModel.triangleClick}"
-                >
-                <com.dl.playfun.widget.image.CircleImageView
-                    android:layout_margin="2dp"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/default_avatar"
-                    app:riv_corner_radius="8dp"
-                    binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
-                    binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
-                    binding:resizeW="@{40}"
-                    binding:resizeH="@{40}"
-                    tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
-            </FrameLayout>
-            <FrameLayout
-                android:id="@+id/fl_triangle_on"
-                android:visibility="visible"
-                android:layout_marginTop="23dp"
-                android:layout_width="46dp"
-                android:layout_height="46dp"
-                binding:drawable_alpha="@{70}"
-                binding:drawable_color="@{@color/black}"
-                binding:drawable_radius_leftBottom="@{22}"
-                binding:drawable_radius_rightBottom="@{22}"
-                >
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_gravity="bottom|center"
-                    android:layout_marginBottom="5dp"
-                    android:layout_width="13dp"
-                    android:layout_height="8dp"
-                    android:src="@drawable/img_coinpusher_triangle"
-                    />
-            </FrameLayout>
-            <LinearLayout
-                android:id="@+id/fl_triangle_off"
-                android:visibility="gone"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:layout_marginTop="23dp"
-                android:layout_width="46dp"
-                android:layout_height="wrap_content"
-                binding:drawable_alpha="@{70}"
-                binding:drawable_color="@{@color/black}"
-                binding:drawable_radius_leftBottom="@{22}"
-                binding:drawable_radius_rightBottom="@{22}"
-                >
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_marginTop="27dp"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:src="@drawable/img_hangup_red_2"
-                    binding:onClickCommand="@{gameViewModel.callReject}"
-                    />
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_marginTop="10dp"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:src="@drawable/img_mike_white_on"
-                    />
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_marginTop="10dp"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:src="@drawable/img_trumpet_white_on"
-                    />
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_marginTop="5dp"
-                    android:layout_gravity="bottom|center"
-                    android:layout_marginBottom="5dp"
-                    android:layout_width="13dp"
-                    android:layout_height="8dp"
-                    android:src="@drawable/img_coinpusher_triangle"
-                    android:rotationX="180"
-                    />
-            </LinearLayout>
+            <include
+                android:id="@+id/game_calling_user_layout"
+                layout="@layout/view_game_calling_user_layout"
+                app:viewModel="@{gameViewModel}" />
         </RelativeLayout>
         <RelativeLayout
             android:id="@+id/rl_receive_call"
-            android:layout_above="@+id/fl_play_coin"
+            android:clickable="true"
             android:layout_width="match_parent"
             android:layout_height="120dp"
-            android:layout_marginStart="45dp"
-            android:layout_marginEnd="45dp"
-            android:layout_marginBottom="35dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="14dp"
             android:visibility="gone"
-            binding:drawable_alpha="@{40}"
+            binding:drawable_alpha="@{180}"
             binding:drawable_cornersRadius="@{8}"
             binding:drawable_color="@{@color/black}"
             binding:drawable_stroke_color="@{@color/dlrtccalling_color_line}"
             binding:drawable_stroke_width="@{1}"
             >
-            <LinearLayout
-                android:id="@+id/ll_user_layout"
-                android:orientation="vertical"
-                android:layout_marginStart="14dp"
-                android:layout_marginTop="20dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:ignore="UselessParent">
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    binding:drawable_cornersRadius="@{50}"
-                    binding:drawable_color="@{@color/yellow_e4a}"
-                    >
-                    <com.dl.playfun.widget.image.CircleImageView
-                        android:layout_margin="2dp"
-                        android:id="@+id/img_avatar"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/default_avatar"
-                        app:riv_corner_radius="8dp"
-                        binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
-                        binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
-                        binding:resizeW="@{60}"
-                        binding:resizeH="@{60}"
-                        tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
-                </FrameLayout>
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:includeFontPadding="false"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="9dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:textSize="12dp"
-                    android:textStyle="bold"
-                    />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_marginStart="18dp"
-                android:layout_marginTop="13dp"
-                android:layout_toEndOf="@+id/ll_user_layout"
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:includeFontPadding="false"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/playfun_game_video_hint"
-                    android:textColor="@color/white"
-                    android:textSize="13dp"
-                    tools:ignore="UnusedAttribute" />
-                <LinearLayout
-                    android:layout_marginTop="14dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_gravity="center"
-                    android:orientation="horizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    >
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="46dp"
-                        android:layout_height="46dp"
-                        android:src="@drawable/img_call_reject_red"
-                        binding:onClickCommand="@{gameViewModel.callReject}"
-                        />
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_marginStart="29dp"
-                        android:layout_width="46dp"
-                        android:layout_height="46dp"
-                        android:src="@drawable/call_accept"
-                        binding:onClickCommand="@{gameViewModel.callAccept}"
-                        />
-                </LinearLayout>
-                <TextView
-                    android:layout_gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="消耗123鑽石/分鐘"
-                    android:textColor="#FFD84A"
-                    android:textSize="11dp"
-                    />
-            </LinearLayout>
+            <include
+                android:id="@+id/game_calling_layout"
+                layout="@layout/view_game_calling_layout"
+                app:viewModel="@{gameViewModel}" />
         </RelativeLayout>
 
         <FrameLayout

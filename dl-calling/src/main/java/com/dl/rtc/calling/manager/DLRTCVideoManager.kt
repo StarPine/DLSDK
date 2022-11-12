@@ -85,13 +85,6 @@ class DLRTCVideoManager : DLRTCCallingItFace {
     }
 
     /**
-     * 挂断电话
-     */
-    override fun reject() {
-        DLRTCStartManager.getInstance().reject()
-    }
-
-    /**
      * 接听电话
      */
     override fun accept() {

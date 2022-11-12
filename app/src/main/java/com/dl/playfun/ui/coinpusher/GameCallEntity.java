@@ -16,6 +16,8 @@ public class GameCallEntity {
     private DLRTCCalling.Type callingType;
     private DLRTCCalling.Role callingRole;
 
+    private boolean isCalling;
+
     public String getUserId() {
         return userId;
     }
@@ -70,5 +72,13 @@ public class GameCallEntity {
 
     public void setCallingRole(DLRTCCalling.Role callingRole) {
         this.callingRole = callingRole;
+    }
+
+    public boolean isCalling() {
+        return isCalling;
+    }
+
+    public void setCalling(boolean calling) {
+        isCalling = calling;
     }
 }

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:binding="http://schemas.android.com/apk/res-auto"
+    tools:ignore="MissingDefaultResource">
+
+    <data>
+        <import type="com.dl.playfun.R" />
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="com.dl.playfun.ui.coinpusher.CoinPusherGameViewModel" />
+    </data>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_width="230dp"
+        tools:layout_height="307dp"
+        >
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/img_video_zoom"
+            android:elevation="99dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
+            android:src="@{viewModel.callZoomOuViewFlag ? @drawable/img_video_zoom_max : @drawable/img_video_zoom_min}"
+            binding:onClickCommand="@{viewModel.callZoomOuViewCLick}"
+            tools:src="@drawable/img_video_zoom_min"
+            />
+        <com.dl.rtc.calling.ui.videolayout.DLRTCVideoLayoutManager
+            android:id="@+id/rtc_layout_manager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+        <LinearLayout
+            android:visibility="@{viewModel.callZoomOuViewFlag ? View.VISIBLE : View.INVISIBLE}"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="17dp"
+            android:layout_marginEnd="17dp"
+            android:layout_marginBottom="14dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="46dp">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:src="@drawable/call_audio_speaker_backdrop_2"
+                binding:onClickCommand="@{viewModel.handsFreeOnClickCommand}"
+                binding:stateActivated="@{viewModel.handsFreeField}"
+                />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_marginStart="29dp"
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:src="@drawable/call_audiocall_backdrop_2"
+                binding:onClickCommand="@{viewModel.micMuteOnClickCommand}"
+                binding:stateActivated="@{viewModel.micMuteField}"
+                />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_marginStart="29dp"
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:src="@drawable/img_hangup_red_3"
+                binding:onClickCommand="@{viewModel.callRejectClick}"
+                />
+        </LinearLayout>
+    </RelativeLayout>
+</layout>
