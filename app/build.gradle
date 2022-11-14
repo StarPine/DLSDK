@@ -271,6 +271,7 @@ android {
                 //删除多余的特效资源
                 variant.mergeAssetsProvider.configure {
                     doLast {
+                        //ai_face_processor.bunlde + face_beautification.bundle
                         delete(fileTree(dir: outputDir, includes: ['model/ai_human_processor.bundle',
                                                                    'model/ai_face_processor.bundle',
                                                                    'model/ai_human_processor_gpu.bundle',
@@ -284,8 +285,7 @@ android {
                                                                    'graphics/controller_cpp.bundle',
                                                                    'graphics/face_makeup.bundle',
                                                                    'graphics/body_slim.bundle',
-                                                                   'graphics/tongue.bundle',
-                                                                   'model/ai_face_processor_lite.bundle'
+                                                                   'graphics/tongue.bundle'
                         ]))
                     }
                 }

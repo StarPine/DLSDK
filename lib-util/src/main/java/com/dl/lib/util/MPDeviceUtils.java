@@ -44,7 +44,7 @@ public class MPDeviceUtils {
     //获取手机的型号 设备名称。如：SM-N9100（三星Note4）
     public static String MODEL;
     //获取设备制造商。如：samsung
-    static String MANUFACTURER;
+    public static String MANUFACTURER;
     //产品的名称
     static String PRODUCT;
     //无线电固件版本号，通常是不可用的 显示
@@ -192,6 +192,16 @@ public class MPDeviceUtils {
             e.printStackTrace();
         }
         return deviceCpuInfo;
+    }
+    /**
+    * @Desc TODO(设备唯一标识符)
+    * @author 彭石林
+    * @parame []
+    * @return java.lang.String
+    * @Date 2022/11/14
+    */
+    public static String getDevId(){
+        return MPDeviceUtils.MANUFACTURER + MPDeviceUtils.MODEL + MPDeviceUtils.BOARD + MPDeviceUtils.DEVICE + MPDeviceUtils.PRODUCT + GOOGLE_ID;
     }
 
     /* renamed from: a */

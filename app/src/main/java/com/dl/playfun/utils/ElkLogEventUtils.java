@@ -109,9 +109,14 @@ public class ElkLogEventUtils {
                 .append("`nt="+ NetworkUtil.getAPNType(Utils.getApp()))
                 //当前移动端所属的ip地址
                 .append("`ip="+NetworkUtil.getIPAddress(Utils.getApp()))
-                .append("`isNoNoEmulator="+isEmulator()) ;
+                .append("`isNoNoEmulator="+isEmulator())
+                //设备唯一标识
+                .append("`dev_id="+MPDeviceUtils.getDevId());
         return stringBuilder.toString();
     }
+
+
+
     public static boolean isEmulator() {
         if (EmulatorDetector.isEmulatorAbsolute()) {
             return true;
