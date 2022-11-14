@@ -1,0 +1,4 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/img_callback_audio" android:state_activated="true" android:state_enabled="true" />
+    <item android:drawable="@drawable/img_callback_video" android:state_activated="false" android:state_enabled="true" />
+</selector>

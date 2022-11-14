@@ -704,6 +704,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
                 viewModel.gameCallEntity.setCalling(true);
                 //视频通话
                 if(viewModel.gameCallEntity.getCallingType() == DLRTCCalling.Type.VIDEO){
+                    binding.rlCallingUserLayout.setVisibility(View.GONE);
                     binding.rlVideoCallLayout.setVisibility(View.VISIBLE);
                     //1.先打开渲染器
                     DLRTCStartManager.Companion.getInstance().createCustomRenderer(true);
@@ -729,7 +730,11 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
                     }
 
                 }else{//语音通话
+                    binding.rlVideoCallLayout.setVisibility(View.GONE);
                     binding.rlCallingUserLayout.setVisibility(View.VISIBLE);
+                    binding.rlCallingUserLayout.findViewById(R.id.fl_triangle_off).setVisibility(View.VISIBLE);
+                    binding.rlCallingUserLayout.findViewById(R.id.fl_triangle_on).setVisibility(View.GONE);
+                    binding.rlCallingUserLayout.findViewById(R.id.img_call_audio_or_video).setVisibility(View.GONE);
                 }
             }
         }
@@ -781,11 +786,14 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
                 if(viewModel.gameCallEntity!=null && viewModel.gameCallEntity.getCallingType()!=null){
                     //视频通话
                     if(viewModel.gameCallEntity.getCallingType() == DLRTCCalling.Type.VIDEO){
-                        binding.rlVideoCallLayout.setVisibility(View.GONE);
                         //显示用户头像可进行回拨
+                        binding.rlCallingUserLayout.findViewById(R.id.img_call_audio_or_video).setActivated(false);
                     }else{
                         //显示用户头像可进行回拨
+                        binding.rlCallingUserLayout.findViewById(R.id.img_call_audio_or_video).setActivated(true);
                     }
+                    binding.rlVideoCallLayout.setVisibility(View.GONE);
+                    binding.rlCallingUserLayout.findViewById(R.id.img_call_audio_or_video).setVisibility(View.VISIBLE);
                     binding.rlCallingUserLayout.setVisibility(View.VISIBLE);
                     binding.rlCallingUserLayout.findViewById(R.id.fl_triangle_off).setVisibility(View.GONE);
                     binding.rlCallingUserLayout.findViewById(R.id.fl_triangle_on).setVisibility(View.GONE);
