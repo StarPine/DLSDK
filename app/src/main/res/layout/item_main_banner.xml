@@ -12,17 +12,17 @@
     <FrameLayout
         binding:onClickCommand="@{viewModel.clickBanner}"
         android:layout_marginStart="15dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="85dp"
+        android:layout_height="110dp">
             <androidx.appcompat.widget.AppCompatImageView
-                binding:resizeH="@{85}"
-                binding:resizeW="@{110}"
                 android:scaleType="fitXY"
                 android:layout_width="85dp"
                 android:layout_height="110dp"
                 binding:imageErrorPlaceholderRes="@{R.drawable.img_pc_default_load}"
                 binding:imagePlaceholderRes="@{R.drawable.img_pc_default_load}"
                 binding:imagePath="@{viewModel.itemEntity.img}"
+                binding:resizeH="@{85}"
+                binding:resizeW="@{110}"
                 />
     </FrameLayout>
 </layout>

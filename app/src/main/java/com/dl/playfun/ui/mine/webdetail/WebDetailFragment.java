@@ -106,11 +106,6 @@ public class WebDetailFragment extends BaseToolbarFragment<FragmentWebDetailBind
                 return super.shouldInterceptRequest(view, request);
             }
         });
-    }
-
-    @Override
-    public void onEnterAnimationEnd(Bundle savedInstanceState) {
-        super.onEnterAnimationEnd(savedInstanceState);
         if (url != null) {
             binding.webView.loadUrl(url);
         }

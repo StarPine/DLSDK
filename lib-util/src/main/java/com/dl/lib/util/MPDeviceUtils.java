@@ -201,7 +201,7 @@ public class MPDeviceUtils {
     * @Date 2022/11/14
     */
     public static String getDevId(){
-        return MPDeviceUtils.MANUFACTURER + MPDeviceUtils.MODEL + MPDeviceUtils.BOARD + MPDeviceUtils.DEVICE + MPDeviceUtils.PRODUCT + GOOGLE_ID;
+        return BRAND+"_"+MPDeviceUtils.MANUFACTURER+"_"+MPDeviceUtils.MODEL+"_"+MPDeviceUtils.BOARD+"_"+MPDeviceUtils.DEVICE+"_"+MPDeviceUtils.PRODUCT+"_"+GOOGLE_ID;
     }
 
     /* renamed from: a */

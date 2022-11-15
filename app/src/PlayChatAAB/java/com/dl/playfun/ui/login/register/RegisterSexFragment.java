@@ -24,6 +24,7 @@ import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.ElkLogEventReport;
 import com.dl.playfun.databinding.FragmentRegisterSexBinding;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.ui.mine.profile.PerfectProfileViewModel;
 import com.dl.playfun.utils.AutoSizeUtils;
@@ -78,6 +79,7 @@ public class RegisterSexFragment extends BaseFragment<FragmentRegisterSexBinding
         super.initData();
         viewModel.UserName.set(name);
         viewModel.setInvitationCode();
+        ElkLogEventReport.reportLoginModule.reportClickRegister(ElkLogEventReport._expose,"enterRegister2", ConfigManager.getInstance().getLoginSource());
     }
 
     @Override
@@ -117,7 +119,7 @@ public class RegisterSexFragment extends BaseFragment<FragmentRegisterSexBinding
             String months = month < 10 ? "0" + month : String.valueOf(month);
             String days = day < 10 ? "0" + day : String.valueOf(day);
             viewModel.UserBirthday.set((calendar.get(Calendar.YEAR) - currentAge) + "-" + months + "-" + days);
-            ElkLogEventReport.reportLoginModule.reportClickRegister(ElkLogEventReport._click,"genderAgeNext",viewModel.UserSex.get(),currentAge);
+            ElkLogEventReport.reportLoginModule.reportClickRegister(ElkLogEventReport._click,"genderAgeNext",viewModel.UserSex.get(),currentAge,ConfigManager.getInstance().getLoginSource());
             if (StringUtil.isEmpty(avatar)){
                 if (viewModel.UserSex.get() == 1){
                     viewModel.regUser(BOY_HEAD);

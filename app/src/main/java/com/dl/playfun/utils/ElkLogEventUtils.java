@@ -31,6 +31,8 @@ import me.goldze.mvvmhabit.http.NetworkUtil;
 public class ElkLogEventUtils {
 
     public static String DEFAULT_LOCAL_LANGUAGE;
+    //保存设备是否注册过用户
+    public static String UserIsNew = "userIsNew";
 
     public static String getDefaultLocalLanguage() {
         return DEFAULT_LOCAL_LANGUAGE;
@@ -112,6 +114,10 @@ public class ElkLogEventUtils {
                 .append("`isNoNoEmulator="+isEmulator())
                 //设备唯一标识
                 .append("`dev_id="+MPDeviceUtils.getDevId());
+        String userIsNew = getUserIsNew();
+        if(userIsNew!=null){
+            stringBuilder.append("`is_new="+userIsNew);
+        }
         return stringBuilder.toString();
     }
 
@@ -216,6 +222,10 @@ public class ElkLogEventUtils {
         //用户的来源信息
         String channel = mapData.get("channel");
         return "`code="+isNullConverterSky(code)+"`channel="+isNullConverterSky(channel);
+    }
+
+    public static String getUserIsNew(){
+        return ConfigManager.getInstance().getAppRepository().readKeyValue(UserIsNew);
     }
 
     /**

@@ -111,6 +111,8 @@ public class AppConfig {
      */
     public static String FukubukuroWebUrl = null;
 
+    public static final String KEY_DL_AES_ENCRY = "key_dl_aes_encry";
+
     public static final String GAME_SOURCES_HEADER_KEY = "game_sources_header_key";
 
     public static final String GAME_SOURCES_AES_KEY = "game_sources_key";

@@ -1,8 +1,11 @@
 package com.dl.playfun.manager;
 
 
+import android.text.TextUtils;
+
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.ObjectUtils;
+import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.EaringlSwitchUtil;
 import com.dl.playfun.app.Injection;
@@ -17,6 +20,7 @@ import com.dl.playfun.entity.SystemConfigEntity;
 import com.dl.playfun.entity.SystemConfigTaskEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.utils.ApiUitl;
+import com.tencent.liteav.trtccalling.ui.audiocall.audiolayout.Utils;
 
 import java.util.List;
 import java.util.Map;
@@ -83,6 +87,33 @@ public class ConfigManager {
      */
     public AppRepository getAppRepository(){
         return AppRepositoryHolder.appRepository;
+    }
+
+    /**
+    * @Desc TODO(查询用户登录渠道)
+    * @author 彭石林
+    * @parame []
+    * @return java.lang.Integer
+    * @Date 2022/11/15
+    */
+    public Integer getLoginSource(){
+        String loginType = getAppRepository().readKeyValue(AppConfig.LOGIN_TYPE);
+        Integer source = null;
+        if(TextUtils.isEmpty(loginType)){
+            return source;
+        }
+        switch (loginType) {
+            case "facebook":
+                source = 1;
+                break;
+            case "google":
+                source = 2;
+                break;
+            case "phone":
+                source = 4;
+                break;
+        }
+        return source;
     }
 
     //位置是否是空的

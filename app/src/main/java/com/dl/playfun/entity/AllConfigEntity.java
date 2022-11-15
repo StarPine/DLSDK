@@ -9,6 +9,10 @@ import java.util.List;
  */
 public class AllConfigEntity {
 
+    //设备使用情况，1获取不到设备信息，2已经注册过的设备，3没有注册过的设备
+    private int deviceUseType;
+
+
     @SerializedName("program_time")
     private List<ConfigItemEntity> programTime;
     @SerializedName("hope_object")
@@ -34,6 +38,14 @@ public class AllConfigEntity {
     private String apiUrl;
     //广场页屏蔽动态的开关
     private int squareDislike;
+
+    public int getDeviceUseType() {
+        return deviceUseType;
+    }
+
+    public void setDeviceUseType(int deviceUseType) {
+        this.deviceUseType = deviceUseType;
+    }
 
     public int getSquareDislike() {
         return squareDislike;

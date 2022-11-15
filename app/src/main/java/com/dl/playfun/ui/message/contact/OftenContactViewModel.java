@@ -12,6 +12,7 @@ import androidx.databinding.ObservableList;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
+import com.dl.playfun.app.ElkLogEventReport;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
@@ -235,16 +236,19 @@ public class OftenContactViewModel extends BaseViewModel<AppRepository> {
                     @Override
                     public void onSuccess(BaseResponse response) {
                         dismissHUD();
+
                         ToastUtils.showShort(R.string.playfun_text_accost_success1);
                         parkItemEntity.setIsAccost(1);
                         Objects.requireNonNull(adapter.getAdapterItem(position).itemEntity.get()).setIsAccost(1);
                         adapter.getAdapterItem(position).accountCollect.set(true);
                         adapter.notifyItemChanged(position);
+                        ElkLogEventReport.reportAccostModule.reportAccostView(2,parkItemEntity.getUserProfile().getId(),parkItemEntity.getUserProfile().getSex(),null);
                     }
 
                     @Override
                     public void onError(RequestException e) {
                         super.onError(e);
+                        ElkLogEventReport.reportAccostModule.reportAccostView(2,parkItemEntity.getUserProfile().getId(),parkItemEntity.getUserProfile().getSex(),e.getMessage()+e.getCode());
                         if(e.getCode()!=null && e.getCode() ==21001 ){//钻石余额不足
                             ToastCenterUtils.showToast(R.string.playfun_dialog_exchange_integral_total_text3);
                             uc.sendAccostFirstError.call();
