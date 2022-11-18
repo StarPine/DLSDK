@@ -36,7 +36,6 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.tencent.imsdk.v2.*
 import com.tencent.qcloud.tuicore.TUILogin
-import com.tencent.qcloud.tuicore.util.ConfigManagerUtil
 import com.tencent.rtmp.ui.TXCloudVideoView
 import com.tencent.trtc.TRTCCloud
 import com.tencent.trtc.TRTCCloudDef.*
@@ -179,6 +178,7 @@ class DLRTCStartManager {
      */
     fun inviteUserRTC(inviteUser : String, inviteType : DLRTCCalling.DLInviteRTCType, roomId : Int, launchView :Boolean, data :String){
         acceptUserId = inviteUser
+        inviteUserId = TUILogin.getLoginUser()
         rtcInviteType = inviteType
         rtcInviteRoomId = roomId
         // 填充通话信令的model
@@ -197,7 +197,7 @@ class DLRTCStartManager {
             } else {
                 intent.component = ComponentName(mContext!!.applicationContext, DLRTCInterceptorCall.instance.videoCallActivity)
             }
-            intent.putExtra(DLRTCCallingConstants.PARAM_NAME_SPONSORID, TUILogin.getLoginUser())
+            intent.putExtra(DLRTCCallingConstants.PARAM_NAME_SPONSORID, inviteUserId)
             intent.putExtra(DLRTCCallingConstants.PARAM_NAME_ROLE, DLRTCCalling.Role.CALL)
             intent.putExtra("userProfile", data)
             intent.putExtra(DLRTCCallingConstants.PARAM_NAME_USERIDS, inviteUser)
@@ -213,6 +213,9 @@ class DLRTCStartManager {
 
     fun getAcceptUserId() : ArrayList<String>{
         return ArrayList<String>().apply { add(acceptUserId) }
+    }
+    fun getInviteUserId() : ArrayList<String>{
+        return ArrayList<String>().apply { add(inviteUserId) }
     }
 
     //应用在后台且没有拉起应用的权限时,上层主动调用该方法,查询有效的通话请求,拉起界面
@@ -364,15 +367,27 @@ class DLRTCStartManager {
                 preExitRoom(null)
                 return
             }
+            rtcSignallingData
+            DLRTCSignalingManager.sendInviteAction(
+                action = DLRTCCallModel.VIDEO_CALL_ACTION_ACCEPT,
+                invitee = inviteUserId,
+                userId = inviteUserId,
+                mData = data,
+                callIDWithUserID = invitee,
+                mCurInvitedList = getInviteUserId()
+            )
             MPTimber.tag(TAGLOG).d("当前远端用户为：${acceptUserId} ")
-                    DLRTCSignalingManager.sendInviteAction(
-                        action = DLRTCCallModel.VIDEO_CALL_ACTION_ACCEPT,
-                        invitee = rtcInviteId,
-                        userId = inviteUserId,
-                        mData = data,
-                        callIDWithUserID = rtcInviteId,
-                        mCurInvitedList = getAcceptUserId()
-                    )
+            if(!mIsInRoom){
+                if(inviteUserId == TUILogin.getLoginUser()  && mIsBeingCalled){
+                    // 只有单聊这个时间才是正确的，因为单聊只会有一个用户进群，群聊这个时间会被后面的人重置
+                    mEnterRoomTime = System.currentTimeMillis()
+                    mTRTCInternalListenerManager?.onUserEnter(acceptUserId)
+                    if (!mIsBeingCalled) {
+                        stopMusic()
+                    }
+                }
+            }
+
         }
 
         /**
@@ -1533,6 +1548,22 @@ class DLRTCStartManager {
 
     fun audioRoute(enable : Boolean){
         mTRTCCloud?.setAudioRoute(if(enable)TRTC_AUDIO_ROUTE_SPEAKER else TRTC_AUDIO_ROUTE_EARPIECE)
+    }
+
+    fun setFramework() {
+        try {
+            val jsonObject = JSONObject().apply {
+                put("api", "setFramework")
+                val params = JSONObject().apply {
+                    put("framework", 1)
+                    put("component", 3)
+                }
+                put("params", params)
+            }
+            mTRTCCloud?.callExperimentalAPI(jsonObject.toString())
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
     }
 
 

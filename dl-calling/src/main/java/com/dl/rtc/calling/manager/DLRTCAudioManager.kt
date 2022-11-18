@@ -50,6 +50,7 @@ class DLRTCAudioManager : DLRTCCallingItFace {
             enableAudioVolumeEvaluation(300)
             setAudioRoute(TRTCCloudDef.TRTC_AUDIO_ROUTE_SPEAKER)
             startLocalAudio(3)
+            DLRTCStartManager.getInstance().setFramework()
             enterRoom(rtcParams, TRTCCloudDef.TRTC_APP_SCENE_AUDIOCALL)
         }
     }

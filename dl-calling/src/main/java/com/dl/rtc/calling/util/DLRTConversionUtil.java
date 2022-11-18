@@ -92,7 +92,12 @@ public class DLRTConversionUtil {
             if (dataMapObj != null && dataMapObj instanceof Map) {
                 Map<String, Object> dataMap = (Map<String, Object>) dataMapObj;
                 DLRTCSignallingData.DataInfo dataInfo = convert2DataInfo(dataMap);
-                signallingData.setBusinessID(dataInfo.getBusinessID());
+                if(signallingData.getBusinessID()!= null && signallingData.getBusinessID().length()<3){
+                    signallingData.setBusinessID(dataInfo.getBusinessID());
+                }
+                if(signallingData.getBusinessID()==null || signallingData.getBusinessID().isEmpty()){
+                    signallingData.setBusinessID(dataInfo.getBusinessID());
+                }
                 signallingData.setData(dataInfo);
             } else {
                 MPTimber.tag(TAG_LOG).e( "dataMapObj is not map, value is :" + dataMapObj);
@@ -101,7 +106,12 @@ public class DLRTConversionUtil {
                     Map<String, Object> dataMap = GsonUtils.fromJson(String.valueOf(dataMapObj),Map.class);
                     MPTimber.tag(TAG_LOG).e( "dataMapObj  is :" + String.valueOf(dataMapObj));
                     DLRTCSignallingData.DataInfo dataInfo = convert2DataInfo(dataMap);
-                    signallingData.setBusinessID(dataInfo.getBusinessID());
+                    if(signallingData.getBusinessID()!= null && signallingData.getBusinessID().length()<3){
+                        signallingData.setBusinessID(dataInfo.getBusinessID());
+                    }
+                    if(signallingData.getBusinessID()==null || signallingData.getBusinessID().isEmpty()){
+                        signallingData.setBusinessID(dataInfo.getBusinessID());
+                    }
                     signallingData.setData(dataInfo);
                 }
             }
