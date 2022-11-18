@@ -21,6 +21,7 @@ import com.dl.playfun.manager.LocaleManager;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.widget.dialog.TraceDialog;
 import com.dl.rtc.calling.base.DLRTCCalling;
+import com.dl.rtc.calling.manager.DLRTCAudioManager;
 import com.dl.rtc.calling.model.DLRTCCallingConstants;
 import com.google.gson.Gson;
 import com.dl.playfun.R;
@@ -98,9 +99,9 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
         Intent intent = getIntent();
         role = (DLRTCCalling.Role) intent.getExtras().get(DLRTCCallingConstants.PARAM_NAME_ROLE);
         //被动接收
-        String[] userIds = intent.getExtras().getStringArray(DLRTCCallingConstants.PARAM_NAME_USERIDS);
-        if (userIds != null && userIds.length > 0) {
-            toId = userIds[0];
+        String userIds = intent.getExtras().getString(DLRTCCallingConstants.PARAM_NAME_USERIDS);
+        if (userIds != null) {
+            toId = userIds;
         }
         //主动呼叫
         callUserId = intent.getExtras().getString(DLRTCCallingConstants.PARAM_NAME_SPONSORID);
@@ -174,25 +175,20 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
     @Override
     public void initViewObservable() {
         super.initViewObservable();
-        viewModel.backViewEvent.observe(this, new Observer<Void>() {
-            @Override
-            public void onChanged(Void unused) {
-                finish();
-            }
-        });
+        viewModel.backViewEvent.observe(this, unused -> finish());
 
-        viewModel.startAudioActivity.observe(this, new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer roomId) {
-                Intent intent = new Intent(DialingAudioActivity.this,AudioCallChatingActivity.class);
-                intent.putExtra("fromUserId", callUserId);
-                intent.putExtra("toUserId", toId);
-                intent.putExtra("mRole", role);
-                intent.putExtra("roomId", roomId);
-                startActivity(intent);
-                finish();
-                overridePendingTransition(R.anim.anim_zoom_in, R.anim.anim_stay);
-            }
+        viewModel.startAudioActivity.observe(this, roomId -> {
+            //有人进入房间回调
+            DLRTCAudioManager.Companion.getInstance().accept();
+            DLRTCAudioManager.Companion.getInstance().enterRoom(roomId);
+            Intent intent = new Intent(DialingAudioActivity.this,AudioCallChatingActivity.class);
+            intent.putExtra("fromUserId", callUserId);
+            intent.putExtra("toUserId", toId);
+            intent.putExtra("mRole", role);
+            intent.putExtra("roomId", roomId);
+            startActivity(intent);
+            finish();
+            overridePendingTransition(R.anim.anim_zoom_in, R.anim.anim_stay);
         });
 
 

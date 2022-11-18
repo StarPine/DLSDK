@@ -42,35 +42,7 @@ object DLRTCSignalingManager {
         callback: V2TIMCallback?
     ): String? {
         MPTimber.tag(TAG_LOG).d(String.format("sendInvite, receiver=%s, data=%s", receiver, data))
-        return V2TIMManager.getSignalingManager()
-            .invite(receiver, data, false, info, timeout, object : V2TIMCallback {
-                override fun onError(code: Int, desc: String) {
-                    callback?.onError(code, desc)
-                }
-
-                override fun onSuccess() {
-                    callback?.onSuccess()
-                }
-            })
-    }
-
-    fun sendGroupInvite(
-        groupId: String,
-        inviteeList: List<String>,
-        data: String,
-        timeout: Int,
-        callback: V2TIMCallback?
-    ): String? {
-        MPTimber.tag(TAG_LOG).d(
-            String.format(
-                "sendGroupInvite, groupId=%s, inviteeList=%s, data=%s",
-                groupId,
-                inviteeList.toTypedArray().contentToString(),
-                data
-            )
-        )
-        return V2TIMManager.getSignalingManager()
-            .inviteInGroup(groupId, inviteeList, data, false, timeout, object : V2TIMCallback {
+        return V2TIMManager.getSignalingManager().invite(receiver, data, false, info, timeout, object : V2TIMCallback {
                 override fun onError(code: Int, desc: String) {
                     callback?.onError(code, desc)
                 }
@@ -82,9 +54,7 @@ object DLRTCSignalingManager {
     }
 
     fun acceptInvite(inviteId: String, data: String, callback: V2TIMCallback?) {
-        MPTimber.tag(TAG_LOG).d(
-            String.format("acceptInvite, inviteId=%s, data=%s", inviteId, data)
-        )
+        MPTimber.tag(TAG_LOG).d(String.format("acceptInvite, inviteId=%s, data=%s", inviteId, data))
         V2TIMManager.getSignalingManager().accept(inviteId, data, object : V2TIMCallback {
             override fun onError(code: Int, desc: String) {
                 callback?.onError(code, desc)
@@ -110,9 +80,7 @@ object DLRTCSignalingManager {
     }
 
     fun cancelInvite(inviteId: String, data: String, callback: V2TIMCallback?) {
-        MPTimber.tag(TAG_LOG).d(
-            String.format("cancelInvite, inviteId=%s, data=%s", inviteId, data)
-        )
+        MPTimber.tag(TAG_LOG).d(String.format("cancelInvite, inviteId=%s, data=%s", inviteId, data))
         V2TIMManager.getSignalingManager().cancel(inviteId, data, object : V2TIMCallback {
             override fun onError(code: Int, desc: String) {
                 callback?.onError(code, desc)
@@ -138,7 +106,7 @@ object DLRTCSignalingManager {
     fun sendInviteAction(action: Int, invitee: String, userId: String, mData: String ? =null,callIDWithUserID : String,mCurInvitedList : List<String>) {
         var transferData: DLRTCSignallingData? = null
         if (!TextUtils.isEmpty(mData)) {
-            transferData = mData?.let { DLRTCSignallingUtil.convert2CallingData(it) }
+            transferData = DLRTCSignallingUtil.convert2CallingData(mData!!)
         }
         MPTimber.tag(TAG_LOG).d("action:$action ,invitee:$invitee ,userId:$userId ,data:$mData")
         val callDataInfo = DLRTCSignallingData.DataInfo()

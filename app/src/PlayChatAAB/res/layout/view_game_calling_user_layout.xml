@@ -112,6 +112,7 @@
             android:layout_height="35dp"
             android:visibility="gone"
             android:src="@drawable/selector_call_audio_or_video"
+            binding:onClickCommand="@{viewModel.makeCallUserClick}"
             />
     </RelativeLayout>
 </layout>

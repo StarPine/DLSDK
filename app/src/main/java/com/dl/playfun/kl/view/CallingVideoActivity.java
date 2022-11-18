@@ -113,7 +113,6 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
     private String toId;
     private Integer roomId;
     private DLRTCCalling.Role role;
-    private String[] userIds;
 
     private int mTimeCount;
     //每个10秒+1
@@ -205,9 +204,9 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         role = (DLRTCCalling.Role) intent.getExtras().get(DLRTCCallingConstants.PARAM_NAME_ROLE);
         roomId = intent.getIntExtra("roomId", 0);
         //被动接收
-        userIds = intent.getExtras().getStringArray(DLRTCCallingConstants.PARAM_NAME_USERIDS);
-        if (userIds != null && userIds.length > 0) {
-            toId = userIds[0];
+        String userIds = intent.getExtras().getString(DLRTCCallingConstants.PARAM_NAME_USERIDS);
+        if (userIds != null) {
+            toId = userIds;
         }
         //主动呼叫
         callUserId = intent.getExtras().getString(DLRTCCallingConstants.PARAM_NAME_SPONSORID);
@@ -251,7 +250,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
             viewModel.isCalledWaitingBinding.set(false);
         }
         if (callingInviteInfo != null) {
-            mCallView = new JMTUICallVideoView(this, role, userIds, callUserId, null, false, callingInviteInfo.getRoomId(),mVideoFactory) {
+            mCallView = new JMTUICallVideoView(this, role, new String[]{toId}, callUserId, null, false, callingInviteInfo.getRoomId(),mVideoFactory) {
                 @Override
                 public void finish() {
                     super.finish();
@@ -264,7 +263,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                 }
             };
         } else {
-            mCallView = new JMTUICallVideoView(this, role, userIds, callUserId, null, false,mVideoFactory) {
+            mCallView = new JMTUICallVideoView(this, role, new String[]{toId}, callUserId, null, false,mVideoFactory) {
                 @Override
                 public void finish() {
                     super.finish();
@@ -283,7 +282,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         mJMView.bringToFront();
         // 不用TRTC sponsor 一套的命名，因为他们那里其实挺混乱的， 这里就用 my 和 other
         String myUserId = V2TIMManager.getInstance().getLoginUser();
-        String otherUserId = (role == DLRTCCalling.Role.CALL ? userIds[0] : callUserId);
+        String otherUserId = (role == DLRTCCalling.Role.CALL ? toId : callUserId);
         if (role == DLRTCCalling.Role.CALL) {//主动呼叫
             callUserId = V2TIMManager.getInstance().getLoginUser();
             viewModel.userCall = true;

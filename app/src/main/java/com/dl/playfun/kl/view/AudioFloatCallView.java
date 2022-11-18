@@ -4,6 +4,7 @@ package com.dl.playfun.kl.view;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -14,6 +15,7 @@ import androidx.annotation.Nullable;
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
+import com.dl.lib.util.log.MPTimber;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.Injection;
@@ -99,6 +101,9 @@ public class AudioFloatCallView extends BaseDLRTCCallView {
     @Override
     protected void timeCountListener(int times) {
         mTimeCount = times;
+        if(mTextViewTimeCount!=null){
+            mTextViewTimeCount.post(()->mTextViewTimeCount.setText(getShowTime(mTimeCount)));
+        }
     }
 
     //更新显示
@@ -108,7 +113,7 @@ public class AudioFloatCallView extends BaseDLRTCCallView {
 
     //通话时长,注意UI更新需要在主线程中进行
     protected void showTimeCount(TextView view, int timeCount) {
-        super.showTimeCount(view);
+        super.showTimeCount(view,timeCount);
     }
 
     //监听IM消息

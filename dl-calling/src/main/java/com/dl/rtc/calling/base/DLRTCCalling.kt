@@ -27,4 +27,12 @@ interface DLRTCCalling {
         CALL_FAILED
         // 通话失败
     }
+
+    enum class DLInviteRTCType {
+        //  ///纯音频
+        dl_rtc_audio,
+        ///音视频邀请
+        dl_rtc_video
+    }
+
 }

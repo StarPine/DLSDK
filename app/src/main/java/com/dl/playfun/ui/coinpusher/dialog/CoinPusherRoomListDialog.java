@@ -78,7 +78,7 @@ public class CoinPusherRoomListDialog extends BaseDialog {
     public CoinPusherRoomListDialog(Context context) {
         super(context);
         this.mContext = context;
-        AutoSizeUtils.applyAdapt(getContext().getResources());
+        AutoSizeUtils.applyAdapt(mContext.getResources());
         initView();
         loadData();
     }

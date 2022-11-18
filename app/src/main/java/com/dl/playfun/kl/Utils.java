@@ -15,18 +15,28 @@ public class Utils {
     /**
      * 开始呼叫某人
      */
-    public static void startCallSomeone(int type, String toUserId, int roomId, String data) {
+    public static void startCallSomeone(int type, String toUserId, int roomId, String data,boolean startView) {
         if (type == DLRTCCallingConstants.TYPE_VIDEO_CALL) {
             String[] userIDs = {toUserId};
-            DLRTCStartManager.Companion.getInstance().call(userIDs, DLRTCCalling.Type.VIDEO, roomId, data);
+          //  DLRTCStartManager.Companion.getInstance().call(userIDs, DLRTCCalling.Type.VIDEO, roomId, data,startView);
         } else if (type == DLRTCCallingConstants.TYPE_AUDIO_CALL) {
             String[] userIDs = {toUserId};
-            DLRTCStartManager.Companion.getInstance().call(userIDs, DLRTCCalling.Type.AUDIO, roomId, data);
+          //  DLRTCStartManager.Companion.getInstance().call(userIDs, DLRTCCalling.Type.AUDIO, roomId, data,startView);
         }
+
     }
 
+    public static void inviteUserRTC(String inviteUser,DLRTCCalling.DLInviteRTCType inviteType, int roomId, boolean launchView, String data){
+        DLRTCStartManager.Companion.getInstance().inviteUserRTC(inviteUser, inviteType, roomId, launchView, data);
+    }
+
+
     public static void tryStartCallSomeone(int type, String userId, int roomId, String data) {
-        startCallSomeone(type, userId, roomId, data);
+        startCallSomeone(type, userId, roomId, data,true);
+    }
+
+    public static void StartGameCallSomeone(int type, String userId, int roomId, String data) {
+        startCallSomeone(type, userId, roomId, data,false);
     }
 
     public static void show(String message) {

@@ -4,9 +4,9 @@ import android.text.TextUtils
 import com.dl.lib.util.log.MPTimber
 import com.dl.rtc.calling.model.bean.DLRTCCallModel
 import com.dl.rtc.calling.model.bean.DLRTCSignallingData
-import com.dl.rtc.calling.util.DLRTCSignallingUtil.convert2CallingData
+import com.dl.rtc.calling.model.bean.DLRTCSignallingDataOld
 import com.google.gson.Gson
-import com.google.gson.JsonSyntaxException
+import com.google.gson.annotations.SerializedName
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -23,66 +23,68 @@ object  DLRTCSignallingUtil {
          * 信令数据模型转换
          */
         fun convert2CallingData(data : String): DLRTCSignallingData {
-            return DLRTConversionUtil.convert2CallingData(data)
-        }
-
-        private fun convert2DataInfo(dataMap: Map<String, Any>): DLRTCSignallingData.DataInfo {
-            val dataInfo: DLRTCSignallingData.DataInfo =
-                DLRTCSignallingData.DataInfo()
-            try {
-                if (dataMap.containsKey(DLRTCCallModel.KEY_CMD)) {
-                    val cmd = dataMap[DLRTCCallModel.KEY_CMD]
-                    if (cmd is String) {
-                        dataInfo.cmd = cmd
-                    } else {
-                        MPTimber.tag(TAG_LOG).e("cmd is not string, value is :$cmd")
-                    }
+            //return DLRTConversionUtil.convert2CallingData(data)
+            var dlRTCSignallingData = DLRTCSignallingData()
+            try{
+                val dlrtcCallModel = Gson().fromJson(data, DLRTCSignallingDataOld::class.java)
+                if(dlrtcCallModel == null){
+                    MPTimber.tag(TAG_LOG).e("onReceiveNewInvitation extraMap is null, ignore")
+                    return dlRTCSignallingData
                 }
-                if (dataMap.containsKey(DLRTCCallModel.KEY_USERIDS)) {
-                    val userIDs =
-                        dataMap[DLRTCCallModel.KEY_USERIDS]
-                    if (userIDs is List<*>) {
-                        dataInfo.userIDs = userIDs as List<String>?
-                    } else {
-                        MPTimber.tag(TAG_LOG).e("userIDs is not List, value is :$userIDs")
+                MPTimber.tag(TAG_LOG).e("当前数据模型为： ${dlrtcCallModel.toString()}")
+                dlrtcCallModel.let { it ->
+                    dlRTCSignallingData.businessID = it.businessID
+                    dlRTCSignallingData.version = it.version
+                    dlRTCSignallingData.platform = it.platform
+                    dlRTCSignallingData.callType = it.callType
+                    dlRTCSignallingData.roomId = it.roomId
+                    dlRTCSignallingData.lineBusy = it.lineBusy
+                    dlRTCSignallingData.callEnd = it.callEnd
+                    dlRTCSignallingData.switchToAudioCall = it.switchToAudioCall
+                    dlRTCSignallingData.data =  it.data?.let {
+                        Gson().fromJson(it, DLRTCSignallingData.DataInfo::class.java)
                     }
-                }
-                if (dataMap.containsKey(DLRTCCallModel.KEY_ROOM_ID)) {
-                    val roomId =
-                        dataMap[DLRTCCallModel.KEY_ROOM_ID]
-                    if (roomId is Double) {
-                        dataInfo.roomID = (roomId.toInt())
-                    } else {
-                        MPTimber.tag(TAG_LOG).e("roomId is not Double, value is :$roomId")
+                    dlRTCSignallingData.data?.let {
+                        if(dlRTCSignallingData.platform.isNullOrEmpty()){
+                            dlRTCSignallingData.platform = it.platform
+                        }
+                        if(dlRTCSignallingData.callEnd == 0){
+                            dlRTCSignallingData.callEnd = it.callEnd
+                        }
+                        if(dlRTCSignallingData.callType == 0){
+                            dlRTCSignallingData.callType = it.callType
+                        }
+                        if(dlRTCSignallingData.roomId == 0){
+                            dlRTCSignallingData.roomId = it.roomID
+                        }
+                        if(dlRTCSignallingData.version == 0 ){
+                            dlRTCSignallingData.version = it.version
+                        }
+                        if(dlRTCSignallingData.businessID!= null && dlRTCSignallingData.businessID!!.length<3){
+                            dlRTCSignallingData.businessID = it.businessID
+                        }
+                        if(dlRTCSignallingData.businessID.isNullOrEmpty()){
+                            dlRTCSignallingData.businessID = it.businessID
+                        }
                     }
+                    dlRTCSignallingData.callAction = it.callAction
+                    dlRTCSignallingData.callId = it.callId
+                    dlRTCSignallingData.user = it.user
                 }
-                if (dataMap.containsKey(DLRTCCallModel.KEY_MESSAGE)) {
-                    val message =
-                        dataMap[DLRTCCallModel.KEY_MESSAGE]
-                    if (message is String) {
-                        dataInfo.message = message
-                    } else {
-                        MPTimber.tag(TAG_LOG).e("message is not string, value is :$message")
-                    }
-                }
-            } catch (e: JsonSyntaxException) {
-                MPTimber.tag(TAG_LOG).e("onReceiveNewInvitation JsonSyntaxException:$e")
+            }catch (exp : Exception){
+                dlRTCSignallingData = DLRTConversionUtil.convert2CallingData(data);
             }
-            return dataInfo
+            return dlRTCSignallingData;
         }
 
         //是否是6-30改造后的信令版本
         fun isNewSignallingVersion(signallingData: DLRTCSignallingData): Boolean {
-            return !TextUtils.isEmpty(signallingData.platform) && !TextUtils.isEmpty(
-                signallingData.businessID
-            )
+            return !TextUtils.isEmpty(signallingData.platform) && !TextUtils.isEmpty(signallingData.businessID)
         }
 
         fun getSwitchAudioRejectMessage(signallingData: DLRTCSignallingData): String? {
             if (isNewSignallingVersion(signallingData)) {
-                val dataInfo: DLRTCSignallingData.DataInfo =
-                    signallingData.data
-                        ?: return ""
+                val dataInfo: DLRTCSignallingData.DataInfo = signallingData.data ?: return ""
                 return dataInfo.message
             }
             val message: String? = signallingData.switchToAudioCall
@@ -107,8 +109,7 @@ object  DLRTCSignallingUtil {
         }
         return if (signallingData.data == null) {
             false
-        } else DLRTCCallModel.VALUE_CMD_SWITCH_TO_AUDIO == signallingData.data!!
-            .cmd
+        } else DLRTCCallModel.VALUE_CMD_SWITCH_TO_AUDIO == signallingData.data!!.cmd
     }
 
      fun isLineBusy(signallingData: DLRTCSignallingData): Boolean {
@@ -126,7 +127,7 @@ object  DLRTCSignallingUtil {
     fun createSignallingData(): DLRTCSignallingData {
         val signallingData = DLRTCSignallingData()
         signallingData.version = DLRTCCallModel.VALUE_VERSION
-        signallingData.businessID =DLRTCCallModel.VALUE_BUSINESS_ID
+        signallingData.businessID = DLRTCCallModel.VALUE_BUSINESS_ID
         signallingData.platform = DLRTCCallModel.VALUE_PLATFORM
         return signallingData
     }

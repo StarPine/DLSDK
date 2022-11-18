@@ -188,6 +188,10 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
         girlEarningsField.set(false);
     });
 
+    //调用推币机
+    public BindingCommand<Void> coinPusherRoomClick = new BindingCommand<>(() -> {
+       uc.coinPusherRoomEvent.call();
+    });
 
     //订阅者
     private Disposable mSubscription;
@@ -754,6 +758,8 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
         //滚动到屏幕底部
         public SingleLiveEvent<Void> scrollToEnd = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> startUpSayHiAnimotor = new SingleLiveEvent<>();
+        //打开推币机弹窗
+        public SingleLiveEvent<Void> coinPusherRoomEvent = new SingleLiveEvent<>();
     }
 
     //追踪

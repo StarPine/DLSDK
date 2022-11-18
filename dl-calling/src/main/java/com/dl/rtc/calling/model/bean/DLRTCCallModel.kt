@@ -24,7 +24,7 @@ class DLRTCCallModel :Cloneable, Serializable {
         var KEY_USER = "user"
 
         val VALUE_VERSION = 4
-        val VALUE_BUSINESS_ID = "av_call" //calling场景
+        const val VALUE_BUSINESS_ID = "av_call" //calling场景
 
         val VALUE_PLATFORM = "Android" //当前平台
 
@@ -110,7 +110,7 @@ class DLRTCCallModel :Cloneable, Serializable {
         var SIGNALING_EXTRA_KEY_SWITCH_AUDIO_CALL = "switch_to_audio_call"
     }
 
-
+    var businessID : String?=null
     @SerializedName("version")
     var version = 0
 

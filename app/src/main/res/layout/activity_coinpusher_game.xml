@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.graphics.drawable.GradientDrawable" />
         <import type="com.dl.playfun.R" />
         <import type="android.view.View" />
         <variable
@@ -21,6 +22,12 @@
             android:id="@+id/WebRtcSurfaceView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+        <FrameLayout
+            android:id="@+id/fl_face_view"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/img_close"
             android:elevation="199dp"
@@ -180,6 +187,7 @@
         <RelativeLayout
             android:id="@+id/rl_receive_call"
             android:clickable="true"
+            android:elevation="200dp"
             android:layout_width="match_parent"
             android:layout_height="120dp"
             android:layout_marginTop="50dp"
@@ -197,7 +205,44 @@
                 layout="@layout/view_game_calling_layout"
                 app:viewModel="@{gameViewModel}" />
         </RelativeLayout>
-
+        <!--拨打中提示-->
+        <LinearLayout
+            android:layout_centerInParent="true"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{gameViewModel.callingOnTheLine ? View.VISIBLE : View.GONE}"
+            tools:visibility="gone"
+            binding:drawable_cornersRadius="@{22}"
+            android:paddingStart="30dp"
+            android:paddingEnd="30dp"
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp"
+            android:gravity="center"
+            binding:drawable_gradient_startColor="@{@color/playfun_shape_radius_start_color}"
+            binding:drawable_gradient_endColor="@{@color/playfun_shape_radius_end_color}"
+            binding:drawable_orientation="@{GradientDrawable.Orientation.LEFT_RIGHT}"
+            >
+            <androidx.appcompat.widget.AppCompatTextView
+                android:includeFontPadding="false"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/playfun_call_waiting_hint"
+                android:textColor="@color/white"
+                android:textSize="13dp"
+                android:lineHeight="13dp"
+                android:textStyle="bold"
+                />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:includeFontPadding="false"
+                android:layout_marginTop="6dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{gameViewModel.maleCallingHint}"
+                android:textColor="@color/white"
+                android:textSize="11dp"
+                />
+        </LinearLayout>
         <FrameLayout
             android:id="@+id/fl_play_coin"
             android:layout_above="@+id/tv_money_hint"
@@ -241,7 +286,17 @@
             android:textColor="#FFD84A"
             android:textSize="13sp"
             tools:ignore="TextContrastCheck" />
-
+        
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/fl_play_coin"
+            android:layout_marginEnd="37dp"
+            android:layout_marginTop="15dp"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:src="@drawable/call_audio_gift2"
+            binding:onClickCommand="@{gameViewModel.giftBagOnClickCommand}"
+            />
 
         <FrameLayout
             android:elevation="99dp"

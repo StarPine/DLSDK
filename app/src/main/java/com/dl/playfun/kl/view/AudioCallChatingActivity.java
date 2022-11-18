@@ -44,6 +44,7 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.ActivityCallAudioChatingBinding;
 import com.dl.playfun.entity.AudioCallingBarrageEntity;
+import com.dl.playfun.entity.CoinPusherDataInfoEntity;
 import com.dl.playfun.entity.CrystalDetailsConfigEntity;
 import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.entity.GoodsEntity;
@@ -53,6 +54,8 @@ import com.dl.playfun.kl.viewmodel.AudioCallChatingItemViewModel;
 import com.dl.playfun.kl.viewmodel.AudioCallChatingViewModel;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocaleManager;
+import com.dl.playfun.ui.coinpusher.CoinPusherGameActivity;
+import com.dl.playfun.ui.coinpusher.dialog.CoinPusherRoomListDialog;
 import com.dl.playfun.ui.dialog.GiftBagDialog;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
@@ -410,22 +413,6 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
             @Override
             public void onChanged(Boolean isGiftSend) {
                 toRecharge();
-//                GameCoinExchargeSheetView coinRechargeSheetView = new GameCoinExchargeSheetView(AudioCallChatingActivity.this);
-//                coinRechargeSheetView.setCallMedia(true);
-//                coinRechargeSheetView.setMaleBalance(viewModel.maleBalanceMoney);
-//                coinRechargeSheetView.show();
-//                coinRechargeSheetView.setCoinRechargeSheetViewListener(new GameCoinExchargeSheetView.CoinRechargeSheetViewListener() {
-//                    @Override
-//                    public void onPaySuccess(GameCoinExchargeSheetView sheetView, CoinExchangePriceInfo sel_goodsEntity) {
-//                        sheetView.dismiss();
-//                        viewModel.getCallingStatus(roomId);
-//                    }
-//
-//                    @Override
-//                    public void onPayFailed(GameCoinExchargeSheetView sheetView, String msg) {
-//                        sheetView.dismiss();
-//                    }
-//                });
             }
         });
         //发送礼物弹窗
@@ -453,6 +440,26 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                 });
                 giftBagDialog.show();
             }
+        });
+        //弹出推币机选择弹窗
+        viewModel.uc.coinPusherRoomEvent.observe(this, unused -> {
+            //弹出推币机选择弹窗
+            CoinPusherRoomListDialog coinersDialog = new CoinPusherRoomListDialog(mContext);
+            coinersDialog.setDialogEventListener(new CoinPusherRoomListDialog.DialogEventListener() {
+                @Override
+                public void startViewing(CoinPusherDataInfoEntity itemEntity) {
+                    coinersDialog.dismiss();
+                    Intent intent = new Intent(mContext, CoinPusherGameActivity.class);
+                    intent.putExtra("CoinPusherInfo",itemEntity);
+                    startActivity(intent);
+                }
+
+                @Override
+                public void buyErrorPayView() {
+                    toRecharge();
+                }
+            });
+            coinersDialog.show();
         });
     }
 

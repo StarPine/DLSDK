@@ -142,7 +142,7 @@ abstract class BaseDLRTCCallView constructor(
                     val userModel = DLRTCUserModel()
                     userModel.userId = userId
                     mOtherInviteeList.add(userModel)
-                    mCallUserModelMap.put(userModel.userId!!, userModel)
+                    mCallUserModelMap[userModel.userId!!] = userModel
                 }
             }
         } else {
@@ -172,7 +172,7 @@ abstract class BaseDLRTCCallView constructor(
         return if (DLRTCCalling.Role.CALL == mRole) {
             mUserIDs.size >= 2
         } else {
-            mUserIDs.size >= 1 || mIsFromGroup
+            mUserIDs.isNotEmpty() || mIsFromGroup
         }
     }
 
@@ -388,11 +388,11 @@ abstract class BaseDLRTCCallView constructor(
     override fun onTryToReconnect() {}
 
     //通话时长,注意UI更新需要在主线程中进行
-    protected open fun showTimeCount(view: TextView?) {
+    protected open fun showTimeCount(view: TextView? , timeCount :Int) {
         if (mTimeRunnable != null) {
             return
         }
-        mTimeCount = Status.mBeginTime
+        mTimeCount = timeCount
         if (null != view) {
             view.text = getShowTime(mTimeCount)
         }
@@ -400,13 +400,13 @@ abstract class BaseDLRTCCallView constructor(
             mTimeCount++
             timeCountListener(mTimeCount)
             Status.mBeginTime = mTimeCount
-            if (null != view) {
-                runOnUiThread {
-                    if (!isDestroyed()) {
-                        view.text = getShowTime(mTimeCount)
-                    }
-                }
-            }
+//            if (null != view) {
+//                runOnUiThread {
+//                    if (!isDestroyed()) {
+//                        view.text = getShowTime(mTimeCount)
+//                    }
+//                }
+//            }
             mTimeHandler!!.postDelayed(mTimeRunnable!!, 1000)
         }
         mTimeHandler!!.postDelayed(mTimeRunnable!!, 1000)

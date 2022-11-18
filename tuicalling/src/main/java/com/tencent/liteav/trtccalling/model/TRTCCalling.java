@@ -1397,8 +1397,7 @@ public class TRTCCalling {
         // 输出版本日志
         printVersionLog();
         mTRTCCloud.setListener(mTRTCCloudListener);
-        mTRTCCloud.enterRoom(trtcParams, mCurCallType == TYPE_VIDEO_CALL
-                ? TRTCCloudDef.TRTC_APP_SCENE_VIDEOCALL : TRTCCloudDef.TRTC_APP_SCENE_AUDIOCALL);
+        mTRTCCloud.enterRoom(trtcParams, mCurCallType == TYPE_VIDEO_CALL ? TRTCCloudDef.TRTC_APP_SCENE_VIDEOCALL : TRTCCloudDef.TRTC_APP_SCENE_AUDIOCALL);
     }
 
     public void reject() {

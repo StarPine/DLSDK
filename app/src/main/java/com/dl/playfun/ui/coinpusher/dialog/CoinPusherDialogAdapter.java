@@ -11,6 +11,7 @@ import androidx.annotation.StringRes;
 import androidx.databinding.DataBindingUtil;
 
 import com.dl.playfun.R;
+import com.dl.playfun.databinding.AlertPermissionsCoinpusherBinding;
 import com.dl.playfun.databinding.DialogCoinpusherHelpBinding;
 import com.dl.playfun.databinding.DialogCoinpusherHintBinding;
 import com.dl.playfun.databinding.DialogCoinpusherHintRetainBinding;
@@ -86,6 +87,43 @@ public class CoinPusherDialogAdapter {
         dialog.show();
         return dialog;
     }
+
+    /**
+     * @Desc TODO(游戏中没有音视频弹出权限提示)
+     * @author 彭石林
+     * @parame [mContext]
+     * @return android.app.Dialog
+     * @Date 2022/9/6
+     */
+    public static Dialog getDialogPermissions(Context mContext,@StringRes int ContentResId,CoinPusherDialogListener coinPusherDialogListener){
+        Dialog dialog = new Dialog(mContext);
+        dialog.setCancelable(true);
+        LayoutInflater inflater = LayoutInflater.from(mContext);
+        AlertPermissionsCoinpusherBinding binding = DataBindingUtil.inflate(inflater, R.layout.alert_permissions_coinpusher, null, false);
+        binding.tvSub.setOnClickListener(v -> {
+            if(coinPusherDialogListener!=null){
+                coinPusherDialogListener.onConfirm(dialog);
+            }
+        });
+        binding.tvTitle.setText(ContentResId);
+        binding.imgClose.setOnClickListener(v -> dialog.dismiss());
+        //设置背景透明,去四个角
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.setContentView(binding.getRoot());
+        //设置宽度充满屏幕
+        Window window = dialog.getWindow();
+        window.setGravity(Gravity.CENTER); //可设置dialog的位置
+        window.getDecorView().setPadding(0, 0, 0, 0); //消除边距
+        WindowManager.LayoutParams lp = window.getAttributes();
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;   //设置宽度充满屏幕
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        window.setAttributes(lp);
+        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        dialog.show();
+        return dialog;
+    }
+
 
     public interface CoinPusherDialogListener {
         default void onConfirm(Dialog dialog) {

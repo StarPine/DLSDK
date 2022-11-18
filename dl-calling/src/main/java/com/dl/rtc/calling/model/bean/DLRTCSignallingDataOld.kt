@@ -4,10 +4,10 @@ import com.google.gson.annotations.SerializedName
 
 /**
  *Author: 彭石林
- *Time: 2022/11/3 11:22
- * Description: 信令模型
+ *Time: 2022/11/18 16:49
+ * Description: This is DLRTCSignallingDataOld
  */
-class DLRTCSignallingData {
+class DLRTCSignallingDataOld {
     //版本号
     var version = 0
 
@@ -15,7 +15,7 @@ class DLRTCSignallingData {
     var businessID: String? = null
     var platform: String? = null
     var extInfo: String? = null
-    var data: DataInfo? = null
+    var data: String? = null
 
     //多人通话custom message增加字段
     @SerializedName("call_action")
@@ -56,14 +56,6 @@ class DLRTCSignallingData {
         var userIDs: List<String>? = null
         var businessID: String? = null
 
-        @SerializedName("call_action")
-        var callAction = 0
-        @SerializedName("call_end")
-        var callEnd = 0
-        @SerializedName("call_type")
-        var callType = 0
-        var platform: String? = null
-        var version = 0
 
         @SerializedName("dl_rtc_key")
         val DLRtcVersionTag = "dl_rtc_new_tag"    ///新版本data的json结构标识 默认无需改变
@@ -92,6 +84,5 @@ class DLRTCSignallingData {
     override fun toString(): String {
         return "DLRTCSignallingData(version=$version, businessID=$businessID, platform=$platform, extInfo=$extInfo, data=$data, callAction=$callAction, callId=$callId, user=$user, callType=$callType, roomId=$roomId, callEnd=$callEnd, switchToAudioCall=$switchToAudioCall, lineBusy=$lineBusy)"
     }
-
 
 }

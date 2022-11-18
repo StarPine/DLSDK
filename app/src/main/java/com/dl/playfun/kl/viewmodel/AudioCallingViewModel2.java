@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -66,8 +67,6 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
                 finishView();
                 return;
             }
-            DLRTCAudioManager.Companion.getInstance().accept();
-            DLRTCAudioManager.Companion.getInstance().enterRoom(roomId);
             unListen();
             startAudioActivity.postValue(roomId);
         }
@@ -98,6 +97,7 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
                 });
         //将订阅者加入管理站
         RxSubscriptions.add(mSubscription);
+        DLRTCAudioManager.Companion.getInstance().addDelegate(mTRTCCallingDelegate);
     }
 
     //移除RxBus
@@ -129,7 +129,6 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
         } else {
             startCalled();
         }
-        DLRTCAudioManager.Companion.getInstance().addDelegate(mTRTCCallingDelegate);
     }
 
     public void cancelCallClick() {
@@ -181,6 +180,7 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
 
             @Override
             public void onUserEnter(String userId) {
+                Log.e("语音聊天房","用户进入房间："+userId);
                 unListen();
                 startAudioActivity.postValue(roomId);
             }
@@ -219,7 +219,7 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
                 updateNetworkQuality(localQuality, remoteQuality);
             }
         };
-        DLRTCStartManager.Companion.getInstance().call(new String[]{toUserId}, DLRTCCalling.Type.AUDIO, roomId, null);
+        Utils.StartGameCallSomeone(1,toUserId, roomId, null);
     }
 
     // 被叫

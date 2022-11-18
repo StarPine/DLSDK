@@ -1,11 +1,13 @@
 package com.dl.rtc.calling.util;
 
+import com.blankj.utilcode.util.GsonUtils;
 import com.dl.lib.util.log.MPTimber;
 import com.dl.rtc.calling.model.bean.DLRTCCallModel;
 import com.dl.rtc.calling.model.bean.DLRTCSignallingData;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -22,161 +24,143 @@ public class DLRTConversionUtil {
         DLRTCSignallingData signallingData = new DLRTCSignallingData();
         Map<String, Object> extraMap;
         try {
-            extraMap = new Gson().fromJson(data, Map.class);
+            extraMap = GsonUtils.fromJson(data, Map.class);
             if (extraMap == null) {
                 MPTimber.tag(TAG_LOG).e( "onReceiveNewInvitation extraMap is null, ignore");
                 return signallingData;
             }
-            if (extraMap.containsKey(DLRTCCallModel.Companion.getKEY_VERSION())) {
-                Object version = extraMap.get(DLRTCCallModel.Companion.getKEY_VERSION());
-                if (version instanceof Double) {
-                    signallingData.setVersion(((Double) version).intValue());
-                } else {
-                    MPTimber.tag(TAG_LOG).e( "version is not Double, value is :" + version);
-                }
+            MPTimber.tag(TAG_LOG).e("当前信令模型解成MAP："+extraMap);
+            Object version = extraMap.get("version");
+            if (version != null) {
+                signallingData.setVersion(new BigDecimal(String.valueOf(version)).intValue());
+            } else {
+                MPTimber.tag(TAG_LOG).e( "version is not Double, value is :" + version);
             }
 
-            if (extraMap.containsKey(DLRTCCallModel.Companion.getKEY_PLATFORM())) {
-                Object platform = extraMap.get(DLRTCCallModel.Companion.getKEY_PLATFORM());
-                if (platform instanceof String) {
-                    signallingData.setPlatform((String) platform);
-                } else {
-                    MPTimber.tag(TAG_LOG).e( "platform is not string, value is :" + platform);
-                }
+            Object platform = extraMap.get("platform");
+            if (platform != null ) {
+                signallingData.setPlatform(String.valueOf(platform));
+            } else {
+                MPTimber.tag(TAG_LOG).e( "platform is not string, value is :" + platform);
             }
 
-            if (extraMap.containsKey(DLRTCCallModel.Companion.getKEY_BUSINESS_ID())) {
-                Object businessId = extraMap.get(DLRTCCallModel.Companion.getKEY_BUSINESS_ID());
-                if (businessId instanceof String) {
-                    signallingData.setBusinessID((String) businessId);
-                } else {
-                    MPTimber.tag(TAG_LOG).e( "businessId is not string, value is :" + businessId);
-                }
+            Object businessId = extraMap.get("businessID");
+            if (businessId != null) {
+                signallingData.setBusinessID(String.valueOf(businessId));
+            } else {
+                MPTimber.tag(TAG_LOG).e( "businessId is not string, value is :" + businessId);
             }
 
+            Object callType = extraMap.get("call_type");
             //兼容老版本某些字段
-            if (extraMap.containsKey(DLRTCCallModel.Companion.getSIGNALING_EXTRA_KEY_CALL_TYPE())) {
-                Object callType = extraMap.get(DLRTCCallModel.Companion.getSIGNALING_EXTRA_KEY_CALL_TYPE());
-                if (callType instanceof Double) {
-                    signallingData.setCallType(((Double) callType).intValue());
-                } else {
-                    MPTimber.tag(TAG_LOG).e( "callType is not Double, value is :" + callType);
-                }
+            if (callType != null) {
+                signallingData.setCallType(new BigDecimal(String.valueOf(callType)).intValue());
+            } else {
+                MPTimber.tag(TAG_LOG).e( "callType is not Double, value is :" + callType);
             }
 
-            if (extraMap.containsKey(DLRTCCallModel.Companion.getSIGNALING_EXTRA_KEY_ROOM_ID())) {
-                Object roomId = extraMap.get(DLRTCCallModel.Companion.getSIGNALING_EXTRA_KEY_ROOM_ID());
-                if (roomId instanceof Double) {
-                    signallingData.setRoomId(((Double) roomId).intValue());
-                } else {
-                    MPTimber.tag(TAG_LOG).e( "roomId is not Double, value is :" + roomId);
-                }
+            Object roomId = extraMap.get("room_id");
+            if (roomId != null) {
+                signallingData.setRoomId(new BigDecimal(String.valueOf(roomId)).intValue());
+            } else {
+                MPTimber.tag(TAG_LOG).e( "roomId is not Double, value is :" + roomId);
             }
 
-            if (extraMap.containsKey(DLRTCCallModel.Companion.getSIGNALING_EXTRA_KEY_LINE_BUSY())) {
-                Object lineBusy = extraMap.get(DLRTCCallModel.Companion.getSIGNALING_EXTRA_KEY_LINE_BUSY());
-                if (lineBusy instanceof String) {
-                    signallingData.setLineBusy((String) lineBusy);
-                } else {
-                    MPTimber.tag(TAG_LOG).e( "lineBusy is not string, value is :" + lineBusy);
-                }
+            Object lineBusy = extraMap.get("line_busy");
+            if (lineBusy != null ) {
+                signallingData.setLineBusy(String.valueOf(lineBusy));
+            } else {
+                MPTimber.tag(TAG_LOG).e( "lineBusy is not string, value is :" + lineBusy);
             }
 
-            if (extraMap.containsKey(DLRTCCallModel.Companion.getSIGNALING_EXTRA_KEY_CALL_END())) {
-                Object callEnd = extraMap.get(DLRTCCallModel.Companion.getSIGNALING_EXTRA_KEY_CALL_END());
-                if (callEnd instanceof Double) {
-                    signallingData.setCallEnd(((Double) callEnd).intValue());
-                } else {
-                    MPTimber.tag(TAG_LOG).e( "callEnd is not Double, value is :" + callEnd);
-                }
+            Object callEnd = extraMap.get("call_end");
+            if (callEnd != null ) {
+                signallingData.setCallEnd(new BigDecimal(String.valueOf(callEnd)).intValue());
+            } else {
+                MPTimber.tag(TAG_LOG).e( "callEnd is not Double, value is :" + callEnd);
             }
 
-            if (extraMap.containsKey(DLRTCCallModel.Companion.getSIGNALING_EXTRA_KEY_SWITCH_AUDIO_CALL())) {
-                Object switchToAudioCall = extraMap.get(DLRTCCallModel.Companion.getSIGNALING_EXTRA_KEY_SWITCH_AUDIO_CALL());
-                if (switchToAudioCall instanceof String) {
-                    signallingData.setSwitchToAudioCall((String) switchToAudioCall);
-                } else {
-                    MPTimber.tag(TAG_LOG).e( "switchToAudioCall is not string, value is :" + switchToAudioCall);
-                }
+            Object switchToAudioCall = extraMap.get("switch_to_audio_call");
+            if (switchToAudioCall != null) {
+                signallingData.setSwitchToAudioCall(String.valueOf(switchToAudioCall));
+            } else {
+                MPTimber.tag(TAG_LOG).e( "switchToAudioCall is not string, value is :" + switchToAudioCall);
             }
 
-            if (extraMap.containsKey(DLRTCCallModel.Companion.getKEY_DATA())) {
-                Object dataMapObj = extraMap.get(DLRTCCallModel.Companion.getKEY_DATA());
-                MPTimber.tag(TAG_LOG).e((dataMapObj instanceof String) +" ==="+(dataMapObj instanceof Map));
-                if (dataMapObj != null && dataMapObj instanceof Map) {
-                    Map<String, Object> dataMap = (Map<String, Object>) dataMapObj;
+            Object dataMapObj = extraMap.get("data");
+            MPTimber.tag(TAG_LOG).e((dataMapObj instanceof String) +" ==="+(dataMapObj instanceof Map));
+            if (dataMapObj != null && dataMapObj instanceof Map) {
+                Map<String, Object> dataMap = (Map<String, Object>) dataMapObj;
+                DLRTCSignallingData.DataInfo dataInfo = convert2DataInfo(dataMap);
+                signallingData.setBusinessID(dataInfo.getBusinessID());
+                signallingData.setData(dataInfo);
+            } else {
+                MPTimber.tag(TAG_LOG).e( "dataMapObj is not map, value is :" + dataMapObj);
+                if(dataMapObj != null && dataMapObj instanceof String){
+                    MPTimber.tag(TAG_LOG).e( "dataMapObj is String, value is :" + dataMapObj);
+                    Map<String, Object> dataMap = GsonUtils.fromJson(String.valueOf(dataMapObj),Map.class);
+                    MPTimber.tag(TAG_LOG).e( "dataMapObj  is :" + String.valueOf(dataMapObj));
                     DLRTCSignallingData.DataInfo dataInfo = convert2DataInfo(dataMap);
+                    signallingData.setBusinessID(dataInfo.getBusinessID());
                     signallingData.setData(dataInfo);
-                } else {
-                    MPTimber.tag(TAG_LOG).e( "dataMapObj is not map, value is :" + dataMapObj);
                 }
             }
 
-            if (extraMap.containsKey(DLRTCCallModel.Companion.getKEY_CALLACTION())) {
-                Object callAction = extraMap.get(DLRTCCallModel.Companion.getKEY_CALLACTION());
-                if (callAction instanceof Double) {
-                    signallingData.setCallAction(((Double) callAction).intValue());
-                } else {
-                    MPTimber.tag(TAG_LOG).e( "callAciton is not Double, value is :" + callAction);
-                }
+            Object callAction = extraMap.get("call_action");
+            if (callAction != null) {
+                signallingData.setCallAction(new BigDecimal(String.valueOf(callAction)).intValue());
+            } else {
+                MPTimber.tag(TAG_LOG).e( "callAciton is not Double, value is :" + callAction);
             }
-            if (extraMap.containsKey(DLRTCCallModel.Companion.getKEY_CALLID())) {
-                Object callId = extraMap.get(DLRTCCallModel.Companion.getKEY_CALLID());
-                if (callId instanceof String) {
-                    signallingData.setCallId((String) callId);
-                } else {
-                    MPTimber.tag(TAG_LOG).e( "callId is not String, value is :" + callId);
-                }
+
+            Object callId = extraMap.get("callid");
+            if (callId != null) {
+                signallingData.setCallId(String.valueOf(callId));
+            } else {
+                MPTimber.tag(TAG_LOG).e( "callId is not String, value is :" + callId);
             }
-            if (extraMap.containsKey(DLRTCCallModel.Companion.getKEY_USER())) {
-                Object user = extraMap.get(DLRTCCallModel.Companion.getKEY_USER());
-                if (user instanceof String) {
-                    signallingData.setUser((String) user);
-                } else {
-                    MPTimber.tag(TAG_LOG).e( "user is not String, value is :" + user);
-                }
+
+            Object user = extraMap.get("user");
+            if (user !=null ) {
+                signallingData.setUser(String.valueOf(user));
+            } else {
+                MPTimber.tag(TAG_LOG).e( "user is not String, value is :" + user);
             }
+
         } catch (JsonSyntaxException e) {
             MPTimber.tag(TAG_LOG).e( "convert2CallingDataBean json parse error");
         }
+        MPTimber.tag(TAG_LOG).e("当前模型解析完成："+signallingData.toString());
         return signallingData;
     }
 
     public static DLRTCSignallingData.DataInfo convert2DataInfo(Map<String, Object> dataMap) {
         DLRTCSignallingData.DataInfo dataInfo = new DLRTCSignallingData.DataInfo();
         try {
-            if (dataMap.containsKey(DLRTCCallModel.Companion.getKEY_CMD())) {
                 Object cmd = dataMap.get(DLRTCCallModel.Companion.getKEY_CMD());
-                if (cmd instanceof String) {
-                    dataInfo.setCmd((String) cmd);
+                if (cmd != null) {
+                    dataInfo.setCmd(String.valueOf(cmd));
                 } else {
                     MPTimber.tag(TAG_LOG).e( "cmd is not string, value is :" + cmd);
                 }
-            }
-            if (dataMap.containsKey(DLRTCCallModel.Companion.getKEY_USERIDS())) {
                 Object userIDs = dataMap.get(DLRTCCallModel.Companion.getKEY_USERIDS());
-                if (userIDs instanceof List) {
+                if (userIDs != null && userIDs instanceof List) {
                     dataInfo.setUserIDs((List<String>) userIDs);
                 } else {
                     MPTimber.tag(TAG_LOG).e( "userIDs is not List, value is :" + userIDs);
                 }
-            }
-            if (dataMap.containsKey(DLRTCCallModel.Companion.getKEY_ROOM_ID())) {
                 Object roomId = dataMap.get(DLRTCCallModel.Companion.getKEY_ROOM_ID());
-                if (roomId instanceof Double) {
-                    dataInfo.setRoomID(((Double) roomId).intValue());
+                if (roomId != null) {
+                    dataInfo.setRoomID(new BigDecimal(String.valueOf(roomId)).intValue());
                 } else {
                     MPTimber.tag(TAG_LOG).e( "roomId is not Double, value is :" + roomId);
                 }
-            }
-            if (dataMap.containsKey(DLRTCCallModel.Companion.getKEY_MESSAGE())) {
                 Object message = dataMap.get(DLRTCCallModel.Companion.getKEY_MESSAGE());
-                if (message instanceof String) {
-                    dataInfo.setMessage((String) message);
+                if (message != null) {
+                    dataInfo.setMessage(String.valueOf(message));
                 } else {
                     MPTimber.tag(TAG_LOG).e( "message is not string, value is :" + message);
                 }
-            }
         } catch (JsonSyntaxException e) {
             MPTimber.tag(TAG_LOG).e( "onReceiveNewInvitation JsonSyntaxException:" + e);
         }

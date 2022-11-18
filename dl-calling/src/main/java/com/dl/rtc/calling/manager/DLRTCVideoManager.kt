@@ -61,7 +61,6 @@ class DLRTCVideoManager : DLRTCCallingItFace {
         encParam.videoResolution = TRTCCloudDef.TRTC_VIDEO_RESOLUTION_1280_720
         encParam.videoFps = 15
         //encParam.videoBitrate = 1000;
-        //encParam.videoBitrate = 1000;
         encParam.minVideoBitrate = 1200
         encParam.videoResolutionMode = TRTCCloudDef.TRTC_VIDEO_RESOLUTION_MODE_PORTRAIT
         encParam.enableAdjustRes = true

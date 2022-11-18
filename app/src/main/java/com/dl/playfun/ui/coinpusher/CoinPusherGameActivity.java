@@ -20,19 +20,21 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.blankj.utilcode.util.ColorUtils;
-import com.blankj.utilcode.util.ToastUtils;
 import com.dl.lib.util.log.MPTimber;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
+import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.ActivityCoinpusherGameBinding;
 import com.dl.playfun.entity.CoinPusherBalanceDataEntity;
 import com.dl.playfun.entity.CoinPusherDataInfoEntity;
+import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.kl.view.AudioCallChatingActivity;
 import com.dl.playfun.kl.view.CallingVideoActivity;
@@ -43,6 +45,7 @@ import com.dl.playfun.ui.coinpusher.dialog.CoinPusherConvertDialog;
 import com.dl.playfun.ui.coinpusher.dialog.CoinPusherDialogAdapter;
 import com.dl.playfun.ui.coinpusher.dialog.CoinPusherGameHistoryDialog;
 import com.dl.playfun.ui.coinpusher.dialog.CoinPusherHelpDialog;
+import com.dl.playfun.ui.dialog.GiftBagDialog;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.CoinPusherApiUtil;
 import com.dl.playfun.utils.ImmersionBarUtils;
@@ -63,6 +66,7 @@ import com.faceunity.nama.FURenderer;
 import com.faceunity.nama.data.FaceUnityDataFactory;
 import com.faceunity.nama.ui.FaceUnityView;
 import com.jakewharton.rxbinding2.view.RxView;
+import com.luck.picture.lib.permissions.PermissionChecker;
 import com.misterp.toast.SnackUtils;
 import com.tencent.imsdk.v2.V2TIMSignalingListener;
 import com.tencent.qcloud.tuicore.TUILogin;
@@ -82,6 +86,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import me.goldze.mvvmhabit.utils.StringUtils;
+import me.goldze.mvvmhabit.utils.ToastUtils;
 
 /**
  * Author: 彭石林
@@ -120,7 +125,6 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
     private Runnable timerRunnable = null;
     private FaceUnityView faceUnityView;
     private FaceUnityDataFactory mFaceUnityDataFactory;
-    private FURenderer mFURenderer;
     @Override
     protected void onResume() {
         super.onResume();
@@ -170,7 +174,6 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
 
     private void gameInit() {
         LoadingVideoShow(true);
-        binding.flLayoutLoadingVideo.setVisibility(View.VISIBLE);
         WsWebRTCView webrtcView = binding.WebRtcSurfaceView;
         WsWebRTCParameters webrtcParam = new WsWebRTCParameters();
         //设置客户 id,由网宿分配给客户的 id 字符串
@@ -504,6 +507,42 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
         viewModel.gameUI.acceptCallingEvent.observe(this, unused -> {
             TimeCallMessage();
         });
+        //挂断电话处理UI
+        viewModel.gameUI.hangupCallingEvent.observe(this, unused -> {
+            initRlCallingUserLayout();
+        });
+        //发送礼物弹窗
+        viewModel.gameUI.sendGiftBagEvent.observe(this,unused -> {
+            if (viewModel.unitPriceList == null || viewModel.payUserBalanceMoney == 0){
+                return;
+            }
+            GiftBagDialog giftBagDialog = new GiftBagDialog(getContext(), false, viewModel.payUserBalanceMoney, viewModel.unitPriceList.size() > 1 ? 3 : 0);
+            giftBagDialog.setGiftOnClickListener(new GiftBagDialog.GiftOnClickListener() {
+                @Override
+                public void sendGiftClick(Dialog dialog, int number, GiftBagEntity.giftEntity giftEntity) {
+                    dialog.dismiss();
+                    viewModel.sendUserGift(dialog, giftEntity, viewModel.otherCallInfoEntity.get().getId(), number);
+                }
+
+                @Override
+                public void rechargeStored(Dialog dialog) {
+                    dialog.dismiss();
+                    payCoinRechargeDialog();
+                }
+            });
+            giftBagDialog.show();
+        });
+        //发送礼物效果展示
+        viewModel.gameUI.sendUserGiftAnim.observe(this, stringObjectMap -> {
+            int account = (int) stringObjectMap.get("account");
+            GiftBagEntity.giftEntity giftEntity = (GiftBagEntity.giftEntity) stringObjectMap.get("giftEntity");
+            //启动SVG动画
+//            startSendSvgAnimotion(giftEntity);
+//            //启动横幅动画
+//            startSendBannersAnimotion(giftEntity, account);
+//            //启动头像动画
+//            startSendHeadAnimotion(giftEntity);
+        });
     }
 
     @Override
@@ -690,14 +729,16 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
     private EmptyTRTCCallingDelegate  mTRTCCallingListener = new EmptyTRTCCallingDelegate() {
         @Override
         public void onError(int code, String msg) {
+            initRlCallingUserLayout();
             MPTimber.tag(TAG).d("EmptyTRTCCallingDelegate onError code："+code+" , msg："+msg);
             ToastUtils.showLong(AppContext.instance().getString(R.string.trtccalling_toast_call_error_msg, code, msg));
-            com.dl.playfun.kl.Utils.show("對方取消通話");
+            ToastUtils.showShort("對方取消通話");
         }
 
         //用户进入房间
         @Override
         public void onUserEnter(String userId) {
+            viewModel.callingOnTheLine.set(false);
             MPTimber.tag(TAG).d("EmptyTRTCCallingDelegate onUserEnter userId："+userId);
             binding.rlReceiveCall.setVisibility(View.GONE);
             if(viewModel.gameCallEntity!=null && viewModel.gameCallEntity.getCallingType()!=null){
@@ -706,6 +747,11 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
                 if(viewModel.gameCallEntity.getCallingType() == DLRTCCalling.Type.VIDEO){
                     binding.rlCallingUserLayout.setVisibility(View.GONE);
                     binding.rlVideoCallLayout.setVisibility(View.VISIBLE);
+                    //创建视频美颜渲染view
+                    faceUnityView = new FaceUnityView(getContext());
+                    faceUnityView.setBackgroundColor(ColorUtils.getColor(R.color.black));
+                    faceUnityView.bindDataFactory(new FaceUnityDataFactory(0));
+                    binding.flFaceView.addView(faceUnityView);
                     //1.先打开渲染器
                     DLRTCStartManager.Companion.getInstance().createCustomRenderer(true);
                     //2.再打开摄像头
@@ -746,33 +792,38 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
 
         @Override
         public void onReject(String userId) {
-            com.dl.playfun.kl.Utils.show(AppContext.instance().getString(R.string.playfun_the_other_party_refuses_to_answer));
+            initRlCallingUserLayout();
+            ToastUtils.showShort(AppContext.instance().getString(R.string.playfun_the_other_party_refuses_to_answer));
             MPTimber.tag(TAG).d("EmptyTRTCCallingDelegate onReject userId："+userId);
         }
 
         @Override
         public void onNoResp(String userId) {
+            initRlCallingUserLayout();
             MPTimber.tag(TAG).d("EmptyTRTCCallingDelegate onReject userId："+userId);
-            com.dl.playfun.kl.Utils.show(AppContext.instance().getString(R.string.playfun_the_other_party_is_temporarily_unavailable));
+            ToastUtils.showShort(AppContext.instance().getString(R.string.playfun_the_other_party_is_temporarily_unavailable));
         }
 
         @Override
         public void onLineBusy(String userId) {
+            initRlCallingUserLayout();
             MPTimber.tag(TAG).d("EmptyTRTCCallingDelegate onReject userId："+userId);
-            com.dl.playfun.kl.Utils.show(AppContext.instance().getString(R.string.playfun_the_other_party_is_on_a_call));
+            ToastUtils.showShort(AppContext.instance().getString(R.string.playfun_the_other_party_is_on_a_call));
         }
 
         @Override
         public void onCallingCancel() {
+            initRlCallingUserLayout();
             //用户取消拨打
             MPTimber.tag(TAG).d("EmptyTRTCCallingDelegate onCallingCancel ");
         }
 
         @Override
         public void onCallingTimeout() {
+            viewModel.callingOnTheLine.set(false);
             //拨打超时
             MPTimber.tag(TAG).d("EmptyTRTCCallingDelegate onCallingTimeout ");
-            binding.rlReceiveCall.setVisibility(View.GONE);
+            initRlCallingUserLayout();
         }
 
         @Override
@@ -780,37 +831,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
             recycleHandles();
             MPTimber.tag(TAG).d("EmptyTRTCCallingDelegate onCallEnd ");
             ToastUtils.showShort(AppContext.instance().getString(R.string.playfun_call_ended));
-            viewModel.gameCallEntity.setCalling(false);
-            binding.rlReceiveCall.post(()->{
-                binding.rlReceiveCall.setVisibility(View.GONE);
-                if(viewModel.gameCallEntity!=null && viewModel.gameCallEntity.getCallingType()!=null){
-                    //视频通话
-                    if(viewModel.gameCallEntity.getCallingType() == DLRTCCalling.Type.VIDEO){
-                        //显示用户头像可进行回拨
-                        binding.rlCallingUserLayout.findViewById(R.id.img_call_audio_or_video).setActivated(false);
-                    }else{
-                        //显示用户头像可进行回拨
-                        binding.rlCallingUserLayout.findViewById(R.id.img_call_audio_or_video).setActivated(true);
-                    }
-                    binding.rlVideoCallLayout.setVisibility(View.GONE);
-                    binding.rlCallingUserLayout.findViewById(R.id.img_call_audio_or_video).setVisibility(View.VISIBLE);
-                    binding.rlCallingUserLayout.setVisibility(View.VISIBLE);
-                    binding.rlCallingUserLayout.findViewById(R.id.fl_triangle_off).setVisibility(View.GONE);
-                    binding.rlCallingUserLayout.findViewById(R.id.fl_triangle_on).setVisibility(View.GONE);
-                };
-            });
-        }
-
-        @Override
-        public void onUserVideoAvailable(String userId, boolean isVideoAvailable) {
-            //有用户的视频开启了
-            MPTimber.tag(TAG).d("EmptyTRTCCallingDelegate onUserVideoAvailable  userId："+userId +" ,isVideoAvailable ："+isVideoAvailable);
-        }
-
-        @Override
-        public void onUserAudioAvailable(String userId, boolean isVideoAvailable) {
-            //有用户的音频开启了
-            MPTimber.tag(TAG).d("EmptyTRTCCallingDelegate onUserAudioAvailable  userId："+userId +" ,isVideoAvailable ："+isVideoAvailable);
+            initRlCallingUserLayout();
         }
 
         @Override
@@ -825,6 +846,33 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
             MPTimber.tag(TAG).d("EmptyTRTCCallingDelegate onTryToReconnect  ");
         }
     };
+    // 初始化回拨业务UI
+    private void initRlCallingUserLayout(){
+        viewModel.gameCallEntity.setCalling(false);
+        viewModel.callingOnTheLine.set(false);
+        binding.rlReceiveCall.post(()->{
+            binding.rlReceiveCall.setVisibility(View.GONE);
+            if(viewModel.gameCallEntity!=null && viewModel.gameCallEntity.getCallingType()!=null){
+                //视频通话
+                if(viewModel.gameCallEntity.getCallingType() == DLRTCCalling.Type.VIDEO){
+                    if(faceUnityView != null){
+                        binding.flFaceView.removeView(faceUnityView);
+                    }
+                    //显示用户头像可进行回拨
+                    binding.rlCallingUserLayout.findViewById(R.id.img_call_audio_or_video).setActivated(false);
+                }else{
+                    //显示用户头像可进行回拨
+                    binding.rlCallingUserLayout.findViewById(R.id.img_call_audio_or_video).setActivated(true);
+                }
+                binding.rlVideoCallLayout.setVisibility(View.GONE);
+                binding.rlCallingUserLayout.findViewById(R.id.img_call_audio_or_video).setVisibility(View.VISIBLE);
+                binding.rlCallingUserLayout.setVisibility(View.VISIBLE);
+                binding.rlCallingUserLayout.findViewById(R.id.fl_triangle_off).setVisibility(View.GONE);
+                binding.rlCallingUserLayout.findViewById(R.id.fl_triangle_on).setVisibility(View.GONE);
+            };
+        });
+    }
+
     private final class DlRtcInterceptorCall implements  DLRTCInterceptorCall.InterceptorCall{
         /**
         * @Desc TODO(接听电话信令拦截)
@@ -836,7 +884,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
         @Override
         public void receiveCall(@Nullable String userIDs, @NonNull DLRTCCalling.Type type, int roomId, @Nullable String data, boolean isFromGroup, @NonNull String sponsorID) {
             MPTimber.tag(TAG).d("音视频接听拦截：receiveCall ");
-            MPTimber.tag(TAG).d("音视频接听拦截： roomId = "+roomId+" sponsorID = "+sponsorID+" data = "+data +" userIDs = "+userIDs);
+            MPTimber.tag(TAG).d("音视频接听拦截： roomId = "+roomId+" sponsorID = "+sponsorID+" data = "+data +" userIDs = "+userIDs +" type="+type.toString());
             GameCallEntity gameCallEntity = new GameCallEntity();
             gameCallEntity.setRoomId(roomId);
             gameCallEntity.setCallingRole(DLRTCCalling.Role.CALLED);
@@ -851,7 +899,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
             }else{
                 callingType = 2;
             }
-            viewModel.getCallingInvitedInfo(callingType,gameCallEntity.getFromUserId(),gameCallEntity.getToUserId());
+            viewModel.getCallingInvitedInfo(callingType,gameCallEntity.getFromUserId(),gameCallEntity.getToUserId(),true);
         }
     }
 
@@ -862,7 +910,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
         if(result){
             viewModel.getCallingInfo(1);
         }else{
-            //获取语音权限失败
+            alertPermissions();
         }
     });
     //多个权限申请监听
@@ -874,10 +922,21 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
                         viewModel.getCallingInfo(2);
                     } else {
                         //有权限没有获取到的动作
+                        alertPermissions();
                     }
                 }
             });
 
+    private void alertPermissions(){
+        //获取语音权限失败
+        CoinPusherDialogAdapter.getDialogPermissions(getContext(), 0, new CoinPusherDialogAdapter.CoinPusherDialogListener() {
+            @Override
+            public void onConfirm(Dialog dialog) {
+                // 只要有一个权限没有被授予, 则直接返回 false
+                PermissionChecker.launchAppDetailsSettings(getContext());
+            }
+        }).show();
+    }
     private void recycleHandles() {
         if (mHandler != null) {
             mHandler.removeCallbacks(timerRunnable);
