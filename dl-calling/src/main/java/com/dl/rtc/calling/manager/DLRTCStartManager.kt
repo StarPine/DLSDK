@@ -45,22 +45,19 @@ class DLRTCStartManager {
     ///当前用户的ID
     private var currentId : String = ""
     ///接收方的ID
-    private var acceptUserId : String = ""
+    var acceptUserId : String = ""
     ///发起方的ID
-    private var inviteUserId : String = ""
+    var inviteUserId : String = ""
     ///腾讯生成的邀请ID
-    private var inviteId : String = ""
+    var inviteId : String = ""
     /// 当前rtc的房间
-    private var inviteRTCRoomId : Int = 0
+    var inviteRTCRoomId : Int = 0
     ///邀请的类型，纯音频还是音视频一起
-    private var inviteTypeMsg : String = ""
+    var inviteTypeMsg : String = ""
     ///是否发起了邀请
-    private var isBeginInvite : Boolean = false
+    var isBeginInvite : Boolean = false
     ///是否收到了邀请
-    private var isReceiveNewInvite : Boolean = false
-
-    // 发起邀请成功，腾讯生成的一个Id
-    var rtcInviteId  = ""
+    var isReceiveNewInvite : Boolean = false
 
     fun setLoginSuccessUser(userId : String) {
         this@DLRTCStartManager.currentId = userId
@@ -68,7 +65,7 @@ class DLRTCStartManager {
 
     ///代理的结合，实现多处响应
     private val delegates by lazy { ArrayList<DLRTCStartManagerDelegate>()}
-    private fun initParams() {
+    fun initParams() {
         ///取消后，数值清空
         this.inviteUserId = ""
         this.inviteId = ""
@@ -97,9 +94,6 @@ class DLRTCStartManager {
     //通话邀请缓存,便于查询通话是否有效
     private val mInviteMap: MutableMap<String, DLRTCCallModel> = HashMap()
 
-
-    //多端登录增加字段:用于标记当前是否是自己发给自己的请求(多端触发),以及自己是否处理了该请求.
-    private var mIsProcessedBySelf = false // 被叫方: 主动操作后标记是否自己处理了请求或回调
 
     val gsonBuilder by lazy { GsonBuilder() }
 
@@ -140,7 +134,7 @@ class DLRTCStartManager {
 
     /**
      * 主动呼叫方
-     * inviteUser 接听人 inviteType 呼叫类型 roomId 房间ID launchView 是否启动view  data 自定义数据
+     * inviteUser 接听人 inviteType 呼叫类型 roomId 房间ID closure 当前调用回调
      */
     fun inviteUserRTC(inviteUser : String, inviteType : DLRTCDataMessageType.DLInviteRTCType, roomId : Int, closure :DLRTCModuleClosuer?){
         ///如果已经开始在邀请,防止重复发起邀请
@@ -269,7 +263,7 @@ class DLRTCStartManager {
         })
     }
 
-    public fun inviteUserReject(inviteId : String,source : String? = null, closure :  DLRTCModuleClosuer?) {
+     fun inviteUserReject(inviteId : String,source : String? = null, closure :  DLRTCModuleClosuer?) {
         if (inviteId.isEmpty() || !isReceiveNewInvite) {
             return
         }
@@ -503,7 +497,7 @@ class DLRTCStartManager {
 
         //C2C多人通话超时逻辑:
         override fun onInvitationTimeout(inviteID: String, inviteeList: List<String>) {
-            MPTimber.tag(TAGLOG).d("onInvitationTimeout inviteID : $inviteID , rtcInviteId : $rtcInviteId ,inviteeList: $inviteeList")
+            MPTimber.tag(TAGLOG).d("onInvitationTimeout inviteID : $inviteID , inviteId : $inviteId ,inviteeList: $inviteeList")
             if (inviteID != this@DLRTCStartManager.inviteId || (!this@DLRTCStartManager.isBeginInvite && !this@DLRTCStartManager.isReceiveNewInvite) ){
                 return
             }
@@ -547,13 +541,6 @@ class DLRTCStartManager {
             exitRoom()
         }
     }
-    //接听电话
-    fun accept() {
-        mIsProcessedBySelf = true
-        mContext?.let { DLRTCCallService.start(it) }
-    }
-
-
 
     /**
      * @return void
@@ -651,7 +638,7 @@ class DLRTCStartManager {
 /// 构建一个需要发送的消息
     /// - Parameter rtcMessage: 当前最新的消息类型
     /// - Returns: 返回字典
-    private fun buildRTCParams(rtcMessage : String,acceptUserId : String? = null,inviteUserId : String? = null): Hashtable<String, Any> {
+    private fun buildRTCParams(rtcMessage : String,_acceptUserId : String? = null,_inviteUserId : String? = null): Hashtable<String, Any> {
         val params = Hashtable<String, Any>()
         params[DLRTCDataMessageType.DLRTCMessageType] = rtcMessage
         params[DLRTCDataMessageType.DLRTCVersionTag] = DLRTCDataMessageType.DLRTCNewTag
@@ -663,10 +650,10 @@ class DLRTCStartManager {
         inviteTypeMsg.isNotEmpty().apply {
             params[DLRTCDataMessageType.DLRTCInviteType] = inviteTypeMsg
         }
-        acceptUserId?.isNotEmpty().apply {
+        _acceptUserId?.isNotEmpty().apply {
             params[DLRTCDataMessageType.DLRTCAcceptUserID] = acceptUserId
         }
-        inviteUserId?.isNotEmpty().apply {
+        _inviteUserId?.isNotEmpty().apply {
             params[DLRTCDataMessageType.DLRTCInviteUserID] = inviteUserId
         }
 

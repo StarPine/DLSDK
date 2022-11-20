@@ -516,7 +516,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
 
                         CallingInviteInfo callingInviteInfo = callingInviteInfoBaseDataResponse.getData();
                         if (callingInviteInfo != null) {
-                            com.dl.playfun.kl.Utils.inviteUserRTC(toIMUserId, DLRTCDataMessageType.DLInviteRTCType.dl_rtc_video, callingInviteInfo.getRoomId(),true, new Gson().toJson(callingInviteInfo));
+                            com.dl.playfun.kl.Utils.inviteUserRTC(toIMUserId, DLRTCDataMessageType.DLInviteRTCType.dl_rtc_audio, callingInviteInfo.getRoomId(),true, new Gson().toJson(callingInviteInfo));
                         }
                     }
 

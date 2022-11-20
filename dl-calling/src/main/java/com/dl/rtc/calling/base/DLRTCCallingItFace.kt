@@ -4,25 +4,11 @@ package com.dl.rtc.calling.base
  * 定义接口层统一约束规范
  */
 interface DLRTCCallingItFace {
-    /**
-     * 挂断
-     */
-    fun hangup()
-
-    /**
-     * 接听
-     */
-    fun inviteUserAccept()
 
     /**
      * 进入房间
      */
-    fun enterRoom(roomId : Int)
-
-    /**
-     * 离开房间
-     */
-    fun exitRoom()
+    fun enterRTCRoom(roomId : Int,roomIds : String? = null)
 
     /**
      *  暂停/恢复发布本地的音频流

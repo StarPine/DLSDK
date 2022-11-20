@@ -1,9 +1,15 @@
 package com.dl.rtc.calling.manager
 
+import android.content.ComponentName
+import android.content.Intent
 import com.dl.lib.util.log.MPTimber
+import com.dl.rtc.calling.DLRTCCallService
+import com.dl.rtc.calling.base.DLRTCCalling
 import com.dl.rtc.calling.base.DLRTCCallingDelegate
 import com.dl.rtc.calling.base.DLRTCCallingItFace
 import com.dl.rtc.calling.base.impl.DLRTCInternalListenerManager
+import com.dl.rtc.calling.model.DLRTCCallingConstants
+import com.dl.rtc.calling.model.DLRTCDataMessageType
 import com.faceunity.core.enumeration.CameraFacingEnum
 import com.faceunity.nama.FURenderer
 import com.tencent.qcloud.tuicore.TUILogin
@@ -21,8 +27,6 @@ import com.tencent.trtc.TRTCCloudListener
 class DLRTCVideoManager : DLRTCCallingItFace {
     val TAG_LOG = "DLRTCVideoManager"
 
-    private var mTRTCInternalListenerManager : DLRTCInternalListenerManager? = null
-
     //当前相机使用前后摄像头吧
     private var mIsUseFrontCamera = false
     //美颜相关
@@ -30,42 +34,18 @@ class DLRTCVideoManager : DLRTCCallingItFace {
     //美颜相关
     private var mFURenderer: FURenderer? = null
 
-    companion object {
-        // 单例可防止同时打开多个实例（双重校验锁式（Double Check)单例）。
-        @Volatile
-        private var sINSTANCE: DLRTCVideoManager? = null
-        @JvmStatic
-        fun getInstance(): DLRTCVideoManager {
-            //如果 INSTANCE 不为空，则返回它，如果是，则创建数据库
-            return sINSTANCE ?: synchronized(this) {
-                //创建对象后。引用apply作用域操作当前对象本身内置方法
-                val instance = DLRTCVideoManager().apply {
-                    mTRTCInternalListenerManager = DLRTCInternalListenerManager.instance
-                }
-                sINSTANCE = instance
-                // 返回实例
-                instance
-            }
+
+    companion object{
+
+        val instance by lazy {
+            DLRTCVideoManager()
         }
     }
 
-
-    fun addDelegate(delegate: DLRTCCallingDelegate?) {
-        if (delegate != null) {
-            mTRTCInternalListenerManager?.addDelegate(delegate)
-        }
-    }
-
-    fun removeDelegate(delegate: DLRTCCallingDelegate?) {
-        if (delegate != null) {
-            mTRTCInternalListenerManager?.removeDelegate(delegate)
-        }
-    }
-
-    /**
-     * 进入房间
-     */
-    private fun enterRTCRoom(mCurRoomID :Int){
+    /// 用进入RTC房间
+/// - Parameter roomId: 整型的rtc房间id
+/// - Parameter roomIds: 字符串类型的房间id，方便后续扩展
+    override fun enterRTCRoom(roomId : Int,roomIds : String?){
         // 进房前需要设置一下关键参数
         val encParam = TRTCVideoEncParam()
         encParam.videoResolution = TRTCCloudDef.TRTC_VIDEO_RESOLUTION_1280_720
@@ -78,7 +58,7 @@ class DLRTCVideoManager : DLRTCCallingItFace {
             setVideoEncoderParam(encParam);
             val trtcParams = TRTCParams(
                 TUILogin.getSdkAppId(), TUILogin.getUserId(),
-                TUILogin.getUserSig(), mCurRoomID, "", ""
+                TUILogin.getUserSig(), roomId, "", ""
             )
             trtcParams.role = TRTCCloudDef.TRTCRoleAnchor
             enableAudioVolumeEvaluation(300)
@@ -86,32 +66,18 @@ class DLRTCVideoManager : DLRTCCallingItFace {
             startLocalAudio(3)
             enterRoom(trtcParams,TRTCCloudDef.TRTC_APP_SCENE_VIDEOCALL)
         }
-        MPTimber.tag(TAG_LOG).i("enterTRTCRoom: " + TUILogin.getUserId() + " room:" + mCurRoomID)
+        MPTimber.tag(TAG_LOG).i("enterTRTCRoom: " + TUILogin.getUserId() + " roomId:" + roomId)
+        DLRTCStartManager.instance.mContext?.let { DLRTCCallService.start(it) }
     }
 
-    override fun hangup() {
-       // DLRTCStartManager.instance.hangup()
-    }
-
-    /**
-     * 接听电话
-     */
-    override fun accept() {
-        DLRTCStartManager.instance.accept()
-    }
-
-    /**
-     * 进入房间
-     */
-    override fun enterRoom(roomId : Int) {
-        enterRTCRoom(roomId)
-    }
-
-    /**
-     * 推出房间
-     */
-    override fun exitRoom() {
-        DLRTCStartManager.instance.exitRoom()
+    /// 用户离开房间
+    fun exitRTCRoom(){
+        DLRTCStartManager.instance.mTRTCCloud?.apply {
+            stopLocalPreview()
+            stopLocalAudio()
+            exitRoom()
+            DLRTCStartManager.instance.mContext?.let { DLRTCCallService.stop(it) }
+        }
     }
 
     override fun muteLocalAudio(enable : Boolean) {

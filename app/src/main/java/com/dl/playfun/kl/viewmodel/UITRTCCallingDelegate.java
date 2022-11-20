@@ -6,25 +6,14 @@ import com.dl.rtc.calling.base.DLRTCCallingDelegate;
 import com.tencent.trtc.TRTCCloudDef;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
-public class EmptyTRTCCallingDelegate implements DLRTCCallingDelegate {
+public class UITRTCCallingDelegate implements DLRTCCallingDelegate {
     private static final String TAG = "trtcJoy";
 
     @Override
     public void onError(int code, String msg) {
         Log.e(TAG, "onError: " + code + " " + msg);
-    }
-
-    @Override
-    public void onInvited(String sponsor, List<String> userIdList, boolean isFromGroup, int callType) {
-        Log.i(TAG, "onInvited: " + sponsor);
-    }
-
-    @Override
-    public void onGroupCallInviteeListUpdate(List<String> userIdList) {
-        Log.i(TAG, "onGroupCallInviteeListUpdate: " + userIdList.toString());
     }
 
     @Override
@@ -42,10 +31,6 @@ public class EmptyTRTCCallingDelegate implements DLRTCCallingDelegate {
         Log.i(TAG, "onReject: " + userId);
     }
 
-    @Override
-    public void onNoResp(String userId) {
-        Log.i(TAG, "onNoResp: " + userId);
-    }
 
     @Override
     public void onLineBusy(String userId) {
@@ -85,11 +70,6 @@ public class EmptyTRTCCallingDelegate implements DLRTCCallingDelegate {
     @Override
     public void onNetworkQuality(TRTCCloudDef.TRTCQuality localQuality, ArrayList<TRTCCloudDef.TRTCQuality> remoteQuality) {
         Log.i(TAG, "onNetworkQuality: ");
-    }
-
-    @Override
-    public void onSwitchToAudio(boolean success, String message) {
-        Log.i(TAG, "onSwitchToAudio: ");
     }
 
     @Override

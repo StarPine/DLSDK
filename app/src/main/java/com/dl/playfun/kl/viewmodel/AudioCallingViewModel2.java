@@ -26,7 +26,9 @@ import com.dl.playfun.R;
 import com.dl.playfun.kl.Utils;
 import com.dl.rtc.calling.base.DLRTCCalling;
 import com.dl.rtc.calling.base.DLRTCCallingDelegate;
+import com.dl.rtc.calling.base.impl.DLRTCInternalListenerManager;
 import com.dl.rtc.calling.manager.DLRTCAudioManager;
+import com.dl.rtc.calling.manager.DLRTCStartShowUIManager;
 import com.tencent.trtc.TRTCCloudDef;
 
 import org.jetbrains.annotations.NotNull;
@@ -47,7 +49,6 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
     public ObservableField<Boolean> isCallBinding = new ObservableField<>(false);
 
     public ObservableField<CallingInviteInfo> callingInviteInfoField = new ObservableField<>();
-    DLRTCCallingDelegate mTRTCCallingDelegate;
     //返回上一页
     public SingleLiveEvent<Void> backViewEvent = new SingleLiveEvent<>();
     public SingleLiveEvent<Integer> startAudioActivity = new SingleLiveEvent<>();
@@ -93,7 +94,7 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
                 });
         //将订阅者加入管理站
         RxSubscriptions.add(mSubscription);
-        DLRTCAudioManager.Companion.getInstance().addDelegate(mTRTCCallingDelegate);
+        DLRTCInternalListenerManager.Companion.getInstance().addDelegate(mTRTCCallingDelegate);
     }
 
     //移除RxBus
@@ -135,119 +136,93 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
 
     // 只设计监听取消和界面返回， 不涉及mTRTCCalling
     public void unListen() {
-        Utils.runOnUiThread(() -> {
             if (null != mTRTCCallingDelegate) {
-                DLRTCAudioManager.Companion.getInstance().removeDelegate(mTRTCCallingDelegate);
+                DLRTCInternalListenerManager.Companion.getInstance().removeDelegate(mTRTCCallingDelegate);
             }
-        });
     }
 
     // 正常拨打等待接听中的挂断， 不涉及界面
     public void endTRTCCalling() {
         Utils.runOnUiThread(() -> {
-            DLRTCAudioManager.Companion.getInstance().hangup();
-//            if (DLRTCCalling.Role.CALL == mRole) {
-//                DLRTCAudioManager.Companion.getInstance().hangup();
-//            } else {
-//                DLRTCAudioManager.Companion.getInstance().reject();
-//            }
+            if (DLRTCCalling.Role.CALL == mRole) {
+                DLRTCStartShowUIManager.Companion.getInstance().inviteUserCanceled();
+            } else {
+                DLRTCStartShowUIManager.Companion.getInstance().inviteUserReject();
+            }
         });
     }
 
     // 主叫
     public void startCall() {
-        // 添加 监听
-        mTRTCCallingDelegate = new EmptyTRTCCallingDelegate() {
-            @Override
-            public void onError(int code, String msg) {
-                // TODO
-                unListen();
-                finishView();
-                ToastUtils.showLong(AppContext.instance().getString(R.string.trtccalling_toast_call_error_msg, code, msg));
-            }
 
-            @Override
-            public void onCallingCancel() {
-                unListen();
-                finishView();
-                Utils.show("對方取消通話");
-                isCancel = true;
-            }
-
-            @Override
-            public void onUserEnter(String userId) {
-                Log.e("语音聊天房","用户进入房间："+userId);
-                unListen();
-                startAudioActivity.postValue(roomId);
-            }
-
-            @Override
-            public void onReject(String userId) {
-                unListen();
-                finishView();
-                Utils.show(AppContext.instance().getString(R.string.playfun_the_other_party_refuses_to_answer));
-
-            }
-
-            @Override
-            public void onNoResp(String userId) {
-                unListen();
-                finishView();
-                Utils.show(AppContext.instance().getString(R.string.playfun_the_other_party_is_temporarily_unavailable));
-            }
-
-            @Override
-            public void onLineBusy(String userId) {
-                unListen();
-                finishView();
-                Utils.show(AppContext.instance().getString(R.string.playfun_the_other_party_is_on_a_call));
-            }
-
-            @Override
-            public void onCallEnd() {
-                unListen();
-                finishView();
-                Utils.show(AppContext.instance().getString(R.string.playfun_call_ended));
-            }
-
-            @Override
-            public void onNetworkQuality(TRTCCloudDef.TRTCQuality localQuality, ArrayList<TRTCCloudDef.TRTCQuality> remoteQuality) {
-                updateNetworkQuality(localQuality, remoteQuality);
-            }
-        };
         Utils.StartGameCallSomeone(1,toUserId, roomId, null);
     }
+    // 添加 监听
+    DLRTCCallingDelegate mTRTCCallingDelegate = new UITRTCCallingDelegate() {
+        @Override
+        public void onError(int code, String msg) {
+            // TODO
+            unListen();
+            finishView();
+            ToastUtils.showLong(AppContext.instance().getString(R.string.trtccalling_toast_call_error_msg, code, msg));
+        }
 
+        @Override
+        public void onCallingCancel() {
+            unListen();
+            finishView();
+            Utils.show(AppContext.instance().getString(R.string.playfun_the_other_party_cancels_the_call));
+            isCancel = true;
+        }
+
+        @Override
+        public void onUserEnter(String userId) {
+            Log.e("语音聊天房","用户进入房间："+userId);
+            unListen();
+            startAudioActivity.postValue(roomId);
+        }
+
+        @Override
+        public void onReject(String userId) {
+            unListen();
+            finishView();
+            Utils.show(AppContext.instance().getString(R.string.playfun_the_other_party_refuses_to_answer));
+
+        }
+
+        @Override
+        public void onLineBusy(String userId) {
+            unListen();
+            finishView();
+            Utils.show(AppContext.instance().getString(R.string.playfun_the_other_party_is_on_a_call));
+        }
+
+        @Override
+        public void onCallEnd() {
+            unListen();
+            finishView();
+            Utils.show(AppContext.instance().getString(R.string.playfun_call_ended));
+        }
+
+        @Override
+        public void onNetworkQuality(TRTCCloudDef.TRTCQuality localQuality, ArrayList<TRTCCloudDef.TRTCQuality> remoteQuality) {
+            updateNetworkQuality(localQuality, remoteQuality);
+        }
+
+        @Override
+        public void onUserLeave(String userId) {
+            super.onUserLeave(userId);
+        }
+
+        @Override
+        public void onCallingTimeout() {
+            unListen();
+            finishView();
+            Utils.show(AppContext.instance().getString(R.string.playfun_the_other_party_is_temporarily_unavailable));
+        }
+    };
     // 被叫
     public void startCalled() {
-        // 1. 添加监听
-        mTRTCCallingDelegate = new EmptyTRTCCallingDelegate() {
-            @Override
-            public void onError(int code, String msg) {
-                unListen();
-                finishView();
-                ToastUtils.showLong(AppContext.instance().getString(R.string.trtccalling_toast_call_error_msg, code, msg));
-            }
-
-            @Override
-            public void onCallingCancel() {
-                unListen();
-                finishView();
-                Utils.show(AppContext.instance().getString(R.string.playfun_the_other_party_cancels_the_call));
-            }
-
-            @Override
-            public void onCallingTimeout() {
-                unListen();
-                finishView();
-                Utils.show(AppContext.instance().getString(R.string.playfun_the_other_party_is_temporarily_unavailable));
-            }
-
-            @Override
-            public void onNetworkQuality(TRTCCloudDef.TRTCQuality localQuality, ArrayList<TRTCCloudDef.TRTCQuality> remoteQuality) {
-                updateNetworkQuality(localQuality, remoteQuality);
-            }
-        };
     }
 
     //localQuality 己方网络状态， remoteQualityList对方网络状态列表，取第一个为1v1通话的网络状态

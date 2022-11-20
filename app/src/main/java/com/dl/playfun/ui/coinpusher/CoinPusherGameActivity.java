@@ -34,7 +34,7 @@ import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.kl.view.AudioCallChatingActivity;
 import com.dl.playfun.kl.view.CallingVideoActivity;
-import com.dl.playfun.kl.viewmodel.EmptyTRTCCallingDelegate;
+import com.dl.playfun.kl.viewmodel.UITRTCCallingDelegate;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseActivity;
 import com.dl.playfun.ui.coinpusher.dialog.CoinPusherConvertDialog;
@@ -61,7 +61,6 @@ import com.faceunity.nama.ui.FaceUnityView;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.luck.picture.lib.permissions.PermissionChecker;
 import com.misterp.toast.SnackUtils;
-import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.custom.CustomConstants;
 import com.tencent.rtmp.ui.TXCloudVideoView;
 import com.tencent.trtc.TRTCCloudDef;
@@ -716,7 +715,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
      * @Date 2022/11/9
      */
 
-    private EmptyTRTCCallingDelegate  mTRTCCallingListener = new EmptyTRTCCallingDelegate() {
+    private UITRTCCallingDelegate mTRTCCallingListener = new UITRTCCallingDelegate() {
         @Override
         public void onError(int code, String msg) {
             initRlCallingUserLayout();
@@ -756,13 +755,13 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
                         viewLayoutParams.height = 0;
                         viewLayoutParams.width = 0;
                         videoLayout.getVideoView().setLayoutParams(viewLayoutParams);
-                        DLRTCVideoManager.getInstance().openCamera(true, txCloudVideoView);
+                        DLRTCVideoManager.Companion.getInstance().openCamera(true, txCloudVideoView);
                     }
                     //有用户的视频开启了
                     DLRTCVideoLayout layout = dLRTCVideoLayoutManager.allocCloudVideoView(viewModel.gameCallEntity.getFromUserId());
                     MPTimber.tag(TAG).d("onInviteeAccepted 读取用户："+viewModel.gameCallEntity.getToUserId()+" 的布局页面"+layout);
                     if (layout != null) {
-                        DLRTCVideoManager.getInstance().startRemoteView(viewModel.gameCallEntity.getFromUserId(), layout.getVideoView());
+                        DLRTCVideoManager.Companion.getInstance().startRemoteView(viewModel.gameCallEntity.getFromUserId(), layout.getVideoView());
                     }
 
                 }else{//语音通话
@@ -785,13 +784,6 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
             initRlCallingUserLayout();
             ToastUtils.showShort(AppContext.instance().getString(R.string.playfun_the_other_party_refuses_to_answer));
             MPTimber.tag(TAG).d("EmptyTRTCCallingDelegate onReject userId："+userId);
-        }
-
-        @Override
-        public void onNoResp(String userId) {
-            initRlCallingUserLayout();
-            MPTimber.tag(TAG).d("EmptyTRTCCallingDelegate onReject userId："+userId);
-            ToastUtils.showShort(AppContext.instance().getString(R.string.playfun_the_other_party_is_temporarily_unavailable));
         }
 
         @Override

@@ -180,7 +180,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
             }
             mainVIewShow.set(true);
             mCallVideoView.acceptCall();
-            DLRTCVideoManager.Companion.getInstance().enterRoom(roomId);
+            //DLRTCVideoManager.Companion.getInstance().enterRoom(roomId);
             Log.e("接听电话按钮点击", mMyUserId + "=======" + mOtherUserId);
             //getCallingInfo(roomId, ChatUtils.imUserIdToSystemUserId(mMyUserId), ChatUtils.imUserIdToSystemUserId(mOtherUserId));
             if (mRole == DLRTCCalling.Role.CALLED) {

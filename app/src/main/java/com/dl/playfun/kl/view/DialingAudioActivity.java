@@ -20,7 +20,7 @@ import com.dl.manager.LocaleManager;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.widget.dialog.TraceDialog;
 import com.dl.rtc.calling.base.DLRTCCalling;
-import com.dl.rtc.calling.manager.DLRTCAudioManager;
+import com.dl.rtc.calling.manager.DLRTCStartShowUIManager;
 import com.dl.rtc.calling.model.DLRTCCallingConstants;
 import com.google.gson.Gson;
 import com.dl.playfun.R;
@@ -178,8 +178,7 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
 
         viewModel.startAudioActivity.observe(this, roomId -> {
             //有人进入房间回调
-            DLRTCAudioManager.Companion.getInstance().accept();
-            DLRTCAudioManager.Companion.getInstance().enterRoom(roomId);
+            DLRTCStartShowUIManager.Companion.getInstance().inviteUserAccept();
             Intent intent = new Intent(DialingAudioActivity.this,AudioCallChatingActivity.class);
             intent.putExtra("fromUserId", callUserId);
             intent.putExtra("toUserId", toId);

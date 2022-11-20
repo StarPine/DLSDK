@@ -173,9 +173,9 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
         ToastUtils.showShort(AppContext.instance().getString(R.string.playfun_the_other_party_refuses_to_answer));
         if(gameCallEntity != null){
             if(gameCallEntity.getCallingType() == DLRTCDataMessageType.DLInviteRTCType.dl_rtc_audio){
-                DLRTCAudioManager.Companion.getInstance().hangup();
+                //DLRTCAudioManager.Companion.getInstance().hangup();
             }else{
-                DLRTCVideoManager.Companion.getInstance().hangup();
+                //DLRTCVideoManager.Companion.getInstance().hangup();
             }
             gameUI.hangupCallingEvent.call();
         }
@@ -349,9 +349,9 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
                         if (callingInviteInfo.getMinutesRemaining() != null && callingInviteInfo.getMinutesRemaining().intValue() <= 0) {
                             if(gameCallEntity != null){
                                 if(gameCallEntity.getCallingType() == DLRTCDataMessageType.DLInviteRTCType.dl_rtc_audio){
-                                    DLRTCAudioManager.Companion.getInstance().hangup();
+                                    //DLRTCAudioManager.Companion.getInstance().hangup();
                                 }else{
-                                    DLRTCVideoManager.Companion.getInstance().hangup();
+                                  //  DLRTCVideoManager.Companion.getInstance().hangup();
                                 }
                             }
                             return;

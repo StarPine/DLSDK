@@ -237,15 +237,6 @@ abstract class BaseDLRTCCallView constructor(
         Status.mCallStatus = Status.CALL_STATUS.NONE
     }
 
-    override fun onGroupCallInviteeListUpdate(userIdList: List<String?>?) {}
-
-    override fun onInvited(
-        sponsor: String?,
-        userIdList: List<String?>?,
-        isFromGroup: Boolean,
-        callType: Int
-    ) {
-    }
 
     override fun onError(code: Int, msg: String?) {
         //发生了错误，报错并退出该页面
@@ -302,25 +293,6 @@ abstract class BaseDLRTCCallView constructor(
         }
     }
 
-    override fun onNoResp(userId: String?) {
-        //删除用户model
-        val userInfo: DLRTCUserModel? = mCallUserModelMap.remove(userId)
-        if (userInfo != null) {
-            mCallUserInfoList.remove(userInfo)
-            mRemovedUserModel = userInfo
-        }
-        //用户无响应时,需提示"**无响应"
-        if (null != userInfo && !TextUtils.isEmpty(userInfo.userName)) {
-            ToastUtils.showLong(
-                mContext!!.getString(
-                    R.string.trtccalling_toast_user_not_response,
-                    userInfo.userName
-                )
-            )
-        } else {
-            showUserToast(userId, R.string.trtccalling_toast_user_not_response)
-        }
-    }
 
     override fun onLineBusy(userId: String?) {
         //删除用户model
@@ -383,7 +355,6 @@ abstract class BaseDLRTCCallView constructor(
 
     override fun onUserAudioAvailable(userId: String?, isAudioAvailable: Boolean) {}
 
-    override fun onSwitchToAudio(success: Boolean, message: String?) {}
 
     override fun onTryToReconnect() {}
 

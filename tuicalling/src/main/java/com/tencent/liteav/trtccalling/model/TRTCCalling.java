@@ -1466,10 +1466,10 @@ public class TRTCCalling {
                             mFURenderer.setCameraFacing(mIsUseFrontCamera? CameraFacingEnum.CAMERA_FRONT:CameraFacingEnum.CAMERA_BACK);
                             long start =  System.nanoTime();
                             dest.texture.textureId = mFURenderer.onDrawFrameSingleInput(src.texture.textureId, src.width, src.height);
-                            if (mCSVUtils != null) {
-                                long renderTime = System.nanoTime() - start;
-                                mCSVUtils.writeCsv(null, renderTime);
-                            }
+//                            if (mCSVUtils != null) {
+//                                long renderTime = System.nanoTime() - start;
+//                                mCSVUtils.writeCsv(null, renderTime);
+//                            }
                             return 0;
                         }
 

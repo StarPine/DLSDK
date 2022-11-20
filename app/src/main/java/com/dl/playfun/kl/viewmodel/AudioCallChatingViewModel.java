@@ -47,7 +47,9 @@ import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.dl.rtc.calling.base.DLRTCCallingDelegate;
+import com.dl.rtc.calling.base.impl.DLRTCInternalListenerManager;
 import com.dl.rtc.calling.manager.DLRTCAudioManager;
+import com.dl.rtc.calling.manager.DLRTCStartShowUIManager;
 import com.google.gson.Gson;
 import com.tencent.custom.GiftEntity;
 import com.tencent.custom.IMGsonUtils;
@@ -330,7 +332,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
 
     public void hangup() {
         unListener();
-        DLRTCAudioManager.Companion.getInstance().hangup();
+        DLRTCStartShowUIManager.Companion.getInstance().inviteUserReject();
         mView.finishView();
         Utils.show(AppContext.instance().getString(R.string.playfun_call_ended));
     }
@@ -344,7 +346,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     }
 
     protected void initListener() {
-        mTRTCCallingDelegate = new EmptyTRTCCallingDelegate() {
+        mTRTCCallingDelegate = new UITRTCCallingDelegate() {
             @Override
             public void onError(int code, String msg) {
                 Log.e(TAG, "onError: " + code + " " + msg);
@@ -379,20 +381,18 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
             @Override
             public void onCallingCancel() {
                 unListener();
-                DLRTCAudioManager.Companion.getInstance().hangup();
+                DLRTCInternalListenerManager.Companion.getInstance().onCallingCancel();
                 mView.finishView();
                 Utils.show("對方取消通話");
             }
         };
-        DLRTCAudioManager.Companion.getInstance().addDelegate(mTRTCCallingDelegate);
+        DLRTCInternalListenerManager.Companion.getInstance().addDelegate(mTRTCCallingDelegate);
     }
 
     protected void unListener() {
-        Utils.runOnUiThread(() -> {
-            if (null != mTRTCCallingDelegate) {
-                DLRTCAudioManager.Companion.getInstance().removeDelegate(mTRTCCallingDelegate);
-            }
-        });
+        if (null != mTRTCCallingDelegate) {
+            DLRTCInternalListenerManager.Companion.getInstance().removeDelegate(mTRTCCallingDelegate);
+        }
     }
 
     //localQuality 己方网络状态， remoteQualityList对方网络状态列表，取第一个为1v1通话的网络状态

@@ -26,6 +26,7 @@ import com.dl.playfun.widget.dialog.TraceDialog;
 import com.dl.rtc.calling.base.DLRTCCalling;
 import com.dl.rtc.calling.manager.DLRTCCallingInfoManager;
 import com.dl.rtc.calling.manager.DLRTCStartManager;
+import com.dl.rtc.calling.manager.DLRTCStartShowUIManager;
 import com.dl.rtc.calling.manager.DLRTCVideoManager;
 import com.dl.rtc.calling.model.bean.DLRTCUserModel;
 import com.dl.rtc.calling.ui.BaseDLRTCCallView;
@@ -129,7 +130,7 @@ public class JMTUICallVideoView extends BaseDLRTCCallView {
                     }
                     TraceDialog.getInstance(getContext())
                             .setCannelOnclick(dialog -> {
-                                DLRTCVideoManager.getInstance().hangup();
+                                //DLRTCVideoManager.getInstance().hangup();
                                 ToastUtils.showShort(R.string.trtccalling_tips_start_camera_audio);
                                 finish();
                             })
@@ -144,7 +145,7 @@ public class JMTUICallVideoView extends BaseDLRTCCallView {
 
                                         @Override
                                         public void onDenied(List<String> permissionsDeniedForever, List<String> permissionsDenied) {
-                                            DLRTCVideoManager.getInstance().hangup();
+                                            //DLRTCVideoManager.getInstance().hangup();
                                             ToastUtils.showShort(R.string.trtccalling_tips_start_camera_audio);
                                             finish();
                                         }
@@ -210,9 +211,8 @@ public class JMTUICallVideoView extends BaseDLRTCCallView {
             public void onGranted(List<String> permissionsGranted) {
                 DLRTCVideoLayout layout = mLayoutManagerTrtc.findCloudView(mSelfModel.getUserId());
                 if (null != layout) {
-                    DLRTCVideoManager.getInstance().openCamera(true, layout.getVideoView());
+                    DLRTCVideoManager.Companion.getInstance().openCamera(true, layout.getVideoView());
                 }
-                //DLRTCVideoManager.getInstance().groupCall(roomId, list, DLRTCCallingConstants.TYPE_VIDEO_CALL, "");
             }
 
             @Override
@@ -230,13 +230,6 @@ public class JMTUICallVideoView extends BaseDLRTCCallView {
         stopCameraAndFinish();
     }
 
-    @Override
-    public void onInvited(String sponsor, List<String> userIdList, boolean isFromGroup, int callType) {
-    }
-
-    @Override
-    public void onGroupCallInviteeListUpdate(List<String> userIdList) {
-    }
 
     @Override
     public void onUserEnter(final String userId) {
@@ -321,26 +314,6 @@ public class JMTUICallVideoView extends BaseDLRTCCallView {
     }
 
     @Override
-    public void onNoResp(final String userId) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (mCallUserModelMap.containsKey(userId)) {
-                    // 进入无响应环节
-                    //1. 回收界面元素
-                    mLayoutManagerTrtc.recyclerCloudViewView(userId);
-                    //2. 删除用户model
-                    DLRTCUserModel userInfo = mCallUserModelMap.remove(userId);
-                    if (userInfo != null) {
-                        mCallUserInfoList.remove(userInfo);
-                        ToastUtils.showLong(getContext().getString(R.string.trtccalling_toast_user_not_response, userInfo.getUserName()));
-                    }
-                }
-            }
-        });
-    }
-
-    @Override
     public void onLineBusy(String userId) {
         if (mCallUserModelMap.containsKey(userId)) {
             // 进入无响应环节
@@ -388,10 +361,10 @@ public class JMTUICallVideoView extends BaseDLRTCCallView {
             layout.setVideoAvailable(isVideoAvailable);
             if (isVideoAvailable) {
                 isStartRemoteView = true;
-                DLRTCVideoManager.getInstance().startRemoteView(userId, layout.getVideoView());
+                DLRTCVideoManager.Companion.getInstance().startRemoteView(userId, layout.getVideoView());
             } else {
                 isStartRemoteView = false;
-                DLRTCVideoManager.getInstance().stopRemoteView(userId);
+                DLRTCVideoManager.Companion.getInstance().stopRemoteView(userId);
             }
         } else {
 
@@ -434,15 +407,10 @@ public class JMTUICallVideoView extends BaseDLRTCCallView {
         RxBus.getDefault().post(new CallingVideoTryToReconnectEvent());
     }
 
-    @Override
-    public void onSwitchToAudio(boolean success, String message) {
-//
-
-    }
 
     private void enableHandsFree(boolean enable) {
         mIsHandsFree = enable;
-        DLRTCVideoManager.getInstance().audioRoute(mIsHandsFree);
+        DLRTCVideoManager.Companion.getInstance().audioRoute(mIsHandsFree);
     }
 
     /**
@@ -457,7 +425,7 @@ public class JMTUICallVideoView extends BaseDLRTCCallView {
             return;
         }
         videoLayout.setVideoAvailable(true);
-        DLRTCVideoManager.getInstance().openCamera(true, videoLayout.getVideoView());
+        DLRTCVideoManager.Companion.getInstance().openCamera(true, videoLayout.getVideoView());
         //2. 展示对方的头像和蒙层
         visibleSponsorGroup(true);
         DLRTCCallingInfoManager.Companion.getInstance().getUserInfoByUserId(mSponsorUserInfo.getUserId(), new DLRTCCallingInfoManager.Companion.UserCallback() {
@@ -639,18 +607,18 @@ public class JMTUICallVideoView extends BaseDLRTCCallView {
     }
 
     private void stopCameraAndFinish() {
-        DLRTCVideoManager.getInstance().closeCamera();
+        DLRTCVideoManager.Companion.getInstance().closeCamera();
         finish();
     }
 
     // ===================kl add fellow=================
     // 挂断电话， 绑定给close按钮的，任何时候可以调用
     public void hangup() {
-        if (mRole == DLRTCCalling.Role.CALLED && !isChatting) {
-            DLRTCVideoManager.getInstance().hangup();
-        } else {
-            DLRTCVideoManager.getInstance().hangup();
-        }
+//        if (mRole == DLRTCCalling.Role.CALLED && !isChatting) {
+//            DLRTCVideoManager.Companion.getInstance().();
+//        } else {
+//            DLRTCVideoManager.Companion.getInstance().hangup();
+//        }
         stopCameraAndFinish();
         // 主叫还没接听的时候主动挂断
         if (mRole == DLRTCCalling.Role.CALL && !isChatting) {
@@ -659,15 +627,15 @@ public class JMTUICallVideoView extends BaseDLRTCCallView {
     }
 
     public void setHandsFree(boolean mIsHandsFree){
-        DLRTCVideoManager.getInstance().muteLocalAudio(mIsHandsFree);
+        DLRTCVideoManager.Companion.getInstance().muteLocalAudio(mIsHandsFree);
     }
     public void setMicMute(boolean isMicMute){
-        DLRTCVideoManager.getInstance().setMicMute(isMicMute);
+        DLRTCVideoManager.Companion.getInstance().setMicMute(isMicMute);
     }
 
     // 接听电话， 给接听按钮用的
     public void acceptCall() {
-        DLRTCVideoManager.getInstance().accept();
+        DLRTCStartShowUIManager.Companion.getInstance().inviteUserAccept();
         showCallingView();
     }
 
@@ -677,7 +645,7 @@ public class JMTUICallVideoView extends BaseDLRTCCallView {
             return;
         }
         mIsFrontCamera = !mIsFrontCamera;
-        DLRTCVideoManager.getInstance().switchCamera(mIsFrontCamera);
+        DLRTCVideoManager.Companion.getInstance().switchCamera(mIsFrontCamera);
 //        mSwitchCameraImg.setActivated(mIsFrontCamera);
         ToastUtils.showLong(R.string.trtccalling_toast_switch_camera);
     }
