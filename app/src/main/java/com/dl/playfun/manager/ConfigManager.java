@@ -3,7 +3,6 @@ package com.dl.playfun.manager;
 
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.ObjectUtils;
-import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.EaringlSwitchUtil;
 import com.dl.playfun.app.Injection;
 import com.dl.playfun.data.AppRepository;

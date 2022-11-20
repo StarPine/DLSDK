@@ -30,7 +30,6 @@ import com.tencent.qcloud.tuicore.interfaces.TUICallback;
 
 import java.util.Objects;
 
-import me.goldze.mvvmhabit.binding.command.BindingAction;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
 import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;

@@ -3,7 +3,6 @@ package com.dl.playfun.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
@@ -11,16 +10,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Base64;
 import android.util.Log;
 
 import com.blankj.utilcode.util.DeviceUtils;
-import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.Utils;
-import com.dl.playfun.app.AppContext;
-import com.dl.playfun.data.source.http.observer.BaseObserver;
-import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -29,7 +23,6 @@ import com.dl.playfun.entity.AddressEntity;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -43,7 +36,6 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import me.goldze.mvvmhabit.utils.RxUtils;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 

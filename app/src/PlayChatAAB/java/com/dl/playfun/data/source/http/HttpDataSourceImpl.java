@@ -112,7 +112,6 @@ import java.util.Map;
 
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
-import retrofit2.http.GET;
 
 /**
  * @author goldze

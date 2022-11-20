@@ -26,7 +26,6 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.utils.StringUtil;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.dl.playfun.R;
-import com.dl.playfun.transformations.MvBlurTransformation;
 
 import java.util.Timer;
 import java.util.TimerTask;

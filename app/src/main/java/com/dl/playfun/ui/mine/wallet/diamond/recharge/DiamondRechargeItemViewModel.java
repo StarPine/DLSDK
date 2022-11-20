@@ -7,12 +7,8 @@ import androidx.databinding.ObservableField;
 
 import com.blankj.utilcode.util.Utils;
 import com.dl.playfun.R;
-import com.dl.playfun.app.AppContext;
 import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.entity.VipPackageItemEntity;
-import com.dl.playfun.manager.ConfigManager;
-import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeItemViewModel;
-import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeViewModel;
 import com.dl.playfun.utils.ExceptionReportUtils;
 
 import me.goldze.mvvmhabit.base.MultiItemViewModel;

@@ -1,16 +1,12 @@
 package com.dl.playfun.ui.mine.wallet.recharge;
 
 import android.app.Application;
-import android.graphics.drawable.Drawable;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
 
-import com.android.billingclient.api.BillingClient;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.R;
-import com.dl.playfun.app.AppContext;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
@@ -22,20 +18,13 @@ import com.dl.playfun.entity.NoteInfoEntity;
 import com.dl.playfun.entity.SystemConfigEntity;
 import com.dl.playfun.entity.SystemRoleMoneyConfigEntity;
 import com.dl.playfun.entity.UserDataEntity;
-import com.dl.playfun.event.UserUpdateVipEvent;
-import com.dl.playfun.ui.mine.wallet.coin.CoinFragment;
-import com.dl.playfun.utils.Utils;
 import com.dl.playfun.viewmodel.BaseViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
-import me.goldze.mvvmhabit.binding.command.BindingAction;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
-import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.RxUtils;
 import me.goldze.mvvmhabit.utils.ToastUtils;

@@ -1,12 +1,6 @@
 package com.dl.playfun.utils;
 
-import android.content.Context;
-import android.content.Intent;
-import android.hardware.Sensor;
-import android.net.Uri;
 import android.os.Build;
-import android.telephony.TelephonyManager;
-import android.text.TextUtils;
 
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.Utils;
@@ -16,9 +10,8 @@ import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.manager.ConfigManager;
-import com.dl.playfun.manager.LocaleManager;
+import com.dl.manager.LocaleManager;
 
-import java.util.Locale;
 import java.util.Map;
 
 import me.goldze.mvvmhabit.http.NetworkUtil;

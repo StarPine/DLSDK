@@ -4,11 +4,14 @@ import com.dl.lib.util.log.MPTimber
 import com.dl.rtc.calling.base.DLRTCCallingDelegate
 import com.dl.rtc.calling.base.DLRTCCallingItFace
 import com.dl.rtc.calling.base.impl.DLRTCInternalListenerManager
+import com.faceunity.core.enumeration.CameraFacingEnum
+import com.faceunity.nama.FURenderer
 import com.tencent.qcloud.tuicore.TUILogin
 import com.tencent.rtmp.ui.TXCloudVideoView
 import com.tencent.trtc.TRTCCloudDef
 import com.tencent.trtc.TRTCCloudDef.TRTCParams
 import com.tencent.trtc.TRTCCloudDef.TRTCVideoEncParam
+import com.tencent.trtc.TRTCCloudListener
 
 /**
  *Author: 彭石林
@@ -19,6 +22,13 @@ class DLRTCVideoManager : DLRTCCallingItFace {
     val TAG_LOG = "DLRTCVideoManager"
 
     private var mTRTCInternalListenerManager : DLRTCInternalListenerManager? = null
+
+    //当前相机使用前后摄像头吧
+    private var mIsUseFrontCamera = false
+    //美颜相关
+    private var mIsFuEffect = false
+    //美颜相关
+    private var mFURenderer: FURenderer? = null
 
     companion object {
         // 单例可防止同时打开多个实例（双重校验锁式（Double Check)单例）。
@@ -64,7 +74,7 @@ class DLRTCVideoManager : DLRTCCallingItFace {
         encParam.minVideoBitrate = 1200
         encParam.videoResolutionMode = TRTCCloudDef.TRTC_VIDEO_RESOLUTION_MODE_PORTRAIT
         encParam.enableAdjustRes = true
-        DLRTCStartManager.getInstance().mTRTCCloud?.apply {
+        DLRTCStartManager.instance.mTRTCCloud?.apply {
             setVideoEncoderParam(encParam);
             val trtcParams = TRTCParams(
                 TUILogin.getSdkAppId(), TUILogin.getUserId(),
@@ -80,14 +90,14 @@ class DLRTCVideoManager : DLRTCCallingItFace {
     }
 
     override fun hangup() {
-        DLRTCStartManager.getInstance().hangup()
+       // DLRTCStartManager.instance.hangup()
     }
 
     /**
      * 接听电话
      */
     override fun accept() {
-        DLRTCStartManager.getInstance().accept()
+        DLRTCStartManager.instance.accept()
     }
 
     /**
@@ -101,61 +111,114 @@ class DLRTCVideoManager : DLRTCCallingItFace {
      * 推出房间
      */
     override fun exitRoom() {
-        DLRTCStartManager.getInstance().exitRoom()
+        DLRTCStartManager.instance.exitRoom()
     }
 
     override fun muteLocalAudio(enable : Boolean) {
-        DLRTCStartManager.getInstance().muteLocalAudio(enable)
+        DLRTCStartManager.instance.muteLocalAudio(enable)
     }
 
     override fun audioRoute(route: Boolean) {
-        DLRTCStartManager.getInstance().audioRoute(route)
+        DLRTCStartManager.instance.audioRoute(route)
     }
 
     override fun enableAGC(enable: Boolean) {
-        DLRTCStartManager.getInstance().enableAGC(enable)
+        DLRTCStartManager.instance.enableAGC(enable)
     }
 
     override fun enableAEC(enable: Boolean) {
-        DLRTCStartManager.getInstance().enableAEC(enable)
+        DLRTCStartManager.instance.enableAEC(enable)
     }
 
     override fun enableANS(enable: Boolean) {
-        DLRTCStartManager.getInstance().enableANS(enable)
+        DLRTCStartManager.instance.enableANS(enable)
     }
 
     /**
      * 打开相机流
      */
     fun openCamera(isFrontCamera: Boolean, txCloudVideoView: TXCloudVideoView?) {
-        DLRTCStartManager.getInstance().openCamera(isFrontCamera, txCloudVideoView)
+        if (txCloudVideoView == null) {
+            return
+        }
+        mIsUseFrontCamera = isFrontCamera
+        if (mIsFuEffect) {
+            DLRTCStartManager.instance.mTRTCCloud!!.setLocalVideoProcessListener(
+                TRTCCloudDef.TRTC_VIDEO_PIXEL_FORMAT_Texture_2D,
+                TRTCCloudDef.TRTC_VIDEO_BUFFER_TYPE_TEXTURE, object :
+                    TRTCCloudListener.TRTCVideoFrameListener {
+                    override fun onGLContextCreated() {
+                        mFURenderer!!.prepareRenderer(null)
+                    }
+
+                    override fun onProcessVideoFrame(src: TRTCCloudDef.TRTCVideoFrame, dest: TRTCCloudDef.TRTCVideoFrame): Int {
+                        mFURenderer!!.cameraFacing = if (mIsUseFrontCamera) CameraFacingEnum.CAMERA_FRONT else CameraFacingEnum.CAMERA_BACK
+                        val start = System.nanoTime()
+                        dest.texture.textureId = mFURenderer!!.onDrawFrameSingleInput(
+                            src.texture.textureId,
+                            src.width,
+                            src.height
+                        )
+                        return 0
+                    }
+
+                    override fun onGLContextDestory() {
+                        mFURenderer!!.release()
+                    }
+
+                })
+        }
+        DLRTCStartManager.instance.mTRTCCloud!!.startLocalPreview(isFrontCamera, txCloudVideoView)
     }
 
     /**
      * 关闭相机流
      */
     fun closeCamera(){
-        DLRTCStartManager.getInstance().closeCamera()
+        DLRTCStartManager.instance.mTRTCCloud!!.stopLocalPreview()
     }
 
     /**
      * 渲染视频
      */
     fun startRemoteView(userId: String?, txCloudVideoView: TXCloudVideoView?) {
-        DLRTCStartManager.getInstance().startRemoteView(userId,txCloudVideoView)
+        if (txCloudVideoView == null) {
+            return
+        }
+        DLRTCStartManager.instance.mTRTCCloud!!.startRemoteView(userId,0, txCloudVideoView)
     }
     /**
      * 关闭渲染视频
      */
     fun stopRemoteView(userId: String?) {
-        DLRTCStartManager.getInstance().stopRemoteView(userId)
+        DLRTCStartManager.instance.mTRTCCloud!!.stopRemoteView(userId,0)
     }
 
     fun setMicMute(enable: Boolean){
-        DLRTCStartManager.getInstance().mTRTCCloud?.muteLocalAudio(enable)
+        DLRTCStartManager.instance.mTRTCCloud?.muteLocalAudio(enable)
     }
 
-    fun switchCamera(enable: Boolean){
-        DLRTCStartManager.getInstance().switchCamera(enable)
+    fun switchCamera(isFrontCamera: Boolean){
+        if (mIsUseFrontCamera == isFrontCamera) {
+            return
+        }
+        mIsUseFrontCamera = isFrontCamera
+        if (mIsFuEffect) {
+            mFURenderer!!.cameraFacing =
+                if (mIsUseFrontCamera) CameraFacingEnum.CAMERA_FRONT else CameraFacingEnum.CAMERA_BACK
+        }
+    }
+
+    /**
+     * 美颜初始化自定义采集和渲染的对象
+     *
+     * @return
+     */
+    fun createCustomRenderer(mIsEffect: Boolean): FURenderer? {
+        mIsFuEffect = mIsEffect
+        if (mIsFuEffect) {
+            mFURenderer = FURenderer.getInstance()
+        }
+        return mFURenderer
     }
 }

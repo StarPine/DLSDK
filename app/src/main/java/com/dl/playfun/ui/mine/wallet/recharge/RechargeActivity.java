@@ -5,7 +5,6 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
 
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.android.billingclient.api.BillingClient;
@@ -17,14 +16,11 @@ import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.BillingClientLifecycle;
-import com.dl.playfun.databinding.ActivityNotepadBinding;
 import com.dl.playfun.databinding.ActivityRechargeBinding;
 import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.ui.base.BaseActivity;
-import com.dl.playfun.ui.message.chatdetail.notepad.NotepadViewModel;
 import com.dl.playfun.widget.BasicToolbar;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 

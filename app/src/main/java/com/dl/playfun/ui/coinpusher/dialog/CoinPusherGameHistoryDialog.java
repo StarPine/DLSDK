@@ -22,7 +22,6 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseDialog;
 import com.dl.playfun.ui.coinpusher.dialog.adapter.CoinPusherGameHistoryAdapter;
 import com.dl.playfun.viewadapter.CustomRefreshHeader;
-import com.dl.playfun.widget.recyclerview.LineManagers;
 
 import java.lang.reflect.Field;
 import java.util.List;

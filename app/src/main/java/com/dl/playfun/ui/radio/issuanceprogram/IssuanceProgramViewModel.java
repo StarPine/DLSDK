@@ -3,7 +3,6 @@ package com.dl.playfun.ui.radio.issuanceprogram;
 import android.app.Application;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
-import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableArrayList;
@@ -14,7 +13,6 @@ import androidx.databinding.ObservableList;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.Utils;
-import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.data.AppRepository;
@@ -31,16 +29,13 @@ import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.BadioEvent;
 import com.dl.playfun.event.SelectMediaSourcesEvent;
 import com.dl.playfun.manager.ConfigManager;
-import com.dl.playfun.ui.login.register.RegisterSexFragment;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.FileUploadUtils;
-import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.tencent.qcloud.tuicore.Status;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -3,8 +3,6 @@ package com.dl.playfun.ui.home.accost;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.os.CountDownTimer;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -14,7 +12,6 @@ import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -32,11 +29,9 @@ import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.AccostEntity;
 import com.dl.playfun.entity.AccostItemEntity;
-import com.dl.playfun.event.LoadEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseDialog;
 import com.dl.playfun.utils.StringUtil;
-import com.dl.playfun.utils.SystemDictUtils;
 import com.dl.playfun.utils.TimeUtils;
 import com.dl.playfun.utils.Utils;
 import com.dl.playfun.widget.image.CircleImageView;
@@ -47,7 +42,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.utils.RxUtils;
 
 /**

@@ -1,6 +1,5 @@
 package com.dl.playfun.ui.mine.vipsubscribe;
 
-import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.View;
@@ -16,7 +15,6 @@ import com.dl.playfun.R;
 
 import me.goldze.mvvmhabit.base.MultiItemViewModel;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
-import me.goldze.mvvmhabit.utils.Utils;
 
 /**
  * 会员充值

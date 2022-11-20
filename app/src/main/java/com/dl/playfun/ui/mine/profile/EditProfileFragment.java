@@ -8,13 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.builder.TimePickerBuilder;
@@ -28,9 +25,6 @@ import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.entity.OccupationConfigItemEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
-import com.dl.playfun.ui.mine.adapter.HopeAdapter;
-import com.dl.playfun.ui.view.wheelview.DlOptionsPickerBuilder;
-import com.dl.playfun.ui.view.wheelview.DlOptionsPickerView;
 import com.dl.playfun.utils.DateUtil;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.PictureSelectorUtil;
@@ -46,8 +40,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.listener.OnItemClickListener;
+
 /**
  * @author wulei
  * 个人资料/个人信息

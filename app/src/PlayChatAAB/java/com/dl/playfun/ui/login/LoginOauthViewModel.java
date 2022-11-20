@@ -22,7 +22,6 @@ import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.main.MainFragment;
 import com.dl.playfun.ui.mine.webdetail.WebDetailFragment;
-import com.dl.playfun.ui.splash.SplashFragment;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
@@ -30,7 +29,6 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import java.util.HashMap;
 import java.util.Map;
 
-import me.goldze.mvvmhabit.binding.command.BindingAction;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
 import me.goldze.mvvmhabit.utils.RxUtils;
 import me.goldze.mvvmhabit.utils.ToastUtils;

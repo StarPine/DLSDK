@@ -1,7 +1,5 @@
 package com.dl.playfun.ui.radio.radiohome;
 
-import static com.blankj.utilcode.util.SnackbarUtils.dismiss;
-
 import android.app.Application;
 import android.os.Bundle;
 import android.util.Log;
@@ -45,7 +43,6 @@ import com.dl.playfun.event.ZoomInPictureEvent;
 import com.dl.playfun.kl.Utils;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.mine.broadcast.mytrends.TrendItemViewModel;
-import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
 import com.dl.playfun.ui.mine.wallet.diamond.recharge.DiamondRechargeActivity;
 import com.dl.playfun.ui.radio.issuanceprogram.IssuanceProgramFragment;
 import com.dl.playfun.ui.radio.radiohome.item.RadioItemBannerVideoViewModel;
@@ -55,7 +52,6 @@ import com.dl.playfun.viewmodel.BaseRefreshViewModel;
 import com.google.gson.Gson;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -1,7 +1,6 @@
 package com.dl.playfun.ui.mine.setting;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableBoolean;
@@ -15,13 +14,11 @@ import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
-import com.dl.playfun.entity.UserBindInfoEntity;
 import com.dl.playfun.entity.VersionEntity;
 import com.dl.playfun.event.BindAccountPhotoEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.GlideCacheManager;
 import com.dl.playfun.ui.login.LoginOauthFragment;
-import com.dl.playfun.ui.main.MainFragment;
 import com.dl.playfun.ui.message.pushsetting.PushSettingFragment;
 import com.dl.playfun.ui.mine.blacklist.BlacklistFragment;
 import com.dl.playfun.ui.mine.language.LanguageSwitchActivity;

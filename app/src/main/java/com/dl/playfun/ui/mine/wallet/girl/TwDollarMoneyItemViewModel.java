@@ -3,7 +3,6 @@ package com.dl.playfun.ui.mine.wallet.girl;
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
 
-import com.dl.playfun.app.AppContext;
 import com.dl.playfun.entity.UserProfitPageInfoEntity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.utils.ExceptionReportUtils;

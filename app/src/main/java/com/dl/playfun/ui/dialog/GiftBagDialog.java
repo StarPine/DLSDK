@@ -23,7 +23,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.StringUtils;
-import com.dl.playfun.app.AppContext;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
@@ -33,7 +32,6 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseDialog;
 import com.dl.playfun.ui.dialog.adapter.GiftBagCardDetailAdapter;
 import com.dl.playfun.ui.dialog.adapter.GiftBagRcvAdapter;
-import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.widget.dialog.MessageDetailDialog;
 import com.dl.playfun.R;
 import com.zyyoona7.popup.EasyPopup;

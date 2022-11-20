@@ -1,7 +1,6 @@
 package com.dl.playfun.ui.coinpusher.dialog;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
@@ -15,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.RelativeLayout;
 
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
@@ -35,7 +33,6 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseDialog;
 import com.dl.playfun.ui.coinpusher.dialog.adapter.CoinPusherCapsuleAdapter;
 import com.dl.playfun.ui.coinpusher.dialog.adapter.CoinPusherConvertAdapter;
-import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 
 import java.lang.reflect.Field;
 

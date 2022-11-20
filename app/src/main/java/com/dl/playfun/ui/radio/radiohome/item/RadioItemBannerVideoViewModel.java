@@ -2,7 +2,6 @@ package com.dl.playfun.ui.radio.radiohome.item;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -10,7 +9,6 @@ import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 
 import com.blankj.utilcode.util.StringUtils;
-import com.bumptech.glide.Glide;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
@@ -25,7 +23,6 @@ import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 import java.util.Objects;
 
 import me.goldze.mvvmhabit.base.MultiItemViewModel;
-import me.goldze.mvvmhabit.binding.command.BindingAction;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
 import me.goldze.mvvmhabit.utils.ToastUtils;
 import me.goldze.mvvmhabit.utils.Utils;

@@ -19,7 +19,6 @@ import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
-import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;

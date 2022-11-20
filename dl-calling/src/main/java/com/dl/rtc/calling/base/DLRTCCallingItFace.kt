@@ -12,7 +12,7 @@ interface DLRTCCallingItFace {
     /**
      * 接听
      */
-    fun accept()
+    fun inviteUserAccept()
 
     /**
      * 进入房间

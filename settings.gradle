@@ -21,3 +21,4 @@ include ':tuicalling'
 /*IM聊天组件*/
 include ':lib-util'
 include ':dl-calling'
+include ':lib-common'

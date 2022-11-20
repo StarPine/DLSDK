@@ -2,9 +2,6 @@ package com.dl.playfun.ui.coinpusher;
 
 import android.app.Application;
 import android.app.Dialog;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 
@@ -13,7 +10,6 @@ import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableInt;
 
-import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.dl.lib.util.log.MPTimber;
@@ -43,6 +39,7 @@ import com.dl.playfun.viewmodel.BaseViewModel;
 import com.dl.rtc.calling.base.DLRTCCalling;
 import com.dl.rtc.calling.manager.DLRTCAudioManager;
 import com.dl.rtc.calling.manager.DLRTCVideoManager;
+import com.dl.rtc.calling.model.DLRTCDataMessageType;
 import com.google.gson.Gson;
 import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
 import com.tencent.imsdk.v2.V2TIMCustomElem;
@@ -175,7 +172,7 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
         Log.e("CoinPusherGameActivity","点击挂断电话======================");
         ToastUtils.showShort(AppContext.instance().getString(R.string.playfun_the_other_party_refuses_to_answer));
         if(gameCallEntity != null){
-            if(gameCallEntity.getCallingType() == DLRTCCalling.Type.AUDIO){
+            if(gameCallEntity.getCallingType() == DLRTCDataMessageType.DLInviteRTCType.dl_rtc_audio){
                 DLRTCAudioManager.Companion.getInstance().hangup();
             }else{
                 DLRTCVideoManager.Companion.getInstance().hangup();
@@ -203,7 +200,7 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
         if(gameCallEntity!=null){
             int callingType;
             //拨打语音
-            if(gameCallEntity.getCallingType() == DLRTCCalling.Type.AUDIO){
+            if(gameCallEntity.getCallingType() == DLRTCDataMessageType.DLInviteRTCType.dl_rtc_audio){
                 callingType = 1;
             }else{
                 //拨打视频
@@ -351,7 +348,7 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
                         }
                         if (callingInviteInfo.getMinutesRemaining() != null && callingInviteInfo.getMinutesRemaining().intValue() <= 0) {
                             if(gameCallEntity != null){
-                                if(gameCallEntity.getCallingType() == DLRTCCalling.Type.AUDIO){
+                                if(gameCallEntity.getCallingType() == DLRTCDataMessageType.DLInviteRTCType.dl_rtc_audio){
                                     DLRTCAudioManager.Companion.getInstance().hangup();
                                 }else{
                                     DLRTCVideoManager.Companion.getInstance().hangup();
@@ -400,11 +397,11 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
                         unitPriceList = callingInviteInfo.getUnitPriceList();
                         //通话类型：1=语音，2=视频
                         if(callingType == 1){
-                            DLRTCAudioManager.Companion.getInstance().accept();
-                            DLRTCAudioManager.Companion.getInstance().enterRoom(gameCallEntity.getRoomId());
+                            //DLRTCAudioManager.Companion.getInstance().accept();
+                            //DLRTCAudioManager.Companion.getInstance().enterRoom(gameCallEntity.getRoomId());
                         }else{
-                            DLRTCVideoManager.Companion.getInstance().accept();
-                            DLRTCVideoManager.Companion.getInstance().enterRoom(gameCallEntity.getRoomId());
+                            //DLRTCVideoManager.Companion.getInstance().accept();
+                            //DLRTCVideoManager.Companion.getInstance().enterRoom(gameCallEntity.getRoomId());
                         }
                         DLRTCAudioManager.Companion.getInstance().enableAGC(true);
                         DLRTCAudioManager.Companion.getInstance().enableAEC(true);
@@ -449,7 +446,7 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
     //来电提示文案
     public String getCallingLayoutTitles(UserProfileInfo itemEntity) {
         if(gameCallEntity!=null){
-            if(gameCallEntity.getCallingType() == DLRTCCalling.Type.AUDIO){
+            if(gameCallEntity.getCallingType() == DLRTCDataMessageType.DLInviteRTCType.dl_rtc_audio){
                 return StringUtils.getString(R.string.playfun_game_audio_hint);
             }else{
                 return StringUtils.getString(R.string.playfun_game_video_hint);

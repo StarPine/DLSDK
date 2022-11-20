@@ -1,14 +1,12 @@
 package com.dl.playfun.ui.coinpusher;
 
 import android.Manifest;
-import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,7 +18,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.blankj.utilcode.util.ColorUtils;
@@ -30,7 +27,6 @@ import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
-import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.ActivityCoinpusherGameBinding;
 import com.dl.playfun.entity.CoinPusherBalanceDataEntity;
 import com.dl.playfun.entity.CoinPusherDataInfoEntity;
@@ -53,22 +49,18 @@ import com.dl.playfun.utils.Utils;
 import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 import com.dl.rtc.calling.DLRTCFloatWindowService;
 import com.dl.rtc.calling.base.DLRTCCalling;
-import com.dl.rtc.calling.base.DLRTCCallingDelegate;
 import com.dl.rtc.calling.base.impl.DLRTCInternalListenerManager;
-import com.dl.rtc.calling.manager.DLRTCIMSignallingManager;
 import com.dl.rtc.calling.manager.DLRTCInterceptorCall;
-import com.dl.rtc.calling.manager.DLRTCStartManager;
 import com.dl.rtc.calling.manager.DLRTCVideoManager;
+import com.dl.rtc.calling.model.DLRTCDataMessageType;
 import com.dl.rtc.calling.ui.videolayout.DLRTCVideoLayout;
 import com.dl.rtc.calling.ui.videolayout.DLRTCVideoLayoutManager;
 import com.dl.rtc.calling.ui.videolayout.VideoLayoutFactory;
-import com.faceunity.nama.FURenderer;
 import com.faceunity.nama.data.FaceUnityDataFactory;
 import com.faceunity.nama.ui.FaceUnityView;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.luck.picture.lib.permissions.PermissionChecker;
 import com.misterp.toast.SnackUtils;
-import com.tencent.imsdk.v2.V2TIMSignalingListener;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.custom.CustomConstants;
 import com.tencent.rtmp.ui.TXCloudVideoView;
@@ -80,8 +72,6 @@ import com.wangsu.libwswebrtc.WsWebRTCView;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -496,7 +486,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
         viewModel.gameUI.callCheckPermissionEvent.observe(this,unused -> {
             GameCallEntity _gameCallEntity = viewModel.gameCallEntity;
             if(viewModel.callingAcceptFlag && _gameCallEntity != null){
-                if(_gameCallEntity.getCallingType()!=null && _gameCallEntity.getCallingType().equals(DLRTCCalling.Type.AUDIO)){
+                if(_gameCallEntity.getCallingType()!=null && _gameCallEntity.getCallingType() == DLRTCDataMessageType.DLInviteRTCType.dl_rtc_audio){
                     toPermissionIntent.launch(Manifest.permission.RECORD_AUDIO);
                 }else{
                     launcherPermissionArray.launch(new String[]{Manifest.permission.RECORD_AUDIO,Manifest.permission.CAMERA});
@@ -642,7 +632,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
     */
     private void callingInterceptApply() {
         Intent intent;
-        if (viewModel.gameCallEntity.getCallingType() == DLRTCCalling.Type.AUDIO) {
+        if (viewModel.gameCallEntity.getCallingType() == DLRTCDataMessageType.DLInviteRTCType.dl_rtc_audio) {
             intent = new Intent(getContext(), AudioCallChatingActivity.class);
             intent.putExtra("fromUserId", viewModel.gameCallEntity.getFromUserId());
             intent.putExtra("toUserId", viewModel.gameCallEntity.getToUserId());
@@ -744,7 +734,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
             if(viewModel.gameCallEntity!=null && viewModel.gameCallEntity.getCallingType()!=null){
                 viewModel.gameCallEntity.setCalling(true);
                 //视频通话
-                if(viewModel.gameCallEntity.getCallingType() == DLRTCCalling.Type.VIDEO){
+                if(Objects.equals(viewModel.gameCallEntity.getCallingType(), DLRTCDataMessageType.INSTANCE.getVideo())){
                     binding.rlCallingUserLayout.setVisibility(View.GONE);
                     binding.rlVideoCallLayout.setVisibility(View.VISIBLE);
                     //创建视频美颜渲染view
@@ -753,7 +743,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
                     faceUnityView.bindDataFactory(new FaceUnityDataFactory(0));
                     binding.flFaceView.addView(faceUnityView);
                     //1.先打开渲染器
-                    DLRTCStartManager.Companion.getInstance().createCustomRenderer(true);
+                    DLRTCVideoManager.Companion.getInstance().createCustomRenderer(true);
                     //2.再打开摄像头
                     DLRTCVideoLayoutManager dLRTCVideoLayoutManager = binding.rlVideoCallLayout.findViewById(R.id.rtc_layout_manager);
                     dLRTCVideoLayoutManager.setEnabled(false);
@@ -854,7 +844,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
             binding.rlReceiveCall.setVisibility(View.GONE);
             if(viewModel.gameCallEntity!=null && viewModel.gameCallEntity.getCallingType()!=null){
                 //视频通话
-                if(viewModel.gameCallEntity.getCallingType() == DLRTCCalling.Type.VIDEO){
+                if(Objects.equals(viewModel.gameCallEntity.getCallingType(), DLRTCDataMessageType.INSTANCE.getVideo())){
                     if(faceUnityView != null){
                         binding.flFaceView.removeView(faceUnityView);
                     }
@@ -882,19 +872,19 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
         * @Date 2022/11/11
         */
         @Override
-        public void receiveCall(@Nullable String userIDs, @NonNull DLRTCCalling.Type type, int roomId, @Nullable String data, boolean isFromGroup, @NonNull String sponsorID) {
+        public void receiveCall(@NonNull String acceptUserId, @NonNull String inviteUserId, @NonNull DLRTCDataMessageType.DLInviteRTCType type, int roomId, @Nullable String data) {
             MPTimber.tag(TAG).d("音视频接听拦截：receiveCall ");
-            MPTimber.tag(TAG).d("音视频接听拦截： roomId = "+roomId+" sponsorID = "+sponsorID+" data = "+data +" userIDs = "+userIDs +" type="+type.toString());
+            MPTimber.tag(TAG).d("音视频接听拦截： roomId = "+roomId+" acceptUserId = "+acceptUserId+" data = "+data +" inviteUserId = "+inviteUserId +" type="+type.toString());
             GameCallEntity gameCallEntity = new GameCallEntity();
             gameCallEntity.setRoomId(roomId);
             gameCallEntity.setCallingRole(DLRTCCalling.Role.CALLED);
             gameCallEntity.setCallingType(type);
-            gameCallEntity.setFromUserId(userIDs);
-            gameCallEntity.setToUserId(TUILogin.getUserId());
+            gameCallEntity.setFromUserId(inviteUserId);
+            gameCallEntity.setToUserId(acceptUserId);
             viewModel.gameCallEntity = gameCallEntity;
             binding.rlReceiveCall.setVisibility(View.VISIBLE);
             int callingType;
-            if(type ==  DLRTCCalling.Type.AUDIO){
+            if(type.equals(DLRTCDataMessageType.INSTANCE.getOnlyAudio())){
                 callingType = 1;
             }else{
                 callingType = 2;

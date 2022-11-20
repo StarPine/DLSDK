@@ -16,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -37,11 +36,7 @@ import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.CreateOrderEntity;
 import com.dl.playfun.entity.DiamondInfoEntity;
 import com.dl.playfun.entity.GoodsEntity;
-import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BasePopupWindow;
-import com.dl.playfun.ui.coinpusher.CoinPusherGameActivity;
-import com.dl.playfun.ui.coinpusher.dialog.CoinPusherGameHistoryDialog;
-import com.dl.playfun.ui.coinpusher.dialog.CoinPusherHelpDialog;
 import com.dl.playfun.ui.dialog.adapter.CoinRechargeAdapter;
 import com.dl.playfun.widget.dialog.TraceDialog;
 import com.jakewharton.rxbinding2.view.RxView;

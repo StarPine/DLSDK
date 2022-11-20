@@ -10,7 +10,6 @@ import com.dl.playfun.event.CoinPusherRoomEvent;
 import com.dl.playfun.event.TaskMainTabEvent;
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
 import com.dl.playfun.ui.mine.wallet.diamond.recharge.DiamondRechargeActivity;
-import com.dl.playfun.ui.task.webview.FukuokaViewFragment;
 import com.dl.playfun.ui.webview.WebHomeFragment;
 
 import me.goldze.mvvmhabit.base.MultiItemViewModel;

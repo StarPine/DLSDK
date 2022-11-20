@@ -1,9 +1,7 @@
 package com.dl.playfun.kl.viewmodel;
 
 import android.app.Application;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -29,8 +27,6 @@ import com.dl.playfun.kl.Utils;
 import com.dl.rtc.calling.base.DLRTCCalling;
 import com.dl.rtc.calling.base.DLRTCCallingDelegate;
 import com.dl.rtc.calling.manager.DLRTCAudioManager;
-import com.dl.rtc.calling.manager.DLRTCStartManager;
-import com.dl.rtc.calling.model.DLRTCCallingConstants;
 import com.tencent.trtc.TRTCCloudDef;
 
 import org.jetbrains.annotations.NotNull;

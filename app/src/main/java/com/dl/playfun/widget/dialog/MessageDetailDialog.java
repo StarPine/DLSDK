@@ -2,7 +2,6 @@ package com.dl.playfun.widget.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,17 +11,14 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.databinding.DataBindingUtil;
 
-import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
 import com.dl.playfun.R;
 import com.dl.playfun.databinding.DialogCheckImgVideoBinding;
-import com.dl.playfun.databinding.DialogCoinpusherHelpBinding;
 import com.dl.playfun.entity.MediaGallerySwitchEntity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.utils.StringUtil;

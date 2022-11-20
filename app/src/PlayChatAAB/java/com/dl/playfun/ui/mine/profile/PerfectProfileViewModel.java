@@ -1,7 +1,6 @@
 package com.dl.playfun.ui.mine.profile;
 
 import android.app.Application;
-import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.NonNull;

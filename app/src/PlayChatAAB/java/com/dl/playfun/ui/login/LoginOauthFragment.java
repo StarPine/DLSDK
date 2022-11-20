@@ -1,7 +1,6 @@
 package com.dl.playfun.ui.login;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 

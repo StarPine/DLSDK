@@ -1,7 +1,6 @@
 package com.dl.playfun.ui.coinpusher.dialog;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;

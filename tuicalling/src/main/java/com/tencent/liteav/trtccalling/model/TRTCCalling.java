@@ -2358,28 +2358,4 @@ public class TRTCCalling {
         }
 
     }
-
-    private CSVUtils mCSVUtils;
-    //性能测试部分
-    private void initCsvUtil(Context context) {
-        mCSVUtils = new CSVUtils(context);
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault());
-        String dateStrDir = format.format(new Date(System.currentTimeMillis()));
-        dateStrDir = dateStrDir.replaceAll("-", "").replaceAll("_", "");
-        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS", Locale.getDefault());
-        String dateStrFile = df.format(new Date());
-        String filePath = Constant.filePath + dateStrDir + File.separator + "excel-" + dateStrFile + ".csv";
-        Log.d(TAG, "initLog: CSV file path:" + filePath);
-        StringBuilder headerInfo = new StringBuilder();
-        headerInfo.append("version：").append(FURenderer.getInstance().getVersion()).append(CSVUtils.COMMA)
-                .append("机型：").append(android.os.Build.MANUFACTURER).append(android.os.Build.MODEL).append(CSVUtils.COMMA)
-                .append("处理方式：双输入纹理输出").append(CSVUtils.COMMA)
-                .append("编码方式：硬件编码").append(CSVUtils.COMMA);
-//                .append("编码分辨率：").append(ENCODE_FRAME_WIDTH).append("x").append(ENCODE_FRAME_HEIGHT).append(CSVUtils.COMMA)
-//                .append("编码帧率：").append(ENCODE_FRAME_FPS).append(CSVUtils.COMMA)
-//                .append("编码码率：").append(ENCODE_FRAME_BITRATE).append(CSVUtils.COMMA)
-//                .append("预览分辨率：").append(CAPTURE_WIDTH).append("x").append(CAPTURE_HEIGHT).append(CSVUtils.COMMA)
-//                .append("预览帧率：").append(CAPTURE_FRAME_RATE).append(CSVUtils.COMMA);
-        mCSVUtils.initHeader(filePath, headerInfo);
-    }
 }

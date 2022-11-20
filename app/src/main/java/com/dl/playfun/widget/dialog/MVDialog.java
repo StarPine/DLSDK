@@ -1,11 +1,8 @@
 package com.dl.playfun.widget.dialog;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.TypedValue;
@@ -17,7 +14,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,17 +24,12 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.dl.playfun.entity.ConfigItemEntity;
 import com.dl.playfun.entity.OccupationConfigItemEntity;
-import com.dl.playfun.utils.DateUtil;
 import com.dl.playfun.utils.ListUtils;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.R;
-import com.dl.playfun.widget.NineGridLockView;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-
-import jp.wasabeef.blurry.Blurry;
 
 public class MVDialog {
     private static volatile MVDialog INSTANCE;

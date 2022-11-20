@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
 
 import com.dl.playfun.R;
-import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;

@@ -1,7 +1,5 @@
 package com.dl.playfun.ui.mine.photosetting;
 
-import android.view.View;
-
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableInt;

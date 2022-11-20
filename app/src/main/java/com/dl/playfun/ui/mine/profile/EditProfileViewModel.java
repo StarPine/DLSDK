@@ -17,7 +17,6 @@ import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.AvatarChangeEvent;
 import com.dl.playfun.event.ProfileChangeEvent;
 import com.dl.playfun.manager.ConfigManager;
-import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.FileUploadUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
 

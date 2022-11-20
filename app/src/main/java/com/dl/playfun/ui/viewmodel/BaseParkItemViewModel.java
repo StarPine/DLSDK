@@ -14,17 +14,13 @@ import com.dl.playfun.entity.AdItemEntity;
 import com.dl.playfun.entity.ParkItemEntity;
 import com.dl.playfun.entity.TaskAdEntity;
 import com.dl.playfun.event.CoinPusherRoomEvent;
-import com.dl.playfun.event.TaskMainTabEvent;
 import com.dl.playfun.manager.ConfigManager;
-import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
 import com.dl.playfun.ui.mine.wallet.diamond.recharge.DiamondRechargeActivity;
-import com.dl.playfun.ui.task.webview.FukuokaViewFragment;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.ui.webview.WebHomeFragment;
 import com.dl.playfun.utils.ChatUtils;
 import com.dl.playfun.utils.ExceptionReportUtils;
 import com.dl.playfun.utils.SystemDictUtils;
-import com.dl.playfun.utils.TimeUtils;
 
 import java.util.List;
 import java.util.Objects;

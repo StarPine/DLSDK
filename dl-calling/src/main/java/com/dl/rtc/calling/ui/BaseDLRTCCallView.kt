@@ -491,12 +491,12 @@ abstract class BaseDLRTCCallView constructor(
             ITUINotification { key, subKey, param ->
                 if (TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED == key && TUIConstants.TUILogin.EVENT_SUB_KEY_USER_KICKED_OFFLINE == subKey) {
                     ToastUtils.showShort(mContext!!.getString(R.string.trtccalling_user_kicked_offline))
-                    DLRTCStartManager.getInstance().hangup()
+                    //DLRTCStartManager.getInstance().hangup()
                     finish()
                 }
                 if (TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED == key && TUIConstants.TUILogin.EVENT_SUB_KEY_USER_SIG_EXPIRED == subKey) {
                     ToastUtils.showShort(mContext!!.getString(R.string.trtccalling_user_sig_expired))
-                    DLRTCStartManager.getInstance().hangup()
+                    //DLRTCStartManager.getInstance().hangup()
                     finish()
                 }
             }

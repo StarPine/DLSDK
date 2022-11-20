@@ -12,10 +12,8 @@ import androidx.databinding.ObservableField;
 
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
-import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
-import com.dl.playfun.app.EaringlSwitchUtil;
 import com.dl.playfun.app.Injection;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.exception.RequestException;
@@ -35,7 +33,6 @@ import com.dl.playfun.entity.UserDetailEntity;
 import com.dl.playfun.event.AccostEvent;
 import com.dl.playfun.event.AddBlackListEvent;
 import com.dl.playfun.event.LikeChangeEvent;
-import com.dl.playfun.event.TaskListEvent;
 import com.dl.playfun.event.TheirPhotoAlbumChangeEvent;
 import com.dl.playfun.event.UserRemarkChangeEvent;
 import com.dl.playfun.event.UserUpdateVipEvent;
@@ -45,7 +42,6 @@ import com.dl.playfun.manager.LocationManager;
 import com.dl.playfun.utils.ChatUtils;
 import com.dl.playfun.utils.FileUploadUtils;
 import com.dl.playfun.utils.ListUtils;
-import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.utils.TimeUtils;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.widget.emptyview.EmptyState;
@@ -57,7 +53,6 @@ import com.tencent.qcloud.tuicore.Status;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;

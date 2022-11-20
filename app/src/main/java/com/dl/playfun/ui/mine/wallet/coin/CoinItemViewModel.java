@@ -5,7 +5,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
 
-import com.dl.playfun.app.AppContext;
 import com.dl.playfun.entity.UserCoinItemEntity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.utils.ExceptionReportUtils;

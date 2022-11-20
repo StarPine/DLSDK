@@ -1,6 +1,7 @@
 package com.dl.rtc.calling.manager
 
 import com.dl.rtc.calling.base.DLRTCCalling
+import com.dl.rtc.calling.model.DLRTCDataMessageType
 import java.lang.ref.WeakReference
 
 /**
@@ -71,17 +72,24 @@ class DLRTCInterceptorCall {
         }
     }
 
-    fun notifyInterceptorCall(userIDs: String, type: DLRTCCalling.Type, roomId: Int, data: String?, isFromGroup : Boolean, sponsorID : String){
+    fun notifyInterceptorCall(acceptUserId: String,inviteUserId : String, type: DLRTCDataMessageType.DLInviteRTCType, roomId: Int, data: String?){
         for (reference in interceptorCallListener!!) {
             val listener: InterceptorCall? = reference.get()
-            listener?.receiveCall(userIDs, type, roomId, data, isFromGroup, sponsorID)
+            listener?.receiveCall(acceptUserId, inviteUserId,type, roomId, data)
         }
     }
 
+    /**
+     * 添加注册监听
+     */
     fun addDelegateInterceptorCall(listener: InterceptorCall) {
         val listenerWeakReference: WeakReference<InterceptorCall> = WeakReference<InterceptorCall>(listener)
         interceptorCallListener!!.add(listenerWeakReference)
     }
+
+    /**
+     * 移除注册监听
+     */
     fun removeDelegateInterceptorCall(listener: InterceptorCall) {
         val iterator: MutableIterator<*> = interceptorCallListener!!.iterator()
         while (iterator.hasNext()) {
@@ -101,7 +109,7 @@ class DLRTCInterceptorCall {
      * 接听拦截回调
      */
     interface InterceptorCall{
-        fun receiveCall(userIDs: String, type: DLRTCCalling.Type, roomId: Int, data: String?, isFromGroup : Boolean, sponsorID : String)
+        fun receiveCall(acceptUserId: String,inviteUserId : String, type: DLRTCDataMessageType.DLInviteRTCType, roomId: Int, data: String?)
     }
 
 }

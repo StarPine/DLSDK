@@ -2,23 +2,16 @@ package com.dl.playfun.ui.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.ImageView;
 
 import androidx.databinding.DataBindingUtil;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.dl.playfun.R;
 import com.dl.playfun.databinding.AlertPhoneCoverBinding;
 import com.dl.playfun.entity.EvaluateItemEntity;
-import com.dl.playfun.ui.message.chatdetail.ChatDetailEvaluateAdapter;
 
 /**
  * Author: 彭石林

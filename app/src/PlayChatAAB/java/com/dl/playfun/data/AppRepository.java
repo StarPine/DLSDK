@@ -17,7 +17,6 @@ import java.util.Map;
 import io.reactivex.Observable;
 import me.goldze.mvvmhabit.base.BaseModel;
 import okhttp3.RequestBody;
-import retrofit2.http.Body;
 
 /**
  * MVVM的Model层，统一模块的数据仓库，包含网络数据和本地数据（一个应用可以有多个Repositor）

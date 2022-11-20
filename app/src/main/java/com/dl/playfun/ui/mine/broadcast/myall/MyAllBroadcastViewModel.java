@@ -19,24 +19,17 @@ import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.BroadcastEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.utils.ApiUitl;
-import com.dl.playfun.utils.FileUploadUtils;
 import com.dl.playfun.viewmodel.BaseRefreshViewModel;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.ui.mine.broadcast.mytrends.TrendItemViewModel;
 import com.dl.playfun.ui.radio.issuanceprogram.IssuanceProgramFragment;
-import com.shuyu.gsyvideoplayer.GSYVideoManager;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Function;
-import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
 import me.goldze.mvvmhabit.base.MultiItemViewModel;
 import me.goldze.mvvmhabit.binding.command.BindingAction;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;

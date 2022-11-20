@@ -48,7 +48,6 @@ import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.Status;
 import com.tencent.qcloud.tuicore.custom.CustomConstants;
-import com.tencent.qcloud.tuicore.custom.CustomConvertUtils;
 import com.tencent.qcloud.tuicore.custom.entity.VideoEvaluationEntity;
 import com.tencent.qcloud.tuicore.custom.entity.VideoPushEntity;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;

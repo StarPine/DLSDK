@@ -27,7 +27,6 @@ import com.dl.rtc.calling.base.DLRTCCalling;
 import com.dl.rtc.calling.manager.DLRTCCallingInfoManager;
 import com.dl.rtc.calling.manager.DLRTCStartManager;
 import com.dl.rtc.calling.manager.DLRTCVideoManager;
-import com.dl.rtc.calling.model.DLRTCCallingConstants;
 import com.dl.rtc.calling.model.bean.DLRTCUserModel;
 import com.dl.rtc.calling.ui.BaseDLRTCCallView;
 import com.dl.rtc.calling.ui.videolayout.DLRTCVideoLayout;
@@ -39,7 +38,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import me.goldze.mvvmhabit.bus.RxBus;
 

@@ -49,25 +49,6 @@ class DLRTCInternalListenerManager : DLRTCCallingDelegate {
         }
     }
 
-    override fun onInvited(
-        sponsor: String?,
-        userIdList: List<String?>?,
-        isFromGroup: Boolean,
-        callType: Int
-    ) {
-        for (reference in mWeakReferenceList!!) {
-            val listener: DLRTCCallingDelegate? = reference.get()
-            listener?.onInvited(sponsor, userIdList, isFromGroup, callType)
-        }
-    }
-
-    override fun onGroupCallInviteeListUpdate(userIdList: List<String?>?) {
-        for (reference in mWeakReferenceList!!) {
-            val listener: DLRTCCallingDelegate? = reference.get()
-            listener?.onGroupCallInviteeListUpdate(userIdList)
-        }
-    }
-
     override fun onUserEnter(userId: String?) {
         for (reference in mWeakReferenceList!!) {
             val listener: DLRTCCallingDelegate? = reference.get()
@@ -86,13 +67,6 @@ class DLRTCInternalListenerManager : DLRTCCallingDelegate {
         for (reference in mWeakReferenceList!!) {
             val listener: DLRTCCallingDelegate? = reference.get()
             listener?.onReject(userId)
-        }
-    }
-
-    override fun onNoResp(userId: String?) {
-        for (reference in mWeakReferenceList!!) {
-            val listener: DLRTCCallingDelegate? = reference.get()
-            listener?.onNoResp(userId)
         }
     }
 
@@ -152,13 +126,6 @@ class DLRTCInternalListenerManager : DLRTCCallingDelegate {
         for (reference in mWeakReferenceList!!) {
             val listener: DLRTCCallingDelegate? = reference.get()
             listener?.onNetworkQuality(localQuality,remoteQuality)
-        }
-    }
-
-    override fun onSwitchToAudio(success: Boolean, message: String?) {
-        for (reference in mWeakReferenceList!!) {
-            val listener: DLRTCCallingDelegate? = reference.get()
-            listener?.onSwitchToAudio(success,message)
         }
     }
 

@@ -24,7 +24,6 @@ import com.dl.playfun.kl.view.VideoPresetActivity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.tim.TUIUtils;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
-import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.widget.dialog.MVDialog;
 import com.dl.playfun.widget.dialog.version.view.UpdateDialogView;
 import com.luck.picture.lib.permissions.PermissionChecker;

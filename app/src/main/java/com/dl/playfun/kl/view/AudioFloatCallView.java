@@ -4,10 +4,7 @@ package com.dl.playfun.kl.view;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -15,7 +12,6 @@ import androidx.annotation.Nullable;
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
-import com.dl.lib.util.log.MPTimber;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.Injection;

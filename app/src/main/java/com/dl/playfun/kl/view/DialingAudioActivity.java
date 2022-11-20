@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.blankj.utilcode.util.ObjectUtils;
@@ -17,7 +16,7 @@ import com.dl.playfun.entity.CallingInviteInfo;
 import com.dl.playfun.event.AudioCallingCancelEvent;
 import com.dl.playfun.kl.viewmodel.AudioCallingViewModel2;
 import com.dl.playfun.manager.ConfigManager;
-import com.dl.playfun.manager.LocaleManager;
+import com.dl.manager.LocaleManager;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.widget.dialog.TraceDialog;
 import com.dl.rtc.calling.base.DLRTCCalling;

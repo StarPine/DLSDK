@@ -48,7 +48,7 @@ import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.event.CallChatingHangupEvent;
 import com.dl.playfun.kl.viewmodel.VideoCallViewModel;
 import com.dl.playfun.manager.ConfigManager;
-import com.dl.playfun.manager.LocaleManager;
+import com.dl.manager.LocaleManager;
 import com.dl.playfun.ui.dialog.GiftBagDialog;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
@@ -59,7 +59,7 @@ import com.dl.playfun.widget.dialog.MessageDetailDialog;
 import com.dl.playfun.widget.dialog.TraceDialog;
 import com.dl.playfun.widget.image.CircleImageView;
 import com.dl.rtc.calling.base.DLRTCCalling;
-import com.dl.rtc.calling.manager.DLRTCStartManager;
+import com.dl.rtc.calling.manager.DLRTCVideoManager;
 import com.dl.rtc.calling.model.DLRTCCallingConstants;
 import com.dl.rtc.calling.ui.videolayout.VideoLayoutFactory;
 import com.faceunity.nama.FURenderer;
@@ -239,7 +239,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         mFURenderer = FURenderer.getInstance();
         mFaceUnityDataFactory = new FaceUnityDataFactory(0);
         mFaceUnityView.bindDataFactory(mFaceUnityDataFactory);
-        DLRTCStartManager.Companion.getInstance().createCustomRenderer(isFuEffect);
+        DLRTCVideoManager.Companion.getInstance().createCustomRenderer(isFuEffect);
 
         mContainerView = findViewById(R.id.container);
         mJMView = findViewById(R.id.jm_view);

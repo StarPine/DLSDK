@@ -8,21 +8,17 @@ import androidx.annotation.NonNull;
 import androidx.databinding.ObservableBoolean;
 
 import com.appsflyer.AppsFlyerLib;
-import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.EaringlSwitchUtil;
 import com.dl.playfun.data.AppRepository;
-import com.dl.playfun.data.source.http.exception.ApiFailException;
 import com.dl.playfun.data.source.http.exception.RequestException;
-import com.dl.playfun.data.source.http.observer.BaseDisposableObserver;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.local.LocalDataSourceImpl;
 import com.dl.playfun.entity.AllConfigEntity;
 import com.dl.playfun.entity.ApiConfigManagerEntity;
-import com.dl.playfun.entity.CityAllEntity;
 import com.dl.playfun.entity.FrequentContactEntity;
 import com.dl.playfun.entity.TokenEntity;
 import com.dl.playfun.entity.UserDataEntity;
@@ -30,12 +26,12 @@ import com.dl.playfun.event.LoginExpiredEvent;
 import com.dl.playfun.ui.login.LoginFragment;
 import com.dl.playfun.ui.login.LoginOauthFragment;
 import com.dl.playfun.ui.main.MainFragment;
-import com.dl.playfun.ui.message.contact.ItemOftenContactViewModel;
-import com.dl.playfun.ui.message.contact.OftenContactViewModel;
 import com.dl.playfun.utils.ExceptionReportUtils;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.viewmodel.BaseViewModel;
+import com.dl.rtc.calling.manager.DLRTCStartManager;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
+import com.tencent.qcloud.tuicore.TUILogin;
 
 import java.util.concurrent.TimeUnit;
 
@@ -177,6 +173,7 @@ public class SplashViewModel extends BaseViewModel<AppRepository> {
                         }
                         initIM();
                         AppContext.instance().logEvent(AppsFlyerEvent.Silent_login);
+                        DLRTCStartManager.Companion.getInstance().setLoginSuccessUser(userDataEntity.getImUserId());
                         startWithPop(MainFragment.class.getCanonicalName());
                     }
 

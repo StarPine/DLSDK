@@ -53,7 +53,7 @@ import com.dl.playfun.event.CallChatingHangupEvent;
 import com.dl.playfun.kl.viewmodel.AudioCallChatingItemViewModel;
 import com.dl.playfun.kl.viewmodel.AudioCallChatingViewModel;
 import com.dl.playfun.manager.ConfigManager;
-import com.dl.playfun.manager.LocaleManager;
+import com.dl.manager.LocaleManager;
 import com.dl.playfun.ui.coinpusher.CoinPusherGameActivity;
 import com.dl.playfun.ui.coinpusher.dialog.CoinPusherRoomListDialog;
 import com.dl.playfun.ui.dialog.GiftBagDialog;

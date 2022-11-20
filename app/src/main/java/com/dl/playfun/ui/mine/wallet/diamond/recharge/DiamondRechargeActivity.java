@@ -1,6 +1,5 @@
 package com.dl.playfun.ui.mine.wallet.diamond.recharge;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -20,8 +19,6 @@ import com.dl.playfun.databinding.ActivityDiamondRechargeBinding;
 import com.dl.playfun.entity.DiamondPaySuccessEntity;
 import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.ui.base.BaseActivity;
-import com.dl.playfun.ui.base.OtherFragmentActivity;
-import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.widget.BasicToolbar;
 import com.dl.playfun.widget.dialog.TraceDialog;

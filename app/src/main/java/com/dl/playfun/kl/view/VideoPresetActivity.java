@@ -9,16 +9,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.dl.playfun.R;
-import com.dl.playfun.manager.LocaleManager;
-import com.dl.rtc.calling.manager.DLRTCStartManager;
-import com.dl.rtc.calling.manager.DLRTCVideoManager;
-import com.dl.rtc.calling.ui.videolayout.DLRTCVideoLayout;
+import com.dl.manager.LocaleManager;
 import com.dl.rtc.calling.ui.videolayout.DLRTCVideoLayoutManager;
 import com.dl.rtc.calling.ui.videolayout.VideoLayoutFactory;
 import com.faceunity.nama.FURenderer;
 import com.faceunity.nama.data.FaceUnityDataFactory;
 import com.faceunity.nama.ui.FaceUnityView;
-import com.tencent.trtc.TRTCCloudDef;
 
 /**
  * @Name： PlayFun_Google
@@ -76,12 +72,9 @@ public class VideoPresetActivity extends AppCompatActivity {
         mFURenderer = FURenderer.getInstance();
         mFaceUnityDataFactory = new FaceUnityDataFactory(0);
         faceUnityView.bindDataFactory(mFaceUnityDataFactory);
-        DLRTCStartManager.Companion.getInstance().createCustomRenderer(isFuEffect);
 
         //2.再打开摄像头
         mLayoutManagerTrtc.initVideoFactory(new VideoLayoutFactory(this));
-        DLRTCVideoLayout videoLayout = mLayoutManagerTrtc.allocCloudVideoView(userId);
-        DLRTCVideoManager.getInstance().openCamera(true, videoLayout.getVideoView());
     }
 
     private void initListener() {
@@ -90,12 +83,10 @@ public class VideoPresetActivity extends AppCompatActivity {
         });
         mCameraChange.setOnClickListener(v -> {
             isFrontCamera = !isFrontCamera;
-            DLRTCVideoManager.getInstance().switchCamera(isFrontCamera);
         });
     }
 
     private void stopCameraAndFinish() {
-        DLRTCStartManager.Companion.getInstance().closeCamera();
         finish();
     }
 

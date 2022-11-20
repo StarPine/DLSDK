@@ -1,7 +1,6 @@
 package com.dl.playfun.ui.mine.trace.list;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableArrayList;

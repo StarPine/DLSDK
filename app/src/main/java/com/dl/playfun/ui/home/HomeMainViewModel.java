@@ -31,13 +31,11 @@ import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.AddBlackListEvent;
 import com.dl.playfun.event.CityChangeEvent;
 import com.dl.playfun.event.DailyAccostEvent;
-import com.dl.playfun.event.LoadEvent;
 import com.dl.playfun.event.LocationChangeEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.home.search.SearchFragment;
 import com.dl.playfun.ui.viewmodel.BaseParkItemViewModel;
 import com.dl.playfun.ui.viewmodel.BaseParkViewModel;
-import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.StringUtil;
 
 import java.util.ArrayList;

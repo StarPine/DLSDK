@@ -28,14 +28,12 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.mine.broadcast.mytrends.CommentItemViewModel;
 import com.dl.playfun.ui.mine.broadcast.mytrends.HeadItemViewModel;
 import com.dl.playfun.ui.mine.broadcast.mytrends.ImageItemViewModel;
-import com.dl.playfun.ui.mine.broadcast.mytrends.TrendItemViewModel;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.ListUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
-import com.shuyu.gsyvideoplayer.GSYVideoManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;

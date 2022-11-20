@@ -18,8 +18,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.R;
-import com.dl.playfun.app.AppContext;
-import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.Injection;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;

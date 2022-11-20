@@ -1,6 +1,5 @@
 package com.dl.playfun.data.source;
 
-import com.dl.playfun.data.RetrofitHeadersConfig;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseListDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
@@ -108,12 +107,10 @@ import java.util.Map;
 
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
-import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
-import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 

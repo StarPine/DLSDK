@@ -1,7 +1,6 @@
 package com.dl.playfun.ui.mine.setting.account;
 
 import android.app.Application;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -25,7 +24,6 @@ import com.dl.playfun.entity.UserBindInfoEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.BindAccountPhotoEvent;
 import com.dl.playfun.event.IsAuthBindingEvent;
-import com.dl.playfun.event.MessageCountChangeEvent;
 import com.dl.playfun.ui.mine.setting.account.bind.CommunityAccountBindFragment;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.viewmodel.BaseViewModel;
@@ -34,7 +32,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.reactivex.disposables.Disposable;
-import me.goldze.mvvmhabit.binding.command.BindingAction;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
 import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.bus.RxSubscriptions;

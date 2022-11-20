@@ -1,7 +1,5 @@
 package com.dl.playfun.ui.home.search;
 
-import static com.blankj.utilcode.util.SnackbarUtils.dismiss;
-
 import android.app.Application;
 import android.text.TextUtils;
 import android.view.KeyEvent;

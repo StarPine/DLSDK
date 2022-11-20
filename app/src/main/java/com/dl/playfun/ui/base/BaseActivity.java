@@ -10,7 +10,7 @@ import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.Observer;
 
 import com.dl.playfun.R;
-import com.dl.playfun.manager.LocaleManager;
+import com.dl.manager.LocaleManager;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.dl.playfun.widget.dialog.loading.DialogLoading;
 import com.dl.playfun.widget.dialog.loading.DialogProgress;

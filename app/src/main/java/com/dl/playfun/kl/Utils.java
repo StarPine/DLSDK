@@ -7,7 +7,9 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.dl.playfun.app.AppContext;
 import com.dl.rtc.calling.base.DLRTCCalling;
 import com.dl.rtc.calling.manager.DLRTCStartManager;
+import com.dl.rtc.calling.manager.DLRTCStartShowUIManager;
 import com.dl.rtc.calling.model.DLRTCCallingConstants;
+import com.dl.rtc.calling.model.DLRTCDataMessageType;
 
 public class Utils {
     protected static final Handler mMainHandler = new Handler(Looper.getMainLooper());
@@ -26,8 +28,9 @@ public class Utils {
 
     }
 
-    public static void inviteUserRTC(String inviteUser,DLRTCCalling.DLInviteRTCType inviteType, int roomId, boolean launchView, String data){
-        DLRTCStartManager.Companion.getInstance().inviteUserRTC(inviteUser, inviteType, roomId, launchView, data);
+    public static void inviteUserRTC(String inviteUser, DLRTCDataMessageType.DLInviteRTCType inviteType, int roomId, boolean launchView, String data){
+        //DLRTCStartManager.Companion.getInstance().inviteUserRTC(inviteUser, inviteType, roomId, launchView, data);
+        DLRTCStartShowUIManager.Companion.getInstance().inviteUserRTC(inviteUser,inviteType,roomId,data);
     }
 
 

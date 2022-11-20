@@ -1,7 +1,5 @@
 package com.dl.playfun.data.source.http.interceptor;
 
-import android.util.Log;
-
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.data.RetrofitHeadersConfig;
@@ -15,7 +13,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 import okhttp3.Headers;

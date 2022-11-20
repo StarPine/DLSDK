@@ -46,7 +46,7 @@ import com.dl.playfun.event.LoginExpiredEvent;
 import com.dl.playfun.kl.view.CallingVideoActivity;
 import com.dl.playfun.kl.view.DialingAudioActivity;
 import com.dl.playfun.manager.ConfigManager;
-import com.dl.playfun.manager.LocaleManager;
+import com.dl.manager.LocaleManager;
 import com.dl.playfun.manager.ThirdPushTokenMgr;
 import com.dl.playfun.tim.TUIUtils;
 import com.dl.playfun.ui.MainContainerActivity;
@@ -54,6 +54,7 @@ import com.dl.playfun.ui.coinpusher.CoinPusherGameActivity;
 import com.dl.playfun.utils.ElkLogEventUtils;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.rtc.calling.manager.DLRTCInterceptorCall;
+import com.dl.rtc.calling.manager.DLRTCStartManager;
 import com.faceunity.nama.FURenderer;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -256,6 +257,7 @@ public class AppContext extends Application {
             @Override
             public void onConnectSuccess() {
                 super.onConnectSuccess();
+                DLRTCStartManager.Companion.getInstance().setLoginSuccessUser(TUILogin.getLoginUser());
             }
 
             @Override

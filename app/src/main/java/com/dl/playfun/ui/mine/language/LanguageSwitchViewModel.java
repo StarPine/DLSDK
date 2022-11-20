@@ -1,8 +1,6 @@
 package com.dl.playfun.ui.mine.language;
 
 import android.app.Application;
-import android.content.res.Resources;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableInt;
@@ -10,10 +8,9 @@ import androidx.databinding.ObservableInt;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.R;
 import com.dl.playfun.data.AppRepository;
-import com.dl.playfun.manager.LocaleManager;
+import com.dl.manager.LocaleManager;
 import com.dl.playfun.viewmodel.BaseViewModel;
 
-import me.goldze.mvvmhabit.binding.command.BindingAction;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 

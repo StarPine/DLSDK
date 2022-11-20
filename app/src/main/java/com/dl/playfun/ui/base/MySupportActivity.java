@@ -2,7 +2,6 @@ package com.dl.playfun.ui.base;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.MotionEvent;
 
@@ -10,10 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.dl.playfun.manager.LocaleManager;
-import com.dl.playfun.utils.ApiUitl;
-
-import java.util.Locale;
+import com.dl.manager.LocaleManager;
 
 import me.yokeyword.fragmentation.ExtraTransaction;
 import me.yokeyword.fragmentation.ISupportActivity;

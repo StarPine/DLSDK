@@ -1,6 +1,7 @@
 package com.dl.playfun.ui.coinpusher;
 
 import com.dl.rtc.calling.base.DLRTCCalling;
+import com.dl.rtc.calling.model.DLRTCDataMessageType;
 
 /**
  * Author: 彭石林
@@ -13,7 +14,7 @@ public class GameCallEntity {
     private int roomId;
     private String fromUserId;
     private String toUserId;
-    private DLRTCCalling.Type callingType;
+    private DLRTCDataMessageType.DLInviteRTCType callingType;
     private DLRTCCalling.Role callingRole;
 
     private boolean isCalling;
@@ -58,11 +59,11 @@ public class GameCallEntity {
         this.toUserId = toUserId;
     }
 
-    public DLRTCCalling.Type getCallingType() {
+    public DLRTCDataMessageType.DLInviteRTCType getCallingType() {
         return callingType;
     }
 
-    public void setCallingType(DLRTCCalling.Type callingType) {
+    public void setCallingType(DLRTCDataMessageType.DLInviteRTCType callingType) {
         this.callingType = callingType;
     }
 

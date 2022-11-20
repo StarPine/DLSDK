@@ -2,7 +2,6 @@ package com.dl.playfun.ui.dialog.adapter;
 
 import android.content.Context;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +17,7 @@ import com.dl.playfun.api.AppGameConfig;
 import com.dl.playfun.entity.GameCoinBuy;
 import com.dl.playfun.R;
 import com.dl.playfun.manager.ConfigManager;
-import com.dl.playfun.utils.ApiUitl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
