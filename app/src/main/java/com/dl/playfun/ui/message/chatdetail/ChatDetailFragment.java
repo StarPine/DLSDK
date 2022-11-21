@@ -1282,6 +1282,11 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             }
         });
         giftBagDialog.show();
+        giftBagDialog.setCrystalGiftOnClickListener((dialog, number, giftEntity) -> {
+            dialog.dismiss();
+            AppContext.instance().logEvent(AppsFlyerEvent.im_send_gifts);
+            viewModel.sendUserGift(dialog, giftEntity, getTaUserIdIM(), number);
+        });
     }
 
     @Override

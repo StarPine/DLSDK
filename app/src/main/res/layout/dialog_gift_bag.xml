@@ -38,7 +38,20 @@
                 android:textColor="@color/empty_list_hint"
                 android:textSize="@dimen/red_dot" />
 
+            <TextView
+                android:id="@+id/tab_crystal"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:layout_alignTop="@+id/tab_gift"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="75dp"
+                android:layout_toEndOf="@+id/tab_gift"
+                android:text="@string/playfun_meagess_crystal"
+                android:textColor="@color/empty_list_hint"
+                android:textSize="@dimen/red_dot" />
+
             <ImageView
+                android:id="@+id/iv_balance_diamond"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 android:layout_centerInParent="true"
@@ -57,6 +70,29 @@
                 android:text="9999999"
                 android:textColor="#ffa72dfe"
                 android:textSize="@dimen/text_size_1067" />
+
+            <ImageView
+                android:id="@+id/iv_balance_crystal"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_centerInParent="true"
+                android:layout_toStartOf="@+id/crystal_balance_value"
+                android:scaleType="centerCrop"
+                android:src="@drawable/icon_bigger_crystal2"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/crystal_balance_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="10dp"
+                android:layout_toStartOf="@+id/btn_stored"
+                android:text="9999999"
+                android:textColor="#ffa72dfe"
+                android:textSize="@dimen/text_size_1067"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/btn_stored"
@@ -199,5 +235,101 @@
                 android:layout_centerInParent="true"
                 android:src="@drawable/gift_bag_empty_img" />
         </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/crystal_page_layout"
+            android:layout_width="match_parent"
+            android:layout_height="279dp"
+            android:visibility="gone">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/crystal_list_page"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:minHeight="197dp"
+                tools:itemCount="1"
+                tools:layoutManager="LinearLayoutManager"
+                tools:listitem="@layout/dialog_gift_bag_item_rcv"
+                tools:spanCount="1" />
+
+            <LinearLayout
+                android:id="@+id/crystal_indicator_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/crystal_list_page"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:minHeight="20dp"
+                android:orientation="horizontal" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/crystal_list_page"
+                android:layout_marginTop="32dp">
+
+                <LinearLayout
+                    android:id="@+id/crystal_check_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="10dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_toStartOf="@+id/crystal_btn_submit"
+                    android:background="@drawable/circle_gray_backdrop_layout">
+
+                    <TextView
+                        android:id="@+id/crystal_number_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerInParent="true"
+                        android:layout_marginStart="16dp"
+                        android:includeFontPadding="false"
+                        android:text="@string/playfun_gift_bag_number_hint"
+                        android:textColor="#ff828282"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/crystal_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginStart="5dp"
+                        android:layout_toEndOf="@+id/number_text"
+                        android:includeFontPadding="false"
+                        android:text="@string/playfun_gift_bag_more_text"
+                        android:textColor="#ff828282"
+                        android:textSize="12sp"
+                        tools:text="1314"
+                        />
+
+                    <ImageView
+                        android:id="@+id/crystal_locker"
+                        android:layout_width="19dp"
+                        android:layout_height="19dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="10dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/icon_del_triangle_img" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/crystal_btn_submit"
+                    style="@null"
+                    android:layout_width="60dp"
+                    android:layout_height="24dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="24dp"
+                    android:background="@drawable/btn_circle_purple"
+                    android:text="@string/playfun_meagess_give_away"
+                    android:textColor="@color/white"
+                    android:textSize="10sp" />
+            </RelativeLayout>
+        </RelativeLayout>
+
     </LinearLayout>
 </LinearLayout>
