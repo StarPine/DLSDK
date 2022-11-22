@@ -378,7 +378,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
             public void onChanged(Map<String, Object> stringObjectMap) {
                 try {
                     int account = (int) stringObjectMap.get("account");
-                    GiftBagEntity.giftEntity giftEntity = (GiftBagEntity.giftEntity) stringObjectMap.get("giftEntity");
+                    GiftBagEntity.GiftEntity giftEntity = (GiftBagEntity.GiftEntity) stringObjectMap.get("giftEntity");
                     //启动SVG动画
                     startVideoSendSvgAnimotion(giftEntity);
                     //启动横幅动画
@@ -433,7 +433,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                 GiftBagDialog giftBagDialog = new GiftBagDialog(mContext, true, viewModel.maleBalanceMoney, viewModel.unitPriceList.size() > 1 ? 4 : 0);
                 giftBagDialog.setGiftOnClickListener(new GiftBagDialog.GiftOnClickListener() {
                     @Override
-                    public void sendGiftClick(Dialog dialog, int number, GiftBagEntity.giftEntity giftEntity) {
+                    public void sendGiftClick(Dialog dialog, int number, GiftBagEntity.GiftEntity giftEntity) {
                         dialog.dismiss();
                         AppContext.instance().logEvent(AppsFlyerEvent.videocall_send_gift);
                         viewModel.sendUserGift(dialog, giftEntity, viewModel.callingVideoInviteInfoField.get().getId(), number);
@@ -491,7 +491,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         }, 1000,10000);
     }
 
-    private void startVideoSendHeadAnimotion(GiftBagEntity.giftEntity giftEntity) {
+    private void startVideoSendHeadAnimotion(GiftBagEntity.GiftEntity giftEntity) {
         ImageView giftImageTrans = new ImageView(mContext);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(dip2px(50), dip2px(50));
         layoutParams.bottomMargin = dip2px(43);
@@ -526,7 +526,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         giftImageTrans.startAnimation(animation);
     }
 
-    private void startVideoSendBannersAnimotion(int account, GiftBagEntity.giftEntity giftEntity) {
+    private void startVideoSendBannersAnimotion(int account, GiftBagEntity.GiftEntity giftEntity) {
         if (account > 1) {
             View streamerView = View.inflate(mContext, R.layout.call_user_streamer_item, null);
             //用户头像
@@ -599,7 +599,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         }
     }
 
-    private void startVideoSendSvgAnimotion(GiftBagEntity.giftEntity giftEntity) {
+    private void startVideoSendSvgAnimotion(GiftBagEntity.GiftEntity giftEntity) {
         SVGAParser svgaParser = SVGAParser.Companion.shareParser();
         try {
             svgaParser.decodeFromURL(new URL(StringUtil.getFullAudioUrl(giftEntity.getLink())), new SVGAParser.ParseCompletion() {

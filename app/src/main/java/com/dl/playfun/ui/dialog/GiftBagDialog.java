@@ -3,6 +3,7 @@ package com.dl.playfun.ui.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Outline;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,12 +27,10 @@ import com.blankj.utilcode.util.ColorUtils;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
-import com.dl.playfun.entity.CrystalGiftBagAdapterEntity;
 import com.dl.playfun.entity.GiftBagAdapterEntity;
 import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseDialog;
-import com.dl.playfun.ui.dialog.adapter.CrystalGiftBagRcvAdapter;
 import com.dl.playfun.ui.dialog.adapter.GiftBagCardDetailAdapter;
 import com.dl.playfun.ui.dialog.adapter.GiftBagRcvAdapter;
 import com.dl.playfun.ui.dialog.adapter.GiftNumberSelectorAdapter;
@@ -67,7 +66,7 @@ public class GiftBagDialog extends BaseDialog {
     private ImageView bag_empty_img;
     //水晶列表
     private RelativeLayout crystal_page_layout;
-    private CrystalGiftBagRcvAdapter crystalGifAdapter;
+    private GiftBagRcvAdapter crystalGifAdapter;
     private RecyclerView crystalGifListPage;
     private LinearLayout crystalIndicatorLayout;
     //赠送按钮
@@ -78,15 +77,17 @@ public class GiftBagDialog extends BaseDialog {
 
     private LinearLayout checkCrystalLineLayout;
 
-    private GiftBagEntity.giftEntity checkGiftItemEntity;
-
-    private GiftBagEntity.CrystalGift checkCrystalItemEntity;
+    private GiftBagEntity.GiftEntity checkGiftItemEntity;
+    private GiftBagEntity.GiftEntity checkCrystalItemEntity;
 
     private GiftNumberSelectorAdapter.GiftNumberSelectorViewHolder checkGiftNumber;
     private GiftNumberSelectorAdapter.GiftNumberSelectorViewHolder checkCrystalGIftNumber;
 
     private RecyclerView gift_check_number;
     private RecyclerView crystal_check_number;
+
+    private TextView gift_number_text;
+    private TextView crystal_number_text;
 
     private EasyPopup mCirclePop;//pupop弹窗
 
@@ -107,7 +108,6 @@ public class GiftBagDialog extends BaseDialog {
 
     private GiftOnClickListener giftOnClickListener;//点击事件回调
     private CardOnClickListener cardOnClickListener;//卡片点击事件回调
-    private CrystalGiftOnClickListener crystalOnClickListener;
     //深色
     private final boolean isDark;
 
@@ -174,6 +174,8 @@ public class GiftBagDialog extends BaseDialog {
         crystalIndicatorLayout = rootView.findViewById(R.id.crystal_indicator_layout);
         gift_check_number = rootView.findViewById(R.id.gift_number_list);
         crystal_check_number = rootView.findViewById(R.id.crystal_number_list);
+        gift_number_text = rootView.findViewById(R.id.gift_number_text);
+        crystal_number_text = rootView.findViewById(R.id.crystal_number_text);
 
         balance_diamond = rootView.findViewById(R.id.iv_balance_diamond);
         balance_crystal = rootView.findViewById(R.id.iv_balance_crystal);
@@ -278,6 +280,18 @@ public class GiftBagDialog extends BaseDialog {
         crystal_check_number.setOutlineProvider(vop);
         crystal_check_number.setClipToOutline(true);
 
+        if (isDark) {
+            gift_number_text.setTextColor(ContextCompat.getColor(mContext, R.color.color_text_9897B3));
+            crystal_number_text.setTextColor(ContextCompat.getColor(mContext, R.color.color_text_9897B3));
+            gift_check_number.setBackground(ContextCompat.getDrawable(mContext, R.drawable.shape_bg_gift_number_selector_night));
+            crystal_check_number.setBackground(ContextCompat.getDrawable(mContext, R.drawable.shape_bg_gift_number_selector_night));
+        } else {
+            gift_number_text.setTextColor(ContextCompat.getColor(mContext, R.color.color_text_333333));
+            crystal_number_text.setTextColor(ContextCompat.getColor(mContext, R.color.color_text_333333));
+            gift_check_number.setBackground(ContextCompat.getDrawable(mContext, R.drawable.shape_bg_gift_number_selector));
+            crystal_check_number.setBackground(ContextCompat.getDrawable(mContext, R.drawable.shape_bg_gift_number_selector));
+        }
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(rootView.getContext());
         linearLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
         giftListPage.setLayoutManager(linearLayoutManager);
@@ -374,8 +388,8 @@ public class GiftBagDialog extends BaseDialog {
                 if (checkCrystalItemEntity == null) {
                     return;
                 }
-                if (crystalOnClickListener != null) {
-                    crystalOnClickListener.sendGiftClick(GiftBagDialog.this, sendCrystalGiftNumber, checkCrystalItemEntity);
+                if (giftOnClickListener != null) {
+                    giftOnClickListener.sendGiftClick(GiftBagDialog.this, sendCrystalGiftNumber, checkCrystalItemEntity);
                 }
             }
         });
@@ -409,7 +423,7 @@ public class GiftBagDialog extends BaseDialog {
                         }
                         int totalCoin = giftBagEntity.getTotalCoin().intValue();
                         balance_value.setText(String.valueOf(totalCoin >= 0 ? totalCoin : 0));
-                        double totalProfit = giftBagEntity.getTotalProfit().intValue();
+                        double totalProfit = giftBagEntity.getTotalProfit();
                         String formatProfit;
                         if (totalProfit < 0) formatProfit = "0.00";
                         else if (totalProfit > 999999.99) formatProfit = "999999.99+";
@@ -418,9 +432,9 @@ public class GiftBagDialog extends BaseDialog {
                         }
                         crystal_balance_value.setText(formatProfit);
                         //礼物列表实现
-                        List<GiftBagEntity.giftEntity> listGifEntity = giftBagEntity.getGift();
+                        List<GiftBagEntity.DiamondGiftEntity> listGifEntity = giftBagEntity.getGift();
                         int gifSize = listGifEntity.size();
-                        List<GiftBagEntity.giftEntity> $listData = new ArrayList<>();
+                        List<GiftBagEntity.DiamondGiftEntity> $listData = new ArrayList<>();
                         List<GiftBagAdapterEntity> listGiftAdapter = new ArrayList<>();
                         if (!listGifEntity.isEmpty()) listGifEntity.get(0).setFirst(true);
                         if (gifSize / 10 > 0) {
@@ -442,15 +456,13 @@ public class GiftBagDialog extends BaseDialog {
                                 }
                             }
                         } else {
-                            for (GiftBagEntity.giftEntity itemEntity : listGifEntity) {
-                                $listData.add(itemEntity);
-                            }
+                            $listData.addAll(listGifEntity);
                             if ($listData.size() > 0) {
                                 GiftBagAdapterEntity giftBagAdapterEntity = new GiftBagAdapterEntity(0, $listData);
                                 listGiftAdapter.add(giftBagAdapterEntity);
                             }
                         }
-                        giftBagRcvAdapter = new GiftBagRcvAdapter(giftListPage, listGiftAdapter, isDark);
+                        giftBagRcvAdapter = new GiftBagRcvAdapter(giftListPage, listGiftAdapter, R.layout.dialog_gift_bag_item_detail, isDark);
                         giftListPage.setAdapter(giftBagRcvAdapter);
                         if (listGiftAdapter.size() > 0) {
                             int listGiftSize = listGiftAdapter.size();
@@ -466,27 +478,26 @@ public class GiftBagDialog extends BaseDialog {
                                 params.leftMargin = dp2px(5);
                                 view.setLayoutParams(params);
                                 indicatorLayout.addView(view);
+                                Log.d("GIFT_DIALOG", "ADD");
                             }
                         }
-                        giftBagRcvAdapter.setOnClickListener(new GiftBagRcvAdapter.OnClickRcvDetailListener() {
-                            @Override
-                            public void clickRcvDetailCheck(int position, GiftBagEntity.giftEntity itemEntity, LinearLayout detail_layout, int rcvPosition) {
-                                if (checkGiftItemEntity != null) {
-                                    if (checkGiftItemEntity.getId().intValue() == itemEntity.getId().intValue()) {
-                                        return;
-                                    } else {
-                                        checkGiftItemEntity = itemEntity;
-                                        if (checkGiftLineLayout != null) checkGiftLineLayout.setBackgroundDrawable(null);
-                                        detail_layout.setBackground(mContext.getDrawable(R.drawable.purple_gift_checked));
-                                        checkGiftLineLayout = detail_layout;
-                                    }
+                        giftBagRcvAdapter.setOnClickListener((position, itemEntity, detail_layout, rcvPosition) -> {
+                            if (checkGiftItemEntity != null) {
+                                if (checkGiftItemEntity.getId().intValue() == itemEntity.getId().intValue()) {
+                                    return;
                                 } else {
                                     checkGiftItemEntity = itemEntity;
-                                    checkGiftLineLayout = detail_layout;
+                                    if (checkGiftLineLayout != null)
+                                        checkGiftLineLayout.setBackgroundDrawable(null);
                                     detail_layout.setBackground(mContext.getDrawable(R.drawable.purple_gift_checked));
+                                    checkGiftLineLayout = detail_layout;
                                 }
-
+                            } else {
+                                checkGiftItemEntity = itemEntity;
+                                checkGiftLineLayout = detail_layout;
+                                detail_layout.setBackground(mContext.getDrawable(R.drawable.purple_gift_checked));
                             }
+
                         });
                         //礼物列表实现
                         //背包实现
@@ -511,10 +522,10 @@ public class GiftBagDialog extends BaseDialog {
                         }
                         //背包实现
                         //水晶礼物实现
-                        List<GiftBagEntity.CrystalGift> listCrystalEntity = giftBagEntity.getCrystal();
+                        List<GiftBagEntity.CrystalGiftEntity> listCrystalEntity = giftBagEntity.getCrystal();
                         int crystalSize = listCrystalEntity.size();
-                        List<GiftBagEntity.CrystalGift> $crystalSizeListData = new ArrayList<>();
-                        List<CrystalGiftBagAdapterEntity> listCrystalAdapter = new ArrayList<>();
+                        List<GiftBagEntity.CrystalGiftEntity> $crystalSizeListData = new ArrayList<>();
+                        List<GiftBagAdapterEntity> listCrystalAdapter = new ArrayList<>();
                         if (!listCrystalEntity.isEmpty()) listCrystalEntity.get(0).setFirst(true);
                         if (crystalSize / 10 > 0) {
                             int cnt = 0;
@@ -522,7 +533,7 @@ public class GiftBagDialog extends BaseDialog {
                             for (int i = 0; i < crystalSize; i++) {
                                 if (idx / 10 > 0) {
                                     $crystalSizeListData.add(listCrystalEntity.get(i));
-                                    listCrystalAdapter.add(cnt, new CrystalGiftBagAdapterEntity(cnt, $crystalSizeListData));
+                                    listCrystalAdapter.add(cnt, new GiftBagAdapterEntity(cnt, $crystalSizeListData));
                                     $crystalSizeListData = new ArrayList<>();
                                     cnt++;
                                     idx = 1;
@@ -530,18 +541,18 @@ public class GiftBagDialog extends BaseDialog {
                                     idx++;
                                     $crystalSizeListData.add(listCrystalEntity.get(i));
                                     if (i == (crystalSize - 1)) {
-                                        listCrystalAdapter.add(cnt, new CrystalGiftBagAdapterEntity(cnt, $crystalSizeListData));
+                                        listCrystalAdapter.add(cnt, new GiftBagAdapterEntity(cnt, $crystalSizeListData));
                                     }
                                 }
                             }
                         } else {
                             $crystalSizeListData.addAll(listCrystalEntity);
                             if ($crystalSizeListData.size() > 0) {
-                                CrystalGiftBagAdapterEntity giftBagAdapterEntity = new CrystalGiftBagAdapterEntity(0, $crystalSizeListData);
+                                GiftBagAdapterEntity giftBagAdapterEntity = new GiftBagAdapterEntity(0, $crystalSizeListData);
                                 listCrystalAdapter.add(giftBagAdapterEntity);
                             }
                         }
-                        crystalGifAdapter = new CrystalGiftBagRcvAdapter(crystalGifListPage, listCrystalAdapter, isDark);
+                        crystalGifAdapter = new GiftBagRcvAdapter(crystalGifListPage, listCrystalAdapter, R.layout.dialog_crystal_gift_bag_item_detail, isDark);
                         crystalGifListPage.setAdapter(crystalGifAdapter);
                         if (listCrystalAdapter.size() > 0) {
                             int listGiftSize = listCrystalAdapter.size();
@@ -564,7 +575,8 @@ public class GiftBagDialog extends BaseDialog {
                             if (checkGiftItemEntity != null) {
                                 if (checkGiftItemEntity.getId().intValue() != itemEntity.getId().intValue()) {
                                     checkCrystalItemEntity = itemEntity;
-                                    if (checkCrystalLineLayout != null) checkCrystalLineLayout.setBackgroundDrawable(null);
+                                    if (checkCrystalLineLayout != null)
+                                        checkCrystalLineLayout.setBackgroundDrawable(null);
                                     detail_layout.setBackground(mContext.getDrawable(R.drawable.purple_gift_checked));
                                     checkCrystalLineLayout = detail_layout;
                                 }
@@ -594,7 +606,7 @@ public class GiftBagDialog extends BaseDialog {
     }
 
     public interface GiftOnClickListener {
-        void sendGiftClick(Dialog dialog, int number, GiftBagEntity.giftEntity giftEntity);
+        void sendGiftClick(Dialog dialog, int number, GiftBagEntity.GiftEntity giftEntity);
 
         void rechargeStored(Dialog dialog);
     }
@@ -606,14 +618,4 @@ public class GiftBagDialog extends BaseDialog {
     public interface CardOnClickListener {
         void onClick(Dialog dialog, int type);
     }
-
-    public void setCrystalGiftOnClickListener(CrystalGiftOnClickListener crystalOnClickListener) {
-        this.crystalOnClickListener = crystalOnClickListener;
-    }
-
-    public interface CrystalGiftOnClickListener {
-        void sendGiftClick(Dialog dialog, int number, GiftBagEntity.CrystalGift giftEntity);
-    }
-
-
 }

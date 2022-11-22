@@ -302,6 +302,8 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
         });
         if (Objects.equals(conversation.getId(), "administrator")) {
             services_tag.setVisibility(View.VISIBLE);
+        } else {
+            services_tag.setVisibility(View.GONE);
         }
     }
 }

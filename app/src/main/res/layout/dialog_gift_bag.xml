@@ -141,9 +141,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/gift_list_page"
                 android:layout_centerInParent="true"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="0dp"
                 android:gravity="center"
-                android:minHeight="156dp"
+                android:minHeight="20dp"
                 android:orientation="horizontal" />
 
             <RelativeLayout
@@ -168,7 +168,8 @@
                     android:layout_height="24dp"
                     android:layout_marginStart="10dp"
                     android:gravity="center"
-                    android:text="@string/playfun_gift_bag_number_hint"/>
+                    android:text="@string/playfun_gift_bag_number_hint"
+                    android:textColor="#ff9897b3"/>
 
                 <Button
                     android:id="@+id/btn_submit"

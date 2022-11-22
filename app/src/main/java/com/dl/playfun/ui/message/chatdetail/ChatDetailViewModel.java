@@ -417,7 +417,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                 });
     }
 
-    public void sendUserGift(Dialog dialog, GiftBagEntity.Entity giftEntity, Integer to_user_id, Integer amount) {
+    public void sendUserGift(Dialog dialog, GiftBagEntity.GiftEntity giftEntity, Integer to_user_id, Integer amount) {
         HashMap<String, Integer> map = new HashMap<>();
         map.put("giftId", giftEntity.getId());
         map.put("toUserId", to_user_id);

@@ -1,5 +1,7 @@
 package com.dl.playfun.entity;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -15,10 +17,10 @@ public class GiftBagEntity {
     @SerializedName("total_coin")
     private Integer totalCoin;
     private Double totalProfit;
-    private List<giftEntity> gift;
+    private List<DiamondGiftEntity> gift;
     private List<propEntity> prop;
     @SerializedName("crystalGift")
-    private List<CrystalGift> crystal;
+    private List<CrystalGiftEntity> crystal;
 
     public Integer getIsFirst() {
         return isFirst;
@@ -44,11 +46,11 @@ public class GiftBagEntity {
         this.totalCoin = totalCoin;
     }
 
-    public List<giftEntity> getGift() {
+    public List<DiamondGiftEntity> getGift() {
         return gift;
     }
 
-    public void setGift(List<giftEntity> gift) {
+    public void setGift(List<DiamondGiftEntity> gift) {
         this.gift = gift;
     }
 
@@ -60,30 +62,21 @@ public class GiftBagEntity {
         this.prop = prop;
     }
 
-    public List<CrystalGift> getCrystal() {
+    public List<CrystalGiftEntity> getCrystal() {
         return crystal;
     }
 
-    public void setCrystal(List<CrystalGift> crystal) {
+    public void setCrystal(List<CrystalGiftEntity> crystal) {
         this.crystal = crystal;
     }
 
-    public abstract class Entity {
-        abstract public Integer getId();
-        abstract public Integer getMoney();
-    }
-
-    public class giftEntity extends Entity {
-        private Integer id;
-        private String name;
-        private Integer money;
-        private String img;
-        @SerializedName("icon_id")
-        private Integer iconId;
-        private String link;
-        private iconEntity icon;
-
-        private boolean isFirst = false;
+    public abstract static class GiftEntity {
+        protected Integer id;
+        protected String name;
+        protected Integer money;
+        protected String img;
+        protected String link;
+        protected boolean isFirst;
 
         public Integer getId() {
             return id;
@@ -117,14 +110,6 @@ public class GiftBagEntity {
             this.img = img;
         }
 
-        public Integer getIconId() {
-            return iconId;
-        }
-
-        public void setIconId(Integer iconId) {
-            this.iconId = iconId;
-        }
-
         public String getLink() {
             return link;
         }
@@ -133,20 +118,35 @@ public class GiftBagEntity {
             this.link = link;
         }
 
+        public boolean isFirst() {
+            return isFirst;
+        }
+
+        public void setFirst(boolean first) {
+            isFirst = first;
+        }
+    }
+
+    public class DiamondGiftEntity extends GiftEntity {
+
+        @SerializedName("icon_id")
+        private Integer iconId;
+        private iconEntity icon;
+
+        public Integer getIconId() {
+            return iconId;
+        }
+
+        public void setIconId(Integer iconId) {
+            this.iconId = iconId;
+        }
+
         public iconEntity getIcon() {
             return icon;
         }
 
         public void setIcon(iconEntity icon) {
             this.icon = icon;
-        }
-
-        public Boolean getFirst() {
-            return isFirst;
-        }
-
-        public void setFirst(Boolean first) {
-            isFirst = first;
         }
 
         public class iconEntity {
@@ -179,15 +179,17 @@ public class GiftBagEntity {
             }
         }
 
+        @NonNull
         @Override
         public String toString() {
-            return "giftEntity{" +
+            return "DiamondGiftEntity{" +
                     "id=" + id +
                     ", name='" + name + '\'' +
                     ", money=" + money +
                     ", img='" + img + '\'' +
-                    ", iconId=" + iconId +
                     ", link='" + link + '\'' +
+                    ", isFirst=" + isFirst +
+                    ", iconId=" + iconId +
                     ", icon=" + icon +
                     '}';
         }
@@ -251,6 +253,7 @@ public class GiftBagEntity {
         }
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "GiftBagEntity{" +
@@ -261,25 +264,10 @@ public class GiftBagEntity {
                 '}';
     }
 
-    public class CrystalGift extends Entity  {
-        private Integer id;
+    public class CrystalGiftEntity extends GiftEntity {
         private Integer type;
-        private String name;
-        private Integer money;
-        private String img;
-        private String link;
         @SerializedName("gift_languages")
         private String lang;
-
-        private boolean isFirst = false;
-
-        public Integer getId() {
-            return id;
-        }
-
-        public void setId(Integer id) {
-            this.id = id;
-        }
 
         public Integer getType() {
             return type;
@@ -287,38 +275,6 @@ public class GiftBagEntity {
 
         public void setType(Integer type) {
             this.type = type;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public Integer getMoney() {
-            return money;
-        }
-
-        public void setMoney(Integer money) {
-            this.money = money;
-        }
-
-        public String getImg() {
-            return img;
-        }
-
-        public void setImg(String img) {
-            this.img = img;
-        }
-
-        public String getLink() {
-            return link;
-        }
-
-        public void setLink(String link) {
-            this.link = link;
         }
 
         public String getLang() {
@@ -329,23 +285,17 @@ public class GiftBagEntity {
             this.lang = lang;
         }
 
-        public Boolean getFirst() {
-            return isFirst;
-        }
-
-        public void setFirst(Boolean first) {
-            isFirst = first;
-        }
-
+        @NonNull
         @Override
         public String toString() {
             return "CrystalGift{" +
                     "id=" + id +
-                    ", type=" + type +
                     ", name='" + name + '\'' +
                     ", money=" + money +
                     ", img='" + img + '\'' +
                     ", link='" + link + '\'' +
+                    ", isFirst=" + isFirst +
+                    ", type=" + type +
                     ", lang='" + lang + '\'' +
                     '}';
         }

@@ -137,6 +137,8 @@
     <color name="playfun_shape_radius_end_color">#BE63FF</color>
 
     <color name="color_gift_number_selector">#F4F4F4</color>
+    <color name="color_gift_number_selector_night">#1C1D2F</color>
     <color name="color_bg_gift_number_selector_item">#FF1579</color>
     <color name="color_text_333333">#333333</color>
+    <color name="color_text_9897B3">#9897B3</color>
 </resources>

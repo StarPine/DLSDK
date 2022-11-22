@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dl.playfun.R;
@@ -19,9 +20,11 @@ import java.util.List;
  */
 public class GiftNumberSelectorAdapter extends RecyclerView.Adapter<GiftNumberSelectorAdapter.GiftNumberSelectorViewHolder> {
 
-    List<Integer> giftNumbers;
+    private List<Integer> giftNumbers;
 
-    ItemOnClickListener listener;
+    private ItemOnClickListener listener;
+
+    private boolean isDarkShow;
 
     @NonNull
     @Override
@@ -39,6 +42,11 @@ public class GiftNumberSelectorAdapter extends RecyclerView.Adapter<GiftNumberSe
         holder.root.setOnClickListener((v) -> {
             listener.onClick(holder);
         });
+        if (isDarkShow) {
+            holder.item.setTextColor(ContextCompat.getColor(holder.root.getContext(), R.color.color_text_9897B3));
+        } else {
+            holder.item.setTextColor(ContextCompat.getColor(holder.root.getContext(), R.color.color_text_333333));
+        }
     }
 
     @Override
@@ -46,20 +54,16 @@ public class GiftNumberSelectorAdapter extends RecyclerView.Adapter<GiftNumberSe
         return giftNumbers.size();
     }
 
-    public List<Integer> getGiftNumbers() {
-        return giftNumbers;
-    }
-
     public void setGiftNumbers(List<Integer> giftNumbers) {
         this.giftNumbers = giftNumbers;
     }
 
-    public ItemOnClickListener getListener() {
-        return listener;
-    }
-
     public void setListener(ItemOnClickListener listener) {
         this.listener = listener;
+    }
+
+    public void setDarkShow(boolean darkShow) {
+        isDarkShow = darkShow;
     }
 
     public static class GiftNumberSelectorViewHolder extends RecyclerView.ViewHolder {

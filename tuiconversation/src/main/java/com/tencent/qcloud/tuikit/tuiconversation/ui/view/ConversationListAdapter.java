@@ -343,22 +343,6 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
             }
         }
         ((ConversationCommonHolder) holder).conversationIconView.setOnlineState(getItem(position).getState() == V2TIMUserStatus.V2TIM_USER_STATUS_ONLINE);
-//        List<String> id = new ArrayList<>();
-//        id.add(getItem(position).getId());
-//        V2TIMManager.getInstance().getUserStatus(id, new V2TIMValueCallback<List<V2TIMUserStatus>>() {
-//            @Override
-//            public void onSuccess(List<V2TIMUserStatus> userStatuses) {
-//                Log.d("ONLINE_STATE", "Success -> " + userStatuses.get(0).getStatusType());
-//                if (userStatuses.get(0).getStatusType() == V2TIMUserStatus.V2TIM_USER_STATUS_ONLINE) {
-//                    ((ConversationCommonHolder) holder).online.setVisibility(View.VISIBLE);
-//                }
-//            }
-//
-//            @Override
-//            public void onError(int i, String s) {
-//                Log.d("ONLINE_STATE", "Failure -> " + s);
-//            }
-//        });
     }
 
     private void setOnClickListener(RecyclerView.ViewHolder holder, int position, ConversationInfo conversationInfo) {

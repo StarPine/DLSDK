@@ -1267,7 +1267,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         GiftBagDialog giftBagDialog = new GiftBagDialog(getContext(), false, viewModel.maleBalance, 0);
         giftBagDialog.setGiftOnClickListener(new GiftBagDialog.GiftOnClickListener() {
             @Override
-            public void sendGiftClick(Dialog dialog, int number, GiftBagEntity.giftEntity giftEntity) {
+            public void sendGiftClick(Dialog dialog, int number, GiftBagEntity.GiftEntity giftEntity) {
                 dialog.dismiss();
                 AppContext.instance().logEvent(AppsFlyerEvent.im_send_gifts);
                 viewModel.sendUserGift(dialog, giftEntity, getTaUserIdIM(), number);
@@ -1282,11 +1282,6 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             }
         });
         giftBagDialog.show();
-        giftBagDialog.setCrystalGiftOnClickListener((dialog, number, giftEntity) -> {
-            dialog.dismiss();
-            AppContext.instance().logEvent(AppsFlyerEvent.im_send_gifts);
-            viewModel.sendUserGift(dialog, giftEntity, getTaUserIdIM(), number);
-        });
     }
 
     @Override
