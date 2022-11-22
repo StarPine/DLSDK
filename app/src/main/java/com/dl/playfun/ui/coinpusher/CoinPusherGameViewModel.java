@@ -37,6 +37,7 @@ import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.dl.rtc.calling.manager.DLRTCAudioManager;
+import com.dl.rtc.calling.manager.DLRTCStartShowUIManager;
 import com.dl.rtc.calling.model.DLRTCDataMessageType;
 import com.google.gson.Gson;
 import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
@@ -175,6 +176,7 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
             }else{
                 //DLRTCVideoManager.Companion.getInstance().hangup();
             }
+            DLRTCStartShowUIManager.Companion.getInstance().inviteUserReject();
             gameUI.hangupCallingEvent.call();
         }
     });

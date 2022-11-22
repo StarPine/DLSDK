@@ -1,5 +1,6 @@
 package com.dl.playfun.kl.view;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
@@ -24,6 +25,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -269,11 +272,25 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
             viewModel.init(acceptUserID, inviteUserID, role);
             viewModel.getCallingInvitedInfo(2, inviteUserID);
         }
-        DLRTCVideoLayout videoLayout = binding.rtcLayoutManager.allocCloudVideoView(role == DLRTCCalling.Role.CALL? inviteUserID : acceptUserID);
-        if(videoLayout!=null){
-            DLRTCVideoManager.Companion.getInstance().openCamera(true, videoLayout.getVideoView());
-        }
+        launcherPermissionArray.launch(new String[]{Manifest.permission.RECORD_AUDIO,Manifest.permission.CAMERA});
     }
+
+    //多个权限申请监听
+    ActivityResultLauncher<String[]> launcherPermissionArray = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(),
+            result -> {
+                if (result.get(Manifest.permission.CAMERA) != null && result.get(Manifest.permission.RECORD_AUDIO) != null) {
+                    if (Objects.requireNonNull(result.get(Manifest.permission.CAMERA)).equals(true) && Objects.requireNonNull(result.get(Manifest.permission.RECORD_AUDIO)).equals(true)) {
+                        //权限全部获取到之后的动作
+                        DLRTCVideoLayout videoLayout = binding.rtcLayoutManager.allocCloudVideoView(role == DLRTCCalling.Role.CALL? inviteUserID : acceptUserID);
+                        if(videoLayout!=null){
+                            DLRTCVideoManager.Companion.getInstance().openCamera(true, videoLayout.getVideoView());
+                        }
+                    } else {
+                        //有权限没有获取到的动作
+                        //alertPermissions();
+                    }
+                }
+            });
 
     @Override
     public void initViewObservable() {
@@ -959,7 +976,6 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
     private final UITRTCCallingDelegate mTRTCCallingListener = new UITRTCCallingDelegate() {
         @Override
         public void onError(int code, String msg) {
-            super.onError(code, msg);
         }
 
         @Override

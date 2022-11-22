@@ -293,7 +293,7 @@ class DLRTCStartManager {
                 err_msg?.apply{
                     errorMsg = err_msg
                 }
-                closure?.callback(true,err_code,errorMsg)
+                closure?.callback(false,err_code,errorMsg)
                 logParams["rejectRet"] = 0
                 logParams["err_code"] = err_code
                 logParams["err_msg"] = errorMsg
@@ -474,7 +474,7 @@ class DLRTCStartManager {
             if (inviteID != this@DLRTCStartManager.inviteId || inviter != this@DLRTCStartManager.inviteUserId) {
                 return
             }
-            if (this@DLRTCStartManager.isReceiveNewInvite && !this@DLRTCStartManager.isBeginInvite) {
+            if (this@DLRTCStartManager.isReceiveNewInvite && this@DLRTCStartManager.isBeginInvite) {
                 return
             }
 
