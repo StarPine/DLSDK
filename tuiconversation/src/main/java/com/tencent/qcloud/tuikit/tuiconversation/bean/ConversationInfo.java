@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMGroupAtInfo;
+import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.imsdk.v2.V2TIMUserStatus;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -22,6 +24,8 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
      */
     private int type;
 
+
+    private int state = V2TIMUserStatus.V2TIM_USER_STATUS_OFFLINE;
     /**
      * 消息未读数
      */
@@ -64,7 +68,15 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
         }
         return null;
     }
-    
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+    }
+
     /**
      * 会话标题
      */

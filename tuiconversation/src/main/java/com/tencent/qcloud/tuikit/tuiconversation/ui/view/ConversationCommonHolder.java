@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class ConversationCommonHolder extends ConversationBaseHolder {
 
@@ -55,6 +56,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
 
     //彭石林修改
     public final ImageView certification;
+    public final ImageView services_tag;
     public final ImageView iv_vip;
     public final ImageView iv_game_icon;
     public Context context;
@@ -75,6 +77,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
         messagefailed = itemView.findViewById(R.id.message_status_failed);
         messageSending = itemView.findViewById(R.id.message_status_sending);
         certification = rootView.findViewById(R.id.certification);
+        services_tag = rootView.findViewById(R.id.service_tag);
         iv_vip = rootView.findViewById(R.id.iv_vip);
         iv_game_icon = rootView.findViewById(R.id.iv_game_icon);
     }
@@ -297,5 +300,8 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
                 Log.e("获取用户信息失败", "getUsersProfile failed: " + code + " desc");
             }
         });
+        if (Objects.equals(conversation.getId(), "administrator")) {
+            services_tag.setVisibility(View.VISIBLE);
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.tencent.qcloud.tuikit.tuiconversation.ui.view;
 
 import android.graphics.Color;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.tencent.imsdk.v2.V2TIMCallback;
+import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMSDKListener;
+import com.tencent.imsdk.v2.V2TIMUserStatus;
+import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationService;
@@ -20,6 +26,7 @@ import com.tencent.qcloud.tuikit.tuiconversation.ui.interfaces.IConversationList
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ConversationListAdapter extends RecyclerView.Adapter implements IConversationListAdapter {
 
@@ -36,6 +43,9 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
     private int mBottomTextSize;
     private int mDateTextSize;
     protected List<ConversationInfo> mDataSource = new ArrayList<>();
+    private Map<String, ConversationInfo> conversationInfoMap;
+    private ArrayList<String> subscribe;
+    private V2TIMSDKListener listener;
     private ConversationListLayout.OnItemClickListener mOnItemClickListener;
     private ConversationListLayout.OnItemLongClickListener mOnItemLongClickListener;
 
@@ -171,7 +181,80 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
 
     @Override
     public void onDataSourceChanged(List<ConversationInfo> dataSource) {
+        if (listener != null) {
+            V2TIMManager.getInstance().removeIMSDKListener(listener);
+        }
+        if (subscribe != null && !subscribe.isEmpty()) {
+            V2TIMManager.getInstance().unsubscribeUserStatus(subscribe, null);
+        }
         this.mDataSource = dataSource;
+        conversationInfoMap = new HashMap<>();
+        subscribe = new ArrayList<>();
+        for (int i = 0; i < dataSource.size(); i++) {
+            ConversationInfo info = getItem(i);
+            if (info != null) {
+                String id = info.getId();
+                conversationInfoMap.put(id, info);
+                if (subscribe.size() < 100) {
+                    subscribe.add(info.getId());
+                }
+            }
+        }
+        V2TIMManager.getInstance().getUserStatus(new ArrayList<>(conversationInfoMap.keySet()), new V2TIMValueCallback<List<V2TIMUserStatus>>() {
+            @Override
+            public void onSuccess(List<V2TIMUserStatus> v2TIMUserStatuses) {
+                Log.d("ONLINE_STATE", "STATE GET =============");
+                for (int i = 0; i < v2TIMUserStatuses.size(); i++) {
+                    V2TIMUserStatus status = v2TIMUserStatuses.get(i);
+                    int newType = status.getStatusType();
+                    ConversationInfo info = conversationInfoMap.get(status.getUserID());
+                    if (info != null) {
+                        if (info.getState() != newType) {
+                            info.setState(newType);
+                            Log.d("ONLINE_STATE", "User[" + status.getUserID() + "] Status turn to " + newType);
+                            onItemChanged(mDataSource.indexOf(info));
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onError(int i, String s) {
+
+            }
+        });
+        V2TIMManager.getInstance().subscribeUserStatus(subscribe, new V2TIMCallback() {
+            @Override
+            public void onSuccess() {
+                Log.d("ONLINE_STATE", "SUBSCRIBE SUCCESS");
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                Log.d("ONLINE_STATE", "SUBSCRIBE ERROR -> " + s);
+            }
+        });
+        listener = new V2TIMSDKListener() {
+            @Override
+            public void onUserStatusChanged(List<V2TIMUserStatus> userStatusList) {
+                Log.d("ONLINE_STATE", "STATE CHANGE =============");
+                super.onUserStatusChanged(userStatusList);
+                for (int i = 0; i < userStatusList.size(); i++) {
+                    V2TIMUserStatus status = userStatusList.get(i);
+                    int newType = status.getStatusType();
+                    ConversationInfo info = conversationInfoMap.get(status.getUserID());
+                    if (info != null) {
+                        if (info.getState() != newType) {
+                            info.setState(newType);
+                            Log.d("ONLINE_STATE", "User[" + status.getUserID() + "] Status turn to " + newType);
+                            onItemChanged(mDataSource.indexOf(info));
+                        }
+                    }
+                }
+            }
+        };
+        V2TIMManager.getInstance().addIMSDKListener(listener);
+
     }
 
     public List<ConversationInfo> getDataSource(){
@@ -259,7 +342,23 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
                 baseHolder.itemView.setBackgroundColor(Color.WHITE);
             }
         }
-
+        ((ConversationCommonHolder) holder).conversationIconView.setOnlineState(getItem(position).getState() == V2TIMUserStatus.V2TIM_USER_STATUS_ONLINE);
+//        List<String> id = new ArrayList<>();
+//        id.add(getItem(position).getId());
+//        V2TIMManager.getInstance().getUserStatus(id, new V2TIMValueCallback<List<V2TIMUserStatus>>() {
+//            @Override
+//            public void onSuccess(List<V2TIMUserStatus> userStatuses) {
+//                Log.d("ONLINE_STATE", "Success -> " + userStatuses.get(0).getStatusType());
+//                if (userStatuses.get(0).getStatusType() == V2TIMUserStatus.V2TIM_USER_STATUS_ONLINE) {
+//                    ((ConversationCommonHolder) holder).online.setVisibility(View.VISIBLE);
+//                }
+//            }
+//
+//            @Override
+//            public void onError(int i, String s) {
+//                Log.d("ONLINE_STATE", "Failure -> " + s);
+//            }
+//        });
     }
 
     private void setOnClickListener(RecyclerView.ViewHolder holder, int position, ConversationInfo conversationInfo) {
