@@ -1,5 +1,6 @@
 package com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,7 +32,8 @@ public class CallingMessageHolder extends TextMessageHolder{
     @Override
     public void layoutVariableViews(TUIMessageBean msg, int position) {
         super.layoutVariableViews(msg, position);
-
+        Log.e("当前文字信令展示消息：",msg.getExtra());
+        Log.e("当前文字信令展示消息2：",new String(msg.getCustomElemData()));
         if (!(msg instanceof CallingMessageBean)) {
             return;
         }

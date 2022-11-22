@@ -2,6 +2,7 @@ package com.tencent.qcloud.tuikit.tuichat.ui.view.message.viewholder;
 
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -34,7 +35,7 @@ public class TextMessageHolder extends MessageContentHolder {
             return;
         }
         TextMessageBean textMessageBean = (TextMessageBean) msg;
-
+        Log.e("当前消息为进入文本消息",textMessageBean.toString());
         if (isForwardMode || isReplyDetailMode || !textMessageBean.isSelf()) {
             int otherTextColorResId = TUIThemeManager.getAttrResId(msgBodyText.getContext(), R.attr.chat_other_msg_text_color);
             int otherTextColor = msgBodyText.getResources().getColor(otherTextColorResId);

@@ -142,6 +142,9 @@ class DLRTCStartManager {
             closure?.callback(false,10010,"当前已经在邀请中")
             return
         }
+        if(this@DLRTCStartManager.currentId.isEmpty()){
+            this@DLRTCStartManager.currentId = TUILogin.getLoginUser()
+        }
         isBeginInvite = true
         this.inviteUserId = currentId
         this.inviteTypeMsg = inviteType.name
@@ -708,7 +711,6 @@ class DLRTCStartManager {
     private fun callBackDataValid(dataString : String?,rtcMsgType : String) :  Hashtable<String, Any>? {
         dataString?.apply {
             val params = convertDataToDict(this)
-            MPTimber.tag(TAGLOG).d("当前信令转换为mmap ：$params")
             if (params.keys.contains(DLRTCDataMessageType.DLRTCVersionTag)) {
                 val messageType = params[DLRTCDataMessageType.DLRTCMessageType]
                 if(messageType is String && messageType == rtcMsgType){

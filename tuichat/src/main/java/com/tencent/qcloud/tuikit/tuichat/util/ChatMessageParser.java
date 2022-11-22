@@ -2,6 +2,7 @@ package com.tencent.qcloud.tuikit.tuichat.util;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -101,7 +102,9 @@ public class ChatMessageParser {
         if (message != null) {
             message.setCommonAttribute(v2TIMMessage);
             message.onProcessMessage(v2TIMMessage);
+            Log.e("解析完成的自定义消息", String.valueOf((message.getV2TIMMessage().toString())));
         }
+        Log.e("解析完成的自定义消息", String.valueOf((message == null)));
         return message;
     }
 

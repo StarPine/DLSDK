@@ -35,8 +35,11 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
 
     private CallingInviteInfo callingInviteInfo;
     //拨打方UserId
-    private String callUserId;
-    private String toId;
+    private String inviteUserID;
+    //接听方
+    private String acceptUserID;
+    //当前是否是拨打人
+    private boolean inviteSelf;
     private Integer roomId;
     private DLRTCCalling.Role role;
 
@@ -98,12 +101,10 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
         Intent intent = getIntent();
         role = (DLRTCCalling.Role) intent.getExtras().get(DLRTCCallingConstants.PARAM_NAME_ROLE);
         //被动接收
-        String userIds = intent.getExtras().getString(DLRTCCallingConstants.PARAM_NAME_USERIDS);
-        if (userIds != null) {
-            toId = userIds;
-        }
+        acceptUserID = intent.getExtras().getString(DLRTCCallingConstants.DLRTCAcceptUserID);
         //主动呼叫
-        callUserId = intent.getExtras().getString(DLRTCCallingConstants.PARAM_NAME_SPONSORID);
+        inviteUserID = intent.getExtras().getString(DLRTCCallingConstants.DLRTCInviteUserID);
+        inviteSelf = intent.getExtras().getBoolean(DLRTCCallingConstants.DLRTCInviteSelf);
         String userData = intent.getExtras().getString("userProfile");
         if (userData != null) {
             callingInviteInfo = new Gson().fromJson(userData, CallingInviteInfo.class);
@@ -114,10 +115,10 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
     @Override
     public void initData() {
         super.initData();
+        DLRTCStartShowUIManager.Companion.getInstance().startRing();
         if (role == DLRTCCalling.Role.CALL) {//主动呼叫
-            callUserId = V2TIMManager.getInstance().getLoginUser();
             if (callingInviteInfo != null) {
-                viewModel.init(callUserId, toId, role, callingInviteInfo.getRoomId());
+                viewModel.init(inviteUserID, acceptUserID, role, callingInviteInfo.getRoomId());
                 viewModel.callingInviteInfoField.set(callingInviteInfo);
                 if (callingInviteInfo.getUserProfileInfo().getSex() == 1 && ConfigManager.getInstance().getTipMoneyShowFlag()) {
                     if (!ObjectUtils.isEmpty(callingInviteInfo.getMessages()) && callingInviteInfo.getMessages().size() > 0) {
@@ -131,9 +132,8 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
                 viewModel.start();
             }
         } else {//被动接听
-            toId = V2TIMManager.getInstance().getLoginUser();
-            viewModel.init(callUserId, toId, role);
-            viewModel.getCallingInvitedInfo(1, callUserId);
+            viewModel.init(inviteUserID, acceptUserID, role);
+            viewModel.getCallingInvitedInfo(1, inviteUserID);
         }
         try {
             new RxPermissions(this)
@@ -152,18 +152,13 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
                                             viewModel.cancelCallClick();
                                         }
                                     })
-                                    .setConfirmOnlick(new TraceDialog.ConfirmOnclick() {
-                                        @Override
-                                        public void confirm(Dialog dialog) {
-                                            new RxPermissions(DialingAudioActivity.this)
-                                                    .request(Manifest.permission.RECORD_AUDIO)
-                                                    .subscribe(granted -> {
-                                                        if (!granted) {
-                                                            viewModel.cancelCallClick();
-                                                        }
-                                                    });
-                                        }
-                                    }).AlertCallAudioPermissions().show();
+                                    .setConfirmOnlick(dialog -> new RxPermissions(DialingAudioActivity.this)
+                                            .request(Manifest.permission.RECORD_AUDIO)
+                                            .subscribe(granted1 -> {
+                                                if (!granted1) {
+                                                    viewModel.cancelCallClick();
+                                                }
+                                            })).AlertCallAudioPermissions().show();
                         }
                     });
         } catch (Exception e) {
@@ -180,10 +175,11 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
             //有人进入房间回调
             DLRTCStartShowUIManager.Companion.getInstance().inviteUserAccept();
             Intent intent = new Intent(DialingAudioActivity.this,AudioCallChatingActivity.class);
-            intent.putExtra("fromUserId", callUserId);
-            intent.putExtra("toUserId", toId);
+            intent.putExtra(DLRTCCallingConstants.DLRTCInviteUserID, inviteUserID);
+            intent.putExtra(DLRTCCallingConstants.DLRTCAcceptUserID, acceptUserID);
             intent.putExtra("mRole", role);
             intent.putExtra("roomId", roomId);
+            intent.putExtra(DLRTCCallingConstants.DLRTCInviteSelf, inviteSelf);
             startActivity(intent);
             finish();
             overridePendingTransition(R.anim.anim_zoom_in, R.anim.anim_stay);

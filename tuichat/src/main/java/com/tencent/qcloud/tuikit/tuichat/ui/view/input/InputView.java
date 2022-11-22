@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -171,7 +172,6 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     private ReplyPreviewBean replyPreviewBean;
     private boolean isShowCustomFace = true;
     private boolean isListenerCustomizeMessage = false;//是否已监听
-
     /**
      * 临时新增
      */
@@ -237,6 +237,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         replyTv = findViewById(R.id.reply_text);
 //        replyCloseBtn = findViewById(R.id.reply_close_btn);
         // 子类实现所有的事件处理
+
 
         int iconSize = getResources().getDimensionPixelSize(R.dimen.chat_input_icon_size);
         ViewGroup.LayoutParams layoutParams = mEmojiInputButton.getLayoutParams();
@@ -420,6 +421,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
 //                exitReply();
 //            }
 //        });
+
     }
 
     public void addInputText(String name, String id){

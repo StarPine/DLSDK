@@ -32,17 +32,14 @@ class DLRTCInterceptorCall {
      */
     fun addDelegateActivity(vararg mClass : Class<*>){
         if(mClass.isNotEmpty()){
-            mClass.apply {
-                //如果为空::创建对象
-                if(interceptorActivity.isNullOrEmpty()){
-                    interceptorActivity = HashMap()
-                }
-                mClass.iterator().forEach {
-                    interceptorActivity!![it.simpleName] = it.canonicalName as Any
-                }
+            //如果为空::创建对象
+            if(interceptorActivity.isNullOrEmpty()){
+                interceptorActivity = HashMap()
+            }
+            mClass.iterator().forEach {
+                interceptorActivity!![it.simpleName] = it.canonicalName as Any
             }
         }
-
     }
 
     /**

@@ -44,6 +44,7 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.ActivityCallAudioChatingBinding;
 import com.dl.playfun.entity.AudioCallingBarrageEntity;
+import com.dl.playfun.entity.CallingInfoEntity;
 import com.dl.playfun.entity.CoinPusherDataInfoEntity;
 import com.dl.playfun.entity.CrystalDetailsConfigEntity;
 import com.dl.playfun.entity.GiftBagEntity;
@@ -55,6 +56,7 @@ import com.dl.playfun.kl.viewmodel.AudioCallChatingViewModel;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.manager.LocaleManager;
 import com.dl.playfun.ui.coinpusher.CoinPusherGameActivity;
+import com.dl.playfun.ui.coinpusher.GameCallEntity;
 import com.dl.playfun.ui.coinpusher.dialog.CoinPusherRoomListDialog;
 import com.dl.playfun.ui.dialog.GiftBagDialog;
 import com.dl.playfun.utils.AutoSizeUtils;
@@ -67,6 +69,8 @@ import com.dl.playfun.widget.dialog.TraceDialog;
 import com.dl.playfun.widget.image.CircleImageView;
 import com.dl.rtc.calling.DLRTCFloatWindowService;
 import com.dl.rtc.calling.base.DLRTCCalling;
+import com.dl.rtc.calling.model.DLRTCCallingConstants;
+import com.dl.rtc.calling.model.DLRTCDataMessageType;
 import com.google.gson.reflect.TypeToken;
 import com.opensource.svgaplayer.SVGACallback;
 import com.opensource.svgaplayer.SVGAImageView;
@@ -85,6 +89,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -188,8 +193,8 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         SVGAParser.Companion.shareParser().init(this);
         mContext = this;
         Intent intent = getIntent();
-        inviterImId = intent.getStringExtra("fromUserId");
-        receiverImId = intent.getStringExtra("toUserId");
+        inviterImId = intent.getStringExtra(DLRTCCallingConstants.DLRTCInviteUserID);
+        receiverImId = intent.getStringExtra(DLRTCCallingConstants.DLRTCAcceptUserID);
         mRole = (DLRTCCalling.Role)intent.getExtras().get("mRole");
         roomId = intent.getIntExtra("roomId", 0);
         mTimeCount = intent.getIntExtra("timeCount", 0);
@@ -451,6 +456,25 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                     coinersDialog.dismiss();
                     Intent intent = new Intent(mContext, CoinPusherGameActivity.class);
                     intent.putExtra("CoinPusherInfo",itemEntity);
+                    //创建玩游戏模型
+                    GameCallEntity gameCallEntity = new GameCallEntity();
+                    gameCallEntity.setRoomId(viewModel.roomId);
+                    gameCallEntity.setInviteUserId(viewModel.fromUserId);
+                    gameCallEntity.setAcceptUserId(viewModel.toUserId);
+                    gameCallEntity.setCallingRole(mRole);
+                    gameCallEntity.setCallingType(DLRTCDataMessageType.DLInviteRTCType.dl_rtc_audio);
+                    gameCallEntity.setCalling(true);
+                    if(viewModel.audioCallingInfoEntity.get()!=null){
+                        CallingInfoEntity callingInviteInfo = viewModel.audioCallingInfoEntity.get();
+                        if(Objects.equals(viewModel.fromUserId , callingInviteInfo.getFromUserProfile().getImId())){
+                            gameCallEntity.setNickname(callingInviteInfo.getFromUserProfile().getNickname());
+                            gameCallEntity.setAvatar(callingInviteInfo.getFromUserProfile().getAvatar());
+                        }else{
+                            gameCallEntity.setNickname(callingInviteInfo.getToUserProfile().getNickname());
+                            gameCallEntity.setAvatar(callingInviteInfo.getToUserProfile().getAvatar());
+                        }
+                    }
+                    intent.putExtra("GameCallEntity",gameCallEntity);
                     startActivity(intent);
                 }
 

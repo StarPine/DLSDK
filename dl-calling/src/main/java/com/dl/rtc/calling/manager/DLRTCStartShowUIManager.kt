@@ -4,6 +4,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
 import com.dl.lib.util.log.MPTimber
 import com.dl.rtc.calling.DLRTCCallService
 import com.dl.rtc.calling.R
@@ -11,6 +12,7 @@ import com.dl.rtc.calling.base.DLRTCCalling
 import com.dl.rtc.calling.base.impl.DLRTCInternalListenerManager
 import com.dl.rtc.calling.model.DLRTCCallingConstants
 import com.dl.rtc.calling.model.DLRTCDataMessageType
+import com.dl.rtc.calling.model.DLRTCSignalingManager
 import com.dl.rtc.calling.model.DLRTCStartModel
 import com.dl.rtc.calling.util.MediaPlayHelper
 import com.tencent.imsdk.v2.V2TIMSimpleMsgListener
@@ -76,19 +78,19 @@ class DLRTCStartShowUIManager : DLRTCStartManagerDelegate, V2TIMSimpleMsgListene
     /**
      * 播放铃声 （这里为了兼容第三方拓展逻辑处理。应在主动拨打、进入语音、视频页面才进行播放。否则不调用）
      */
-    private fun startRing() {
+     fun startRing() {
         mMediaPlayHelper?.start(R.raw.phone_dialing)
     }
 
-    private fun stopRing() {
+     fun stopRing() {
         stopMusic()
     }
 
-    private fun playHangupMusic() {
+     fun playHangupMusic() {
         mMediaPlayHelper?.start(R.raw.phone_hangup, 2000)
     }
 
-    private fun stopMusic() {
+     fun stopMusic() {
         mMediaPlayHelper?.stop()
     }
 
@@ -109,10 +111,11 @@ class DLRTCStartShowUIManager : DLRTCStartManagerDelegate, V2TIMSimpleMsgListene
                     } else {
                         intent.component = ComponentName(mContext.applicationContext, DLRTCInterceptorCall.instance.videoCallActivity)
                     }
-                    intent.putExtra(DLRTCCallingConstants.PARAM_NAME_SPONSORID, TUILogin.getLoginUser())
+                    intent.putExtra(DLRTCCallingConstants.DLRTCInviteUserID, TUILogin.getLoginUser())
                     intent.putExtra(DLRTCCallingConstants.PARAM_NAME_ROLE, DLRTCCalling.Role.CALL)
+                    intent.putExtra(DLRTCCallingConstants.DLRTCAcceptUserID, inviteUser)
+                    intent.putExtra(DLRTCCallingConstants.DLRTCInviteSelf,false)
                     intent.putExtra("userProfile", data)
-                    intent.putExtra(DLRTCCallingConstants.PARAM_NAME_USERIDS, inviteUser)
                     intent.putExtra("roomId", roomId)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     mContext.startActivity(intent)
@@ -143,34 +146,31 @@ class DLRTCStartShowUIManager : DLRTCStartManagerDelegate, V2TIMSimpleMsgListene
 
     //取消电话
     fun inviteUserCanceled(){
-        lastRtcModel?.apply {
-            DLRTCStartManager.instance.inviteUserCanceled(inviteId,object : DLRTCModuleClosuer{
+            DLRTCStartManager.instance.inviteUserCanceled(DLRTCStartManager.instance.inviteId,object : DLRTCModuleClosuer{
                 override fun callback(_success: Boolean, _errorCode: Int, _errorMsg: String?) {
                     MPTimber.tag(TAG_LOG).e("inviteUserCanceled 取消电话 ： $_success $_errorCode $_errorMsg")
                     exitRTCRoom()
                     DLRTCStartManager.instance.RTCRoomExitRoom()
                 }
             })
-        }
     }
 
     //拒绝当前邀请
     fun inviteUserReject(){
-        lastRtcModel?.apply {
-            DLRTCStartManager.instance.inviteUserReject(inviteId,"",object : DLRTCModuleClosuer{
-                override fun callback(_success: Boolean, _errorCode: Int, _errorMsg: String?) {
-                    MPTimber.tag(TAG_LOG).e("inviteUserReject 拒绝当前邀请 ： $_success $_errorCode $_errorMsg")
-                    exitRTCRoom()
-                    DLRTCStartManager.instance.RTCRoomExitRoom()
-                }
-            })
-        }
+        DLRTCStartManager.instance.inviteUserReject(DLRTCStartManager.instance.inviteId,"",object : DLRTCModuleClosuer{
+            override fun callback(_success: Boolean, _errorCode: Int, _errorMsg: String?) {
+                MPTimber.tag(TAG_LOG).e("inviteUserReject 拒绝当前邀请 ： $_success $_errorCode $_errorMsg")
+                exitRTCRoom()
+                DLRTCStartManager.instance.RTCRoomExitRoom()
+            }
+        })
     }
 
 
     override fun RTCStartManagerReciveMsg(manager: DLRTCStartManager, rtcModel: DLRTCStartModel) {
         MPTimber.tag(TAG_LOG).d("RTCStartManagerReciveMsg ： $rtcModel")
         MPTimber.tag(TAG_LOG).d("当前信令类型：${rtcModel.rtcDataMessageType}")
+        DLRTCSignalingManager.sendInviteAction(rtcModel)
         when(rtcModel.rtcDataMessageType){
             //开始邀请
             DLRTCDataMessageType.invite ->{
@@ -195,6 +195,7 @@ class DLRTCStartShowUIManager : DLRTCStartManagerDelegate, V2TIMSimpleMsgListene
             ///接受邀请
             DLRTCDataMessageType.accept -> {
                 MPTimber.tag(TAG_LOG).e("接受邀请")
+                stopMusic()
                 if(inviteUserCall){
                     setStartManagerParams(rtcModel)
                     DLRTCStartManager.instance.mTRTCCloud?.setListener(mTRTCCloudListener)
@@ -237,11 +238,11 @@ class DLRTCStartShowUIManager : DLRTCStartManagerDelegate, V2TIMSimpleMsgListene
      */
     override fun onRecvC2CCustomMessage(msgID: String?, sender: V2TIMUserInfo?, customData: ByteArray?) {
         if(customData==null){ return }
-//        val customDataString = String(customData)
-//        if (TextUtils.isEmpty(customDataString)) {
-//            return
-//        }
-//        MPTimber.tag(TAG_LOG).d("onRecvC2CCustomMessage ： $msgID , sender：$sender , customData：$customDataString")
+        val customDataString = String(customData)
+        if (TextUtils.isEmpty(customDataString)) {
+            return
+        }
+        MPTimber.tag(TAG_LOG).d("onRecvC2CCustomMessage ： $msgID , sender：$sender , customData：$customDataString")
 //        val signallingData  = DLRTConversionUtil.convert2CallingData(customDataString)
 //        if (signallingData?.data == null || null == signallingData.businessID || signallingData.businessID != "av_call") {
 //            MPTimber.d(TAG_LOG, "this is not the calling scene")
@@ -266,10 +267,10 @@ class DLRTCStartShowUIManager : DLRTCStartManagerDelegate, V2TIMSimpleMsgListene
                 } else {
                     intent.component = ComponentName(mContext!!.applicationContext, DLRTCInterceptorCall.instance.videoCallActivity)
                 }
-                intent.putExtra(DLRTCCallingConstants.PARAM_NAME_SPONSORID, dLRTCStartModel.inviteUserId)
+                intent.putExtra(DLRTCCallingConstants.DLRTCInviteUserID, dLRTCStartModel.inviteUserId)
                 intent.putExtra(DLRTCCallingConstants.PARAM_NAME_ROLE, DLRTCCalling.Role.CALLED)
-                intent.putExtra(DLRTCCallingConstants.PARAM_NAME_USERIDS, dLRTCStartModel.acceptUserId)
-                intent.putExtra(DLRTCCallingConstants.PARAM_NAME_GROUPID, "")
+                intent.putExtra(DLRTCCallingConstants.DLRTCAcceptUserID, dLRTCStartModel.acceptUserId)
+                intent.putExtra(DLRTCCallingConstants.DLRTCInviteSelf,false)
                 intent.putExtra("roomId", dLRTCStartModel.rtcInviteRoomId)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 mContext!!.startActivity(intent)
@@ -282,7 +283,7 @@ class DLRTCStartShowUIManager : DLRTCStartManagerDelegate, V2TIMSimpleMsgListene
         }
     }
 
-    fun setStartManagerParams(dLRTCStartModel :DLRTCStartModel){
+    private fun setStartManagerParams(dLRTCStartModel :DLRTCStartModel){
         if(DLRTCStartManager.instance.inviteId.isEmpty()){
             DLRTCStartManager.instance.inviteId = dLRTCStartModel.inviteId
         }
@@ -328,9 +329,12 @@ class DLRTCStartShowUIManager : DLRTCStartManagerDelegate, V2TIMSimpleMsgListene
         override fun onExitRoom(reason: Int) {
             MPTimber.tag(TAG_LOG).d("onExitRoom reason : $reason ")
             //1 后台执行踢出房间。 2 后台解散房间
-            if (reason == 1 || reason == 2) {
-                DLRTCInternalListenerManager.instance.onCallEnd()
-            }
+//            if (reason == 1 || reason == 2) {
+//                DLRTCInternalListenerManager.instance.onCallEnd()
+//            }
+            DLRTCInternalListenerManager.instance.onCallEnd()
+            initParams()
+            DLRTCStartManager.instance.mContext?.let { DLRTCCallService.stop(it) }
             DLRTCStartManager.instance.RTCRoomExitRoom()
         }
 
@@ -343,6 +347,8 @@ class DLRTCStartShowUIManager : DLRTCStartManagerDelegate, V2TIMSimpleMsgListene
         override fun onRemoteUserLeaveRoom(userId: String, reason: Int) {
             MPTimber.tag(TAG_LOG).d("onRemoteUserLeaveRoom userId : $userId , reason : $reason")
             DLRTCInternalListenerManager.instance.onCallEnd()
+            initParams()
+            DLRTCStartManager.instance.mContext?.let { DLRTCCallService.stop(it) }
             DLRTCStartManager.instance.RTCRoomExitRoom()
         }
 

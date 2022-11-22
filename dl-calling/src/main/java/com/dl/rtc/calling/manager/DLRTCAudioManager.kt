@@ -41,8 +41,25 @@ class DLRTCAudioManager : DLRTCCallingItFace {
         DLRTCStartManager.instance.mContext?.let { DLRTCCallService.start(it) }
     }
 
+    fun startLocalAudio(){
+        DLRTCStartManager.instance.mTRTCCloud?.startLocalAudio(3)
+    }
+
+    fun stopLocalAudio(){
+        DLRTCStartManager.instance.mTRTCCloud?.stopLocalAudio()
+    }
+
+
     override fun muteLocalAudio(enable : Boolean) {
         DLRTCStartManager.instance.muteLocalAudio(enable)
+    }
+
+    /// 禁止远端音频
+/// - Parameters:
+///   - mute: 是否静音
+///   - userId: 静音的用户id
+    fun muteRemoteAudio(enable : Boolean,userId : String){
+        DLRTCStartManager.instance.mTRTCCloud?.muteRemoteAudio(userId,enable)
     }
 
     //禁止所有远端的音频，静音所有的音频流

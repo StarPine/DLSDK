@@ -36,9 +36,7 @@ import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
-import com.dl.rtc.calling.base.DLRTCCalling;
 import com.dl.rtc.calling.manager.DLRTCAudioManager;
-import com.dl.rtc.calling.manager.DLRTCVideoManager;
 import com.dl.rtc.calling.model.DLRTCDataMessageType;
 import com.google.gson.Gson;
 import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
@@ -208,11 +206,11 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
             }
             String fromUserId = TUILogin.getUserId();
             String answerUserId = null;
-            MPTimber.tag("CoinPusherGameActivity").d("fromUserId： "+fromUserId+" ,上个拨打人"+gameCallEntity.getFromUserId() +" ==="+fromUserId.equals(gameCallEntity.getFromUserId()));
-            if(!fromUserId.equals(gameCallEntity.getFromUserId())){
-                answerUserId = gameCallEntity.getFromUserId();
+            MPTimber.tag("CoinPusherGameActivity").d("fromUserId： "+fromUserId+" ,上个拨打人"+gameCallEntity.getInviteUserId() +" ==="+fromUserId.equals(gameCallEntity.getInviteUserId()));
+            if(!fromUserId.equals(gameCallEntity.getInviteUserId())){
+                answerUserId = gameCallEntity.getInviteUserId();
             }else{
-                answerUserId = gameCallEntity.getToUserId();
+                answerUserId = gameCallEntity.getAcceptUserId();
             }
             getCallingInvitedInfo(callingType,fromUserId,answerUserId,false);
         }
@@ -379,7 +377,7 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
     * @Date 2022/11/11
     */
     public void getCallingInfo(int callingType) {
-        model.getCallingInfo(gameCallEntity.getRoomId(), callingType, gameCallEntity.getFromUserId(), gameCallEntity.getToUserId())
+        model.getCallingInfo(gameCallEntity.getRoomId(), callingType, gameCallEntity.getInviteUserId(), gameCallEntity.getAcceptUserId())
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())

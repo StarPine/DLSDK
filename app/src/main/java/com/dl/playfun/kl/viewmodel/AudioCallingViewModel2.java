@@ -139,6 +139,7 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
             if (null != mTRTCCallingDelegate) {
                 DLRTCInternalListenerManager.Companion.getInstance().removeDelegate(mTRTCCallingDelegate);
             }
+        DLRTCStartShowUIManager.Companion.getInstance().stopMusic();
     }
 
     // 正常拨打等待接听中的挂断， 不涉及界面

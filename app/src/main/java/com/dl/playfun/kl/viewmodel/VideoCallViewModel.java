@@ -39,13 +39,13 @@ import com.dl.playfun.entity.MallWithdrawTipsInfoEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.entity.UserProfileInfo;
 import com.dl.playfun.event.CallVideoUserEnterEvent;
-import com.dl.playfun.kl.view.JMTUICallVideoView;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.dl.rtc.calling.base.DLRTCCalling;
+import com.dl.rtc.calling.manager.DLRTCStartShowUIManager;
 import com.dl.rtc.calling.manager.DLRTCVideoManager;
 import com.google.gson.Gson;
 import com.tencent.custom.GiftEntity;
@@ -107,7 +107,6 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
     public ObservableField<Boolean> mainVIewShow = new ObservableField<>(false);
     //防录屏提示开关
     public ObservableField<Boolean> tipSwitch = new ObservableField(true);
-    protected JMTUICallVideoView mCallVideoView;
     public String mfromUserId;
     public String mtoUserId;
     //当前用户是否男性
@@ -179,7 +178,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
                 return;
             }
             mainVIewShow.set(true);
-            mCallVideoView.acceptCall();
+            DLRTCStartShowUIManager.Companion.getInstance().inviteUserAccept();
             //DLRTCVideoManager.Companion.getInstance().enterRoom(roomId);
             Log.e("接听电话按钮点击", mMyUserId + "=======" + mOtherUserId);
             //getCallingInfo(roomId, ChatUtils.imUserIdToSystemUserId(mMyUserId), ChatUtils.imUserIdToSystemUserId(mOtherUserId));
@@ -187,6 +186,11 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
                 isCalledWaitingBinding.set(false);
             }
         }
+    });
+
+    //调用推币机
+    public BindingCommand<Void> coinPusherRoomClick = new BindingCommand<>(() -> {
+        uc.coinPusherRoomEvent.call();
     });
 
     //点击文字充值
@@ -239,7 +243,6 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
         @Override
         public void call() {
             uc.closeViewHint.call();
-            //mCallVideoView.hangup();
         }
     });
     //发送礼物
@@ -263,7 +266,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
             }
             boolean minMute = !micMuteField.get();
             micMuteField.set(minMute);
-            mCallVideoView.setMicMute(minMute);
+            DLRTCVideoManager.Companion.getInstance().setMicMute(minMute);
         }
     });
 
@@ -278,21 +281,21 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
             }
             boolean handsFree = !handsFreeField.get();
             handsFreeField.set(handsFree);
-            mCallVideoView.setHandsFree(handsFree);
+            DLRTCVideoManager.Companion.getInstance().muteLocalAudio(handsFree);
         }
     });
 
     public BindingCommand switchCameraOnclick = new BindingCommand(new BindingAction() {
         @Override
         public void call() {
-            mCallVideoView.switchCamera();
+            DLRTCVideoManager.Companion.getInstance().switchCamera(true);
         }
     });
 
     public BindingCommand rejectOnclick = new BindingCommand(new BindingAction() {
         @Override
         public void call() {
-            mCallVideoView.hangup();
+            DLRTCStartShowUIManager.Companion.getInstance().inviteUserReject();
         }
     });
 
@@ -323,7 +326,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
     });
 
     public void hangup(){
-        mCallVideoView.hangup();
+        DLRTCStartShowUIManager.Companion.getInstance().inviteUserReject();
     }
 
     //拨打语音、视频
@@ -393,22 +396,20 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
     }
 
     //    protected TRTCCallingDelegate mTRTCCallingDelegate;
-    public void init(String myUserId, String otherUserId, DLRTCCalling.Role role, JMTUICallVideoView view) {
+    public void init(String myUserId, String otherUserId, DLRTCCalling.Role role) {
         this.mMyUserId = myUserId;
         this.mOtherUserId = otherUserId;
         this.mRole = role;
-        this.mCallVideoView = view;
         this.isMale = ConfigManager.getInstance().isMale();
         this.isShowTipMoney = ConfigManager.getInstance().getTipMoneyShowFlag();
         this.isCalledBinding.set(role == DLRTCCalling.Role.CALLED);
         this.isCalledWaitingBinding.set(role == DLRTCCalling.Role.CALLED);
     }
 
-    public void init(String myUserId, String otherUserId, DLRTCCalling.Role role, JMTUICallVideoView view, Integer roomId) {
+    public void init(String myUserId, String otherUserId, DLRTCCalling.Role role, Integer roomId) {
         this.mMyUserId = myUserId;
         this.mOtherUserId = otherUserId;
         this.mRole = role;
-        this.mCallVideoView = view;
         this.isMale = ConfigManager.getInstance().isMale();
         this.isCalledBinding.set(role == DLRTCCalling.Role.CALLED);
         this.isCalledWaitingBinding.set(role == DLRTCCalling.Role.CALLED);
@@ -526,7 +527,6 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
             return;
         }
         isCallingInviteInfoNull = true;
-        Log.e("通话中调用接口", "====================" + roomId + "======" + fromUserId + "==========" + toUserId);
         model.getCallingInfo(roomId, 2, fromUserId, toUserId)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
@@ -539,7 +539,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
                         isCallingInviteInfoNull = true;
                         CallingInfoEntity callingInviteInfo = response.getData();
                         UserDataEntity userDataEntity = model.readUserData();
-                        mCallVideoView.acceptCall();
+                        DLRTCStartShowUIManager.Companion.getInstance().inviteUserAccept();
                         sayHiEntityList = callingInviteInfo.getSayHiList().getData();
                         if (callingInviteInfo.getPaymentRelation().getPayeeImId().equals(ConfigManager.getInstance().getUserImID())){
                             isPayee = true;
@@ -561,9 +561,9 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
                         //价格配置表
                         unitPriceList = callingInviteInfo.getUnitPriceList();
                         initIMListener();
-                        mCallVideoView.enableAGC(true);
-                        mCallVideoView.enableAEC(true);
-                        mCallVideoView.enableANS(true);
+                        DLRTCVideoManager.Companion.getInstance().enableAGC(true);
+                        DLRTCVideoManager.Companion.getInstance().enableAEC(true);
+                        DLRTCVideoManager.Companion.getInstance().enableANS(true);
                     }
 
                     @Override
@@ -690,7 +690,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
                     public void onSuccess(BaseResponse response) {
                         dismissHUD();
                         if (isHangup) {
-                            mCallVideoView.hangup();
+                            DLRTCStartShowUIManager.Companion.getInstance().inviteUserAccept();
                         } else {
                             collected = 1;
                             collectedField.set(1);
@@ -868,6 +868,8 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
         //滚动到屏幕底部
         public SingleLiveEvent<Void> scrollToEnd = new SingleLiveEvent<>();
         public SingleLiveEvent<Void> startVideoUpSayHiAnimotor = new SingleLiveEvent<>();
+        //打开推币机弹窗
+        public SingleLiveEvent<Void> coinPusherRoomEvent = new SingleLiveEvent<>();
     }
 
 }

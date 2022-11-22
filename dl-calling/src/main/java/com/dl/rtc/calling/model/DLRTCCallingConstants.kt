@@ -23,18 +23,8 @@ object DLRTCCallingConstants {
     var component = TC_TUICALLING_COMPONENT
 
 
-    ///开始邀请
-    const val invite = "dl_rtc_message_invite"
-    ///邀请成功
-    const val  inviteSucc = "dl_rtc_message_inviteSuccess"
-    ///拒绝邀请
-    const val  reject = "dl_rtc_message_reject"
-    ///接受邀请
-    const val  accept = "dl_rtc_message_accept"
-    ///发起方取消邀请
-    const val  cancel = "dl_rtc_message_cancel"
-    ///邀请超时
-    const val  timeout = "dl_rtc_message_timeout"
-    /// 离开音视频房间
-    const val  exitRoom = "dl_rtc_message_exitRoom"
+    const val DLRTCInviteUserID = "dl_rtc_invite_user_Id" ///邀请用户的userID
+    const val DLRTCAcceptUserID = "dl_rtc_accept_user_id"  ///接受对端邀请的ID
+    //当前是否是拨打人
+    const val DLRTCInviteSelf = "dl_rtc_invite_self"
 }

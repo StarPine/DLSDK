@@ -140,7 +140,7 @@ class DLRTCVideoManager : DLRTCCallingItFace {
     /**
      * 关闭相机流
      */
-    fun closeCamera(){
+    fun stopLocalPreview(){
         DLRTCStartManager.instance.mTRTCCloud!!.stopLocalPreview()
     }
 

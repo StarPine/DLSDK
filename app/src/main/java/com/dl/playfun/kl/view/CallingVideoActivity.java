@@ -20,35 +20,40 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.dl.lib.util.FastClickUtil;
 import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.dl.lib.util.log.MPTimber;
+import com.dl.manager.LocaleManager;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.ActivityCallVideoBinding;
+import com.dl.playfun.entity.CallingInfoEntity;
 import com.dl.playfun.entity.CallingInviteInfo;
+import com.dl.playfun.entity.CoinPusherDataInfoEntity;
 import com.dl.playfun.entity.CrystalDetailsConfigEntity;
 import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.entity.GoodsEntity;
-import com.dl.playfun.event.CallChatingHangupEvent;
+import com.dl.playfun.event.CallVideoUserEnterEvent;
+import com.dl.playfun.kl.Utils;
+import com.dl.playfun.kl.viewmodel.UITRTCCallingDelegate;
 import com.dl.playfun.kl.viewmodel.VideoCallViewModel;
 import com.dl.playfun.manager.ConfigManager;
-import com.dl.manager.LocaleManager;
+import com.dl.playfun.ui.coinpusher.CoinPusherGameActivity;
+import com.dl.playfun.ui.coinpusher.GameCallEntity;
+import com.dl.playfun.ui.coinpusher.dialog.CoinPusherRoomListDialog;
 import com.dl.playfun.ui.dialog.GiftBagDialog;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
@@ -59,8 +64,12 @@ import com.dl.playfun.widget.dialog.MessageDetailDialog;
 import com.dl.playfun.widget.dialog.TraceDialog;
 import com.dl.playfun.widget.image.CircleImageView;
 import com.dl.rtc.calling.base.DLRTCCalling;
+import com.dl.rtc.calling.base.impl.DLRTCInternalListenerManager;
+import com.dl.rtc.calling.manager.DLRTCStartShowUIManager;
 import com.dl.rtc.calling.manager.DLRTCVideoManager;
 import com.dl.rtc.calling.model.DLRTCCallingConstants;
+import com.dl.rtc.calling.model.DLRTCDataMessageType;
+import com.dl.rtc.calling.ui.videolayout.DLRTCVideoLayout;
 import com.dl.rtc.calling.ui.videolayout.VideoLayoutFactory;
 import com.faceunity.nama.FURenderer;
 import com.faceunity.nama.data.FaceUnityDataFactory;
@@ -72,14 +81,16 @@ import com.opensource.svgaplayer.SVGAParser;
 import com.opensource.svgaplayer.SVGASoundManager;
 import com.opensource.svgaplayer.SVGAVideoEntity;
 import com.tencent.custom.GiftEntity;
-import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
+import com.tencent.trtc.TRTCCloudDef;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -97,20 +108,15 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
     private FURenderer mFURenderer;
     private final boolean isFuEffect = true;
 
-    //视频悬浮框
-    private VideoLayoutFactory mVideoFactory;
-
     private Context mContext;
 
-    private JMTUICallVideoView mCallView;
-    private RelativeLayout mContainerView;
-    private View mJMView;
     private ObjectAnimator rotation;
 
     private CallingInviteInfo callingInviteInfo;
     //拨打方UserId
-    private String callUserId;
-    private String toId;
+    private String inviteUserID;
+    //接听方
+    private String acceptUserID;
     private Integer roomId;
     private DLRTCCalling.Role role;
 
@@ -204,16 +210,14 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         role = (DLRTCCalling.Role) intent.getExtras().get(DLRTCCallingConstants.PARAM_NAME_ROLE);
         roomId = intent.getIntExtra("roomId", 0);
         //被动接收
-        String userIds = intent.getExtras().getString(DLRTCCallingConstants.PARAM_NAME_USERIDS);
-        if (userIds != null) {
-            toId = userIds;
-        }
+        acceptUserID = intent.getExtras().getString(DLRTCCallingConstants.DLRTCAcceptUserID);
         //主动呼叫
-        callUserId = intent.getExtras().getString(DLRTCCallingConstants.PARAM_NAME_SPONSORID);
+        inviteUserID = intent.getExtras().getString(DLRTCCallingConstants.DLRTCInviteUserID);
         String userData = intent.getExtras().getString("userProfile");
         if (userData != null) {
             callingInviteInfo = new Gson().fromJson(userData, CallingInviteInfo.class);
         }
+        DLRTCInternalListenerManager.Companion.getInstance().addDelegate(mTRTCCallingListener);
     }
 
     /**
@@ -240,54 +244,16 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         mFaceUnityDataFactory = new FaceUnityDataFactory(0);
         mFaceUnityView.bindDataFactory(mFaceUnityDataFactory);
         DLRTCVideoManager.Companion.getInstance().createCustomRenderer(isFuEffect);
-
-        mContainerView = findViewById(R.id.container);
-        mJMView = findViewById(R.id.jm_view);
-        mVideoFactory = new VideoLayoutFactory(this);
-        LogUtils.i("callingInviteInfo: "+callingInviteInfo);
         if(isRestart){
             viewModel.mainVIewShow.set(true);
             viewModel.isCalledWaitingBinding.set(false);
         }
-        if (callingInviteInfo != null) {
-            mCallView = new JMTUICallVideoView(this, role, new String[]{toId}, callUserId, null, false, callingInviteInfo.getRoomId(),mVideoFactory) {
-                @Override
-                public void finish() {
-                    super.finish();
-                    //2秒最多发一次
-                    if (!FastClickUtil.isFastCallFun("CallingVideoActivity")) {
-                        RxBus.getDefault().post(new CallChatingHangupEvent());
-                    }
-                    Log.i("JM_trtc", "finish: ");
-                    CallingVideoActivity.this.finish();
-                }
-            };
-        } else {
-            mCallView = new JMTUICallVideoView(this, role, new String[]{toId}, callUserId, null, false,mVideoFactory) {
-                @Override
-                public void finish() {
-                    super.finish();
-                    //2秒最多发一次
-                    if (!FastClickUtil.isFastCallFun("CallingVideoActivity")) {
-                        RxBus.getDefault().post(new CallChatingHangupEvent());
-                    }
-                    Log.i("JM_trtc", "finish: ");
-                    CallingVideoActivity.this.finish();
-                }
-            };
-        }
-
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
-        mContainerView.addView(mCallView, params);
-        mJMView.bringToFront();
+        binding.rtcLayoutManager.initVideoFactory(new VideoLayoutFactory(this));
         // 不用TRTC sponsor 一套的命名，因为他们那里其实挺混乱的， 这里就用 my 和 other
-        String myUserId = V2TIMManager.getInstance().getLoginUser();
-        String otherUserId = (role == DLRTCCalling.Role.CALL ? toId : callUserId);
         if (role == DLRTCCalling.Role.CALL) {//主动呼叫
-            callUserId = V2TIMManager.getInstance().getLoginUser();
             viewModel.userCall = true;
             if (callingInviteInfo != null) {
-                viewModel.init(callUserId, toId, role, mCallView, callingInviteInfo.getRoomId());
+                viewModel.init(inviteUserID, acceptUserID, role, callingInviteInfo.getRoomId());
                 viewModel.callingInviteInfoField.set(callingInviteInfo);
                 if (callingInviteInfo.getUserProfileInfo().getSex() == 1) {
                     if (!ObjectUtils.isEmpty(callingInviteInfo.getMessages()) && callingInviteInfo.getMessages().size() > 0) {
@@ -300,9 +266,12 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                 }
             }
         } else {//被动接听
-            toId = V2TIMManager.getInstance().getLoginUser();
-            viewModel.init(myUserId, otherUserId, role, mCallView);
-            viewModel.getCallingInvitedInfo(2, callUserId);
+            viewModel.init(acceptUserID, inviteUserID, role);
+            viewModel.getCallingInvitedInfo(2, inviteUserID);
+        }
+        DLRTCVideoLayout videoLayout = binding.rtcLayoutManager.allocCloudVideoView(role == DLRTCCalling.Role.CALL? inviteUserID : acceptUserID);
+        if(videoLayout!=null){
+            DLRTCVideoManager.Companion.getInstance().openCamera(true, videoLayout.getVideoView());
         }
     }
 
@@ -347,71 +316,47 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
             }
         });
         //公屏消息滚动到底部
-        viewModel.uc.scrollToEnd.observe(this, new Observer<Void>() {
-            @Override
-            public void onChanged(Void unused) {
-                binding.rcvLayout.scrollToPosition(viewModel.adapter.getItemCount() - 1);
-            }
-        });
+        viewModel.uc.scrollToEnd.observe(this, unused -> binding.rcvLayout.scrollToPosition(viewModel.adapter.getItemCount() - 1));
         //关闭按钮点击事件回调
-        viewModel.uc.closeViewHint.observe(this, new Observer<Void>() {
-            @Override
-            public void onChanged(Void unused) {
-                onBackViewCLick();
-            }
-        });
+        viewModel.uc.closeViewHint.observe(this, unused -> onBackViewCLick());
         //接收礼物效果展示
-        viewModel.uc.acceptUserGift.observe(this, new Observer<GiftEntity>() {
-            @Override
-            public void onChanged(GiftEntity giftEntity) {
-                viewModel.getCallingStatus(viewModel.roomId);
-                try {
-                    int account = giftEntity.getAmount();
-                    //启动SVG动画
-                    startVideoAcceptSVGAnimotion(giftEntity);
-                    //启动横幅动画
-                    startVideoAcceptBannersAnimotion(giftEntity, account);
-                    //启动头像动画
-                    startVideoAcceptHeadAnimotion(giftEntity);
-                } catch (Exception e) {
+        viewModel.uc.acceptUserGift.observe(this, giftEntity -> {
+            viewModel.getCallingStatus(viewModel.roomId);
+            try {
+                int account = giftEntity.getAmount();
+                //启动SVG动画
+                startVideoAcceptSVGAnimotion(giftEntity);
+                //启动横幅动画
+                startVideoAcceptBannersAnimotion(giftEntity, account);
+                //启动头像动画
+                startVideoAcceptHeadAnimotion(giftEntity);
+            } catch (Exception e) {
 
-                }
             }
         });
         //发送礼物效果展示
-        viewModel.uc.sendUserGiftAnim.observe(this, new Observer<Map<String, Object>>() {
-            @Override
-            public void onChanged(Map<String, Object> stringObjectMap) {
-                try {
-                    int account = (int) stringObjectMap.get("account");
-                    GiftBagEntity.giftEntity giftEntity = (GiftBagEntity.giftEntity) stringObjectMap.get("giftEntity");
-                    //启动SVG动画
-                    startVideoSendSvgAnimotion(giftEntity);
-                    //启动横幅动画
-                    startVideoSendBannersAnimotion(account, giftEntity);
-                    //启动头像动画
-                    startVideoSendHeadAnimotion(giftEntity);
-                } catch (Exception e) {
+        viewModel.uc.sendUserGiftAnim.observe(this, stringObjectMap -> {
+            try {
+                int account = (int) stringObjectMap.get("account");
+                GiftBagEntity.giftEntity giftEntity = (GiftBagEntity.giftEntity) stringObjectMap.get("giftEntity");
+                //启动SVG动画
+                startVideoSendSvgAnimotion(giftEntity);
+                //启动横幅动画
+                startVideoSendBannersAnimotion(account, giftEntity);
+                //启动头像动画
+                startVideoSendHeadAnimotion(giftEntity);
+            } catch (Exception e) {
 
-                }
             }
         });
         //接听成功
-        viewModel.uc.callAudioStart.observe(this, new Observer<Void>() {
-            @Override
-            public void onChanged(Void unused) {
-                //开始记时
-                TimeCallMessage();
-                setTimerForCallinfo();
-            }
+        viewModel.uc.callAudioStart.observe(this, unused -> {
+            //开始记时
+            TimeCallMessage();
+            setTimerForCallinfo();
         });
         //钻石不足充值弹窗
-        viewModel.uc.sendUserGiftError.observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean isGiftSend) {
-                toRecharge();
-            }
-        });
+        viewModel.uc.sendUserGiftError.observe(this, isGiftSend -> toRecharge());
         //发送礼物弹窗
         viewModel.uc.callGiftBagAlert.observe(this, new Observer<Void>() {
             @Override
@@ -437,6 +382,40 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                 });
                 giftBagDialog.show();
             }
+        });
+        //弹出推币机选择弹窗
+        viewModel.uc.coinPusherRoomEvent.observe(this, unused -> {
+            //弹出推币机选择弹窗
+            CoinPusherRoomListDialog coinersDialog = new CoinPusherRoomListDialog(mContext);
+            coinersDialog.setDialogEventListener(new CoinPusherRoomListDialog.DialogEventListener() {
+                @Override
+                public void startViewing(CoinPusherDataInfoEntity itemEntity) {
+                    coinersDialog.dismiss();
+                    Intent intent = new Intent(mContext, CoinPusherGameActivity.class);
+                    intent.putExtra("CoinPusherInfo",itemEntity);
+                    //创建玩游戏模型
+                    GameCallEntity gameCallEntity = new GameCallEntity();
+                    gameCallEntity.setRoomId(viewModel.roomId);
+                    gameCallEntity.setInviteUserId(inviteUserID);
+                    gameCallEntity.setAcceptUserId(acceptUserID);
+                    gameCallEntity.setCallingRole(role);
+                    gameCallEntity.setCallingType(DLRTCDataMessageType.DLInviteRTCType.dl_rtc_video);
+                    gameCallEntity.setCalling(true);
+                    if(viewModel.callingInviteInfoField.get()!=null){
+                        gameCallEntity.setNickname(viewModel.callingInviteInfoField.get().getUserProfileInfo().getCityName());
+                        gameCallEntity.setAvatar(viewModel.callingInviteInfoField.get().getUserProfileInfo().getAvatar());
+                    }
+                    intent.putExtra("GameCallEntity",gameCallEntity);
+                    startActivity(intent);
+                    finish();
+                }
+
+                @Override
+                public void buyErrorPayView() {
+                    toRecharge();
+                }
+            });
+            coinersDialog.show();
         });
     }
 
@@ -945,6 +924,8 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
     @Override
     public void onDestroy() {
         super.onDestroy();
+        DLRTCInternalListenerManager.Companion.getInstance().removeDelegate(mTRTCCallingListener);
+        DLRTCStartShowUIManager.Companion.getInstance().stopRing();
         AppContext.isCalling = false;
         //取消窥屏
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
@@ -966,6 +947,93 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
     public int dip2px(float dpValue) {
         final float scale = mContext.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
+    }
+
+
+    /**
+     * @Desc TODO(监听RTC信令回调)
+     * @author 彭石林
+     * @Date 2022/11/9
+     */
+
+    private final UITRTCCallingDelegate mTRTCCallingListener = new UITRTCCallingDelegate() {
+        @Override
+        public void onError(int code, String msg) {
+            super.onError(code, msg);
+        }
+
+        @Override
+        public void onUserEnter(String userId) {
+            DLRTCStartShowUIManager.Companion.getInstance().stopRing();
+            //发送订阅事件通知有人加入了视频聊天房
+            RxBus.getDefault().post(new CallVideoUserEnterEvent(userId));
+        }
+
+        @Override
+        public void onUserLeave(String userId) {
+            stopCameraAndFinish();
+        }
+
+        @Override
+        public void onReject(String userId) {
+            Utils.show(AppContext.instance().getString(R.string.playfun_the_other_party_refuses_to_answer));
+            stopCameraAndFinish();
+        }
+
+        @Override
+        public void onCallingCancel() {
+            Utils.show(AppContext.instance().getString(R.string.playfun_the_other_party_cancels_the_call));
+            stopCameraAndFinish();
+        }
+
+        @Override
+        public void onCallingTimeout() {
+            Utils.show(AppContext.instance().getString(R.string.playfun_the_other_party_is_temporarily_unavailable));
+            stopCameraAndFinish();
+        }
+
+        @Override
+        public void onCallEnd() {
+            Utils.show(AppContext.instance().getString(R.string.playfun_call_ended));
+            stopCameraAndFinish();
+        }
+
+        @Override
+        public void onUserVideoAvailable(String userId, boolean isVideoAvailable) {
+            MPTimber.tag("视频聊天页面：").d("有用户进来了："+userId+" , isVideoAvailable："+isVideoAvailable);
+            if(isVideoAvailable){
+                //有用户的视频开启了
+                DLRTCVideoLayout layout = binding.rtcLayoutManager.allocCloudVideoView(userId);
+                if (layout != null) {
+                    DLRTCVideoManager.Companion.getInstance().startRemoteView(userId, layout.getVideoView());
+                }
+            }
+        }
+
+        @Override
+        public void onUserAudioAvailable(String userId, boolean isVideoAvailable) {
+            super.onUserAudioAvailable(userId, isVideoAvailable);
+        }
+
+        @Override
+        public void onUserVoiceVolume(Map<String, Integer> volumeMap) {
+            super.onUserVoiceVolume(volumeMap);
+        }
+
+        @Override
+        public void onNetworkQuality(TRTCCloudDef.TRTCQuality localQuality, ArrayList<TRTCCloudDef.TRTCQuality> remoteQuality) {
+            super.onNetworkQuality(localQuality, remoteQuality);
+        }
+
+        @Override
+        public void onTryToReconnect() {
+            super.onTryToReconnect();
+        }
+    };
+
+    private void stopCameraAndFinish() {
+        DLRTCVideoManager.Companion.getInstance().stopLocalPreview();
+        finish();
     }
 
 }

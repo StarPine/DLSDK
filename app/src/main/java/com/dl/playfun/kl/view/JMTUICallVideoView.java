@@ -21,6 +21,7 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.dl.playfun.R;
 import com.dl.playfun.entity.CallingVideoTryToReconnectEvent;
 import com.dl.playfun.event.CallVideoUserEnterEvent;
+import com.dl.playfun.kl.viewmodel.UITRTCCallingDelegate;
 import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.widget.dialog.TraceDialog;
 import com.dl.rtc.calling.base.DLRTCCalling;
@@ -607,7 +608,7 @@ public class JMTUICallVideoView extends BaseDLRTCCallView {
     }
 
     private void stopCameraAndFinish() {
-        DLRTCVideoManager.Companion.getInstance().closeCamera();
+        DLRTCVideoManager.Companion.getInstance().stopLocalPreview();
         finish();
     }
 
@@ -686,5 +687,6 @@ public class JMTUICallVideoView extends BaseDLRTCCallView {
     public void enableANS(boolean openANS) {
         DLRTCStartManager.Companion.getInstance().enableANS(openANS);
     }
+
 
 }
