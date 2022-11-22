@@ -2,28 +2,27 @@ package com.dl.playfun.ui.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Outline;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewOutlineProvider;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.blankj.utilcode.util.ColorUtils;
-import com.blankj.utilcode.util.StringUtils;
-import com.dl.playfun.app.AppContext;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
@@ -35,17 +34,17 @@ import com.dl.playfun.ui.base.BaseDialog;
 import com.dl.playfun.ui.dialog.adapter.CrystalGiftBagRcvAdapter;
 import com.dl.playfun.ui.dialog.adapter.GiftBagCardDetailAdapter;
 import com.dl.playfun.ui.dialog.adapter.GiftBagRcvAdapter;
-import com.dl.playfun.utils.LogUtils;
+import com.dl.playfun.ui.dialog.adapter.GiftNumberSelectorAdapter;
 import com.dl.playfun.widget.dialog.MessageDetailDialog;
 import com.dl.playfun.R;
 import com.zyyoona7.popup.EasyPopup;
-import com.zyyoona7.popup.XGravity;
-import com.zyyoona7.popup.YGravity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import me.goldze.mvvmhabit.utils.ConvertUtils;
 import me.goldze.mvvmhabit.utils.RxUtils;
 
 /**
@@ -83,18 +82,16 @@ public class GiftBagDialog extends BaseDialog {
 
     private GiftBagEntity.CrystalGift checkCrystalItemEntity;
 
-    private LinearLayout gift_check_number;//礼物数量选择
-    private LinearLayout crystal_check_number;
+    private GiftNumberSelectorAdapter.GiftNumberSelectorViewHolder checkGiftNumber;
+    private GiftNumberSelectorAdapter.GiftNumberSelectorViewHolder checkCrystalGIftNumber;
+
+    private RecyclerView gift_check_number;
+    private RecyclerView crystal_check_number;
 
     private EasyPopup mCirclePop;//pupop弹窗
 
-    private TextView gift_number;//数量
-    private TextView crystal_gift_number;//
-
-    private ImageView gift_locker;//三角形提示图片
-    private ImageView crystal_locker;//三角形提示图片
-
     private Integer sendGiftNumber = 1;//发送数量
+    private Integer sendCrystalGiftNumber = 1;
 
     private TextView btn_stored;//储值按钮
 
@@ -175,12 +172,8 @@ public class GiftBagDialog extends BaseDialog {
         crystalBtnSubmit = rootView.findViewById(R.id.crystal_btn_submit);
         indicatorLayout = rootView.findViewById(R.id.indicator_layout);
         crystalIndicatorLayout = rootView.findViewById(R.id.crystal_indicator_layout);
-        gift_check_number = rootView.findViewById(R.id.gift_check_number);
-        crystal_check_number = rootView.findViewById(R.id.crystal_check_number);
-        gift_number = rootView.findViewById(R.id.gift_number);
-        crystal_gift_number = rootView.findViewById(R.id.crystal_number);
-        gift_locker = rootView.findViewById(R.id.gift_locker);
-        crystal_locker = rootView.findViewById(R.id.crystal_locker);
+        gift_check_number = rootView.findViewById(R.id.gift_number_list);
+        crystal_check_number = rootView.findViewById(R.id.crystal_number_list);
 
         balance_diamond = rootView.findViewById(R.id.iv_balance_diamond);
         balance_crystal = rootView.findViewById(R.id.iv_balance_crystal);
@@ -236,194 +229,54 @@ public class GiftBagDialog extends BaseDialog {
 
         });
 
-        gift_check_number.setOnClickListener(new View.OnClickListener() {
+        List<Integer> numbers = Arrays.asList(new Integer[]{1, 10, 38, 66, 188, 520, 1314, 3344});
+        GiftNumberSelectorAdapter adapter = new GiftNumberSelectorAdapter();
+        adapter.setGiftNumbers(numbers);
+        adapter.setListener((holder) -> {
+            Context context = holder.root.getContext();
+            if (checkGiftNumber != null) {
+                checkGiftNumber.root.setBackground(null);
+                checkGiftNumber.item.setTextColor(ContextCompat.getColor(context, R.color.color_text_333333));
+            }
+            sendGiftNumber = Integer.valueOf(holder.item.getText().toString());
+            checkGiftNumber = holder;
+            holder.root.setBackground(ContextCompat.getDrawable(context, R.drawable.shape_bg_gift_number_selector_item));
+            holder.item.setTextColor(ContextCompat.getColor(context, R.color.color_bg_gift_number_selector_item));
+        });
+        LinearLayoutManager manager = new LinearLayoutManager(mContext);
+        manager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        gift_check_number.setLayoutManager(manager);
+        gift_check_number.setAdapter(adapter);
+
+        ViewOutlineProvider vop = new ViewOutlineProvider() {
             @Override
-            public void onClick(View v) {
-                gift_locker.setImageResource(R.drawable.icon_top_triangle_img);
-                mCirclePop = EasyPopup.create()
-                        .setContentView(mContext, R.layout.gift_bag_more_item)
-//                        .setAnimationStyle(R.style.RightPopAnim)
-                        //是否允许点击PopupWindow之外的地方消失
-                        .setFocusAndOutsideEnable(true)
-                        .setDimValue(0)
-                        .setWidth(dp2px(126))
-                        .setHeight(dp2px(240))
-                        .apply();
-                mCirclePop.showAtAnchorView(v, YGravity.ABOVE, XGravity.RIGHT, dp2px(-58), 0);
-                if (isDark) {
-                    FrameLayout containerProp = mCirclePop.findViewById(R.id.container_prop);
-                    containerProp.setBackground(mContext.getDrawable(R.drawable.gift_bag_prop_backdrop_img2));
-                }
-                mCirclePop.findViewById(R.id.text_layout1).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String value = ((TextView) mCirclePop.findViewById(R.id.text_value1)).getText().toString();
-                        gift_number.setText(value + StringUtils.getString(R.string.playfun_individual));
-                        sendGiftNumber = Integer.parseInt(value);
-                        mCirclePop.dismiss();
-                    }
-                });
-                mCirclePop.findViewById(R.id.text_layout2).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String value = ((TextView) mCirclePop.findViewById(R.id.text_value2)).getText().toString();
-                        gift_number.setText(value + StringUtils.getString(R.string.playfun_individual));
-                        sendGiftNumber = Integer.parseInt(value);
-                        mCirclePop.dismiss();
-                    }
-                });
-                mCirclePop.findViewById(R.id.text_layout3).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String value = ((TextView) mCirclePop.findViewById(R.id.text_value3)).getText().toString();
-                        gift_number.setText(value + StringUtils.getString(R.string.playfun_individual));
-                        sendGiftNumber = Integer.parseInt(value);
-                        mCirclePop.dismiss();
-                    }
-                });
-                mCirclePop.findViewById(R.id.text_layout4).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String value = ((TextView) mCirclePop.findViewById(R.id.text_value4)).getText().toString();
-                        gift_number.setText(value + StringUtils.getString(R.string.playfun_individual));
-                        sendGiftNumber = Integer.parseInt(value);
-                        mCirclePop.dismiss();
-                    }
-                });
-                mCirclePop.findViewById(R.id.text_layout5).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String value = ((TextView) mCirclePop.findViewById(R.id.text_value5)).getText().toString();
-                        gift_number.setText(value + StringUtils.getString(R.string.playfun_individual));
-                        sendGiftNumber = Integer.parseInt(value);
-                        mCirclePop.dismiss();
-                    }
-                });
-                mCirclePop.findViewById(R.id.text_layout6).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String value = ((TextView) mCirclePop.findViewById(R.id.text_value6)).getText().toString();
-                        gift_number.setText(value + StringUtils.getString(R.string.playfun_individual));
-                        sendGiftNumber = Integer.parseInt(value);
-                        mCirclePop.dismiss();
-                    }
-                });
-                mCirclePop.findViewById(R.id.text_layout7).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String value = ((TextView) mCirclePop.findViewById(R.id.text_value7)).getText().toString();
-                        gift_number.setText(value + StringUtils.getString(R.string.playfun_individual));
-                        sendGiftNumber = Integer.parseInt(value);
-                        mCirclePop.dismiss();
-                    }
-                });
-                mCirclePop.findViewById(R.id.text_layout8).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String value = ((TextView) mCirclePop.findViewById(R.id.text_value8)).getText().toString();
-                        gift_number.setText(value + StringUtils.getString(R.string.playfun_individual));
-                        sendGiftNumber = Integer.parseInt(value);
-                        mCirclePop.dismiss();
-                    }
-                });
-                mCirclePop.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                    @Override
-                    public void onDismiss() {
-                        gift_locker.setImageResource(R.drawable.icon_del_triangle_img);
-                    }
-                });
+            public void getOutline(View view, Outline outline) {
+                outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), ConvertUtils.dp2px(100));
             }
-        });
-        crystal_check_number.setOnClickListener(v -> {
-            crystal_locker.setImageResource(R.drawable.icon_top_triangle_img);
-            mCirclePop = EasyPopup.create()
-                    .setContentView(mContext, R.layout.gift_bag_more_item)
-//                        .setAnimationStyle(R.style.RightPopAnim)
-                    //是否允许点击PopupWindow之外的地方消失
-                    .setFocusAndOutsideEnable(true)
-                    .setDimValue(0)
-                    .setWidth(dp2px(126))
-                    .setHeight(dp2px(240))
-                    .apply();
-            mCirclePop.showAtAnchorView(v, YGravity.ABOVE, XGravity.RIGHT, dp2px(-58), 0);
-            if (isDark) {
-                FrameLayout containerProp = mCirclePop.findViewById(R.id.container_prop);
-                containerProp.setBackground(mContext.getDrawable(R.drawable.gift_bag_prop_backdrop_img2));
+        };
+
+        gift_check_number.setOutlineProvider(vop);
+        gift_check_number.setClipToOutline(true);
+
+        adapter = new GiftNumberSelectorAdapter();
+        adapter.setGiftNumbers(numbers);
+        adapter.setListener((holder -> {
+            Context context = holder.root.getContext();
+            if (checkCrystalGIftNumber != null) {
+                checkCrystalGIftNumber.root.setBackground(null);
+                checkCrystalGIftNumber.item.setTextColor(ContextCompat.getColor(context, R.color.color_text_333333));
             }
-            mCirclePop.findViewById(R.id.text_layout1).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String value = ((TextView) mCirclePop.findViewById(R.id.text_value1)).getText().toString();
-                    crystal_gift_number.setText(value + StringUtils.getString(R.string.playfun_individual));
-                    sendGiftNumber = Integer.parseInt(value);
-                    mCirclePop.dismiss();
-                }
-            });
-            mCirclePop.findViewById(R.id.text_layout2).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String value = ((TextView) mCirclePop.findViewById(R.id.text_value2)).getText().toString();
-                    crystal_gift_number.setText(value + StringUtils.getString(R.string.playfun_individual));
-                    sendGiftNumber = Integer.parseInt(value);
-                    mCirclePop.dismiss();
-                }
-            });
-            mCirclePop.findViewById(R.id.text_layout3).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String value = ((TextView) mCirclePop.findViewById(R.id.text_value3)).getText().toString();
-                    crystal_gift_number.setText(value + StringUtils.getString(R.string.playfun_individual));
-                    sendGiftNumber = Integer.parseInt(value);
-                    mCirclePop.dismiss();
-                }
-            });
-            mCirclePop.findViewById(R.id.text_layout4).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String value = ((TextView) mCirclePop.findViewById(R.id.text_value4)).getText().toString();
-                    crystal_gift_number.setText(value + StringUtils.getString(R.string.playfun_individual));
-                    sendGiftNumber = Integer.parseInt(value);
-                    mCirclePop.dismiss();
-                }
-            });
-            mCirclePop.findViewById(R.id.text_layout5).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String value = ((TextView) mCirclePop.findViewById(R.id.text_value5)).getText().toString();
-                    crystal_gift_number.setText(value + StringUtils.getString(R.string.playfun_individual));
-                    sendGiftNumber = Integer.parseInt(value);
-                    mCirclePop.dismiss();
-                }
-            });
-            mCirclePop.findViewById(R.id.text_layout6).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String value = ((TextView) mCirclePop.findViewById(R.id.text_value6)).getText().toString();
-                    crystal_gift_number.setText(value + StringUtils.getString(R.string.playfun_individual));
-                    sendGiftNumber = Integer.parseInt(value);
-                    mCirclePop.dismiss();
-                }
-            });
-            mCirclePop.findViewById(R.id.text_layout7).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String value = ((TextView) mCirclePop.findViewById(R.id.text_value7)).getText().toString();
-                    crystal_gift_number.setText(value + StringUtils.getString(R.string.playfun_individual));
-                    sendGiftNumber = Integer.parseInt(value);
-                    mCirclePop.dismiss();
-                }
-            });
-            mCirclePop.findViewById(R.id.text_layout8).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String value = ((TextView) mCirclePop.findViewById(R.id.text_value8)).getText().toString();
-                    crystal_gift_number.setText(value + StringUtils.getString(R.string.playfun_individual));
-                    sendGiftNumber = Integer.parseInt(value);
-                    mCirclePop.dismiss();
-                }
-            });
-            mCirclePop.setOnDismissListener(() -> crystal_locker.setImageResource(R.drawable.icon_del_triangle_img));
-        });
+            sendCrystalGiftNumber = Integer.valueOf(holder.item.getText().toString());
+            checkCrystalGIftNumber = holder;
+            holder.root.setBackground(ContextCompat.getDrawable(context, R.drawable.shape_bg_gift_number_selector_item));
+            holder.item.setTextColor(ContextCompat.getColor(context, R.color.color_bg_gift_number_selector_item));
+        }));
+        manager = new LinearLayoutManager(mContext);
+        manager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        crystal_check_number.setLayoutManager(manager);
+        crystal_check_number.setAdapter(adapter);
+        crystal_check_number.setOutlineProvider(vop);
+        crystal_check_number.setClipToOutline(true);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(rootView.getContext());
         linearLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
@@ -522,7 +375,7 @@ public class GiftBagDialog extends BaseDialog {
                     return;
                 }
                 if (crystalOnClickListener != null) {
-                    crystalOnClickListener.sendGiftClick(GiftBagDialog.this, sendGiftNumber, checkCrystalItemEntity);
+                    crystalOnClickListener.sendGiftClick(GiftBagDialog.this, sendCrystalGiftNumber, checkCrystalItemEntity);
                 }
             }
         });
@@ -569,6 +422,7 @@ public class GiftBagDialog extends BaseDialog {
                         int gifSize = listGifEntity.size();
                         List<GiftBagEntity.giftEntity> $listData = new ArrayList<>();
                         List<GiftBagAdapterEntity> listGiftAdapter = new ArrayList<>();
+                        if (!listGifEntity.isEmpty()) listGifEntity.get(0).setFirst(true);
                         if (gifSize / 10 > 0) {
                             int cnt = 0;
                             int idx = 1;
@@ -622,7 +476,7 @@ public class GiftBagDialog extends BaseDialog {
                                         return;
                                     } else {
                                         checkGiftItemEntity = itemEntity;
-                                        checkGiftLineLayout.setBackgroundDrawable(null);
+                                        if (checkGiftLineLayout != null) checkGiftLineLayout.setBackgroundDrawable(null);
                                         detail_layout.setBackground(mContext.getDrawable(R.drawable.purple_gift_checked));
                                         checkGiftLineLayout = detail_layout;
                                     }
@@ -661,7 +515,7 @@ public class GiftBagDialog extends BaseDialog {
                         int crystalSize = listCrystalEntity.size();
                         List<GiftBagEntity.CrystalGift> $crystalSizeListData = new ArrayList<>();
                         List<CrystalGiftBagAdapterEntity> listCrystalAdapter = new ArrayList<>();
-                        listCrystalEntity.get(0).setFirst(true);
+                        if (!listCrystalEntity.isEmpty()) listCrystalEntity.get(0).setFirst(true);
                         if (crystalSize / 10 > 0) {
                             int cnt = 0;
                             int idx = 1;
@@ -710,7 +564,7 @@ public class GiftBagDialog extends BaseDialog {
                             if (checkGiftItemEntity != null) {
                                 if (checkGiftItemEntity.getId().intValue() != itemEntity.getId().intValue()) {
                                     checkCrystalItemEntity = itemEntity;
-                                    checkCrystalLineLayout.setBackgroundDrawable(null);
+                                    if (checkCrystalLineLayout != null) checkCrystalLineLayout.setBackgroundDrawable(null);
                                     detail_layout.setBackground(mContext.getDrawable(R.drawable.purple_gift_checked));
                                     checkCrystalLineLayout = detail_layout;
                                 }

@@ -83,6 +83,8 @@ public class GiftBagEntity {
         private String link;
         private iconEntity icon;
 
+        private boolean isFirst = false;
+
         public Integer getId() {
             return id;
         }
@@ -139,6 +141,13 @@ public class GiftBagEntity {
             this.icon = icon;
         }
 
+        public Boolean getFirst() {
+            return isFirst;
+        }
+
+        public void setFirst(Boolean first) {
+            isFirst = first;
+        }
 
         public class iconEntity {
             private Integer id;
@@ -262,7 +271,7 @@ public class GiftBagEntity {
         @SerializedName("gift_languages")
         private String lang;
 
-        private Boolean isFirst = false;
+        private boolean isFirst = false;
 
         public Integer getId() {
             return id;

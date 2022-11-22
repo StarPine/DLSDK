@@ -74,6 +74,9 @@ public class GiftBagDetailAdapter extends RecyclerView.Adapter<GiftBagDetailAdap
                     }
                 }
             });
+            if (listData.get(position).getFirst()) {
+                onClickDetailListener.clickDetailCheck(index, itemEntity, itemViewHolder.detail_layout);
+            }
         }
 
     }
