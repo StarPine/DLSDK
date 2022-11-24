@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -36,8 +37,10 @@ public class GiftBagDetailAdapter extends RecyclerView.Adapter<GiftBagDetailAdap
 
     private final int layoutRes;
 
-    public GiftBagDetailAdapter(RecyclerView recyclerView, List<? extends GiftBagEntity.GiftEntity> data, int layoutRes, boolean isDarkShow) {
-        this.mContext = recyclerView.getContext();
+    private GiftItemViewHolder selected;
+
+    public GiftBagDetailAdapter(Context context, List<? extends GiftBagEntity.GiftEntity> data, int layoutRes, boolean isDarkShow) {
+        this.mContext = context;
         this.listData = data;
         this.layoutRes = layoutRes;
         this.isDarkShow = isDarkShow;
@@ -53,8 +56,7 @@ public class GiftBagDetailAdapter extends RecyclerView.Adapter<GiftBagDetailAdap
     @Override
     public void onBindViewHolder(@NonNull GiftItemViewHolder holder, int position) {
         if (listData != null && listData.size() > 0) {
-            int index = position;
-            GiftBagEntity.GiftEntity itemEntity = listData.get(index);
+            GiftBagEntity.GiftEntity itemEntity = listData.get(position);
             holder.title.setText(itemEntity.getName());
             if (isDarkShow) {
                 holder.title.setTextColor(Color.parseColor("#F1F2F9"));
@@ -67,16 +69,11 @@ public class GiftBagDetailAdapter extends RecyclerView.Adapter<GiftBagDetailAdap
                     .placeholder(R.drawable.default_avatar)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(holder.icon_url);
-            holder.detail_layout.setOnClickListener(v -> {
-                if (onClickDetailListener != null) {
-                    onClickDetailListener.clickDetailCheck(index, itemEntity, holder.detail_layout);
-                }
-            });
+            holder.detail_layout.setOnClickListener(v -> itemOnSelect(position, holder));
             if (listData.get(position).isFirst()) {
-                onClickDetailListener.clickDetailCheck(index, itemEntity, holder.detail_layout);
+                itemOnSelect(position, holder);
             }
         }
-
     }
 
     @Override
@@ -85,6 +82,22 @@ public class GiftBagDetailAdapter extends RecyclerView.Adapter<GiftBagDetailAdap
             return 0;
         }
         return listData.size();
+    }
+
+    private void itemOnSelect(int position, GiftItemViewHolder holder) {
+        if (onClickDetailListener != null) {
+            cleanSelect();
+            selected = holder;
+            holder.detail_layout.setBackground(ContextCompat.getDrawable(mContext, R.drawable.purple_gift_checked));
+            onClickDetailListener.clickDetailCheck(listData.get(position));
+        }
+    }
+
+    public void cleanSelect() {
+        if (selected != null) {
+            selected.detail_layout.setBackground(null);
+            selected = null;
+        }
     }
 
     public static class GiftItemViewHolder extends RecyclerView.ViewHolder {
@@ -103,10 +116,10 @@ public class GiftBagDetailAdapter extends RecyclerView.Adapter<GiftBagDetailAdap
     }
 
     public interface OnClickDetailListener {
-        void clickDetailCheck(int position, GiftBagEntity.GiftEntity itemEntity, LinearLayout detail_layout);
+        void clickDetailCheck(GiftBagEntity.GiftEntity itemEntity);
     }
 
-    public void setOnClickListener(OnClickDetailListener onClickListener){
+        public void setOnClickListener(OnClickDetailListener onClickListener) {
         this.onClickDetailListener = onClickListener;
     }
 

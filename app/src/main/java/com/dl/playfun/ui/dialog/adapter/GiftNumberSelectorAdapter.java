@@ -1,5 +1,6 @@
 package com.dl.playfun.ui.dialog.adapter;
 
+import android.content.Context;
 import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dl.playfun.R;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @author Shuotao Gong
@@ -20,11 +22,27 @@ import java.util.List;
  */
 public class GiftNumberSelectorAdapter extends RecyclerView.Adapter<GiftNumberSelectorAdapter.GiftNumberSelectorViewHolder> {
 
-    private List<Integer> giftNumbers;
+    private final Context context;
 
-    private ItemOnClickListener listener;
+    private final List<Integer> giftNumbers;
 
-    private boolean isDarkShow;
+    private final ItemOnClickListener listener;
+
+    private final boolean isDarkShow;
+
+    private GiftNumberSelectorViewHolder selected;
+
+    /**
+     * @param giftNumbers 礼物可选数量
+     * @param isDarkShow 是否暗黑模式
+     * @param listener 点击回调
+     */
+    public GiftNumberSelectorAdapter(Context context, List<Integer> giftNumbers, boolean isDarkShow, ItemOnClickListener listener) {
+        this.context = context;
+        this.giftNumbers = giftNumbers;
+        this.isDarkShow = isDarkShow;
+        this.listener = listener;
+    }
 
     @NonNull
     @Override
@@ -35,13 +53,12 @@ public class GiftNumberSelectorAdapter extends RecyclerView.Adapter<GiftNumberSe
 
     @Override
     public void onBindViewHolder(@NonNull GiftNumberSelectorViewHolder holder, int position) {
-        holder.item.setText(giftNumbers.get(position).toString());
+        holder.item.setText(String.format(Locale.getDefault(), "%d", giftNumbers.get(position)));
+
+        holder.root.setOnClickListener(v -> itemOnSelect(position, holder));
         if (position == 0) {
-            listener.onClick(holder);
+            itemOnSelect(position, holder);
         }
-        holder.root.setOnClickListener((v) -> {
-            listener.onClick(holder);
-        });
         if (isDarkShow) {
             holder.item.setTextColor(ContextCompat.getColor(holder.root.getContext(), R.color.color_text_9897B3));
         } else {
@@ -54,16 +71,15 @@ public class GiftNumberSelectorAdapter extends RecyclerView.Adapter<GiftNumberSe
         return giftNumbers.size();
     }
 
-    public void setGiftNumbers(List<Integer> giftNumbers) {
-        this.giftNumbers = giftNumbers;
-    }
-
-    public void setListener(ItemOnClickListener listener) {
-        this.listener = listener;
-    }
-
-    public void setDarkShow(boolean darkShow) {
-        isDarkShow = darkShow;
+    private void itemOnSelect(int position, GiftNumberSelectorViewHolder holder) {
+        if (selected != null) {
+            selected.root.setBackground(null);
+            selected.item.setTextColor(ContextCompat.getColor(context, R.color.color_text_333333));
+        }
+        selected = holder;
+        holder.root.setBackground(ContextCompat.getDrawable(context, R.drawable.shape_bg_gift_number_selector_item));
+        holder.item.setTextColor(ContextCompat.getColor(context, R.color.color_bg_gift_number_selector_item));
+        listener.onClick(giftNumbers.get(position));
     }
 
     public static class GiftNumberSelectorViewHolder extends RecyclerView.ViewHolder {
@@ -79,7 +95,7 @@ public class GiftNumberSelectorAdapter extends RecyclerView.Adapter<GiftNumberSe
     }
 
     public interface ItemOnClickListener {
-        void onClick(GiftNumberSelectorViewHolder holder);
+        void onClick(int selectedNumber);
     }
 
 }

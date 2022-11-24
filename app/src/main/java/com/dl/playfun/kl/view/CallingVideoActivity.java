@@ -430,7 +430,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                 if (viewModel.unitPriceList == null ||  viewModel.maleBalanceMoney == 0){
                     return;
                 }
-                GiftBagDialog giftBagDialog = new GiftBagDialog(mContext, true, viewModel.maleBalanceMoney, viewModel.unitPriceList.size() > 1 ? 4 : 0);
+                GiftBagDialog giftBagDialog = new GiftBagDialog(mContext, true, viewModel.unitPriceList.size() > 1 ? 4 : 0);
                 giftBagDialog.setGiftOnClickListener(new GiftBagDialog.GiftOnClickListener() {
                     @Override
                     public void sendGiftClick(Dialog dialog, int number, GiftBagEntity.GiftEntity giftEntity) {

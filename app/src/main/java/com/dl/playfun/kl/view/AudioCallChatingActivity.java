@@ -435,7 +435,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                 if (viewModel.unitPriceList == null || viewModel.maleBalanceMoney == 0){
                     return;
                 }
-                GiftBagDialog giftBagDialog = new GiftBagDialog(mContext, true, viewModel.maleBalanceMoney, viewModel.unitPriceList.size() > 1 ? 3 : 0);
+                GiftBagDialog giftBagDialog = new GiftBagDialog(mContext, true, viewModel.unitPriceList.size() > 1 ? 3 : 0);
                 giftBagDialog.setGiftOnClickListener(new GiftBagDialog.GiftOnClickListener() {
                     @Override
                     public void sendGiftClick(Dialog dialog, int number, GiftBagEntity.GiftEntity giftEntity) {

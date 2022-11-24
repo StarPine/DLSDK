@@ -76,6 +76,7 @@ public class GiftBagEntity {
         protected Integer money;
         protected String img;
         protected String link;
+        private Integer type;
         protected boolean isFirst;
 
         public Integer getId() {
@@ -116,6 +117,14 @@ public class GiftBagEntity {
 
         public void setLink(String link) {
             this.link = link;
+        }
+
+        public Integer getType() {
+            return type;
+        }
+
+        public void setType(Integer type) {
+            this.type = type;
         }
 
         public boolean isFirst() {
@@ -265,17 +274,8 @@ public class GiftBagEntity {
     }
 
     public class CrystalGiftEntity extends GiftEntity {
-        private Integer type;
         @SerializedName("gift_languages")
         private String lang;
-
-        public Integer getType() {
-            return type;
-        }
-
-        public void setType(Integer type) {
-            this.type = type;
-        }
 
         public String getLang() {
             return lang;
@@ -295,7 +295,6 @@ public class GiftBagEntity {
                     ", img='" + img + '\'' +
                     ", link='" + link + '\'' +
                     ", isFirst=" + isFirst +
-                    ", type=" + type +
                     ", lang='" + lang + '\'' +
                     '}';
         }

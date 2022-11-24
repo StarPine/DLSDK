@@ -23,6 +23,10 @@
         <import type="androidx.recyclerview.widget.LinearLayoutManager" />
     </data>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:background="@color/status_bar_color"
         android:layout_width="match_parent"
@@ -123,8 +127,7 @@
             android:layout_height="match_parent"
             binding:drawable_color="@{@color/white}"
             binding:drawable_radius_leftTop="@{20}"
-            binding:drawable_radius_rightTop="@{20}"
-            >
+            binding:drawable_radius_rightTop="@{20}">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -263,19 +266,30 @@
                 </com.scwang.smart.refresh.layout.SmartRefreshLayout>
             </LinearLayout>
 
+
+        </RelativeLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp">
+
             <com.dl.playfun.widget.image.HomeShareImageView
-                tools:visibility="visible"
                 android:id="@+id/iv_accost"
                 android:layout_width="58dp"
                 android:layout_height="58dp"
                 android:layout_marginStart="288dp"
                 android:layout_marginTop="430dp"
-                android:elevation="50dp"
                 android:clickable="true"
+                android:elevation="50dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/nearby_accost_tip_img"
-                binding:onClickCommand="@{viewModel.toTaskClickCommand}" />
+                binding:onClickCommand="@{viewModel.toTaskClickCommand}"
+                tools:visibility="visible" />
+
         </RelativeLayout>
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    </FrameLayout>
 
 </layout>
