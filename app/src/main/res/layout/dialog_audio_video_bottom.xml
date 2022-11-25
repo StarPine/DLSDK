@@ -9,7 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/dialog_audio_video_backdrop"
-        android:minHeight="150dp"
         android:orientation="vertical">
 
         <FrameLayout
@@ -24,10 +23,10 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="21dp"
-                    android:layout_height="21dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:src="@drawable/img_im_msgdetail_video_call" />
+                    android:src="@drawable/custom_call_video" />
 
                 <TextView
                     android:layout_marginStart="4dp"
@@ -48,6 +47,7 @@
         </FrameLayout>
 
         <View
+            android:id="@+id/v_line"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="#FFF1F1F1" />
@@ -64,10 +64,9 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="21dp"
-                    android:layout_height="21dp"
-                    android:layout_centerInParent="true"
-                    android:src="@drawable/img_im_msgdetail_audio_call" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/custom_call_audio" />
 
                 <TextView
                     android:layout_marginStart="4dp"
