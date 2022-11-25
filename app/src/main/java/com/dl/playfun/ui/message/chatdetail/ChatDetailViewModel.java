@@ -49,6 +49,7 @@ import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.dl.rtc.calling.base.DLRTCCalling;
+import com.dl.rtc.calling.manager.DLRTCStartShowUIManager;
 import com.dl.rtc.calling.model.DLRTCDataMessageType;
 import com.google.gson.Gson;
 import com.tencent.qcloud.tuicore.Status;
@@ -518,7 +519,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                         if (callingInviteInfo != null) {
                             com.dl.playfun.kl.Utils.inviteUserRTC(toIMUserId,
                                     callingType==1 ? DLRTCDataMessageType.DLInviteRTCType.dl_rtc_audio : DLRTCDataMessageType.DLInviteRTCType.dl_rtc_video,
-                                    callingInviteInfo.getRoomId(),true, new Gson().toJson(callingInviteInfo));
+                                    callingInviteInfo.getRoomId(),true);
                         }
                     }
 

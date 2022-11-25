@@ -276,7 +276,6 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         }
         launcherPermissionArray.launch(new String[]{Manifest.permission.RECORD_AUDIO,Manifest.permission.CAMERA});
     }
-    private int permissionCount = 0;
     //多个权限申请监听
     ActivityResultLauncher<String[]> launcherPermissionArray = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(),
             result -> {
@@ -288,7 +287,6 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                             DLRTCVideoManager.Companion.getInstance().openCamera(true, videoLayout.getVideoView());
                         }
                     } else {
-                        permissionCount++;
                         //有权限没有获取到的动作
                         alertPermissions(R.string.playfun_permissions_video2);
                     }
@@ -300,11 +298,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
             if(_success){
                 PermissionChecker.launchAppDetailsSettings(mContext);
             }else {
-                if(permissionCount>=2){
-                    viewModel.hangup();
-                    return;
-                }
-                launcherPermissionArray.launch(new String[]{Manifest.permission.RECORD_AUDIO,Manifest.permission.CAMERA});
+                viewModel.uc.closeViewHint.call();
             }
         }).show();
     }
@@ -333,8 +327,6 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                     rotation = ObjectAnimator.ofFloat(binding.ivVideoUpSayHi, "rotation", 0.0F, 360.0F);
                 }
                 if (!rotation.isRunning()){
-//                    rotation.setRepeatMode(ValueAnimator.RESTART);
-//                    rotation.setRepeatCount(-1);
                     rotation.addListener(new AnimatorListenerAdapter() {
                         @Override
                         public void onAnimationEnd(Animator animation) {
@@ -351,7 +343,9 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         //公屏消息滚动到底部
         viewModel.uc.scrollToEnd.observe(this, unused -> binding.rcvLayout.scrollToPosition(viewModel.adapter.getItemCount() - 1));
         //关闭按钮点击事件回调
-        viewModel.uc.closeViewHint.observe(this, unused -> onBackViewCLick());
+        viewModel.uc.closeViewHint.observe(this, unused -> {
+            onBackViewCLick();
+        });
         //接收礼物效果展示
         viewModel.uc.acceptUserGift.observe(this, giftEntity -> {
             viewModel.getCallingStatus(viewModel.roomId);
@@ -820,6 +814,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
     public void onBackViewCLick() {
         if (viewModel.collected == null) {
             viewModel.hangup();
+            finish();
             return;
         }
         if (viewModel.isMale) {

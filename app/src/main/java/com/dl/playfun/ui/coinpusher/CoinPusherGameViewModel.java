@@ -211,7 +211,7 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
                 callingType = 2;
             }
             String fromUserId = TUILogin.getUserId();
-            String answerUserId = null;
+            String answerUserId;
             MPTimber.tag("CoinPusherGameActivity").d("fromUserId： "+fromUserId+" ,上个拨打人"+gameCallEntity.getInviteUserId() +" ==="+fromUserId.equals(gameCallEntity.getInviteUserId()));
             if(!fromUserId.equals(gameCallEntity.getInviteUserId())){
                 answerUserId = gameCallEntity.getInviteUserId();
@@ -363,7 +363,7 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
                         callUserRoomInfoEntity.set(callingInviteInfo);
                         //主动拨打
                         callingOnTheLine.set(true);
-                        Utils.StartGameCallSomeone(callingType, receiverImId, callingInviteInfo.getRoomId(), new Gson().toJson(callingInviteInfo));
+                        Utils.StartGameCallSomeone(callingType, receiverImId, callingInviteInfo.getRoomId());
                         DLRTCAudioManager.Companion.getInstance().enableAGC(true);
                         DLRTCAudioManager.Companion.getInstance().enableAEC(true);
                         DLRTCAudioManager.Companion.getInstance().enableANS(true);

@@ -18,6 +18,7 @@ import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.entity.CallUserInfoEntity;
 import com.dl.playfun.event.AudioCallingCancelEvent;
+import com.dl.playfun.kl.CallChatingConstant;
 import com.dl.playfun.kl.view.Ifinish;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.viewmodel.BaseViewModel;
@@ -97,17 +98,6 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
         RxSubscriptions.remove(mSubscription);
     }
 
-    public void init(DLRTCCalling.Role role, int roomId) {
-        this.mRole = role;
-        isCallBinding.set(role == DLRTCCalling.Role.CALL);
-        this.CallingRoomId = roomId;
-    }
-
-    public void init(DLRTCCalling.Role role) {
-        this.mRole = role;
-        isCallBinding.set(role == DLRTCCalling.Role.CALL);
-    }
-
     public void cancelCallClick() {
         unListen();
         endTRTCCalling();
@@ -127,8 +117,10 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
         Utils.runOnUiThread(() -> {
             if (DLRTCCalling.Role.CALL == mRole) {
                 DLRTCStartShowUIManager.Companion.getInstance().inviteUserCanceled();
+                updateCallingStatus(CallChatingConstant.chanel);
             } else {
                 DLRTCStartShowUIManager.Companion.getInstance().inviteUserReject();
+                updateCallingStatus(CallChatingConstant.dissolveRoom);
             }
         });
     }
@@ -283,6 +275,10 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
             return String.format(StringUtils.getString(R.string.playfun_age_and_constellation), callingInviteInfo.getAge(), callingInviteInfo.getConstellation());
         }
         return "";
+    }
+
+    public void updateCallingStatus(int eventType){
+        CallChatingConstant.updateCallingStatus(CallingRoomId, "", eventType);
     }
 
     //查询用户资料

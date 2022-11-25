@@ -27,6 +27,7 @@ import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.widget.image.CircleImageView;
 import com.dl.rtc.calling.DLRTCFloatWindowService;
 import com.dl.rtc.calling.base.DLRTCCalling;
+import com.dl.rtc.calling.model.DLRTCCallingConstants;
 import com.dl.rtc.calling.ui.BaseDLRTCCallView;
 import com.google.gson.Gson;
 import com.tencent.custom.GiftEntity;
@@ -170,13 +171,13 @@ public class AudioFloatCallView extends BaseDLRTCCallView {
             if (!isRestart) {
                 isRestart = true;
                 Intent intent = new Intent(getContext(), AudioCallChatingActivity.class);
-                intent.putExtra("fromUserId", mSponsorID);
-                intent.putExtra("toUserId", mUserIDs[0]);
-                intent.putExtra("mRole", mRole);
-                intent.putExtra("roomId", roomId);
+                intent.putExtra(DLRTCCallingConstants.DLRTCInviteUserID, mSponsorID);
+                intent.putExtra(DLRTCCallingConstants.DLRTCAcceptUserID, mUserIDs[0]);
+                intent.putExtra(DLRTCCallingConstants.PARAM_NAME_ROLE, mRole);
+                intent.putExtra(DLRTCCallingConstants.RTCInviteRoomID, roomId);
                 intent.putExtra("timeCount", ++mTimeCount);
                 intent.putExtra("isRestart", isRestart);
-                intent.putExtra("_callUserInfoEntity",otherUserProfile);
+                intent.putExtra("CallingInviteInfoField",otherUserProfile);
                 intent.putExtra("audioCallingBarrage", GsonUtils.toJson(audioBarrageList));
                 if (isBackground(getContext())) {
                     getContext().startActivity(intent);
@@ -233,22 +234,6 @@ public class AudioFloatCallView extends BaseDLRTCCallView {
         return false;
     }
 
-    //获取房间状态
-    public void getRoomStatus(Integer roomId) {
-        Injection.provideDemoRepository().getRoomStatus(roomId)
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .subscribe(new BaseObserver<BaseDataResponse<CallingStatusEntity>>() {
-                    @Override
-                    public void onSuccess(BaseDataResponse<CallingStatusEntity> response) {
-                        CallingStatusEntity data = response.getData();
-                        Integer roomStatus = data.getRoomStatus();
-                        if (roomStatus != null && roomStatus != 101) {
-                            onCallEnd();
-                        }
-                    }
-                });
-    }
 
     @Override
     public void onCallEnd() {

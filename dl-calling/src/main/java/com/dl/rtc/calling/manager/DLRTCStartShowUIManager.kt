@@ -98,32 +98,11 @@ class DLRTCStartShowUIManager : DLRTCStartManagerDelegate, V2TIMSimpleMsgListene
     /**
      * 拨打电话
      */
-    fun inviteUserRTC(inviteUser : String, inviteType : DLRTCDataMessageType.DLInviteRTCType, roomId : Int, data :String){
+    fun inviteUserRTC(inviteUser : String, inviteType : DLRTCDataMessageType.DLInviteRTCType, roomId : Int, dlrtcStartUiClosuer: DLRTCStartUiClosuer){
         DLRTCStartManager.instance.inviteUserRTC(inviteUser,inviteType,roomId, object : DLRTCModuleClosuer{
             override fun callback(_success: Boolean, _errorCode: Int, _errorMsg: String?) {
                 inviteUserCall = _success
-                if(_success){
-                    val mContext = DLRTCStartManager.instance.mContext!!
-                    // 首次拨打电话，生成id
-                    // 单聊发送C2C消息; 用C2C实现的多人通话,需要保存每个userId对应的callId
-                    val intent = Intent(Intent.ACTION_VIEW)
-                    if (inviteType == DLRTCDataMessageType.DLInviteRTCType.dl_rtc_audio) {
-                        intent.component = ComponentName(mContext.applicationContext, DLRTCInterceptorCall.instance.audioCallActivity)
-                    } else {
-                        intent.component = ComponentName(mContext.applicationContext, DLRTCInterceptorCall.instance.videoCallActivity)
-                    }
-                    intent.putExtra(DLRTCCallingConstants.DLRTCInviteUserID, TUILogin.getLoginUser())
-                    intent.putExtra(DLRTCCallingConstants.PARAM_NAME_ROLE, DLRTCCalling.Role.CALL)
-                    intent.putExtra(DLRTCCallingConstants.DLRTCAcceptUserID, inviteUser)
-                    intent.putExtra(DLRTCCallingConstants.DLRTCInviteSelf,false)
-                    intent.putExtra(DLRTCCallingConstants.RTCInviteRoomID,roomId)
-                    intent.putExtra("userProfile", data)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    mContext.startActivity(intent)
-                    DLRTCCallService.start(mContext)
-                }else{
-
-                }
+                dlrtcStartUiClosuer.callback(_success, _errorCode, _errorMsg)
             }
         })
     }
@@ -278,11 +257,7 @@ class DLRTCStartShowUIManager : DLRTCStartManagerDelegate, V2TIMSimpleMsgListene
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 mContext!!.startActivity(intent)
         }else{
-//            var userIdResult = ""
-//            if(!userIDs.isNullOrEmpty()){
-//                userIdResult = userIDs[0].toString()
-//            }
-           // DLRTCInterceptorCall.instance.notifyInterceptorCall(userIdResult, type, roomId, data, isFromGroup, sponsorID)
+            DLRTCInterceptorCall.instance.notifyInterceptorCall(dLRTCStartModel.acceptUserId, dLRTCStartModel.inviteUserId, DLRTCDataMessageType.DLInviteRTCType.valueOf(dLRTCStartModel.rtcInviteType), dLRTCStartModel.rtcInviteRoomId, null)
         }
     }
 
@@ -378,4 +353,7 @@ class DLRTCStartShowUIManager : DLRTCStartManagerDelegate, V2TIMSimpleMsgListene
             DLRTCInternalListenerManager.instance.onNetworkQuality(quality, arrayList)
         }
     }
+}
+interface DLRTCStartUiClosuer{
+    fun callback(_success : Boolean,_errorCode : Int,_errorMsg : String?)
 }

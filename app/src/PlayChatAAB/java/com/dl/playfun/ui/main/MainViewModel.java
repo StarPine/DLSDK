@@ -490,7 +490,7 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
                         }
                         CallingInviteInfo callingInviteInfo = callingInviteInfoBaseDataResponse.getData();
                         if (callingInviteInfo != null) {
-                            Utils.tryStartCallSomeone(2, otherImUserId, callingInviteInfo.getRoomId(), new Gson().toJson(callingInviteInfo));
+                            Utils.tryStartCallSomeone(2, otherImUserId, callingInviteInfo.getRoomId());
                         }
                     }
 

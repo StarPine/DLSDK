@@ -387,12 +387,6 @@ class DLRTCStartManager {
                         val rtcRoomId = getParamsRoomId(params[DLRTCDataMessageType.DLRTCInviteRoomID])
                         model.rtcInviteRoomId = rtcRoomId
                         this@DLRTCStartManager.inviteRTCRoomId = rtcRoomId
-
-                        val interceptorResult = DLRTCInterceptorCall.instance.containsActivity(AppManager.getAppManager().currentActivity().javaClass)
-                        if(interceptorResult){
-                            DLRTCInterceptorCall.instance.notifyInterceptorCall(acceptUserId, _inviteUserId, DLRTCDataMessageType.DLInviteRTCType.valueOf(model.rtcInviteType), rtcRoomId, null)
-                            return
-                        }
                         for (delegate in delegates) {
                             delegate.RTCStartManagerReciveMsg(this@DLRTCStartManager, model)
                         }

@@ -43,6 +43,7 @@ import com.dl.playfun.entity.MallWithdrawTipsInfoEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.AudioCallingCancelEvent;
 import com.dl.playfun.event.CallingToGamePlayingEvent;
+import com.dl.playfun.kl.CallChatingConstant;
 import com.dl.playfun.kl.Utils;
 import com.dl.playfun.kl.view.Ifinish;
 import com.dl.playfun.manager.ConfigManager;
@@ -97,9 +98,11 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     //是否发送过礼物
     public boolean sendGiftBagSuccess = false;
     public Integer roomId;
+    public String roomIdStr;
     public String fromUserId;
     public String toUserId;
-
+    //心跳包发送间隔
+    public int heartBeatInterval = 10;
     //通话数据加载完成
     public boolean callInfoLoaded = false;
     //男生钻石总余额
@@ -124,7 +127,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     //当前用户是否为收款人
     public boolean isPayee = false;
     //是否已追踪0未追踪1已追踪
-    public Integer collected;
+    public Boolean collected;
     //余额不足临界提示分钟数
     public int balanceNotEnoughTipsMinutes;
     //余额不足提示标记
@@ -132,8 +135,6 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     public ObservableField<Boolean> isShowCountdown = new ObservableField(false);
     //防录屏提示开关
     public ObservableField<Boolean> tipSwitch = new ObservableField(true);
-    //价格配置表
-    public List<CallingInfoEntity.CallingUnitPriceInfo> unitPriceList;
 
     //时间提示
     public ObservableField<String> timeTextField = new ObservableField<>();
@@ -152,10 +153,9 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     public ObservableBoolean girlEarningsField = new ObservableBoolean(false);
     //收益文字
     public ObservableField<SpannableString> girlEarningsText = new ObservableField<>();
-    public ObservableField<UserDataEntity> audioUserDataEntity = new ObservableField<>();
     public ObservableField<CallingInfoEntity> audioCallingInfoEntity = new ObservableField<>();
     //是否已经追踪
-    public ObservableInt collectedField = new ObservableInt(1);
+    public ObservableBoolean collectedField = new ObservableBoolean(false);
     //是否静音
     public ObservableBoolean micMuteField = new ObservableBoolean(false);
     //是否免提
@@ -190,7 +190,6 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
         @Override
         public void call() {
             AppContext.instance().logEvent(AppsFlyerEvent.voicecall_gift);
-            getCallingStatus(roomId);
             uc.callGiftBagAlert.call();
         }
     });
@@ -262,6 +261,48 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
         sayHiEntityHidden.set(true);
     });
 
+    //查询房间信息
+    public void callingInviteUser(String inviterImId,String receiverImId){
+//        callingType	是	Integer	通话类型：1=语音，2=视频
+//                * inviterImId	是	String	拔打人IM ID
+//     * receiverImId	是	String	接收人IM ID
+        Map<String, Object> mapData = new HashMap<>();
+        mapData.put("callingType",1);
+        mapData.put("inviterImId",inviterImId);
+        mapData.put("receiverImId",receiverImId);
+        model.callingInviteUser(ApiUitl.getBody(GsonUtils.toJson(mapData)))
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseDataResponse<CallUserRoomInfoEntity>>(){
+                    @Override
+                    public void onSuccess(BaseDataResponse<CallUserRoomInfoEntity> response) {
+                        CallUserRoomInfoEntity callingInviteInfo = response.getData();
+                        if(callingInviteInfo!=null){
+                            if(!callingInviteInfo.getPayerImId().equals(ConfigManager.getInstance().getUserImID())){
+                                //付费方
+                                isPayee = true;
+                            }
+                            //心跳间隔大于0秒才进行赋值。否则默认10秒
+                            if(callingInviteInfo.getHeartBeatInterval() > 0){
+                                heartBeatInterval = callingInviteInfo.getHeartBeatInterval();
+                            }
+                        }
+                        uc.callAudioStart.call();
+                        //主动拨打
+                        DLRTCAudioManager.Companion.getInstance().enableAGC(true);
+                        DLRTCAudioManager.Companion.getInstance().enableAEC(true);
+                        DLRTCAudioManager.Companion.getInstance().enableANS(true);
+                        //gameUI.acceptCallingEvent.call();
+                    }
+                    @Override
+                    public void onComplete() {
+                        dismissHUD();
+                    }
+                });
+    }
+
     //发送礼物
     public void sendUserGift(Dialog dialog, GiftBagEntity.giftEntity giftEntity, Integer to_user_id, Integer amount) {
         HashMap<String, Integer> map = new HashMap<>();
@@ -278,7 +319,6 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                     @Override
                     public void onSuccess(BaseResponse baseResponse) {
                         dismissHUD();
-                        getCallingStatus(roomId);
                         sendGiftBagSuccess = true;
 //                        dialog.dismiss();
                         String textTip = null;
@@ -367,6 +407,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     }
 
     public void hangup() {
+        updateCallingStatus(CallChatingConstant.exitRoom);
         unListener();
         DLRTCStartShowUIManager.Companion.getInstance().inviteUserReject();
         mView.finishView();
@@ -391,6 +432,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
 
             @Override
             public void onCallEnd() {
+                updateCallingStatus(CallChatingConstant.exitRoom);
                 DLRTCStartShowUIManager.Companion.getInstance().exitRTCRoom();
                 Log.i(TAG, "onCallEnd: ");
                 endChattingAndShowHint(AppContext.instance().getString(R.string.playfun_call_ended));
@@ -412,7 +454,6 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
 
             @Override
             public void onTryToReconnect() {
-                getRoomStatus(roomId);
             }
 
             @Override
@@ -582,17 +623,44 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                             //自定义消息类型
                             case 2:
                                 V2TIMCustomElem v2TIMCustomElem = info.getV2TIMMessage().getCustomElem();
-                                Log.e("当前消息是自定义消息：", String.valueOf(v2TIMCustomElem==null));
-                                Log.e("当前消息是自定义消息2：",new String(v2TIMCustomElem.getData()));
+                                Log.e("语音当前消息是自定义消息2：",new String(v2TIMCustomElem.getData()));
                                 Map<String, Object> contentBody = CustomConvertUtils.CustomMassageConvertMap(v2TIMCustomElem);
                                 if (ObjectUtils.isNotEmpty(contentBody)) {
-                                    Log.e("接受到的自定义讯息为", String.valueOf(contentBody));
+                                    Log.e("语音接受到的自定义讯息为", String.valueOf(contentBody));
                                     //模块类型--判断
                                     if (contentBody.containsKey(CustomConstants.Message.MODULE_NAME_KEY)) {
                                         //获取moudle-pushCoinGame 推币机
                                         if (CustomConvertUtils.ContainsMessageModuleKey(contentBody, CustomConstants.Message.MODULE_NAME_KEY, CustomConstants.CoinPusher.MODULE_NAME)) {
-                                            Log.e("当前模块效验通过","转到推币机处理");
                                             V2TIMCustomManagerUtil.CoinPusherManager(contentBody);
+                                        }
+                                        //通话模块
+                                        if(CustomConvertUtils.ContainsMessageModuleKey(contentBody, CustomConstants.Message.MODULE_NAME_KEY, CustomConstants.CallingMessage.MODULE_NAME)){
+                                            Map<String,Object> pushCoinGame = CustomConvertUtils.ConvertMassageModule(contentBody,CustomConstants.Message.MODULE_NAME_KEY,CustomConstants.CallingMessage.MODULE_NAME,CustomConstants.Message.CUSTOM_CONTENT_BODY);
+                                            if(ObjectUtils.isNotEmpty(pushCoinGame)){
+                                                //消息类型--判断
+                                                if(pushCoinGame.containsKey(CustomConstants.Message.CUSTOM_MSG_KEY)){
+                                                    if (CustomConvertUtils.ContainsMessageModuleKey(pushCoinGame,CustomConstants.Message.CUSTOM_MSG_KEY,CustomConstants.CallingMessage.CALLING_PROFIT_TIPS)){
+                                                        // //通话中收益
+                                                        Map<String,Object> startWinning = CustomConvertUtils.ConvertMassageModule(pushCoinGame,CustomConstants.Message.CUSTOM_MSG_KEY,CustomConstants.CallingMessage.CALLING_PROFIT_TIPS,CustomConstants.Message.CUSTOM_MSG_BODY);
+                                                        if(ObjectUtils.isNotEmpty(startWinning)){
+                                                            CallingStatusEntity callingStatusEntity = GsonUtils.fromJson(GsonUtils.toJson(startWinning),CallingStatusEntity.class);
+                                                            if(callingStatusEntity!=null){
+                                                                Integer roomStatus = callingStatusEntity.getRoomStatus();
+                                                                if (roomStatus != null && roomStatus != 101) {
+                                                                    hangup();
+                                                                }
+                                                                maleBalanceMoney = callingStatusEntity.getPayerCoinBalance();
+                                                                payeeProfits = callingStatusEntity.getPayeeProfits().doubleValue();
+                                                                totalMinutes = callingStatusEntity.getTotalMinutes() * 60;
+                                                                totalMinutesRemaining = totalMinutes - TimeCount;
+                                                                callInfoLoaded = true;
+                                                                Log.e("当前通话收益",callingStatusEntity.toString());
+                                                            }
+
+                                                        }
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -667,139 +735,27 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                 });
     }
 
-    //获取房间状态
-    public void getRoomStatus(Integer roomId) {
-        model.getRoomStatus(roomId)
+    //发送心跳包
+    public void callingKeepAlive(Integer roomId,String roomIdStr){
+        Map<String,Object> mapData = new HashMap<>();
+        mapData.put("roomId",roomId);
+        mapData.put("roomIdStr",roomIdStr);
+        model.callingKeepAlive(ApiUitl.getBody(GsonUtils.toJson(mapData)))
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
-                .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseDataResponse<CallingStatusEntity>>() {
+                .subscribe(new BaseObserver<BaseResponse>() {
                     @Override
-                    public void onSuccess(BaseDataResponse<CallingStatusEntity> response) {
-                        CallingStatusEntity data = response.getData();
-                        Integer roomStatus = data.getRoomStatus();
-                        LogUtils.i("onSuccess: " + roomStatus);
-                        if (roomStatus != null && roomStatus != 101) {
-                            hangup();
-                        }
-                    }
-                });
-    }
-
-    //获取通话状态
-    public void getCallingStatus(Integer roomId) {
-        model.getCallingStatus(roomId)
-                .doOnSubscribe(this)
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseDataResponse<CallingStatusEntity>>() {
-                    @Override
-                    public void onSuccess(BaseDataResponse<CallingStatusEntity> response) {
-                        CallingStatusEntity data = response.getData();
-                        if (data != null) {
-                            maleBalanceMoney = data.getPayerCoinBalance();
-                            payeeProfits = data.getPayeeProfits().doubleValue();
-                            totalMinutes = data.getTotalMinutes() * 60;
-                            totalMinutesRemaining = totalMinutes - TimeCount;
-                            callInfoLoaded = true;
-                        }
+                    public void onSuccess(BaseResponse baseResponse) {
 
                     }
                 });
     }
 
-
-    public void getCallingInfo(Integer roomId, String fromUserId, String toUserId) {
-        model.getCallingInfo(roomId, 1, fromUserId, toUserId)
-                .doOnSubscribe(this)
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseDataResponse<CallingInfoEntity>>() {
-                    @Override
-                    public void onSuccess(BaseDataResponse<CallingInfoEntity> response) {
-                        CallingInfoEntity callingInviteInfo = response.getData();
-                        UserDataEntity userDataEntity = model.readUserData();
-                        audioUserDataEntity.set(userDataEntity);
-                        audioCallingInfoEntity.set(callingInviteInfo);
-                        if (callingInviteInfo.getPaymentRelation().getPayeeImId().equals(ConfigManager.getInstance().getUserImID())){
-                            isPayee = true;
-                        }
-
-                        sayHiEntityList = callingInviteInfo.getSayHiList().getData();
-                        if (sayHiEntityList.size() > 1) {
-                            sayHiEntityHidden.set(false);
-                            sayHiEntityField.set(sayHiEntityList.get(0));
-                        }
-                        //是否已追踪0未追踪1已追踪
-                        collected = callingInviteInfo.getCollected();
-                        collectedField.set(collected);
-                        //余额不足提示分钟数
-                        balanceNotEnoughTipsMinutes = callingInviteInfo.getBalanceNotEnoughTipsMinutes();
-                        //价格配置表
-                        unitPriceList = callingInviteInfo.getUnitPriceList();
-
-                        DLRTCAudioManager.Companion.getInstance().enableAGC(true);
-                        DLRTCAudioManager.Companion.getInstance().enableAEC(true);
-                        DLRTCAudioManager.Companion.getInstance().enableANS(true);
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        dismissHUD();
-                        uc.callAudioStart.call();
-                    }
-                });
+    public void updateCallingStatus(int eventType){
+        CallChatingConstant.updateCallingStatus(roomId, roomIdStr, eventType);
     }
 
-    //拨打电话给指定用户
-    public void callingInviteUser(int callingType, String inviterImId,String receiverImId){
-//        callingType	是	Integer	通话类型：1=语音，2=视频
-//                * inviterImId	是	String	拔打人IM ID
-//     * receiverImId	是	String	接收人IM ID
-        Map<String, Object> mapData = new HashMap<>();
-        mapData.put("callingType",callingType);
-        mapData.put("inviterImId",inviterImId);
-        mapData.put("receiverImId",receiverImId);
-        model.callingInviteUser(ApiUitl.getBody(GsonUtils.toJson(mapData)))
-                .doOnSubscribe(this)
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseDataResponse<CallUserRoomInfoEntity>>(){
-                    @Override
-                    public void onSuccess(BaseDataResponse<CallUserRoomInfoEntity> response) {
-                        //主动拨打
-                        DLRTCAudioManager.Companion.getInstance().enableAGC(true);
-                        DLRTCAudioManager.Companion.getInstance().enableAEC(true);
-                        DLRTCAudioManager.Companion.getInstance().enableANS(true);
-                        //gameUI.acceptCallingEvent.call();
-                    }
-                    @Override
-                    public void onComplete() {
-                        dismissHUD();
-                    }
-                });
-    }
-
-    public void getTips(Integer toUserId,int type,String isShowCountdown){
-        model.getTips(toUserId, type,isShowCountdown)
-                .doOnSubscribe(this)
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .subscribe(new BaseObserver<BaseDataResponse>() {
-                    @Override
-                    public void onSuccess(BaseDataResponse baseDataResponse) {
-                    }
-
-                    @Override
-                    public void onError(RequestException e) {
-
-                    }
-                });
-    }
     //获取破冰文案
     public void getSayHiList() {
         //录音文案数组坐标
@@ -829,6 +785,10 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                                 }
                             } else {
                                 sayHiePosition = 0;
+                                sayHiEntityField.set(sayHiEntityList.get(0));
+                            }
+                            if (sayHiEntityList.size() > 1) {
+                                sayHiEntityHidden.set(false);
                                 sayHiEntityField.set(sayHiEntityList.get(0));
                             }
                         } catch (Exception e) {
@@ -880,8 +840,8 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                         if (isHangup) {
                             hangup();
                         } else {
-                            collected = 1;
-                            collectedField.set(1);
+                            collected = true;
+                            collectedField.set(true);
                             ToastUtils.showShort(R.string.playfun_cancel_zuizong_3);
                         }
                     }

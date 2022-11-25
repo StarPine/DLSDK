@@ -54,6 +54,8 @@ public class CustomConstants {
         //模块名
         public static final String MODULE_NAME = "calling";
         public static final String TYPE_CALLING_FAILED = "callingFailed";
+        //通话中收益
+        public static final String CALLING_PROFIT_TIPS = "callingProfitTips";
     }
 
     //系统提示模块

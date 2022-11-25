@@ -39,7 +39,7 @@ public class CallUserInfoEntity implements Serializable {
     private int status;
     //在线状态:0=不在线;1=在线;
     private int isOnline;
-    //是否已追踪0未追踪1已追踪2相互追踪
+    //是否 已追踪0未追踪1已追踪2相互追踪
     private int collected;
 
     public int getId() {

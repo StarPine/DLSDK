@@ -1,15 +1,24 @@
 package com.dl.playfun.kl;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 
+import androidx.annotation.Nullable;
+
 import com.blankj.utilcode.util.ToastUtils;
 import com.dl.playfun.app.AppContext;
+import com.dl.rtc.calling.DLRTCCallService;
 import com.dl.rtc.calling.base.DLRTCCalling;
+import com.dl.rtc.calling.manager.DLRTCInterceptorCall;
 import com.dl.rtc.calling.manager.DLRTCStartManager;
 import com.dl.rtc.calling.manager.DLRTCStartShowUIManager;
+import com.dl.rtc.calling.manager.DLRTCStartUiClosuer;
 import com.dl.rtc.calling.model.DLRTCCallingConstants;
 import com.dl.rtc.calling.model.DLRTCDataMessageType;
+import com.tencent.qcloud.tuicore.TUILogin;
 
 public class Utils {
     protected static final Handler mMainHandler = new Handler(Looper.getMainLooper());
@@ -17,29 +26,50 @@ public class Utils {
     /**
      * 开始呼叫某人
      */
-    public static void startCallSomeone(int type, String toUserId, int roomId, String data,boolean startView) {
-        if (type == DLRTCCallingConstants.TYPE_VIDEO_CALL) {
-            String[] userIDs = {toUserId};
-          //  DLRTCStartManager.Companion.getInstance().call(userIDs, DLRTCCalling.Type.VIDEO, roomId, data,startView);
-        } else if (type == DLRTCCallingConstants.TYPE_AUDIO_CALL) {
-            String[] userIDs = {toUserId};
-          //  DLRTCStartManager.Companion.getInstance().call(userIDs, DLRTCCalling.Type.AUDIO, roomId, data,startView);
+    public static void startCallSomeone(int type, String toUserId, int roomId,boolean startView) {
+        DLRTCDataMessageType.DLInviteRTCType dlInviteRTCType = null;
+        if (type == 1) {
+            dlInviteRTCType = DLRTCDataMessageType.DLInviteRTCType.dl_rtc_audio;
+        } else if (type == 2) {
+            dlInviteRTCType = DLRTCDataMessageType.DLInviteRTCType.dl_rtc_video;
         }
-
+        inviteUserRTC(toUserId, dlInviteRTCType, roomId,startView);
     }
 
-    public static void inviteUserRTC(String inviteUser, DLRTCDataMessageType.DLInviteRTCType inviteType, int roomId, boolean launchView, String data){
-        //DLRTCStartManager.Companion.getInstance().inviteUserRTC(inviteUser, inviteType, roomId, launchView, data);
-        DLRTCStartShowUIManager.Companion.getInstance().inviteUserRTC(inviteUser,inviteType,roomId,data);
+    public static void inviteUserRTC(String inviteUser, DLRTCDataMessageType.DLInviteRTCType inviteType, int roomId,boolean lanuchView){
+        DLRTCStartShowUIManager.Companion.getInstance().inviteUserRTC(inviteUser, inviteType, roomId, (_success, _errorCode, _errorMsg) -> {
+            if(_success){
+                Context mContext = DLRTCStartManager.Companion.getInstance().getMContext();
+                if(lanuchView){
+                    // 首次拨打电话，生成id
+                    // 单聊发送C2C消息; 用C2C实现的多人通话,需要保存每个userId对应的callId
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    if (inviteType == DLRTCDataMessageType.DLInviteRTCType.dl_rtc_audio) {
+                        intent.setComponent(new ComponentName(mContext.getApplicationContext(), DLRTCInterceptorCall.Companion.getInstance().getAudioCallActivity()));
+                    } else {
+                        intent.setComponent(new ComponentName(mContext.getApplicationContext(), DLRTCInterceptorCall.Companion.getInstance().getVideoCallActivity()));
+                    }
+                    intent.putExtra(DLRTCCallingConstants.DLRTCInviteUserID, TUILogin.getLoginUser());
+                    intent.putExtra(DLRTCCallingConstants.PARAM_NAME_ROLE, DLRTCCalling.Role.CALL);
+                    intent.putExtra(DLRTCCallingConstants.DLRTCAcceptUserID, inviteUser);
+                    intent.putExtra(DLRTCCallingConstants.DLRTCInviteSelf,false);
+                    intent.putExtra(DLRTCCallingConstants.RTCInviteRoomID,roomId);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    mContext.startActivity(intent);
+
+                }
+                DLRTCCallService.Companion.start(mContext);
+            }
+        });
     }
 
 
-    public static void tryStartCallSomeone(int type, String userId, int roomId, String data) {
-        startCallSomeone(type, userId, roomId, data,true);
+    public static void tryStartCallSomeone(int type, String userId, int roomId) {
+        startCallSomeone(type, userId, roomId,true);
     }
 
-    public static void StartGameCallSomeone(int type, String userId, int roomId, String data) {
-        startCallSomeone(type, userId, roomId, data,false);
+    public static void StartGameCallSomeone(int type, String userId, int roomId) {
+        startCallSomeone(type, userId, roomId,false);
     }
 
     public static void show(String message) {

@@ -372,7 +372,7 @@ public class WebHomeFragment extends BaseFragment<ActivityWebHomePlayfunBinding,
             if(dataInfo!=null){
                 CallingInviteInfo callingInviteInfo = GsonUtils.fromJson(dataInfo,CallingInviteInfo.class);
                 if (callingInviteInfo != null) {
-                    Utils.tryStartCallSomeone(2, toIMUserId, callingInviteInfo.getRoomId(), new Gson().toJson(callingInviteInfo));
+                    Utils.tryStartCallSomeone(2, toIMUserId, callingInviteInfo.getRoomId());
                 }
             }
         }

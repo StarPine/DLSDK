@@ -104,4 +104,18 @@ public class CallingStatusEntity {
     public void setPayeeProfits(BigDecimal payeeProfits) {
         this.payeeProfits = payeeProfits;
     }
+
+    @Override
+    public String toString() {
+        return "CallingStatusEntity{" +
+                "roomId=" + roomId +
+                ", roomStatus=" + roomStatus +
+                ", totalMinutes=" + totalMinutes +
+                ", elapsedMinutes=" + elapsedMinutes +
+                ", remainingMinutes=" + remainingMinutes +
+                ", frozenCoins=" + frozenCoins +
+                ", payerCoinBalance=" + payerCoinBalance +
+                ", payeeProfits=" + payeeProfits +
+                '}';
+    }
 }

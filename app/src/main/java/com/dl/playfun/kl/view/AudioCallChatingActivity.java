@@ -17,6 +17,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -124,7 +125,6 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
     private Runnable timerRunnable = null;
     private Handler mHandler = new Handler(msg -> false);
     private ObjectAnimator rotation;
-    private Timer timer;
     //对方用户信息
     private CallUserInfoEntity _callUserInfoEntity;
 
@@ -197,12 +197,12 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         Intent intent = getIntent();
         inviterImId = intent.getStringExtra(DLRTCCallingConstants.DLRTCInviteUserID);
         receiverImId = intent.getStringExtra(DLRTCCallingConstants.DLRTCAcceptUserID);
-        mRole = (DLRTCCalling.Role)intent.getExtras().get("mRole");
-        roomId = intent.getIntExtra("roomId", 0);
+        mRole = (DLRTCCalling.Role)intent.getExtras().get(DLRTCCallingConstants.PARAM_NAME_ROLE);
+        roomId = intent.getIntExtra(DLRTCCallingConstants.RTCInviteRoomID, 0);
         mTimeCount = intent.getIntExtra("timeCount", 0);
         isRestart = intent.getBooleanExtra("isRestart", false);
         barrageInfo = intent.getStringExtra("audioCallingBarrage");
-        _callUserInfoEntity = (CallUserInfoEntity)intent.getSerializableExtra("_callUserInfoEntity");
+        _callUserInfoEntity = (CallUserInfoEntity)intent.getSerializableExtra("CallingInviteInfoField");
     }
 
     @Override
@@ -214,20 +214,26 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
             viewModel.tipSwitch.set(false);
             viewModel.TimeCount = mTimeCount;
             TimeCallMessage();
-            setTimerForCallinfo();
             loadBarrageInfo();
         }
         viewModel.init(this);
         viewModel.roomId = roomId;
         viewModel.fromUserId = inviterImId;
         viewModel.toUserId = receiverImId;
-        viewModel.getCallingInfo(roomId, inviterImId, receiverImId);
-
         if(mRole == DLRTCCalling.Role.CALL){
             viewModel.coinPusherRoomShow.set(true);
         }
+        //设置对方用户信息
         viewModel.otherUserInfoField.set(_callUserInfoEntity);
+        if(_callUserInfoEntity!=null){
+            viewModel.collected = _callUserInfoEntity.getCollected() > 0;
+            //是否已追踪  0 未追踪 1已追踪 2相互追踪
+            viewModel.collectedField.set(viewModel.collected);
+        }
+        //读取当前用户信息
         viewModel.currentUserInfoField.set(ConfigManager.getInstance().getAppRepository().readUserData());
+        viewModel.callingInviteUser(inviterImId,receiverImId);
+        viewModel.getSayHiList();
     }
 
     /**
@@ -385,7 +391,6 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         viewModel.uc.acceptUserGift.observe(this, new Observer<GiftEntity>() {
             @Override
             public void onChanged(GiftEntity giftEntity) {
-                viewModel.getCallingStatus(roomId);
                 int account = giftEntity.getAmount();
                 //启动SVG动画
                 startAcceptSVGAnimotion(giftEntity);
@@ -416,26 +421,19 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                 //开始记时
                 if (!isRestart){
                     TimeCallMessage();
-                    setTimerForCallinfo();
                 }
             }
         });
         //钻石不足充值弹窗
-        viewModel.uc.sendUserGiftError.observe(this, new Observer<Boolean>() {
-
-            @Override
-            public void onChanged(Boolean isGiftSend) {
-                toRecharge();
-            }
-        });
+        viewModel.uc.sendUserGiftError.observe(this, isGiftSend -> toRecharge());
         //发送礼物弹窗
         viewModel.uc.callGiftBagAlert.observe(this, new Observer<Void>() {
             @Override
             public void onChanged(Void unused) {
-                if (viewModel.unitPriceList == null || viewModel.maleBalanceMoney == 0){
+                if ( viewModel.maleBalanceMoney == 0){
                     return;
                 }
-                GiftBagDialog giftBagDialog = new GiftBagDialog(mContext, true, viewModel.maleBalanceMoney, viewModel.unitPriceList.size() > 1 ? 3 : 0);
+                GiftBagDialog giftBagDialog = new GiftBagDialog(mContext, true, viewModel.maleBalanceMoney,  0);
                 giftBagDialog.setGiftOnClickListener(new GiftBagDialog.GiftOnClickListener() {
                     @Override
                     public void sendGiftClick(Dialog dialog, int number, GiftBagEntity.giftEntity giftEntity) {
@@ -481,6 +479,8 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                             gameCallEntity.setAvatar(callingInviteInfo.getToUserProfile().getAvatar());
                         }
                     }
+                    intent.putExtra("GameCallEntity",gameCallEntity);
+                    intent.putExtra("CallUserInfoEntity",viewModel.otherUserInfoField.get());
                     startActivity(intent);
                     return;
                 }
@@ -513,6 +513,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                             gameCallEntity.setAvatar(callingInviteInfo.getToUserProfile().getAvatar());
                         }
                     }
+                    intent.putExtra("CallUserInfoEntity",viewModel.otherUserInfoField.get());
                     intent.putExtra("GameCallEntity",gameCallEntity);
                     CallGameCoinPusherEntity callGameCoinPusherEntity = new CallGameCoinPusherEntity();
                     callGameCoinPusherEntity.setState(CallGameCoinPusherEntity.enterGame);
@@ -549,7 +550,6 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         coinRechargeFragmentView.setClickListener(new CoinRechargeSheetView.ClickListener() {
             @Override
             public void paySuccess(GoodsEntity goodsEntity) {
-                viewModel.getCallingStatus(roomId);
             }
         });
         coinRechargeFragmentView.show();
@@ -575,23 +575,6 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                 viewModel.isHideExchangeRules.set(false);
             }
         }
-    }
-
-    private void setTimerForCallinfo() {
-        timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                try {
-                    if(isFinishing() || isDestroyed()){
-                        return;
-                    }
-                    viewModel.getCallingStatus(roomId);
-                }catch (Exception ignored){
-
-                }
-            }
-        }, 1000,10000);
     }
 
     private void startAcceptBannersAnimotion(GiftEntity giftEntity, int account) {
@@ -920,49 +903,47 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         if (timerRunnable != null) {
             return;
         }
-        timerRunnable = new Runnable() {
-            @Override
-            public void run() {
-                mTimeCount++;
-                viewModel.TimeCount++;
-                viewModel.timeTextField.set(mContext.getString(R.string.playfun_call_message_deatail_time_msg, mTimeCount/3600, mTimeCount / 60, mTimeCount % 60));
-                if (mTimeCount>=5){viewModel.tipSwitch.set(false);}
-                if (mTimeCount % 10 == 0){
-                    viewModel.getRoomStatus(roomId);
-                }
-                if (!viewModel.sayHiEntityHidden.get() && mTimeCount % 10 == 0) {
-                    //没10秒更新一次破冰文案
-                    viewModel.getSayHiList();
-                }
-                if (viewModel.callInfoLoaded && viewModel.isShowTipMoney){
-                    //判断是否为付费方
-                    if (!viewModel.isPayee) {
-                        if (viewModel.totalMinutesRemaining <= viewModel.balanceNotEnoughTipsMinutes * 60) {
-                            viewModel.totalMinutesRemaining--;
-                            if (viewModel.totalMinutesRemaining < 0) {
-                                viewModel.hangup();
-                                return;
-                            }
-                            String minute = StringUtils.getString(R.string.playfun_minute);
-                            String textHint = (viewModel.totalMinutesRemaining / 60) + minute + (viewModel.totalMinutesRemaining % 60);
-                            String txt = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt14), textHint);
-                            viewModel.maleTextMoneyField.set(txt);
-                            if (!viewModel.flagMoneyNotWorth) {
-                                moneyNoWorthSwich(true);
-                            }
-
-                        }else{
-                            if (viewModel.flagMoneyNotWorth) {
-                                moneyNoWorthSwich(false);
-                            }
-                        }
-                    }else {
-                        setProfitTips();
-                    }
-                }
-
-                mHandler.postDelayed(timerRunnable, 1000);
+        timerRunnable = () -> {
+            mTimeCount++;
+            viewModel.TimeCount++;
+            viewModel.timeTextField.set(mContext.getString(R.string.playfun_call_message_deatail_time_msg, mTimeCount/3600, mTimeCount / 60, mTimeCount % 60));
+            if (mTimeCount>=5){viewModel.tipSwitch.set(false);}
+            if (mTimeCount % viewModel.heartBeatInterval == 0){
+                //每隔多少秒发送心跳包
+                viewModel.callingKeepAlive(roomId,null);
             }
+            if (!viewModel.sayHiEntityHidden.get() && mTimeCount % 10 == 0) {
+                //没10秒更新一次破冰文案
+                viewModel.getSayHiList();
+            }
+            if (viewModel.callInfoLoaded && viewModel.isShowTipMoney){
+                //判断是否为付费方
+                if (!viewModel.isPayee) {
+                    if (viewModel.totalMinutesRemaining <= viewModel.balanceNotEnoughTipsMinutes * 60) {
+                        viewModel.totalMinutesRemaining--;
+                        if (viewModel.totalMinutesRemaining < 0) {
+                            viewModel.hangup();
+                            return;
+                        }
+                        String minute = StringUtils.getString(R.string.playfun_minute);
+                        String textHint = (viewModel.totalMinutesRemaining / 60) + minute + (viewModel.totalMinutesRemaining % 60);
+                        String txt = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt14), textHint);
+                        viewModel.maleTextMoneyField.set(txt);
+                        if (!viewModel.flagMoneyNotWorth) {
+                            moneyNoWorthSwich(true);
+                        }
+
+                    }else{
+                        if (viewModel.flagMoneyNotWorth) {
+                            moneyNoWorthSwich(false);
+                        }
+                    }
+                }else {
+                    setProfitTips();
+                }
+            }
+
+            mHandler.postDelayed(timerRunnable, 1000);
         };
         mHandler.postDelayed(timerRunnable, 1000);
     }
@@ -971,7 +952,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
      * 展示右下角收益提示
      */
     private void setProfitTips() {
-        if (!viewModel.isShowCountdown.get() && viewModel.payeeProfits > 0) {//对方余额不足没有展示
+        if (Boolean.FALSE.equals(viewModel.isShowCountdown.get()) && viewModel.payeeProfits > 0) {//对方余额不足没有展示
             if (!viewModel.girlEarningsField.get()) {
                 viewModel.girlEarningsField.set(true);
             }
@@ -993,12 +974,6 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
     private void moneyNoWorthSwich(boolean isShow) {
         viewModel.flagMoneyNotWorth = isShow;
         viewModel.maleTextLayoutSHow.set(isShow);
-        //通知女生男生这边余额不足
-            if (isShow){
-                viewModel.getTips(viewModel.otherUserInfoField.get().getId(),2,"1");
-            }else {
-                viewModel.getTips(viewModel.otherUserInfoField.get().getId(),2,"0");
-            }
     }
 
     @Override
@@ -1012,10 +987,6 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         if (mHandler != null) {
             mHandler.removeCallbacks(timerRunnable);
             mHandler = null;
-        }
-        if (timer != null){
-            timer.cancel();
-            timer = null;
         }
     }
 
@@ -1032,7 +1003,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
             return;
         }
         if (viewModel.isMale) {
-            if (viewModel.collected == 1) {//已追踪
+            if (viewModel.collected == true) {//已追踪
                 String title = StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt9);
                 MessageDetailDialog.callAudioHint2(mContext, title, null, new MessageDetailDialog.AudioCallHintOnClickListener() {
                     @Override
@@ -1085,12 +1056,14 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
 
     @Override
     public void finishView() {
+        Log.e("开始结束页面","===============");
         //2秒最多发一次
         if (!FastClickUtil.isFastCallFun("AudioCallChatingActivity")) {
             RxBus.getDefault().post(new CallChatingHangupEvent());
         }
 //        Utils.runOnUiThread(this::finish);
         runOnUiThread(() -> {
+            Log.e("开始结束页面","22222222222===============");
             finish();
             overridePendingTransition(0, R.anim.anim_nomal);
         });

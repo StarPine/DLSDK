@@ -2,6 +2,7 @@ package com.dl.playfun.ui.coinpusher;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +31,7 @@ import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.databinding.ActivityCoinpusherGameBinding;
+import com.dl.playfun.entity.CallUserInfoEntity;
 import com.dl.playfun.entity.CoinPusherBalanceDataEntity;
 import com.dl.playfun.entity.CoinPusherDataInfoEntity;
 import com.dl.playfun.entity.GiftBagEntity;
@@ -56,6 +58,7 @@ import com.dl.rtc.calling.base.impl.DLRTCInternalListenerManager;
 import com.dl.rtc.calling.manager.DLRTCInterceptorCall;
 import com.dl.rtc.calling.manager.DLRTCStartShowUIManager;
 import com.dl.rtc.calling.manager.DLRTCVideoManager;
+import com.dl.rtc.calling.model.DLRTCCallingConstants;
 import com.dl.rtc.calling.model.DLRTCDataMessageType;
 import com.dl.rtc.calling.ui.videolayout.DLRTCVideoLayout;
 import com.dl.rtc.calling.ui.videolayout.DLRTCVideoLayoutManager;
@@ -80,6 +83,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
+import me.goldze.mvvmhabit.base.AppManager;
 import me.goldze.mvvmhabit.utils.StringUtils;
 import me.goldze.mvvmhabit.utils.ToastUtils;
 
@@ -132,6 +136,8 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
     public Integer _gameRoomId = 0;
     public int _levelId;
     public String _nickname;
+    //对端的用户信息-其他页面跳转过来。
+    public CallUserInfoEntity _callUserInfoEntity = null;
 
     @Override
     protected void onResume() {
@@ -193,6 +199,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
            _gameRoomId = intent.getIntExtra("roomId",0);
            _levelId = intent.getIntExtra("levelId",0);
            _nickname = intent.getStringExtra("nickname");
+           _callUserInfoEntity = (CallUserInfoEntity)intent.getSerializableExtra("CallUserInfoEntity");
        }
         initListener();
     }
@@ -283,8 +290,10 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
     @Override
     public void initData() {
         super.initData();
+        if(_callUserInfoEntity!=null){
+            viewModel.otherCallInfoEntity.set(_callUserInfoEntity);
+        }
         viewModel._gameRoomId = _gameRoomId;
-        Log.e("推币机页面接收房间ID",_gameRoomId+"========="+viewModel._gameRoomId);
         viewModel.circuseeStatus.set(_circusesStatus);
         viewModel.totalMoney.set(_totalGold);
         binding.tvMoneyHint.setText(String.format(StringUtils.getString(R.string.playfun_coinpusher_game_text_2),_payGameMoney));
@@ -532,6 +541,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
         //效验权限
         viewModel.gameUI.callCheckPermissionEvent.observe(this,unused -> {
             GameCallEntity _gameCallEntity = viewModel.gameCallEntity;
+            Log.e("开始效验权限","==============="+(_gameCallEntity==null));
             if(_gameCallEntity != null){
                 if(_gameCallEntity.getCallingType()!=null && _gameCallEntity.getCallingType() == DLRTCDataMessageType.DLInviteRTCType.dl_rtc_audio){
                     toPermissionIntent.launch(Manifest.permission.RECORD_AUDIO);
@@ -643,6 +653,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
         if(viewModel!=null){
             if(viewModel.gamePlayingState==null){ //状态为空
                 if(viewModel.gameCallEntity != null && viewModel.gameCallEntity.isCalling()){
+                    Log.e("进入返回语音页面","=======================");
                     callingInterceptApply();
                 }
                 super.onBackPressed();
@@ -678,24 +689,27 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
     * @Date 2022/11/10
     */
     private void callingInterceptApply() {
-        Intent intent;
+        Intent intent = null;
         if (viewModel.gameCallEntity.getCallingType() == DLRTCDataMessageType.DLInviteRTCType.dl_rtc_audio) {
-            intent = new Intent(getContext(), AudioCallChatingActivity.class);
-            intent.putExtra("fromUserId", viewModel.gameCallEntity.getInviteUserId());
-            intent.putExtra("toUserId", viewModel.gameCallEntity.getAcceptUserId());
-            intent.putExtra("mRole", viewModel.gameCallEntity.getCallingRole());
-            intent.putExtra("roomId", viewModel.gameCallEntity.getRoomId());
+            Activity audioCallChatingAct = AppManager.getAppManager().getActivity(AudioCallChatingActivity.class);
+            //通话中页面不存在
+            if(audioCallChatingAct == null){
+                intent = new Intent(getContext(), AudioCallChatingActivity.class);
+            }
+
         } else {
             intent = new Intent(getContext(), CallingVideoActivity.class);
-            intent.putExtra("sponsorID", viewModel.gameCallEntity.getInviteUserId());
-            intent.putExtra("userIDs", new String[]{viewModel.gameCallEntity.getAcceptUserId()});
-            intent.putExtra("role", viewModel.gameCallEntity.getCallingRole());
-            intent.putExtra("roomId", viewModel.gameCallEntity.getRoomId());
-            intent.putExtra("sponsorID",viewModel.gameCallEntity.getInviteUserId());
         }
-        intent.putExtra("timeCount", viewModel.mTimeCount);
-        intent.putExtra("isRestart", true);
-        getContext().startActivity(intent);
+        if(intent != null){
+            intent.putExtra(DLRTCCallingConstants.DLRTCInviteUserID, viewModel.gameCallEntity.getInviteUserId());
+            intent.putExtra(DLRTCCallingConstants.DLRTCAcceptUserID, viewModel.gameCallEntity.getAcceptUserId());
+            intent.putExtra(DLRTCCallingConstants.PARAM_NAME_ROLE, viewModel.gameCallEntity.getCallingRole());
+            intent.putExtra(DLRTCCallingConstants.RTCInviteRoomID,viewModel.gameCallEntity.getRoomId());
+            intent.putExtra("CallingInviteInfoField",viewModel.otherCallInfoEntity.get());
+            intent.putExtra("timeCount", viewModel.mTimeCount);
+            intent.putExtra("isRestart", true);
+            getContext().startActivity(intent);
+        }
     }
 
     //倒计时开始
@@ -769,7 +783,6 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
             initRlCallingUserLayout();
             MPTimber.tag(TAG).d("EmptyTRTCCallingDelegate onError code："+code+" , msg："+msg);
             ToastUtils.showLong(AppContext.instance().getString(R.string.trtccalling_toast_call_error_msg, code, msg));
-            ToastUtils.showShort("對方取消通話");
         }
 
         //用户进入房间
@@ -820,7 +833,14 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
             recycleHandles();
             MPTimber.tag(TAG).d("EmptyTRTCCallingDelegate onCallEnd ");
             ToastUtils.showShort(AppContext.instance().getString(R.string.playfun_call_ended));
-            initRlCallingUserLayout();
+            //如果是围观方。应该结束游戏
+            if(_circusesStatus){
+                finish();
+            }else{
+                initRlCallingUserLayout();
+            }
+
+            //如果是围观方。挂断电挂应该关闭页面
         }
 
         @Override
@@ -897,6 +917,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
 
     //单个权限申请监听
     ActivityResultLauncher<String> toPermissionIntent = registerForActivityResult(new ActivityResultContracts.RequestPermission(), result -> {
+        Log.e("开始效验权限","==============="+(result));
         //获取单个权限成功
         if(result){
             //获取权限后接听电话
@@ -921,12 +942,9 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
 
     private void alertPermissions(@StringRes int stringResId){
         //获取语音权限失败
-        CoinPusherDialogAdapter.getDialogPermissions(getContext(), stringResId, new CoinPusherDialogAdapter.PermissionDialogListener() {
-            @Override
-            public void callback(boolean _success) {
-                if(_success){
-                    PermissionChecker.launchAppDetailsSettings(getContext());
-                }
+        CoinPusherDialogAdapter.getDialogPermissions(getContext(), stringResId, _success -> {
+            if(_success){
+                PermissionChecker.launchAppDetailsSettings(getContext());
             }
         }).show();
     }

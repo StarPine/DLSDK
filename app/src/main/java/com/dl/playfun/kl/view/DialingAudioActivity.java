@@ -1,7 +1,6 @@
 package com.dl.playfun.kl.view;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -12,26 +11,20 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.StringRes;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.blankj.utilcode.util.ObjectUtils;
 import com.dl.playfun.BR;
 import com.dl.playfun.app.AppViewModelFactory;
-import com.dl.playfun.entity.CallingInviteInfo;
 import com.dl.playfun.event.AudioCallingCancelEvent;
+import com.dl.playfun.kl.CallChatingConstant;
 import com.dl.playfun.kl.viewmodel.AudioCallingViewModel2;
-import com.dl.playfun.manager.ConfigManager;
 import com.dl.manager.LocaleManager;
 import com.dl.playfun.ui.coinpusher.dialog.CoinPusherDialogAdapter;
 import com.dl.playfun.utils.ImmersionBarUtils;
-import com.dl.playfun.widget.dialog.TraceDialog;
 import com.dl.rtc.calling.base.DLRTCCalling;
 import com.dl.rtc.calling.manager.DLRTCStartShowUIManager;
 import com.dl.rtc.calling.model.DLRTCCallingConstants;
-import com.google.gson.Gson;
 import com.dl.playfun.R;
 import com.dl.playfun.databinding.ActivityCallWaiting2Binding;
 import com.luck.picture.lib.permissions.PermissionChecker;
-import com.tbruyelle.rxpermissions2.RxPermissions;
-import com.tencent.imsdk.v2.V2TIMManager;
 
 import me.goldze.mvvmhabit.base.BaseActivity;
 import me.goldze.mvvmhabit.bus.RxBus;
@@ -118,6 +111,7 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
         DLRTCStartShowUIManager.Companion.getInstance().startRing();
         viewModel.CallingRoomId = rtcInviteRoomId;
         viewModel.mRole = role;
+        viewModel.isCallBinding.set(role == DLRTCCalling.Role.CALL);
         if (role == DLRTCCalling.Role.CALL) {//主动呼叫
                 viewModel.getCallingUserInfo(null, acceptUserID);
         } else {//被动接听
@@ -125,12 +119,10 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
         }
         toPermissionIntent.launch(Manifest.permission.RECORD_AUDIO);
     }
-    private int permissionCount = 0;
     //单个权限申请监听
     ActivityResultLauncher<String> toPermissionIntent = registerForActivityResult(new ActivityResultContracts.RequestPermission(), result -> {
         //获取单个权限成功
         if(!result){
-            permissionCount++;
             alertPermissions(R.string.playfun_permissions_audio_txt2);
         }
     });
@@ -140,11 +132,7 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
             if(_success){
                 PermissionChecker.launchAppDetailsSettings(DialingAudioActivity.this);
             }else {
-                if(permissionCount>=2){
-                    viewModel.endTRTCCalling();
-                    return;
-                }
-                toPermissionIntent.launch(Manifest.permission.RECORD_AUDIO);
+                viewModel.endTRTCCalling();
             }
         }).show();
     }
@@ -152,26 +140,30 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
     @Override
     public void initViewObservable() {
         super.initViewObservable();
-        viewModel.backViewEvent.observe(this, unused -> finish());
-
+        viewModel.backViewEvent.observe(this, unused -> {
+            finish();
+        });
         viewModel.startAudioActivity.observe(this, roomId -> {
+            viewModel.updateCallingStatus(CallChatingConstant.enterRoom);
+            //关闭当前页面
+            finish();
+            overridePendingTransition(R.anim.anim_zoom_in, R.anim.anim_stay);
             //有人进入房间回调
             DLRTCStartShowUIManager.Companion.getInstance().inviteUserAccept();
             Intent intent = new Intent(DialingAudioActivity.this,AudioCallChatingActivity.class);
             intent.putExtra(DLRTCCallingConstants.DLRTCInviteUserID, inviteUserID);
             intent.putExtra(DLRTCCallingConstants.DLRTCAcceptUserID, acceptUserID);
-            intent.putExtra("mRole", role);
-            intent.putExtra("roomId", roomId);
+            intent.putExtra(DLRTCCallingConstants.PARAM_NAME_ROLE, role);
+            intent.putExtra(DLRTCCallingConstants.RTCInviteRoomID, roomId);
             intent.putExtra(DLRTCCallingConstants.DLRTCInviteSelf, inviteSelf);
             intent.putExtra("CallingInviteInfoField",viewModel.callingInviteInfoField.get());
             startActivity(intent);
-            overridePendingTransition(R.anim.anim_zoom_in, R.anim.anim_stay);
+
         });
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        RxBus.getDefault().post(new AudioCallingCancelEvent());
     }
 }
