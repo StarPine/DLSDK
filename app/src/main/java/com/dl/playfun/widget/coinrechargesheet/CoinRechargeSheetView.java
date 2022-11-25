@@ -301,7 +301,9 @@ public class CoinRechargeSheetView extends BasePopupWindow implements View.OnCli
         }else {
             totalReward = currGoodsInfo.getGiveCoin();
         }
-
+        if(mActivity.isFinishing() || mActivity.isDestroyed()){
+            return;
+        }
         TraceDialog.getInstance(mActivity)
                 .setTitle(mActivity.getString(R.string.playfun_recharge_success))
                 .setConfirmOnlick(dialog -> {

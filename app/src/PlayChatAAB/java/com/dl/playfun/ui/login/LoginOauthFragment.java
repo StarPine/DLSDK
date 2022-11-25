@@ -43,7 +43,6 @@ public class LoginOauthFragment extends BaseFragment<FragmentLoginOauthBinding,L
     public void initData() {
         super.initData();
         ElkLogEventReport.reportLoginModule.reportClickLoginPage(ElkLogEventReport._expose,"oneClickLoginPage");
-        UserDataEntity oldUserData = ConfigManager.getInstance().getAppRepository().readOldUserData();
         viewModel.loadData();
     }
 }

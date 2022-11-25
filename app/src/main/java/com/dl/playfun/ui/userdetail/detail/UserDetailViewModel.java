@@ -16,6 +16,7 @@ import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.EaringlSwitchUtil;
+import com.dl.playfun.app.ElkLogEventReport;
 import com.dl.playfun.app.Injection;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.exception.RequestException;
@@ -416,6 +417,10 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
                     @Override
                     public void onSuccess(BaseResponse response) {
                         ToastUtils.showShort(R.string.playfun_text_accost_success1);
+                        if(detailEntity.get()!=null){
+                            ElkLogEventReport.reportAccostModule.reportAccostView(2,userId.get(),detailEntity.get().getSex(),null);
+                        }
+
                         RxBus.getDefault().post(new AccostEvent(position));
                         loadData();
                     }
@@ -423,6 +428,9 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
                     @Override
                     public void onError(RequestException e) {
                         super.onError(e);
+                        if(detailEntity.get()!=null){
+                            ElkLogEventReport.reportAccostModule.reportAccostView(2,userId.get(),detailEntity.get().getSex(),e.getMessage()+e.getCode());
+                        }
                         if(e.getCode()!=null && e.getCode() == 21001 ){//钻石余额不足
                             ToastCenterUtils.showToast(R.string.playfun_dialog_exchange_integral_total_text3);
                             uc.sendAccostFirstError.call();

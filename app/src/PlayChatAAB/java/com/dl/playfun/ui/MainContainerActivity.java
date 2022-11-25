@@ -23,6 +23,7 @@ import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.BillingClientLifecycle;
+import com.dl.playfun.app.ElkLogEventReport;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.LoginExpiredEvent;
 import com.dl.playfun.event.ToastUIEvent;
@@ -317,6 +318,10 @@ public class MainContainerActivity extends MySupportActivity {
             super.onBackPressedSupport();
         } else {
             if (System.currentTimeMillis() - TOUCH_TIME < WAIT_TIME) {
+                //在登入页面退出app的时候，添加这个打点统计
+                if(getSupportFragmentManager().getFragments().get(0) instanceof LoginFragment){
+                    ElkLogEventReport.reportLoginModule.reportClickLoginPage(null,"closeLoginPage");
+                }
                 this.finish();
                 android.os.Process.killProcess(android.os.Process.myPid());
                 System.exit(0);

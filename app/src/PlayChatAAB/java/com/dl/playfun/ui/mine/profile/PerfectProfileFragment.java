@@ -18,6 +18,7 @@ import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.ElkLogEventReport;
 import com.dl.playfun.databinding.FragmentPerfectProfileBinding;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.ui.login.register.RegisterSexFragment;
 import com.dl.playfun.utils.ApiUitl;
@@ -54,6 +55,7 @@ public class PerfectProfileFragment extends BaseFragment<FragmentPerfectProfileB
     public void initData() {
         super.initData();
         viewModel.getNickName();
+        ElkLogEventReport.reportLoginModule.reportClickRegister(ElkLogEventReport._expose,"enterRegister1", ConfigManager.getInstance().getLoginSource());
     }
 
     @Override

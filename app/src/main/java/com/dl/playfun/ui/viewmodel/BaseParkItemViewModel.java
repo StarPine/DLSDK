@@ -1,6 +1,7 @@
 package com.dl.playfun.ui.viewmodel;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -10,21 +11,19 @@ import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
+import com.dl.playfun.app.ElkLogEventReport;
 import com.dl.playfun.entity.AdItemEntity;
 import com.dl.playfun.entity.ParkItemEntity;
-import com.dl.playfun.entity.TaskAdEntity;
 import com.dl.playfun.event.CoinPusherRoomEvent;
-import com.dl.playfun.event.TaskMainTabEvent;
 import com.dl.playfun.manager.ConfigManager;
-import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
+import com.dl.playfun.ui.home.HomeMainViewModel;
+import com.dl.playfun.ui.home.search.SearchViewModel;
 import com.dl.playfun.ui.mine.wallet.diamond.recharge.DiamondRechargeActivity;
-import com.dl.playfun.ui.task.webview.FukuokaViewFragment;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.ui.webview.WebHomeFragment;
 import com.dl.playfun.utils.ChatUtils;
 import com.dl.playfun.utils.ExceptionReportUtils;
 import com.dl.playfun.utils.SystemDictUtils;
-import com.dl.playfun.utils.TimeUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -64,14 +63,22 @@ public class BaseParkItemViewModel extends MultiItemViewModel<BaseParkViewModel>
                 ChatUtils.chatUser(itemEntity.get().getImUserId(), itemEntity.get().getId(), itemEntity.get().getNickname(), viewModel);
                 AppContext.instance().logEvent(AppsFlyerEvent.homepage_chat);
             } else {
+                int accostSource = 0;
                 try {
+                    if(viewModel instanceof HomeMainViewModel){
+                        accostSource = 1;
+                        Log.e("单点搭讪","是在主页搭讪================");
+                    }else if(viewModel instanceof SearchViewModel){
+                        accostSource = 3;
+                    }
+                    //ElkLogEventReport.reportAccostModule.reportAccostView();
                     //男女点击搭讪
                     AppContext.instance().logEvent(ConfigManager.getInstance().isMale() ? AppsFlyerEvent.greet_male : AppsFlyerEvent.greet_female);
                 }catch (Exception ignored){
 
                 }
                 int position = viewModel.observableList.indexOf(BaseParkItemViewModel.this);
-                viewModel.putAccostFirst(position);
+                viewModel.putAccostFirst(position,accostSource);
                 AppContext.instance().logEvent(AppsFlyerEvent.homepage_accost);
             }
 

@@ -266,12 +266,15 @@ public class AppContext extends Application {
             @Override
             public void onKickedOffline() {
                 super.onKickedOffline();
+                ElkLogEventReport.reportLoginModule.reportSignOutKicked(1,null,null);
                 RxBus.getDefault().post(new LoginExpiredEvent());
             }
 
             @Override
             public void onUserSigExpired() {
                 super.onUserSigExpired();
+                ElkLogEventReport.reportLoginModule.reportLogin(null,"loginExpired",null);
+                ElkLogEventReport.reportLoginModule.reportSignOutKicked(2,null,null);
                 flushSign();
             }
 
@@ -544,6 +547,7 @@ public class AppContext extends Application {
                 foregroundActivities--;
                 if (foregroundActivities == 0) {
                     // 应用切到后台
+                    StatisticsAnalysis.sendSaveStatistics();
                     Log.i(TAG, "application enter background");
                     V2TIMManager.getConversationManager().getTotalUnreadMessageCount(new V2TIMValueCallback<Long>() {
                         @Override
