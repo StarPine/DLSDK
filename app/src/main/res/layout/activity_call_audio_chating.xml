@@ -98,7 +98,7 @@
                     android:layout_height="90dp"
                     binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
                     binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
-                    binding:imagePath="@{viewModel.leftUserInfoField.avatar}"
+                    binding:imagePath="@{viewModel.otherUserInfoField.avatar}"
                     binding:resizeH="@{90}"
                     binding:resizeW="@{90}"
                     tools:src="@drawable/default_avatar" />
@@ -123,7 +123,7 @@
                     android:layout_toEndOf="@+id/cimg_avatar_center"
                     binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
                     binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
-                    binding:imagePath="@{viewModel.rightUserInfoField.avatar}"
+                    binding:imagePath="@{viewModel.currentUserInfoField.avatar}"
                     binding:resizeH="@{90}"
                     binding:resizeW="@{90}"
                     tools:src="@drawable/default_avatar"  />
@@ -156,7 +156,7 @@
                 android:layout_height="wrap_content">
                 <TextView
                     android:id="@+id/left_user_name"
-                    android:text="@{viewModel.leftUserInfoField.nickname}"
+                    android:text="@{viewModel.otherUserInfoField.nickname}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
@@ -174,23 +174,12 @@
                     android:layout_gravity="center"
                     android:layout_marginStart="5dp"
                     android:layout_toEndOf="@+id/left_user_name"
-                    android:src="@{viewModel.getVipGodsImg(viewModel.leftUserInfoField)}"
-                    android:visibility="@{viewModel.getVipGodsImg(viewModel.leftUserInfoField)== null?View.GONE:View.VISIBLE}"
+                    android:src="@{viewModel.getVipGodsImg(viewModel.otherUserInfoField)}"
+                    android:visibility="@{viewModel.getVipGodsImg(viewModel.otherUserInfoField)== null?View.GONE:View.VISIBLE}"
                     tools:src="@drawable/ic_vip"
                     tools:visibility="gone"
                     />
 
-                <ImageView
-                    android:layout_width="31dp"
-                    android:layout_height="13dp"
-                    android:layout_alignBottom="@+id/tv_name"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="7dp"
-                    android:layout_toRightOf="@+id/iv_vip"
-                    binding:imagePath="@{viewModel.gameUrl(viewModel.leftUserInfoField.gameChannel)}"
-                    android:visibility="@{viewModel.isEmpty(viewModel.gameUrl(viewModel.leftUserInfoField.gameChannel))?View.GONE:View.VISIBLE}"
-
-                    />
             </LinearLayout>
 
             <LinearLayout
@@ -201,7 +190,7 @@
                 android:layout_height="wrap_content">
                 <TextView
                     android:id="@+id/right_user_name"
-                    android:text="@{viewModel.rightUserInfoField.nickname}"
+                    android:text="@{viewModel.currentUserInfoField.nickname}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
@@ -215,17 +204,9 @@
                     android:layout_marginStart="5dp"
                     android:layout_width="31dp"
                     android:layout_height="13dp"
-                    android:src="@{viewModel.getVipGodsImg(viewModel.rightUserInfoField)}"
-                    android:visibility="@{viewModel.getVipGodsImg(viewModel.rightUserInfoField)== null?View.GONE:View.VISIBLE}"
+                    android:src="@{viewModel.getVipGodsImg(viewModel.currentUserInfoField)}"
+                    android:visibility="@{viewModel.getVipGodsImg(viewModel.currentUserInfoField)== null?View.GONE:View.VISIBLE}"
                     tools:visibility="gone"
-                    />
-                <ImageView
-                    android:layout_width="31dp"
-                    android:layout_height="13dp"
-                    android:layout_marginStart="5dp"
-                    binding:imagePath="@{viewModel.gameUrl(viewModel.rightUserInfoField.gameChannel)}"
-                    android:visibility="@{viewModel.isEmpty(viewModel.gameUrl(viewModel.rightUserInfoField.gameChannel))?View.GONE:View.VISIBLE}"
-                    tools:src="@drawable/ic_vip"
                     />
             </LinearLayout>
         </LinearLayout>
@@ -388,30 +369,6 @@
                 binding:onClickCommand="@{viewModel.closeMoney}" />
         </RelativeLayout>
 
-        <FrameLayout
-            android:layout_above="@+id/img_coinpusher_advert"
-            android:layout_alignStart="@+id/img_coinpusher_advert"
-            android:layout_marginStart="-29dp"
-            android:background="@drawable/img_advert_coinpusher_lable"
-            android:layout_width="67dp"
-            android:layout_height="28dp"
-            >
-            <androidx.appcompat.widget.AppCompatTextView
-                android:includeFontPadding="false"
-                android:layout_marginTop="6dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="他正在玩"
-                android:textColor="@color/white"
-                android:textSize="11dp"
-                android:lineHeight="11dp"
-                android:singleLine="true"
-                android:ellipsize="marquee"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:focusable="true" />
-        </FrameLayout>
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/img_coinpusher_advert"
             android:layout_above="@+id/bottom_layout"
@@ -420,6 +377,7 @@
             android:layout_marginEnd="14dp"
             android:layout_width="58dp"
             android:layout_height="58dp"
+            android:visibility="@{viewModel.coinPusherRoomShow ? View.VISIBLE : View.GONE}"
             android:src="@drawable/img_advert_coinpusher"
             binding:onClickCommand="@{viewModel.coinPusherRoomClick}"
             />

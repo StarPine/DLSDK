@@ -1,10 +1,6 @@
 package com.dl.rtc.calling.model
 
-import android.text.TextUtils
 import com.dl.lib.util.log.MPTimber
-import com.dl.rtc.calling.model.bean.DLRTCCallModel
-import com.dl.rtc.calling.model.bean.DLRTCSignallingData
-import com.dl.rtc.calling.util.DLRTCSignallingUtil
 import com.google.gson.GsonBuilder
 import com.tencent.imsdk.v2.*
 import java.util.*
@@ -40,6 +36,34 @@ object DLRTCSignalingManager {
 
                 override fun onError(errorCode: Int, errorMsg: String) {
                     MPTimber.tag(TAG_LOG).d("onError: errorCode = $errorCode , errorMsg = $errorMsg")
+                }
+            })
+    }
+
+    fun sendC2CCustomMessage(dataStr : String,userId: String) {
+        V2TIMManager.getInstance().sendC2CCustomMessage(dataStr.toByteArray(), userId,
+            object : V2TIMValueCallback<V2TIMMessage> {
+                override fun onSuccess(v2TIMMessage: V2TIMMessage) {
+                    MPTimber.tag(TAG_LOG).d("sendC2CCustomMessage onSuccess: v2TIMMessage = $v2TIMMessage")
+                }
+
+                override fun onError(errorCode: Int, errorMsg: String) {
+                    MPTimber.tag(TAG_LOG).d("sendC2CCustomMessage onError: errorCode = $errorCode , errorMsg = $errorMsg")
+                }
+            })
+    }
+
+    /**
+     * 发送C2C消息
+     */
+    fun sendC2CMessage(v2TIMMessage : V2TIMMessage,receiverUserID: String){
+        V2TIMManager.getMessageManager().sendMessage(v2TIMMessage, receiverUserID, null, V2TIMMessage.V2TIM_PRIORITY_DEFAULT, false, null, object : V2TIMSendCallback<V2TIMMessage?> {
+                override fun onProgress(progress: Int) {}
+                override fun onError(errorCode: Int, errorMsg: String) {
+                    MPTimber.tag(TAG_LOG).d("sendC2CMessage onError: errorCode = $errorCode , errorMsg = $errorMsg")
+                }
+                override fun onSuccess(v2TIMMessage: V2TIMMessage?) {
+                    MPTimber.tag(TAG_LOG).d("sendC2CMessage onSuccess")
                 }
             })
     }

@@ -54,6 +54,26 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     }
 
     @Override
+    public Observable<BaseResponse> updateCallingStatus(RequestBody requestBody) {
+        return mHttpDataSource.updateCallingStatus(requestBody);
+    }
+
+    @Override
+    public Observable<BaseDataResponse<CallUserRoomInfoEntity>> callingInviteUser(RequestBody requestBody) {
+        return mHttpDataSource.callingInviteUser(requestBody);
+    }
+
+    @Override
+    public Observable<BaseResponse> callingKeepAlive(RequestBody requestBody) {
+        return mHttpDataSource.callingKeepAlive(requestBody);
+    }
+
+    @Override
+    public Observable<BaseDataResponse<CallUserInfoEntity>> callingUserInfo(Integer userId, String imId) {
+        return mHttpDataSource.callingUserInfo(userId, imId);
+    }
+
+    @Override
     public Observable<BaseResponse> broadcastDisLike(RequestBody body) {
         return mHttpDataSource.broadcastDisLike(body);
     }
@@ -1569,6 +1589,11 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
     @Override
     public Observable<BaseResponse> mediaGallerySnapshotUnLock(String msgKey, Integer toUserId) {
         return mHttpDataSource.mediaGallerySnapshotUnLock(msgKey, toUserId);
+    }
+
+    @Override
+    public Observable<BaseResponse> coinPusherWatchRoom(Integer roomId, Integer toUserId, int type) {
+        return mHttpDataSource.coinPusherWatchRoom(roomId, toUserId,type);
     }
 
     @Override

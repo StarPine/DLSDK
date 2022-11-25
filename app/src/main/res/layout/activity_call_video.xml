@@ -192,11 +192,11 @@
                 android:layout_width="31dp"
                 android:layout_height="31dp"
                 android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_marginTop="47dp"
-                android:layout_marginRight="17dp"
+                android:layout_marginEnd="17dp"
                 binding:onClickCommand="@{viewModel.closeOnclick}"
-                    android:src="@drawable/call_video_close" />
+                android:src="@drawable/call_video_close" />
 
             <ImageView
                 android:layout_width="31dp"
@@ -581,30 +581,6 @@
                     android:src="@drawable/ic_close_x"
                     binding:onClickCommand="@{viewModel.closeMoney}" />
             </RelativeLayout>
-            <FrameLayout
-                android:layout_above="@+id/img_coinpusher_advert"
-                android:layout_alignStart="@+id/img_coinpusher_advert"
-                android:layout_marginStart="-29dp"
-                android:background="@drawable/img_advert_coinpusher_lable"
-                android:layout_width="67dp"
-                android:layout_height="28dp"
-                >
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:includeFontPadding="false"
-                    android:layout_marginTop="6dp"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginEnd="12dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="他正在玩"
-                    android:textColor="@color/white"
-                    android:textSize="11dp"
-                    android:lineHeight="11dp"
-                    android:singleLine="true"
-                    android:ellipsize="marquee"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:focusable="true" />
-            </FrameLayout>
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/img_coinpusher_advert"
                 android:layout_above="@+id/bottom_layout"

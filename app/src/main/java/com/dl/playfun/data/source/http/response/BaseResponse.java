@@ -14,6 +14,35 @@ public class BaseResponse {
     private String status;
     private String message;
 
+    //新版定义内容
+    private Integer errorCode = 0;
+    private String errorMsg = "";
+    private long timestamp = 0;
+
+    public Integer getErrorCode() {
+        return errorCode;
+    }
+
+    public void setErrorCode(Integer errorCode) {
+        this.errorCode = errorCode;
+    }
+
+    public String getErrorMsg() {
+        return errorMsg;
+    }
+
+    public void setErrorMsg(String errorMsg) {
+        this.errorMsg = errorMsg;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
     public Integer getCode() {
         return code;
     }

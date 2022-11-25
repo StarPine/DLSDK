@@ -28,6 +28,8 @@ public class CustomConstants {
         public static final String LITTLE_GAME_WINNING = "littleGameWinning";
         //落币数量
         public static final String DROP_COINS = "dropCoins";
+        //通话中转到房间
+        public static final String CALL_GO_GAME_WINNING = "callGoGameWinning";
     }
     //照片、视频模块
     public static final class MediaGallery {

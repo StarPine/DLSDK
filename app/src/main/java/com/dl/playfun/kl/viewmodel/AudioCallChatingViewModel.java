@@ -33,15 +33,20 @@ import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
+import com.dl.playfun.entity.CallGameCoinPusherEntity;
+import com.dl.playfun.entity.CallUserInfoEntity;
+import com.dl.playfun.entity.CallUserRoomInfoEntity;
 import com.dl.playfun.entity.CallingInfoEntity;
 import com.dl.playfun.entity.CallingStatusEntity;
 import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.entity.MallWithdrawTipsInfoEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.AudioCallingCancelEvent;
+import com.dl.playfun.event.CallingToGamePlayingEvent;
 import com.dl.playfun.kl.Utils;
 import com.dl.playfun.kl.view.Ifinish;
 import com.dl.playfun.manager.ConfigManager;
+import com.dl.playfun.manager.V2TIMCustomManagerUtil;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.ToastCenterUtils;
@@ -54,9 +59,12 @@ import com.google.gson.Gson;
 import com.tencent.custom.GiftEntity;
 import com.tencent.custom.IMGsonUtils;
 import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
+import com.tencent.imsdk.v2.V2TIMCustomElem;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMMessageReceipt;
+import com.tencent.qcloud.tuicore.custom.CustomConstants;
+import com.tencent.qcloud.tuicore.custom.CustomConvertUtils;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.MyImageSpan;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
@@ -65,9 +73,11 @@ import com.tencent.trtc.TRTCCloudDef;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -127,8 +137,11 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
 
     //时间提示
     public ObservableField<String> timeTextField = new ObservableField<>();
-    public ObservableField<CallingInfoEntity.FromUserProfile> rightUserInfoField = new ObservableField<>();
-    public ObservableField<CallingInfoEntity.FromUserProfile> leftUserInfoField = new ObservableField<>();
+    //对方用户信息
+    public ObservableField<CallUserInfoEntity> otherUserInfoField = new ObservableField<>();
+    //当前用户信息
+    public ObservableField<UserDataEntity> currentUserInfoField = new ObservableField<>();
+
     //是否已经显示过兑换规则
     public ObservableField<Boolean> isHideExchangeRules = new ObservableField<>(false);
     //男生收益框是否展示
@@ -183,7 +196,10 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     });
     //关闭男生隐藏余额不足提示
     public BindingCommand<Void> closeMoney = new BindingCommand<>(() -> maleTextLayoutSHow.set(false));
-
+    //显示推币机按钮
+    public ObservableBoolean coinPusherRoomShow = new ObservableBoolean(false);
+    //信令消息
+    public CallGameCoinPusherEntity _callGameCoinPusherEntity;
     //关闭女生界面男生余额不足提示
     public BindingCommand<Void> closeMoney2 = new BindingCommand<>(() -> {
         isShowCountdown.set(false);
@@ -197,6 +213,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
 
     //订阅者
     private Disposable mSubscription;
+    private Disposable mCallingToGameSubscription;
     private long mSelfLowQualityTime;
     private long mOtherPartyLowQualityTime;
 
@@ -265,21 +282,19 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                         sendGiftBagSuccess = true;
 //                        dialog.dismiss();
                         String textTip = null;
-
                         if (isMale) {
                             textTip = StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt_male);
                         } else {
                             textTip = StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt_gift);
                         }
-                        String nickname = leftUserInfoField.get().getNickname();
+                        String nickname = otherUserInfoField.get().getNickname();
                         textTip += " " + nickname;
                         int startLength = textTip.length();
                         textTip += " " + giftEntity.getName() + " x" + amount;
                         SpannableString stringBuilder = new SpannableString(textTip);
-                        int nicknameIndex = textTip.indexOf(nickname);
 
                         ForegroundColorSpan blueSpanWhite = new ForegroundColorSpan(ColorUtils.getColor(R.color.white));
-                        stringBuilder.setSpan(blueSpanWhite, 0, textTip.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        stringBuilder.setSpan(blueSpanWhite, 0, startLength, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         putRcvItemMessage(stringBuilder, giftEntity.getImg(), false);
                         Map<String, Object> mapData = new HashMap<>();
                         mapData.put("account", amount);
@@ -309,8 +324,28 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                     // 彈出確定框吧
                     hangup();
                 });
+        mCallingToGameSubscription = RxBus.getDefault().toObservable(CallingToGamePlayingEvent.class)
+                .subscribe(event -> {
+                    if(event!=null){
+                        CallGameCoinPusherEntity callGameCoinPusherEntity = event.getCallGameCoinPusherEntity();
+                        if(callGameCoinPusherEntity!=null){
+                            Log.e("当前接受到推币机类型：",callGameCoinPusherEntity.toString());
+                            //进房
+                            if(Objects.equals(callGameCoinPusherEntity.getState(),CallGameCoinPusherEntity.enterGame)){
+                                //展示推币机入口
+                                coinPusherRoomShow.set(true);
+                                _callGameCoinPusherEntity = callGameCoinPusherEntity;
+                            }else if(Objects.equals(callGameCoinPusherEntity.getState(),CallGameCoinPusherEntity.leaveGame)){
+                                //退房
+                                coinPusherRoomShow.set(false);
+                            }
+                        }
+                    }
+
+                });
         //将订阅者加入管理站
         RxSubscriptions.add(mSubscription);
+        RxSubscriptions.add(mCallingToGameSubscription);
     }
 
     //移除RxBus
@@ -319,6 +354,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
         super.removeRxBus();
         //将订阅者从管理站中移除
         RxSubscriptions.remove(mSubscription);
+        RxSubscriptions.remove(mCallingToGameSubscription);
     }
 
     public void init(Ifinish iview) {
@@ -355,6 +391,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
 
             @Override
             public void onCallEnd() {
+                DLRTCStartShowUIManager.Companion.getInstance().exitRTCRoom();
                 Log.i(TAG, "onCallEnd: ");
                 endChattingAndShowHint(AppContext.instance().getString(R.string.playfun_call_ended));
             }
@@ -428,7 +465,29 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
         return lowQuality;
     }
 
-    public Drawable getVipGodsImg(CallingInfoEntity.FromUserProfile fromUserProfile) {
+    public Drawable getVipGodsImg(CallUserInfoEntity fromUserProfile) {
+        if (fromUserProfile != null) {
+            if (fromUserProfile.getSex() == 1) {
+                if (fromUserProfile.getIsVip() == 1) {
+                    return AppContext.instance().getDrawable(R.drawable.ic_vip);
+                } else {
+                    if (fromUserProfile.getCertification() == 1) {
+                        return AppContext.instance().getDrawable(R.drawable.ic_real_man);
+                    }
+                }
+            } else {//女生
+                if (fromUserProfile.getIsVip() == 1) {
+                    return AppContext.instance().getDrawable(R.drawable.ic_goddess);
+                } else {
+                    if (fromUserProfile.getCertification() == 1) {
+                        return AppContext.instance().getDrawable(R.drawable.ic_real_man);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+    public Drawable getVipGodsImg(UserDataEntity fromUserProfile) {
         if (fromUserProfile != null) {
             if (fromUserProfile.getSex() == 1) {
                 if (fromUserProfile.getIsVip() == 1) {
@@ -479,41 +538,65 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
         V2TIMManager.getMessageManager().addAdvancedMsgListener(new V2TIMAdvancedMsgListener() {
             @Override
             public void onRecvNewMessage(V2TIMMessage msg) {//新消息提醒
-                if (msg != null && leftUserInfoField.get() != null) {
+                if (msg != null && otherUserInfoField.get() != null) {
                     TUIMessageBean info = ChatMessageBuilder.buildMessage(msg);
                     if (info != null) {
-                        if (info.getV2TIMMessage().getSender().equals(leftUserInfoField.get().getImId())) {
-                            String text = String.valueOf(info.getExtra());
-                            if (isJSON2(text) && text.indexOf("type") != -1) {//做自定义通知判断
-                                Map<String, Object> map_data = new Gson().fromJson(text, Map.class);
-                                //礼物消息
-                                if (map_data != null && map_data.get("type") != null && map_data.get("type").equals("message_gift")
-                                        && map_data.get("is_accost") == null) {
-                                    GiftEntity giftEntity = IMGsonUtils.fromJson(String.valueOf(map_data.get("data")), GiftEntity.class);
-                                    uc.acceptUserGift.postValue(giftEntity);
-                                    //显示礼物弹幕
-                                    showGiftBarrage(giftEntity);
-                                    //礼物收益提示
-                                    giftIncome(giftEntity);
-                                }else if (map_data != null && map_data.get("type") != null && map_data.get("type").equals("message_countdown")) {//对方余额不足
-                                    if (isPayee && isShowTipMoney) {
-                                        String data = (String) map_data.get("data");
-                                        Map<String, Object> dataMapCountdown = new Gson().fromJson(data, Map.class);
-                                        String isShow = (String) dataMapCountdown.get("is_show");
-                                        if (isShow != null && isShow.equals("1")) {
-                                            isShowCountdown.set(true);
-                                            girlEarningsField.set(true);
-                                            String girlEarningsTex = StringUtils.getString(R.string.playfun_insufficient_balance_of_counterparty);
-                                            SpannableString stringBuilder = new SpannableString(girlEarningsTex);
-                                            stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, girlEarningsTex.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                            girlEarningsText.set(stringBuilder);
+                        Log.e("当前语音聊天消息:",info.getMsgType() + "======="+info.toString());
+                        switch (info.getMsgType()){
+                            //文本类型消息
+                            case 1:
+                                if (info.getV2TIMMessage().getSender().equals(otherUserInfoField.get().getImId())) {
+                                    String text = String.valueOf(info.getExtra());
+                                    if (isJSON2(text) && text.indexOf("type") != -1) {//做自定义通知判断
+                                        Map<String, Object> map_data = new Gson().fromJson(text, Map.class);
+                                        //礼物消息
+                                        if (map_data != null && map_data.get("type") != null && map_data.get("type").equals("message_gift")
+                                                && map_data.get("is_accost") == null) {
+                                            GiftEntity giftEntity = IMGsonUtils.fromJson(String.valueOf(map_data.get("data")), GiftEntity.class);
+                                            uc.acceptUserGift.postValue(giftEntity);
+                                            //显示礼物弹幕
+                                            showGiftBarrage(giftEntity);
+                                            //礼物收益提示
+                                            giftIncome(giftEntity);
+                                        }else if (map_data != null && map_data.get("type") != null && map_data.get("type").equals("message_countdown")) {//对方余额不足
+                                            if (isPayee && isShowTipMoney) {
+                                                String data = (String) map_data.get("data");
+                                                Map<String, Object> dataMapCountdown = new Gson().fromJson(data, Map.class);
+                                                String isShow = (String) dataMapCountdown.get("is_show");
+                                                if (isShow != null && isShow.equals("1")) {
+                                                    isShowCountdown.set(true);
+                                                    girlEarningsField.set(true);
+                                                    String girlEarningsTex = StringUtils.getString(R.string.playfun_insufficient_balance_of_counterparty);
+                                                    SpannableString stringBuilder = new SpannableString(girlEarningsTex);
+                                                    stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, girlEarningsTex.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                                    girlEarningsText.set(stringBuilder);
 
-                                        }else if (isShow != null && isShow.equals("0")){
-                                            isShowCountdown.set(false);
+                                                }else if (isShow != null && isShow.equals("0")){
+                                                    isShowCountdown.set(false);
+                                                }
+                                            }
                                         }
                                     }
                                 }
-                            }
+                                break;
+                            //自定义消息类型
+                            case 2:
+                                V2TIMCustomElem v2TIMCustomElem = info.getV2TIMMessage().getCustomElem();
+                                Log.e("当前消息是自定义消息：", String.valueOf(v2TIMCustomElem==null));
+                                Log.e("当前消息是自定义消息2：",new String(v2TIMCustomElem.getData()));
+                                Map<String, Object> contentBody = CustomConvertUtils.CustomMassageConvertMap(v2TIMCustomElem);
+                                if (ObjectUtils.isNotEmpty(contentBody)) {
+                                    Log.e("接受到的自定义讯息为", String.valueOf(contentBody));
+                                    //模块类型--判断
+                                    if (contentBody.containsKey(CustomConstants.Message.MODULE_NAME_KEY)) {
+                                        //获取moudle-pushCoinGame 推币机
+                                        if (CustomConvertUtils.ContainsMessageModuleKey(contentBody, CustomConstants.Message.MODULE_NAME_KEY, CustomConstants.CoinPusher.MODULE_NAME)) {
+                                            Log.e("当前模块效验通过","转到推币机处理");
+                                            V2TIMCustomManagerUtil.CoinPusherManager(contentBody);
+                                        }
+                                    }
+                                }
+                                break;
                         }
                     }
                 }
@@ -542,10 +625,8 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
      * @param giftEntity
      */
     private void showGiftBarrage(GiftEntity giftEntity) {
-        int nickNameLength = leftUserInfoField.get().getNickname().length();
         String sexText = isMale ? StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt3) : StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt2);
-        String messageText = leftUserInfoField.get().getNickname() + " " + StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt1) + " " + sexText + " " + giftEntity.getTitle() + "x" + giftEntity.getAmount();
-        int youIndex = messageText.indexOf(sexText);
+        String messageText = otherUserInfoField.get().getNickname() + " " + StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt1) + " " + sexText + " " + giftEntity.getTitle() + "x" + giftEntity.getAmount();
         SpannableString stringBuilder = new SpannableString(messageText);
         ForegroundColorSpan blueSpanWhite = new ForegroundColorSpan(ColorUtils.getColor(R.color.white));
         stringBuilder.setSpan(blueSpanWhite, 0, messageText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -652,13 +733,6 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                             sayHiEntityHidden.set(false);
                             sayHiEntityField.set(sayHiEntityList.get(0));
                         }
-                        if (userDataEntity.getId().intValue() == callingInviteInfo.getFromUserProfile().getId().intValue()) {
-                            rightUserInfoField.set(callingInviteInfo.getFromUserProfile());
-                            leftUserInfoField.set(callingInviteInfo.getToUserProfile());
-                        } else {
-                            rightUserInfoField.set(callingInviteInfo.getToUserProfile());
-                            leftUserInfoField.set(callingInviteInfo.getFromUserProfile());
-                        }
                         //是否已追踪0未追踪1已追踪
                         collected = callingInviteInfo.getCollected();
                         collectedField.set(collected);
@@ -676,6 +750,36 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                     public void onComplete() {
                         dismissHUD();
                         uc.callAudioStart.call();
+                    }
+                });
+    }
+
+    //拨打电话给指定用户
+    public void callingInviteUser(int callingType, String inviterImId,String receiverImId){
+//        callingType	是	Integer	通话类型：1=语音，2=视频
+//                * inviterImId	是	String	拔打人IM ID
+//     * receiverImId	是	String	接收人IM ID
+        Map<String, Object> mapData = new HashMap<>();
+        mapData.put("callingType",callingType);
+        mapData.put("inviterImId",inviterImId);
+        mapData.put("receiverImId",receiverImId);
+        model.callingInviteUser(ApiUitl.getBody(GsonUtils.toJson(mapData)))
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseDataResponse<CallUserRoomInfoEntity>>(){
+                    @Override
+                    public void onSuccess(BaseDataResponse<CallUserRoomInfoEntity> response) {
+                        //主动拨打
+                        DLRTCAudioManager.Companion.getInstance().enableAGC(true);
+                        DLRTCAudioManager.Companion.getInstance().enableAEC(true);
+                        DLRTCAudioManager.Companion.getInstance().enableANS(true);
+                        //gameUI.acceptCallingEvent.call();
+                    }
+                    @Override
+                    public void onComplete() {
+                        dismissHUD();
                     }
                 });
     }
@@ -764,7 +868,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
 
     //追踪
     public void addLike(boolean isHangup) {
-        model.addCollect(leftUserInfoField.get().getId())
+        model.addCollect(otherUserInfoField.get().getId())
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
@@ -795,7 +899,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     }
 
     public static boolean isJSON2(String str) {
-        boolean result = false;
+        boolean result;
         try {
             new Gson().fromJson(str, Map.class);
             result = true;
@@ -804,28 +908,6 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
         }
         return result;
 
-    }
-
-    /**
-     * 正则匹配 返回值是一个SpannableString 即经过变色处理的数据
-     */
-    private SpannableString matcherSearchText(int color, String text, String keyword) {
-        if (text == null || TextUtils.isEmpty(text)) {
-            return SpannableString.valueOf("");
-        }
-        SpannableString spannableString = new SpannableString(text);
-        //条件 keyword
-        Pattern pattern = Pattern.compile(Pattern.quote(keyword), Pattern.CASE_INSENSITIVE);
-        //匹配
-        Matcher matcher = pattern.matcher(spannableString);
-        while (matcher.find()) {
-            int start = matcher.start();
-            int end = matcher.end();
-            //ForegroundColorSpan 需要new 不然也只能是部分变色
-            spannableString.setSpan(new ForegroundColorSpan(color), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-        //返回变色处理的结果
-        return spannableString;
     }
 
 }

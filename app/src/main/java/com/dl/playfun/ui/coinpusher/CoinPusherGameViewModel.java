@@ -21,11 +21,12 @@ import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
+import com.dl.playfun.entity.CallUserInfoEntity;
+import com.dl.playfun.entity.CallUserRoomInfoEntity;
 import com.dl.playfun.entity.CallingInfoEntity;
 import com.dl.playfun.entity.CallingInviteInfo;
 import com.dl.playfun.entity.CallingStatusEntity;
 import com.dl.playfun.entity.CoinPusherBalanceDataEntity;
-import com.dl.playfun.entity.CoinPusherDataInfoEntity;
 import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.entity.UserProfileInfo;
 import com.dl.playfun.event.CoinPusherGamePlayingEvent;
@@ -78,13 +79,14 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
     //livedata页面交互
     public UIChangeObservable gameUI = new UIChangeObservable();
     public ObservableInt totalMoney = new ObservableInt(0);
-    public CoinPusherDataInfoEntity coinPusherDataInfoEntity;
 
     //消费者
     private Disposable coinPusherGamePlayingSubscription;
 
     private IMAdvancedMsgListener imAdvancedMsgListener;
 
+    //围观模式-不能投币。切不能操作雨刷
+    public ObservableBoolean circuseeStatus = new ObservableBoolean(false);
     //默认叠起
     public boolean triangleSwitch = true;
 
@@ -96,11 +98,11 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
     //拨打中
     public ObservableBoolean callingOnTheLine = new ObservableBoolean(false);
     //当前通话对方用户信息
-    public ObservableField<UserProfileInfo> otherCallInfoEntity = new ObservableField<>();
+    public ObservableField<CallUserInfoEntity> otherCallInfoEntity = new ObservableField<>();
+    //当前通话房间信息
+    public ObservableField<CallUserRoomInfoEntity> callUserRoomInfoEntity = new ObservableField<>();
     //通话中价格提示
     public ObservableField<String> maleCallingHint = new ObservableField<>("");
-    //是否能接听
-    public boolean callingAcceptFlag = false;
     //当前用户是否为收款人
     public boolean isCallingPay = false;
     //余额不足临界提示分钟数
@@ -109,6 +111,9 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
     public List<CallingInfoEntity.CallingUnitPriceInfo> unitPriceList;
     //付费放钻石总余额
     public int payUserBalanceMoney = 0;
+
+    //游戏房间ID
+    public Integer _gameRoomId = 0;
 
     //推币机禁音
     public ObservableBoolean muteEnabled = new ObservableBoolean(false);
@@ -122,13 +127,13 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
     }
     //关闭页面点击
     public BindingCommand<Void> gameCloseView = new BindingCommand<>(()->gameUI.backViewApply.call());
-    //投币按钮迪纳基
+    //投币按钮点击
     public BindingCommand<Void> playCoinClick = new BindingCommand<>(() -> {
-        playingCoinPusherThrowCoin(coinPusherDataInfoEntity.getRoomInfo().getRoomId());
+        playingCoinPusherThrowCoin(_gameRoomId);
     });
     //雨刷控制开关
     public BindingCommand<Void> playPusherActClick = new BindingCommand<>(() -> {
-        playingCoinPusherAct(coinPusherDataInfoEntity.getRoomInfo().getRoomId());
+        playingCoinPusherAct(_gameRoomId);
     });
 
     //禁用麦克风点击
@@ -182,7 +187,6 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
     });
     //点击接听电话
     public BindingCommand<Void> callAcceptClick = new BindingCommand<>(() -> {
-        Log.e("CoinPusherGameActivity","点击接听电话======================");
         gameUI.callCheckPermissionEvent.call();
     });
 
@@ -214,7 +218,7 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
             }else{
                 answerUserId = gameCallEntity.getAcceptUserId();
             }
-            getCallingInvitedInfo(callingType,fromUserId,answerUserId,false);
+            callingInviteUser(callingType, fromUserId, answerUserId);
         }
     });
 
@@ -317,106 +321,62 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
                     }
                 });
     }
-
-    /**
-    * @Desc TODO(拨打语音、视频---接听人)
-    * @author 彭石林
-    * @parame [callingType 拨打类型, fromUserId 拨打人, answerUserId 接听人, passiveCall 是否是被动接听]
-    * @return void
-    * @Date 2022/11/16
-    */
-    public void getCallingInvitedInfo(int callingType, String fromUserId,String answerUserId,boolean passiveCall) {
-        model.callingInviteInfo(callingType, fromUserId, answerUserId, 0)
+    //查询用户资料
+    public void getCallingUserInfo(Integer userId, String imId){
+        model.callingUserInfo(userId, imId)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
-                .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseDataResponse<CallingInviteInfo>>() {
+                .doOnSubscribe(disposable -> loadingShow())
+                .subscribe(new BaseObserver<BaseDataResponse<CallUserInfoEntity>>(){
                     @Override
-                    public void onSuccess(BaseDataResponse<CallingInviteInfo> callingInviteInfoBaseDataResponse) {
-                        CallingInviteInfo callingInviteInfo = callingInviteInfoBaseDataResponse.getData();
-                        otherCallInfoEntity.set(callingInviteInfo.getUserProfileInfo());
-                        gameCallEntity.setRoomId(callingInviteInfo.getRoomId());
-                        if (model.readUserData().getSex() == 0 && ConfigManager.getInstance().getTipMoneyShowFlag()) {
-                            if (!ObjectUtils.isEmpty(callingInviteInfo.getMessages()) && callingInviteInfo.getMessages().size() > 0) {
-                                StringBuilder valueData = new StringBuilder();
-                                for (String value : callingInviteInfo.getMessages()) {
-                                    valueData.append(value).append("\n");
-                                }
-                                maleCallingHint.set(valueData.toString());
-                            }
-                        }
-                        if (callingInviteInfo.getMinutesRemaining() != null && callingInviteInfo.getMinutesRemaining().intValue() <= 0) {
-                            if(gameCallEntity != null){
-                                if(gameCallEntity.getCallingType() == DLRTCDataMessageType.DLInviteRTCType.dl_rtc_audio){
-                                    //DLRTCAudioManager.Companion.getInstance().hangup();
-                                }else{
-                                  //  DLRTCVideoManager.Companion.getInstance().hangup();
-                                }
-                            }
-                            return;
-                        }
-                        if (callingInviteInfo.getMinutesRemaining() != null && callingInviteInfo.getMinutesRemaining().intValue() > 0) {
-                            callingAcceptFlag = true;
-                        }
-                        //主动拨打
-                        if(!passiveCall){
-                            callingOnTheLine.set(true);
-                            Utils.StartGameCallSomeone(callingType, answerUserId, callingInviteInfo.getRoomId(), new Gson().toJson(callingInviteInfo));
-                        }
+                    public void onSuccess(BaseDataResponse<CallUserInfoEntity> response) {
+                        CallUserInfoEntity callingInviteInfo = response.getData();
+                        otherCallInfoEntity.set(callingInviteInfo);
+                        //gameCallEntity.setRoomId(callingInviteInfo);
                     }
-
                     @Override
                     public void onComplete() {
-                        dismissHUD();
+                        loadingHide();
                     }
                 });
     }
-    /**
-    * @Desc TODO(通话中)
-    * @author 彭石林
-    * @parame [roomId 房间号,callingType 通话类型：1=语音，2=视频  fromUserId 拔打人用户ID, toUserId 接收人用户ID]
-    * @Date 2022/11/11
-    */
-    public void getCallingInfo(int callingType) {
-        model.getCallingInfo(gameCallEntity.getRoomId(), callingType, gameCallEntity.getInviteUserId(), gameCallEntity.getAcceptUserId())
+
+    //拨打电话给指定用户
+    public void callingInviteUser(int callingType, String inviterImId,String receiverImId){
+//        callingType	是	Integer	通话类型：1=语音，2=视频
+//                * inviterImId	是	String	拔打人IM ID
+//     * receiverImId	是	String	接收人IM ID
+        Map<String, Object> mapData = new HashMap<>();
+        mapData.put("callingType",callingType);
+        mapData.put("inviterImId",inviterImId);
+        mapData.put("receiverImId",receiverImId);
+        model.callingInviteUser(ApiUitl.getBody(GsonUtils.toJson(mapData)))
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
-                .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseDataResponse<CallingInfoEntity>>() {
+                .doOnSubscribe(disposable -> loadingShow())
+                .subscribe(new BaseObserver<BaseDataResponse<CallUserRoomInfoEntity>>(){
                     @Override
-                    public void onSuccess(BaseDataResponse<CallingInfoEntity> response) {
-                        CallingInfoEntity callingInviteInfo = response.getData();
-                        if (callingInviteInfo.getPaymentRelation().getPayeeImId().equals(ConfigManager.getInstance().getUserImID())){
-                            isCallingPay = true;
-                        }
-                        //余额不足提示分钟数
-                        balanceNotEnoughTipsMinutes = callingInviteInfo.getBalanceNotEnoughTipsMinutes();
-                        //价格配置表
-                        unitPriceList = callingInviteInfo.getUnitPriceList();
-                        //通话类型：1=语音，2=视频
-                        if(callingType == 1){
-                            //DLRTCAudioManager.Companion.getInstance().accept();
-                            //DLRTCAudioManager.Companion.getInstance().enterRoom(gameCallEntity.getRoomId());
-                        }else{
-                            //DLRTCVideoManager.Companion.getInstance().accept();
-                            //DLRTCVideoManager.Companion.getInstance().enterRoom(gameCallEntity.getRoomId());
-                        }
+                    public void onSuccess(BaseDataResponse<CallUserRoomInfoEntity> response) {
+                        CallUserRoomInfoEntity callingInviteInfo = response.getData();
+                        callUserRoomInfoEntity.set(callingInviteInfo);
+                        //主动拨打
+                        callingOnTheLine.set(true);
+                        Utils.StartGameCallSomeone(callingType, receiverImId, callingInviteInfo.getRoomId(), new Gson().toJson(callingInviteInfo));
                         DLRTCAudioManager.Companion.getInstance().enableAGC(true);
                         DLRTCAudioManager.Companion.getInstance().enableAEC(true);
                         DLRTCAudioManager.Companion.getInstance().enableANS(true);
-                        gameUI.acceptCallingEvent.call();
+                        //gameUI.acceptCallingEvent.call();
                     }
-
                     @Override
                     public void onComplete() {
-                        dismissHUD();
+                        loadingHide();
                     }
                 });
     }
 
-    public int isRealManVisible(UserProfileInfo itemEntity) {
+    public int isRealManVisible(CallUserInfoEntity itemEntity) {
         if (itemEntity != null && itemEntity.getIsVip() != 1) {
             if (itemEntity.getCertification() == 1) {
                 return View.VISIBLE;
@@ -428,7 +388,7 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
         }
     }
 
-    public int isVipVisible(UserProfileInfo itemEntity) {
+    public int isVipVisible(CallUserInfoEntity itemEntity) {
         if (itemEntity != null && itemEntity.getSex() == 1 && itemEntity.getIsVip() == 1) {
             return View.VISIBLE;
         } else {
@@ -436,7 +396,7 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
         }
     }
 
-    public int isGoddessVisible(UserProfileInfo itemEntity) {
+    public int isGoddessVisible(CallUserInfoEntity itemEntity) {
         if (itemEntity != null && itemEntity.getSex() == 0 && itemEntity.getIsVip() == 1) {
             return View.VISIBLE;
         } else {
@@ -444,7 +404,7 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
         }
     }
     //来电提示文案
-    public String getCallingLayoutTitles(UserProfileInfo itemEntity) {
+    public String getCallingLayoutTitles(CallUserInfoEntity itemEntity) {
         if(gameCallEntity!=null){
             if(gameCallEntity.getCallingType() == DLRTCDataMessageType.DLInviteRTCType.dl_rtc_audio){
                 return StringUtils.getString(R.string.playfun_game_audio_hint);

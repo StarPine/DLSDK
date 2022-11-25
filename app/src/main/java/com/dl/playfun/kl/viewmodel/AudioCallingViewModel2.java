@@ -1,5 +1,6 @@
 package com.dl.playfun.kl.viewmodel;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
@@ -9,15 +10,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
 
-import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
-import com.dl.playfun.entity.CallingInviteInfo;
-import com.dl.playfun.entity.UserProfileInfo;
+import com.dl.playfun.entity.CallUserInfoEntity;
 import com.dl.playfun.event.AudioCallingCancelEvent;
 import com.dl.playfun.kl.view.Ifinish;
 import com.dl.playfun.manager.ConfigManager;
@@ -27,7 +26,6 @@ import com.dl.playfun.kl.Utils;
 import com.dl.rtc.calling.base.DLRTCCalling;
 import com.dl.rtc.calling.base.DLRTCCallingDelegate;
 import com.dl.rtc.calling.base.impl.DLRTCInternalListenerManager;
-import com.dl.rtc.calling.manager.DLRTCAudioManager;
 import com.dl.rtc.calling.manager.DLRTCStartShowUIManager;
 import com.tencent.trtc.TRTCCloudDef;
 
@@ -48,30 +46,24 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
     public ObservableField<String> maleBinding = new ObservableField<>("");
     public ObservableField<Boolean> isCallBinding = new ObservableField<>(false);
 
-    public ObservableField<CallingInviteInfo> callingInviteInfoField = new ObservableField<>();
+    public ObservableField<CallUserInfoEntity> callingInviteInfoField = new ObservableField<>();
     //返回上一页
     public SingleLiveEvent<Void> backViewEvent = new SingleLiveEvent<>();
     public SingleLiveEvent<Integer> startAudioActivity = new SingleLiveEvent<>();
 
-    public boolean audioSuccess = false;
     public View.OnClickListener acceptOnClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (!audioSuccess) {
-                return;
-            }
             if (isCancel){
                 finishView();
                 return;
             }
             unListen();
-            startAudioActivity.postValue(roomId);
+            startAudioActivity.postValue(CallingRoomId);
         }
     };
-    protected int roomId;
-    private String fromUserId;
-    private String toUserId;
-    private DLRTCCalling.Role mRole;
+    public int CallingRoomId;
+    public DLRTCCalling.Role mRole;
     public View.OnClickListener closeOnclick = v -> cancelCallClick();
     public View.OnClickListener rejectOnClick = v -> cancelCallClick();
     //订阅者
@@ -105,27 +97,15 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
         RxSubscriptions.remove(mSubscription);
     }
 
-    public void init(String fromUserId, String toUserId, DLRTCCalling.Role role, int roomId) {
-        this.fromUserId = fromUserId;
-        this.toUserId = toUserId;
+    public void init(DLRTCCalling.Role role, int roomId) {
         this.mRole = role;
         isCallBinding.set(role == DLRTCCalling.Role.CALL);
-        this.roomId = roomId;
+        this.CallingRoomId = roomId;
     }
 
-    public void init(String fromUserId, String toUserId, DLRTCCalling.Role role) {
-        this.fromUserId = fromUserId;
-        this.toUserId = toUserId;
+    public void init(DLRTCCalling.Role role) {
         this.mRole = role;
         isCallBinding.set(role == DLRTCCalling.Role.CALL);
-    }
-
-    public void start() {
-        if (mRole == DLRTCCalling.Role.CALL) {
-            startCall();
-        } else {
-            startCalled();
-        }
     }
 
     public void cancelCallClick() {
@@ -152,12 +132,6 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
             }
         });
     }
-
-    // 主叫
-    public void startCall() {
-
-        Utils.StartGameCallSomeone(1,toUserId, roomId, null);
-    }
     // 添加 监听
     DLRTCCallingDelegate mTRTCCallingDelegate = new UITRTCCallingDelegate() {
         @Override
@@ -180,7 +154,7 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
         public void onUserEnter(String userId) {
             Log.e("语音聊天房","用户进入房间："+userId);
             unListen();
-            startAudioActivity.postValue(roomId);
+            startAudioActivity.postValue(CallingRoomId);
         }
 
         @Override
@@ -222,9 +196,6 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
             Utils.show(AppContext.instance().getString(R.string.playfun_the_other_party_is_temporarily_unavailable));
         }
     };
-    // 被叫
-    public void startCalled() {
-    }
 
     //localQuality 己方网络状态， remoteQualityList对方网络状态列表，取第一个为1v1通话的网络状态
     protected void updateNetworkQuality(TRTCCloudDef.TRTCQuality localQuality, List<TRTCCloudDef.TRTCQuality> remoteQualityList) {
@@ -274,25 +245,23 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
         }
     }
 
-    public Drawable getVipGodsImg(CallingInviteInfo callingInviteInfo) {
-        if (callingInviteInfo != null){
-            UserProfileInfo userProfileInfo = callingInviteInfo.getUserProfileInfo();
-            if (userProfileInfo != null) {
-                if (userProfileInfo.getSex() == 1) {
-                    if(userProfileInfo.getIsVip()==1){
-                        return AppContext.instance().getDrawable(R.drawable.ic_vip);
-                    }else {
-                        if(userProfileInfo.getCertification()==1){
-                            return AppContext.instance().getDrawable(R.drawable.ic_real_man);
-                        }
+    @SuppressLint("UseCompatLoadingForDrawables")
+    public Drawable getVipGodsImg(CallUserInfoEntity userProfileInfo) {
+        if (userProfileInfo != null) {
+            if (userProfileInfo.getSex() == 1) {
+                if(userProfileInfo.getIsVip()==1){
+                    return AppContext.instance().getDrawable(R.drawable.ic_vip);
+                }else {
+                    if(userProfileInfo.getCertification()==1){
+                        return AppContext.instance().getDrawable(R.drawable.ic_real_man);
                     }
-                } else {//女生
-                    if(userProfileInfo.getIsVip()==1){
-                        return AppContext.instance().getDrawable(R.drawable.ic_goddess);
-                    }else {
-                        if(userProfileInfo.getCertification()==1){
-                            return  AppContext.instance().getDrawable(R.drawable.ic_real_man);
-                        }
+                }
+            } else {//女生
+                if(userProfileInfo.getIsVip()==1){
+                    return AppContext.instance().getDrawable(R.drawable.ic_goddess);
+                }else {
+                    if(userProfileInfo.getCertification()==1){
+                        return  AppContext.instance().getDrawable(R.drawable.ic_real_man);
                     }
                 }
             }
@@ -309,46 +278,26 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
         return obj == null || obj.equals("");
     }
 
-    public String ageAndConstellation(CallingInviteInfo callingInviteInfo) {
+    public String ageAndConstellation(CallUserInfoEntity callingInviteInfo) {
         if (callingInviteInfo != null) {
-            return String.format(StringUtils.getString(R.string.playfun_age_and_constellation), callingInviteInfo.getUserProfileInfo().getAge(), callingInviteInfo.getUserProfileInfo().getConstellation());
+            return String.format(StringUtils.getString(R.string.playfun_age_and_constellation), callingInviteInfo.getAge(), callingInviteInfo.getConstellation());
         }
         return "";
     }
 
-    //拨打语音、视频---接听人
-    public void getCallingInvitedInfo(int callingType, String fromUserId) {
-        String userId = model.readUserData().getImUserId();
-        model.callingInviteInfo(callingType, fromUserId, userId, 0)
+    //查询用户资料
+    public void getCallingUserInfo(Integer userId, String imId){
+        model.callingUserInfo(userId, imId)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
                 .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseDataResponse<CallingInviteInfo>>() {
+                .subscribe(new BaseObserver<BaseDataResponse<CallUserInfoEntity>>(){
                     @Override
-                    public void onSuccess(BaseDataResponse<CallingInviteInfo> callingInviteInfoBaseDataResponse) {
-                        CallingInviteInfo callingInviteInfo = callingInviteInfoBaseDataResponse.getData();
-                        roomId = callingInviteInfo.getRoomId();
-                        if (model.readUserData().getSex() == 0 && ConfigManager.getInstance().getTipMoneyShowFlag()) {
-                            if (!ObjectUtils.isEmpty(callingInviteInfo.getMessages()) && callingInviteInfo.getMessages().size() > 0) {
-                                String valueData = "";
-                                for (String value : callingInviteInfo.getMessages()) {
-                                    valueData += value + "\n";
-                                }
-                                maleBinding.set(valueData);
-                            }
-                        }
+                    public void onSuccess(BaseDataResponse<CallUserInfoEntity> response) {
+                        CallUserInfoEntity callingInviteInfo = response.getData();
                         callingInviteInfoField.set(callingInviteInfo);
-                        if (callingInviteInfo.getMinutesRemaining() != null && callingInviteInfo.getMinutesRemaining().intValue() <= 0) {
-                            cancelCallClick();
-                            return;
-                        }
-                        if (callingInviteInfo.getMinutesRemaining() != null && callingInviteInfo.getMinutesRemaining().intValue() > 0) {
-                            audioSuccess = true;
-                        }
-                        start();
                     }
-
                     @Override
                     public void onComplete() {
                         dismissHUD();

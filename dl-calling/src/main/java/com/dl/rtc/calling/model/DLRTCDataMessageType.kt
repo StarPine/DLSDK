@@ -17,7 +17,7 @@ object DLRTCDataMessageType {
 
     val DLRTCInviteType = "dl_rtc_type"
 
-    var DLRTCInviteID = "InviteID"
+    var DLRTCInviteID = "dl_rtc_invite_Id"
     ///开始邀请
     val invite = "dl_rtc_message_invite"
     ///邀请成功

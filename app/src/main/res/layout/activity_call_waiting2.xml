@@ -45,7 +45,7 @@
                 android:scaleType="centerCrop"
                 binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
                 binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
-                binding:imageThumbPath="@{viewModel.callingInviteInfoField.userProfileInfo.avatar}"
+                binding:imageThumbPath="@{viewModel.callingInviteInfoField.avatar}"
                 binding:resizeH="@{90}"
                 binding:resizeW="@{90}"/>
 
@@ -71,7 +71,7 @@
                         android:singleLine="true"
                         android:ellipsize="end"
                         android:gravity="center"
-                        android:text="@={viewModel.callingInviteInfoField.userProfileInfo.nickname}"
+                        android:text="@={viewModel.callingInviteInfoField.nickname}"
                         android:textColor="@color/white"
                         tools:text="dddd"
                         android:textSize="19sp" />
@@ -84,16 +84,6 @@
                         android:layout_marginStart="2dp"
                         android:src="@{viewModel.getVipGodsImg(viewModel.callingInviteInfoField)}"
                         android:visibility="@{viewModel.getVipGodsImg(viewModel.callingInviteInfoField) == null?View.GONE:View.VISIBLE}"
-                        />
-
-                    <ImageView
-                        android:layout_gravity="center_vertical"
-                        android:layout_width="31dp"
-                        android:layout_height="13dp"
-                        android:layout_marginStart="5dp"
-                        binding:imagePath="@{viewModel.gameUrl(viewModel.callingInviteInfoField.userProfileInfo.gameChannel)}"
-                        android:visibility="@{viewModel.isEmpty(viewModel.gameUrl(viewModel.callingInviteInfoField.userProfileInfo.gameChannel))?View.GONE:View.VISIBLE}"
-                        tools:src="@drawable/ic_vip"
                         />
 
                 </LinearLayout>
@@ -115,7 +105,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="12dp"
-                        android:text="@={viewModel.callingInviteInfoField.userProfileInfo.cityName}"
+                        android:text="@={viewModel.callingInviteInfoField.cityName}"
                         android:textColor="@color/white"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -159,7 +149,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="12dp"
-                        android:text="@{SystemDictUtils.getOccupationById(safeUnbox(viewModel.callingInviteInfoField.userProfileInfo.occupationId))}"
+                        android:text="@{SystemDictUtils.getOccupationById(safeUnbox(viewModel.callingInviteInfoField.occupationId))}"
                         android:textColor="@color/white"
                         android:textSize="12sp" />
                 </LinearLayout>

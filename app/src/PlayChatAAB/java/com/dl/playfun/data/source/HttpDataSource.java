@@ -1,120 +1,65 @@
 package com.dl.playfun.data.source;
 
+import com.dl.playfun.data.RetrofitHeadersConfig;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseListDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
-import com.dl.playfun.entity.AccostEntity;
-import com.dl.playfun.entity.AdBannerEntity;
-import com.dl.playfun.entity.AdUserBannerEntity;
-import com.dl.playfun.entity.AddressEntity;
-import com.dl.playfun.entity.AlbumPhotoEntity;
-import com.dl.playfun.entity.AllConfigEntity;
-import com.dl.playfun.entity.ApiConfigManagerEntity;
-import com.dl.playfun.entity.ApplyMessageEntity;
-import com.dl.playfun.entity.BaseUserBeanEntity;
-import com.dl.playfun.entity.BlackEntity;
-import com.dl.playfun.entity.BonusGoodsEntity;
-import com.dl.playfun.entity.BoradCastMessageEntity;
-import com.dl.playfun.entity.BroadcastEntity;
-import com.dl.playfun.entity.BroadcastListEntity;
-import com.dl.playfun.entity.BrowseNumberEntity;
-import com.dl.playfun.entity.BubbleEntity;
-import com.dl.playfun.entity.CallingInfoEntity;
-import com.dl.playfun.entity.CallingInviteInfo;
-import com.dl.playfun.entity.CallingStatusEntity;
-import com.dl.playfun.entity.CashWalletEntity;
-import com.dl.playfun.entity.ChatDetailCoinEntity;
-import com.dl.playfun.entity.ChatRedPackageEntity;
-import com.dl.playfun.entity.CheckNicknameEntity;
-import com.dl.playfun.entity.ChooseAreaEntity;
-import com.dl.playfun.entity.CityAllEntity;
-import com.dl.playfun.entity.CoinExchangeBoxInfo;
-import com.dl.playfun.entity.CoinPusherConverInfoEntity;
-import com.dl.playfun.entity.CoinPusherBalanceDataEntity;
-import com.dl.playfun.entity.CoinPusherDataInfoEntity;
-import com.dl.playfun.entity.CoinPusherRoomHistoryEntity;
-import com.dl.playfun.entity.CoinPusherRoomInfoEntity;
-import com.dl.playfun.entity.CoinPusherRoomTagInfoEntity;
-import com.dl.playfun.entity.CoinWalletEntity;
-import com.dl.playfun.entity.CommentMessageEntity;
-import com.dl.playfun.entity.ConfigItemEntity;
-import com.dl.playfun.entity.CreateOrderEntity;
-import com.dl.playfun.entity.DayRewardInfoEntity;
-import com.dl.playfun.entity.DiamondInfoEntity;
-import com.dl.playfun.entity.EjectEntity;
-import com.dl.playfun.entity.EjectSignInEntity;
-import com.dl.playfun.entity.EvaluateEntity;
-import com.dl.playfun.entity.EvaluateMessageEntity;
-import com.dl.playfun.entity.ExchangeEntity;
-import com.dl.playfun.entity.ExchangeIntegraOuterEntity;
-import com.dl.playfun.entity.ExclusiveAccostInfoEntity;
-import com.dl.playfun.entity.FaceVerifyResultEntity;
-import com.dl.playfun.entity.FrequentContactEntity;
-import com.dl.playfun.entity.GameCoinBuy;
-import com.dl.playfun.entity.GameCoinWalletEntity;
-import com.dl.playfun.entity.GamePhotoAlbumEntity;
-import com.dl.playfun.entity.GiftBagEntity;
-import com.dl.playfun.entity.GiveMessageEntity;
-import com.dl.playfun.entity.GoldDetailEntity;
-import com.dl.playfun.entity.GoodsEntity;
-import com.dl.playfun.entity.GoogleNearPoiBean;
-import com.dl.playfun.entity.GooglePoiBean;
-import com.dl.playfun.entity.IMTransUserEntity;
-import com.dl.playfun.entity.ImUserSigEntity;
-import com.dl.playfun.entity.IsChatEntity;
-import com.dl.playfun.entity.LevelApiEntity;
-import com.dl.playfun.entity.LevelPageInfoEntity;
-import com.dl.playfun.entity.MallWithdrawTipsInfoEntity;
-import com.dl.playfun.entity.MessageGroupEntity;
-import com.dl.playfun.entity.MessageRuleEntity;
-import com.dl.playfun.entity.NewsEntity;
-import com.dl.playfun.entity.NoteInfoEntity;
-import com.dl.playfun.entity.OccupationConfigItemEntity;
-import com.dl.playfun.entity.ParkItemEntity;
-import com.dl.playfun.entity.PhotoAlbumEntity;
-import com.dl.playfun.entity.PriceConfigEntity;
-import com.dl.playfun.entity.PrivacyEntity;
-import com.dl.playfun.entity.ProfitMessageEntity;
-import com.dl.playfun.entity.PushSettingEntity;
-import com.dl.playfun.entity.RadioTwoFilterItemEntity;
-import com.dl.playfun.entity.SignMessageEntity;
-import com.dl.playfun.entity.SoundEntity;
-import com.dl.playfun.entity.StatusEntity;
-import com.dl.playfun.entity.SwiftMessageEntity;
-import com.dl.playfun.entity.SystemMessageEntity;
-import com.dl.playfun.entity.TagEntity;
-import com.dl.playfun.entity.TaskAdEntity;
-import com.dl.playfun.entity.TaskConfigEntity;
-import com.dl.playfun.entity.TaskConfigItemEntity;
-import com.dl.playfun.entity.TaskRewardReceiveEntity;
-import com.dl.playfun.entity.TokenEntity;
-import com.dl.playfun.entity.TopicalListEntity;
-import com.dl.playfun.entity.TraceEntity;
-import com.dl.playfun.entity.UnReadMessageNumEntity;
-import com.dl.playfun.entity.UserBindInfoEntity;
-import com.dl.playfun.entity.UserCoinItemEntity;
-import com.dl.playfun.entity.UserConnMicStatusEntity;
-import com.dl.playfun.entity.UserDataEntity;
-import com.dl.playfun.entity.UserDetailEntity;
-import com.dl.playfun.entity.UserInfoEntity;
-import com.dl.playfun.entity.UserProfitPageEntity;
-import com.dl.playfun.entity.UserRemarkEntity;
-import com.dl.playfun.entity.VersionEntity;
-import com.dl.playfun.entity.VipInfoEntity;
+import com.dl.playfun.entity.*;
 
 import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
+import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface HttpDataSource {
+
+    /**
+     * @Desc TODO(更新通话状态)
+     * @author 彭石林
+     * roomId	否	Integer	房间ID
+     * roomIdStr	否	String	字符串形式的房间ID
+     * eventType	是	Integer	事件类型(取值见下方)
+     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
+     * @Date 2022/11/24
+     */
+    Observable<BaseResponse> updateCallingStatus(RequestBody requestBody);
+    /**
+     * @Desc TODO(新的通话接口)
+     * @author 彭石林
+     * callingType	是	Integer	通话类型：1=语音，2=视频
+     * inviterImId	是	String	拔打人IM ID
+     * receiverImId	是	String	接收人IM ID
+     * callingSource	否	Integer	通话来源:0无;1视讯派对;2视讯推送
+     * callingSourceId	否	Long	通话来源ID：视讯推送时传videoCallPushLogId
+     * @Date 2022/11/24
+     */
+    Observable<BaseDataResponse<CallUserRoomInfoEntity>> callingInviteUser(RequestBody requestBody);
+    /**
+     * @Desc TODO(通话时的心跳保活，每10秒调用一次，挂断后停止调用)
+     * @author 彭石林
+     * @parame [requestBody]
+     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
+     * @Date 2022/11/24
+     */
+    Observable<BaseResponse> callingKeepAlive(RequestBody requestBody);
+    /**
+     * @Desc TODO(查看用户资料)
+     * @author 彭石林
+     * @parame [user] userId	否	Integer	用户ID
+     * imId	否	String	用户的IMID
+     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse>
+     * @Date 2022/11/24
+     */
+    Observable<BaseDataResponse<CallUserInfoEntity>> callingUserInfo(Integer userId, String imId);
 
     /**
      * @Desc TODO(不喜欢某个电台)
@@ -205,6 +150,19 @@ public interface HttpDataSource {
      */
     Observable<BaseResponse> mediaGallerySnapshotUnLock(String msgKey, Integer toUserId);
 
+    /**
+     * @Desc TODO(通话-进入推币机退出围观)
+     * @author 彭石林
+     *  roomId	是	int	房间号
+     *     toUserId	是	int	对方用户ID
+     *     type	是	int	类型 1进入 2退
+     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
+     * @Date 2022/11/22
+     */
+    @Headers(RetrofitHeadersConfig.PlayChat_API_URL)
+    @POST("api/iscan/watchRoom")
+    @FormUrlEncoded
+    Observable<BaseResponse> coinPusherWatchRoom(@Field("roomId") Integer roomId,@Field("toUserId") Integer toUserId,@Field("type") int type);
     /**
      * @Desc TODO(查询用户当前余额)
      * @author 彭石林

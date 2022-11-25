@@ -127,7 +127,7 @@ class DLRTCStartManager {
         }
         mTRTCInternalListenerManager = DLRTCInternalListenerManager.instance
         mTRTCCloud = TRTCCloud.sharedInstance(mContext)
-        initFlag = false
+        initFlag = true
         DLRTCIMSignallingManager.getInstance().addSignalingListener(mTIMSignallingListener)
         initParams()
     }
@@ -390,7 +390,7 @@ class DLRTCStartManager {
 
                         val interceptorResult = DLRTCInterceptorCall.instance.containsActivity(AppManager.getAppManager().currentActivity().javaClass)
                         if(interceptorResult){
-                            DLRTCInterceptorCall.instance.notifyInterceptorCall(acceptUserId, inviteID,model.rtcInviteType as DLRTCDataMessageType.DLInviteRTCType, rtcRoomId, null)
+                            DLRTCInterceptorCall.instance.notifyInterceptorCall(acceptUserId, _inviteUserId, DLRTCDataMessageType.DLInviteRTCType.valueOf(model.rtcInviteType), rtcRoomId, null)
                             return
                         }
                         for (delegate in delegates) {

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Window;
@@ -41,16 +42,18 @@ public class CoinPusherGameHistoryDialog extends BaseDialog {
 
     private final Context mContext;
 
-    private final Integer roomId;
-    private final CoinPusherRoomDeviceInfo coinPusherRoomDeviceInfo;
+    private Integer roomId;
+    private int levelId;
+    private String nickname;
 
     private CoinPusherGameHistoryAdapter coinPusherCapsuleAdapter;
 
-    public CoinPusherGameHistoryDialog(Context context,CoinPusherRoomDeviceInfo coinPusherRoomDeviceInfo) {
+    public CoinPusherGameHistoryDialog(Context context,Integer _roomId,int _levelId,String _nickname) {
         super(context);
         this.mContext = context;
-        this.roomId = coinPusherRoomDeviceInfo.getRoomId();
-        this.coinPusherRoomDeviceInfo = coinPusherRoomDeviceInfo;
+        this.roomId = _roomId;
+        this.levelId = _levelId;
+        this.nickname = _nickname;
         initView();
         startRefreshDataInfo();
     }
@@ -58,10 +61,8 @@ public class CoinPusherGameHistoryDialog extends BaseDialog {
     private void initView() {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         binding = DataBindingUtil.inflate(inflater, R.layout.dialog_coinpusher_list_history, null, false);
-        if(coinPusherRoomDeviceInfo!=null){
-            int levelId = coinPusherRoomDeviceInfo.getLevelId();
-            String nickname = coinPusherRoomDeviceInfo.getNickname();
-            binding.tvTitle.setText(String.format(StringUtils.getString(R.string.playfun_coinpusher_history_text2),String.valueOf(levelId+" "+nickname)));
+        if(!TextUtils.isEmpty(nickname)){
+            binding.tvTitle.setText(String.format(StringUtils.getString(R.string.playfun_coinpusher_history_text2), levelId + " " + nickname));
         }
         //支持LiveData绑定xml，数据改变，UI自动会更新
         binding.setLifecycleOwner(this);

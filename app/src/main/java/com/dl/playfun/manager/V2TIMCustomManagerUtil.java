@@ -3,8 +3,13 @@ package com.dl.playfun.manager;
 import android.util.Log;
 
 import com.blankj.utilcode.util.ObjectUtils;
+import com.blankj.utilcode.util.StringUtils;
+import com.dl.playfun.R;
+import com.dl.playfun.entity.CallGameCoinPusherEntity;
+import com.dl.playfun.event.CallingToGamePlayingEvent;
 import com.dl.playfun.event.CoinPusherGamePlayingEvent;
 import com.google.gson.reflect.TypeToken;
+import com.tencent.custom.tmp.CustomDlTempMessage;
 import com.tencent.qcloud.tuicore.custom.CustomConstants;
 import com.tencent.qcloud.tuicore.custom.CustomConvertUtils;
 import com.tencent.qcloud.tuicore.custom.entity.CustomBaseEntity;
@@ -24,6 +29,28 @@ import me.goldze.mvvmhabit.bus.RxBus;
  */
 public class V2TIMCustomManagerUtil {
     private static final String TAG = "V2TIMCustomManagerUtil";
+
+    /**
+    * @Desc TODO(创建消息模板)
+    * @author 彭石林
+    * @parame [msgModuleName, customMsgType, customMsgBody]
+    * @return com.tencent.custom.tmp.CustomDlTempMessage
+    * @Date 2022/11/23
+    */
+    public static CustomDlTempMessage buildDlTempMessage(String msgModuleName,String customMsgType,Object customMsgBody){
+        CustomDlTempMessage.MsgBodyInfo msgBodyInfo = new CustomDlTempMessage.MsgBodyInfo();
+        msgBodyInfo.setCustomMsgType(customMsgType);
+        msgBodyInfo.setCustomMsgBody(customMsgBody);
+        CustomDlTempMessage.MsgModuleInfo msgModuleInfo = new CustomDlTempMessage.MsgModuleInfo();
+        msgModuleInfo.setMsgModuleName(msgModuleName);
+        msgModuleInfo.setContentBody(msgBodyInfo);
+        CustomDlTempMessage customDlTempMessage = new CustomDlTempMessage();
+        customDlTempMessage.setContentBody(msgModuleInfo);
+        customDlTempMessage.setLanguage(StringUtils.getString(R.string.playfun_local_language));
+        return customDlTempMessage;
+    }
+
+
     /**
     * @Desc TODO(推币机模块处理)
     * @author 彭石林
@@ -54,6 +81,27 @@ public class V2TIMCustomManagerUtil {
                             BigDecimal goldNumberDecimal = new BigDecimal(String.valueOf(ObjectUtils.getOrDefault(startWinning.get("goldNumber"),0)));
                             BigDecimal totalGoldDecimal = new BigDecimal(String.valueOf(ObjectUtils.getOrDefault(startWinning.get("totalGold"),0)));
                             RxBus.getDefault().post(new CoinPusherGamePlayingEvent(CustomConstants.CoinPusher.DROP_COINS,goldNumberDecimal.intValue(),totalGoldDecimal.intValue()));
+                        }
+                    }else if(CustomConvertUtils.ContainsMessageModuleKey(pushCoinGame,CustomConstants.Message.CUSTOM_MSG_KEY,CustomConstants.CoinPusher.CALL_GO_GAME_WINNING)){
+                        //通话中转到游戏
+                        Map<String,Object> callGoGame = CustomConvertUtils.ConvertMassageModule(pushCoinGame,CustomConstants.Message.CUSTOM_MSG_KEY,CustomConstants.CoinPusher.CALL_GO_GAME_WINNING,CustomConstants.Message.CUSTOM_MSG_BODY);
+                        if(ObjectUtils.isNotEmpty(callGoGame)){
+                            CallGameCoinPusherEntity callGameCoinPusherEntity = new CallGameCoinPusherEntity();
+                            callGameCoinPusherEntity.setState(String.valueOf(callGoGame.get("state")));
+                            callGameCoinPusherEntity.setCircuses(Boolean.getBoolean(String.valueOf(callGoGame.get("circuses"))));
+                            callGameCoinPusherEntity.setClientWsRtcId(String.valueOf(callGoGame.get("clientWsRtcId")));
+                            callGameCoinPusherEntity.setStreamUrl(String.valueOf(callGoGame.get("streamUrl")));
+                            callGameCoinPusherEntity.setTotalGold(20);
+                            //callGameCoinPusherEntity.setTotalGold(Integer.parseInt(callGoGame.get("totalGold").toString()));
+                            //callGameCoinPusherEntity.setCountdown(Long.getLong(callGoGame.get("countdown").toString()));
+                            BigDecimal levelId = new BigDecimal(String.valueOf(ObjectUtils.getOrDefault(callGoGame.get("levelId"),0)));
+                            callGameCoinPusherEntity.setLevelId(levelId.intValue());
+                            callGameCoinPusherEntity.setNickname(String.valueOf(callGoGame.get("nickname")));
+                            BigDecimal payGameMoney = new BigDecimal(String.valueOf(ObjectUtils.getOrDefault(callGoGame.get("payGameMoney"),0)));
+                            callGameCoinPusherEntity.setPayGameMoney(payGameMoney.intValue());
+                            BigDecimal roomId = new BigDecimal(String.valueOf(ObjectUtils.getOrDefault(callGoGame.get("roomId"),0)));
+                            callGameCoinPusherEntity.setRoomId(roomId.intValue());
+                            RxBus.getDefault().post(new CallingToGamePlayingEvent(callGameCoinPusherEntity));
                         }
                     }
                 }

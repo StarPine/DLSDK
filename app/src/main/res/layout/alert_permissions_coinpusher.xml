@@ -34,7 +34,7 @@
                 android:layout_marginEnd="48dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="為了使用語音、錄音等功能，請先同意麥克風權限"
+                android:text="@string/playfun_permissions_video2"
                 android:textColor="@color/toolbar_title_color"
                 android:textSize="13dp"
                 />

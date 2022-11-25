@@ -59,6 +59,7 @@ class DLRTCStartShowUIManager : DLRTCStartManagerDelegate, V2TIMSimpleMsgListene
         if(initFlag){
             return
         }
+        initFlag = true
         mMediaPlayHelper = MediaPlayHelper(mContext)
         DLRTCStartManager.instance.addRtcListener(this)
         DLRTCIMSignallingManager.getInstance().addSimpleMsgListener(this)
@@ -115,8 +116,8 @@ class DLRTCStartShowUIManager : DLRTCStartManagerDelegate, V2TIMSimpleMsgListene
                     intent.putExtra(DLRTCCallingConstants.PARAM_NAME_ROLE, DLRTCCalling.Role.CALL)
                     intent.putExtra(DLRTCCallingConstants.DLRTCAcceptUserID, inviteUser)
                     intent.putExtra(DLRTCCallingConstants.DLRTCInviteSelf,false)
+                    intent.putExtra(DLRTCCallingConstants.RTCInviteRoomID,roomId)
                     intent.putExtra("userProfile", data)
-                    intent.putExtra("roomId", roomId)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     mContext.startActivity(intent)
                     DLRTCCallService.start(mContext)
@@ -189,6 +190,7 @@ class DLRTCStartShowUIManager : DLRTCStartManagerDelegate, V2TIMSimpleMsgListene
                 MPTimber.tag(TAG_LOG).e("拒绝邀请")
                 DLRTCInternalListenerManager.instance.onReject(rtcModel.acceptUserId)
                 initParams()
+                exitRTCRoom()
                 DLRTCStartManager.instance.mContext?.let { DLRTCCallService.stop(it) }
                 DLRTCStartManager.instance.RTCRoomExitRoom()
             }
@@ -271,6 +273,7 @@ class DLRTCStartShowUIManager : DLRTCStartManagerDelegate, V2TIMSimpleMsgListene
                 intent.putExtra(DLRTCCallingConstants.PARAM_NAME_ROLE, DLRTCCalling.Role.CALLED)
                 intent.putExtra(DLRTCCallingConstants.DLRTCAcceptUserID, dLRTCStartModel.acceptUserId)
                 intent.putExtra(DLRTCCallingConstants.DLRTCInviteSelf,false)
+                intent.putExtra(DLRTCCallingConstants.RTCInviteRoomID,dLRTCStartModel.rtcInviteRoomId)
                 intent.putExtra("roomId", dLRTCStartModel.rtcInviteRoomId)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 mContext!!.startActivity(intent)

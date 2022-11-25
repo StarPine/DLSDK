@@ -31,7 +31,50 @@ import retrofit2.http.Query;
  */
 
 public interface ApiService {
-    
+
+    /**
+    * @Desc TODO(更新通话状态)
+    * @author 彭石林
+    * roomId	否	Integer	房间ID
+     * roomIdStr	否	String	字符串形式的房间ID
+     * eventType	是	Integer	事件类型(取值见下方)
+    * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
+    * @Date 2022/11/24
+    */
+    @POST("calling/updateCallingStatus")
+    Observable<BaseResponse> updateCallingStatus(@Body RequestBody requestBody);
+    /**
+    * @Desc TODO(新的通话接口)
+    * @author 彭石林
+    * callingType	是	Integer	通话类型：1=语音，2=视频
+     * inviterImId	是	String	拔打人IM ID
+     * receiverImId	是	String	接收人IM ID
+     * callingSource	否	Integer	通话来源:0无;1视讯派对;2视讯推送
+     * callingSourceId	否	Long	通话来源ID：视讯推送时传videoCallPushLogId
+    * @Date 2022/11/24
+    */
+    @POST("calling/call")
+    Observable<BaseDataResponse<CallUserRoomInfoEntity>> callingInviteUser(@Body RequestBody requestBody);
+    /**
+    * @Desc TODO(通话时的心跳保活，每10秒调用一次，挂断后停止调用)
+    * @author 彭石林
+    * @parame [requestBody]
+    * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
+    * @Date 2022/11/24
+    */
+    @POST("calling/keepAlive")
+    Observable<BaseResponse> callingKeepAlive(@Body RequestBody requestBody);
+    /**
+    * @Desc TODO(查看用户资料)
+    * @author 彭石林
+    * @parame [user] userId	否	Integer	用户ID
+     * imId	否	String	用户的IMID
+    * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseDataResponse>
+    * @Date 2022/11/24
+    */
+    @GET("calling/user/getUserInfo")
+    Observable<BaseDataResponse<CallUserInfoEntity>> callingUserInfo(@Query("userId") Integer userId, @Query("imId") String imId);
+
     /**
     * @Desc TODO(不喜欢某个电台)
     * @author 彭石林
@@ -143,6 +186,21 @@ public interface ApiService {
     @FormUrlEncoded
     Observable<BaseResponse> mediaGalleryPay(@Field("msgKey")String msgKey, @Field("toUserId") Integer toUserId);
 
+
+
+    /**
+    * @Desc TODO(通话-进入推币机退出围观)
+    * @author 彭石林
+     *  roomId	是	int	房间号
+     *     toUserId	是	int	对方用户ID
+     *     type	是	int	类型 1进入 2退
+    * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
+    * @Date 2022/11/22
+    */
+    @Headers(RetrofitHeadersConfig.PlayChat_API_URL)
+    @POST("api/iscan/watchRoom")
+    @FormUrlEncoded
+    Observable<BaseResponse> coinPusherWatchRoom(@Field("roomId") Integer roomId,@Field("toUserId") Integer toUserId,@Field("type") int type);
     /**
     * @Desc TODO(推币机-历史记录)
     * @author 彭石林

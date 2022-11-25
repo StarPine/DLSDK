@@ -95,18 +95,23 @@ public class CoinPusherDialogAdapter {
      * @return android.app.Dialog
      * @Date 2022/9/6
      */
-    public static Dialog getDialogPermissions(Context mContext,@StringRes int ContentResId,CoinPusherDialogListener coinPusherDialogListener){
+    public static Dialog getDialogPermissions(Context mContext,@StringRes int ContentResId,PermissionDialogListener permissionDialogListener){
         Dialog dialog = new Dialog(mContext);
         dialog.setCancelable(true);
         LayoutInflater inflater = LayoutInflater.from(mContext);
         AlertPermissionsCoinpusherBinding binding = DataBindingUtil.inflate(inflater, R.layout.alert_permissions_coinpusher, null, false);
         binding.tvSub.setOnClickListener(v -> {
-            if(coinPusherDialogListener!=null){
-                coinPusherDialogListener.onConfirm(dialog);
+            if(permissionDialogListener!=null){
+                permissionDialogListener.callback(true);
             }
         });
         binding.tvTitle.setText(ContentResId);
-        binding.imgClose.setOnClickListener(v -> dialog.dismiss());
+        binding.imgClose.setOnClickListener(v -> {
+            if(permissionDialogListener!=null){
+                permissionDialogListener.callback(false);
+            }
+            dialog.dismiss();
+        });
         //设置背景透明,去四个角
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         dialog.setContentView(binding.getRoot());
@@ -129,6 +134,10 @@ public class CoinPusherDialogAdapter {
         default void onConfirm(Dialog dialog) {
 
         }
+    }
+
+    public interface PermissionDialogListener{
+        void callback(boolean _success);
     }
 
 

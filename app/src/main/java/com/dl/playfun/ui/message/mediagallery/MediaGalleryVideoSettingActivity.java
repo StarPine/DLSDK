@@ -131,8 +131,10 @@ public class MediaGalleryVideoSettingActivity extends BaseActivity<ActivitySnaps
         if(ObjectUtils.isNotEmpty(localCheckItemEntity)){
             checkItemEntity = localCheckItemEntity;
         }else{
-            checkItemEntity = mediaPriceTmpConfig.getContent().get(0);
-            configId = mediaPriceTmpConfig.getConfigId();
+            if(mediaPriceTmpConfig!=null){
+                checkItemEntity = mediaPriceTmpConfig.getContent().get(0);
+                configId = mediaPriceTmpConfig.getConfigId();
+            }
         }
 
     }

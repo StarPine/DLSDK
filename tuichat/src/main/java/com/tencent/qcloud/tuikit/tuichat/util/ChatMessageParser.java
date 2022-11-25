@@ -102,9 +102,7 @@ public class ChatMessageParser {
         if (message != null) {
             message.setCommonAttribute(v2TIMMessage);
             message.onProcessMessage(v2TIMMessage);
-            Log.e("解析完成的自定义消息", String.valueOf((message.getV2TIMMessage().toString())));
         }
-        Log.e("解析完成的自定义消息", String.valueOf((message == null)));
         return message;
     }
 

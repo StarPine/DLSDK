@@ -44,6 +44,8 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.ActivityCallAudioChatingBinding;
 import com.dl.playfun.entity.AudioCallingBarrageEntity;
+import com.dl.playfun.entity.CallGameCoinPusherEntity;
+import com.dl.playfun.entity.CallUserInfoEntity;
 import com.dl.playfun.entity.CallingInfoEntity;
 import com.dl.playfun.entity.CoinPusherDataInfoEntity;
 import com.dl.playfun.entity.CrystalDetailsConfigEntity;
@@ -55,6 +57,7 @@ import com.dl.playfun.kl.viewmodel.AudioCallChatingItemViewModel;
 import com.dl.playfun.kl.viewmodel.AudioCallChatingViewModel;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.manager.LocaleManager;
+import com.dl.playfun.manager.V2TIMCustomManagerUtil;
 import com.dl.playfun.ui.coinpusher.CoinPusherGameActivity;
 import com.dl.playfun.ui.coinpusher.GameCallEntity;
 import com.dl.playfun.ui.coinpusher.dialog.CoinPusherRoomListDialog;
@@ -71,6 +74,7 @@ import com.dl.rtc.calling.DLRTCFloatWindowService;
 import com.dl.rtc.calling.base.DLRTCCalling;
 import com.dl.rtc.calling.model.DLRTCCallingConstants;
 import com.dl.rtc.calling.model.DLRTCDataMessageType;
+import com.dl.rtc.calling.model.DLRTCSignalingManager;
 import com.google.gson.reflect.TypeToken;
 import com.opensource.svgaplayer.SVGACallback;
 import com.opensource.svgaplayer.SVGAImageView;
@@ -78,9 +82,13 @@ import com.opensource.svgaplayer.SVGAParser;
 import com.opensource.svgaplayer.SVGASoundManager;
 import com.opensource.svgaplayer.SVGAVideoEntity;
 import com.tencent.custom.GiftEntity;
+import com.tencent.custom.tmp.CustomDlTempMessage;
 import com.tencent.qcloud.tuicore.Status;
+import com.tencent.qcloud.tuicore.custom.CustomConstants;
 import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.MyImageSpan;
+import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -110,21 +118,15 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
 
     private int mTimeCount;
     private boolean isRestart;
-    //每个10秒+1
-    private int mTimeTen;
-    private int minuteTime;
 
     private SVGAImageView giftEffects;
 
     private Runnable timerRunnable = null;
-    private Handler mHandler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(@NonNull Message msg) {
-            return false;
-        }
-    });
+    private Handler mHandler = new Handler(msg -> false);
     private ObjectAnimator rotation;
     private Timer timer;
+    //对方用户信息
+    private CallUserInfoEntity _callUserInfoEntity;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -200,7 +202,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         mTimeCount = intent.getIntExtra("timeCount", 0);
         isRestart = intent.getBooleanExtra("isRestart", false);
         barrageInfo = intent.getStringExtra("audioCallingBarrage");
-
+        _callUserInfoEntity = (CallUserInfoEntity)intent.getSerializableExtra("_callUserInfoEntity");
     }
 
     @Override
@@ -220,6 +222,12 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         viewModel.fromUserId = inviterImId;
         viewModel.toUserId = receiverImId;
         viewModel.getCallingInfo(roomId, inviterImId, receiverImId);
+
+        if(mRole == DLRTCCalling.Role.CALL){
+            viewModel.coinPusherRoomShow.set(true);
+        }
+        viewModel.otherUserInfoField.set(_callUserInfoEntity);
+        viewModel.currentUserInfoField.set(ConfigManager.getInstance().getAppRepository().readUserData());
     }
 
     /**
@@ -277,7 +285,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
     //创建悬浮窗视图
     private AudioFloatCallView createFloatView() {
         String[] userIds = new String[]{receiverImId};
-        if (viewModel.leftUserInfoField.get() == null){
+        if (viewModel.otherUserInfoField.get() == null){
             return null;
         }
         ArrayList<AudioCallingBarrageEntity> audioCallChatingItemViewModelList = new ArrayList<>();
@@ -289,7 +297,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
             audioCallChatingItemViewModelList.add(audioCallingBarrageEntity);
         }
         return new AudioFloatCallView(this, mRole, DLRTCCalling.Type.AUDIO, userIds, inviterImId,
-                null, false,viewModel.leftUserInfoField.get(),mTimeCount,roomId, audioCallChatingItemViewModelList);
+                null, false,viewModel.otherUserInfoField.get(),mTimeCount,roomId, audioCallChatingItemViewModelList);
     }
 
     private void requestSettingCanDrawOverlays() {
@@ -433,7 +441,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                     public void sendGiftClick(Dialog dialog, int number, GiftBagEntity.giftEntity giftEntity) {
                         dialog.dismiss();
                         AppContext.instance().logEvent(AppsFlyerEvent.voicecall_send_gift);
-                        viewModel.sendUserGift(dialog, giftEntity, viewModel.leftUserInfoField.get().getId(), number);
+                        viewModel.sendUserGift(dialog, giftEntity, viewModel.otherUserInfoField.get().getId(), number);
                     }
 
                     @Override
@@ -448,14 +456,45 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         });
         //弹出推币机选择弹窗
         viewModel.uc.coinPusherRoomEvent.observe(this, unused -> {
+            if(viewModel.coinPusherRoomShow.get()){
+                CallGameCoinPusherEntity _callGameCoinPusherEntity = viewModel._callGameCoinPusherEntity;
+                if(_callGameCoinPusherEntity != null){
+                    Intent intent = CoinPusherGameActivity.getStartActivityIntent(mContext,_callGameCoinPusherEntity.getClientWsRtcId()
+                            ,_callGameCoinPusherEntity.getStreamUrl(),_callGameCoinPusherEntity.getTotalGold(),_callGameCoinPusherEntity.getPayGameMoney(),30,10
+                            ,_callGameCoinPusherEntity.getRoomId(),_callGameCoinPusherEntity.getLevelId(),_callGameCoinPusherEntity.getNickname());
+                    intent.putExtra("_circusesStatus",true);
+                    //创建玩游戏模型
+                    GameCallEntity gameCallEntity = new GameCallEntity();
+                    gameCallEntity.setRoomId(viewModel.roomId);
+                    gameCallEntity.setInviteUserId(viewModel.fromUserId);
+                    gameCallEntity.setAcceptUserId(viewModel.toUserId);
+                    gameCallEntity.setCallingRole(mRole);
+                    gameCallEntity.setCallingType(DLRTCDataMessageType.DLInviteRTCType.dl_rtc_audio);
+                    gameCallEntity.setCalling(true);
+                    if(viewModel.audioCallingInfoEntity.get()!=null){
+                        CallingInfoEntity callingInviteInfo = viewModel.audioCallingInfoEntity.get();
+                        if(Objects.equals(viewModel.fromUserId , callingInviteInfo.getFromUserProfile().getImId())){
+                            gameCallEntity.setNickname(callingInviteInfo.getFromUserProfile().getNickname());
+                            gameCallEntity.setAvatar(callingInviteInfo.getFromUserProfile().getAvatar());
+                        }else{
+                            gameCallEntity.setNickname(callingInviteInfo.getToUserProfile().getNickname());
+                            gameCallEntity.setAvatar(callingInviteInfo.getToUserProfile().getAvatar());
+                        }
+                    }
+                    startActivity(intent);
+                    return;
+                }
+            }
+
             //弹出推币机选择弹窗
             CoinPusherRoomListDialog coinersDialog = new CoinPusherRoomListDialog(mContext);
             coinersDialog.setDialogEventListener(new CoinPusherRoomListDialog.DialogEventListener() {
                 @Override
                 public void startViewing(CoinPusherDataInfoEntity itemEntity) {
                     coinersDialog.dismiss();
-                    Intent intent = new Intent(mContext, CoinPusherGameActivity.class);
-                    intent.putExtra("CoinPusherInfo",itemEntity);
+                    Intent intent = CoinPusherGameActivity.getStartActivityIntent(mContext,itemEntity.getClientWsRtcId()
+                            ,itemEntity.getRtcUrl(),itemEntity.getTotalGold(),itemEntity.getRoomInfo().getMoney(),itemEntity.getOutTime(),itemEntity.getCountdown()
+                            ,itemEntity.getRoomInfo().getRoomId(),itemEntity.getRoomInfo().getLevelId(),itemEntity.getRoomInfo().getNickname());
                     //创建玩游戏模型
                     GameCallEntity gameCallEntity = new GameCallEntity();
                     gameCallEntity.setRoomId(viewModel.roomId);
@@ -475,6 +514,21 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                         }
                     }
                     intent.putExtra("GameCallEntity",gameCallEntity);
+                    CallGameCoinPusherEntity callGameCoinPusherEntity = new CallGameCoinPusherEntity();
+                    callGameCoinPusherEntity.setState(CallGameCoinPusherEntity.enterGame);
+                    callGameCoinPusherEntity.setCircuses(false);
+                    callGameCoinPusherEntity.setRoomId(itemEntity.getRoomInfo().getRoomId());
+                    callGameCoinPusherEntity.setClientWsRtcId(itemEntity.getClientWsRtcId());
+                    callGameCoinPusherEntity.setStreamUrl(itemEntity.getRtcUrl());
+                    callGameCoinPusherEntity.setTotalGold(itemEntity.getTotalGold());
+                    callGameCoinPusherEntity.setCountdown(itemEntity.getCountdown());
+                    callGameCoinPusherEntity.setLevelId(itemEntity.getRoomInfo().getLevelId());
+                    callGameCoinPusherEntity.setNickname(itemEntity.getRoomInfo().getNickname());
+                    callGameCoinPusherEntity.setPayGameMoney(itemEntity.getRoomInfo().getMoney());
+
+                    CustomDlTempMessage customDlTempMessage = V2TIMCustomManagerUtil.buildDlTempMessage(CustomConstants.CoinPusher.MODULE_NAME,CustomConstants.CoinPusher.CALL_GO_GAME_WINNING,callGameCoinPusherEntity);
+                    TUIMessageBean messageInfo = ChatMessageBuilder.buildCustomMessage(GsonUtils.toJson(customDlTempMessage), null, null);
+                    DLRTCSignalingManager.INSTANCE.sendC2CMessage(messageInfo.getV2TIMMessage(),mRole ==  DLRTCCalling.Role.CALL?  receiverImId: inviterImId);
                     startActivity(intent);
                 }
 
@@ -551,7 +605,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
             ImageView giftNumImg = streamerView.findViewById(R.id.gift_num_img);
             //文案
             TextView tipText = streamerView.findViewById(R.id.tip_text);
-            String sexText = viewModel.leftUserInfoField.get().getNickname();
+            String sexText = viewModel.otherUserInfoField.get().getNickname();
             String messageText = StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt1);
             String lastText = StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt17);
             String itemTextMessage = sexText + "\n" + messageText + lastText;
@@ -562,7 +616,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
             tipText.setText(stringBuilder);
             Glide.with(mContext)
                     .asBitmap()
-                    .load(StringUtil.getFullImageUrl(viewModel.rightUserInfoField.get().getAvatar()))
+                    .load(StringUtil.getFullImageUrl(viewModel.otherUserInfoField.get().getAvatar()))
                     .error(R.drawable.default_avatar)
                     .placeholder(R.drawable.default_avatar)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -705,7 +759,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
             TextView tipText = streamerView.findViewById(R.id.tip_text);
             String sexText = StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt17);
             String messageText = StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt1);
-            String itemTextMessage = sexText + messageText + "\n" + viewModel.leftUserInfoField.get().getNickname();
+            String itemTextMessage = sexText + messageText + "\n" + viewModel.otherUserInfoField.get().getNickname();
             SpannableString stringBuilder = new SpannableString(itemTextMessage);
             stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint2)), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 1, 3, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -713,7 +767,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
             tipText.setText(stringBuilder);
             Glide.with(mContext)
                     .asBitmap()
-                    .load(StringUtil.getFullImageUrl(viewModel.rightUserInfoField.get().getAvatar()))
+                    .load(StringUtil.getFullImageUrl(viewModel.otherUserInfoField.get().getAvatar()))
                     .error(R.drawable.default_avatar)
                     .placeholder(R.drawable.default_avatar)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -941,9 +995,9 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         viewModel.maleTextLayoutSHow.set(isShow);
         //通知女生男生这边余额不足
             if (isShow){
-                viewModel.getTips(viewModel.leftUserInfoField.get().getId(),2,"1");
+                viewModel.getTips(viewModel.otherUserInfoField.get().getId(),2,"1");
             }else {
-                viewModel.getTips(viewModel.leftUserInfoField.get().getId(),2,"0");
+                viewModel.getTips(viewModel.otherUserInfoField.get().getId(),2,"0");
             }
     }
 

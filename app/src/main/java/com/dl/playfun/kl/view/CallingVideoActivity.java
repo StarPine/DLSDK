@@ -28,6 +28,7 @@ import android.widget.TextView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -56,6 +57,7 @@ import com.dl.playfun.kl.viewmodel.VideoCallViewModel;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.coinpusher.CoinPusherGameActivity;
 import com.dl.playfun.ui.coinpusher.GameCallEntity;
+import com.dl.playfun.ui.coinpusher.dialog.CoinPusherDialogAdapter;
 import com.dl.playfun.ui.coinpusher.dialog.CoinPusherRoomListDialog;
 import com.dl.playfun.ui.dialog.GiftBagDialog;
 import com.dl.playfun.utils.AutoSizeUtils;
@@ -78,6 +80,7 @@ import com.faceunity.nama.FURenderer;
 import com.faceunity.nama.data.FaceUnityDataFactory;
 import com.faceunity.nama.ui.FaceUnityView;
 import com.google.gson.Gson;
+import com.luck.picture.lib.permissions.PermissionChecker;
 import com.opensource.svgaplayer.SVGACallback;
 import com.opensource.svgaplayer.SVGAImageView;
 import com.opensource.svgaplayer.SVGAParser;
@@ -125,7 +128,6 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
 
     private int mTimeCount;
     //每个10秒+1
-    private int mTimeTen;
     private Timer timer;
 
     private SVGAImageView giftEffects;
@@ -274,7 +276,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         }
         launcherPermissionArray.launch(new String[]{Manifest.permission.RECORD_AUDIO,Manifest.permission.CAMERA});
     }
-
+    private int permissionCount = 0;
     //多个权限申请监听
     ActivityResultLauncher<String[]> launcherPermissionArray = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(),
             result -> {
@@ -286,12 +288,26 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                             DLRTCVideoManager.Companion.getInstance().openCamera(true, videoLayout.getVideoView());
                         }
                     } else {
+                        permissionCount++;
                         //有权限没有获取到的动作
-                        //alertPermissions();
+                        alertPermissions(R.string.playfun_permissions_video2);
                     }
                 }
             });
-
+    private void alertPermissions(@StringRes int stringResId){
+        //获取语音权限失败
+        CoinPusherDialogAdapter.getDialogPermissions(this, stringResId, _success -> {
+            if(_success){
+                PermissionChecker.launchAppDetailsSettings(mContext);
+            }else {
+                if(permissionCount>=2){
+                    viewModel.hangup();
+                    return;
+                }
+                launcherPermissionArray.launch(new String[]{Manifest.permission.RECORD_AUDIO,Manifest.permission.CAMERA});
+            }
+        }).show();
+    }
     @Override
     public void initViewObservable() {
         super.initViewObservable();
@@ -408,8 +424,9 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                 @Override
                 public void startViewing(CoinPusherDataInfoEntity itemEntity) {
                     coinersDialog.dismiss();
-                    Intent intent = new Intent(mContext, CoinPusherGameActivity.class);
-                    intent.putExtra("CoinPusherInfo",itemEntity);
+                    Intent intent = CoinPusherGameActivity.getStartActivityIntent(mContext,itemEntity.getClientWsRtcId()
+                            ,itemEntity.getRtcUrl(),itemEntity.getTotalGold(),itemEntity.getRoomInfo().getMoney(),itemEntity.getOutTime(),itemEntity.getCountdown()
+                            ,itemEntity.getRoomInfo().getRoomId(),itemEntity.getRoomInfo().getLevelId(),itemEntity.getRoomInfo().getNickname());
                     //创建玩游戏模型
                     GameCallEntity gameCallEntity = new GameCallEntity();
                     gameCallEntity.setRoomId(viewModel.roomId);

@@ -15,19 +15,29 @@ public abstract class BaseDisposableObserver<T extends BaseResponse> extends Dis
 
     @Override
     public void onNext(T t) {
-        if (t.isSuccess()) {
-            onSuccess(t);
-        }else if (t.isInfo()) {
-            onSuccess(t);
-        } else if (t.isFail()) {
-            ApiFailException apiFailException = new ApiFailException(t.getCode(), t.getMessage());
-            onError(apiFailException);
-        } else if (t.isError()) {
-            ApiErrorException apiErrorException = new ApiErrorException(t.getCode(), t.getMessage());
-            onError(apiErrorException);
-        } else {
-            ApiFailException apiFailException = new ApiFailException(t.getCode(), t.getMessage());
-            onError(apiFailException);
+        //新版处理。1.4.80 错误码。
+        if(t.getErrorCode()!=null){
+            if(t.getErrorCode()==0){
+                onSuccess(t);
+            }else{
+                ApiFailException apiFailException = new ApiFailException(t.getErrorCode(), t.getErrorMsg());
+                onError(apiFailException);
+            }
+        }else{
+            if (t.isSuccess()) {
+                onSuccess(t);
+            }else if (t.isInfo()) {
+                onSuccess(t);
+            } else if (t.isFail()) {
+                ApiFailException apiFailException = new ApiFailException(t.getCode(), t.getMessage());
+                onError(apiFailException);
+            } else if (t.isError()) {
+                ApiErrorException apiErrorException = new ApiErrorException(t.getCode(), t.getMessage());
+                onError(apiErrorException);
+            } else {
+                ApiFailException apiFailException = new ApiFailException(t.getCode(), t.getMessage());
+                onError(apiFailException);
+            }
         }
     }
 

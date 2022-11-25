@@ -83,6 +83,7 @@
                 android:scaleType="fitXY"
                 android:src="@drawable/img_coinpusher_wiper"
                 binding:onClickCommand="@{gameViewModel.playPusherActClick}"
+                android:visibility="@{gameViewModel.circuseeStatus ? View.GONE : View.VISIBLE}"
                 />
         </LinearLayout>
         <RelativeLayout
@@ -250,6 +251,7 @@
             android:layout_marginBottom="10dp"
             android:layout_width="77dp"
             android:layout_height="77dp"
+            android:visibility="@{gameViewModel.circuseeStatus ? View.INVISIBLE : View.VISIBLE}"
             >
             <com.opensource.svgaplayer.SVGAImageView
                 android:id="@+id/svga_player"
@@ -285,7 +287,9 @@
             android:text="@string/playfun_coinpusher_game_text_2"
             android:textColor="#FFD84A"
             android:textSize="13sp"
-            tools:ignore="TextContrastCheck" />
+            tools:ignore="TextContrastCheck"
+            android:visibility="@{gameViewModel.circuseeStatus ? View.INVISIBLE : View.VISIBLE}"
+            />
         
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_alignParentEnd="true"

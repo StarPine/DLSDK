@@ -35,8 +35,10 @@ public class CustomConvertUtils {
         if(v2TIMCustomElem != null){
             if(v2TIMCustomElem.getData()!=null && v2TIMCustomElem.getData().length>0){
                 String customData = new String(v2TIMCustomElem.getData());
+                Log.e("当前IM消息格式解析：",String.valueOf(customData));
                 if (!TextUtils.isEmpty(customData)) {
                     Map<String, Object> mapData = new Gson().fromJson(customData, Map.class);
+                    Log.e("当前IM消息格式解析2：",String.valueOf(mapData));
                     if(null != mapData && !mapData.isEmpty()){
                         if(mapData.get(TUIConstants.Message.CUSTOM_BUSINESS_ID_KEY)!=null){
                             String businessID = String.valueOf(mapData.get(TUIConstants.Message.CUSTOM_BUSINESS_ID_KEY));
@@ -46,6 +48,9 @@ public class CustomConvertUtils {
                                     return null;
                                 }
                                 String contentBody = String.valueOf(mapData.get(CustomConstants.Message.CUSTOM_CONTENT_BODY));
+                                if(mapData.get(CustomConstants.Message.CUSTOM_CONTENT_BODY) instanceof Map){
+                                    return (Map<String, Object>) mapData.get(CustomConstants.Message.CUSTOM_CONTENT_BODY);
+                                }
                                 if(isJSONEmpty(contentBody)){
                                    return new Gson().fromJson(contentBody, Map.class);
                                 }
@@ -73,6 +78,9 @@ public class CustomConvertUtils {
         if(mapData.containsKey(key)){
             if(Objects.equals(mapData.get(key), moduleName)){
                 String coinPusherString = String.valueOf(mapData.get(contentKey));
+                if(mapData.get(contentKey) instanceof  Map){
+                    return (Map<String, Object>) mapData.get(contentKey);
+                }
                 if(CustomConvertUtils.isJSONEmpty(coinPusherString)){
                     return new Gson().fromJson(coinPusherString,Map.class);
                 }

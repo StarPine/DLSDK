@@ -26,6 +26,8 @@ public class GameCallEntity implements Serializable {
     //主动拨打 or 被动接听
     private DLRTCCalling.Role callingRole;
 
+
+
     private boolean isCalling;
 
     public String getAvatar() {

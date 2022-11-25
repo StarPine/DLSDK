@@ -137,8 +137,9 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                 @Override
                 public void startViewing(CoinPusherDataInfoEntity itemEntity) {
                     coinersDialog.dismiss();
-                    Intent intent = new Intent(mActivity, CoinPusherGameActivity.class);
-                    intent.putExtra("CoinPusherInfo",itemEntity);
+                    Intent intent = CoinPusherGameActivity.getStartActivityIntent(mActivity,itemEntity.getClientWsRtcId()
+                            ,itemEntity.getRtcUrl(),itemEntity.getTotalGold(),itemEntity.getRoomInfo().getMoney(),itemEntity.getOutTime(),itemEntity.getCountdown()
+                            ,itemEntity.getRoomInfo().getRoomId(),itemEntity.getRoomInfo().getLevelId(),itemEntity.getRoomInfo().getNickname());
                     startActivity(intent);
                 }
                 @Override
@@ -393,8 +394,9 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                 @Override
                 public void startViewing(CoinPusherDataInfoEntity itemEntity) {
                     coinersDialog.dismiss();
-                    Intent intent = new Intent(mActivity, CoinPusherGameActivity.class);
-                    intent.putExtra("CoinPusherInfo",itemEntity);
+                    Intent intent = CoinPusherGameActivity.getStartActivityIntent(mActivity,itemEntity.getClientWsRtcId()
+                            ,itemEntity.getRtcUrl(),itemEntity.getTotalGold(),itemEntity.getRoomInfo().getMoney(),itemEntity.getOutTime(),itemEntity.getCountdown()
+                            ,itemEntity.getRoomInfo().getRoomId(),itemEntity.getRoomInfo().getLevelId(),itemEntity.getRoomInfo().getNickname());
                     startActivity(intent);
                 }
 

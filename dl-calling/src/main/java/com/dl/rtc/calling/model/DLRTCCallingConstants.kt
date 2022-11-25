@@ -27,4 +27,6 @@ object DLRTCCallingConstants {
     const val DLRTCAcceptUserID = "dl_rtc_accept_user_id"  ///接受对端邀请的ID
     //当前是否是拨打人
     const val DLRTCInviteSelf = "dl_rtc_invite_self"
+    //通话房间ID
+    const val RTCInviteRoomID = "rtcInviteRoomId"
 }
