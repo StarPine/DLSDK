@@ -110,9 +110,11 @@ open class DLRTCVideoLayoutManager
      */
     open fun findCloudView(userId: String?): DLRTCVideoLayout? {
         if (userId == null) return null
-        for (layoutEntity in mVideoFactory!!.mLayoutEntityList!!) {
-            if (layoutEntity.userId == userId) {
-                return layoutEntity.layout
+        mVideoFactory!!.mLayoutEntityList?.apply {
+            for (layoutEntity in this) {
+                if (layoutEntity.userId == userId) {
+                    return layoutEntity.layout
+                }
             }
         }
         return null

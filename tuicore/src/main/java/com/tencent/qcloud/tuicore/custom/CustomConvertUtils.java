@@ -35,7 +35,6 @@ public class CustomConvertUtils {
         if(v2TIMCustomElem != null){
             if(v2TIMCustomElem.getData()!=null && v2TIMCustomElem.getData().length>0){
                 String customData = new String(v2TIMCustomElem.getData());
-                Log.e("当前IM消息格式解析：",String.valueOf(customData));
                 if (!TextUtils.isEmpty(customData)) {
                     Map<String, Object> mapData = new Gson().fromJson(customData, Map.class);
                     Log.e("当前IM消息格式解析2：",String.valueOf(mapData));

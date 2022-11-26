@@ -144,7 +144,6 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
         final TUIMessageBean msg = getItem(position);
-        Log.e("当前消息为：",msg.toString());
         if (holder instanceof MessageBaseHolder) {
             if (holder instanceof MessageContentHolder) {
                 ((MessageContentHolder) holder).isMultiSelectMode = isShowMultiSelectCheckBox;

@@ -29,7 +29,7 @@ public class CustomConstants {
         //落币数量
         public static final String DROP_COINS = "dropCoins";
         //通话中转到房间
-        public static final String CALL_GO_GAME_WINNING = "callGoGameWinning";
+        public static final String CALL_GO_GAME_WINNING = "callGoCoinPusherGame";
     }
     //照片、视频模块
     public static final class MediaGallery {

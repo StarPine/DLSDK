@@ -63,7 +63,7 @@
                     android:scaleType="centerCrop"
                     binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
                     binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
-                    binding:imageThumbPath="@{viewModel.callingInviteInfoField.userProfileInfo.avatar}"
+                    binding:imageThumbPath="@{viewModel.otherUserInfoField.avatar}"
                     binding:resizeH="@{35}"
                     binding:resizeW="@{35}"
                     />
@@ -86,7 +86,7 @@
                         android:gravity="left"
                         android:maxWidth="78dp"
                         android:singleLine="true"
-                        android:text="@={viewModel.callingInviteInfoField.userProfileInfo.nickname}"
+                        android:text="@={viewModel.otherUserInfoField.nickname}"
                         android:textColor="@color/white"
                         android:textSize="12sp" />
 
@@ -95,18 +95,10 @@
                         android:layout_height="13dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="2dp"
-                        android:src="@{viewModel.getVipGodsImg(viewModel.callingInviteInfoField)}"
-                        android:visibility="@{viewModel.getVipGodsImg(viewModel.callingInviteInfoField) == null?View.GONE:View.VISIBLE}"
+                        android:src="@{viewModel.getVipGodsImg(viewModel.otherUserInfoField)}"
+                        android:visibility="@{viewModel.getVipGodsImg(viewModel.otherUserInfoField) == null?View.GONE:View.VISIBLE}"
                         />
 
-                    <ImageView
-                        android:layout_width="31dp"
-                        android:layout_height="13dp"
-                        android:layout_marginStart="5dp"
-                        binding:imagePath="@{viewModel.gameUrl(viewModel.callingInviteInfoField.userProfileInfo.gameChannel)}"
-                        android:visibility="@{viewModel.isEmpty(viewModel.gameUrl(viewModel.callingInviteInfoField.userProfileInfo.gameChannel))?View.GONE:View.VISIBLE}"
-                        tools:src="@drawable/ic_vip"
-                        />
                 </LinearLayout>
 
                 <LinearLayout
@@ -124,7 +116,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="top"
                         android:includeFontPadding="false"
-                        android:text="@{viewModel.callingInviteInfoField.userProfileInfo.cityName}"
+                        android:text="@{viewModel.otherUserInfoField.cityName}"
                         android:textColor="#FF827692"
                         android:textSize="9sp" />
 
@@ -142,7 +134,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:includeFontPadding="false"
-                        android:text="@{viewModel.ageAndConstellation(viewModel.callingInviteInfoField)}"
+                        android:text="@{viewModel.ageAndConstellation(viewModel.otherUserInfoField)}"
                         android:textColor="#FF827692"
                         android:textSize="9sp" />
 
@@ -160,7 +152,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:includeFontPadding="false"
-                        android:text="@{SystemDictUtils.getOccupationById(safeUnbox(viewModel.callingInviteInfoField.userProfileInfo.occupationId))}"
+                        android:text="@{SystemDictUtils.getOccupationById(safeUnbox(viewModel.otherUserInfoField.occupationId))}"
                         android:textColor="#FF827692"
                         android:textSize="9sp" />
                 </LinearLayout>
@@ -228,7 +220,7 @@
                 android:layout_marginLeft="53dp"
                 android:layout_marginBottom="53dp"
                 android:src="@drawable/call_reject"
-                android:visibility="@{viewModel.isCalledWaitingBinding ? View.VISIBLE : View.GONE}"
+                android:visibility="@{viewModel.isCalledBinding ? View.VISIBLE : View.GONE}"
                 binding:onClickCommand="@{viewModel.rejectOnclick}" />
 
             <ImageView
@@ -239,7 +231,7 @@
                 android:layout_marginRight="53dp"
                 android:layout_marginBottom="53dp"
                 android:src="@drawable/call_accept"
-                android:visibility="@{viewModel.isCalledWaitingBinding ? View.VISIBLE : View.GONE}"
+                android:visibility="@{viewModel.isCalledBinding ? View.VISIBLE : View.GONE}"
                 binding:onClickCommand="@{viewModel.acceptOnclick}" />
         </RelativeLayout>
 
@@ -269,7 +261,7 @@
                     android:scaleType="centerCrop"
                     binding:imageErrorPlaceholderRes="@{R.drawable.default_avatar}"
                     binding:imagePlaceholderRes="@{R.drawable.default_avatar}"
-                    binding:imageThumbPath="@{viewModel.callingVideoInviteInfoField.avatar}" />
+                    binding:imageThumbPath="@{viewModel.otherUserInfoField.avatar}" />
 
                 <LinearLayout
                     android:id="@+id/name_layouts"
@@ -288,7 +280,7 @@
                         android:gravity="left"
                         android:maxWidth="78dp"
                         android:singleLine="true"
-                        android:text="@={viewModel.callingVideoInviteInfoField.nickname}"
+                        android:text="@={viewModel.otherUserInfoField.nickname}"
                         android:textColor="@color/white"
                         android:textSize="12sp" />
 
@@ -298,18 +290,10 @@
                         android:layout_height="13dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="2dp"
-                        android:src="@{viewModel.getVipGodsImg(viewModel.callingInviteInfoField)}"
-                        android:visibility="@{viewModel.getVipGodsImg(viewModel.callingInviteInfoField) == null?View.GONE:View.VISIBLE}"
+                        android:src="@{viewModel.getVipGodsImg(viewModel.otherUserInfoField)}"
+                        android:visibility="@{viewModel.getVipGodsImg(viewModel.otherUserInfoField) == null?View.GONE:View.VISIBLE}"
                         />
 
-                    <ImageView
-                        android:layout_width="31dp"
-                        android:layout_height="13dp"
-                        android:layout_marginStart="5dp"
-                        binding:imagePath="@{viewModel.gameUrl(viewModel.callingInviteInfoField.userProfileInfo.gameChannel)}"
-                        android:visibility="@{viewModel.isEmpty(viewModel.gameUrl(viewModel.callingInviteInfoField.userProfileInfo.gameChannel))?View.GONE:View.VISIBLE}"
-                        tools:src="@drawable/ic_vip"
-                        />
 
                 </LinearLayout>
 
@@ -328,7 +312,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="top"
                         android:includeFontPadding="false"
-                        android:text="@{viewModel.callingVideoInviteInfoField.cityName}"
+                        android:text="@{viewModel.otherUserInfoField.cityName}"
                         android:textColor="@color/white"
                         android:textSize="9sp" />
 
@@ -346,7 +330,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:includeFontPadding="false"
-                        android:text="@{viewModel.ageAndConstellation(viewModel.callingInviteInfoField)}"
+                        android:text="@{viewModel.ageAndConstellation(viewModel.otherUserInfoField)}"
                         android:textColor="@color/white"
                         android:textSize="9sp" />
 
@@ -364,7 +348,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:includeFontPadding="false"
-                        android:text="@{SystemDictUtils.getOccupationById(safeUnbox(viewModel.callingVideoInviteInfoField.occupationId))}"
+                        android:text="@{SystemDictUtils.getOccupationById(safeUnbox(viewModel.otherUserInfoField.occupationId))}"
                         android:textColor="@color/white"
                         android:textSize="9sp" />
                 </LinearLayout>
@@ -378,7 +362,7 @@
                     android:layout_marginEnd="5dp"
                     android:clickable="true"
                     android:src="@drawable/call_audio_follow"
-                    android:visibility="@{viewModel.collectedField==1?View.GONE:View.VISIBLE}"
+                    android:visibility="@{viewModel.collectedField ? View.GONE : View.VISIBLE}"
                     binding:onClickCommand="@{viewModel.addlikeOnClickCommand}" />
             </RelativeLayout>
             <TextView
@@ -589,6 +573,7 @@
                 android:layout_marginEnd="14dp"
                 android:layout_width="58dp"
                 android:layout_height="58dp"
+                android:visibility="@{viewModel.coinPusherRoomShow ? View.VISIBLE : View.GONE}"
                 android:src="@drawable/img_advert_coinpusher"
                 binding:onClickCommand="@{viewModel.coinPusherRoomClick}"
                 />

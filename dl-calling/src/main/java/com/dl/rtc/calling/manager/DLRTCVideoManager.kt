@@ -119,7 +119,6 @@ class DLRTCVideoManager : DLRTCCallingItFace {
 
                     override fun onProcessVideoFrame(src: TRTCCloudDef.TRTCVideoFrame, dest: TRTCCloudDef.TRTCVideoFrame): Int {
                         mFURenderer!!.cameraFacing = if (mIsUseFrontCamera) CameraFacingEnum.CAMERA_FRONT else CameraFacingEnum.CAMERA_BACK
-                        val start = System.nanoTime()
                         dest.texture.textureId = mFURenderer!!.onDrawFrameSingleInput(
                             src.texture.textureId,
                             src.width,
@@ -137,6 +136,38 @@ class DLRTCVideoManager : DLRTCCallingItFace {
         DLRTCStartManager.instance.mTRTCCloud!!.startLocalPreview(isFrontCamera, txCloudVideoView)
     }
 
+
+    fun updateLocalView(txCloudVideoView: TXCloudVideoView?){
+        if (txCloudVideoView == null) {
+            return
+        }
+        if (mIsFuEffect) {
+            DLRTCStartManager.instance.mTRTCCloud!!.setLocalVideoProcessListener(
+                TRTCCloudDef.TRTC_VIDEO_PIXEL_FORMAT_Texture_2D,
+                TRTCCloudDef.TRTC_VIDEO_BUFFER_TYPE_TEXTURE, object : TRTCCloudListener.TRTCVideoFrameListener {
+                    override fun onGLContextCreated() {
+                        mFURenderer!!.prepareRenderer(null)
+                    }
+
+                    override fun onProcessVideoFrame(src: TRTCCloudDef.TRTCVideoFrame, dest: TRTCCloudDef.TRTCVideoFrame): Int {
+                        mFURenderer!!.cameraFacing = if (mIsUseFrontCamera) CameraFacingEnum.CAMERA_FRONT else CameraFacingEnum.CAMERA_BACK
+                        dest.texture.textureId = mFURenderer!!.onDrawFrameSingleInput(
+                            src.texture.textureId,
+                            src.width,
+                            src.height
+                        )
+                        return 0
+                    }
+
+                    override fun onGLContextDestory() {
+                        mFURenderer!!.release()
+                    }
+
+                })
+        }
+        DLRTCStartManager.instance.mTRTCCloud!!.updateLocalView(txCloudVideoView)
+    }
+
     /**
      * 关闭相机流
      */
@@ -152,6 +183,15 @@ class DLRTCVideoManager : DLRTCCallingItFace {
             return
         }
         DLRTCStartManager.instance.mTRTCCloud!!.startRemoteView(userId,0, txCloudVideoView)
+    }
+    /**
+     * 更新渲染视频
+     */
+    fun updateRemoteView(userId: String?, txCloudVideoView: TXCloudVideoView?) {
+        if (txCloudVideoView == null) {
+            return
+        }
+        DLRTCStartManager.instance.mTRTCCloud!!.updateRemoteView(userId,0, txCloudVideoView)
     }
     /**
      * 关闭渲染视频

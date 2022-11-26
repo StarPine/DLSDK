@@ -369,16 +369,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                     if(event!=null){
                         CallGameCoinPusherEntity callGameCoinPusherEntity = event.getCallGameCoinPusherEntity();
                         if(callGameCoinPusherEntity!=null){
-                            Log.e("当前接受到推币机类型：",callGameCoinPusherEntity.toString());
-                            //进房
-                            if(Objects.equals(callGameCoinPusherEntity.getState(),CallGameCoinPusherEntity.enterGame)){
-                                //展示推币机入口
-                                coinPusherRoomShow.set(true);
-                                _callGameCoinPusherEntity = callGameCoinPusherEntity;
-                            }else if(Objects.equals(callGameCoinPusherEntity.getState(),CallGameCoinPusherEntity.leaveGame)){
-                                //退房
-                                coinPusherRoomShow.set(false);
-                            }
+                            uc.callingToGamePlayingEvent.postValue(callGameCoinPusherEntity);
                         }
                     }
 
@@ -582,7 +573,6 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                 if (msg != null && otherUserInfoField.get() != null) {
                     TUIMessageBean info = ChatMessageBuilder.buildMessage(msg);
                     if (info != null) {
-                        Log.e("当前语音聊天消息:",info.getMsgType() + "======="+info.toString());
                         switch (info.getMsgType()){
                             //文本类型消息
                             case 1:
@@ -623,7 +613,6 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                             //自定义消息类型
                             case 2:
                                 V2TIMCustomElem v2TIMCustomElem = info.getV2TIMMessage().getCustomElem();
-                                Log.e("语音当前消息是自定义消息2：",new String(v2TIMCustomElem.getData()));
                                 Map<String, Object> contentBody = CustomConvertUtils.CustomMassageConvertMap(v2TIMCustomElem);
                                 if (ObjectUtils.isNotEmpty(contentBody)) {
                                     Log.e("语音接受到的自定义讯息为", String.valueOf(contentBody));
@@ -654,7 +643,6 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                                                                 totalMinutes = callingStatusEntity.getTotalMinutes() * 60;
                                                                 totalMinutesRemaining = totalMinutes - TimeCount;
                                                                 callInfoLoaded = true;
-                                                                Log.e("当前通话收益",callingStatusEntity.toString());
                                                             }
 
                                                         }
@@ -824,6 +812,8 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<Void> startUpSayHiAnimotor = new SingleLiveEvent<>();
         //打开推币机弹窗
         public SingleLiveEvent<Void> coinPusherRoomEvent = new SingleLiveEvent<>();
+        //处理推币机信令转主线程
+        public SingleLiveEvent<CallGameCoinPusherEntity> callingToGamePlayingEvent = new SingleLiveEvent<>();
     }
 
     //追踪
