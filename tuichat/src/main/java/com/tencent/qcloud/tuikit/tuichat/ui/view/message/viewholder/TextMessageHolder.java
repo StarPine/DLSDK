@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
@@ -36,6 +37,8 @@ public class TextMessageHolder extends MessageContentHolder {
         }
         TextMessageBean textMessageBean = (TextMessageBean) msg;
         Log.e("当前消息为进入文本消息",textMessageBean.toString());
+        Log.e("当前自定义消息文本：",String.valueOf(new String(textMessageBean.getCustomElemData())));
+        Log.e("当前自定义消息文1本：", String.valueOf(V2TIMManager.getSignalingManager().getSignalingInfo(msg.getV2TIMMessage()) == null));
         if (isForwardMode || isReplyDetailMode || !textMessageBean.isSelf()) {
             int otherTextColorResId = TUIThemeManager.getAttrResId(msgBodyText.getContext(), R.attr.chat_other_msg_text_color);
             int otherTextColor = msgBodyText.getResources().getColor(otherTextColorResId);
@@ -61,16 +64,49 @@ public class TextMessageHolder extends MessageContentHolder {
             }
         }
 
-        msgContentFrame.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
+        msgContentFrame.setOnLongClickListener(view -> {
 //                mSelectableTextHelper.selectAll();
-                if (onItemClickListener != null) {
-                    onItemClickListener.onMessageLongClick(view, position, msg);
-                }
-                return true;
+            if (onItemClickListener != null) {
+                onItemClickListener.onMessageLongClick(view, position, msg);
             }
+            return true;
         });
+
+        //int actionType = Double.valueOf(String.valueOf(signallingData.get("actionType"))).intValue();
+        //int callType = Double.valueOf(String.valueOf(callData.get("call_type"))).intValue();
+
+//        if (msg.isSelf()) {
+//            itemView.findViewById(R.id.left_call_img).setVisibility(View.GONE);
+//            if (actionType == 1) {//发起通话
+//                itemView.findViewById(R.id.right_call_img).setBackgroundResource(callType == 1 ? R.drawable.custom_audio_right_img_1 : R.drawable.custom_video_right_img_1);
+//                itemView.findViewById(R.id.right_call_img).setVisibility(View.VISIBLE);
+//            } else if (actionType == 2) {//取消通话
+//                itemView.findViewById(R.id.right_call_img).setBackgroundResource(callType == 1 ? R.drawable.custom_audio_right_img_2 : R.drawable.custom_video_right_img_1);
+//                itemView.findViewById(R.id.right_call_img).setVisibility(View.VISIBLE);
+//            } else if (actionType == 4) {//接听电话
+//                itemView.findViewById(R.id.right_call_img).setBackgroundResource(callType == 1 ? R.drawable.custom_audio_right_img_2 : R.drawable.custom_video_right_img_1);
+//                itemView.findViewById(R.id.right_call_img).setVisibility(View.VISIBLE);
+//            } else if (actionType == 7) {//接听电话
+//                itemView.findViewById(R.id.right_call_img).setBackgroundResource(callType == 1 ? R.drawable.custom_audio_right_img_2 : R.drawable.custom_video_right_img_1);
+//                itemView.findViewById(R.id.right_call_img).setVisibility(View.VISIBLE);
+//            }
+//        } else {
+//            itemView.findViewById(R.id.right_call_img).setVisibility(View.GONE);
+//            if (actionType == 1) {//发起通话
+//                itemView.findViewById(R.id.left_call_img).setBackgroundResource(callType == 1 ? R.drawable.custom_audio_left_img_1 : R.drawable.custom_video_left_img_1);
+//                itemView.findViewById(R.id.left_call_img).setVisibility(View.VISIBLE);
+//            } else if (actionType == 2) {//取消通话
+//                itemView.findViewById(R.id.left_call_img).setBackgroundResource(callType == 1 ? R.drawable.custom_audio_left_img_2 : R.drawable.custom_video_left_img_1);
+//                itemView.findViewById(R.id.left_call_img).setVisibility(View.VISIBLE);
+//            } else if (actionType == 4) {//接听电话
+//                itemView.findViewById(R.id.left_call_img).setBackgroundResource(callType == 1 ? R.drawable.custom_audio_left_img_2 : R.drawable.custom_video_left_img_1);
+//                itemView.findViewById(R.id.left_call_img).setVisibility(View.VISIBLE);
+//            } else if (actionType == 7) {//接听电话
+//                itemView.findViewById(R.id.left_call_img).setBackgroundResource(callType == 1 ? R.drawable.custom_audio_left_img_2 : R.drawable.custom_video_left_img_1);
+//                itemView.findViewById(R.id.left_call_img).setVisibility(View.VISIBLE);
+//            }
+//        }
+
         boolean isEmoji = false;
         String extra = msg.getExtra();
         if (extra != null && extra.contains("href") && extra.contains("</a>")) {

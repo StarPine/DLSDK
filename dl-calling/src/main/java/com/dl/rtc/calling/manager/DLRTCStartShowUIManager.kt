@@ -14,7 +14,9 @@ import com.dl.rtc.calling.model.DLRTCCallingConstants
 import com.dl.rtc.calling.model.DLRTCDataMessageType
 import com.dl.rtc.calling.model.DLRTCSignalingManager
 import com.dl.rtc.calling.model.DLRTCStartModel
+import com.dl.rtc.calling.model.bean.DLRTCSignallingData
 import com.dl.rtc.calling.util.MediaPlayHelper
+import com.google.gson.GsonBuilder
 import com.tencent.imsdk.v2.V2TIMSimpleMsgListener
 import com.tencent.imsdk.v2.V2TIMUserInfo
 import com.tencent.qcloud.tuicore.TUILogin
@@ -150,8 +152,11 @@ class DLRTCStartShowUIManager : DLRTCStartManagerDelegate, V2TIMSimpleMsgListene
     override fun RTCStartManagerReciveMsg(manager: DLRTCStartManager, rtcModel: DLRTCStartModel) {
         MPTimber.tag(TAG_LOG).d("RTCStartManagerReciveMsg ： $rtcModel")
         MPTimber.tag(TAG_LOG).d("当前信令类型：${rtcModel.rtcDataMessageType}")
-        DLRTCSignalingManager.sendInviteAction(rtcModel)
+        //DLRTCSignalingManager.sendInviteAction(rtcModel)
         when(rtcModel.rtcDataMessageType){
+            DLRTCDataMessageType.inviteSucc -> {
+               // sendC2CCustomMessage(acceptUserId = rtcModel.acceptUserId,inviteeId = rtcModel.inviteId, invitee = rtcModel.inviteUserId,1);
+            }
             //开始邀请
             DLRTCDataMessageType.invite ->{
                 //此处应处理接听页面唤醒
@@ -352,6 +357,28 @@ class DLRTCStartShowUIManager : DLRTCStartManagerDelegate, V2TIMSimpleMsgListene
         override fun onNetworkQuality(quality: TRTCQuality, arrayList: ArrayList<TRTCQuality?>?) {
             DLRTCInternalListenerManager.instance.onNetworkQuality(quality, arrayList)
         }
+    }
+
+    fun sendC2CCustomMessage(acceptUserId : String, inviteeId : String, invitee : String, action : Int){
+        val callDataInfo = DLRTCSignallingData.DataInfo()
+        callDataInfo.cmd = "sync_info"
+        callDataInfo.userIDs  = listOf(acceptUserId);
+
+        val signallingData = createSignallingData()
+        signallingData.data = (callDataInfo)
+        signallingData.callAction = (action)
+        signallingData.callId = inviteeId
+        signallingData.user = (invitee)
+        val gsonBuilder = GsonBuilder()
+        val dataStr = gsonBuilder.create().toJson(signallingData)
+        DLRTCSignalingManager.sendC2CCustomMessage(dataStr,invitee);
+    }
+    private fun createSignallingData(): DLRTCSignallingData {
+        val signallingData = DLRTCSignallingData()
+        signallingData.version = 4
+        signallingData.businessID = "av_call"
+        signallingData.platform = "Android"
+        return signallingData
     }
 }
 interface DLRTCStartUiClosuer{
