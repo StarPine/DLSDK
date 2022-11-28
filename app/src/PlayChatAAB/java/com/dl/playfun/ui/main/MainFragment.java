@@ -58,7 +58,7 @@ import com.dl.playfun.ui.message.MessageMainFragment;
 import com.dl.playfun.ui.mine.MineFragment;
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
 import com.dl.playfun.ui.radio.radiohome.RadioFragment;
-import com.dl.playfun.ui.task.TaskCenterFragment;
+import com.dl.playfun.ui.task.TaskCenterWebViewFragment;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.StringUtil;
@@ -694,9 +694,22 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
     }
 
     private void initView() {
+        TaskCenterWebViewFragment taskCenter = new TaskCenterWebViewFragment();
+        taskCenter.setOnClickListener(id -> setSelectedItemId(
+                        (new ImageView[]{
+                                binding.navigationHomeImg,
+                                binding.navigationRadioImg,
+                                binding.navigationRankImg,
+                                binding.navigationMessageImg,
+                                binding.navigationMineImg
+                        })[id]
+                )
+        );
+
+
         mFragments[FIRST] = new HomeMainFragment();
         mFragments[SECOND] = new RadioFragment();
-        mFragments[THIRD] = new TaskCenterFragment();
+        mFragments[THIRD] = taskCenter;
         mFragments[FOURTH] = new MessageMainFragment();
         mFragments[FIFTH] = new MineFragment();
         tvBadgeNum = binding.tvMsgCount;

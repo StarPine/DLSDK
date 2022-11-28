@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -32,6 +33,8 @@ public class ConversationIconView extends RelativeLayout {
 
     private ConversationIconPresenter presenter;
 
+    private View onlineIndicator;
+
     public ConversationIconView(Context context) {
         super(context);
         init();
@@ -52,6 +55,7 @@ public class ConversationIconView extends RelativeLayout {
         mIconView = findViewById(R.id.profile_icon);
         ((SynthesizedImageView) mIconView).defaultImage(0);
         presenter = new ConversationIconPresenter();
+        onlineIndicator = findViewById(R.id.online);
     }
 
     /**
@@ -141,6 +145,14 @@ public class ConversationIconView extends RelativeLayout {
     public void clearImage() {
         if (mIconView instanceof SynthesizedImageView) {
             ((SynthesizedImageView) mIconView).clear();
+        }
+    }
+
+    public void setOnlineState(boolean state) {
+        if (state) {
+            onlineIndicator.setVisibility(VISIBLE);
+        } else {
+            onlineIndicator.setVisibility(GONE);
         }
     }
 }

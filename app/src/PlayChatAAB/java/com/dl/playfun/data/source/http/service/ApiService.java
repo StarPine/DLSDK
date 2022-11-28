@@ -1594,7 +1594,7 @@ public interface ApiService {
      */
     @Headers("Content-Type: application/json")
     @POST("calling/captcha/sendCaptcha")
-    Observable<BaseResponse> verifyCodePost(
+    Observable<BaseDataResponse<VerifyCodeEntity>> verifyCodePost(
             @Body RequestBody requestBody
     );
 

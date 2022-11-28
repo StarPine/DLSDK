@@ -18,6 +18,7 @@ import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppViewModelFactory;
+import com.dl.playfun.app.ElkLogEventReport;
 import com.dl.playfun.databinding.FragmentMeSettingBinding;
 import com.dl.playfun.entity.VersionEntity;
 import com.dl.playfun.kl.view.VideoPresetActivity;
@@ -108,24 +109,28 @@ public class MeSettingFragment extends BaseToolbarFragment<FragmentMeSettingBind
                 });
             }
         });
-        viewModel.uc.clickLogout.observe(this, aVoid -> MVDialog.getInstance(this.getContext())
-                .setContent(getString(R.string.playfun_conflirm_log_out))
-                .setConfirmOnlick(dialog -> {
-                    TUIUtils.logout(new V2TIMCallback() {
-                        @Override
-                        public void onSuccess() {
-                            ConfigManager.getInstance().getAppRepository().saveOldUserData();
-                            viewModel.logout();
-                        }
+        viewModel.uc.clickLogout.observe(this, aVoid ->{
+            ElkLogEventReport.reportLoginModule.reportSignOut(ElkLogEventReport._click,"clickSignOut",ConfigManager.getInstance().getLoginSource());
+            MVDialog.getInstance(this.getContext())
+                    .setContent(getString(R.string.playfun_conflirm_log_out))
+                    .setConfirmOnlick(dialog -> {
+                        ElkLogEventReport.reportLoginModule.reportSignOut(ElkLogEventReport._click,"confirmSignOut",ConfigManager.getInstance().getLoginSource());
+                        TUIUtils.logout(new V2TIMCallback() {
+                            @Override
+                            public void onSuccess() {
+                                ConfigManager.getInstance().getAppRepository().saveOldUserData();
+                                viewModel.logout();
+                            }
 
-                        @Override
-                        public void onError(int i, String s) {
-                            ConfigManager.getInstance().getAppRepository().saveOldUserData();
-                            viewModel.logout();
-                        }
-                    });
-                })
-                .chooseType(MVDialog.TypeEnum.CENTERWARNED)
-                .show());
+                            @Override
+                            public void onError(int i, String s) {
+                                ConfigManager.getInstance().getAppRepository().saveOldUserData();
+                                viewModel.logout();
+                            }
+                        });
+                    })
+                    .chooseType(MVDialog.TypeEnum.CENTERWARNED)
+                    .show();
+        });
     }
 }

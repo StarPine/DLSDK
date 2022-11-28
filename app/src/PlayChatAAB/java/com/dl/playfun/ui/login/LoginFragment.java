@@ -93,9 +93,17 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
     }
 
     @Override
-    public void initData() {
-        super.initData();
+    public void onSupportVisible() {
+        super.onSupportVisible();
         setLastLoginBubble();
+    }
+
+    @Override
+    public void onSupportInvisible() {
+        super.onSupportInvisible();
+        if (popupWindow != null){
+            popupWindow.dismiss();
+        }
     }
 
     @Override
@@ -223,27 +231,29 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
         if (TextUtils.isEmpty(loginType)){
             return;
         }
-       // View view = getLayoutInflater().inflate(R.layout.pop_last_login_bubble, null);
-        LayoutInflater inflater = LayoutInflater.from(getContext());
-        View view = inflater.inflate(R.layout.pop_last_login_bubble, null);
-        popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        popupWindow.setOutsideTouchable(false);
-        popupWindow.setFocusable(false);
+        if(popupWindow == null){
+            // View view = getLayoutInflater().inflate(R.layout.pop_last_login_bubble, null);
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+            View view = inflater.inflate(R.layout.pop_last_login_bubble, null);
+            popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            popupWindow.setOutsideTouchable(false);
+            popupWindow.setFocusable(false);
+        }
         showLastLoginBubble();
 
     }
 
     private void showLastLoginBubble(){
-        if (loginType != null){
+        if (loginType != null && !mActivity.isDestroyed() && !mActivity.isFinishing()){
             switch (loginType) {
                 case "facebook":
-                    popupWindow.showAsDropDown(binding.loginButton, Utils.dip2px(getContext(),165), -Utils.dip2px(getContext(),65));
+                    popupWindow.showAsDropDown(binding.loginButton, Utils.dip2px(mActivity,165), -Utils.dip2px(mActivity,65));
                     break;
                 case "google":
-                    popupWindow.showAsDropDown(binding.ivGoogleLogin, Utils.dip2px(getContext(),165), -Utils.dip2px(getContext(),65));
+                    popupWindow.showAsDropDown(binding.ivGoogleLogin, Utils.dip2px(mActivity,165), -Utils.dip2px(mActivity,65));
                     break;
                 case "phone":
-                    popupWindow.showAsDropDown(binding.ivPhoneLogin, -Utils.dip2px(getContext(),30) , -(Utils.dip2px(getContext(),65)));
+                    popupWindow.showAsDropDown(binding.ivPhoneLogin, -Utils.dip2px(mActivity,30) , -(Utils.dip2px(mActivity,65)));
                     break;
             }
         }

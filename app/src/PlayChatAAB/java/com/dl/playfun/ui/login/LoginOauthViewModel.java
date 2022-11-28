@@ -114,6 +114,7 @@ public class LoginOauthViewModel extends BaseViewModel<AppRepository> {
                             if(e.getMessage() != null){
                                 ToastUtils.showShort( e.getMessage());
                             }
+                            ElkLogEventReport.reportLoginModule.reportLogin(null,"loginExpired",null);
                             popAllTo(new LoginFragment());
                         }else{
                             super.onError(e);

@@ -23,6 +23,7 @@ import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
+import com.dl.playfun.app.ElkLogEventReport;
 import com.dl.playfun.databinding.FragmentRegisterBinding;
 import com.dl.playfun.entity.ChooseAreaItemEntity;
 import com.dl.playfun.entity.OverseasUserEntity;
@@ -164,6 +165,7 @@ public class RegisterFragment extends BaseToolbarFragment<FragmentRegisterBindin
                 Collection<String> collection = new ArrayList<String>();
                 collection.add("email");
                 loginManager.logIn(RegisterFragment.this, collection);
+                ElkLogEventReport.reportLoginModule.reportClickLoginPage(ElkLogEventReport._click,"fb");
             }
         });
         LoginManager.getInstance().registerCallback(callbackManager,
@@ -228,6 +230,7 @@ public class RegisterFragment extends BaseToolbarFragment<FragmentRegisterBindin
             public void onClick(View v) {
                 Intent intent = googleSignInClient.getSignInIntent();
                 startActivityForResult(intent, Google_Code);
+                ElkLogEventReport.reportLoginModule.reportClickLoginPage(ElkLogEventReport._click,"google");
             }
         });
 

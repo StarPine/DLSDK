@@ -1,5 +1,6 @@
 package com.dl.playfun.data.source.http.observer;
 
+import com.dl.playfun.app.ElkLogEventReport;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.event.LoginExpiredEvent;
@@ -22,6 +23,8 @@ public abstract class BaseObserver<T extends BaseResponse> extends BaseDisposabl
             //冻结账号
             RxBus.getDefault().post(new UserDisableEvent());
         } else if (e.getCode() == 10100) {
+            ElkLogEventReport.reportLoginModule.reportLogin(null,"loginExpired",null);
+            ElkLogEventReport.reportLoginModule.reportSignOutKicked(3,e.getCode(),e.getMessage());
             //Log.e("接收服务器的登录过期数据",e.getClass().getCanonicalName());
             RxBus.getDefault().post(new LoginExpiredEvent());
         } else {

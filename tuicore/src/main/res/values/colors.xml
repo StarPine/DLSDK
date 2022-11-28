@@ -30,4 +30,6 @@
 
     <color name="gift_right_txt_color">#FFE0E0E0</color>
     <color name="gift_left_txt_color">#FF9897B3</color>
+
+    <color name="color_online_green">#14E29A</color>
 </resources>

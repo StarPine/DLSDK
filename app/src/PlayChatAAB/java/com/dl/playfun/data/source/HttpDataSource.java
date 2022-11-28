@@ -1305,7 +1305,7 @@ public interface HttpDataSource {
      * @param phone
      * @return
      */
-    Observable<BaseResponse> verifyCodePost(RequestBody requestBody);
+    Observable<BaseDataResponse<VerifyCodeEntity>> verifyCodePost(RequestBody requestBody);
 
     /**
      * 手机号注册

@@ -366,18 +366,21 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
             }
         });
         //发送礼物效果展示
-        viewModel.uc.sendUserGiftAnim.observe(this, stringObjectMap -> {
-            try {
-                int account = (int) stringObjectMap.get("account");
-                GiftBagEntity.giftEntity giftEntity = (GiftBagEntity.giftEntity) stringObjectMap.get("giftEntity");
-                //启动SVG动画
-                startVideoSendSvgAnimotion(giftEntity);
-                //启动横幅动画
-                startVideoSendBannersAnimotion(account, giftEntity);
-                //启动头像动画
-                startVideoSendHeadAnimotion(giftEntity);
-            } catch (Exception e) {
+        viewModel.uc.sendUserGiftAnim.observe(this, new Observer<Map<String, Object>>() {
+            @Override
+            public void onChanged(Map<String, Object> stringObjectMap) {
+                try {
+                    int account = (int) stringObjectMap.get("account");
+                    GiftBagEntity.GiftEntity giftEntity = (GiftBagEntity.GiftEntity) stringObjectMap.get("giftEntity");
+                    //启动SVG动画
+                    startVideoSendSvgAnimotion(giftEntity);
+                    //启动横幅动画
+                    startVideoSendBannersAnimotion(account, giftEntity);
+                    //启动头像动画
+                    startVideoSendHeadAnimotion(giftEntity);
+                } catch (Exception e) {
 
+                }
             }
         });
         //接听成功
@@ -394,7 +397,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                 GiftBagDialog giftBagDialog = new GiftBagDialog(mContext, true, viewModel.maleBalanceMoney, 0);
                 giftBagDialog.setGiftOnClickListener(new GiftBagDialog.GiftOnClickListener() {
                     @Override
-                    public void sendGiftClick(Dialog dialog, int number, GiftBagEntity.giftEntity giftEntity) {
+                    public void sendGiftClick(Dialog dialog, int number, GiftBagEntity.GiftEntity giftEntity) {
                         dialog.dismiss();
                         AppContext.instance().logEvent(AppsFlyerEvent.videocall_send_gift);
                         viewModel.sendUserGift(dialog, giftEntity, viewModel.otherUserInfoField.get().getId(), number);
@@ -566,7 +569,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         giftImageTrans.startAnimation(animation);
     }
 
-    private void startVideoSendBannersAnimotion(int account, GiftBagEntity.giftEntity giftEntity) {
+    private void startVideoSendBannersAnimotion(int account, GiftBagEntity.GiftEntity giftEntity) {
         if (account > 1) {
             View streamerView = View.inflate(mContext, R.layout.call_user_streamer_item, null);
             //用户头像
@@ -639,7 +642,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         }
     }
 
-    private void startVideoSendSvgAnimotion(GiftBagEntity.giftEntity giftEntity) {
+    private void startVideoSendSvgAnimotion(GiftBagEntity.GiftEntity giftEntity) {
         SVGAParser svgaParser = SVGAParser.Companion.shareParser();
         try {
             svgaParser.decodeFromURL(new URL(StringUtil.getFullAudioUrl(giftEntity.getLink())), new SVGAParser.ParseCompletion() {

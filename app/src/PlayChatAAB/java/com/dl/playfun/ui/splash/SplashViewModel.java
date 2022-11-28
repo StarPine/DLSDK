@@ -12,6 +12,7 @@ import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.EaringlSwitchUtil;
+import com.dl.playfun.app.ElkLogEventReport;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
@@ -19,13 +20,14 @@ import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.local.LocalDataSourceImpl;
 import com.dl.playfun.entity.AllConfigEntity;
 import com.dl.playfun.entity.ApiConfigManagerEntity;
-import com.dl.playfun.entity.FrequentContactEntity;
 import com.dl.playfun.entity.TokenEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.LoginExpiredEvent;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.login.LoginFragment;
 import com.dl.playfun.ui.login.LoginOauthFragment;
 import com.dl.playfun.ui.main.MainFragment;
+import com.dl.playfun.utils.ElkLogEventUtils;
 import com.dl.playfun.utils.ExceptionReportUtils;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.viewmodel.BaseViewModel;
@@ -141,6 +143,7 @@ public class SplashViewModel extends BaseViewModel<AppRepository> {
      * 加载用户资料
      */
     private void loadProfile () {
+        ElkLogEventReport.reportLoginModule.reportLogin(null,"silentLogin", ConfigManager.getInstance().getLoginSource());
         //RaJava模拟登录
         model.getUserData()
                 .compose(RxUtils.schedulersTransformer())
@@ -179,6 +182,9 @@ public class SplashViewModel extends BaseViewModel<AppRepository> {
 
                     @Override
                     public void onError(RequestException e) {
+                        if(e.getCode()==10100){
+                            ElkLogEventReport.reportLoginModule.reportLogin(null,"loginExpired",null);
+                        }
                         initIM();
                         if (model.readUserData() != null) {
                             startWithPop(MainFragment.class.getCanonicalName());
@@ -213,6 +219,7 @@ public class SplashViewModel extends BaseViewModel<AppRepository> {
                     public void onSuccess(BaseDataResponse<AllConfigEntity> response) {
                         try {
                             AllConfigEntity allConfigEntity = response.getData();
+                            model.putKeyValue(ElkLogEventUtils.UserIsNew,allConfigEntity.getDeviceUseType()+"");
                             model.saveHeightConfig(allConfigEntity.getHeight());
                             model.saveWeightConfig(allConfigEntity.getWeight());
                             model.saveReportReasonConfig(allConfigEntity.getReportReason());

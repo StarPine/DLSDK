@@ -17,7 +17,6 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,10 +44,6 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.ActivityCallAudioChatingBinding;
 import com.dl.playfun.entity.AudioCallingBarrageEntity;
-import com.dl.playfun.entity.CallGameCoinPusherEntity;
-import com.dl.playfun.entity.CallUserInfoEntity;
-import com.dl.playfun.entity.CallingInfoEntity;
-import com.dl.playfun.entity.CoinPusherDataInfoEntity;
 import com.dl.playfun.entity.CrystalDetailsConfigEntity;
 import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.entity.GoodsEntity;
@@ -57,11 +52,7 @@ import com.dl.playfun.event.CallChatingHangupEvent;
 import com.dl.playfun.kl.viewmodel.AudioCallChatingItemViewModel;
 import com.dl.playfun.kl.viewmodel.AudioCallChatingViewModel;
 import com.dl.playfun.manager.ConfigManager;
-import com.dl.manager.LocaleManager;
-import com.dl.playfun.manager.V2TIMCustomManagerUtil;
-import com.dl.playfun.ui.coinpusher.CoinPusherGameActivity;
-import com.dl.playfun.ui.coinpusher.GameCallEntity;
-import com.dl.playfun.ui.coinpusher.dialog.CoinPusherRoomListDialog;
+import com.dl.playfun.manager.LocaleManager;
 import com.dl.playfun.ui.dialog.GiftBagDialog;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
@@ -73,9 +64,6 @@ import com.dl.playfun.widget.dialog.TraceDialog;
 import com.dl.playfun.widget.image.CircleImageView;
 import com.dl.rtc.calling.DLRTCFloatWindowService;
 import com.dl.rtc.calling.base.DLRTCCalling;
-import com.dl.rtc.calling.model.DLRTCCallingConstants;
-import com.dl.rtc.calling.model.DLRTCDataMessageType;
-import com.dl.rtc.calling.model.DLRTCSignalingManager;
 import com.google.gson.reflect.TypeToken;
 import com.opensource.svgaplayer.SVGACallback;
 import com.opensource.svgaplayer.SVGAImageView;
@@ -83,13 +71,9 @@ import com.opensource.svgaplayer.SVGAParser;
 import com.opensource.svgaplayer.SVGASoundManager;
 import com.opensource.svgaplayer.SVGAVideoEntity;
 import com.tencent.custom.GiftEntity;
-import com.tencent.custom.tmp.CustomDlTempMessage;
 import com.tencent.qcloud.tuicore.Status;
-import com.tencent.qcloud.tuicore.custom.CustomConstants;
 import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.MyImageSpan;
-import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -98,7 +82,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -119,14 +102,21 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
 
     private int mTimeCount;
     private boolean isRestart;
+    //每个10秒+1
+    private int mTimeTen;
+    private int minuteTime;
 
     private SVGAImageView giftEffects;
 
     private Runnable timerRunnable = null;
-    private Handler mHandler = new Handler(msg -> false);
+    private Handler mHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(@NonNull Message msg) {
+            return false;
+        }
+    });
     private ObjectAnimator rotation;
-    //对方用户信息
-    private CallUserInfoEntity _callUserInfoEntity;
+    private Timer timer;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -195,14 +185,14 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         SVGAParser.Companion.shareParser().init(this);
         mContext = this;
         Intent intent = getIntent();
-        inviterImId = intent.getStringExtra(DLRTCCallingConstants.DLRTCInviteUserID);
-        receiverImId = intent.getStringExtra(DLRTCCallingConstants.DLRTCAcceptUserID);
-        mRole = (DLRTCCalling.Role)intent.getExtras().get(DLRTCCallingConstants.PARAM_NAME_ROLE);
-        roomId = intent.getIntExtra(DLRTCCallingConstants.RTCInviteRoomID, 0);
+        inviterImId = intent.getStringExtra("fromUserId");
+        receiverImId = intent.getStringExtra("toUserId");
+        mRole = (DLRTCCalling.Role)intent.getExtras().get("mRole");
+        roomId = intent.getIntExtra("roomId", 0);
         mTimeCount = intent.getIntExtra("timeCount", 0);
         isRestart = intent.getBooleanExtra("isRestart", false);
         barrageInfo = intent.getStringExtra("audioCallingBarrage");
-        _callUserInfoEntity = (CallUserInfoEntity)intent.getSerializableExtra("CallingInviteInfoField");
+
     }
 
     @Override
@@ -214,26 +204,14 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
             viewModel.tipSwitch.set(false);
             viewModel.TimeCount = mTimeCount;
             TimeCallMessage();
+            setTimerForCallinfo();
             loadBarrageInfo();
         }
         viewModel.init(this);
         viewModel.roomId = roomId;
         viewModel.fromUserId = inviterImId;
         viewModel.toUserId = receiverImId;
-        if(mRole == DLRTCCalling.Role.CALL){
-            viewModel.coinPusherRoomShow.set(true);
-        }
-        //设置对方用户信息
-        viewModel.otherUserInfoField.set(_callUserInfoEntity);
-        if(_callUserInfoEntity!=null){
-            viewModel.collected = _callUserInfoEntity.getCollected() > 0;
-            //是否已追踪  0 未追踪 1已追踪 2相互追踪
-            viewModel.collectedField.set(viewModel.collected);
-        }
-        //读取当前用户信息
-        viewModel.currentUserInfoField.set(ConfigManager.getInstance().getAppRepository().readUserData());
-        viewModel.callingInviteUser(inviterImId,receiverImId);
-        viewModel.getSayHiList();
+        viewModel.getCallingInfo(roomId, inviterImId, receiverImId);
     }
 
     /**
@@ -291,7 +269,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
     //创建悬浮窗视图
     private AudioFloatCallView createFloatView() {
         String[] userIds = new String[]{receiverImId};
-        if (viewModel.otherUserInfoField.get() == null){
+        if (viewModel.leftUserInfoField.get() == null){
             return null;
         }
         ArrayList<AudioCallingBarrageEntity> audioCallChatingItemViewModelList = new ArrayList<>();
@@ -303,7 +281,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
             audioCallChatingItemViewModelList.add(audioCallingBarrageEntity);
         }
         return new AudioFloatCallView(this, mRole, DLRTCCalling.Type.AUDIO, userIds, inviterImId,
-                null, false,viewModel.otherUserInfoField.get(),mTimeCount,roomId, audioCallChatingItemViewModelList);
+                null, false,viewModel.leftUserInfoField.get(),mTimeCount,roomId, audioCallChatingItemViewModelList);
     }
 
     private void requestSettingCanDrawOverlays() {
@@ -841,7 +819,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         giftImageTrans.startAnimation(animation);
     }
 
-    private void startSendSvgAnimotion(GiftBagEntity.giftEntity giftEntity) {
+    private void startSendSvgAnimotion(GiftBagEntity.GiftEntity giftEntity) {
         if (!StringUtils.isEmpty(giftEntity.getLink())) {
             SVGAParser svgaParser = SVGAParser.Companion.shareParser();
             try {

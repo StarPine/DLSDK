@@ -804,7 +804,7 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
 
 
     @Override
-    public Observable<BaseResponse> verifyCodePost(RequestBody requestBody) {
+    public Observable<BaseDataResponse<VerifyCodeEntity>> verifyCodePost(RequestBody requestBody) {
         return mHttpDataSource.verifyCodePost(requestBody);
     }
 

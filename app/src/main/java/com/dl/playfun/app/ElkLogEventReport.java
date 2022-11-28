@@ -66,6 +66,50 @@ public class ElkLogEventReport {
         //交友意愿
         static final String datingPurpose = "datingPurpose";
 
+        //登出
+        static final String _signOut = "signOut";
+        //登入
+        static final String _Login = "Login";
+
+        /**
+        * @Desc TODO(登入操作)
+        * @author 彭石林
+        * @parame []
+        * @Date 2022/11/15
+        */
+        public static void reportLogin(String ct, String dt,Integer source){
+            String doSendStatistics = commonClickString("pageview",_Login, ct, dt);
+            if(source!=null){
+                doSendStatistics += "`source="+source;
+            }
+            StatisticsAnalysis.doSendStatistics(doSendStatistics);
+        }
+
+        /**
+         * @Desc TODO(登出操作)
+         * @author 彭石林
+         * @parame []
+         * @Date 2022/11/15
+         */
+        public static void reportSignOut(String ct, String dt,Integer source){
+            String doSendStatistics = commonClickString("pageview",_signOut, ct, dt);
+            if(source!=null){
+                doSendStatistics += "`source="+source;
+            }
+            StatisticsAnalysis.doSendStatistics(doSendStatistics);
+        }
+
+        public static void reportSignOutKicked(int type,Integer errcode,String errmsg){
+            String doSendStatistics = commonClickString("pageview",_signOut, null, "offline")+"`type="+type;
+            if(errcode!=null){
+                doSendStatistics += "`errcode="+errcode;
+            }
+            if(errmsg!=null){
+                doSendStatistics += "`errmsg="+errmsg;
+            }
+            StatisticsAnalysis.doSendStatistics(doSendStatistics);
+        }
+
         /**
         * @Desc TODO(登录页面)
         * @author 彭石林
@@ -103,6 +147,32 @@ public class ElkLogEventReport {
             }
             StatisticsAnalysis.doSendStatistics(doSendStatistics);
         }
+        public static void reportClickRegister(String ct, String dt,Integer sex, Integer age,Integer source){
+            String doSendStatistics = commonClickString("pageview",register,ct, dt);
+            if(sex!=null){
+                doSendStatistics += "`sex="+sex;
+            }
+            if(sex!=null){
+                doSendStatistics += "`age="+age;
+            }
+            if(source!=null){
+                doSendStatistics += "`source="+source;
+            }
+            StatisticsAnalysis.doSendStatistics(doSendStatistics);
+        }
+        /**
+         * @Desc TODO(注册页面)
+         * @author 彭石林
+         * @parame [lt, et, ct, dt]
+         * @Date 2022/10/22
+         */
+        public static void reportClickRegister(String ct, String dt,Integer source){
+            String doSendStatistics = commonClickString("pageview",register,ct, dt);
+            if(source!=null){
+                doSendStatistics += "`source="+source;
+            }
+            StatisticsAnalysis.doSendStatistics(doSendStatistics);
+        }
         
         /**
         * @Desc TODO(交友意愿)
@@ -116,6 +186,31 @@ public class ElkLogEventReport {
             if(!TextUtils.isEmpty(option)){
                 doSendStatistics += "`option="+option;
             }
+            StatisticsAnalysis.doSendStatistics(doSendStatistics);
+        }
+
+        /**
+        * @Desc TODO(在手机登入页面 ， 点击获取验证码的时候添加这个打点统计 （ 暫時打在前端 ）)
+        * @author 彭石林
+        * @parame ["0:新的正确手机号
+         * 1:已注册/绑定手机号
+         * 3:验证码异常/接口异常
+         * 4:没有输入手机号"]
+        * @return void
+        * @Date 2022/11/15
+        */
+        public static void reportVerifyCodeMsg(int is_new_p, String errmsg){
+            String doSendStatistics = commonClickString("pageview",phoneLogin,_click, "getCode");
+                doSendStatistics += "`is_new_p="+is_new_p + "`errmsg="+errmsg;
+            StatisticsAnalysis.doSendStatistics(doSendStatistics);
+        }
+        public static void reportVerifyCode(int is_new_p, Integer code){
+            String doSendStatistics = commonClickString("pageview",phoneLogin,_click, "phoneLoginNext");
+            doSendStatistics += "`is_new_p="+is_new_p;
+            if(code!=null){
+                doSendStatistics += "`code="+code;
+            }
+
             StatisticsAnalysis.doSendStatistics(doSendStatistics);
         }
 
@@ -162,6 +257,38 @@ public class ElkLogEventReport {
                     +"`spend_time="+spend_time
                     +"`payType="+payType
                     +"`orderNo="+isNullConverterSky(orderNo);
+            StatisticsAnalysis.doSendStatistics(doSendStatistics);
+        }
+
+    }
+
+    /**
+    * @Desc TODO(搭讪模块)
+    * @author 彭石林
+    * @parame
+    * @return
+    * @Date 2022/11/15
+    */
+    public static class reportAccostModule{
+        /**
+        * @Desc TODO(点击单次搭讪的时候，添加这个打点统计)
+        * @author 彭石林
+        * @parame [source
+         * "1:首页
+         * 2:用户主页
+         * 3:搜索页面
+         * 4:常联系列表推荐", otherId 搭讪对象id, otherSex 搭讪对象性别, errmsg 异常情况的msg+code]
+        * @return void
+        * @Date 2022/11/15
+        */
+        public static void reportAccostView(int source,int otherId,int otherSex,String errmsg){
+            String doSendStatistics = commonClickString("pageview","greet",_click,"clickGreet")+
+                    "`source="+source
+                    +"`otherId="+otherId
+                    +"`otherSex="+otherSex;
+            if(!TextUtils.isEmpty(errmsg)){
+                doSendStatistics += "`errmsg="+errmsg;
+            }
             StatisticsAnalysis.doSendStatistics(doSendStatistics);
         }
 
@@ -246,6 +373,23 @@ public class ElkLogEventReport {
         
         public static void reportBillingClientHistory(String flowNode,int flowCode){
             String doSendStatistics = commonClickString("googlePlay","lifecycle","Buy","History")+"`flowNode="+flowNode+"`flowCode="+flowCode;
+            StatisticsAnalysis.doSendStatistics(doSendStatistics);
+        }
+    }
+
+    public static class reportTaskCenterModule {
+        public static void reportEnterTaskCenter() {
+            String doSendStatistics = commonClickString("pageview","missionCenter",_expose,"enterMissionCenter");
+            StatisticsAnalysis.doSendStatistics(doSendStatistics);
+        }
+
+        public static void reportClickSign() {
+            String doSendStatistics = commonClickString("pageview","missionCenter",_click,"sign");
+            StatisticsAnalysis.doSendStatistics(doSendStatistics);
+        }
+
+        public static void reportClickGet() {
+            String doSendStatistics = commonClickString("pageview","missionCenter",_click,"get");
             StatisticsAnalysis.doSendStatistics(doSendStatistics);
         }
     }

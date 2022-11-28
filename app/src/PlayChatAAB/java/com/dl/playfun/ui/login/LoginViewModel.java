@@ -20,13 +20,14 @@ import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.ElkLogEventReport;
 import com.dl.playfun.data.AppRepository;
+import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
-import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.ChooseAreaItemEntity;
 import com.dl.playfun.entity.SystemConfigEntity;
 import com.dl.playfun.entity.TokenEntity;
 import com.dl.playfun.entity.UserDataEntity;
+import com.dl.playfun.entity.VerifyCodeEntity;
 import com.dl.playfun.event.ItemChooseAreaEvent;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.ThirdPushTokenMgr;
@@ -69,6 +70,10 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
     public SingleLiveEvent<String> setAreaSuccess = new SingleLiveEvent<>();
 
     private Disposable ItemChooseAreaSubscription;
+
+    private CountDownTimer timerCode;
+    //打点需求
+    private Integer is_new_p = null;
     //选择地区
     public BindingCommand ChooseAreaView = new BindingCommand(()->{
         start(ChooseAreaFragment.class.getCanonicalName());
@@ -87,6 +92,7 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
      */
     public BindingCommand termsOfServiceOnClickCommand = new BindingCommand(() -> {
         Bundle bundle = WebDetailFragment.getStartBundle(AppConfig.TERMS_OF_SERVICE_URL);
+        ElkLogEventReport.reportLoginModule.reportClickPhoneLogin(ElkLogEventReport._click,"privacyPolicy");
         start(WebDetailFragment.class.getCanonicalName(), bundle);
     });
     /**
@@ -94,6 +100,7 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
      */
     public BindingCommand usageSpecificationOnClickCommand = new BindingCommand(() -> {
         Bundle bundle = WebDetailFragment.getStartBundle(AppConfig.PRIVACY_POLICY_URL);
+        ElkLogEventReport.reportLoginModule.reportClickPhoneLogin(ElkLogEventReport._click,"userAgreement");
         start(WebDetailFragment.class.getCanonicalName(), bundle);
     });
     public ObservableField<String> downTimeStr = new ObservableField<>(StringUtils.getString(R.string.playfun_send_code));
@@ -119,11 +126,16 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
         }
         if (TextUtils.isEmpty(mobile.get())) {
             ToastUtils.showShort(StringUtils.getString(R.string.mobile_hint));
+            ElkLogEventReport.reportLoginModule.reportVerifyCode(4,0);
             return;
         }
         if (TextUtils.isEmpty(code.get())) {
             ToastUtils.showShort(R.string.playfun_please_input_code);
+            ElkLogEventReport.reportLoginModule.reportVerifyCode(3,1);
             return;
+        }
+        if(is_new_p!=null && code.get().length() == 6){
+            ElkLogEventReport.reportLoginModule.reportVerifyCode(is_new_p,2);
         }
         ElkLogEventReport.reportLoginModule.reportClickPhoneLogin(ElkLogEventReport._click,"phoneLoginNext");
         Map<String, Object> mapData = new HashMap<>();
@@ -132,6 +144,7 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
         mapData.put("device_code", ApiUitl.getAndroidId());
         mapData.put("region_code", areaCode.get().getCode());
         mapData.put("AndroidDeviceInfo", MPDeviceUtils.getDeviceInfo());
+        ElkLogEventReport.reportLoginModule.reportLogin(null,"activelogin",null);
         model.v2Login(ApiUitl.getBody(GsonUtils.toJson(mapData)))
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
@@ -188,6 +201,14 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
                     }
 
                     @Override
+                    public void onError(RequestException e) {
+                        super.onError(e);
+                        if(is_new_p!=null){
+                            ElkLogEventReport.reportLoginModule.reportVerifyCode(is_new_p,0);
+                        }
+                    }
+
+                    @Override
                     public void onComplete() {
                         dismissHUD();
                     }
@@ -219,6 +240,7 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
             ToastUtils.showShort(R.string.get_userdata_defail);
             return;
         }
+        ElkLogEventReport.reportLoginModule.reportLogin(null,"activelogin",null);
         ElkLogEventReport.reportAuthModule.reportLoginAuth(type,email);
         id += type;
         Map<String, Object> mapData = new HashMap<>();
@@ -319,6 +341,7 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
     private void reqVerifyCode() {
         if (TextUtils.isEmpty(mobile.get())) {
             ToastUtils.showShort(R.string.mobile_hint);
+            ElkLogEventReport.reportLoginModule.reportVerifyCode(4,null);
             return;
         }
         if (ObjectUtils.isEmpty(areaCode.get())) {
@@ -327,7 +350,7 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
         }
         if (!isDownTime) {
             ElkLogEventReport.reportLoginModule.reportClickPhoneLogin(ElkLogEventReport._click,"getCode");
-            Map<String, String> mapData = new HashMap<String, String>();
+            Map<String, String> mapData = new HashMap<>();
             mapData.put("regionCode", areaCode.get().getCode());
             mapData.put("phone", mobile.get());
             model.verifyCodePost(ApiUitl.getBody(GsonUtils.toJson(mapData)))
@@ -335,14 +358,20 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
                     .compose(RxUtils.schedulersTransformer())
                     .compose(RxUtils.exceptionTransformer())
                     .doOnSubscribe(disposable -> showHUD())
-                    .subscribe(new BaseObserver<BaseResponse>() {
+                    .subscribe(new BaseObserver<BaseDataResponse<VerifyCodeEntity>>() {
+
                         @Override
-                        public void onSuccess(BaseResponse baseResponse) {
+                        public void onSuccess(BaseDataResponse<VerifyCodeEntity> response) {
                             ToastUtils.showShort(R.string.code_sended);
+                            VerifyCodeEntity verifyCodeEntity = response.getData();
+                            if(verifyCodeEntity != null && verifyCodeEntity.getVerifyCode()!=null){
+                                is_new_p = verifyCodeEntity.getVerifyCode();
+                                ElkLogEventReport.reportLoginModule.reportVerifyCode(verifyCodeEntity.getVerifyCode(),null);
+                            }
                             /**
                              * 倒计时60秒，一次1秒
                              */
-                            CountDownTimer timer = new CountDownTimer(60 * 1000, 1000) {
+                            timerCode = new CountDownTimer(60 * 1000, 1000) {
                                 @Override
                                 public void onTick(long millisUntilFinished) {
                                     isDownTime = true;
@@ -358,7 +387,12 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
                                     downTimeStr.set(StringUtils.getString(R.string.again_send));
                                 }
                             }.start();
+                        }
 
+                        @Override
+                        public void onError(RequestException e) {
+                            super.onError(e);
+                            ElkLogEventReport.reportLoginModule.reportVerifyCodeMsg(3,e.getMessage());
                         }
 
                         @Override
@@ -406,5 +440,9 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
     public void removeRxBus() {
         super.removeRxBus();
         RxSubscriptions.remove(ItemChooseAreaSubscription);
+        if(timerCode!=null){
+            timerCode.cancel();
+            timerCode = null;
+        }
     }
 }

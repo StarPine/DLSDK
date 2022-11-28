@@ -412,7 +412,7 @@ public class HttpDataSourceImpl implements HttpDataSource {
     }
 
     @Override
-    public Observable<BaseResponse> verifyCodePost(RequestBody requestBody) {
+    public Observable<BaseDataResponse<VerifyCodeEntity>> verifyCodePost(RequestBody requestBody) {
         return apiService.verifyCodePost(requestBody);
     }
 

@@ -4,10 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.dl.lib.util.MPDeviceUtils;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.data.source.http.interceptor.ApiTimeOutInterceptor;
 import com.dl.playfun.data.source.http.interceptor.TokenInterceptor;
+import com.dl.playfun.utils.AESUtil;
 import com.dl.playfun.utils.ApiUitl;
 import com.ihsanbal.logging.Level;
 import com.ihsanbal.logging.LoggingInterceptor;
@@ -98,6 +100,7 @@ public class RetrofitClient {
         //source 来源ID 1642158125=喵遊(俄语) 1648520220=杜拉克 //playchat 1648626888
         headers.put("appId",AppConfig.APPID);
         headers.put("deviceCode", ApiUitl.getAndroidId());
+        headers.put("dev_id", AESUtil.encrypt_AES(AppConfig.KEY_DL_AES_ENCRY,MPDeviceUtils.getDevId(),AppConfig.KEY_DL_AES_ENCRY));
         headers.put("Accept-Language", mContext.getString(R.string.playfun_local_language));
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 //.cookieJar(new CookieJarImpl(new PersistentCookieStore(mContext)))

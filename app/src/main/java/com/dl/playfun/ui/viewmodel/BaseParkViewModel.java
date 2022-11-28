@@ -8,6 +8,7 @@ import androidx.databinding.ObservableList;
 
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
+import com.dl.playfun.app.ElkLogEventReport;
 import com.dl.playfun.data.AppRepository;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
@@ -18,6 +19,7 @@ import com.dl.playfun.event.LikeChangeEvent;
 import com.dl.playfun.event.TaskListEvent;
 import com.dl.playfun.event.TaskTypeStatusEvent;
 import com.dl.playfun.event.UserRemarkChangeEvent;
+import com.dl.playfun.ui.home.HomeMainViewModel;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.viewmodel.BaseRefreshViewModel;
 
@@ -187,8 +189,9 @@ public abstract class BaseParkViewModel<T extends AppRepository> extends BaseRef
     }
 
     //搭讪
-    public void putAccostFirst(int position) {
+    public void putAccostFirst(int position,int accostSource) {
         ParkItemEntity parkItemEntity = observableList.get(position).itemEntity.get();
+
         model.putAccostFirst(parkItemEntity.getId())
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
@@ -198,6 +201,7 @@ public abstract class BaseParkViewModel<T extends AppRepository> extends BaseRef
                     @Override
                     public void onSuccess(BaseResponse response) {
                         dismissHUD();
+                        ElkLogEventReport.reportAccostModule.reportAccostView(accostSource,parkItemEntity.getId(),parkItemEntity.getSex(),null);
                         ToastUtils.showShort(R.string.playfun_text_accost_success1);
                         parkItemEntity.setCollect(false);
                         Objects.requireNonNull(adapter.getAdapterItem(position).itemEntity.get()).setIsAccost(1);
@@ -211,6 +215,7 @@ public abstract class BaseParkViewModel<T extends AppRepository> extends BaseRef
                     @Override
                     public void onError(RequestException e) {
                         super.onError(e);
+                        ElkLogEventReport.reportAccostModule.reportAccostView(accostSource,parkItemEntity.getId(),parkItemEntity.getSex(),e.getMessage()+e.getCode());
                         if(e.getCode()!=null && e.getCode().intValue()==21001 ){//钻石余额不足
                             ToastCenterUtils.showToast(R.string.playfun_dialog_exchange_integral_total_text3);
                             AccostFirstSuccess(null, position);
