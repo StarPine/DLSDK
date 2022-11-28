@@ -23,6 +23,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -55,6 +56,7 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
 import com.dl.playfun.ui.certification.certificationmale.CertificationMaleFragment;
+import com.dl.playfun.ui.coinpusher.dialog.CoinPusherDialogAdapter;
 import com.dl.playfun.ui.dialog.GiftBagDialog;
 import com.dl.playfun.ui.message.chatdetail.notepad.NotepadActivity;
 import com.dl.playfun.ui.message.mediagallery.MediaGalleryVideoSettingActivity;
@@ -80,6 +82,7 @@ import com.dl.playfun.widget.dialog.UserBehaviorDialog;
 import com.google.gson.Gson;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.listener.OnResultCallbackListener;
+import com.luck.picture.lib.permissions.PermissionChecker;
 import com.opensource.svgaplayer.SVGACallback;
 import com.opensource.svgaplayer.SVGAImageView;
 import com.opensource.svgaplayer.SVGAParser;
@@ -121,6 +124,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import me.goldze.mvvmhabit.utils.ToastUtils;
 import me.yokeyword.fragmentation.ISupportFragment;
@@ -358,16 +362,15 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             startSVGAnimotion();
         });
         //im价格加载提醒
-        viewModel.uc.imProfit.observe(this, unused -> {
-            String videoTips = viewModel.priceConfigEntityField.getCurrent().getVideoTips();
-            if (ConfigManager.getInstance().getTipMoneyShowFlag() && videoTips != null && videoTips.length() > 0) {
-                String replaceEnd = videoTips.replaceAll("\\(|\\)", "");
-                inputLayout.setProfitTip(replaceEnd, true);
-            } else {
-                inputLayout.setProfitTip("", false);
-            }
-
-        });
+//        viewModel.uc.imProfit.observe(this, unused -> {
+//            String videoTips = viewModel.priceConfigEntityField.getCurrent().getVideoTips();
+//            if (ConfigManager.getInstance().getTipMoneyShowFlag() && videoTips != null && videoTips.length() > 0) {
+//                String replaceEnd = videoTips.replaceAll("\\(|\\)", "");
+//                inputLayout.setProfitTip(replaceEnd, true);
+//            } else {
+//                inputLayout.setProfitTip("", false);
+//            }
+//        });
         viewModel.uc.sendUserGiftError.observe(this, new Observer<Void>() {
             @Override
             public void onChanged(Void unused) {
@@ -1292,7 +1295,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             return;
         }
         isShowAudioPermDialog = true;
-        applyRecordAudioPermission();
+        toPermissionIntent.launch(Manifest.permission.RECORD_AUDIO);
     }
 
     private void callingAble(String audioTag){
@@ -1359,6 +1362,8 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
 
         MessageDetailDialog.AudioAndVideoCallDialog(mActivity,
                 true,
+                audioTag,
+                isDouble,
                 AudioProfitTips,
                 VideoProfitTips,
                 new MessageDetailDialog.AudioAndVideoCallOnClickListener() {
