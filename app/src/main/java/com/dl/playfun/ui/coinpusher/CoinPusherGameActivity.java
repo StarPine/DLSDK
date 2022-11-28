@@ -568,10 +568,10 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
             if (viewModel.unitPriceList == null || viewModel.payUserBalanceMoney == 0){
                 return;
             }
-            GiftBagDialog giftBagDialog = new GiftBagDialog(getContext(), false, viewModel.payUserBalanceMoney, viewModel.unitPriceList.size() > 1 ? 3 : 0);
+            GiftBagDialog giftBagDialog = new GiftBagDialog(getContext(), false,  0);
             giftBagDialog.setGiftOnClickListener(new GiftBagDialog.GiftOnClickListener() {
                 @Override
-                public void sendGiftClick(Dialog dialog, int number, GiftBagEntity.giftEntity giftEntity) {
+                public void sendGiftClick(Dialog dialog, int number, GiftBagEntity.GiftEntity giftEntity) {
                     dialog.dismiss();
                     viewModel.sendUserGift(dialog, giftEntity, viewModel.otherCallInfoEntity.get().getId(), number);
                 }
@@ -587,7 +587,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
         //发送礼物效果展示
         viewModel.gameUI.sendUserGiftAnim.observe(this, stringObjectMap -> {
             int account = (int) stringObjectMap.get("account");
-            GiftBagEntity.giftEntity giftEntity = (GiftBagEntity.giftEntity) stringObjectMap.get("giftEntity");
+            GiftBagEntity.GiftEntity giftEntity = (GiftBagEntity.GiftEntity) stringObjectMap.get("giftEntity");
             //启动SVG动画
 //            startSendSvgAnimotion(giftEntity);
 //            //启动横幅动画

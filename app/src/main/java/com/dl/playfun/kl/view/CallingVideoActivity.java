@@ -366,21 +366,18 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
             }
         });
         //发送礼物效果展示
-        viewModel.uc.sendUserGiftAnim.observe(this, new Observer<Map<String, Object>>() {
-            @Override
-            public void onChanged(Map<String, Object> stringObjectMap) {
-                try {
-                    int account = (int) stringObjectMap.get("account");
-                    GiftBagEntity.GiftEntity giftEntity = (GiftBagEntity.GiftEntity) stringObjectMap.get("giftEntity");
-                    //启动SVG动画
-                    startVideoSendSvgAnimotion(giftEntity);
-                    //启动横幅动画
-                    startVideoSendBannersAnimotion(account, giftEntity);
-                    //启动头像动画
-                    startVideoSendHeadAnimotion(giftEntity);
-                } catch (Exception e) {
+        viewModel.uc.sendUserGiftAnim.observe(this, stringObjectMap -> {
+            try {
+                int account = (int) stringObjectMap.get("account");
+                GiftBagEntity.GiftEntity giftEntity = (GiftBagEntity.GiftEntity) stringObjectMap.get("giftEntity");
+                //启动SVG动画
+                startVideoSendSvgAnimotion(giftEntity);
+                //启动横幅动画
+                startVideoSendBannersAnimotion(account, giftEntity);
+                //启动头像动画
+                startVideoSendHeadAnimotion(giftEntity);
+            } catch (Exception e) {
 
-                }
             }
         });
         //接听成功
@@ -394,7 +391,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         viewModel.uc.callGiftBagAlert.observe(this, new Observer<Void>() {
             @Override
             public void onChanged(Void unused) {
-                GiftBagDialog giftBagDialog = new GiftBagDialog(mContext, true, viewModel.maleBalanceMoney, 0);
+                GiftBagDialog giftBagDialog = new GiftBagDialog(mContext, true, 0);
                 giftBagDialog.setGiftOnClickListener(new GiftBagDialog.GiftOnClickListener() {
                     @Override
                     public void sendGiftClick(Dialog dialog, int number, GiftBagEntity.GiftEntity giftEntity) {
@@ -534,7 +531,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         }
     }
 
-    private void startVideoSendHeadAnimotion(GiftBagEntity.giftEntity giftEntity) {
+    private void startVideoSendHeadAnimotion(GiftBagEntity.GiftEntity giftEntity) {
         ImageView giftImageTrans = new ImageView(mContext);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(dip2px(50), dip2px(50));
         layoutParams.bottomMargin = dip2px(43);

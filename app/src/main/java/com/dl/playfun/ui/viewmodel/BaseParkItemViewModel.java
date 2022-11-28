@@ -16,6 +16,8 @@ import com.dl.playfun.entity.TaskAdEntity;
 import com.dl.playfun.event.CoinPusherRoomEvent;
 import com.dl.playfun.event.TaskMainTabEvent;
 import com.dl.playfun.manager.ConfigManager;
+import com.dl.playfun.ui.home.HomeMainViewModel;
+import com.dl.playfun.ui.home.search.SearchViewModel;
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
 import com.dl.playfun.ui.mine.wallet.diamond.recharge.DiamondRechargeActivity;
 import com.dl.playfun.ui.task.webview.FukuokaViewFragment;
@@ -68,7 +70,6 @@ public class BaseParkItemViewModel extends MultiItemViewModel<BaseParkViewModel>
                 try {
                     if(viewModel instanceof HomeMainViewModel){
                         accostSource = 1;
-                        Log.e("单点搭讪","是在主页搭讪================");
                     }else if(viewModel instanceof SearchViewModel){
                         accostSource = 3;
                     }
