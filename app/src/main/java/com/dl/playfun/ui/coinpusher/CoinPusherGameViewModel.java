@@ -37,6 +37,7 @@ import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
+import com.dl.rtc.calling.base.DLRTCCalling;
 import com.dl.rtc.calling.manager.DLRTCAudioManager;
 import com.dl.rtc.calling.manager.DLRTCStartShowUIManager;
 import com.dl.rtc.calling.model.DLRTCDataMessageType;
@@ -218,6 +219,7 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
             }else{
                 answerUserId = gameCallEntity.getAcceptUserId();
             }
+            gameCallEntity.setCallingRole(DLRTCCalling.Role.CALL);
             callingInviteUser(callingType, fromUserId, answerUserId);
         }
     });

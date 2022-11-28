@@ -40,6 +40,7 @@ import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.kl.view.AudioCallChatingActivity;
 import com.dl.playfun.kl.view.CallingVideoActivity;
+import com.dl.playfun.kl.view.DialingAudioActivity;
 import com.dl.playfun.kl.viewmodel.UITRTCCallingDelegate;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.V2TIMCustomManagerUtil;
@@ -657,7 +658,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
     private void interceptBackPressed(){
         if(viewModel!=null){
             if(viewModel.gamePlayingState==null){ //状态为空
-                if(viewModel.gameCallEntity != null && viewModel.gameCallEntity.isCalling()){
+                if(viewModel.gameCallEntity != null){
                     Log.e("进入返回语音页面","=======================");
                     callingInterceptApply();
                 }
@@ -706,8 +707,20 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
             if(audioCallChatingAct == null){
                 intent = new Intent(getContext(), AudioCallChatingActivity.class);
             }
+            //返回拨打中页面
+            if(viewModel.callingOnTheLine.get()){
+                intent = new Intent(getContext(), DialingAudioActivity.class);
+            }
+            if(intent!=null){
+                intent.putExtra("isRestart", true);
+            }
+
         } else {
             intent = new Intent(getContext(), CallingVideoActivity.class);
+            //返回拨打中页面
+            intent.putExtra("isRestart", viewModel.callingOnTheLine.get());
+            intent.putExtra(DLRTCCallingConstants.PARAM_NAME_ROLE,DLRTCCalling.Role.CALL);
+
         }
         if(intent != null){
             intent.putExtra(DLRTCCallingConstants.DLRTCInviteUserID, viewModel.gameCallEntity.getInviteUserId());
