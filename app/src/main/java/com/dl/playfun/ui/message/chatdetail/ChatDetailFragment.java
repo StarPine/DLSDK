@@ -1295,7 +1295,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
             return;
         }
         isShowAudioPermDialog = true;
-        toPermissionIntent.launch(Manifest.permission.RECORD_AUDIO);
+        alertPermissions(R.string.playfun_permissions_audio_txt2);
     }
 
     private void callingAble(String audioTag){
@@ -1342,6 +1342,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     private void alertPermissions(@StringRes int stringResId){
         //获取语音权限失败
         CoinPusherDialogAdapter.getDialogPermissions(mActivity, stringResId, _success -> {
+            isShowAudioPermDialog = false;
             if(_success){
                 PermissionChecker.launchAppDetailsSettings(mActivity);
             }

@@ -2,6 +2,7 @@ package com.dl.playfun.ui.coinpusher.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Window;
@@ -107,10 +108,15 @@ public class CoinPusherDialogAdapter {
         });
         binding.tvTitle.setText(ContentResId);
         binding.imgClose.setOnClickListener(v -> {
-            if(permissionDialogListener!=null){
-                permissionDialogListener.callback(false);
-            }
             dialog.dismiss();
+        });
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                if(permissionDialogListener!=null){
+                    permissionDialogListener.callback(false);
+                }
+            }
         });
         //设置背景透明,去四个角
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
