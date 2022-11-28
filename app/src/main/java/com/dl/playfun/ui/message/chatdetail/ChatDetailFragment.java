@@ -160,6 +160,8 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     private volatile int defBottomMargin = 0;
     private volatile int defBottomMarginHeight = 0;
     private CoinRechargeSheetView coinRechargeFragmentView;
+    private boolean isShowAudioPermDialog;
+    private int lastHeight;
 
     @Nullable
     @Override
@@ -1225,29 +1227,17 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     }
 
     @Override
-    public void onChangedFaceLayout(boolean flag, int height, int faceHeight) {
+    public void onChangedVideoLayout(int height) {
         try {
             //非客服账号加载用户标签和状态
             if (!mChatInfo.getId().startsWith(AppConfig.CHAT_SERVICE_USER_ID)) {
-                if (flag) {
-                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) binding.rlLayout.getLayoutParams();
-                    if (defBottomMargin == 0) {
-                        defBottomMargin = layoutParams.bottomMargin;
-                    }
-                    int ctHeight = 0;
-                    if (height == 0 || faceHeight == 0) {
-                        ctHeight = faceHeight == 0 ? 1084 : faceHeight;
-                    }
-                    layoutParams.bottomMargin = height + ctHeight + defBottomMarginHeight;
-                    binding.rlLayout.setLayoutParams(layoutParams);
-                } else {
-                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) binding.rlLayout.getLayoutParams();
-                    if (defBottomMargin == 0) {
-                        defBottomMargin = layoutParams.bottomMargin;
-                    }
-                    layoutParams.bottomMargin = defBottomMargin;
-                    binding.rlLayout.setLayoutParams(layoutParams);
-                }
+
+                if (lastHeight == height)return;
+
+                lastHeight = height;
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) binding.rlLayout.getLayoutParams();
+                layoutParams.bottomMargin = lastHeight + 135;
+                binding.rlLayout.setLayoutParams(layoutParams);
             }
         } catch (Exception e) {
 
@@ -1283,6 +1273,15 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     @Override
     public void onClickCallVideo() {
         callingAble(VIDEO_TAG);
+    }
+
+    @Override
+    public void applyAudioPermission() {
+        if (isShowAudioPermDialog){
+            return;
+        }
+        isShowAudioPermDialog = true;
+        applyRecordAudioPermission();
     }
 
     private void callingAble(String audioTag){
@@ -1342,29 +1341,34 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                         AppContext.instance().logEvent(AppsFlyerEvent.im_video_call);
                         viewModel.getCallingInvitedInfo(2, getUserIdIM(), mChatInfo.getId());
                     } else {
-                        TraceDialog.getInstance(mActivity)
-                                .setCannelOnclick(new TraceDialog.CannelOnclick() {
-                                    @Override
-                                    public void cannel(Dialog dialog) {
-
-                                    }
-                                })
-                                .setConfirmOnlick(new TraceDialog.ConfirmOnclick() {
-                                    @Override
-                                    public void confirm(Dialog dialog) {
-                                        new RxPermissions(mActivity)
-                                                .request(Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA)
-                                                .subscribe(granted -> {
-                                                    if (granted) {
-                                                        AppContext.instance().logEvent(AppsFlyerEvent.im_video_call);
-                                                        viewModel.getCallingInvitedInfo(2, getUserIdIM(), mChatInfo.getId());
-                                                    }
-                                                });
-                                    }
-                                })
-                                .AlertCallAudioPermissions().show();
+                        applyRecordAudioPermission();
                     }
                 });
+    }
+
+    private void applyRecordAudioPermission() {
+        TraceDialog.getInstance(mActivity)
+                .setCannelOnclick(new TraceDialog.CannelOnclick() {
+                    @Override
+                    public void cannel(Dialog dialog) {
+                        isShowAudioPermDialog = false;
+                    }
+                })
+                .setConfirmOnlick(new TraceDialog.ConfirmOnclick() {
+                    @Override
+                    public void confirm(Dialog dialog) {
+                        isShowAudioPermDialog = false;
+                        new RxPermissions(mActivity)
+                                .request(Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA)
+                                .subscribe(granted -> {
+                                    if (granted) {
+                                        AppContext.instance().logEvent(AppsFlyerEvent.im_video_call);
+                                        viewModel.getCallingInvitedInfo(2, getUserIdIM(), mChatInfo.getId());
+                                    }
+                                });
+                    }
+                })
+                .AlertCallAudioPermissions().show();
     }
 
     private void startAudioCalling() {
