@@ -99,7 +99,7 @@ public class TaskCenterWebViewFragment extends BaseFragment<TaskCenterFragmentWe
     public void onResume() {
         super.onResume();
         if (webView != null) {
-            //webView.loadUrl("javascript:newData()");
+            webView.loadUrl("javascript:newData()");
         }
     }
 
