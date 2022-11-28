@@ -18,6 +18,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
@@ -25,7 +26,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -90,12 +90,13 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     private static final int STATE_ACTION_INPUT = 3;
 
     /**
-     * DL add 彭石林新增--自定义按钮组
+     * 消息发送按钮
      */
-    protected ImageView sendBtnDisplay;
+    protected Button mSendTextButton;
     protected ImageView phoneVideoBtn;
     protected ImageView giftBtn;
     protected ImageView callPhoneVideoBtn;
+    protected ImageView callPhoneAudioBtn;
 
     // 音视频通话成员数限制
     protected static final int CALL_MEMBER_LIMIT = 8;
@@ -117,11 +118,6 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
      */
     protected Object mMoreInputEvent;
     protected boolean mMoreInputDisable;
-
-    /**
-     * 消息发送按钮
-     */
-    protected ImageView mSendTextButton;
 
     /**
      * 语音长按按钮
@@ -167,26 +163,13 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
 
     private boolean isReplyModel = false;
     private View replyLayout;
+    private LinearLayout ll_input;
+    private LinearLayout ll_super;
     private TextView replyTv;
     private ImageView replyCloseBtn;
     private ReplyPreviewBean replyPreviewBean;
     private boolean isShowCustomFace = true;
     private boolean isListenerCustomizeMessage = false;//是否已监听
-    /**
-     * 临时新增
-     */
-    private TextView tv_profit_tip;
-
-
-    public void setProfitTip(String tip,boolean isShow){
-        if (isShow){
-            tv_profit_tip.setVisibility(VISIBLE);
-            tv_profit_tip.setText(tip);
-        }else {
-            tv_profit_tip.setVisibility(GONE);
-        }
-
-    }
 
     private SendOnClickCallback sendOnClickCallbacks;
 
@@ -233,11 +216,12 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         mEmojiInputButton = findViewById(R.id.face_btn);
         mSendTextButton = findViewById(R.id.send_btn);
         mTextInput = findViewById(R.id.chat_message_input);
+        ll_input = findViewById(R.id.ll_input);
+        ll_super = findViewById(R.id.ll_super);
         replyLayout = findViewById(R.id.reply_preview_bar);
         replyTv = findViewById(R.id.reply_text);
 //        replyCloseBtn = findViewById(R.id.reply_close_btn);
         // 子类实现所有的事件处理
-
 
         int iconSize = getResources().getDimensionPixelSize(R.dimen.chat_input_icon_size);
         ViewGroup.LayoutParams layoutParams = mEmojiInputButton.getLayoutParams();
@@ -245,26 +229,23 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         layoutParams.height = iconSize;
         mEmojiInputButton.setLayoutParams(layoutParams);
 
-        layoutParams = mAudioInputSwitchButton.getLayoutParams();
-        layoutParams.width = iconSize;
-        layoutParams.height = iconSize;
-        mAudioInputSwitchButton.setLayoutParams(layoutParams);
-
-        layoutParams.width = iconSize;
-        layoutParams.height = iconSize;
-
-        //彭石林新增
-        sendBtnDisplay = findViewById(R.id.send_btn_display);
         phoneVideoBtn = findViewById(R.id.phone_video_btn);
         giftBtn = findViewById(R.id.gift_btn);
+        callPhoneAudioBtn = findViewById(R.id.call_phone_audio_btn);
         callPhoneVideoBtn = findViewById(R.id.call_phone_video_btn);
-        tv_profit_tip = findViewById(R.id.tv_profit_tip);
-
         init();
     }
 
     @SuppressLint("ClickableViewAccessibility")
     protected void init() {
+        ll_super.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (sendOnClickCallbacks != null) {
+                    sendOnClickCallbacks.onChangedVideoLayout(ll_super.getMeasuredHeight());
+                }
+            }
+        });
 
         //DL add
         phoneVideoBtn.setOnClickListener(new View.OnClickListener(){
@@ -287,11 +268,19 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             @Override
             public void onClick(View v) {
                 if (sendOnClickCallbacks != null) {
-                    sendOnClickCallbacks.onClickCallPlayUser();
+                    sendOnClickCallbacks.onClickCallVideo();
                 }
             }
         });
-        
+        callPhoneAudioBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (sendOnClickCallbacks != null) {
+                    sendOnClickCallbacks.onClickCallAudio();
+                }
+            }
+        });
+
         mAudioInputSwitchButton.setOnClickListener(this);
         mEmojiInputButton.setOnClickListener(this);
         mSendTextButton.setOnClickListener(this);
@@ -361,6 +350,9 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                                 });
                                 break;
                             case MotionEvent.ACTION_MOVE:
+                                if (mChatInputHandler != null) {
+                                    mChatInputHandler.onTouchFlag(true);
+                                }
                                 if (motionEvent.getY() - mStartRecordY < -100) {
                                     mAudioCancel = true;
                                     if (mChatInputHandler != null) {
@@ -378,6 +370,9 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                                 break;
                             case MotionEvent.ACTION_CANCEL:
                             case MotionEvent.ACTION_UP:
+                                if (mChatInputHandler != null) {
+                                    mChatInputHandler.onTouchFlag(false);
+                                }
                                 mAudioCancel = motionEvent.getY() - mStartRecordY < -100;
                                 if (mChatInputHandler != null) {
                                     mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_STOP);
@@ -393,7 +388,9 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                     @Override
                     public void onDenied() {
                         TUIChatLog.i(TAG, "audio record checkPermission failed");
-
+                        if (sendOnClickCallbacks != null) {
+                            sendOnClickCallbacks.applyAudioPermission();
+                        }
                     }
                 });
                 return false;
@@ -421,7 +418,6 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
 //                exitReply();
 //            }
 //        });
-
     }
 
     public void addInputText(String name, String id){
@@ -794,7 +790,6 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             if (mCurrentState == STATE_FACE_INPUT || mCurrentState == STATE_ACTION_INPUT) {
                 mCurrentState = STATE_VOICE_INPUT;
                 mInputMoreView.setVisibility(View.GONE);
-                mEmojiInputButton.setImageResource(R.drawable.action_face_selector);
             } else if (mCurrentState == STATE_SOFT_INPUT) {
                 mCurrentState = STATE_VOICE_INPUT;
             } else {
@@ -802,13 +797,13 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             }
             if (mCurrentState == STATE_VOICE_INPUT) {
                 mSendAudioButton.setVisibility(VISIBLE);
-                mTextInput.setVisibility(GONE);
+                ll_input.setVisibility(GONE);
                 mAudioInputSwitchButton.setImageResource(R.drawable.chat_input_keyboard);
                 hideSoftInput();
             } else {
                 mAudioInputSwitchButton.setImageResource(R.drawable.action_audio_selector);
                 mSendAudioButton.setVisibility(GONE);
-                mTextInput.setVisibility(VISIBLE);
+                ll_input.setVisibility(VISIBLE);
                 showSoftInput();
             }
         } else if (view.getId() == R.id.face_btn) {
@@ -816,20 +811,15 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             if (mCurrentState == STATE_VOICE_INPUT) {
                 mCurrentState = STATE_NONE_INPUT;
                 mSendAudioButton.setVisibility(GONE);
-                mTextInput.setVisibility(VISIBLE);
+                ll_input.setVisibility(VISIBLE);
             }
             if (mCurrentState == STATE_FACE_INPUT) {
                 mCurrentState = STATE_SOFT_INPUT;
                 mInputMoreView.setVisibility(View.GONE);
-                mEmojiInputButton.setImageResource(R.drawable.action_face_selector);
-                mTextInput.setVisibility(VISIBLE);
-                if (sendOnClickCallbacks != null) {
-                    sendOnClickCallbacks.onChangedFaceLayout(false, 0, 0);
-                }
+                ll_input.setVisibility(VISIBLE);
 //                showSoftInput();
             } else {
                 mCurrentState = STATE_FACE_INPUT;
-                mEmojiInputButton.setImageResource(R.drawable.chat_input_keyboard);
                 showFaceViewGroup();
             }
         } else if (view.getId() == R.id.send_btn) {
@@ -872,10 +862,9 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         TUIChatLog.i(TAG, "showSoftInput");
         hideInputMoreLayout();
         mAudioInputSwitchButton.setImageResource(R.drawable.action_audio_selector);
-        mEmojiInputButton.setImageResource(R.drawable.chat_input_face);
         mCurrentState = STATE_SOFT_INPUT;
         mSendAudioButton.setVisibility(GONE);
-        mTextInput.setVisibility(VISIBLE);
+        ll_input.setVisibility(VISIBLE);
 
         mTextInput.requestFocus();
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -901,12 +890,13 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     }
 
     public void onEmptyClick() {
-        hideSoftInput();
-        mCurrentState = STATE_SOFT_INPUT;
-        mEmojiInputButton.setImageResource(R.drawable.action_face_selector);
-        mAudioInputSwitchButton.setImageResource(R.drawable.action_audio_selector);
-        mSendAudioButton.setVisibility(GONE);
-        mTextInput.setVisibility(VISIBLE);
+        if (mCurrentState != STATE_VOICE_INPUT){
+            hideSoftInput();
+            mCurrentState = STATE_SOFT_INPUT;
+        }
+//        mAudioInputSwitchButton.setImageResource(R.drawable.action_audio_selector);
+//        mSendAudioButton.setVisibility(GONE);
+//        ll_input.setVisibility(VISIBLE);
     }
 
     private boolean isSoftInputShown() {
@@ -976,6 +966,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
 
             @Override
             public void onEmojiClick(Emoji emoji) {
+                if (emoji == null)return;
                 int index = mTextInput.getSelectionStart();
                 Editable editable = mTextInput.getText();
                 editable.insert(index, emoji.getFilter());
@@ -995,16 +986,6 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                     mChatInputHandler.onInputAreaClick();
                 }
             }, 100);
-        }
-        if (mInputMoreView != null) {
-            mInputMoreView.post(new Runnable() {
-                @Override
-                public void run() {
-                    if (sendOnClickCallbacks != null) {
-                        sendOnClickCallbacks.onChangedFaceLayout(true, getMeasuredHeight(), mInputMoreView.getMeasuredHeight());
-                    }
-                }
-            });
         }
     }
 
@@ -1096,11 +1077,9 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         if (TextUtils.isEmpty(s.toString().trim())) {
             mSendEnable = false;
             showSendTextButton(View.GONE);
-            showMoreInputButton(View.VISIBLE);
         } else {
             mSendEnable = true;
             showSendTextButton(View.VISIBLE);
-            showMoreInputButton(View.GONE);
             if (mTextInput.getLineCount() != mLastMsgLineCount) {
                 mLastMsgLineCount = mTextInput.getLineCount();
                 if (mChatInputHandler != null) {
@@ -1402,11 +1381,9 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         mMoreInputDisable = disable;
         if (disable) {
 //            mMoreInputButton.setVisibility(GONE);
-            sendBtnDisplay.setVisibility(GONE);
             mSendTextButton.setVisibility(VISIBLE);
         } else {
 //            mMoreInputButton.setVisibility(VISIBLE);
-            sendBtnDisplay.setVisibility(VISIBLE);
             mSendTextButton.setVisibility(GONE);
         }
     }
@@ -1447,7 +1424,6 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         if (mMoreInputDisable) {
             return;
         }
-        sendBtnDisplay.setVisibility(visibility);
     }
 
     protected void showSendTextButton(int visibility) {
@@ -1519,6 +1495,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         void onInputAreaClick();
 
         void onRecordStatusChanged(int status);
+        void onTouchFlag(boolean isMove);
     }
 
     public interface OnStartActivityListener {
@@ -1531,12 +1508,15 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         void onClickPhoneVideo();
         void onClickGift();
 
-        void onClickCallPlayUser();
+        void onClickCallAudio();
+        void onClickCallVideo();
+        void applyAudioPermission();
 
         void sendBlackStatus(int status);
 
+
         //简体表情按钮是否展开
-        void onChangedFaceLayout(boolean flag, int height, int faceHeight);
+        void onChangedVideoLayout(int height);
     }
 
 }

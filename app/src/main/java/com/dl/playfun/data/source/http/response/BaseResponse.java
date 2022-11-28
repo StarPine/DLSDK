@@ -15,7 +15,7 @@ public class BaseResponse {
     private String message;
 
     //新版定义内容
-    private Integer errorCode = 0;
+    private Integer errorCode ;
     private String errorMsg = "";
     private long timestamp = 0;
 

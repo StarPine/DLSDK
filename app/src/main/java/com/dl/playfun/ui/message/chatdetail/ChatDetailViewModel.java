@@ -534,7 +534,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                     @Override
                     public void onError(RequestException e) {
                         super.onError(e);
-                        if(e.getCode()!=null && e.getCode() ==21001 && e.getCode()==1 ){//钻石余额不足
+                        if(e.getCode()!=null && e.getCode() ==21001){//钻石余额不足
                             uc.sendDialogViewEvent.call();
                         }
                     }

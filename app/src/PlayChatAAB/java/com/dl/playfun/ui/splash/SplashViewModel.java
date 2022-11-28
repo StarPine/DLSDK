@@ -9,6 +9,7 @@ import androidx.databinding.ObservableBoolean;
 
 import com.appsflyer.AppsFlyerLib;
 import com.blankj.utilcode.util.StringUtils;
+import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.EaringlSwitchUtil;
@@ -109,6 +110,7 @@ public class SplashViewModel extends BaseViewModel<AppRepository> {
                         if (!response.isDataEmpty()) {
                             ApiConfigManagerEntity apiConfigManager = response.getData();
                             if (apiConfigManager != null) {
+                                AppConfig.CHAT_SERVICE_USER_ID = apiConfigManager.getCustomerId();
                                 model.saveApiConfigManager(apiConfigManager);
                                 model.putKeyValue(LocalDataSourceImpl.KEY_ELK_URL_DATA,apiConfigManager.getAppLoggerUrl());
                                 initSettingConfig();
