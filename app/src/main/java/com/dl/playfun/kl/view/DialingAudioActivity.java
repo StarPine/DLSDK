@@ -11,8 +11,12 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.StringRes;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.blankj.utilcode.util.GsonUtils;
+import com.blankj.utilcode.util.StringUtils;
+import com.dl.lib.util.log.MPTimber;
 import com.dl.playfun.BR;
 import com.dl.playfun.app.AppViewModelFactory;
+import com.dl.playfun.entity.CallUserRoomInfoEntity;
 import com.dl.playfun.event.AudioCallingCancelEvent;
 import com.dl.playfun.kl.CallChatingConstant;
 import com.dl.playfun.kl.viewmodel.AudioCallingViewModel2;
@@ -39,6 +43,9 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
     private boolean inviteSelf;
     private DLRTCCalling.Role role;
     private int rtcInviteRoomId;
+
+    private String inviteExtJson = null;
+    private CallUserRoomInfoEntity _callUserRoomInfoEntity = null;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -103,6 +110,8 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
         inviteUserID = intent.getStringExtra(DLRTCCallingConstants.DLRTCInviteUserID);
         inviteSelf = intent.getBooleanExtra(DLRTCCallingConstants.DLRTCInviteSelf,false);
         rtcInviteRoomId = intent.getIntExtra(DLRTCCallingConstants.RTCInviteRoomID,0);
+        inviteExtJson = intent.getStringExtra(DLRTCCallingConstants.inviteExtJson);
+
     }
 
     @Override
@@ -116,6 +125,9 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
                 viewModel.getCallingUserInfo(null, acceptUserID);
         } else {//被动接听
             viewModel.getCallingUserInfo(null, inviteUserID);
+        }
+        if(!StringUtils.isEmpty(inviteExtJson)){
+            _callUserRoomInfoEntity = GsonUtils.fromJson(inviteExtJson,CallUserRoomInfoEntity.class);
         }
         toPermissionIntent.launch(Manifest.permission.RECORD_AUDIO);
     }

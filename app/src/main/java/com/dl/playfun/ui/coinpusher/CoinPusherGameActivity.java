@@ -873,7 +873,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
             binding.rlReceiveCall.setVisibility(View.GONE);
             if(viewModel.gameCallEntity!=null && viewModel.gameCallEntity.getCallingType()!=null){
                 //视频通话
-                if(Objects.equals(viewModel.gameCallEntity.getCallingType(), DLRTCDataMessageType.INSTANCE.getVideo())){
+                if(viewModel.gameCallEntity.getCallingType() == DLRTCDataMessageType.DLInviteRTCType.dl_rtc_video){
                     if(faceUnityView != null){
                         binding.flFaceView.removeView(faceUnityView);
                     }
@@ -977,7 +977,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
         if(viewModel.gameCallEntity!=null && viewModel.gameCallEntity.getCallingType()!=null){
             viewModel.gameCallEntity.setCalling(true);
             //视频通话
-            if(Objects.equals(viewModel.gameCallEntity.getCallingType(), DLRTCDataMessageType.DLInviteRTCType.dl_rtc_video)){
+            if(viewModel.gameCallEntity.getCallingType() == DLRTCDataMessageType.DLInviteRTCType.dl_rtc_video){
                 binding.rlCallingUserLayout.setVisibility(View.GONE);
                 binding.rlVideoCallLayout.setVisibility(View.VISIBLE);
                 //创建视频美颜渲染view

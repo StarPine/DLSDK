@@ -22,6 +22,7 @@ import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
+import com.dl.playfun.entity.CallUserRoomInfoEntity;
 import com.dl.playfun.entity.CallingInviteInfo;
 import com.dl.playfun.entity.ChatDetailCoinEntity;
 import com.dl.playfun.entity.EvaluateEntity;
@@ -42,6 +43,7 @@ import com.dl.playfun.event.AddBlackListEvent;
 import com.dl.playfun.event.CallChatingHangupEvent;
 import com.dl.playfun.event.MessageGiftNewEvent;
 import com.dl.playfun.event.MineInfoChangeEvent;
+import com.dl.playfun.kl.Utils;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.utils.ApiUitl;
@@ -49,6 +51,7 @@ import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.dl.rtc.calling.base.DLRTCCalling;
+import com.dl.rtc.calling.manager.DLRTCAudioManager;
 import com.dl.rtc.calling.manager.DLRTCStartShowUIManager;
 import com.dl.rtc.calling.model.DLRTCDataMessageType;
 import com.google.gson.Gson;
@@ -498,31 +501,33 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
             //男女点击拨打视频
             AppContext.instance().logEvent(ConfigManager.getInstance().isMale() ? AppsFlyerEvent.call_video_male : AppsFlyerEvent.call_video_female);
         }
-        model.callingInviteInfo(callingType, IMUserId, toIMUserId, 0)
+        Map<String, Object> mapData = new HashMap<>();
+        mapData.put("callingType",callingType);
+        mapData.put("inviterImId",IMUserId);
+        mapData.put("receiverImId",toIMUserId);
+        model.callingInviteUser(ApiUitl.getBody(GsonUtils.toJson(mapData)))
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
                 .compose(RxUtils.exceptionTransformer())
                 .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseDataResponse<CallingInviteInfo>>() {
+                .subscribe(new BaseObserver<BaseDataResponse<CallUserRoomInfoEntity>>(){
                     @Override
-                    public void onSuccess(BaseDataResponse<CallingInviteInfo> callingInviteInfoBaseDataResponse) {
-                        if (callingInviteInfoBaseDataResponse.getCode() == 2) {//忙线中
+                    public void onSuccess(BaseDataResponse<CallUserRoomInfoEntity> response) {
+                        if (response.getErrorCode() == 2) {//忙线中
                             uc.otherBusy.call();
                             return;
                         }
-                        if (callingInviteInfoBaseDataResponse.getCode() == 22001) {//游戏中
+                        if (response.getErrorCode() == 22001) {//游戏中
                             Toast.makeText(AppContext.instance(), R.string.playfun_in_game, Toast.LENGTH_SHORT).show();
                             return;
                         }
-
-                        CallingInviteInfo callingInviteInfo = callingInviteInfoBaseDataResponse.getData();
-                        if (callingInviteInfo != null) {
+                        CallUserRoomInfoEntity callUserRoomInfoEntity = response.getData();
+                        if (callUserRoomInfoEntity != null) {
                             com.dl.playfun.kl.Utils.inviteUserRTC(toIMUserId,
                                     callingType==1 ? DLRTCDataMessageType.DLInviteRTCType.dl_rtc_audio : DLRTCDataMessageType.DLInviteRTCType.dl_rtc_video,
-                                    callingInviteInfo.getRoomId(),true);
+                                    callUserRoomInfoEntity.getRoomId(),true,GsonUtils.toJson(callUserRoomInfoEntity));
                         }
                     }
-
                     @Override
                     public void onError(RequestException e) {
                         super.onError(e);

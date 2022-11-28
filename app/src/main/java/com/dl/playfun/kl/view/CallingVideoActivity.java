@@ -391,9 +391,6 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         viewModel.uc.callGiftBagAlert.observe(this, new Observer<Void>() {
             @Override
             public void onChanged(Void unused) {
-                if (viewModel.maleBalanceMoney == 0){
-                    return;
-                }
                 GiftBagDialog giftBagDialog = new GiftBagDialog(mContext, true, viewModel.maleBalanceMoney, 0);
                 giftBagDialog.setGiftOnClickListener(new GiftBagDialog.GiftOnClickListener() {
                     @Override
@@ -481,7 +478,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
 
                     CustomDlTempMessage customDlTempMessage = V2TIMCustomManagerUtil.buildDlTempMessage(CustomConstants.CoinPusher.MODULE_NAME,CustomConstants.CoinPusher.CALL_GO_GAME_WINNING,callGameCoinPusherEntity);
                     //TUIMessageBean messageInfo = ChatMessageBuilder.buildCustomMessage(GsonUtils.toJson(customDlTempMessage), null, null);
-                    DLRTCSignalingManager.INSTANCE.sendC2CCustomMessage(GsonUtils.toJson(customDlTempMessage),viewModel.mRole ==  DLRTCCalling.Role.CALL?  viewModel.inviteUserID: viewModel.acceptUserID);
+                    DLRTCSignalingManager.INSTANCE.sendC2CCustomMessage(GsonUtils.toJson(customDlTempMessage),viewModel.mRole ==  DLRTCCalling.Role.CALL? viewModel.acceptUserID :  viewModel.inviteUserID);
                     startActivity(intent);
                     finish();
                 }
@@ -494,17 +491,20 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
             coinersDialog.show();
         });
         viewModel.uc.callingToGamePlayingEvent.observe(this, callGameCoinPusherEntity -> {
-            //进房
-            if(Objects.equals(callGameCoinPusherEntity.getState(),CallGameCoinPusherEntity.enterGame)){
-                //展示推币机入口
-                viewModel.coinPusherRoomShow.set(true);
-                viewModel._callGameCoinPusherEntity = callGameCoinPusherEntity;
-            }else if(Objects.equals(callGameCoinPusherEntity.getState(),CallGameCoinPusherEntity.leaveGame)){
-                if(!callGameCoinPusherEntity.isCircuses()){
-                    //退房
-                    viewModel.coinPusherRoomShow.set(false);
+            binding.getRoot().post(()->{
+                Log.e("大妈好啊没体哦弄口","===============");
+                //进房
+                if(Objects.equals(callGameCoinPusherEntity.getState(),CallGameCoinPusherEntity.enterGame)){
+                    //展示推币机入口
+                    viewModel.coinPusherRoomShow.set(true);
+                    viewModel._callGameCoinPusherEntity = callGameCoinPusherEntity;
+                }else if(Objects.equals(callGameCoinPusherEntity.getState(),CallGameCoinPusherEntity.leaveGame)){
+                    if(!callGameCoinPusherEntity.isCircuses()){
+                        //退房
+                        viewModel.coinPusherRoomShow.set(false);
+                    }
                 }
-            }
+            });
         });
     }
 

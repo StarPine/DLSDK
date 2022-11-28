@@ -33,6 +33,9 @@ object DLRTCDataMessageType {
     /// 离开音视频房间
     val exitRoom = "dl_rtc_message_exitRoom"
 
+    //音视频通讯邀请拓展字段
+    val inviteExtJson = "dl_rtc_invite_ext_json"
+
 
     val onlyAudio = "dl_rtc_audio"    ///纯音频
     val video     = "dl_rtc_video"       ///音视频邀请

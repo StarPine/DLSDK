@@ -20,4 +20,6 @@ object DLRTCCallingConstants {
     const val DLRTCInviteSelf = "dl_rtc_invite_self"
     //通话房间ID
     const val RTCInviteRoomID = "rtcInviteRoomId"
+    //拨打通话ext拓展字段
+    const val inviteExtJson = "inviteExtJson"
 }

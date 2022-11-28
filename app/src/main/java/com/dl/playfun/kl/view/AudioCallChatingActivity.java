@@ -401,18 +401,15 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
             }
         });
         //发送礼物效果展示
-        viewModel.uc.sendUserGiftAnim.observe(this, new Observer<Map<String, Object>>() {
-            @Override
-            public void onChanged(Map<String, Object> stringObjectMap) {
-                int account = (int) stringObjectMap.get("account");
-                GiftBagEntity.giftEntity giftEntity = (GiftBagEntity.giftEntity) stringObjectMap.get("giftEntity");
-                //启动SVG动画
-                startSendSvgAnimotion(giftEntity);
-                //启动横幅动画
-                startSendBannersAnimotion(giftEntity, account);
-                //启动头像动画
-                startSendHeadAnimotion(giftEntity);
-            }
+        viewModel.uc.sendUserGiftAnim.observe(this, stringObjectMap -> {
+            int account = (int) stringObjectMap.get("account");
+            GiftBagEntity.giftEntity giftEntity = (GiftBagEntity.giftEntity) stringObjectMap.get("giftEntity");
+            //启动SVG动画
+            startSendSvgAnimotion(giftEntity);
+            //启动横幅动画
+            startSendBannersAnimotion(giftEntity, account);
+            //启动头像动画
+            startSendHeadAnimotion(giftEntity);
         });
         //接听成功
         viewModel.uc.callAudioStart.observe(this, new Observer<Void>() {
@@ -430,9 +427,6 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         viewModel.uc.callGiftBagAlert.observe(this, new Observer<Void>() {
             @Override
             public void onChanged(Void unused) {
-                if ( viewModel.maleBalanceMoney == 0){
-                    return;
-                }
                 GiftBagDialog giftBagDialog = new GiftBagDialog(mContext, true, viewModel.maleBalanceMoney,  0);
                 giftBagDialog.setGiftOnClickListener(new GiftBagDialog.GiftOnClickListener() {
                     @Override

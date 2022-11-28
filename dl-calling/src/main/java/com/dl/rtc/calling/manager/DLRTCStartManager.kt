@@ -387,6 +387,12 @@ class DLRTCStartManager {
                         val rtcRoomId = getParamsRoomId(params[DLRTCDataMessageType.DLRTCInviteRoomID])
                         model.rtcInviteRoomId = rtcRoomId
                         this@DLRTCStartManager.inviteRTCRoomId = rtcRoomId
+                        //拓展字段 = dl_rtc_invite_ext_json
+                        val inviteExtJson = params[DLRTCDataMessageType.inviteExtJson] as? String
+                        inviteExtJson?.apply {
+                            model.inviteExtJson = this
+                            MPTimber.tag(TAGLOG).d("当前拓展字段：inviteExtJson： $inviteExtJson")
+                        }
                         for (delegate in delegates) {
                             delegate.RTCStartManagerReciveMsg(this@DLRTCStartManager, model)
                         }

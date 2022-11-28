@@ -125,7 +125,6 @@ public class CoinPusherDialogAdapter {
         window.setAttributes(lp);
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        dialog.show();
         return dialog;
     }
 

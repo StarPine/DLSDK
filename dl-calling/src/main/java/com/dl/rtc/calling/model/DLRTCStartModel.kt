@@ -17,6 +17,8 @@ class DLRTCStartModel {
   var rtcInviteStrRoomId : String = ""
   ///发起邀请，生成的RTC房间号，字符串类型，用于后续的扩展
   var rtcInviteRoomId : Int = 0
+  //ext_json 拓展字段
+  var inviteExtJson : String = ""
 
   override fun toString(): String {
     return "DLRTCStartModel(rtcDataMessageType='$rtcDataMessageType', acceptUserId='$acceptUserId', inviteUserId='$inviteUserId', inviteId='$inviteId', rtcInviteType='$rtcInviteType', rtcInviteStrRoomId='$rtcInviteStrRoomId', rtcInviteRoomId=$rtcInviteRoomId)"
