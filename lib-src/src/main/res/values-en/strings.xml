@@ -2286,5 +2286,6 @@
     <string name="playfun_permissions_audio_txt2">為了使用語音、錄音等功能，請先同意麥克風權限</string>
     <string name="playfun_permissions_video2">為了使用視訊、錄影、美顏等功能，請先同意攝像頭權限</string>
     <string name="playfun_photo_setting">Not be zero</string>
+    <string name="playfun_check_name_tips">Nickname occuppied, enter again.</string>
     <!--PlayFun-APP-END-->
 </resources>
