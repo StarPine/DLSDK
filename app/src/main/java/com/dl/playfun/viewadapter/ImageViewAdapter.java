@@ -164,11 +164,13 @@ public class ImageViewAdapter {
     public static void setPhotoItemImageUrl(ImageView imageView, String imageItemPhotoPath, int imageItemPhotoPlaceholderRes, int imageItemPhotoErrorPlaceholderRes,Boolean isLocalFile){
         if(!isLocalFile){
             Glide.with(imageView.getContext()).load(StringUtil.getFullImageUrl(imageItemPhotoPath))
+                    .fitCenter()//防止图片被拉伸
                     .error(imageItemPhotoErrorPlaceholderRes)
                     .placeholder(imageItemPhotoPlaceholderRes)
                     .into(imageView);
         }else{
             Glide.with(imageView.getContext()).load(imageItemPhotoPath)
+                    .fitCenter()//防止图片被拉伸
                     .error(imageItemPhotoErrorPlaceholderRes)
                     .placeholder(imageItemPhotoPlaceholderRes)
                     .into(imageView);
