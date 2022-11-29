@@ -143,8 +143,10 @@ public class MeSettingViewModel extends BaseViewModel<AppRepository> {
         //友盟用户统计
         // MobclickAgent.onProfileSignOff();
         AppConfig.userClickOut = true;
+        showHUD();
         ConfigManager.getInstance().getAppRepository().logout();
         popAllTo(new LoginOauthFragment());
+        dismissHUD();
         //startWithPopTo(LoginOauthFragment.class.getCanonicalName(), MainFragment.class.getCanonicalName(), true);
     }
 
