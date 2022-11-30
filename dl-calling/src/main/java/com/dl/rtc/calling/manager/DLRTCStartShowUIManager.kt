@@ -100,8 +100,8 @@ class DLRTCStartShowUIManager : DLRTCStartManagerDelegate, V2TIMSimpleMsgListene
     /**
      * 拨打电话
      */
-    fun inviteUserRTC(inviteUser : String, inviteType : DLRTCDataMessageType.DLInviteRTCType, roomId : Int, dlrtcStartUiClosuer: DLRTCStartUiClosuer){
-        DLRTCStartManager.instance.inviteUserRTC(inviteUser,inviteType,roomId, object : DLRTCModuleClosuer{
+    fun inviteUserRTC(inviteUser : String, inviteType : DLRTCDataMessageType.DLInviteRTCType, roomId : Int, dLInviteTimeout : Int?,inviteExtJson : String?, dlrtcStartUiClosuer: DLRTCStartUiClosuer){
+        DLRTCStartManager.instance.inviteUserRTC(inviteUser,inviteType,roomId, dLInviteTimeout, inviteExtJson, object : DLRTCModuleClosuer{
             override fun callback(_success: Boolean, _errorCode: Int, _errorMsg: String?) {
                 inviteUserCall = _success
                 dlrtcStartUiClosuer.callback(_success, _errorCode, _errorMsg)

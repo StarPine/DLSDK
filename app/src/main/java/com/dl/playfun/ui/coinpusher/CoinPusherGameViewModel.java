@@ -2,6 +2,9 @@ package com.dl.playfun.ui.coinpusher;
 
 import android.app.Application;
 import android.app.Dialog;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 
@@ -10,6 +13,7 @@ import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableInt;
 
+import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.dl.lib.util.log.MPTimber;
@@ -24,17 +28,15 @@ import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.CallUserInfoEntity;
 import com.dl.playfun.entity.CallUserRoomInfoEntity;
 import com.dl.playfun.entity.CallingInfoEntity;
-import com.dl.playfun.entity.CallingInviteInfo;
 import com.dl.playfun.entity.CallingStatusEntity;
 import com.dl.playfun.entity.CoinPusherBalanceDataEntity;
 import com.dl.playfun.entity.GiftBagEntity;
-import com.dl.playfun.entity.UserProfileInfo;
 import com.dl.playfun.event.CoinPusherGamePlayingEvent;
 import com.dl.playfun.kl.Utils;
-import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.V2TIMCustomManagerUtil;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.LogUtils;
+import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.dl.rtc.calling.base.DLRTCCalling;
@@ -42,6 +44,8 @@ import com.dl.rtc.calling.manager.DLRTCAudioManager;
 import com.dl.rtc.calling.manager.DLRTCStartShowUIManager;
 import com.dl.rtc.calling.model.DLRTCDataMessageType;
 import com.google.gson.Gson;
+import com.tencent.custom.GiftEntity;
+import com.tencent.custom.IMGsonUtils;
 import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
 import com.tencent.imsdk.v2.V2TIMCustomElem;
 import com.tencent.imsdk.v2.V2TIMManager;
@@ -55,6 +59,7 @@ import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import io.reactivex.disposables.Disposable;
 import me.goldze.mvvmhabit.binding.command.BindingAction;
@@ -98,6 +103,8 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
     public int mTimeCount = 0;
     //拨打中
     public ObservableBoolean callingOnTheLine = new ObservableBoolean(false);
+    //是否挂断
+    public ObservableBoolean callingDropped = new ObservableBoolean(true);
     //当前通话对方用户信息
     public ObservableField<CallUserInfoEntity> otherCallInfoEntity = new ObservableField<>();
     //当前通话房间信息
@@ -108,8 +115,6 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
     public boolean isCallingPay = false;
     //余额不足临界提示分钟数
     public int balanceNotEnoughTipsMinutes;
-    //价格配置表
-    public List<CallingInfoEntity.CallingUnitPriceInfo> unitPriceList;
     //付费放钻石总余额
     public int payUserBalanceMoney = 0;
 
@@ -122,6 +127,9 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
     public ObservableBoolean micMuteField = new ObservableBoolean(false);
     //是否免提
     public ObservableBoolean handsFreeField = new ObservableBoolean(false);
+    //回拨图标 语言or视讯拨打
+    public ObservableBoolean makeCallTypeField = new ObservableBoolean(true);
+
 
     public CoinPusherGameViewModel(@NonNull Application application, AppRepository model) {
         super(application, model);
@@ -245,6 +253,7 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
         }else{
             gamePlayingState = loadingPlayer;
         }
+        Log.e("推币机进行投币","房间ID:"+String.valueOf(roomId));
         model.playingCoinPusherThrowCoin(roomId)
                 .doOnSubscribe(this)
                 .compose(RxUtils.schedulersTransformer())
@@ -456,6 +465,8 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
         public SingleLiveEvent<Void> sendGiftBagEvent = new SingleLiveEvent<>();
         //发送礼物效果
         public SingleLiveEvent<Map<String, Object>> sendUserGiftAnim = new SingleLiveEvent<>();
+        //接收礼物效果
+        public SingleLiveEvent<GiftEntity> acceptUserGift = new SingleLiveEvent<>();
     }
     //显示loading
     public void loadingShow(){
@@ -533,7 +544,7 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
                 });
     }
     //IM消息监听
-    private static class IMAdvancedMsgListener extends V2TIMAdvancedMsgListener {
+    private class IMAdvancedMsgListener extends V2TIMAdvancedMsgListener {
         @Override
         public void onRecvNewMessage(V2TIMMessage msg) {
             TUIMessageBean info = ChatMessageBuilder.buildMessage(msg);
@@ -547,6 +558,19 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
                             //获取moudle-pushCoinGame 推币机
                             if (CustomConvertUtils.ContainsMessageModuleKey(contentBody, CustomConstants.Message.MODULE_NAME_KEY, CustomConstants.CoinPusher.MODULE_NAME)) {
                                 V2TIMCustomManagerUtil.CoinPusherManager(contentBody);
+                            }
+                        }
+                    }
+                }else if(info.getMsgType() == 1){
+                    if (otherCallInfoEntity.get()!=null && info.getV2TIMMessage().getSender().equals(otherCallInfoEntity.get().getImId())) {
+                        String text = String.valueOf(info.getExtra());
+                        if (StringUtil.isJSON2(text) && text.contains("type")) {//做自定义通知判断
+                            Map<String, Object> map_data = new Gson().fromJson(text, Map.class);
+                            //礼物消息
+                            if (map_data != null && map_data.get("type") != null && Objects.equals(map_data.get("type"), "message_gift")
+                                    && map_data.get("is_accost") == null) {
+                                GiftEntity giftEntity = IMGsonUtils.fromJson(String.valueOf(map_data.get("data")), GiftEntity.class);
+                                gameUI.acceptUserGift.postValue(giftEntity);
                             }
                         }
                     }

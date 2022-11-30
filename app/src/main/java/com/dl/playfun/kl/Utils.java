@@ -33,11 +33,11 @@ public class Utils {
         } else if (type == 2) {
             dlInviteRTCType = DLRTCDataMessageType.DLInviteRTCType.dl_rtc_video;
         }
-        inviteUserRTC(toUserId, dlInviteRTCType, roomId,startView,null);
+        inviteUserRTC(toUserId, dlInviteRTCType, roomId, 30,startView,null);
     }
 
-    public static void inviteUserRTC(String inviteUser, DLRTCDataMessageType.DLInviteRTCType inviteType, int roomId,boolean lanuchView,String inviteExtJson){
-        DLRTCStartShowUIManager.Companion.getInstance().inviteUserRTC(inviteUser, inviteType, roomId, (_success, _errorCode, _errorMsg) -> {
+    public static void inviteUserRTC(String inviteUser, DLRTCDataMessageType.DLInviteRTCType inviteType, int roomId,Integer dLInviteTimeout,boolean lanuchView,String inviteExtJson){
+        DLRTCStartShowUIManager.Companion.getInstance().inviteUserRTC(inviteUser, inviteType, roomId, dLInviteTimeout, inviteExtJson, (_success, _errorCode, _errorMsg) -> {
             if(_success){
                 Context mContext = DLRTCStartManager.Companion.getInstance().getMContext();
                 if(lanuchView){

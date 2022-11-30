@@ -2,12 +2,17 @@ package com.dl.playfun.manager;
 
 import android.util.Log;
 
+import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.R;
 import com.dl.playfun.entity.CallGameCoinPusherEntity;
+import com.dl.playfun.entity.CallingStatusEntity;
+import com.dl.playfun.entity.RtcRoomMessageEntity;
+import com.dl.playfun.event.CallingStatusEvent;
 import com.dl.playfun.event.CallingToGamePlayingEvent;
 import com.dl.playfun.event.CoinPusherGamePlayingEvent;
+import com.dl.playfun.event.RtcRoomMessageEvent;
 import com.google.gson.reflect.TypeToken;
 import com.tencent.custom.tmp.CustomDlTempMessage;
 import com.tencent.qcloud.tuicore.custom.CustomConstants;
@@ -19,6 +24,7 @@ import com.tencent.qcloud.tuicore.custom.entity.VideoPushEntity;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.Map;
+import java.util.Objects;
 
 import me.goldze.mvvmhabit.bus.RxBus;
 
@@ -92,8 +98,6 @@ public class V2TIMCustomManagerUtil {
                             callGameCoinPusherEntity.setClientWsRtcId(String.valueOf(callGoGame.get("clientWsRtcId")));
                             callGameCoinPusherEntity.setStreamUrl(String.valueOf(callGoGame.get("streamUrl")));
                             callGameCoinPusherEntity.setTotalGold(20);
-                            //callGameCoinPusherEntity.setTotalGold(Integer.parseInt(callGoGame.get("totalGold").toString()));
-                            //callGameCoinPusherEntity.setCountdown(Long.getLong(callGoGame.get("countdown").toString()));
                             BigDecimal levelId = new BigDecimal(String.valueOf(ObjectUtils.getOrDefault(callGoGame.get("levelId"),0)));
                             callGameCoinPusherEntity.setLevelId(levelId.intValue());
                             callGameCoinPusherEntity.setNickname(String.valueOf(callGoGame.get("nickname")));
@@ -102,6 +106,40 @@ public class V2TIMCustomManagerUtil {
                             BigDecimal roomId = new BigDecimal(String.valueOf(ObjectUtils.getOrDefault(callGoGame.get("roomId"),0)));
                             callGameCoinPusherEntity.setRoomId(roomId.intValue());
                             RxBus.getDefault().post(new CallingToGamePlayingEvent(callGameCoinPusherEntity));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * RTC通话中推送消息模块
+     */
+    public static void RtcRoomMessageManager(Map<String,Object> contentBody){
+        if(ObjectUtils.isNotEmpty(contentBody)){
+            //消息类型--判断
+            if(contentBody.containsKey(CustomConstants.Message.CUSTOM_MSG_KEY)){
+                //活动入口
+                if (CustomConvertUtils.ContainsMessageModuleKey(contentBody,CustomConstants.Message.CUSTOM_MSG_KEY,CustomConstants.RtcRoomMessage.TYPE_ACTIVITY_ENTRANCE)){
+                    // 活动入口
+                    Map<String,Object> startWinning = CustomConvertUtils.ConvertMassageModule(contentBody,CustomConstants.Message.CUSTOM_MSG_KEY,CustomConstants.RtcRoomMessage.TYPE_ACTIVITY_ENTRANCE,CustomConstants.Message.CUSTOM_MSG_BODY);
+                    if(ObjectUtils.isNotEmpty(startWinning)){
+                        RtcRoomMessageEntity rtcRoomMessageEntity = GsonUtils.fromJson(GsonUtils.toJson(startWinning),RtcRoomMessageEntity.class);
+                        if(rtcRoomMessageEntity != null){
+                            //推币机活动入口信息
+                            if(Objects.equals(rtcRoomMessageEntity.getActivityType(),RtcRoomMessageEntity.coinPusherGame)){
+                                RxBus.getDefault().post(new RtcRoomMessageEvent(rtcRoomMessageEntity));
+                            }
+                        }
+                    }
+                }else if(CustomConvertUtils.ContainsMessageModuleKey(contentBody,CustomConstants.Message.CUSTOM_MSG_KEY,CustomConstants.RtcRoomMessage.TYPE_CALLING_PROFIT_TIPS)){
+                    // //通话中收益
+                    Map<String,Object> startWinning = CustomConvertUtils.ConvertMassageModule(contentBody,CustomConstants.Message.CUSTOM_MSG_KEY,CustomConstants.RtcRoomMessage.TYPE_CALLING_PROFIT_TIPS,CustomConstants.Message.CUSTOM_MSG_BODY);
+                    if(ObjectUtils.isNotEmpty(startWinning)){
+                        CallingStatusEntity callingStatusEntity = GsonUtils.fromJson(GsonUtils.toJson(startWinning),CallingStatusEntity.class);
+                        if(callingStatusEntity!=null){
+                            RxBus.getDefault().post(new CallingStatusEvent(callingStatusEntity));
                         }
                     }
                 }

@@ -44,7 +44,8 @@ import me.goldze.mvvmhabit.utils.RxUtils;
 public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> implements Ifinish {
 
     private static final int MIN_DURATION_SHOW_LOW_QUALITY = 5000; //显示网络不佳最小间隔时间
-    public ObservableField<String> maleBinding = new ObservableField<>("");
+
+    public ObservableField<String> callPromptText = new ObservableField<>("");
     public ObservableField<Boolean> isCallBinding = new ObservableField<>(false);
 
     public ObservableField<CallUserInfoEntity> callingInviteInfoField = new ObservableField<>();
@@ -114,15 +115,13 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
 
     // 正常拨打等待接听中的挂断， 不涉及界面
     public void endTRTCCalling() {
-        Utils.runOnUiThread(() -> {
-            if (DLRTCCalling.Role.CALL == mRole) {
-                DLRTCStartShowUIManager.Companion.getInstance().inviteUserCanceled();
-                updateCallingStatus(CallChatingConstant.chanel);
-            } else {
-                DLRTCStartShowUIManager.Companion.getInstance().inviteUserReject();
-                updateCallingStatus(CallChatingConstant.dissolveRoom);
-            }
-        });
+        if (DLRTCCalling.Role.CALL == mRole) {
+            DLRTCStartShowUIManager.Companion.getInstance().inviteUserCanceled();
+            updateCallingStatus(CallChatingConstant.chanel);
+        } else {
+            DLRTCStartShowUIManager.Companion.getInstance().inviteUserReject();
+            updateCallingStatus(CallChatingConstant.dissolveRoom);
+        }
     }
     // 添加 监听
     DLRTCCallingDelegate mTRTCCallingDelegate = new UITRTCCallingDelegate() {

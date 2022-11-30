@@ -9,12 +9,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -25,6 +33,8 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.GsonUtils;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.dl.lib.util.log.MPTimber;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
@@ -35,9 +45,9 @@ import com.dl.playfun.databinding.ActivityCoinpusherGameBinding;
 import com.dl.playfun.entity.CallGameCoinPusherEntity;
 import com.dl.playfun.entity.CallUserInfoEntity;
 import com.dl.playfun.entity.CoinPusherBalanceDataEntity;
-import com.dl.playfun.entity.CoinPusherDataInfoEntity;
 import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.entity.GoodsEntity;
+import com.dl.playfun.kl.CallChatingConstant;
 import com.dl.playfun.kl.view.AudioCallChatingActivity;
 import com.dl.playfun.kl.view.CallingVideoActivity;
 import com.dl.playfun.kl.view.DialingAudioActivity;
@@ -50,12 +60,14 @@ import com.dl.playfun.ui.coinpusher.dialog.CoinPusherDialogAdapter;
 import com.dl.playfun.ui.coinpusher.dialog.CoinPusherGameHistoryDialog;
 import com.dl.playfun.ui.coinpusher.dialog.CoinPusherHelpDialog;
 import com.dl.playfun.ui.dialog.GiftBagDialog;
-import com.dl.playfun.ui.message.mediagallery.photo.MediaGalleryPhotoPayActivity;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.CoinPusherApiUtil;
 import com.dl.playfun.utils.ImmersionBarUtils;
+import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.utils.Utils;
 import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
+import com.dl.playfun.widget.custom.BaseSVGACallback;
+import com.dl.playfun.widget.image.CircleImageView;
 import com.dl.rtc.calling.DLRTCFloatWindowService;
 import com.dl.rtc.calling.base.DLRTCCalling;
 import com.dl.rtc.calling.base.impl.DLRTCInternalListenerManager;
@@ -73,10 +85,14 @@ import com.faceunity.nama.ui.FaceUnityView;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.luck.picture.lib.permissions.PermissionChecker;
 import com.misterp.toast.SnackUtils;
+import com.opensource.svgaplayer.SVGACallback;
+import com.opensource.svgaplayer.SVGAImageView;
+import com.opensource.svgaplayer.SVGAParser;
+import com.opensource.svgaplayer.SVGAVideoEntity;
+import com.tencent.custom.GiftEntity;
 import com.tencent.custom.tmp.CustomDlTempMessage;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.custom.CustomConstants;
-import com.tencent.qcloud.tuicore.custom.entity.MediaGalleryEditEntity;
 import com.tencent.rtmp.ui.TXCloudVideoView;
 import com.tencent.trtc.TRTCCloudDef;
 import com.wangsu.libwswebrtc.WsWebRTCObserver;
@@ -84,6 +100,10 @@ import com.wangsu.libwswebrtc.WsWebRTCParameters;
 import com.wangsu.libwswebrtc.WsWebRTCPortalReport;
 import com.wangsu.libwswebrtc.WsWebRTCView;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -145,6 +165,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
     //对端的用户信息-其他页面跳转过来。
     public CallUserInfoEntity _callUserInfoEntity = null;
 
+    private SVGAImageView giftEffects;
     @Override
     protected void onResume() {
         super.onResume();
@@ -324,8 +345,10 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
         }
         if(_gameCallEntity!=null){
             viewModel.gameCallEntity = _gameCallEntity;
+            viewModel.callingDropped.set(false);
             gameCalling();
         }
+        giftEffects = binding.giftEffects;
     }
 
 
@@ -566,9 +589,6 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
         });
         //发送礼物弹窗
         viewModel.gameUI.sendGiftBagEvent.observe(this,unused -> {
-            if (viewModel.unitPriceList == null || viewModel.payUserBalanceMoney == 0){
-                return;
-            }
             GiftBagDialog giftBagDialog = new GiftBagDialog(getContext(), false,  0);
             giftBagDialog.setGiftOnClickListener(new GiftBagDialog.GiftOnClickListener() {
                 @Override
@@ -589,12 +609,21 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
         viewModel.gameUI.sendUserGiftAnim.observe(this, stringObjectMap -> {
             int account = (int) stringObjectMap.get("account");
             GiftBagEntity.GiftEntity giftEntity = (GiftBagEntity.GiftEntity) stringObjectMap.get("giftEntity");
-            //启动SVG动画
-//            startSendSvgAnimotion(giftEntity);
+            if(giftEntity != null){
+                //启动播放礼物飘屏
+                startAcceptHeadAnimotion(true,giftEntity.getImg(),giftEntity.getLink(),account);
+            }
+
 //            //启动横幅动画
 //            startSendBannersAnimotion(giftEntity, account);
 //            //启动头像动画
 //            startSendHeadAnimotion(giftEntity);
+        });
+        //接收礼物效果展示
+        viewModel.gameUI.acceptUserGift.observe(this, giftEntity -> {
+            int account = giftEntity.getAmount();
+            //启动播放礼物飘屏
+            startAcceptHeadAnimotion(false,giftEntity.getImgPath(),giftEntity.getSvgaPath(),account);
         });
     }
 
@@ -706,6 +735,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
             //通话中页面不存在
             if(audioCallChatingAct == null){
                 intent = new Intent(getContext(), AudioCallChatingActivity.class);
+                CallChatingConstant.updateCoinPusherWatchRoom(_gameRoomId, viewModel.otherCallInfoEntity.get().getId(),2);
             }
             //返回拨打中页面
             if(viewModel.callingOnTheLine.get()){
@@ -745,7 +775,6 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
                         SnackUtils.showCenterShort(getContentShowView(),String.format(StringUtils.getString(R.string.playfun_coinpusher_text_downtime),millisUntilFinished/1000));
                     }
                 }
-
             }
 
             @Override
@@ -811,6 +840,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
         @Override
         public void onUserEnter(String userId) {
             viewModel.callingOnTheLine.set(false);
+            viewModel.callingDropped.set(false);
             MPTimber.tag(TAG).d("EmptyTRTCCallingDelegate onUserEnter userId："+userId);
             binding.rlReceiveCall.setVisibility(View.GONE);
             gameCalling();
@@ -855,6 +885,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
             recycleHandles();
             MPTimber.tag(TAG).d("EmptyTRTCCallingDelegate onCallEnd ");
             ToastUtils.showShort(AppContext.instance().getString(R.string.playfun_call_ended));
+            viewModel.callingDropped.set(true);
             //如果是围观方。应该结束游戏
             if(_circusesStatus){
                 finish();
@@ -883,6 +914,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
         viewModel.callingOnTheLine.set(false);
         binding.getRoot().post(()->{
             binding.rlVideoCallLayout.setVisibility(View.GONE);
+            binding.gameCallingVideoLayout.rlVideoAllLayout.setVisibility(View.GONE);
             binding.rlReceiveCall.setVisibility(View.GONE);
             if(viewModel.gameCallEntity!=null && viewModel.gameCallEntity.getCallingType()!=null){
                 //视频通话
@@ -897,6 +929,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
                     binding.rlCallingUserLayout.findViewById(R.id.img_call_audio_or_video).setActivated(true);
                 }
                 binding.rlVideoCallLayout.setVisibility(View.GONE);
+                binding.gameCallingVideoLayout.rlVideoAllLayout.setVisibility(View.GONE);
                 binding.rlCallingUserLayout.findViewById(R.id.img_call_audio_or_video).setVisibility(View.VISIBLE);
                 binding.rlCallingUserLayout.setVisibility(View.VISIBLE);
                 binding.rlCallingUserLayout.findViewById(R.id.fl_triangle_off).setVisibility(View.GONE);
@@ -985,14 +1018,16 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
         };
         mHandler.postDelayed(timerRunnable, 1000);
     }
-
+    //处理通话中进入推币机的视频、语音页面处理
     private void gameCalling() {
         if(viewModel.gameCallEntity!=null && viewModel.gameCallEntity.getCallingType()!=null){
             viewModel.gameCallEntity.setCalling(true);
             //视频通话
             if(viewModel.gameCallEntity.getCallingType() == DLRTCDataMessageType.DLInviteRTCType.dl_rtc_video){
+                viewModel.makeCallTypeField.set(false);
                 binding.rlCallingUserLayout.setVisibility(View.GONE);
                 binding.rlVideoCallLayout.setVisibility(View.VISIBLE);
+                binding.gameCallingVideoLayout.rlVideoAllLayout.setVisibility(View.VISIBLE);
                 //创建视频美颜渲染view
                 faceUnityView = new FaceUnityView(getContext());
                 faceUnityView.setBackgroundColor(ColorUtils.getColor(R.color.black));
@@ -1022,12 +1057,181 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
                     DLRTCVideoManager.Companion.getInstance().updateRemoteView(remoteViewUserId, layout.getVideoView());
                 }
             }else{//语音通话
+                viewModel.makeCallTypeField.set(true);
                 binding.rlVideoCallLayout.setVisibility(View.GONE);
+                binding.gameCallingVideoLayout.rlVideoAllLayout.setVisibility(View.GONE);
                 binding.rlCallingUserLayout.setVisibility(View.VISIBLE);
                 binding.rlCallingUserLayout.findViewById(R.id.fl_triangle_off).setVisibility(View.VISIBLE);
                 binding.rlCallingUserLayout.findViewById(R.id.fl_triangle_on).setVisibility(View.GONE);
                 binding.rlCallingUserLayout.findViewById(R.id.img_call_audio_or_video).setVisibility(View.GONE);
             }
         }
+    }
+    /**
+     * 展示右下角收益提示
+     */
+//    private void setProfitTips() {
+//        if (Boolean.FALSE.equals(viewModel.isShowCountdown.get()) && viewModel.payeeProfits > 0) {//对方余额不足没有展示
+//            if (!viewModel.girlEarningsField.get()) {
+//                viewModel.girlEarningsField.set(true);
+//            }
+//            String profit = viewModel.payeeProfits + "";
+//            String girlEarningsTex = String.format(com.blankj.utilcode.util.StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt), profit);
+//            SpannableString stringBuilder = new SpannableString(girlEarningsTex);
+//            ForegroundColorSpan blueSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint1));
+//            int index = girlEarningsTex.indexOf(profit);
+//            stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, girlEarningsTex.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//            stringBuilder.setSpan(blueSpan, index, index + profit.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//            viewModel.girlEarningsText.set(stringBuilder);
+//        }
+//    }
+    private void startSVGAnim(String svgaPath) {
+        if (!com.blankj.utilcode.util.StringUtils.isEmpty(svgaPath)) {
+            SVGAParser svgaParser = SVGAParser.Companion.shareParser();
+            try {
+                svgaParser.decodeFromURL(new URL(StringUtil.getFullAudioUrl(svgaPath)), new SVGAParser.ParseCompletion() {
+                    @Override
+                    public void onComplete(@NotNull SVGAVideoEntity videoItem) {
+                        giftEffects.setVisibility(View.VISIBLE);
+                        giftEffects.setVideoItem(videoItem);
+                        giftEffects.setLoops(1);
+                        giftEffects.setCallback(new BaseSVGACallback(){
+                            @Override
+                            public void onComplete() {
+                                //播放完成
+                                giftEffects.setVisibility(View.GONE);
+                            }
+                        });
+                        giftEffects.startAnimation();
+                    }
+                    @Override
+                    public void onError() {
+                    }
+                }, null);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    private void startAcceptBannersAnimotion(String imgPath, int account) {
+        if (account > 1) {
+            View streamerView = View.inflate(getContext(), R.layout.call_user_streamer_item, null);
+            //用户头像
+            CircleImageView userImg = streamerView.findViewById(R.id.user_img);
+            //礼物图片
+            ImageView giftImg = streamerView.findViewById(R.id.gift_img);
+            //礼物图片数量
+            ImageView giftNumImg = streamerView.findViewById(R.id.gift_num_img);
+            //文案
+            TextView tipText = streamerView.findViewById(R.id.tip_text);
+            String sexText = viewModel.otherCallInfoEntity.get().getNickname();
+            String messageText = com.blankj.utilcode.util.StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt1);
+            String lastText = com.blankj.utilcode.util.StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt17);
+            String itemTextMessage = sexText + "\n" + messageText + lastText;
+            SpannableString stringBuilder = new SpannableString(itemTextMessage);
+            stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint2)), 0, sexText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), sexText.length(), sexText.length() + 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint2)), sexText.length() + 2, itemTextMessage.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            tipText.setText(stringBuilder);
+            Glide.with(getContext())
+                    .asBitmap()
+                    .load(StringUtil.getFullImageUrl(viewModel.otherCallInfoEntity.get().getAvatar()))
+                    .error(R.drawable.default_avatar)
+                    .placeholder(R.drawable.default_avatar)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(userImg);
+            Glide.with(getContext())
+                    .asBitmap()
+                    .load(StringUtil.getFullImageUrl(imgPath))
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(giftImg);
+            if (account == 1) {
+                giftNumImg.setImageResource(R.drawable.img_gift_num1);
+            } else if (account == 10) {
+                giftNumImg.setImageResource(R.drawable.img_gift_num10);
+            } else if (account == 38) {
+                giftNumImg.setImageResource(R.drawable.img_gift_num38);
+            } else if (account == 66) {
+                giftNumImg.setImageResource(R.drawable.img_gift_num66);
+            } else if (account == 188) {
+                giftNumImg.setImageResource(R.drawable.img_gift_num188);
+            } else if (account == 520) {
+                giftNumImg.setImageResource(R.drawable.img_gift_num520);
+            } else if (account == 1314) {
+                giftNumImg.setImageResource(R.drawable.img_gift_num1314);
+            } else if (account == 3344) {
+                giftNumImg.setImageResource(R.drawable.img_gift_num3344);
+            }
+            Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.anim_call_audio_right_in_streamer);
+            animation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    postRemoveView(binding.mainView, streamerView);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                }
+            });
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.leftMargin = Utils.dip2px(getContext(),14);
+            layoutParams.topMargin = Utils.dip2px(getContext(),249);
+            streamerView.setLayoutParams(layoutParams);
+            binding.mainView.addView(streamerView);
+            streamerView.startAnimation(animation);
+        }
+    }
+    private void startAcceptHeadAnimotion(boolean self,String imgPath,String svgaPath, int account) {
+        ImageView giftImageTrans = new ImageView(getContext());
+        Animation animation;
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(Utils.dip2px(getContext(),40), Utils.dip2px(getContext(),40));
+        if(self){
+            animation = AnimationUtils.loadAnimation(getContext(), R.anim.anim_call_coinpusher_receive_tip);
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            //layoutParams.leftMargin = Utils.dip2px(getContext(),277);
+            layoutParams.bottomMargin = Utils.dip2px(getContext(),71);
+        }else{
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_END);
+            animation = AnimationUtils.loadAnimation(getContext(), R.anim.anim_call_coinpusher_send_tip);
+            layoutParams.topMargin = Utils.dip2px(getContext(),135);
+        }
+        giftImageTrans.setLayoutParams(layoutParams);
+        giftImageTrans.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                postRemoveView(binding.mainView, giftImageTrans);
+                //启动SVG动画
+                startSVGAnim(svgaPath);
+                //启动横幅动画
+                startAcceptBannersAnimotion(imgPath, account);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        Glide.with(getContext())
+                .asBitmap()
+                .load(StringUtil.getFullImageUrl(imgPath))
+                .error(R.drawable.radio_program_list_content)
+                .placeholder(R.drawable.radio_program_list_content)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(giftImageTrans);
+        binding.mainView.addView(giftImageTrans);
+        giftImageTrans.startAnimation(animation);
+    }
+    //异步移除view
+    private void postRemoveView(ViewGroup viewGroup, View IiageTrans) {
+        viewGroup.post(() -> viewGroup.removeView(IiageTrans));
     }
 }

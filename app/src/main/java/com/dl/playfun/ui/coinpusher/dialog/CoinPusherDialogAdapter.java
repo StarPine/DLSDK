@@ -104,6 +104,7 @@ public class CoinPusherDialogAdapter {
             if(permissionDialogListener!=null){
                 permissionDialogListener.callback(true);
             }
+            dialog.dismiss();
         });
         binding.tvTitle.setText(ContentResId);
         binding.imgClose.setOnClickListener(v -> {

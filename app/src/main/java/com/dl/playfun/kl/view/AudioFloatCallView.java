@@ -19,6 +19,7 @@ import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.entity.AudioCallingBarrageEntity;
 import com.dl.playfun.entity.CallUserInfoEntity;
+import com.dl.playfun.entity.CallUserRoomInfoEntity;
 import com.dl.playfun.entity.CallingInfoEntity;
 import com.dl.playfun.entity.CallingStatusEntity;
 import com.dl.playfun.entity.RestartActivityEntity;
@@ -55,6 +56,8 @@ public class AudioFloatCallView extends BaseDLRTCCallView {
     private Integer roomId = 0;
     private CallUserInfoEntity otherUserProfile;
     private ArrayList<AudioCallingBarrageEntity> audioBarrageList;
+    //当前房间信息
+    private CallUserRoomInfoEntity callUserRoomInfoEntity;
 
     public int mTimeCount = 0;
 
@@ -62,12 +65,12 @@ public class AudioFloatCallView extends BaseDLRTCCallView {
     public AudioFloatCallView(Context context, DLRTCCalling.Role role, DLRTCCalling.Type type, String[] userIDs,
                               String sponsorID, String groupID, boolean isFromGroup,
                               CallUserInfoEntity otherUserProfile, int timeCount,
-                              Integer roomId, ArrayList<AudioCallingBarrageEntity> audioBarrageList) {
+                              Integer roomId, ArrayList<AudioCallingBarrageEntity> audioBarrageList,CallUserRoomInfoEntity _callUserRoomInfoEntity) {
         super(context, role, type, userIDs, sponsorID, groupID, isFromGroup);
-        initData(otherUserProfile, timeCount, roomId,audioBarrageList);
+        initData(otherUserProfile, timeCount, roomId,audioBarrageList,_callUserRoomInfoEntity);
     }
 
-    private void initData(CallUserInfoEntity otherUserProfile, int timeCount, Integer roomId, ArrayList<AudioCallingBarrageEntity> audioBarrageList) {
+    private void initData(CallUserInfoEntity otherUserProfile, int timeCount, Integer roomId, ArrayList<AudioCallingBarrageEntity> audioBarrageList,CallUserRoomInfoEntity _callUserRoomInfoEntity) {
         Glide.with(AppContext.instance())
                 .asDrawable()
                 .load(StringUtil.getFullImageUrl(otherUserProfile.getAvatar()))
@@ -78,6 +81,7 @@ public class AudioFloatCallView extends BaseDLRTCCallView {
         this.roomId = roomId;
         this.otherUserProfile = otherUserProfile;
         this.audioBarrageList = audioBarrageList;
+        this.callUserRoomInfoEntity = _callUserRoomInfoEntity;
         showTimeCount(mTextViewTimeCount, timeCount);
     }
 
@@ -179,6 +183,7 @@ public class AudioFloatCallView extends BaseDLRTCCallView {
                 intent.putExtra("isRestart", isRestart);
                 intent.putExtra("CallingInviteInfoField",otherUserProfile);
                 intent.putExtra("audioCallingBarrage", GsonUtils.toJson(audioBarrageList));
+                intent.putExtra("CallUserRoomInfoEntity",callUserRoomInfoEntity);
                 if (isBackground(getContext())) {
                     getContext().startActivity(intent);
                 } else {

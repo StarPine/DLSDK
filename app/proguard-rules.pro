@@ -31,6 +31,7 @@
 -keep class com.dl.playfun.app.** { *; }
 -keep class com.dl.playfun.viewmodel.** { *; }
 -keep class com.dl.playfun.ui.** { *; }
+-keep class com.dl.rtc.calling.** {*;}
 #腾讯
 -keep class com.tencent.** { *; }
 

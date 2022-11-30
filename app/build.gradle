@@ -192,7 +192,7 @@ android {
                 // 版本号
                 versionCode 37
                 // 版本名
-                versionName "1.4.74-beta"
+                versionName "1.4.80-beta"
             }else{
                 // 服务端接口HOST
                 buildConfigField "String", "DEFAULT_API_URL", "\"https://config.play-chat.net/\""

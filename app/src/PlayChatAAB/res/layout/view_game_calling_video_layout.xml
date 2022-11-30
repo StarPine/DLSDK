@@ -12,6 +12,7 @@
             type="com.dl.playfun.ui.coinpusher.CoinPusherGameViewModel" />
     </data>
     <RelativeLayout
+        android:id="@+id/rl_video_all_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout_width="230dp"

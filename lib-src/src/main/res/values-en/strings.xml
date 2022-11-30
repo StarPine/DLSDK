@@ -6,7 +6,7 @@
     <string name="alivc_media_gop">Keyframe interval</string>
     <string name="alivc_media_frame_rate_hint">Recommended 20-30, default 30</string>
     <string name="alivc_media_gop_hint">Recommended 1-300, default 250</string>
-    <string name="alivc_media_resolution">resolution</string>
+    <string name="alivc_media_resolution" translatable="false">resolution</string>
     <string name="alivc_media_crop_mode">Crop mode</string>
     <string name="alivc_media_mode_fill">padding</string>
     <string name="alivc_media_mode_crop">crop</string>
@@ -1709,6 +1709,7 @@
     <string name="playfun_status_layout_error_network">Network error. Click to retry</string>
     <string name="playfun_dialog_exchange_integral_success">Points redeemed.</string>
     <string name="playfun_dialog_exchange_integral_total_text1">Not enough diamonds. Please top up your diamonds.</string>
+    <string name="playfun_dialog_exchange_integral_total_text1_crystal">Not enough crystals</string>
     <string name="playfun_dialog_exchange_integral_total_text2">Top-up diamonds are automatically converted to points at a ratio of 1:100.</string>
     <string name="playfun_dialog_exchange_integral_total_text3">Not enough diamonds to start a chat.</string>
     <string name="playfun_mood_item_id1">Want to fall in love</string>
@@ -1770,6 +1771,11 @@
     <string name="playfun_gift_bag_more_text6">perfect</string>
     <string name="playfun_gift_bag_more_text7">single-minded</string>
     <string name="playfun_call_waiting_hint">Waiting to be answered...</string>
+    <string name="playfun_call_earnings_audio_hint">Voice award %s crystals/min</string>
+    <string name="playfun_call_earnings_hint">Receive gifts with more awards!</string>
+    <string name="playfun_call_earnings_video_hint">Video award %s crystals/min</string>
+    <string name="playfun_call_pay_audio_hint">He/She is hot, voice call needs %s diamonds/min.</string>
+    <string name="playfun_call_pay_video_hint">He/She is hot, video call needs %s diamonds/min.</string>
     <string name="playfun_call_audio_tips">Here are chat tips. Make it easier for you to chat.</string>
     <string name="playfun_call_video_invite_hint">invites you to a video call</string>
     <string name="playfun_message_deatail_call_audio">Voice call</string>
@@ -1805,6 +1811,7 @@
     <string name="playfun_certification_girl_hint_text1">Exchange right</string>
     <string name="playfun_radio_fragment_posts">Post</string>
     <string name="playfun_meagess_gift">Gift</string>
+    <string name="playfun_meagess_crystal">Crystal</string>
     <string name="playfun_meagess_backpack">Bag</string>
     <string name="playfun_meagess_give_away">Send</string>
     <string name="playfun_coin_detail_detail">Details</string>
@@ -2281,8 +2288,6 @@
     <string name="playfun_fragment_issuance_shield">Shield moment</string>
     <string name="playfun_game_audio_hint">與她語音，一起玩遊戲</string>
     <string name="playfun_game_video_hint">與她視訊，一起玩遊戲</string>
-    <string name="playfun_meagess_crystal">Crystal</string>
-    <string name="playfun_dialog_exchange_integral_total_text1_crystal">Not enough crystals</string>
     <string name="playfun_permissions_audio_txt2">為了使用語音、錄音等功能，請先同意麥克風權限</string>
     <string name="playfun_permissions_video2">為了使用視訊、錄影、美顏等功能，請先同意攝像頭權限</string>
     <!--PlayFun-APP-END-->

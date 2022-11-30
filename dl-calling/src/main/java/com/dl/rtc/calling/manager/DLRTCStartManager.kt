@@ -89,7 +89,7 @@ class DLRTCStartManager {
     /**
      * 超时时间，单位秒
      */
-    val DLInviteTimeout = 30
+    private var DLInviteTimeout = 30
 
     //通话邀请缓存,便于查询通话是否有效
     private val mInviteMap: MutableMap<String, DLRTCCallModel> = HashMap()
@@ -136,15 +136,16 @@ class DLRTCStartManager {
      * 主动呼叫方
      * inviteUser 接听人 inviteType 呼叫类型 roomId 房间ID closure 当前调用回调
      */
-    fun inviteUserRTC(inviteUser : String, inviteType : DLRTCDataMessageType.DLInviteRTCType, roomId : Int, closure :DLRTCModuleClosuer?){
+    fun inviteUserRTC(inviteUser : String, inviteType : DLRTCDataMessageType.DLInviteRTCType, roomId : Int, dLInviteTimeout : Int?,inviteExtJson : String?, closure :DLRTCModuleClosuer?){
         ///如果已经开始在邀请,防止重复发起邀请
         if (isBeginInvite && !this.inviteUserId.isNullOrEmpty()) {
             closure?.callback(false,10010,"当前已经在邀请中")
             return
         }
-        if(this@DLRTCStartManager.currentId.isEmpty()){
-            this@DLRTCStartManager.currentId = TUILogin.getLoginUser()
+        dLInviteTimeout?.apply{
+            DLInviteTimeout = this
         }
+        this@DLRTCStartManager.currentId = TUILogin.getLoginUser()
         isBeginInvite = true
         this.inviteUserId = currentId
         this.inviteTypeMsg = inviteType.name
@@ -154,6 +155,7 @@ class DLRTCStartManager {
         ///构建额外的信息
         val dataParams = buildRTCParams(DLRTCDataMessageType.invite,acceptUserId,currentId)
         dataParams[DLRTCDataMessageType.DLRTCInviteTimeOut] = DLInviteTimeout
+        dataParams[DLRTCDataMessageType.inviteExtJson] = inviteExtJson
         val dataString = gsonBuilder.create().toJson(dataParams)
 
         val logParams = buildRTCLogParams(acceptUserId,currentId)

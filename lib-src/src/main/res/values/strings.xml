@@ -1771,6 +1771,11 @@
     <string name="playfun_gift_bag_more_text6">perfect</string>
     <string name="playfun_gift_bag_more_text7">single-minded</string>
     <string name="playfun_call_waiting_hint">Waiting to be answered...</string>
+    <string name="playfun_call_earnings_audio_hint">Voice award %s crystals/min</string>
+    <string name="playfun_call_earnings_hint">Receive gifts with more awards!</string>
+    <string name="playfun_call_earnings_video_hint">Video award %s crystals/min</string>
+    <string name="playfun_call_pay_audio_hint">He/She is hot, voice call needs %s diamonds/min.</string>
+    <string name="playfun_call_pay_video_hint">He/She is hot, video call needs %s diamonds/min.</string>
     <string name="playfun_call_audio_tips">Here are chat tips. Make it easier for you to chat.</string>
     <string name="playfun_call_video_invite_hint">invites you to a video call</string>
     <string name="playfun_message_deatail_call_audio">Voice call</string>

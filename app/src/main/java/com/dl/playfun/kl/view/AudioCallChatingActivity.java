@@ -47,6 +47,7 @@ import com.dl.playfun.databinding.ActivityCallAudioChatingBinding;
 import com.dl.playfun.entity.AudioCallingBarrageEntity;
 import com.dl.playfun.entity.CallGameCoinPusherEntity;
 import com.dl.playfun.entity.CallUserInfoEntity;
+import com.dl.playfun.entity.CallUserRoomInfoEntity;
 import com.dl.playfun.entity.CallingInfoEntity;
 import com.dl.playfun.entity.CoinPusherDataInfoEntity;
 import com.dl.playfun.entity.CrystalDetailsConfigEntity;
@@ -54,6 +55,7 @@ import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.entity.GoodsEntity;
 import com.dl.playfun.entity.ShowFloatWindowEntity;
 import com.dl.playfun.event.CallChatingHangupEvent;
+import com.dl.playfun.kl.CallChatingConstant;
 import com.dl.playfun.kl.viewmodel.AudioCallChatingItemViewModel;
 import com.dl.playfun.kl.viewmodel.AudioCallChatingViewModel;
 import com.dl.playfun.manager.ConfigManager;
@@ -127,6 +129,8 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
     private ObjectAnimator rotation;
     //对方用户信息
     private CallUserInfoEntity _callUserInfoEntity;
+    //当前房间信息
+    private CallUserRoomInfoEntity _callUserRoomInfoEntity;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -203,6 +207,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         isRestart = intent.getBooleanExtra("isRestart", false);
         barrageInfo = intent.getStringExtra("audioCallingBarrage");
         _callUserInfoEntity = (CallUserInfoEntity)intent.getSerializableExtra("CallingInviteInfoField");
+        _callUserRoomInfoEntity = (CallUserRoomInfoEntity)intent.getSerializableExtra("CallUserRoomInfoEntity");
     }
 
     @Override
@@ -220,9 +225,6 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         viewModel.roomId = roomId;
         viewModel.fromUserId = inviterImId;
         viewModel.toUserId = receiverImId;
-        if(mRole == DLRTCCalling.Role.CALL){
-            viewModel.coinPusherRoomShow.set(true);
-        }
         //设置对方用户信息
         viewModel.otherUserInfoField.set(_callUserInfoEntity);
         if(_callUserInfoEntity!=null){
@@ -232,7 +234,12 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         }
         //读取当前用户信息
         viewModel.currentUserInfoField.set(ConfigManager.getInstance().getAppRepository().readUserData());
-        viewModel.callingInviteUser(inviterImId,receiverImId);
+        if(_callUserRoomInfoEntity!=null){
+            viewModel.callingInviteUserApply(_callUserRoomInfoEntity);
+        }else{
+            viewModel.callingInviteUser(inviterImId,receiverImId);
+        }
+
         viewModel.getSayHiList();
     }
 
@@ -303,7 +310,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
             audioCallChatingItemViewModelList.add(audioCallingBarrageEntity);
         }
         return new AudioFloatCallView(this, mRole, DLRTCCalling.Type.AUDIO, userIds, inviterImId,
-                null, false,viewModel.otherUserInfoField.get(),mTimeCount,roomId, audioCallChatingItemViewModelList);
+                null, false,viewModel.otherUserInfoField.get(),mTimeCount,roomId, audioCallChatingItemViewModelList,_callUserRoomInfoEntity);
     }
 
     private void requestSettingCanDrawOverlays() {
@@ -470,6 +477,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                     }
                     intent.putExtra("GameCallEntity",gameCallEntity);
                     intent.putExtra("CallUserInfoEntity",viewModel.otherUserInfoField.get());
+                    intent.putExtra("mTimeCount",mTimeCount);
                     startActivity(intent);
                     return;
                 }
@@ -499,21 +507,8 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                     }
                     intent.putExtra("CallUserInfoEntity",viewModel.otherUserInfoField.get());
                     intent.putExtra("GameCallEntity",gameCallEntity);
-                    CallGameCoinPusherEntity callGameCoinPusherEntity = new CallGameCoinPusherEntity();
-                    callGameCoinPusherEntity.setState(CallGameCoinPusherEntity.enterGame);
-                    callGameCoinPusherEntity.setCircuses(false);
-                    callGameCoinPusherEntity.setRoomId(itemEntity.getRoomInfo().getRoomId());
-                    callGameCoinPusherEntity.setClientWsRtcId(itemEntity.getClientWsRtcId());
-                    callGameCoinPusherEntity.setStreamUrl(itemEntity.getRtcUrl());
-                    callGameCoinPusherEntity.setTotalGold(itemEntity.getTotalGold());
-                    callGameCoinPusherEntity.setCountdown(itemEntity.getCountdown());
-                    callGameCoinPusherEntity.setLevelId(itemEntity.getRoomInfo().getLevelId());
-                    callGameCoinPusherEntity.setNickname(itemEntity.getRoomInfo().getNickname());
-                    callGameCoinPusherEntity.setPayGameMoney(itemEntity.getRoomInfo().getMoney());
-
-                    CustomDlTempMessage customDlTempMessage = V2TIMCustomManagerUtil.buildDlTempMessage(CustomConstants.CoinPusher.MODULE_NAME,CustomConstants.CoinPusher.CALL_GO_GAME_WINNING,callGameCoinPusherEntity);
-                    //TUIMessageBean messageInfo = ChatMessageBuilder.buildCustomMessage(GsonUtils.toJson(customDlTempMessage), null, null);
-                    DLRTCSignalingManager.INSTANCE.sendC2CCustomMessage(GsonUtils.toJson(customDlTempMessage),mRole ==  DLRTCCalling.Role.CALL?  receiverImId: inviterImId);
+                    intent.putExtra("mTimeCount",mTimeCount);
+                    CallChatingConstant.updateCoinPusherWatchRoom(itemEntity.getRoomInfo().getRoomId(), viewModel.otherUserInfoField.get().getId(),1);
                     startActivity(intent);
                 }
 

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -21,6 +22,7 @@ import com.dl.playfun.event.AudioCallingCancelEvent;
 import com.dl.playfun.kl.CallChatingConstant;
 import com.dl.playfun.kl.viewmodel.AudioCallingViewModel2;
 import com.dl.manager.LocaleManager;
+import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.coinpusher.dialog.CoinPusherDialogAdapter;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.rtc.calling.base.DLRTCCalling;
@@ -29,6 +31,9 @@ import com.dl.rtc.calling.model.DLRTCCallingConstants;
 import com.dl.playfun.R;
 import com.dl.playfun.databinding.ActivityCallWaiting2Binding;
 import com.luck.picture.lib.permissions.PermissionChecker;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import me.goldze.mvvmhabit.base.BaseActivity;
 import me.goldze.mvvmhabit.bus.RxBus;
@@ -122,15 +127,42 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
         viewModel.mRole = role;
         viewModel.isCallBinding.set(role == DLRTCCalling.Role.CALL);
         if (role == DLRTCCalling.Role.CALL) {//主动呼叫
-                viewModel.getCallingUserInfo(null, acceptUserID);
+            viewModel.getCallingUserInfo(null, acceptUserID);
         } else {//被动接听
             viewModel.getCallingUserInfo(null, inviteUserID);
         }
         if(!StringUtils.isEmpty(inviteExtJson)){
             _callUserRoomInfoEntity = GsonUtils.fromJson(inviteExtJson,CallUserRoomInfoEntity.class);
+            callPromptText();
         }
         toPermissionIntent.launch(Manifest.permission.RECORD_AUDIO);
     }
+    //处理通话中提示
+    private  void callPromptText(){
+        if(_callUserRoomInfoEntity != null && !StringUtils.isTrimEmpty(_callUserRoomInfoEntity.getPayerImId())){
+            Log.e("当前处理通话中tishi",_callUserRoomInfoEntity.toString());
+            //不是付费方：收益方
+            if(!_callUserRoomInfoEntity.getPayerImId().equals(ConfigManager.getInstance().getUserImID())){
+               String audioHint =  getString(R.string.playfun_call_earnings_audio_hint);
+                StringBuilder stringBuffer = new StringBuilder();
+                BigDecimal profitPerMinutes = _callUserRoomInfoEntity.getProfitPerMinutes();
+                if(null != profitPerMinutes){
+                    stringBuffer.append(String.format(audioHint,profitPerMinutes.setScale(2, RoundingMode.HALF_UP))).append("\n");
+                    stringBuffer.append(getString(R.string.playfun_call_earnings_hint));
+                    viewModel.callPromptText.set(stringBuffer.toString());
+                }
+            }else{
+                String payAudioHint =  getString(R.string.playfun_call_pay_audio_hint);
+                StringBuilder stringBuffer = new StringBuilder();
+                BigDecimal coinPerMinutes = _callUserRoomInfoEntity.getCoinPerMinutes();
+                if(null != coinPerMinutes){
+                    stringBuffer.append(String.format(payAudioHint,String.valueOf(coinPerMinutes.intValue()))).append("\n");
+                    viewModel.callPromptText.set(stringBuffer.toString());
+                }
+            }
+        }
+    }
+
     //单个权限申请监听
     ActivityResultLauncher<String> toPermissionIntent = registerForActivityResult(new ActivityResultContracts.RequestPermission(), result -> {
         //获取单个权限成功
@@ -144,7 +176,7 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
             if(_success){
                 PermissionChecker.launchAppDetailsSettings(DialingAudioActivity.this);
             }else {
-                viewModel.endTRTCCalling();
+                viewModel.cancelCallClick();
             }
         }).show();
     }
@@ -168,6 +200,7 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
             intent.putExtra(DLRTCCallingConstants.PARAM_NAME_ROLE, role);
             intent.putExtra(DLRTCCallingConstants.RTCInviteRoomID, roomId);
             intent.putExtra(DLRTCCallingConstants.DLRTCInviteSelf, inviteSelf);
+            intent.putExtra("CallUserRoomInfoEntity",_callUserRoomInfoEntity);
             intent.putExtra("CallingInviteInfoField",viewModel.callingInviteInfoField.get());
             startActivity(intent);
 
@@ -177,5 +210,6 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        viewModel.cancelCallClick();
     }
 }

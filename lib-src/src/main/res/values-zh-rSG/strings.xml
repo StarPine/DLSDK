@@ -1214,7 +1214,7 @@
     <string name="playfun_top_up_to_pay">請儲值後再完成支付</string>
     <string name="playfun_he_true_evaluation">他的真實評價</string>
     <string name="playfun_your_true_evaluation">我的真實評價</string>
-    <string name="playfun_model_please_input_explain_female">請輸入用戶昵稱/職業進行搜尋</string>
+    <string name="playfun_model_please_input_explain_female">請完整輸入用戶暱稱進行搜索</string>
     <string name="playfun_name_nust">昵稱為必填項</string>
     <string name="playfun_brithday_must">生日為必填項</string>
     <string name="playfun_occupation_must">職業為必填項</string>
@@ -1771,6 +1771,11 @@
     <string name="playfun_gift_bag_more_text6">十全十美</string>
     <string name="playfun_gift_bag_more_text7">一心一意</string>
     <string name="playfun_call_waiting_hint">等待對方接聽...</string>
+    <string name="playfun_call_earnings_audio_hint">語音獎勵%s水晶/分鐘</string>
+    <string name="playfun_call_earnings_hint">收禮還能獎勵更多哦！</string>
+    <string name="playfun_call_earnings_video_hint">視訊獎勵%s水晶/分鐘</string>
+    <string name="playfun_call_pay_audio_hint">對方人氣火爆，語音消耗%s鑽石/分鐘</string>
+    <string name="playfun_call_pay_video_hint">對方人氣火爆，視訊消耗 %s 鑽石/分鐘</string>
     <string name="playfun_call_audio_tips">看看聊天tips，不怕沒話題~</string>
     <string name="playfun_call_video_invite_hint">邀請你視訊聊天...</string>
     <string name="playfun_message_deatail_call_audio">語音通話</string>
@@ -2210,7 +2215,7 @@
     <string name="playfun_perfect_tips_age">年齡</string>
     <string name="playfun_perfect_age">18歲</string>
     <string name="playfun_coinpusher_hint_title">歡樂推幣機</string>
-    <string name="playfun_coinpusher_text_30">您30s內沒有投幣，已自動退出</string>
+    <string name="playfun_coinpusher_text_30">您沒有投幣，已自動退出</string>
     <string name="playfun_purchase_text">購買</string>
     <string name="playfun_capsule_tab">寶盒</string>
     <string name="playfun_coinpusher_text_1">熱玩</string>

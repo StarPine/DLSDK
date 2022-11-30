@@ -6,7 +6,7 @@
     <string name="alivc_media_gop">Keyframe interval</string>
     <string name="alivc_media_frame_rate_hint">Recommended 20-30, default 30</string>
     <string name="alivc_media_gop_hint">Recommended 1-300, default 250</string>
-    <string name="alivc_media_resolution">resolution</string>
+    <string name="alivc_media_resolution" translatable="false">resolution</string>
     <string name="alivc_media_crop_mode">Crop mode</string>
     <string name="alivc_media_mode_fill">padding</string>
     <string name="alivc_media_mode_crop">crop</string>
@@ -950,7 +950,7 @@
     <string name="playfun_face_detect_auth_begin_ok">Start verifying</string>
     <string name="playfun_face_detect_dialog_btn_sure">Confirm</string>
     <string name="playfun_tab_female_1">Nearby</string>
-    <string name="playfun_tab_female_2">New users</string>
+    <string name="playfun_tab_female_2">New</string>
     <string name="playfun_tab_female_3">Queen</string>
     <string name="playfun_tab_male_1">Nearby</string>
     <string name="playfun_tab_male_2">VIP</string>
@@ -994,7 +994,7 @@
     <string name="playfun_mine_certification_center">Verify Your Profile</string>
     <string name="playfun_mine_my_adoui">My Voice</string>
     <string name="playfun_mine_my_borcast">My Moments</string>
-    <string name="playfun_mine_my_album">Photos</string>
+    <string name="playfun_mine_my_album">Album</string>
     <string name="playfun_mine_upload_photo">Upload photos</string>
     <string name="playfun_mine_upload_photo_or_video">Upload</string>
     <string name="playfun_mine_album_privacy">Album settings</string>
@@ -1633,15 +1633,15 @@
     <string name="playfun_mine_trace_delike">Sure to unfollow?</string>
     <string name="playfun_mine_trace_delike_cannel">Cancel</string>
     <string name="playfun_mine_trace_delike_confirm">Confirm</string>
-    <string name="playfun_mine_trace_man_title">My visitors</string>
+    <string name="playfun_mine_trace_man_title">Visitors</string>
     <string name="playfun_mine_trace_man_title2">Following %s users</string>
-    <string name="playfun_mine_trace_man_title3">See all people who are interested in me %s</string>
-    <string name="playfun_mine_trace_man_title4">Unlock 24 hours real-time view of all the people who are interested in me</string>
-    <string name="playfun_mine_trace_man_title_dialog">See all people who are interested in me</string>
+    <string name="playfun_mine_trace_man_title3">See all people who are attracted to you %s</string>
+    <string name="playfun_mine_trace_man_title4">Unlock 24 hours real-time view of all the people who are attracted to you</string>
+    <string name="playfun_mine_trace_man_title_dialog">See all people who are attracted to you</string>
     <string name="playfun_mine_trace_man_unlocks">Once unlocked, you can view all people who are interested in you within 24 hours</string>
     <string name="playfun_mine_trace_man_play_title">Unlock Who visited me</string>
     <string name="playfun_mine_trace_man_play_confirm">Unlock now (%s diamonds)</string>
-    <string name="playfun_mine_trace_man_title1">%s users are interested in me.</string>
+    <string name="playfun_mine_trace_man_title1">%s users are attracted to you.</string>
     <string name="playfun_mine_trace_man_hint">%s times</string>
     <string name="playfun_mine_trace_time_exp">Visited just now</string>
     <string name="playfun_mine_trace_time_exp2">Visited 1 hour ago</string>
@@ -1709,6 +1709,7 @@
     <string name="playfun_status_layout_error_network">Network error. Click to retry</string>
     <string name="playfun_dialog_exchange_integral_success">Points redeemed.</string>
     <string name="playfun_dialog_exchange_integral_total_text1">Not enough diamonds. Please top up your diamonds.</string>
+    <string name="playfun_dialog_exchange_integral_total_text1_crystal">Not enough crystals</string>
     <string name="playfun_dialog_exchange_integral_total_text2">Top-up diamonds are automatically converted to points at a ratio of 1:100.</string>
     <string name="playfun_dialog_exchange_integral_total_text3">Not enough diamonds to start a chat.</string>
     <string name="playfun_mood_item_id1">Want to fall in love</string>
@@ -1770,6 +1771,11 @@
     <string name="playfun_gift_bag_more_text6">perfect</string>
     <string name="playfun_gift_bag_more_text7">single-minded</string>
     <string name="playfun_call_waiting_hint">Waiting to be answered...</string>
+    <string name="playfun_call_earnings_audio_hint">Voice award %s crystals/min</string>
+    <string name="playfun_call_earnings_hint">Receive gifts with more awards!</string>
+    <string name="playfun_call_earnings_video_hint">Video award %s crystals/min</string>
+    <string name="playfun_call_pay_audio_hint">He/She is hot, voice call needs %s diamonds/min.</string>
+    <string name="playfun_call_pay_video_hint">He/She is hot, video call needs %s diamonds/min.</string>
     <string name="playfun_call_audio_tips">Here are chat tips. Make it easier for you to chat.</string>
     <string name="playfun_call_video_invite_hint">invites you to a video call</string>
     <string name="playfun_message_deatail_call_audio">Voice call</string>
@@ -1805,6 +1811,7 @@
     <string name="playfun_certification_girl_hint_text1">Exchange right</string>
     <string name="playfun_radio_fragment_posts">Post</string>
     <string name="playfun_meagess_gift">Gift</string>
+    <string name="playfun_meagess_crystal">Crystal</string>
     <string name="playfun_meagess_backpack">Bag</string>
     <string name="playfun_meagess_give_away">Send</string>
     <string name="playfun_coin_detail_detail">Details</string>
@@ -1920,7 +1927,7 @@
     <string name="notepad_word_count">0/200</string>
     <string name="playfun_mine_shop">Shop</string>
     <string name="playfun_coin_electronic_wallet">Wallet</string>
-    <string name="fragment_level_title">Level privilege</string>
+    <string name="fragment_level_title">Privilege</string>
     <string name="fragment_level_text3">* The final interpretation right belongs to the platform</string>
     <string name="fragment_level_text4">Grade</string>
     <string name="fragment_level_text5">Privilege</string>
@@ -1968,7 +1975,7 @@
     <string name="playfun_visitor_total_count">See all visitors %s</string>
     <string name="playfun_mine_profile">Profile</string>
     <string name="playfun_mine_wallet">Wallet</string>
-    <string name="playfun_mine_my_visitors_man">My visitors</string>
+    <string name="playfun_mine_my_visitors_man">Visitors</string>
     <string name="fragment_perfect_hint">At least 18 years old to register</string>
     <string name="setting_photo_cover_hint">Set as cover</string>
     <string name="playfun_setting_text">Setting</string>
@@ -2141,8 +2148,8 @@
     <string name="playfun_contact_empty_text_2">There is no frequent contact, let\'s chat!</string>
     <string name="playfun_contact_text1">Set up frequent contact success</string>
     <string name="playfun_contact_text2">Frequent contact cancelled</string>
-    <string name="playfun_mine_title_btn_exclusive">Exclusive greeting</string>
-    <string name="playfun_mine_title_my_exclusive">Exclusive greeting</string>
+    <string name="playfun_mine_title_btn_exclusive">Custom greet</string>
+    <string name="playfun_mine_title_my_exclusive">Custom greet</string>
     <string name="playfun_my_exclusive_tips_content">1. Greeting text and sweet voice is a perfect greeting combination\n2. You can modify greeting words and voice greetings once a day</string>
     <string name="playfun_text_chat_up">Greeting</string>
     <string name="playfun_audio_chat_up">Voice greeting</string>
@@ -2161,9 +2168,9 @@
     <string name="playfun_audio_accost_tip">Within 15 seconds</string>
     <string name="playfun_deadline_is_up">Deadline until:\n%s</string>
     <string name="playfun_buy_now">Buy now</string>
-    <string name="playfun_continue_to_now">Continue to buy</string>
+    <string name="playfun_continue_to_now">Purchase</string>
     <string name="playfun_vip_service_tips">Automatic subscription, cancel anytime. \nPurchasing a subscription will be charged to your Google account and signifies your agreement to our User Agreement and Privacy Policy. Automatic subscriptions can be managed or cancelled at any time in the settings.</string>
-    <string name="playfun_nonactivated">Nonactivated</string>
+    <string name="playfun_nonactivated">Unactivated</string>
     <string name="playfun_reward">award</string>
     <string name="playfun_reward_tips">Log in tomorrow to get %s diamonds, video card*%s</string>
     <string name="playfun_reward_tips2">Log in tomorrow to get %s diamonds</string>
@@ -2208,7 +2215,7 @@
     <string name="playfun_perfect_tips_age">Age</string>
     <string name="playfun_perfect_age">18</string>
     <string name="playfun_coinpusher_hint_title">Happy Coin Factory</string>
-    <string name="playfun_coinpusher_text_30">You have not inserted coins within 30s, and quit out</string>
+    <string name="playfun_coinpusher_text_30">You have not inserted coins, and quit out</string>
     <string name="playfun_purchase_text">Buy</string>
     <string name="playfun_capsule_tab">Treasure box</string>
     <string name="playfun_coinpusher_text_1">Occupied</string>
@@ -2281,8 +2288,6 @@
     <string name="playfun_fragment_issuance_shield">Shield moment</string>
     <string name="playfun_game_audio_hint">與她語音，一起玩遊戲</string>
     <string name="playfun_game_video_hint">與她視訊，一起玩遊戲</string>
-    <string name="playfun_meagess_crystal">Crystal</string>
-    <string name="playfun_dialog_exchange_integral_total_text1_crystal">Not enough crystals</string>
     <string name="playfun_permissions_audio_txt2">為了使用語音、錄音等功能，請先同意麥克風權限</string>
     <string name="playfun_permissions_video2">為了使用視訊、錄影、美顏等功能，請先同意攝像頭權限</string>
     <!--PlayFun-APP-END-->

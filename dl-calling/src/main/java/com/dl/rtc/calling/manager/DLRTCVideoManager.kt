@@ -1,15 +1,8 @@
 package com.dl.rtc.calling.manager
 
-import android.content.ComponentName
-import android.content.Intent
 import com.dl.lib.util.log.MPTimber
 import com.dl.rtc.calling.DLRTCCallService
-import com.dl.rtc.calling.base.DLRTCCalling
-import com.dl.rtc.calling.base.DLRTCCallingDelegate
 import com.dl.rtc.calling.base.DLRTCCallingItFace
-import com.dl.rtc.calling.base.impl.DLRTCInternalListenerManager
-import com.dl.rtc.calling.model.DLRTCCallingConstants
-import com.dl.rtc.calling.model.DLRTCDataMessageType
 import com.faceunity.core.enumeration.CameraFacingEnum
 import com.faceunity.nama.FURenderer
 import com.tencent.qcloud.tuicore.TUILogin
@@ -209,6 +202,7 @@ class DLRTCVideoManager : DLRTCCallingItFace {
             return
         }
         mIsUseFrontCamera = isFrontCamera
+        DLRTCStartManager.instance.mTRTCCloud?.switchCamera()
         if (mIsFuEffect) {
             mFURenderer!!.cameraFacing =
                 if (mIsUseFrontCamera) CameraFacingEnum.CAMERA_FRONT else CameraFacingEnum.CAMERA_BACK

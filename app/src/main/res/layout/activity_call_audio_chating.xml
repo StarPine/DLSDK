@@ -293,7 +293,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/bottom_layout"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_marginEnd="14dp"
             android:layout_marginBottom="14dp"
             android:background="@drawable/border_purple_background_white"
@@ -316,8 +316,6 @@
             <ImageView
                 android:layout_width="14dp"
                 android:layout_height="14dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerInParent="true"
                 android:layout_marginEnd="12dp"
                 android:src="@drawable/ic_close_x"
                 android:visibility="@{viewModel.isShowCountdown?View.VISIBLE:View.GONE}"
@@ -380,6 +378,11 @@
             android:visibility="@{viewModel.coinPusherRoomShow ? View.VISIBLE : View.GONE}"
             android:src="@drawable/img_advert_coinpusher"
             binding:onClickCommand="@{viewModel.coinPusherRoomClick}"
+            binding:imagePath="@{viewModel.rtcRoomMessageField.rtcRoomMessageEntity.activityData.icon}"
+            binding:imageErrorPlaceholderRes="@{R.drawable.img_advert_coinpusher}"
+            binding:imagePlaceholderRes="@{R.drawable.img_advert_coinpusher}"
+            binding:resizeH="@{58}"
+            binding:resizeW="@{58}"
             />
 
         <LinearLayout

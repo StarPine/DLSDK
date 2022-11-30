@@ -113,6 +113,7 @@
             android:visibility="gone"
             android:src="@drawable/selector_call_audio_or_video"
             binding:onClickCommand="@{viewModel.makeCallUserClick}"
+            binding:stateActivated="@{viewModel.makeCallTypeField}"
             />
     </RelativeLayout>
 </layout>

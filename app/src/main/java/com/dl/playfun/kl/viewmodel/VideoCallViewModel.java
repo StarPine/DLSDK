@@ -280,12 +280,11 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
             DLRTCVideoManager.Companion.getInstance().muteLocalAudio(handsFree);
         }
     });
+    private boolean isFrontCamera = true;
 
-    public BindingCommand switchCameraOnclick = new BindingCommand(new BindingAction() {
-        @Override
-        public void call() {
-            DLRTCVideoManager.Companion.getInstance().switchCamera(true);
-        }
+    public BindingCommand switchCameraOnclick = new BindingCommand(() -> {
+        isFrontCamera = !isFrontCamera;
+        DLRTCVideoManager.Companion.getInstance().switchCamera(isFrontCamera);
     });
 
     public BindingCommand rejectOnclick = new BindingCommand(new BindingAction() {
@@ -476,28 +475,32 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
                     @Override
                     public void onSuccess(BaseDataResponse<CallUserRoomInfoEntity> response) {
                         CallUserRoomInfoEntity callingInviteInfo = response.getData();
-                        if(callingInviteInfo!=null){
-                            if(!callingInviteInfo.getPayerImId().equals(ConfigManager.getInstance().getUserImID())){
-                                //付费方
-                                isPayee = true;
-                            }
-                            //心跳间隔大于0秒才进行赋值。否则默认10秒
-                            if(callingInviteInfo.getHeartBeatInterval() > 0){
-                                heartBeatInterval = callingInviteInfo.getHeartBeatInterval();
-                            }
-                        }
-                        uc.callAudioStart.call();
-                        //主动拨打
-                        DLRTCAudioManager.Companion.getInstance().enableAGC(true);
-                        DLRTCAudioManager.Companion.getInstance().enableAEC(true);
-                        DLRTCAudioManager.Companion.getInstance().enableANS(true);
-                        //gameUI.acceptCallingEvent.call();
+                        callingInviteUserApply(callingInviteInfo);
                     }
                     @Override
                     public void onComplete() {
                         dismissHUD();
                     }
                 });
+    }
+
+    //查询房间信息
+    public void callingInviteUserApply(CallUserRoomInfoEntity callingInviteInfo){
+        if(callingInviteInfo!=null){
+            if(!callingInviteInfo.getPayerImId().equals(ConfigManager.getInstance().getUserImID())){
+                //付费方
+                isPayee = true;
+            }
+            //心跳间隔大于0秒才进行赋值。否则默认10秒
+            if(callingInviteInfo.getHeartBeatInterval() > 0){
+                heartBeatInterval = callingInviteInfo.getHeartBeatInterval();
+            }
+        }
+        uc.callAudioStart.call();
+        //主动拨打
+        DLRTCAudioManager.Companion.getInstance().enableAGC(true);
+        DLRTCAudioManager.Companion.getInstance().enableAEC(true);
+        DLRTCAudioManager.Companion.getInstance().enableANS(true);
     }
     //发送心跳包
     public void callingKeepAlive(Integer roomId,String roomIdStr){
@@ -700,33 +703,10 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
                                         if (CustomConvertUtils.ContainsMessageModuleKey(contentBody, CustomConstants.Message.MODULE_NAME_KEY, CustomConstants.CoinPusher.MODULE_NAME)) {
                                             V2TIMCustomManagerUtil.CoinPusherManager(contentBody);
                                         }
-                                        //通话模块
-                                        if(CustomConvertUtils.ContainsMessageModuleKey(contentBody, CustomConstants.Message.MODULE_NAME_KEY, CustomConstants.CallingMessage.MODULE_NAME)){
-                                            Map<String,Object> pushCoinGame = CustomConvertUtils.ConvertMassageModule(contentBody,CustomConstants.Message.MODULE_NAME_KEY,CustomConstants.CallingMessage.MODULE_NAME,CustomConstants.Message.CUSTOM_CONTENT_BODY);
-                                            if(ObjectUtils.isNotEmpty(pushCoinGame)){
-                                                //消息类型--判断
-                                                if(pushCoinGame.containsKey(CustomConstants.Message.CUSTOM_MSG_KEY)){
-                                                    if (CustomConvertUtils.ContainsMessageModuleKey(pushCoinGame,CustomConstants.Message.CUSTOM_MSG_KEY,CustomConstants.CallingMessage.CALLING_PROFIT_TIPS)){
-                                                        // //通话中收益
-                                                        Map<String,Object> startWinning = CustomConvertUtils.ConvertMassageModule(pushCoinGame,CustomConstants.Message.CUSTOM_MSG_KEY,CustomConstants.CallingMessage.CALLING_PROFIT_TIPS,CustomConstants.Message.CUSTOM_MSG_BODY);
-                                                        if(ObjectUtils.isNotEmpty(startWinning)){
-                                                            CallingStatusEntity callingStatusEntity = GsonUtils.fromJson(GsonUtils.toJson(startWinning),CallingStatusEntity.class);
-                                                            if(callingStatusEntity!=null){
-                                                                Integer roomStatus = callingStatusEntity.getRoomStatus();
-                                                                if (roomStatus != null && roomStatus != 101) {
-                                                                    hangup();
-                                                                }
-                                                                maleBalanceMoney = callingStatusEntity.getPayerCoinBalance();
-                                                                payeeProfits = callingStatusEntity.getPayeeProfits().doubleValue();
-                                                                totalMinutes = callingStatusEntity.getTotalMinutes() * 60;
-                                                                totalMinutesRemaining = totalMinutes - TimeCount;
-                                                                callInfoLoaded = true;
-                                                            }
-
-                                                        }
-                                                    }
-                                                }
-                                            }
+                                        //RTC通话中推送消息模块
+                                        if(CustomConvertUtils.ContainsMessageModuleKey(contentBody, CustomConstants.Message.MODULE_NAME_KEY,CustomConstants.RtcRoomMessage.MODULE_NAME)){
+                                            Map<String,Object> rtcRoomMsg = CustomConvertUtils.ConvertMassageModule(contentBody,CustomConstants.Message.MODULE_NAME_KEY,CustomConstants.RtcRoomMessage.MODULE_NAME,CustomConstants.Message.CUSTOM_CONTENT_BODY);
+                                            V2TIMCustomManagerUtil.RtcRoomMessageManager(rtcRoomMsg);
                                         }
                                     }
                                 }

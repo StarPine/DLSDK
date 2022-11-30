@@ -46,6 +46,7 @@ import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.databinding.ActivityCallVideoBinding;
 import com.dl.playfun.entity.CallGameCoinPusherEntity;
 import com.dl.playfun.entity.CallUserInfoEntity;
+import com.dl.playfun.entity.CallUserRoomInfoEntity;
 import com.dl.playfun.entity.CoinPusherDataInfoEntity;
 import com.dl.playfun.entity.CrystalDetailsConfigEntity;
 import com.dl.playfun.entity.GiftBagEntity;
@@ -144,6 +145,10 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
 
     private Handler mHandler = new Handler(msg -> false);
 
+    //当前房间信息
+    private CallUserRoomInfoEntity _callUserRoomInfoEntity;
+
+
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LocaleManager.setLocal(newBase));
@@ -222,6 +227,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         inviteUserID = intent.getExtras().getString(DLRTCCallingConstants.DLRTCInviteUserID);
         _callUserInfoEntity = (CallUserInfoEntity)intent.getSerializableExtra("CallingInviteInfoField");
         DLRTCInternalListenerManager.Companion.getInstance().addDelegate(mTRTCCallingListener);
+        _callUserRoomInfoEntity = (CallUserRoomInfoEntity)intent.getSerializableExtra("CallUserRoomInfoEntity");
     }
 
     /**
@@ -260,10 +266,18 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         }
         if(role == DLRTCCalling.Role.CALL){  //主动呼叫
             viewModel.coinPusherRoomShow.set(true);
+            viewModel.getCallingUserInfo(null, acceptUserID);
+        }else{
+            viewModel.getCallingUserInfo(null, inviteUserID);
         }
-        viewModel.getCallingUserInfo(null, acceptUserID);
+
         launcherPermissionArray.launch(new String[]{Manifest.permission.RECORD_AUDIO,Manifest.permission.CAMERA});
         viewModel.initIMListener();
+        if(_callUserRoomInfoEntity!=null) {
+            viewModel.callingInviteUserApply(_callUserRoomInfoEntity);
+        }else{
+            viewModel.callingInviteUser(inviteUserID,acceptUserID);
+        }
     }
     //多个权限申请监听
     ActivityResultLauncher<String[]> launcherPermissionArray = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(),
@@ -285,9 +299,6 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                             }
                             if (layout != null) {
                                 DLRTCVideoManager.Companion.getInstance().updateRemoteView(remoteUserId, layout.getVideoView());
-                            }
-                            if (roomId != 0 && inviteUserID != null && acceptUserID != null) {
-                                viewModel.callingInviteUser(inviteUserID, acceptUserID);
                             }
                         }
                     } else {
@@ -376,7 +387,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                 startVideoSendBannersAnimotion(account, giftEntity);
                 //启动头像动画
                 startVideoSendHeadAnimotion(giftEntity);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
 
             }
         });
@@ -464,21 +475,6 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                     }
                     intent.putExtra("CallUserInfoEntity",viewModel.otherUserInfoField.get());
                     intent.putExtra("GameCallEntity",gameCallEntity);
-                    CallGameCoinPusherEntity callGameCoinPusherEntity = new CallGameCoinPusherEntity();
-                    callGameCoinPusherEntity.setState(CallGameCoinPusherEntity.enterGame);
-                    callGameCoinPusherEntity.setCircuses(false);
-                    callGameCoinPusherEntity.setRoomId(itemEntity.getRoomInfo().getRoomId());
-                    callGameCoinPusherEntity.setClientWsRtcId(itemEntity.getClientWsRtcId());
-                    callGameCoinPusherEntity.setStreamUrl(itemEntity.getRtcUrl());
-                    callGameCoinPusherEntity.setTotalGold(itemEntity.getTotalGold());
-                    callGameCoinPusherEntity.setCountdown(itemEntity.getCountdown());
-                    callGameCoinPusherEntity.setLevelId(itemEntity.getRoomInfo().getLevelId());
-                    callGameCoinPusherEntity.setNickname(itemEntity.getRoomInfo().getNickname());
-                    callGameCoinPusherEntity.setPayGameMoney(itemEntity.getRoomInfo().getMoney());
-
-                    CustomDlTempMessage customDlTempMessage = V2TIMCustomManagerUtil.buildDlTempMessage(CustomConstants.CoinPusher.MODULE_NAME,CustomConstants.CoinPusher.CALL_GO_GAME_WINNING,callGameCoinPusherEntity);
-                    //TUIMessageBean messageInfo = ChatMessageBuilder.buildCustomMessage(GsonUtils.toJson(customDlTempMessage), null, null);
-                    DLRTCSignalingManager.INSTANCE.sendC2CCustomMessage(GsonUtils.toJson(customDlTempMessage),viewModel.mRole ==  DLRTCCalling.Role.CALL? viewModel.acceptUserID :  viewModel.inviteUserID);
                     startActivity(intent);
                     finish();
                 }
@@ -492,7 +488,6 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         });
         viewModel.uc.callingToGamePlayingEvent.observe(this, callGameCoinPusherEntity -> {
             binding.getRoot().post(()->{
-                Log.e("大妈好啊没体哦弄口","===============");
                 //进房
                 if(Objects.equals(callGameCoinPusherEntity.getState(),CallGameCoinPusherEntity.enterGame)){
                     //展示推币机入口
@@ -1029,9 +1024,6 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         public void onUserEnter(String userId) {
             DLRTCStartShowUIManager.Companion.getInstance().stopRing();
             viewModel.mainVIewShow.set(true);
-            if (roomId != 0 && inviteUserID != null && acceptUserID != null) {
-                viewModel.callingInviteUser(inviteUserID, acceptUserID);
-            }
         }
 
         @Override

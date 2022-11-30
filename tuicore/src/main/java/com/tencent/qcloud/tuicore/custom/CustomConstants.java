@@ -54,8 +54,15 @@ public class CustomConstants {
         //模块名
         public static final String MODULE_NAME = "calling";
         public static final String TYPE_CALLING_FAILED = "callingFailed";
+    }
+    //RTC通话中推送消息模块
+    public static final class RtcRoomMessage{
+        //模块名
+        public static final String MODULE_NAME = "rtcRoomMsg";
+        //活动入口
+        public static final String TYPE_ACTIVITY_ENTRANCE = "activityEntrance";
         //通话中收益
-        public static final String CALLING_PROFIT_TIPS = "callingProfitTips";
+        public static final String TYPE_CALLING_PROFIT_TIPS = "callingProfitTips";
     }
 
     //系统提示模块

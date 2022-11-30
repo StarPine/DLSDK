@@ -1771,6 +1771,11 @@
     <string name="playfun_gift_bag_more_text6">十全十美</string>
     <string name="playfun_gift_bag_more_text7">一心一意</string>
     <string name="playfun_call_waiting_hint">等待對方接聽...</string>
+    <string name="playfun_call_earnings_audio_hint">語音獎勵%s水晶/分鐘</string>
+    <string name="playfun_call_earnings_hint">收禮還能獎勵更多哦！</string>
+    <string name="playfun_call_earnings_video_hint">視訊獎勵%s水晶/分鐘</string>
+    <string name="playfun_call_pay_audio_hint">對方人氣火爆，語音消耗%s鑽石/分鐘</string>
+    <string name="playfun_call_pay_video_hint">對方人氣火爆，視訊消耗 %s 鑽石/分鐘</string>
     <string name="playfun_call_audio_tips">看看聊天tips，不怕沒話題~</string>
     <string name="playfun_call_video_invite_hint">邀請你視訊聊天...</string>
     <string name="playfun_message_deatail_call_audio">語音通話</string>

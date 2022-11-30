@@ -1,17 +1,18 @@
 package com.dl.playfun.entity;
 
-import androidx.annotation.NonNull;
+import java.io.Serializable;
 
 /**
  * Author: 彭石林
  * Time: 2022/11/22 22:51
- * Description: This is CallGameCoinPusherEntity
+ * Description: 活动入口推币机消息体
  */
-public class CallGameCoinPusherEntity {
+public class CallGameCoinPusherEntity implements Serializable {
     //进房
     public final static String enterGame = "enterGame";
     //推房
     public final static String leaveGame = "leaveGame";
+
     //当前状态：enterGame 、leaveGame
     private String state;
     //当前是否围观方
@@ -25,10 +26,15 @@ public class CallGameCoinPusherEntity {
 
     private Integer totalGold;
     private Integer payGameMoney;
-    private long outTime;
-    private long countdown;
     private int levelId;
     private String nickname;
+
+    //活动icon
+    private String icon;
+    //拓展字段。列入推送H5小游戏。打开网址
+    private String webLink;
+    ////游戏方ID -IM ID 只有此用户才能发起游戏
+    private String playUserId;
 
     public String getState() {
         return state;
@@ -86,22 +92,6 @@ public class CallGameCoinPusherEntity {
         this.payGameMoney = payGameMoney;
     }
 
-    public long getOutTime() {
-        return outTime;
-    }
-
-    public void setOutTime(long outTime) {
-        this.outTime = outTime;
-    }
-
-    public long getCountdown() {
-        return countdown;
-    }
-
-    public void setCountdown(long countdown) {
-        this.countdown = countdown;
-    }
-
     public int getLevelId() {
         return levelId;
     }
@@ -118,6 +108,30 @@ public class CallGameCoinPusherEntity {
         this.nickname = nickname;
     }
 
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public String getWebLink() {
+        return webLink;
+    }
+
+    public void setWebLink(String webLink) {
+        this.webLink = webLink;
+    }
+
+    public String getPlayUserId() {
+        return playUserId;
+    }
+
+    public void setPlayUserId(String playUserId) {
+        this.playUserId = playUserId;
+    }
+
     @Override
     public String toString() {
         return "CallGameCoinPusherEntity{" +
@@ -128,10 +142,11 @@ public class CallGameCoinPusherEntity {
                 ", roomId=" + roomId +
                 ", totalGold=" + totalGold +
                 ", payGameMoney=" + payGameMoney +
-                ", outTime=" + outTime +
-                ", countdown=" + countdown +
                 ", levelId=" + levelId +
                 ", nickname='" + nickname + '\'' +
+                ", icon='" + icon + '\'' +
+                ", webLink='" + webLink + '\'' +
+                ", playUserId='" + playUserId + '\'' +
                 '}';
     }
 }

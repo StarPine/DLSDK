@@ -40,9 +40,12 @@ import com.dl.playfun.entity.CallingInfoEntity;
 import com.dl.playfun.entity.CallingStatusEntity;
 import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.entity.MallWithdrawTipsInfoEntity;
+import com.dl.playfun.entity.RtcRoomMessageEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.AudioCallingCancelEvent;
+import com.dl.playfun.event.CallingStatusEvent;
 import com.dl.playfun.event.CallingToGamePlayingEvent;
+import com.dl.playfun.event.RtcRoomMessageEvent;
 import com.dl.playfun.kl.CallChatingConstant;
 import com.dl.playfun.kl.Utils;
 import com.dl.playfun.kl.view.Ifinish;
@@ -50,6 +53,7 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.V2TIMCustomManagerUtil;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.LogUtils;
+import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.dl.rtc.calling.base.DLRTCCallingDelegate;
@@ -153,7 +157,6 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     public ObservableBoolean girlEarningsField = new ObservableBoolean(false);
     //收益文字
     public ObservableField<SpannableString> girlEarningsText = new ObservableField<>();
-    public ObservableField<CallingInfoEntity> audioCallingInfoEntity = new ObservableField<>();
     //是否已经追踪
     public ObservableBoolean collectedField = new ObservableBoolean(false);
     //是否静音
@@ -169,6 +172,8 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     public BindingRecyclerViewAdapter<AudioCallChatingItemViewModel> adapter = new BindingRecyclerViewAdapter<>();
     public ObservableList<AudioCallChatingItemViewModel> observableList = new ObservableArrayList<>();
     public ItemBinding<AudioCallChatingItemViewModel> itemBinding = ItemBinding.of(BR.viewModel, R.layout.item_call_audio_chating);
+    //活动入口信息
+    public ObservableField<RtcRoomMessageEvent> rtcRoomMessageField = new ObservableField<>();
 
     private final static String TAG = "trtcJoy";
     private static final int MIN_DURATION_SHOW_LOW_QUALITY = 5000; //显示网络不佳最小间隔时间
@@ -213,6 +218,8 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     //订阅者
     private Disposable mSubscription;
     private Disposable mCallingToGameSubscription;
+    private Disposable mRtcRoomMessageSubscription;
+    private Disposable mCallingStatusEventSubscription;
     private long mSelfLowQualityTime;
     private long mOtherPartyLowQualityTime;
 
@@ -279,22 +286,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                     @Override
                     public void onSuccess(BaseDataResponse<CallUserRoomInfoEntity> response) {
                         CallUserRoomInfoEntity callingInviteInfo = response.getData();
-                        if(callingInviteInfo!=null){
-                            if(!callingInviteInfo.getPayerImId().equals(ConfigManager.getInstance().getUserImID())){
-                                //付费方
-                                isPayee = true;
-                            }
-                            //心跳间隔大于0秒才进行赋值。否则默认10秒
-                            if(callingInviteInfo.getHeartBeatInterval() > 0){
-                                heartBeatInterval = callingInviteInfo.getHeartBeatInterval();
-                            }
-                        }
-                        uc.callAudioStart.call();
-                        //主动拨打
-                        DLRTCAudioManager.Companion.getInstance().enableAGC(true);
-                        DLRTCAudioManager.Companion.getInstance().enableAEC(true);
-                        DLRTCAudioManager.Companion.getInstance().enableANS(true);
-                        //gameUI.acceptCallingEvent.call();
+                        callingInviteUserApply(callingInviteInfo);
                     }
                     @Override
                     public void onComplete() {
@@ -302,6 +294,25 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                     }
                 });
     }
+    //查询房间信息
+    public void callingInviteUserApply(CallUserRoomInfoEntity callingInviteInfo){
+        if(callingInviteInfo!=null){
+            if(!callingInviteInfo.getPayerImId().equals(ConfigManager.getInstance().getUserImID())){
+                //付费方
+                isPayee = true;
+            }
+            //心跳间隔大于0秒才进行赋值。否则默认10秒
+            if(callingInviteInfo.getHeartBeatInterval() > 0){
+                heartBeatInterval = callingInviteInfo.getHeartBeatInterval();
+            }
+        }
+        uc.callAudioStart.call();
+        //主动拨打
+        DLRTCAudioManager.Companion.getInstance().enableAGC(true);
+        DLRTCAudioManager.Companion.getInstance().enableAEC(true);
+        DLRTCAudioManager.Companion.getInstance().enableANS(true);
+    }
+
 
     //发送礼物
     public void sendUserGift(Dialog dialog, GiftBagEntity.GiftEntity giftEntity, Integer to_user_id, Integer amount) {
@@ -374,9 +385,36 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                     }
 
                 });
+        //通话活动入口
+        mRtcRoomMessageSubscription = RxBus.getDefault().toObservable(RtcRoomMessageEvent.class)
+                .subscribe(rtcRoomMessageEvent -> {
+                    Log.e("接受到信令活动入口",rtcRoomMessageEvent.toString());
+                    RtcRoomMessageEntity rtcRoomMessageEntity = rtcRoomMessageEvent.getRtcRoomMessageEntity();
+                    if(Objects.equals(rtcRoomMessageEntity.getActivityData().getPlayUserId(),currentUserInfoField.get().getImUserId())){
+                        rtcRoomMessageField.set(rtcRoomMessageEvent);
+                        coinPusherRoomShow.set(true);
+                    }
+                });
+        mCallingStatusEventSubscription = RxBus.getDefault().toObservable(CallingStatusEvent.class)
+                .subscribe(callingStatusEvent -> {
+
+                    if(callingStatusEvent!=null && callingStatusEvent.getCallingStatusEntity()!=null){
+                        CallingStatusEntity callingStatusEntity = callingStatusEvent.getCallingStatusEntity();
+                        Integer roomStatus = callingStatusEntity.getRoomStatus();
+                        if (roomStatus != null && roomStatus != 101) {
+                            hangup();
+                        }
+                        maleBalanceMoney = callingStatusEntity.getPayerCoinBalance();
+                        payeeProfits = callingStatusEntity.getPayeeProfits().doubleValue();
+                        totalMinutes = callingStatusEntity.getTotalMinutes() * 60;
+                        totalMinutesRemaining = totalMinutes - TimeCount;
+                        callInfoLoaded = true;
+                    }
+                });
         //将订阅者加入管理站
         RxSubscriptions.add(mSubscription);
         RxSubscriptions.add(mCallingToGameSubscription);
+        RxSubscriptions.add(mRtcRoomMessageSubscription);
     }
 
     //移除RxBus
@@ -386,6 +424,8 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
         //将订阅者从管理站中移除
         RxSubscriptions.remove(mSubscription);
         RxSubscriptions.remove(mCallingToGameSubscription);
+        RxSubscriptions.remove(mRtcRoomMessageSubscription);
+        destroyIMListener();
     }
 
     public void init(Ifinish iview) {
@@ -454,6 +494,13 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                 mView.finishView();
                 Utils.show("對方取消通話");
             }
+
+            @Override
+            public void onUserAudioAvailable(String userId, boolean isVideoAvailable) {
+                Log.i(TAG, "onUserAudioAvailable: userId："+userId + ", onUserAudioAvailable ="+isVideoAvailable);
+                updateCallingStatus(CallChatingConstant.pusherAudioStart);
+            }
+
         };
         DLRTCInternalListenerManager.Companion.getInstance().addDelegate(mTRTCCallingDelegate);
     }
@@ -567,113 +614,96 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
 
     //监听IM消息
     private void initIMListener() {
-        V2TIMManager.getMessageManager().addAdvancedMsgListener(new V2TIMAdvancedMsgListener() {
-            @Override
-            public void onRecvNewMessage(V2TIMMessage msg) {//新消息提醒
-                if (msg != null && otherUserInfoField.get() != null) {
-                    TUIMessageBean info = ChatMessageBuilder.buildMessage(msg);
-                    if (info != null) {
-                        switch (info.getMsgType()){
-                            //文本类型消息
-                            case 1:
-                                if (info.getV2TIMMessage().getSender().equals(otherUserInfoField.get().getImId())) {
-                                    String text = String.valueOf(info.getExtra());
-                                    if (isJSON2(text) && text.indexOf("type") != -1) {//做自定义通知判断
-                                        Map<String, Object> map_data = new Gson().fromJson(text, Map.class);
-                                        //礼物消息
-                                        if (map_data != null && map_data.get("type") != null && map_data.get("type").equals("message_gift")
-                                                && map_data.get("is_accost") == null) {
-                                            GiftEntity giftEntity = IMGsonUtils.fromJson(String.valueOf(map_data.get("data")), GiftEntity.class);
-                                            uc.acceptUserGift.postValue(giftEntity);
-                                            //显示礼物弹幕
-                                            showGiftBarrage(giftEntity);
-                                            //礼物收益提示
-                                            giftIncome(giftEntity);
-                                        }else if (map_data != null && map_data.get("type") != null && map_data.get("type").equals("message_countdown")) {//对方余额不足
-                                            if (isPayee && isShowTipMoney) {
-                                                String data = (String) map_data.get("data");
-                                                Map<String, Object> dataMapCountdown = new Gson().fromJson(data, Map.class);
-                                                String isShow = (String) dataMapCountdown.get("is_show");
-                                                if (isShow != null && isShow.equals("1")) {
-                                                    isShowCountdown.set(true);
-                                                    girlEarningsField.set(true);
-                                                    String girlEarningsTex = StringUtils.getString(R.string.playfun_insufficient_balance_of_counterparty);
-                                                    SpannableString stringBuilder = new SpannableString(girlEarningsTex);
-                                                    stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, girlEarningsTex.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                                    girlEarningsText.set(stringBuilder);
+        V2TIMManager.getMessageManager().addAdvancedMsgListener(v2TIMAdvancedMsgListener);
+    }
 
-                                                }else if (isShow != null && isShow.equals("0")){
-                                                    isShowCountdown.set(false);
-                                                }
+    private void destroyIMListener(){
+        V2TIMManager.getMessageManager().removeAdvancedMsgListener(v2TIMAdvancedMsgListener);
+    }
+
+    V2TIMAdvancedMsgListener v2TIMAdvancedMsgListener = new V2TIMAdvancedMsgListener() {
+        @Override
+        public void onRecvNewMessage(V2TIMMessage msg) {//新消息提醒
+            if (msg != null && otherUserInfoField.get() != null) {
+                TUIMessageBean info = ChatMessageBuilder.buildMessage(msg);
+                if (info != null) {
+                    switch (info.getMsgType()){
+                        //文本类型消息
+                        case 1:
+                            if (info.getV2TIMMessage().getSender().equals(otherUserInfoField.get().getImId())) {
+                                String text = String.valueOf(info.getExtra());
+                                if (isJSON2(text) && text.indexOf("type") != -1) {//做自定义通知判断
+                                    Map<String, Object> map_data = new Gson().fromJson(text, Map.class);
+                                    //礼物消息
+                                    if (map_data != null && map_data.get("type") != null && map_data.get("type").equals("message_gift")
+                                            && map_data.get("is_accost") == null) {
+                                        GiftEntity giftEntity = IMGsonUtils.fromJson(String.valueOf(map_data.get("data")), GiftEntity.class);
+                                        uc.acceptUserGift.postValue(giftEntity);
+                                        //显示礼物弹幕
+                                        showGiftBarrage(giftEntity);
+                                        //礼物收益提示
+                                        giftIncome(giftEntity);
+                                    }else if (map_data != null && map_data.get("type") != null && map_data.get("type").equals("message_countdown")) {//对方余额不足
+                                        if (isPayee && isShowTipMoney) {
+                                            String data = (String) map_data.get("data");
+                                            Map<String, Object> dataMapCountdown = new Gson().fromJson(data, Map.class);
+                                            String isShow = (String) dataMapCountdown.get("is_show");
+                                            if (isShow != null && isShow.equals("1")) {
+                                                isShowCountdown.set(true);
+                                                girlEarningsField.set(true);
+                                                String girlEarningsTex = StringUtils.getString(R.string.playfun_insufficient_balance_of_counterparty);
+                                                SpannableString stringBuilder = new SpannableString(girlEarningsTex);
+                                                stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, girlEarningsTex.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                                girlEarningsText.set(stringBuilder);
+
+                                            }else if (isShow != null && isShow.equals("0")){
+                                                isShowCountdown.set(false);
                                             }
                                         }
                                     }
                                 }
-                                break;
-                            //自定义消息类型
-                            case 2:
-                                V2TIMCustomElem v2TIMCustomElem = info.getV2TIMMessage().getCustomElem();
-                                Map<String, Object> contentBody = CustomConvertUtils.CustomMassageConvertMap(v2TIMCustomElem);
-                                if (ObjectUtils.isNotEmpty(contentBody)) {
-                                    Log.e("语音接受到的自定义讯息为", String.valueOf(contentBody));
-                                    //模块类型--判断
-                                    if (contentBody.containsKey(CustomConstants.Message.MODULE_NAME_KEY)) {
-                                        //获取moudle-pushCoinGame 推币机
-                                        if (CustomConvertUtils.ContainsMessageModuleKey(contentBody, CustomConstants.Message.MODULE_NAME_KEY, CustomConstants.CoinPusher.MODULE_NAME)) {
-                                            V2TIMCustomManagerUtil.CoinPusherManager(contentBody);
-                                        }
-                                        //通话模块
-                                        if(CustomConvertUtils.ContainsMessageModuleKey(contentBody, CustomConstants.Message.MODULE_NAME_KEY, CustomConstants.CallingMessage.MODULE_NAME)){
-                                            Map<String,Object> pushCoinGame = CustomConvertUtils.ConvertMassageModule(contentBody,CustomConstants.Message.MODULE_NAME_KEY,CustomConstants.CallingMessage.MODULE_NAME,CustomConstants.Message.CUSTOM_CONTENT_BODY);
-                                            if(ObjectUtils.isNotEmpty(pushCoinGame)){
-                                                //消息类型--判断
-                                                if(pushCoinGame.containsKey(CustomConstants.Message.CUSTOM_MSG_KEY)){
-                                                    if (CustomConvertUtils.ContainsMessageModuleKey(pushCoinGame,CustomConstants.Message.CUSTOM_MSG_KEY,CustomConstants.CallingMessage.CALLING_PROFIT_TIPS)){
-                                                        // //通话中收益
-                                                        Map<String,Object> startWinning = CustomConvertUtils.ConvertMassageModule(pushCoinGame,CustomConstants.Message.CUSTOM_MSG_KEY,CustomConstants.CallingMessage.CALLING_PROFIT_TIPS,CustomConstants.Message.CUSTOM_MSG_BODY);
-                                                        if(ObjectUtils.isNotEmpty(startWinning)){
-                                                            CallingStatusEntity callingStatusEntity = GsonUtils.fromJson(GsonUtils.toJson(startWinning),CallingStatusEntity.class);
-                                                            if(callingStatusEntity!=null){
-                                                                Integer roomStatus = callingStatusEntity.getRoomStatus();
-                                                                if (roomStatus != null && roomStatus != 101) {
-                                                                    hangup();
-                                                                }
-                                                                maleBalanceMoney = callingStatusEntity.getPayerCoinBalance();
-                                                                payeeProfits = callingStatusEntity.getPayeeProfits().doubleValue();
-                                                                totalMinutes = callingStatusEntity.getTotalMinutes() * 60;
-                                                                totalMinutesRemaining = totalMinutes - TimeCount;
-                                                                callInfoLoaded = true;
-                                                            }
-
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
+                            }
+                            break;
+                        //自定义消息类型
+                        case 2:
+                            V2TIMCustomElem v2TIMCustomElem = info.getV2TIMMessage().getCustomElem();
+                            Map<String, Object> contentBody = CustomConvertUtils.CustomMassageConvertMap(v2TIMCustomElem);
+                            if (ObjectUtils.isNotEmpty(contentBody)) {
+                                Log.e("语音接受到的自定义讯息为", String.valueOf(contentBody));
+                                //模块类型--判断
+                                if (contentBody.containsKey(CustomConstants.Message.MODULE_NAME_KEY)) {
+                                    //获取moudle-pushCoinGame 推币机
+                                    if (CustomConvertUtils.ContainsMessageModuleKey(contentBody, CustomConstants.Message.MODULE_NAME_KEY, CustomConstants.CoinPusher.MODULE_NAME)) {
+                                        V2TIMCustomManagerUtil.CoinPusherManager(contentBody);
+                                    }
+                                    //RTC通话中推送消息模块
+                                    if(CustomConvertUtils.ContainsMessageModuleKey(contentBody, CustomConstants.Message.MODULE_NAME_KEY,CustomConstants.RtcRoomMessage.MODULE_NAME)){
+                                        Map<String,Object> rtcRoomMsg = CustomConvertUtils.ConvertMassageModule(contentBody,CustomConstants.Message.MODULE_NAME_KEY,CustomConstants.RtcRoomMessage.MODULE_NAME,CustomConstants.Message.CUSTOM_CONTENT_BODY);
+                                        V2TIMCustomManagerUtil.RtcRoomMessageManager(rtcRoomMsg);
                                     }
                                 }
-                                break;
-                        }
+                            }
+                            break;
                     }
                 }
             }
+        }
 
-            @Override
-            public void onRecvC2CReadReceipt(List<V2TIMMessageReceipt> receiptList) {
-                super.onRecvC2CReadReceipt(receiptList);
-            }
+        @Override
+        public void onRecvC2CReadReceipt(List<V2TIMMessageReceipt> receiptList) {
+            super.onRecvC2CReadReceipt(receiptList);
+        }
 
-            @Override
-            public void onRecvMessageRevoked(String msgID) {
-                super.onRecvMessageRevoked(msgID);
-            }
+        @Override
+        public void onRecvMessageRevoked(String msgID) {
+            super.onRecvMessageRevoked(msgID);
+        }
 
-            @Override
-            public void onRecvMessageModified(V2TIMMessage msg) {
-                super.onRecvMessageModified(msg);
-            }
-        });
-    }
+        @Override
+        public void onRecvMessageModified(V2TIMMessage msg) {
+            super.onRecvMessageModified(msg);
+        }
+    };
 
     /**
      * 显示礼物弹幕

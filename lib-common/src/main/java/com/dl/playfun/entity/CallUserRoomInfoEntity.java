@@ -1,5 +1,6 @@
 package com.dl.playfun.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -7,7 +8,7 @@ import java.math.BigDecimal;
  * Time: 2022/11/24 10:40
  * Description: 新的通话接口
  */
-public class CallUserRoomInfoEntity {
+public class CallUserRoomInfoEntity implements Serializable {
     //房间ID
     private int roomId;
     //字符串形式的房间ID
@@ -78,7 +79,7 @@ public class CallUserRoomInfoEntity {
         this.customShowMsg = customShowMsg;
     }
 
-    public static class CustomShowMsg{
+    public static class CustomShowMsg implements Serializable{
         private String callingMsg;
         private String handUpMsg;
         private String callPlayMsg;
@@ -115,5 +116,28 @@ public class CallUserRoomInfoEntity {
         public void setGiftAwardMsg(String giftAwardMsg) {
             this.giftAwardMsg = giftAwardMsg;
         }
+
+        @Override
+        public String toString() {
+            return "CustomShowMsg{" +
+                    "callingMsg='" + callingMsg + '\'' +
+                    ", handUpMsg='" + handUpMsg + '\'' +
+                    ", callPlayMsg='" + callPlayMsg + '\'' +
+                    ", giftAwardMsg='" + giftAwardMsg + '\'' +
+                    '}';
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "CallUserRoomInfoEntity{" +
+                "roomId=" + roomId +
+                ", roomIdStr='" + roomIdStr + '\'' +
+                ", payerImId='" + payerImId + '\'' +
+                ", coinPerMinutes=" + coinPerMinutes +
+                ", profitPerMinutes=" + profitPerMinutes +
+                ", heartBeatInterval=" + heartBeatInterval +
+                ", customShowMsg=" + customShowMsg +
+                '}';
     }
 }

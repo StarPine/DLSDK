@@ -98,6 +98,12 @@ public class MainContainerActivity extends MySupportActivity {
     }
 
     @Override
+    public void onStart(){
+        super.onStart();
+        AutoSizeUtils.applyAdapt(this.getResources());
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         onCreateTime = System.currentTimeMillis() / 1000;

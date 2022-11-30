@@ -131,24 +131,26 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         //30秒没有投币提示
         if(AppConfig.CoinPusherGameNotPushed){
             AppConfig.CoinPusherGameNotPushed = false;
-            //弹出推币机选择弹窗
-            CoinPusherRoomListDialog coinersDialog = new CoinPusherRoomListDialog(mActivity);
-            coinersDialog.setDialogEventListener(new CoinPusherRoomListDialog.DialogEventListener() {
-                @Override
-                public void startViewing(CoinPusherDataInfoEntity itemEntity) {
-                    coinersDialog.dismiss();
-                    Intent intent = CoinPusherGameActivity.getStartActivityIntent(mActivity,itemEntity.getClientWsRtcId()
-                            ,itemEntity.getRtcUrl(),itemEntity.getTotalGold(),itemEntity.getRoomInfo().getMoney(),itemEntity.getOutTime(),itemEntity.getCountdown()
-                            ,itemEntity.getRoomInfo().getRoomId(),itemEntity.getRoomInfo().getLevelId(),itemEntity.getRoomInfo().getNickname());
-                    startActivity(intent);
-                }
-                @Override
-                public void buyErrorPayView() {
-                    payCoinRechargeDialog();
-                }
-            });
-            coinersDialog.show();
-            CoinPusherDialogAdapter.getDialogCoinPusherHint(getContext());
+            binding.getRoot().postDelayed(()->{
+                //弹出推币机选择弹窗
+                CoinPusherRoomListDialog coinersDialog = new CoinPusherRoomListDialog(mActivity);
+                coinersDialog.setDialogEventListener(new CoinPusherRoomListDialog.DialogEventListener() {
+                    @Override
+                    public void startViewing(CoinPusherDataInfoEntity itemEntity) {
+                        coinersDialog.dismiss();
+                        Intent intent = CoinPusherGameActivity.getStartActivityIntent(mActivity,itemEntity.getClientWsRtcId()
+                                ,itemEntity.getRtcUrl(),itemEntity.getTotalGold(),itemEntity.getRoomInfo().getMoney(),itemEntity.getOutTime(),itemEntity.getCountdown()
+                                ,itemEntity.getRoomInfo().getRoomId(),itemEntity.getRoomInfo().getLevelId(),itemEntity.getRoomInfo().getNickname());
+                        startActivity(intent);
+                    }
+                    @Override
+                    public void buyErrorPayView() {
+                        payCoinRechargeDialog();
+                    }
+                });
+                coinersDialog.show();
+                CoinPusherDialogAdapter.getDialogCoinPusherHint(getContext());
+            },500);
         }
     }
     //异步移除view

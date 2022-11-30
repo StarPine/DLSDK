@@ -68,6 +68,7 @@ import com.dl.playfun.ui.mine.webview.WebViewFragment;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.ui.userdetail.report.ReportUserFragment;
 import com.dl.playfun.utils.ApiUitl;
+import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.PictureSelectorUtil;
@@ -170,6 +171,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        AutoSizeUtils.applyAdapt(this.getResources());
         mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
         View view = super.onCreateView(inflater, container, savedInstanceState);
         ImmersionBarUtils.setupStatusBar(this, true, true);
@@ -186,6 +188,12 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         //SVGA播放初始化
         SVGASoundManager.INSTANCE.init();
         SVGAParser.Companion.shareParser().init(this.getContext());
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        AutoSizeUtils.applyAdapt(this.getResources());
     }
 
     @Override

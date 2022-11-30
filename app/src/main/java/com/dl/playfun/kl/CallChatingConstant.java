@@ -10,6 +10,9 @@ import com.dl.playfun.utils.ApiUitl;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.reactivex.schedulers.Schedulers;
+import me.goldze.mvvmhabit.utils.RxUtils;
+
 
 public class CallChatingConstant {
 
@@ -31,7 +34,7 @@ public class CallChatingConstant {
     //停止推送视频数据
     public static final int pusherVideoStop = 202;
     //开始推送音频数据
-    public static final int pusherAudioStart = 203;
+    public static final int pusherAudioStart = 10000;
     //停止推送音频数据
     public static final int pusherAudioStop = 204;
     //开始推送辅路数据
@@ -49,6 +52,7 @@ public class CallChatingConstant {
         mapData.put("roomIdStr",roomIdStr);
         mapData.put("eventType",eventType);
         ConfigManager.getInstance().getAppRepository().updateCallingStatus(ApiUitl.getBody(GsonUtils.toJson(mapData)))
+                .subscribeOn(Schedulers.io())
                 .subscribe(new BaseObserver<BaseResponse>() {
                     @Override
                     public void onSuccess(BaseResponse baseResponse) {
@@ -60,4 +64,26 @@ public class CallChatingConstant {
                     }
                 });
     }
+
+    /**
+     * 通话中 -推币机进入、退出围观
+     * @param roomId
+     * @param toUserId
+     * @param type
+     */
+    public static void updateCoinPusherWatchRoom(Integer roomId, Integer toUserId, int type){
+        ConfigManager.getInstance().getAppRepository().coinPusherWatchRoom(roomId, toUserId, type)
+                .subscribeOn(Schedulers.io())
+                .subscribe(new BaseObserver<BaseResponse>() {
+                    @Override
+                    public void onSuccess(BaseResponse baseResponse) {
+
+                    }
+
+                    @Override
+                    public void onError(RequestException e) {
+                    }
+                });
+    }
+
 }
