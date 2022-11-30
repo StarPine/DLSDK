@@ -12,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -698,6 +699,7 @@ public class MVDialog {
         contentView.offsetLeftAndRight(100);
         bottomDialog.getWindow().setGravity(Gravity.BOTTOM);
         bottomDialog.getWindow().setWindowAnimations(R.style.BottomDialog_Animation);
+        bottomDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         EditText editText = contentView.findViewById(R.id.et_comment);
         TextView tvSize = contentView.findViewById(R.id.tv_size);
         editText.addTextChangedListener(new TextWatcher() {
