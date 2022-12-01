@@ -190,8 +190,8 @@ public class GiftBagDialog extends BaseDialog {
             @Override
             public void onClick(View v) {
                 tab_bag.setTextColor(ColorUtils.getColor(R.color.purple1));
-                tab_gift.setTextColor(ColorUtils.getColor(R.color.empty_list_hint));
-                tab_crystal.setTextColor(ColorUtils.getColor(R.color.empty_list_hint));
+                tab_gift.setTextColor(ColorUtils.getColor(R.color.color_text_333333));
+                tab_crystal.setTextColor(ColorUtils.getColor(R.color.color_text_333333));
                 gift_page_layout.setVisibility(View.GONE);
                 bag_page_layout.setVisibility(View.VISIBLE);
                 crystal_page_layout.setVisibility(View.GONE);
@@ -204,9 +204,9 @@ public class GiftBagDialog extends BaseDialog {
         tab_gift.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tab_bag.setTextColor(ColorUtils.getColor(R.color.empty_list_hint));
+                tab_bag.setTextColor(ColorUtils.getColor(R.color.color_text_333333));
                 tab_gift.setTextColor(ColorUtils.getColor(R.color.purple1));
-                tab_crystal.setTextColor(ColorUtils.getColor(R.color.empty_list_hint));
+                tab_crystal.setTextColor(ColorUtils.getColor(R.color.color_text_333333));
                 gift_page_layout.setVisibility(View.VISIBLE);
                 bag_page_layout.setVisibility(View.GONE);
                 crystal_page_layout.setVisibility(View.GONE);
@@ -217,8 +217,8 @@ public class GiftBagDialog extends BaseDialog {
             }
         });
         tab_crystal.setOnClickListener((v) -> {
-            tab_bag.setTextColor(ColorUtils.getColor(R.color.empty_list_hint));
-            tab_gift.setTextColor(ColorUtils.getColor(R.color.empty_list_hint));
+            tab_bag.setTextColor(ColorUtils.getColor(R.color.color_text_333333));
+            tab_gift.setTextColor(ColorUtils.getColor(R.color.color_text_333333));
             tab_crystal.setTextColor(ColorUtils.getColor(R.color.purple1));
             gift_page_layout.setVisibility(View.GONE);
             bag_page_layout.setVisibility(View.GONE);
@@ -239,8 +239,8 @@ public class GiftBagDialog extends BaseDialog {
             gift_check_number.setBackground(ContextCompat.getDrawable(mContext, R.drawable.shape_bg_gift_number_selector_night));
             crystal_check_number.setBackground(ContextCompat.getDrawable(mContext, R.drawable.shape_bg_gift_number_selector_night));
         } else {
-            gift_number_text.setTextColor(ContextCompat.getColor(mContext, R.color.color_text_333333));
-            crystal_number_text.setTextColor(ContextCompat.getColor(mContext, R.color.color_text_333333));
+            gift_number_text.setTextColor(ContextCompat.getColor(mContext, R.color.color_text_bfbfbf));
+            crystal_number_text.setTextColor(ContextCompat.getColor(mContext, R.color.color_text_bfbfbf));
             gift_check_number.setBackground(ContextCompat.getDrawable(mContext, R.drawable.shape_bg_gift_number_selector));
             crystal_check_number.setBackground(ContextCompat.getDrawable(mContext, R.drawable.shape_bg_gift_number_selector));
         }
@@ -334,7 +334,7 @@ public class GiftBagDialog extends BaseDialog {
         ViewOutlineProvider vop = new ViewOutlineProvider() {
             @Override
             public void getOutline(View view, Outline outline) {
-                outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), ConvertUtils.dp2px(12));
+                outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), ConvertUtils.dp2px(15));
             }
         };
 
@@ -354,8 +354,6 @@ public class GiftBagDialog extends BaseDialog {
                         GiftBagEntity giftBagEntity = response.getData();
                         Integer isFirst = giftBagEntity.getIsFirst();
                         if (isFirst != null && isFirst == 1) {
-                            btn_stored.setBackground(mContext.getDrawable(R.drawable.gift_red_border_backdrop));
-                            btn_stored.setTextColor(ColorUtils.getColor(R.color.red));
                             btn_stored.setText(R.string.playfun_gift_bag_text1);
                         }
                         int totalCoin = giftBagEntity.getTotalCoin().intValue();
