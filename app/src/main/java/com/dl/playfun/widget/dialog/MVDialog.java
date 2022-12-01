@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -11,9 +12,11 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,9 +30,12 @@ import com.dl.playfun.entity.OccupationConfigItemEntity;
 import com.dl.playfun.utils.ListUtils;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.R;
+import com.tencent.qcloud.tuicore.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MVDialog {
     private static volatile MVDialog INSTANCE;
@@ -694,8 +700,14 @@ public class MVDialog {
         contentView.offsetLeftAndRight(100);
         bottomDialog.getWindow().setGravity(Gravity.BOTTOM);
         bottomDialog.getWindow().setWindowAnimations(R.style.BottomDialog_Animation);
+        bottomDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         EditText editText = contentView.findViewById(R.id.et_comment);
         TextView tvSize = contentView.findViewById(R.id.tv_size);
+        View outside = contentView.findViewById(R.id.outside);
+        outside.setOnClickListener(v -> {
+            hideInput(editText);
+            dismiss();
+        });
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -934,25 +946,26 @@ public class MVDialog {
         Dialog bottomDialog = new Dialog(context, R.style.BottomDialog);
         View contentView = LayoutInflater.from(context).inflate(R.layout.dialog_set_money, null);
         bottomDialog.setContentView(contentView);
-        ViewGroup.LayoutParams layoutParams = contentView.getLayoutParams();
-        layoutParams.width = context.getResources().getDisplayMetrics().widthPixels - (context.getResources().getDisplayMetrics().widthPixels / 5);
-        contentView.setLayoutParams(layoutParams);
         bottomDialog.getWindow().setGravity(Gravity.CENTER);
+        bottomDialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         bottomDialog.getWindow().setWindowAnimations(R.style.BottomDialog_Animation);
         TextView title = contentView.findViewById(R.id.tv_title);
         EditText edtMoney = contentView.findViewById(R.id.edt_money);
         Button contentBtn = contentView.findViewById(R.id.btn_confirm);
+        LinearLayout ll_super = contentView.findViewById(R.id.ll_super);
         if (StringUtils.isEmpty(titleString)) {
             title.setVisibility(View.GONE);
         } else {
             title.setVisibility(View.VISIBLE);
             title.setText(titleString);
         }
-        contentView.findViewById(R.id.iv_dialog_close).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bottomDialog.dismiss();
-            }
+        contentView.findViewById(R.id.iv_dialog_close).setOnClickListener(v -> {
+            hideInput(edtMoney);
+            bottomDialog.dismiss();
+        });
+        ll_super.setOnClickListener(v -> {
+            hideInput(edtMoney);
+            bottomDialog.dismiss();
         });
         if (StringUtil.isEmpty(confirmText)) {
             contentBtn.setText(context.getResources().getString(R.string.playfun_confirm));
@@ -963,21 +976,57 @@ public class MVDialog {
             @Override
             public void onClick(View v) {
                 String money = edtMoney.getText().toString();
+                if(TextUtils.isEmpty(money)){
+                    ToastUtil.toastShortMessage(context.getResources().getString(R.string.playfun_please_diamond_number));
+                    return;
+                }
+                int parseInt = Integer.parseInt(money);
+                if (parseInt <= 0 || money.startsWith("0")){
+                    ToastUtil.toastShortMessage(context.getResources().getString(R.string.playfun_photo_setting));
+                    return;
+                }
                 if (confirmMoneyOnclick != null) {
                     confirmMoneyOnclick.confirm(INSTANCE, money);
                 }
             }
         });
-        bottomDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        edtMoney.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                edtMoney.clearFocus();
-                edtMoney.setFocusable(false);
-                onDismissListener.onDismiss(bottomDialog);
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+                String s1 = editable.toString();
+                if (s1.startsWith("0")){
+                    editable.replace(0, 1, "");
+                }
+                String s2 = editable.toString();
+                Pattern p = Pattern.compile("[^0-9]");
+                Matcher m = p.matcher(s2);
+                if(m.find()){
+                    String all = s2.replaceAll("[^0-9]", "");
+                    edtMoney.setText(all);
+                    edtMoney.setSelection(all.length());
+                }
+
             }
         });
 
         return bottomDialog;
+    }
+
+    private void hideInput(EditText editText) {
+        InputMethodManager inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        editText.clearFocus();
+        inputManager.hideSoftInputFromWindow(editText.getWindowToken(), 0);
     }
 
     private Dialog getcenterWarnedDialog() {

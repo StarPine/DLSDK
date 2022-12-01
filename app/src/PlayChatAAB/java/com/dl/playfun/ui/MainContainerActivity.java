@@ -137,26 +137,29 @@ public class MainContainerActivity extends MySupportActivity {
         });
     }
 
-//    @Override
-//    public boolean dispatchTouchEvent(MotionEvent ev) {
-//        try {
-//            if (ev.getAction() == MotionEvent.ACTION_DOWN) {  //把操作放在用户点击的时候
-//                if (KeyboardUtils.isSoftInputVisible(this)) {
-//                    View v = getCurrentFocus();      //得到当前页面的焦点,ps:有输入框的页面焦点一般会被输入框占据
-//                    if (isShouldHideKeyboard(v, ev)) { //判断用户点击的是否是输入框以外的区域
-//                        KeyboardUtils.hideSoftInput(this);
-//                    }
-//                }
-//            }
-//            if (ev != null) {
-//                return super.dispatchTouchEvent(ev);
-//            }
-//        } catch (Exception ignored) {
-//
-//        }
-//
-//        return false;
-//    }
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        try {
+            if (AppConfig.inChating){
+                return super.dispatchTouchEvent(ev);
+            }
+            if (ev.getAction() == MotionEvent.ACTION_DOWN) {  //把操作放在用户点击的时候
+                if (KeyboardUtils.isSoftInputVisible(this)) {
+                    View v = getCurrentFocus();      //得到当前页面的焦点,ps:有输入框的页面焦点一般会被输入框占据
+                    if (isShouldHideKeyboard(v, ev)) { //判断用户点击的是否是输入框以外的区域
+                        KeyboardUtils.hideSoftInput(this);
+                    }
+                }
+            }
+            if (ev != null) {
+                return super.dispatchTouchEvent(ev);
+            }
+        } catch (Exception ignored) {
+
+        }
+
+        return false;
+    }
 
     /**
      * 根据EditText所在坐标和用户点击的坐标相对比，来判断是否隐藏键盘，因为当用户点击EditText时则不能隐藏
