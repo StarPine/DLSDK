@@ -1018,8 +1018,15 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        AppConfig.inChating = true;
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
+        AppConfig.inChating = false;
         AudioPlayer.getInstance().stopPlay();
     }
     //选择照片 snapshot 是否是付费

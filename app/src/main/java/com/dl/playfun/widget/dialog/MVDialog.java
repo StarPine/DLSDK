@@ -16,6 +16,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -702,6 +703,11 @@ public class MVDialog {
         bottomDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         EditText editText = contentView.findViewById(R.id.et_comment);
         TextView tvSize = contentView.findViewById(R.id.tv_size);
+        View outside = contentView.findViewById(R.id.outside);
+        outside.setOnClickListener(v -> {
+            hideInput(editText);
+            dismiss();
+        });
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -940,25 +946,26 @@ public class MVDialog {
         Dialog bottomDialog = new Dialog(context, R.style.BottomDialog);
         View contentView = LayoutInflater.from(context).inflate(R.layout.dialog_set_money, null);
         bottomDialog.setContentView(contentView);
-        ViewGroup.LayoutParams layoutParams = contentView.getLayoutParams();
-        layoutParams.width = context.getResources().getDisplayMetrics().widthPixels - (context.getResources().getDisplayMetrics().widthPixels / 5);
-        contentView.setLayoutParams(layoutParams);
         bottomDialog.getWindow().setGravity(Gravity.CENTER);
+        bottomDialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         bottomDialog.getWindow().setWindowAnimations(R.style.BottomDialog_Animation);
         TextView title = contentView.findViewById(R.id.tv_title);
         EditText edtMoney = contentView.findViewById(R.id.edt_money);
         Button contentBtn = contentView.findViewById(R.id.btn_confirm);
+        LinearLayout ll_super = contentView.findViewById(R.id.ll_super);
         if (StringUtils.isEmpty(titleString)) {
             title.setVisibility(View.GONE);
         } else {
             title.setVisibility(View.VISIBLE);
             title.setText(titleString);
         }
-        contentView.findViewById(R.id.iv_dialog_close).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bottomDialog.dismiss();
-            }
+        contentView.findViewById(R.id.iv_dialog_close).setOnClickListener(v -> {
+            hideInput(edtMoney);
+            bottomDialog.dismiss();
+        });
+        ll_super.setOnClickListener(v -> {
+            hideInput(edtMoney);
+            bottomDialog.dismiss();
         });
         if (StringUtil.isEmpty(confirmText)) {
             contentBtn.setText(context.getResources().getString(R.string.playfun_confirm));
@@ -981,14 +988,6 @@ public class MVDialog {
                 if (confirmMoneyOnclick != null) {
                     confirmMoneyOnclick.confirm(INSTANCE, money);
                 }
-            }
-        });
-        bottomDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                edtMoney.clearFocus();
-                edtMoney.setFocusable(false);
-                onDismissListener.onDismiss(bottomDialog);
             }
         });
         edtMoney.addTextChangedListener(new TextWatcher() {
@@ -1022,6 +1021,12 @@ public class MVDialog {
         });
 
         return bottomDialog;
+    }
+
+    private void hideInput(EditText editText) {
+        InputMethodManager inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        editText.clearFocus();
+        inputManager.hideSoftInputFromWindow(editText.getWindowToken(), 0);
     }
 
     private Dialog getcenterWarnedDialog() {
