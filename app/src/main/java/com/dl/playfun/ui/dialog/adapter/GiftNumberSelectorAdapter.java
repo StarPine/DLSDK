@@ -47,22 +47,22 @@ public class GiftNumberSelectorAdapter extends RecyclerView.Adapter<GiftNumberSe
     @NonNull
     @Override
     public GiftNumberSelectorViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_gift_number_selector_item, null, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_gift_number_selector_item, parent, false);
         return new GiftNumberSelectorViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull GiftNumberSelectorViewHolder holder, int position) {
-        holder.item.setText(String.format(Locale.getDefault(), "%d", giftNumbers.get(position)));
+        holder.item.setText(String.valueOf(giftNumbers.get(position)));
 
         holder.root.setOnClickListener(v -> itemOnSelect(position, holder));
-        if (position == 0) {
-            itemOnSelect(position, holder);
-        }
         if (isDarkShow) {
             holder.item.setTextColor(ContextCompat.getColor(holder.root.getContext(), R.color.color_text_9897B3));
         } else {
             holder.item.setTextColor(ContextCompat.getColor(holder.root.getContext(), R.color.color_text_333333));
+        }
+        if (position == 0) {
+            itemOnSelect(position, holder);
         }
     }
 
@@ -74,7 +74,11 @@ public class GiftNumberSelectorAdapter extends RecyclerView.Adapter<GiftNumberSe
     private void itemOnSelect(int position, GiftNumberSelectorViewHolder holder) {
         if (selected != null) {
             selected.root.setBackground(null);
-            selected.item.setTextColor(ContextCompat.getColor(context, R.color.color_text_333333));
+            if (isDarkShow) {
+                selected.item.setTextColor(ContextCompat.getColor(holder.root.getContext(), R.color.color_text_9897B3));
+            } else {
+                selected.item.setTextColor(ContextCompat.getColor(holder.root.getContext(), R.color.color_text_333333));
+            }
         }
         selected = holder;
         holder.root.setBackground(ContextCompat.getDrawable(context, R.drawable.shape_bg_gift_number_selector_item));
