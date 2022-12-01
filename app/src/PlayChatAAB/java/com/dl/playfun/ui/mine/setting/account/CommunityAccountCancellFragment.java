@@ -13,10 +13,12 @@ import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.databinding.FragmentSettingAccountCancellBinding;
+import com.dl.playfun.tim.TUIUtils;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.ui.login.LoginFragment;
 import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 import com.dl.playfun.widget.dialog.MMAlertDialog;
+import com.tencent.imsdk.v2.V2TIMCallback;
 
 public class CommunityAccountCancellFragment extends BaseToolbarFragment<FragmentSettingAccountCancellBinding, CommunityAccountCancellViewModel> {
     @Override
@@ -50,8 +52,17 @@ public class CommunityAccountCancellFragment extends BaseToolbarFragment<Fragmen
             public void onChanged(Boolean type) {
                 if (type) {
                     MMAlertDialog.AlertAccountCancell(mActivity, (dialog, which) -> {
-                        //跳转到登录界面
-                        viewModel.startLoginView();
+                        TUIUtils.logout(new V2TIMCallback() {
+                            @Override
+                            public void onSuccess() {
+                                viewModel.startLoginView();
+                            }
+
+                            @Override
+                            public void onError(int i, String s) {
+                                viewModel.startLoginView();
+                            }
+                        });
                     }).show();
                 } else {
                     //调用充值钻石弹窗

@@ -52,7 +52,9 @@ public class CommunityAccountCancellViewModel extends BaseViewModel<AppRepositor
     }
 
     public void startLoginView() {
+        showHUD();
         model.logout();
+        dismissHUD();
         //跳转到登录界面
         startWithPopTo(LoginFragment.class.getCanonicalName(), CommunityAccountCancellFragment.class.getCanonicalName(), true);
     }
