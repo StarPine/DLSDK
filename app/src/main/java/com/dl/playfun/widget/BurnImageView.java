@@ -189,7 +189,7 @@ public class BurnImageView extends RelativeLayout {
         this.addWaterMark = addWaterMark;
         this.burnCommand = burnCommand;
         this.tapCommand = tapCommand;
-        isBurn = burnImgEnt.getIsBurn() == 1 || (burnImgEnt.getIsRedPackage() == 1 && burnImgEnt.getIsPay() == 0);
+        isBurn = burnImgEnt.getIsBurn() == 1;
         burnStatus = burnImgEnt.getBurnStatus();
         showImg();
     }

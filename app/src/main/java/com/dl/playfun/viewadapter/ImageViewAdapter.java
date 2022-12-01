@@ -19,10 +19,14 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.ImageViewTarget;
+import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.utils.StringUtil;
 
+import jp.wasabeef.glide.transformations.BlurTransformation;
 import me.goldze.mvvmhabit.utils.StringUtils;
+
+import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 
 /**
  * @author wulei
@@ -109,6 +113,40 @@ public class ImageViewAdapter {
                 w = dp2px(context,resizeW);
             }
             return String.format(value,String.valueOf(h == 0 ? w : h),String.valueOf(w == 0 ? h : w));
+        }
+    }
+
+    @BindingAdapter(value = {"imageBlurPath","isBlur","addWaterMark"}, requireAll = false)
+    public static void setImageBlurPath(ImageView imageView, String imageBlurPath, boolean isBlur, boolean addWaterMark) {
+        try {
+            String url = "";
+            if (!StringUtils.isEmpty(imageBlurPath)) {
+                url = StringUtil.getFullThumbImageUrl(imageBlurPath);
+            }
+            if (addWaterMark) {
+                url = StringUtil.getFullImageWatermarkUrl(imageBlurPath);
+            }
+            if (isBlur){
+                Glide.with(imageView.getContext())
+                        .load(url)
+                        .apply(bitmapTransform(new BlurTransformation(100)))
+                        .apply(new RequestOptions()
+                                .placeholder(R.drawable.black_background)
+                                .error(R.drawable.black_background))
+                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                        .into(imageView);
+            }else {
+                Glide.with(imageView.getContext())
+                        .load(url)
+                        .fitCenter()
+                        .apply(new RequestOptions()
+                                .placeholder(R.drawable.black_background)
+                                .error(R.drawable.black_background))
+                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                        .into(imageView);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

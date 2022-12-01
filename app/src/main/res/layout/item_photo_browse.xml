@@ -28,15 +28,42 @@
             binding:videoCompletionCommand="@{viewModel.videoCompletionCommand}"
             binding:videoUri="@{viewModel.itemEntity.type == 2 ? viewModel.itemEntity.src:null}" />
 
-        <com.dl.playfun.widget.BurnImageView
-            android:elevation="11dp"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="@{viewModel.itemEntity.type == 1 ? View.VISIBLE:View.GONE}"
-            binding:addWaterMark="@{true}"
-            binding:burnCommand="@{viewModel.burnedCommand}"
-            binding:burnImgEnt="@{viewModel.itemEntity}"
-            binding:tapCommand="@{viewModel.itemClick}" />
+            android:elevation="12dp"
+            android:visibility="@{viewModel.itemEntity.type == 1 ? View.VISIBLE:View.GONE}">
+
+            <com.dl.playfun.widget.BurnImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="@{viewModel.itemEntity.isBurn == 1 ? View.VISIBLE:View.GONE}"
+                binding:addWaterMark="@{true}"
+                binding:burnCommand="@{viewModel.burnedCommand}"
+                binding:burnImgEnt="@{viewModel.itemEntity}"
+                binding:tapCommand="@{viewModel.itemClick}" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="@{viewModel.itemEntity.isBurn != 1 ? View.VISIBLE:View.GONE}">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    binding:addWaterMark="@{true}"
+                    binding:imageBlurPath="@{viewModel.itemEntity.src}" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="@{(viewModel.itemEntity.isPay != 1&amp;&amp; viewModel.itemEntity.isRedPackage == 1)?View.VISIBLE:View.GONE}"
+                    binding:imageBlurPath="@{viewModel.itemEntity.src}"
+                    binding:isBlur="@{true}" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/ll_burned_msg"
@@ -62,10 +89,10 @@
         </LinearLayout>
 
         <RelativeLayout
-            android:elevation="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:elevation="20dp"
             android:visibility="@{(viewModel.itemEntity.isRedPackage == 1 &amp;&amp; viewModel.itemEntity.isPay != 1)?View.VISIBLE:View.GONE}">
 
             <ImageView
@@ -84,30 +111,31 @@
                     android:id="@+id/tv_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="invisible"
                     android:text="@string/playfun_send_red_package_look_photo"
                     android:textColor="#F4B56F"
-                    android:textSize="@dimen/text_size_middle" />
+                    android:textSize="@dimen/text_size_middle"
+                    android:visibility="invisible" />
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/tv_1"
-                    android:gravity="center"
-                    android:layout_centerHorizontal="true">
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center">
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/img_icon"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:src="@drawable/ic_coin" />
+
                     <TextView
                         android:id="@+id/tv_price"
-                        android:layout_toEndOf="@+id/img_icon"
-                        android:layout_marginStart="5dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
                         android:layout_marginTop="5dp"
+                        android:layout_toEndOf="@+id/img_icon"
                         android:text="@{String.valueOf(viewModel.redPackagePrice)}"
                         android:textColor="#F4B56F"
                         android:textSize="22sp" />
