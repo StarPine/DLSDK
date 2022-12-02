@@ -32,8 +32,9 @@
                 <com.dl.playfun.ui.webview.BrowserView
                     android:id="@+id/web_view"
                     android:layout_width="match_parent"
+
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="45dp"
+                    android:layout_marginBottom="35dp"
                     />
             </com.dl.playfun.widget.action.StatusLayout>
         </LinearLayout>
