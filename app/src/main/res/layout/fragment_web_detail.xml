@@ -36,12 +36,32 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <WebView
-            android:id="@+id/web_view"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fillViewport="true"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            android:orientation="vertical">
+
+            <ProgressBar
+                android:id="@+id/pb_browser_progTress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:progressDrawable="@drawable/progress_gradient_bg"
+                android:visibility="gone" />
+
+            <com.dl.playfun.widget.action.StatusLayout
+                android:id="@+id/hl_browser_hint"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.dl.playfun.ui.webview.BrowserView
+                    android:id="@+id/web_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fillViewport="true"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            </com.dl.playfun.widget.action.StatusLayout>
+        </LinearLayout>
 
     </LinearLayout>
 </layout>
