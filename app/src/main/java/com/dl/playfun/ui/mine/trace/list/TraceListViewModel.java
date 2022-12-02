@@ -17,14 +17,17 @@ import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.TraceEntity;
 import com.dl.playfun.event.LikeChangeEvent;
 import com.dl.playfun.event.TraceEvent;
+import com.dl.playfun.event.TraceReFreshEvent;
 import com.dl.playfun.ui.mine.trace.TraceItemViewModel;
 import com.dl.playfun.ui.mine.trace.TraceViewModel;
 import com.dl.playfun.viewmodel.BaseViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
+import io.reactivex.disposables.Disposable;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
 import me.goldze.mvvmhabit.bus.RxBus;
+import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.goldze.mvvmhabit.utils.RxUtils;
 import me.tatarka.bindingcollectionadapter2.BindingRecyclerViewAdapter;
@@ -42,6 +45,7 @@ public class TraceListViewModel extends BaseViewModel<AppRepository> {
     public ItemBinding<TraceItemViewModel> itemBinding = ItemBinding.of(BR.viewModel, R.layout.trace_item_park);
     public Integer grend = 0;
     public UIChangeObservable uc = new UIChangeObservable();
+    private Disposable traceEventSubscription;
     public TraceViewModel traceViewModel;
     private int currentPage = 1;
     private int total = 1;
@@ -59,12 +63,6 @@ public class TraceListViewModel extends BaseViewModel<AppRepository> {
     protected void nextPage() {
         currentPage++;
         loadDatas(currentPage);
-    }
-
-    @Override
-    public void onLazyInitView() {
-        super.onLazyInitView();
-        loadDatas(1);
     }
 
     public void loadDatas(int page) {
@@ -132,6 +130,9 @@ public class TraceListViewModel extends BaseViewModel<AppRepository> {
                             TraceItemViewModel item = new TraceItemViewModel(TraceListViewModel.this, itemEntity, grend);
                             observableList.add(item);
                         }
+                        if (observableList.size() <= 0 ){
+                            uc.emptyText.call();
+                        }
                         RxBus.getDefault().post(new TraceEvent(response.getData().getTotal(), grend));
                     }
 
@@ -157,11 +158,12 @@ public class TraceListViewModel extends BaseViewModel<AppRepository> {
                         RxBus.getDefault().post(new LikeChangeEvent(TraceListViewModel.this, traceEntity.getId(), false));
                         if (grend == 0) {
                             observableList.remove(position);
+                            RxBus.getDefault().post(new TraceEvent(--total, grend));
                         } else {
                             observableList.get(position).itemEntity.get().setFollow(false);
                             adapter.notifyDataSetChanged();
                         }
-                        collect(1);
+                        RxBus.getDefault().post(new TraceReFreshEvent(grend));
                     }
 
                     @Override
@@ -189,6 +191,7 @@ public class TraceListViewModel extends BaseViewModel<AppRepository> {
                     public void onSuccess(BaseResponse response) {
                         LikeChangeEvent likeChangeEvent = new LikeChangeEvent(TraceListViewModel.this, traceEntity.getId(), true);
                         RxBus.getDefault().post(likeChangeEvent);
+                        RxBus.getDefault().post(new TraceReFreshEvent(1));
                         observableList.get(position).itemEntity.get().setFollow(true);
                         adapter.notifyDataSetChanged();
                     }
@@ -207,6 +210,24 @@ public class TraceListViewModel extends BaseViewModel<AppRepository> {
                 });
     }
 
+    @Override
+    public void registerRxBus() {
+        super.registerRxBus();
+        traceEventSubscription = RxBus.getDefault().toObservable(TraceReFreshEvent.class)
+                .subscribe(event -> {
+                    int index = event.getIndex();
+                    if (index != grend){
+                        loadDatas(1);
+                    }
+                });
+    }
+
+    @Override
+    public void removeRxBus() {
+        super.removeRxBus();
+        RxSubscriptions.remove(traceEventSubscription);
+    }
+
     public class UIChangeObservable {
         //取消关注
         public SingleLiveEvent<Integer> clickDelLike = new SingleLiveEvent<>();
@@ -219,6 +240,7 @@ public class TraceListViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<Void> finishRefreshing = new SingleLiveEvent<>();
         //上拉加载完成
         public SingleLiveEvent<Void> finishLoadmore = new SingleLiveEvent<>();
+        public SingleLiveEvent<Void> emptyText = new SingleLiveEvent<>();
 
     }
 

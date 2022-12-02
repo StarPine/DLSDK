@@ -2,9 +2,18 @@ package com.dl.playfun.ui.mine.trace.list;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -12,10 +21,13 @@ import androidx.lifecycle.ViewModelProviders;
 import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.ui.mine.trace.TraceViewModel;
+import com.dl.playfun.ui.radio.issuanceprogram.IssuanceProgramFragment;
 import com.dl.playfun.widget.dialog.TraceDialog;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.databinding.FragmentTraceListBinding;
+
+import me.goldze.mvvmhabit.utils.StringUtils;
 
 /**
  * Author: 彭石林
@@ -65,24 +77,26 @@ public class TraceListFragment extends BaseToolbarFragment<FragmentTraceListBind
         AppViewModelFactory factory = AppViewModelFactory.getInstance(mActivity.getApplication());
         TraceListViewModel traceListViewModel = ViewModelProviders.of(this, factory).get(TraceListViewModel.class);
         traceListViewModel.grend = grends;
+        traceListViewModel.loadDatas(1);
+        if (grends == 0) {
+            traceListViewModel.stateModel.emptyText.set(StringUtils.getString(R.string.playfun_mine_trace_empty));
+        } else {
+            traceListViewModel.stateModel.emptyText.set(StringUtils.getString(R.string.playfun_mine_fans_empty));
+        }
         return traceListViewModel;
     }
-
-//    @Override
-//    public void setUserVisibleHint(boolean isVisibleToUser) {
-//        super.setUserVisibleHint(isVisibleToUser);
-//        if (isVisibleToUser){
-//            Log.e("从新进入绑定刷新框架","-----");
-//            if (binding.refreshLayout!=null){//重新设置监听解决有时候上下拉回调不走 原因监听被覆盖
-//                binding.refreshLayout.setEnableLoadMore(true);//启用上拉加载功能
-//                binding.refreshLayout.setEnableRefresh(true);
-//            }
-//        }
-//    }
 
     @Override
     public void initViewObservable() {
         viewModel.traceViewModel = this.traceViewModel;
+        viewModel.uc.emptyText.observe(this,unused -> {
+            if (grends == 1){
+                String content = binding.empty.tvMsg.getText().toString();
+                String target = mActivity.getString(R.string.playfun_mine_fans_empty2);
+                SpannableString spannableString = new SpannableString(content);
+                setServiceTips(spannableString, binding.empty.tvMsg, content, target);
+            }
+        });
         viewModel.uc.clickDelLike.observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer unused) {
@@ -135,4 +149,26 @@ public class TraceListFragment extends BaseToolbarFragment<FragmentTraceListBind
 
     }
 
+    private SpannableString setServiceTips(SpannableString spannableString, TextView tvTips, String content, String key) {
+        UnderlineSpan colorSpan = new UnderlineSpan() {
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                ds.setColor(mActivity.getResources().getColor(R.color.colorAccent));//设置颜色
+//                ds.setUnderlineText(false); //去掉下划线
+            }
+        };
+        ClickableSpan clickableSpan = new ClickableSpan() {
+
+            @Override
+            public void onClick(@NonNull View widget) {
+                    viewModel.start(IssuanceProgramFragment.class.getCanonicalName());
+            }
+        };
+        int tips = content.indexOf(key);
+        spannableString.setSpan(clickableSpan, tips, tips + key.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        spannableString.setSpan(colorSpan, tips, tips + key.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        tvTips.setMovementMethod(LinkMovementMethod.getInstance());
+        tvTips.setText(spannableString);
+        return spannableString;
+    }
 }

@@ -2294,5 +2294,7 @@
     <string name="playfun_permissions_video2">為了使用視訊、錄影、美顏等功能，請先同意攝像頭權限</string>
     <string name="playfun_photo_setting">設定查看鑽石不能為0</string>
     <string name="playfun_check_name_tips">輸入暱稱已被佔用，請重新輸入</string>
+    <string name="playfun_mine_fans_empty">還沒有粉絲哦\n快去發動態>>\n可以快速增粉</string>
+    <string name="playfun_mine_fans_empty2">快去發動態>></string>
     <!--PlayFun-APP-END-->
 </resources>
