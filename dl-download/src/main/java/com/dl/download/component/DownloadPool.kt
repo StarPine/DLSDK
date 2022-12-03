@@ -95,7 +95,7 @@ internal object DownloadPool {
 
                 override fun onResponse(call: Call, response: Response) {
                     Log.d(TAG, "Okhttp Connect Success[${task.url}] @TaskGroup[${group.taskGroupName}]")
-                    response.body?.byteStream()?.use { bs ->
+                    response.body?.byteStream()?.let { bs ->
                         val contentLen = response.body!!.contentLength()
                         Decoder.groupTaskDecode(group, task, bs, contentLen)
                     } ?: run {
@@ -128,7 +128,7 @@ internal object DownloadPool {
             object : Callback {
                 override fun onResponse(call: Call, response: Response) {
                     Log.d(TAG, "Okhttp Connect Success[${task.url}] @SingleTask")
-                    response.body?.byteStream()?.use { bs ->
+                    response.body?.byteStream()?.let { bs ->
                         val contentLen = response.body!!.contentLength()
                         Decoder.singleTaskDecode(context, task, bs, contentLen, isMonitorProgress, listener)
                     } ?: run {

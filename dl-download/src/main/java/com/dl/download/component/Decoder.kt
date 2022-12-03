@@ -78,9 +78,10 @@ internal object Decoder {
         task: DownloadTask, input: InputStream, contentLength: Long,
         isMonitorProgress: Boolean, listener: DownloadTaskListener, file: File
     ) {
-        file.takeIf { !it.exists() }?.createNewFile()
+        val downloading = File(file.path + ".downloading")
+        downloading.takeIf { !it.exists() }?.createNewFile()
         val pool = ByteArray(2048)
-        FileOutputStream(file).use { fos ->
+        FileOutputStream(downloading).use { fos ->
             var streamLen: Int
             var sum = 0L
             while (run {
@@ -94,6 +95,9 @@ internal object Decoder {
                 }
             }
         }
+        input.close()
+        downloading.renameTo(file)
+        downloading.delete()
     }
 
 }
