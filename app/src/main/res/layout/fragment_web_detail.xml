@@ -42,7 +42,7 @@
             android:orientation="vertical">
 
             <ProgressBar
-                android:id="@+id/pb_browser_progTress"
+                android:id="@+id/pb_browser_progress"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="3dp"
