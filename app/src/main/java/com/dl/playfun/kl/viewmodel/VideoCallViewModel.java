@@ -33,16 +33,15 @@ import com.dl.playfun.entity.CallGameCoinPusherEntity;
 import com.dl.playfun.entity.CallUserInfoEntity;
 import com.dl.playfun.entity.CallUserRoomInfoEntity;
 import com.dl.playfun.entity.CallingInfoEntity;
-import com.dl.playfun.entity.CallingStatusEntity;
 import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.entity.MallWithdrawTipsInfoEntity;
+import com.dl.playfun.entity.RtcRoomMessageEntity;
 import com.dl.playfun.entity.UserDataEntity;
-import com.dl.playfun.event.CallingToGamePlayingEvent;
+import com.dl.playfun.event.RtcRoomMessageEvent;
 import com.dl.playfun.kl.CallChatingConstant;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.V2TIMCustomManagerUtil;
 import com.dl.playfun.utils.ApiUitl;
-import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.dl.rtc.calling.base.DLRTCCalling;
@@ -99,12 +98,14 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
     public int sayHiePosition = 0;
     public int sayHiePage = 1;
     //订阅者
-    private Disposable mCallingToGameSubscription;
+    private Disposable mRtcRoomMessageSubscription;
 
     //对方用户信息
     public ObservableField<CallUserInfoEntity> otherUserInfoField = new ObservableField<>();
     //显示推币机按钮
     public ObservableBoolean coinPusherRoomShow = new ObservableBoolean(false);
+    //活动入口信息
+    public ObservableField<RtcRoomMessageEvent> rtcRoomMessageField = new ObservableField<>();
     //信令消息
     public CallGameCoinPusherEntity _callGameCoinPusherEntity;
     // 是否被叫
@@ -177,7 +178,6 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
         public void call() {
             mainVIewShow.set(true);
             DLRTCStartShowUIManager.Companion.getInstance().inviteUserAccept();
-            Log.e("接听电话按钮点击", inviteUserID + "=======" + acceptUserID);
             updateCallingStatus(CallChatingConstant.enterRoom);
             if (mRole == DLRTCCalling.Role.CALLED) {
                 isCalledBinding.set(false);
@@ -235,13 +235,8 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
             getMallWithdrawTipsInfo(1);
         }
     });
-
-    public BindingCommand closeOnclick = new BindingCommand(new BindingAction() {
-        @Override
-        public void call() {
-            uc.closeViewHint.call();
-        }
-    });
+    //拨打中or接听前 关闭当前页面
+    public BindingCommand closeOnclick = new BindingCommand(() -> uc.closeViewHint.call());
     //发送礼物
     public BindingCommand giftBagOnClickCommand = new BindingCommand(new BindingAction() {
         @Override
@@ -286,11 +281,18 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
         isFrontCamera = !isFrontCamera;
         DLRTCVideoManager.Companion.getInstance().switchCamera(isFrontCamera);
     });
-
+    //拒绝电话
     public BindingCommand rejectOnclick = new BindingCommand(new BindingAction() {
         @Override
         public void call() {
-            DLRTCStartShowUIManager.Companion.getInstance().inviteUserReject();
+            if (DLRTCCalling.Role.CALL == mRole) {
+                DLRTCStartShowUIManager.Companion.getInstance().inviteUserCanceled();
+                updateCallingStatus(CallChatingConstant.dissolveRoom);
+            } else {
+                DLRTCStartShowUIManager.Companion.getInstance().inviteUserReject();
+                updateCallingStatus(CallChatingConstant.dissolveRoom);
+            }
+            finish();
         }
     });
 
@@ -514,7 +516,9 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
                 .subscribe(new BaseObserver<BaseResponse>() {
                     @Override
                     public void onSuccess(BaseResponse baseResponse) {
-
+                    }
+                    @Override
+                    public void onError(RequestException e) {
                     }
                 });
     }
@@ -614,18 +618,34 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
     @Override
     public void registerRxBus() {
         super.registerRxBus();
-        mCallingToGameSubscription = RxBus.getDefault().toObservable(CallingToGamePlayingEvent.class)
-                .subscribe(event -> {
-                    if(event!=null){
-                        CallGameCoinPusherEntity callGameCoinPusherEntity = event.getCallGameCoinPusherEntity();
+        //通话活动入口
+        mRtcRoomMessageSubscription = RxBus.getDefault().toObservable(RtcRoomMessageEvent.class)
+                .subscribe(rtcRoomMessageEvent -> {
+                    Log.e("接受到信令活动入口",rtcRoomMessageEvent.toString());
+                    RtcRoomMessageEntity rtcRoomMessageEntity = rtcRoomMessageEvent.getRtcRoomMessageEntity();
+                    if(Objects.equals(rtcRoomMessageEntity.getActivityData().getPlayUserId(),ConfigManager.getInstance().getUserImID())){
+                        rtcRoomMessageField.set(rtcRoomMessageEvent);
+                        coinPusherRoomShow.set(true);
+                    }else{
+                        CallGameCoinPusherEntity callGameCoinPusherEntity = rtcRoomMessageEntity.getActivityData();
                         if(callGameCoinPusherEntity!=null){
-                            uc.callingToGamePlayingEvent.postValue(callGameCoinPusherEntity);
+                            CallGameCoinPusherEntity.ActivityData activityData = callGameCoinPusherEntity.getActData();
+                            if(activityData != null && activityData.getState() != null){
+                                if(Objects.equals(activityData.getState(),CallGameCoinPusherEntity.enterGame)){
+                                    rtcRoomMessageField.set(rtcRoomMessageEvent);
+                                    coinPusherRoomShow.set(true);
+                                    _callGameCoinPusherEntity = callGameCoinPusherEntity;
+                                }else{
+                                    rtcRoomMessageField.set(rtcRoomMessageEvent);
+                                    coinPusherRoomShow.set(false);
+                                    _callGameCoinPusherEntity = null;
+                                }
+                            }
                         }
                     }
-
                 });
         //将订阅者加入管理站
-        RxSubscriptions.add(mCallingToGameSubscription);
+        RxSubscriptions.add(mRtcRoomMessageSubscription);
     }
 
     //移除RxBus
@@ -633,7 +653,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
     public void removeRxBus() {
         super.removeRxBus();
         //将订阅者从管理站中移除
-        RxSubscriptions.remove(mCallingToGameSubscription);
+        RxSubscriptions.remove(mRtcRoomMessageSubscription);
     }
 
     public static boolean isJSON2(String str) {
@@ -788,8 +808,6 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<Void> startVideoUpSayHiAnimotor = new SingleLiveEvent<>();
         //打开推币机弹窗
         public SingleLiveEvent<Void> coinPusherRoomEvent = new SingleLiveEvent<>();
-        //处理推币机信令转主线程
-        public SingleLiveEvent<CallGameCoinPusherEntity> callingToGamePlayingEvent = new SingleLiveEvent<>();
     }
 
 }

@@ -3,11 +3,13 @@ package com.dl.playfun.kl.viewmodel;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.ObservableField;
 
 import com.blankj.utilcode.util.StringUtils;
@@ -117,7 +119,7 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
     public void endTRTCCalling() {
         if (DLRTCCalling.Role.CALL == mRole) {
             DLRTCStartShowUIManager.Companion.getInstance().inviteUserCanceled();
-            updateCallingStatus(CallChatingConstant.chanel);
+            updateCallingStatus(CallChatingConstant.dissolveRoom);
         } else {
             DLRTCStartShowUIManager.Companion.getInstance().inviteUserReject();
             updateCallingStatus(CallChatingConstant.dissolveRoom);
@@ -185,6 +187,15 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
             unListen();
             finishView();
             Utils.show(AppContext.instance().getString(R.string.playfun_the_other_party_is_temporarily_unavailable));
+        }
+        @Override
+        public void onFirstAudioFrame(@NonNull String userId) {
+            updateCallingStatus(CallChatingConstant.pusherAudioStart);
+        }
+
+        @Override
+        public void onRemoteAudioStatusUpdated(@NonNull String userId, int status, int reason, @Nullable Bundle extraInfo) {
+            updateCallingStatus(CallChatingConstant.pusherAudioStart);
         }
     };
 

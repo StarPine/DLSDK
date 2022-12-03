@@ -4,6 +4,7 @@ package com.dl.playfun.kl.view;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.widget.TextView;
 
@@ -253,6 +254,26 @@ public class AudioFloatCallView extends BaseDLRTCCallView {
 
     @Override
     public void onNetworkQuality(@Nullable TRTCCloudDef.TRTCQuality localQuality, @Nullable ArrayList<TRTCCloudDef.TRTCQuality> remoteQuality) {
+
+    }
+
+    @Override
+    public void onFirstAudioFrame(@Nullable String userId) {
+
+    }
+
+    @Override
+    public void onRemoteAudioStatusUpdated(@Nullable String userId, int status, int reason, @Nullable Bundle extraInfo) {
+
+    }
+
+    @Override
+    public void onFirstVideoFrame(@Nullable String userId, int streamType, int width, int height) {
+
+    }
+
+    @Override
+    public void onRemoteVideoStatusUpdated(@Nullable String userId, int streamType, int status, int reason, @Nullable Bundle extraInfo) {
 
     }
 }

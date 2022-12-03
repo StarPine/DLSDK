@@ -1,6 +1,10 @@
 package com.dl.playfun.kl.viewmodel;
 
+import android.os.Bundle;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.dl.rtc.calling.base.DLRTCCallingDelegate;
 import com.tencent.trtc.TRTCCloudDef;
@@ -75,5 +79,25 @@ public class UITRTCCallingDelegate implements DLRTCCallingDelegate {
     @Override
     public void onTryToReconnect() {
         Log.i(TAG, "onTryToReconnect: ");
+    }
+
+    @Override
+    public void onFirstAudioFrame(@NonNull String userId) {
+        Log.i(TAG, "onFirstAudioFrame: userId="+userId);
+    }
+
+    @Override
+    public void onRemoteAudioStatusUpdated(@NonNull String userId, int status, int reason, @Nullable Bundle extraInfo) {
+        Log.i(TAG, "onRemoteAudioStatusUpdated: userId="+userId+", status="+status+", reason="+reason);
+    }
+
+    @Override
+    public void onRemoteVideoStatusUpdated(@NonNull String userId, int streamType, int status, int reason, @Nullable Bundle extraInfo) {
+        Log.i(TAG, "onRemoteVideoStatusUpdated: userId="+userId+", streamType="+streamType+", status="+status+", reason="+reason);
+    }
+
+    @Override
+    public void onFirstVideoFrame(@Nullable String userId, int streamType, int width, int height) {
+        Log.i(TAG, "onFirstVideoFrame: userId="+userId +" , streamType="+streamType);
     }
 }

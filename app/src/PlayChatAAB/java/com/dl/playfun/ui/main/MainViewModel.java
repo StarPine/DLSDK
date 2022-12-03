@@ -598,7 +598,6 @@ public class MainViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<Void> showRegisterRewardDialog = new SingleLiveEvent<>();
         public SingleLiveEvent<Integer> allMessageCountChange = new SingleLiveEvent<>();
         public ObservableField<Boolean> gender = new ObservableField<>(false);
-        public SingleLiveEvent<MainTabEvent> mainTab = new SingleLiveEvent<>();
         //更新版本
         public SingleLiveEvent<VersionEntity> versionEntitySingl = new SingleLiveEvent<>();
         //未付费弹窗

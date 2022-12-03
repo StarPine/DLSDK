@@ -294,24 +294,6 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
             startActivity(intent);
             mActivity.overridePendingTransition(R.anim.anim_zoom_in, R.anim.anim_stay);
         });
-        viewModel.uc.mainTab.observe(this, new Observer<MainTabEvent>() {
-            @Override
-            public void onChanged(MainTabEvent mainTabEvent) {
-                if (mainTabEvent != null) {
-                    switch (mainTabEvent.getTabName()) {
-                        case "home":
-                            setSelectedItemId(binding.navigationHomeImg);//tbar切换到首頁
-                            break;
-                        case "plaza":
-                            setSelectedItemId(binding.navigationRadioImg);//tbar切换到廣場
-                            break;
-                        case "message":
-                            setSelectedItemId(binding.navigationMessageImg);//tbar切换到訊息
-                            break;
-                    }
-                }
-            }
-        });
         //版本更新提示
         viewModel.uc.versionEntitySingl.observe(this, new Observer<VersionEntity>() {
             @Override
@@ -338,28 +320,6 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                         }
                     }
                 });
-            }
-        });
-
-        viewModel.uc.mainTab.observe(this, new Observer<MainTabEvent>() {
-            @Override
-            public void onChanged(MainTabEvent mainTabEvent) {
-                if (mainTabEvent != null) {
-                    switch (mainTabEvent.getTabName()) {
-                        case "home":
-                            setSelectedItemId(binding.navigationHomeImg);//tbar切换到首頁
-                            break;
-                        case "redio":
-                            setSelectedItemId(binding.navigationRadioImg);//tbar切换到廣場
-                            break;
-                        case "message":
-                            setSelectedItemId(binding.navigationMessageImg);//tbar切换到訊息
-                            break;
-                        case "mine":
-                            setSelectedItemId(binding.navigationMineImg);//tbar切换到訊息
-                            break;
-                    }
-                }
             }
         });
         viewModel.uc.taskCenterclickTab.observe(this, taskMainTabEvent -> {

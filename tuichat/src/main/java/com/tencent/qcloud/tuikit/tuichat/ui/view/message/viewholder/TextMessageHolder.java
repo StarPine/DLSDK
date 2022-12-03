@@ -36,9 +36,6 @@ public class TextMessageHolder extends MessageContentHolder {
             return;
         }
         TextMessageBean textMessageBean = (TextMessageBean) msg;
-        Log.e("当前消息为进入文本消息",textMessageBean.toString());
-        Log.e("当前自定义消息文本：",String.valueOf(new String(textMessageBean.getCustomElemData())));
-        Log.e("当前自定义消息文1本：", String.valueOf(V2TIMManager.getSignalingManager().getSignalingInfo(msg.getV2TIMMessage()) == null));
         if (isForwardMode || isReplyDetailMode || !textMessageBean.isSelf()) {
             int otherTextColorResId = TUIThemeManager.getAttrResId(msgBodyText.getContext(), R.attr.chat_other_msg_text_color);
             int otherTextColor = msgBodyText.getResources().getColor(otherTextColorResId);

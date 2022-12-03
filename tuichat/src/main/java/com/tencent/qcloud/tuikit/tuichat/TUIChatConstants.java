@@ -1,7 +1,5 @@
 package com.tencent.qcloud.tuikit.tuichat;
 
-import android.os.Environment;
-
 import com.tencent.imsdk.BaseConstants;
 
 public class TUIChatConstants {
@@ -95,5 +93,19 @@ public class TUIChatConstants {
         public static final String CHAT_EARNINGS = "chat_earnings";//收益提示(旧的)
 
     }
+
+
+    ///开始邀请
+    public static final String invite = "dl_rtc_message_invite";
+    ///拒绝邀请
+    public static final String  reject = "dl_rtc_message_reject";
+    ///接受邀请
+    public static final String  accept = "dl_rtc_message_accept";
+    ///发起方取消邀请
+    public static final String  cancel = "dl_rtc_message_cancel";
+    ///邀请超时
+    public static final String  timeout = "dl_rtc_message_timeout";
+    /// 离开音视频房间
+    public static final String  exitRoom = "dl_rtc_message_exitRoom";
 
 }

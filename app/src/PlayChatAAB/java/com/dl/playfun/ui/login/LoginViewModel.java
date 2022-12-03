@@ -39,6 +39,7 @@ import com.dl.playfun.ui.mine.webdetail.WebDetailFragment;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.viewmodel.BaseViewModel;
+import com.dl.rtc.calling.manager.DLRTCStartManager;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
@@ -181,6 +182,7 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
                         //友盟登录统计
                         // MobclickAgent.onProfileSignIn(String.valueOf(userDataEntity.getId()));
                         AppsFlyerLib.getInstance().setCustomerUserId(String.valueOf(authLoginUserEntity.getId()));
+                        DLRTCStartManager.Companion.getInstance().setLoginSuccessUser(authLoginUserEntity.getImUserId());
                         AppContext.instance().mFirebaseAnalytics.setUserId(String.valueOf(authLoginUserEntity.getId()));
                         try {
                             //添加崩溃人员id
@@ -309,6 +311,7 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
                             model.saveUserData(authLoginUserEntity);
                             ConfigManager.getInstance().getAppRepository().removeOldUserData();
                             AppsFlyerLib.getInstance().setCustomerUserId(String.valueOf(authLoginUserEntity.getId()));
+                            DLRTCStartManager.Companion.getInstance().setLoginSuccessUser(authLoginUserEntity.getImUserId());
                             AppContext.instance().mFirebaseAnalytics.setUserId(String.valueOf(authLoginUserEntity.getId()));
                             try {
                                 //添加崩溃人员id

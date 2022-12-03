@@ -1,5 +1,6 @@
 package com.dl.rtc.calling.base
 
+import android.os.Bundle
 import com.tencent.trtc.TRTCCloudDef
 
 /**
@@ -90,4 +91,24 @@ interface DLRTCCallingDelegate {
      * 网络重连
      */
     fun onTryToReconnect()
+
+    /**
+     * SDK 开始播放远端用户的首帧音频
+     */
+    fun onFirstAudioFrame(userId :String?)
+
+    /**
+     * 远端音频状态变化的事件回调
+     */
+    fun onRemoteAudioStatusUpdated(userId : String?, status : Int, reason : Int, extraInfo : Bundle?)
+
+    /**
+     * SDK 开始渲染自己本地或远端用户的首帧画面
+     */
+    fun onFirstVideoFrame(userId: String?, streamType: Int, width: Int, height: Int)
+    /**
+     * 远端视频状态变化的事件回调
+     */
+    fun onRemoteVideoStatusUpdated(userId : String?, streamType : Int, status : Int, reason : Int, extraInfo : Bundle?)
+
 }

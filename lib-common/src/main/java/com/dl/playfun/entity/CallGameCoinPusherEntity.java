@@ -13,22 +13,6 @@ public class CallGameCoinPusherEntity implements Serializable {
     //推房
     public final static String leaveGame = "leaveGame";
 
-    //当前状态：enterGame 、leaveGame
-    private String state;
-    //当前是否围观方
-    private boolean circuses;
-    //拉流地址
-    private String streamUrl;
-    //拉流客户端ID
-    private String clientWsRtcId;
-    //房间ID
-    private int roomId;
-
-    private Integer totalGold;
-    private Integer payGameMoney;
-    private int levelId;
-    private String nickname;
-
     //活动icon
     private String icon;
     //拓展字段。列入推送H5小游戏。打开网址
@@ -36,76 +20,113 @@ public class CallGameCoinPusherEntity implements Serializable {
     ////游戏方ID -IM ID 只有此用户才能发起游戏
     private String playUserId;
 
-    public String getState() {
-        return state;
-    }
+    private ActivityData actData;
 
-    public void setState(String state) {
-        this.state = state;
-    }
 
-    public boolean isCircuses() {
-        return circuses;
-    }
+    public class ActivityData implements Serializable{
 
-    public void setCircuses(boolean circuses) {
-        this.circuses = circuses;
-    }
+        //当前状态：enterGame 、leaveGame
+        private String state;
+        //当前是否围观方
+        private boolean circuses;
+        //拉流地址
+        private String streamUrl;
+        //拉流客户端ID
+        private String clientWsRtcId;
+        //房间ID
+        private int roomId;
 
-    public String getStreamUrl() {
-        return streamUrl;
-    }
+        private Integer totalGold;
+        private Integer payGameMoney;
+        private int levelId;
+        private String nickname;
 
-    public void setStreamUrl(String streamUrl) {
-        this.streamUrl = streamUrl;
-    }
+        public String getState() {
+            return state;
+        }
 
-    public String getClientWsRtcId() {
-        return clientWsRtcId;
-    }
+        public void setState(String state) {
+            this.state = state;
+        }
 
-    public void setClientWsRtcId(String clientWsRtcId) {
-        this.clientWsRtcId = clientWsRtcId;
-    }
+        public boolean isCircuses() {
+            return circuses;
+        }
 
-    public int getRoomId() {
-        return roomId;
-    }
+        public void setCircuses(boolean circuses) {
+            this.circuses = circuses;
+        }
 
-    public void setRoomId(int roomId) {
-        this.roomId = roomId;
-    }
+        public String getStreamUrl() {
+            return streamUrl;
+        }
 
-    public Integer getTotalGold() {
-        return totalGold;
-    }
+        public void setStreamUrl(String streamUrl) {
+            this.streamUrl = streamUrl;
+        }
 
-    public void setTotalGold(Integer totalGold) {
-        this.totalGold = totalGold;
-    }
+        public String getClientWsRtcId() {
+            return clientWsRtcId;
+        }
 
-    public Integer getPayGameMoney() {
-        return payGameMoney;
-    }
+        public void setClientWsRtcId(String clientWsRtcId) {
+            this.clientWsRtcId = clientWsRtcId;
+        }
 
-    public void setPayGameMoney(Integer payGameMoney) {
-        this.payGameMoney = payGameMoney;
-    }
+        public int getRoomId() {
+            return roomId;
+        }
 
-    public int getLevelId() {
-        return levelId;
-    }
+        public void setRoomId(int roomId) {
+            this.roomId = roomId;
+        }
 
-    public void setLevelId(int levelId) {
-        this.levelId = levelId;
-    }
+        public Integer getTotalGold() {
+            return totalGold;
+        }
 
-    public String getNickname() {
-        return nickname;
-    }
+        public void setTotalGold(Integer totalGold) {
+            this.totalGold = totalGold;
+        }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+        public Integer getPayGameMoney() {
+            return payGameMoney;
+        }
+
+        public void setPayGameMoney(Integer payGameMoney) {
+            this.payGameMoney = payGameMoney;
+        }
+
+        public int getLevelId() {
+            return levelId;
+        }
+
+        public void setLevelId(int levelId) {
+            this.levelId = levelId;
+        }
+
+        public String getNickname() {
+            return nickname;
+        }
+
+        public void setNickname(String nickname) {
+            this.nickname = nickname;
+        }
+
+        @Override
+        public String toString() {
+            return "activityData{" +
+                    "state='" + state + '\'' +
+                    ", circuses=" + circuses +
+                    ", streamUrl='" + streamUrl + '\'' +
+                    ", clientWsRtcId='" + clientWsRtcId + '\'' +
+                    ", roomId=" + roomId +
+                    ", totalGold=" + totalGold +
+                    ", payGameMoney=" + payGameMoney +
+                    ", levelId=" + levelId +
+                    ", nickname='" + nickname + '\'' +
+                    '}';
+        }
     }
 
     public String getIcon() {
@@ -132,21 +153,21 @@ public class CallGameCoinPusherEntity implements Serializable {
         this.playUserId = playUserId;
     }
 
+    public ActivityData getActData() {
+        return actData;
+    }
+
+    public void setActData(ActivityData actData) {
+        this.actData = actData;
+    }
+
     @Override
     public String toString() {
         return "CallGameCoinPusherEntity{" +
-                "state='" + state + '\'' +
-                ", circuses=" + circuses +
-                ", streamUrl='" + streamUrl + '\'' +
-                ", clientWsRtcId='" + clientWsRtcId + '\'' +
-                ", roomId=" + roomId +
-                ", totalGold=" + totalGold +
-                ", payGameMoney=" + payGameMoney +
-                ", levelId=" + levelId +
-                ", nickname='" + nickname + '\'' +
-                ", icon='" + icon + '\'' +
+                "icon='" + icon + '\'' +
                 ", webLink='" + webLink + '\'' +
                 ", playUserId='" + playUserId + '\'' +
+                ", actData=" + actData +
                 '}';
     }
 }

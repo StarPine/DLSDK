@@ -102,6 +102,8 @@ public class CustomDlTempMessage extends TUIMessageBean implements Serializable 
         ////消息的类型，可以自定义
         private String customMsgType;
         private Object customMsgBody;
+        //是否隐藏ui
+        private boolean isHideUI = false;
 
         public String getCustomMsgType() {
             return customMsgType;
@@ -117,6 +119,14 @@ public class CustomDlTempMessage extends TUIMessageBean implements Serializable 
 
         public void setCustomMsgBody(Object customMsgBody) {
             this.customMsgBody = customMsgBody;
+        }
+
+        public boolean isHideUI() {
+            return isHideUI;
+        }
+
+        public void setHideUI(boolean hideUI) {
+            isHideUI = hideUI;
         }
 
         @Override

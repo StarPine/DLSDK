@@ -27,6 +27,7 @@ import com.dl.playfun.ui.login.register.FriendsWillWebViewFragment;
 import com.dl.playfun.ui.main.MainFragment;
 import com.dl.playfun.utils.FileUploadUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
+import com.dl.rtc.calling.manager.DLRTCStartManager;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.messaging.FirebaseMessaging;
 
@@ -209,6 +210,7 @@ public class PerfectProfileViewModel extends BaseViewModel<AppRepository> {
                         model.saveUserData(userDataEntity);
                         AppsFlyerLib.getInstance().setCustomerUserId(String.valueOf(userDataEntity.getId()));
                         AppContext.instance().mFirebaseAnalytics.setUserId(String.valueOf(userDataEntity.getId()));
+                        DLRTCStartManager.Companion.getInstance().setLoginSuccessUser(userDataEntity.getImUserId());
                         try {
                             //添加崩溃人员id
                             FirebaseCrashlytics.getInstance().setUserId(String.valueOf(userDataEntity.getId()));

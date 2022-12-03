@@ -1,6 +1,7 @@
 package com.dl.playfun.ui.coinpusher;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 
 import androidx.annotation.NonNull;
@@ -46,5 +47,25 @@ public class CoinPusherCallVideoView extends BaseDLRTCCallView {
         //发生了错误，报错并退出该页面
         ToastUtils.showLong(getContext().getString(R.string.trtccalling_toast_call_error_msg, code, msg));
         //stopCameraAndFinish();
+    }
+
+    @Override
+    public void onFirstAudioFrame(@Nullable String userId) {
+
+    }
+
+    @Override
+    public void onRemoteAudioStatusUpdated(@Nullable String userId, int status, int reason, @Nullable Bundle extraInfo) {
+
+    }
+
+    @Override
+    public void onFirstVideoFrame(@Nullable String userId, int streamType, int width, int height) {
+
+    }
+
+    @Override
+    public void onRemoteVideoStatusUpdated(@Nullable String userId, int streamType, int status, int reason, @Nullable Bundle extraInfo) {
+
     }
 }

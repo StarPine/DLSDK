@@ -29,6 +29,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.blankj.utilcode.util.ColorUtils;
@@ -164,6 +165,11 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
     public String _nickname;
     //对端的用户信息-其他页面跳转过来。
     public CallUserInfoEntity _callUserInfoEntity = null;
+    //心跳包间隔时间
+    public int _heartBeatInterval = 10;
+    //是否付费方
+    public boolean _isPayee = false;
+    public int _mTimeCount = 0;
 
     private SVGAImageView giftEffects;
     @Override
@@ -212,7 +218,6 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
         super.initParam();
        Intent intent =  getIntent();
        if(intent!=null){
-           Log.e(TAG,"接收页面传值："+intent.toString());
            //倒计时多少时间结束游戏
            downTimeMillisInFuture = intent.getLongExtra("outTime",30);
            ////倒计时剩余多少时间提示
@@ -227,6 +232,10 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
            _levelId = intent.getIntExtra("levelId",0);
            _nickname = intent.getStringExtra("nickname");
            _callUserInfoEntity = (CallUserInfoEntity)intent.getSerializableExtra("CallUserInfoEntity");
+           _heartBeatInterval = intent.getIntExtra("heartBeatInterval",10);
+           _isPayee = intent.getBooleanExtra("isPayee",false);
+           _mTimeCount = intent.getIntExtra("mTimeCount",0);
+
        }
         initListener();
     }
@@ -344,9 +353,16 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
             downTime();
         }
         if(_gameCallEntity!=null){
+            viewModel.callingState = 2;
             viewModel.gameCallEntity = _gameCallEntity;
             viewModel.callingDropped.set(false);
+            viewModel.mTimeCount = _mTimeCount;
             gameCalling();
+            TimeCallMessage();
+            setProfitTips();
+        }
+        if(_isPayee){
+            viewModel.callingDropped.set(false);
         }
         giftEffects = binding.giftEffects;
     }
@@ -613,17 +629,23 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
                 //启动播放礼物飘屏
                 startAcceptHeadAnimotion(true,giftEntity.getImg(),giftEntity.getLink(),account);
             }
-
-//            //启动横幅动画
-//            startSendBannersAnimotion(giftEntity, account);
-//            //启动头像动画
-//            startSendHeadAnimotion(giftEntity);
         });
         //接收礼物效果展示
         viewModel.gameUI.acceptUserGift.observe(this, giftEntity -> {
             int account = giftEntity.getAmount();
             //启动播放礼物飘屏
             startAcceptHeadAnimotion(false,giftEntity.getImgPath(),giftEntity.getSvgaPath(),account);
+        });
+        //通话中挂断
+        viewModel.gameUI.callChatFinish.observe(this, unused -> {
+            //围观者才进行退出逻辑
+            if(_circusesStatus){
+                callingInterceptApply(true);
+            }
+        });
+        //刷新收益
+        viewModel.gameUI.refreshEarnings.observe(this, unused -> {
+            setProfitTips();
         });
     }
 
@@ -689,7 +711,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
             if(viewModel.gamePlayingState==null){ //状态为空
                 if(viewModel.gameCallEntity != null){
                     Log.e("进入返回语音页面","=======================");
-                    callingInterceptApply();
+                    callingInterceptApply(false);
                 }
                 super.onBackPressed();
             }else{
@@ -708,7 +730,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
                         public void onConfirm(Dialog dialog) {
                             dialog.dismiss();
                             //结束当前页面
-                            finish();
+                            callingInterceptApply(true);
                         }
                     }).show();
                 }
@@ -723,44 +745,49 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
     * @parame []
     * @Date 2022/11/10
     */
-    private void callingInterceptApply() {
-        CallGameCoinPusherEntity callGameCoinPusherEntity = new CallGameCoinPusherEntity();
-        callGameCoinPusherEntity.setState(CallGameCoinPusherEntity.leaveGame);
-        callGameCoinPusherEntity.setCircuses(_circusesStatus);
-        CustomDlTempMessage customDlTempMessage = V2TIMCustomManagerUtil.buildDlTempMessage(CustomConstants.CoinPusher.MODULE_NAME,CustomConstants.CoinPusher.CALL_GO_GAME_WINNING,callGameCoinPusherEntity);
-        DLRTCSignalingManager.INSTANCE.sendC2CCustomMessage(GsonUtils.toJson(customDlTempMessage),viewModel.gameCallEntity.getCallingRole() ==  DLRTCCalling.Role.CALL? viewModel.gameCallEntity.getAcceptUserId() : viewModel.gameCallEntity.getInviteUserId());
-        Intent intent = null;
-        if (viewModel.gameCallEntity.getCallingType() == DLRTCDataMessageType.DLInviteRTCType.dl_rtc_audio) {
-            Activity audioCallChatingAct = AppManager.getAppManager().getActivity(AudioCallChatingActivity.class);
-            //通话中页面不存在
-            if(audioCallChatingAct == null){
-                intent = new Intent(getContext(), AudioCallChatingActivity.class);
-                CallChatingConstant.updateCoinPusherWatchRoom(_gameRoomId, viewModel.otherCallInfoEntity.get().getId(),2);
-            }
-            //返回拨打中页面
-            if(viewModel.callingOnTheLine.get()){
-                intent = new Intent(getContext(), DialingAudioActivity.class);
-            }
-            if(intent!=null){
-                intent.putExtra("isRestart", true);
-            }
-
-        } else {
-            intent = new Intent(getContext(), CallingVideoActivity.class);
-            //返回拨打中页面
-            intent.putExtra("isRestart", viewModel.callingOnTheLine.get());
-            intent.putExtra(DLRTCCallingConstants.PARAM_NAME_ROLE,DLRTCCalling.Role.CALL);
-
+    boolean finishFlag = false;
+    private void callingInterceptApply(boolean finishView) {
+        if(!finishFlag){
+            finishFlag = true;
+        }else{
+            return;
         }
-        if(intent != null){
-            intent.putExtra(DLRTCCallingConstants.DLRTCInviteUserID, viewModel.gameCallEntity.getInviteUserId());
-            intent.putExtra(DLRTCCallingConstants.DLRTCAcceptUserID, viewModel.gameCallEntity.getAcceptUserId());
-            intent.putExtra(DLRTCCallingConstants.PARAM_NAME_ROLE, viewModel.gameCallEntity.getCallingRole());
-            intent.putExtra(DLRTCCallingConstants.RTCInviteRoomID,viewModel.gameCallEntity.getRoomId());
-            intent.putExtra("CallingInviteInfoField",viewModel.otherCallInfoEntity.get());
-            intent.putExtra("timeCount", viewModel.mTimeCount);
-            intent.putExtra("isRestart", true);
-            getContext().startActivity(intent);
+        if(viewModel.callingState > 0 ){
+            Intent intent = null;
+            if(viewModel.callingState == 1){ //拨打中
+                if (viewModel.gameCallEntity.getCallingType() == DLRTCDataMessageType.DLInviteRTCType.dl_rtc_audio) {
+                    intent = new Intent(getContext(), DialingAudioActivity.class);
+                }else{
+                    intent = new Intent(getContext(), CallingVideoActivity.class);
+                }
+                //主拨打人
+                intent.putExtra(DLRTCCallingConstants.PARAM_NAME_ROLE,DLRTCCalling.Role.CALL);
+            }else if(viewModel.callingState == 2){ //通话中
+                CallChatingConstant.updateCoinPusherWatchRoom(_gameRoomId, viewModel.otherCallInfoEntity.get().getId(),2);
+                if (viewModel.gameCallEntity.getCallingType() == DLRTCDataMessageType.DLInviteRTCType.dl_rtc_audio) {
+                    intent = new Intent(getContext(), AudioCallChatingActivity.class);
+                    intent.putExtra("isRestart", true);
+                }else{
+                    intent = new Intent(getContext(), CallingVideoActivity.class);
+                    //返回拨打中页面
+                    intent.putExtra("isRestart", true);
+                }
+            }
+            if(intent != null){
+                intent.putExtra(DLRTCCallingConstants.PARAM_NAME_ROLE,viewModel.gameCallEntity.getCallingRole());
+                intent.putExtra(DLRTCCallingConstants.DLRTCInviteUserID, viewModel.gameCallEntity.getInviteUserId());
+                intent.putExtra(DLRTCCallingConstants.DLRTCAcceptUserID, viewModel.gameCallEntity.getAcceptUserId());
+                intent.putExtra(DLRTCCallingConstants.PARAM_NAME_ROLE, viewModel.gameCallEntity.getCallingRole());
+                intent.putExtra(DLRTCCallingConstants.RTCInviteRoomID,viewModel.gameCallEntity.getRoomId());
+                intent.putExtra("CallingInviteInfoField",viewModel.otherCallInfoEntity.get());
+                intent.putExtra("timeCount", viewModel.mTimeCount);
+                intent.putExtra("payeeProfits",viewModel.payeeProfits);
+                intent.putExtra("isPayee",_isPayee);
+                getContext().startActivity(intent);
+            }
+        }
+        if(finishView){
+            finish();
         }
     }
 
@@ -782,7 +809,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
                 if(downTimeMillisHintFlag){
                     AppConfig.CoinPusherGameNotPushed = true;
                 }
-                finish();
+                callingInterceptApply(true);
             }
         };
         downTimer.start();
@@ -840,10 +867,10 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
         @Override
         public void onUserEnter(String userId) {
             viewModel.callingOnTheLine.set(false);
+            viewModel.callingState = 2;
             viewModel.callingDropped.set(false);
             MPTimber.tag(TAG).d("EmptyTRTCCallingDelegate onUserEnter userId："+userId);
             binding.rlReceiveCall.setVisibility(View.GONE);
-            gameCalling();
         }
 
         @Override
@@ -853,6 +880,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
 
         @Override
         public void onReject(String userId) {
+            viewModel.callingState = 0;
             initRlCallingUserLayout();
             ToastUtils.showShort(AppContext.instance().getString(R.string.playfun_the_other_party_refuses_to_answer));
             MPTimber.tag(TAG).d("EmptyTRTCCallingDelegate onReject userId："+userId);
@@ -867,6 +895,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
 
         @Override
         public void onCallingCancel() {
+            viewModel.callingState = 0;
             initRlCallingUserLayout();
             //用户取消拨打
             MPTimber.tag(TAG).d("EmptyTRTCCallingDelegate onCallingCancel ");
@@ -875,6 +904,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
         @Override
         public void onCallingTimeout() {
             viewModel.callingOnTheLine.set(false);
+            viewModel.callingState = 0;
             //拨打超时
             MPTimber.tag(TAG).d("EmptyTRTCCallingDelegate onCallingTimeout ");
             initRlCallingUserLayout();
@@ -886,9 +916,10 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
             MPTimber.tag(TAG).d("EmptyTRTCCallingDelegate onCallEnd ");
             ToastUtils.showShort(AppContext.instance().getString(R.string.playfun_call_ended));
             viewModel.callingDropped.set(true);
+            viewModel.callingState = 0;
             //如果是围观方。应该结束游戏
             if(_circusesStatus){
-                finish();
+                callingInterceptApply(true);
             }else{
                 initRlCallingUserLayout();
             }
@@ -907,11 +938,19 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
             //重新连接
             MPTimber.tag(TAG).d("EmptyTRTCCallingDelegate onTryToReconnect  ");
         }
+
+        @Override
+        public void onFirstVideoFrame(@Nullable String userId, int streamType, int width, int height) {
+            if(viewModel.gameCallEntity!=null ){
+                gameCalling();
+            }
+        }
     };
     // 初始化回拨业务UI
     private void initRlCallingUserLayout(){
         viewModel.gameCallEntity.setCalling(false);
         viewModel.callingOnTheLine.set(false);
+        viewModel.callingState = 0;
         binding.getRoot().post(()->{
             binding.rlVideoCallLayout.setVisibility(View.GONE);
             binding.gameCallingVideoLayout.rlVideoAllLayout.setVisibility(View.GONE);
@@ -959,6 +998,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
             viewModel.gameCallEntity = gameCallEntity;
             binding.rlReceiveCall.setVisibility(View.VISIBLE);
             viewModel.getCallingUserInfo(null, gameCallEntity.getInviteUserId());
+            viewModel.callingState = 1;
         }
     }
 
@@ -1010,10 +1050,12 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
         }
         timerRunnable = () -> {
             viewModel.mTimeCount++;
-            if (viewModel.mTimeCount % 30 == 0){
-                viewModel.getRoomStatus(viewModel.gameCallEntity.getRoomId());
+            viewModel.callDurationTime.set(getString(R.string.playfun_call_message_deatail_time_msg, viewModel.mTimeCount/3600, viewModel.mTimeCount / 60, viewModel.mTimeCount % 60));
+            if (viewModel.mTimeCount % _heartBeatInterval == 0){
+                //每隔多少秒发送心跳包
+                viewModel.callingKeepAlive(viewModel.gameCallEntity.getRoomId(),null);
             }
-
+            setProfitTips();
             mHandler.postDelayed(timerRunnable, 1000);
         };
         mHandler.postDelayed(timerRunnable, 1000);
@@ -1045,7 +1087,12 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
                     viewLayoutParams.height = 0;
                     viewLayoutParams.width = 0;
                     videoLayout.getVideoView().setLayoutParams(viewLayoutParams);
-                    DLRTCVideoManager.Companion.getInstance().updateLocalView(txCloudVideoView);
+                    if(_gameCallEntity!=null){
+                        DLRTCVideoManager.Companion.getInstance().updateLocalView(txCloudVideoView);
+                    }else{
+                        DLRTCVideoManager.Companion.getInstance().openCamera(true, txCloudVideoView);
+                    }
+
                 }
                 String remoteViewUserId = TUILogin.getLoginUser().equals(viewModel.gameCallEntity.getInviteUserId()) ? viewModel.gameCallEntity.getAcceptUserId() :viewModel.gameCallEntity.getInviteUserId();
                 //有用户的视频开启了
@@ -1054,7 +1101,12 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
                     layout =  dLRTCVideoLayoutManager.allocCloudVideoView(remoteViewUserId);
                 }
                 if (layout != null) {
-                    DLRTCVideoManager.Companion.getInstance().updateRemoteView(remoteViewUserId, layout.getVideoView());
+                    if(_gameCallEntity!=null){
+                        DLRTCVideoManager.Companion.getInstance().updateRemoteView(remoteViewUserId, layout.getVideoView());
+                    }else{
+                        DLRTCVideoManager.Companion.getInstance().startRemoteView(remoteViewUserId, layout.getVideoView());
+                    }
+
                 }
             }else{//语音通话
                 viewModel.makeCallTypeField.set(true);
@@ -1070,21 +1122,24 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
     /**
      * 展示右下角收益提示
      */
-//    private void setProfitTips() {
-//        if (Boolean.FALSE.equals(viewModel.isShowCountdown.get()) && viewModel.payeeProfits > 0) {//对方余额不足没有展示
-//            if (!viewModel.girlEarningsField.get()) {
-//                viewModel.girlEarningsField.set(true);
-//            }
-//            String profit = viewModel.payeeProfits + "";
-//            String girlEarningsTex = String.format(com.blankj.utilcode.util.StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt), profit);
-//            SpannableString stringBuilder = new SpannableString(girlEarningsTex);
-//            ForegroundColorSpan blueSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint1));
-//            int index = girlEarningsTex.indexOf(profit);
-//            stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, girlEarningsTex.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//            stringBuilder.setSpan(blueSpan, index, index + profit.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//            viewModel.girlEarningsText.set(stringBuilder);
-//        }
-//    }
+    private void setProfitTips() {
+        if (_isPayee && viewModel.payeeProfits > 0) {//对方余额不足没有展示
+            binding.tvRevenueTips.post(()->{
+                if (binding.tvRevenueTips.getVisibility() == View.GONE) {
+                    binding.tvRevenueTips.setVisibility(View.VISIBLE);
+                }
+                String profit = viewModel.payeeProfits + "";
+                String girlEarningsTex = String.format(getString(R.string.playfun_call_message_deatail_girl_txt), profit);
+                SpannableString stringBuilder = new SpannableString(girlEarningsTex);
+                ForegroundColorSpan blueSpan = new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint1));
+                int index = girlEarningsTex.indexOf(profit);
+                stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, girlEarningsTex.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                stringBuilder.setSpan(blueSpan, index, index + profit.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                binding.tvRevenueTips.setText(stringBuilder);
+            });
+        }
+    }
+
     private void startSVGAnim(String svgaPath) {
         if (!com.blankj.utilcode.util.StringUtils.isEmpty(svgaPath)) {
             SVGAParser svgaParser = SVGAParser.Companion.shareParser();
@@ -1125,8 +1180,8 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
             //文案
             TextView tipText = streamerView.findViewById(R.id.tip_text);
             String sexText = viewModel.otherCallInfoEntity.get().getNickname();
-            String messageText = com.blankj.utilcode.util.StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt1);
-            String lastText = com.blankj.utilcode.util.StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt17);
+            String messageText = getString(R.string.playfun_call_message_deatail_girl_txt1);
+            String lastText = getString(R.string.playfun_call_message_deatail_girl_txt17);
             String itemTextMessage = sexText + "\n" + messageText + lastText;
             SpannableString stringBuilder = new SpannableString(itemTextMessage);
             stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.call_message_deatail_hint2)), 0, sexText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1145,9 +1200,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
                     .load(StringUtil.getFullImageUrl(imgPath))
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(giftImg);
-            if (account == 1) {
-                giftNumImg.setImageResource(R.drawable.img_gift_num1);
-            } else if (account == 10) {
+            if (account == 10) {
                 giftNumImg.setImageResource(R.drawable.img_gift_num10);
             } else if (account == 38) {
                 giftNumImg.setImageResource(R.drawable.img_gift_num38);
@@ -1192,7 +1245,8 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
         if(self){
             animation = AnimationUtils.loadAnimation(getContext(), R.anim.anim_call_coinpusher_receive_tip);
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-            //layoutParams.leftMargin = Utils.dip2px(getContext(),277);
+            layoutParams.leftMargin = Utils.dip2px(getContext(),277);
+            //layoutParams.topMargin = Utils.dip2px(getContext(),135);
             layoutParams.bottomMargin = Utils.dip2px(getContext(),71);
         }else{
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_END);

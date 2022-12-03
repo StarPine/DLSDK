@@ -201,6 +201,7 @@ public interface ApiService {
     @POST("api/iscan/watchRoom")
     @FormUrlEncoded
     Observable<BaseResponse> coinPusherWatchRoom(@Field("roomId") Integer roomId,@Field("toUserId") Integer toUserId,@Field("type") int type);
+
     /**
     * @Desc TODO(推币机-历史记录)
     * @author 彭石林

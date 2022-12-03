@@ -39,9 +39,6 @@ import kotlin.collections.HashMap
 class DLRTCStartManager {
     val TAGLOG = "DLRTCStartManager";
 
-    private val mMainHandler = Handler(Looper.getMainLooper())
-
-
     ///当前用户的ID
     private var currentId : String = ""
     ///接收方的ID
@@ -145,7 +142,7 @@ class DLRTCStartManager {
         dLInviteTimeout?.apply{
             DLInviteTimeout = this
         }
-        this@DLRTCStartManager.currentId = TUILogin.getLoginUser()
+        currentId = TUILogin.getLoginUser()
         isBeginInvite = true
         this.inviteUserId = currentId
         this.inviteTypeMsg = inviteType.name
@@ -254,7 +251,7 @@ class DLRTCStartManager {
             }
 
             override fun onError(err_code: Int, err_msg: String?) {
-                var errorMsg : String = "接受当前邀请成功失败"
+                var errorMsg = "接受当前邀请成功失败"
                 err_msg?.apply{
                     errorMsg = err_msg
                 }
@@ -362,15 +359,12 @@ class DLRTCStartManager {
             this@DLRTCStartManager.inviteId = inviteID
             this@DLRTCStartManager.inviteUserId = inviter
             this@DLRTCStartManager.isReceiveNewInvite = true
-
+            this@DLRTCStartManager.currentId = TUILogin.getLoginUser()
             val dataResult = callBackDataValid(data , DLRTCDataMessageType.invite)
             dataResult?.apply {
 
                 val params = this
                 val acceptUserId = (params[DLRTCDataMessageType.DLRTCAcceptUserID] as? String) ?: ""
-                if(this@DLRTCStartManager.currentId.isEmpty()){
-                    this@DLRTCStartManager.currentId = TUILogin.getLoginUser()
-                }
                 ///查看邀请的人是不是我，不是我的话，直接就去掉
                 if (acceptUserId == this@DLRTCStartManager.currentId) {
                     val _inviteUserId = params[DLRTCDataMessageType.DLRTCInviteUserID] as? String

@@ -3,6 +3,7 @@ package com.dl.playfun.kl.viewmodel;
 import android.app.Application;
 import android.app.Dialog;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.ObservableArrayList;
 import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
@@ -44,7 +46,6 @@ import com.dl.playfun.entity.RtcRoomMessageEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.AudioCallingCancelEvent;
 import com.dl.playfun.event.CallingStatusEvent;
-import com.dl.playfun.event.CallingToGamePlayingEvent;
 import com.dl.playfun.event.RtcRoomMessageEvent;
 import com.dl.playfun.kl.CallChatingConstant;
 import com.dl.playfun.kl.Utils;
@@ -174,6 +175,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     public ItemBinding<AudioCallChatingItemViewModel> itemBinding = ItemBinding.of(BR.viewModel, R.layout.item_call_audio_chating);
     //活动入口信息
     public ObservableField<RtcRoomMessageEvent> rtcRoomMessageField = new ObservableField<>();
+    public CallGameCoinPusherEntity _callGameCoinPusherEntity;
 
     private final static String TAG = "trtcJoy";
     private static final int MIN_DURATION_SHOW_LOW_QUALITY = 5000; //显示网络不佳最小间隔时间
@@ -202,8 +204,6 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     public BindingCommand<Void> closeMoney = new BindingCommand<>(() -> maleTextLayoutSHow.set(false));
     //显示推币机按钮
     public ObservableBoolean coinPusherRoomShow = new ObservableBoolean(false);
-    //信令消息
-    public CallGameCoinPusherEntity _callGameCoinPusherEntity;
     //关闭女生界面男生余额不足提示
     public BindingCommand<Void> closeMoney2 = new BindingCommand<>(() -> {
         isShowCountdown.set(false);
@@ -375,16 +375,6 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                     // 彈出確定框吧
                     hangup();
                 });
-        mCallingToGameSubscription = RxBus.getDefault().toObservable(CallingToGamePlayingEvent.class)
-                .subscribe(event -> {
-                    if(event!=null){
-                        CallGameCoinPusherEntity callGameCoinPusherEntity = event.getCallGameCoinPusherEntity();
-                        if(callGameCoinPusherEntity!=null){
-                            uc.callingToGamePlayingEvent.postValue(callGameCoinPusherEntity);
-                        }
-                    }
-
-                });
         //通话活动入口
         mRtcRoomMessageSubscription = RxBus.getDefault().toObservable(RtcRoomMessageEvent.class)
                 .subscribe(rtcRoomMessageEvent -> {
@@ -393,6 +383,22 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                     if(Objects.equals(rtcRoomMessageEntity.getActivityData().getPlayUserId(),currentUserInfoField.get().getImUserId())){
                         rtcRoomMessageField.set(rtcRoomMessageEvent);
                         coinPusherRoomShow.set(true);
+                    }else{
+                        CallGameCoinPusherEntity callGameCoinPusherEntity = rtcRoomMessageEntity.getActivityData();
+                        if(callGameCoinPusherEntity!=null){
+                            CallGameCoinPusherEntity.ActivityData activityData = callGameCoinPusherEntity.getActData();
+                            if(activityData != null && activityData.getState() != null){
+                                if(Objects.equals(activityData.getState(),CallGameCoinPusherEntity.enterGame)){
+                                    rtcRoomMessageField.set(rtcRoomMessageEvent);
+                                    coinPusherRoomShow.set(true);
+                                    _callGameCoinPusherEntity = callGameCoinPusherEntity;
+                                }else{
+                                    rtcRoomMessageField.set(rtcRoomMessageEvent);
+                                    coinPusherRoomShow.set(false);
+                                    _callGameCoinPusherEntity = null;
+                                }
+                            }
+                        }
                     }
                 });
         mCallingStatusEventSubscription = RxBus.getDefault().toObservable(CallingStatusEvent.class)
@@ -438,7 +444,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     }
 
     public void hangup() {
-        updateCallingStatus(CallChatingConstant.exitRoom);
+        updateCallingStatus(CallChatingConstant.dissolveRoom);
         unListener();
         DLRTCStartShowUIManager.Companion.getInstance().inviteUserReject();
         mView.finishView();
@@ -463,7 +469,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
 
             @Override
             public void onCallEnd() {
-                updateCallingStatus(CallChatingConstant.exitRoom);
+                updateCallingStatus(CallChatingConstant.dissolveRoom);
                 DLRTCStartShowUIManager.Companion.getInstance().exitRTCRoom();
                 Log.i(TAG, "onCallEnd: ");
                 endChattingAndShowHint(AppContext.instance().getString(R.string.playfun_call_ended));
@@ -496,11 +502,14 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
             }
 
             @Override
-            public void onUserAudioAvailable(String userId, boolean isVideoAvailable) {
-                Log.i(TAG, "onUserAudioAvailable: userId："+userId + ", onUserAudioAvailable ="+isVideoAvailable);
+            public void onFirstAudioFrame(@NonNull String userId) {
                 updateCallingStatus(CallChatingConstant.pusherAudioStart);
             }
 
+            @Override
+            public void onRemoteAudioStatusUpdated(@NonNull String userId, int status, int reason, @Nullable Bundle extraInfo) {
+                updateCallingStatus(CallChatingConstant.pusherAudioStart);
+            }
         };
         DLRTCInternalListenerManager.Companion.getInstance().addDelegate(mTRTCCallingDelegate);
     }
@@ -669,7 +678,6 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                             V2TIMCustomElem v2TIMCustomElem = info.getV2TIMMessage().getCustomElem();
                             Map<String, Object> contentBody = CustomConvertUtils.CustomMassageConvertMap(v2TIMCustomElem);
                             if (ObjectUtils.isNotEmpty(contentBody)) {
-                                Log.e("语音接受到的自定义讯息为", String.valueOf(contentBody));
                                 //模块类型--判断
                                 if (contentBody.containsKey(CustomConstants.Message.MODULE_NAME_KEY)) {
                                     //获取moudle-pushCoinGame 推币机
@@ -767,6 +775,10 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                     public void onSuccess(BaseResponse baseResponse) {
 
                     }
+
+                    @Override
+                    public void onError(RequestException e) {
+                    }
                 });
     }
 
@@ -844,6 +856,8 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
         public SingleLiveEvent<Void> coinPusherRoomEvent = new SingleLiveEvent<>();
         //处理推币机信令转主线程
         public SingleLiveEvent<CallGameCoinPusherEntity> callingToGamePlayingEvent = new SingleLiveEvent<>();
+        //刷新收益
+        public SingleLiveEvent<Void> refreshEarnings = new SingleLiveEvent<>();
     }
 
     //追踪

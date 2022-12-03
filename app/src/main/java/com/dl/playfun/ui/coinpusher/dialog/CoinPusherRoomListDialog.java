@@ -117,10 +117,10 @@ public class CoinPusherRoomListDialog extends BaseDialog {
             CoinPusherRoomDeviceInfo deviceInfo = coinPusherRoomListAdapter.getItemEntity(position);
             if(ObjectUtils.isNotEmpty(deviceInfo)){
                 //拨打语音小窗口不允许打电话
-                if (Status.mIsShowFloatWindow){
-                    ToastUtils.showShort(R.string.audio_in_call);
-                    return;
-                }
+//                if (Status.mIsShowFloatWindow){
+//                    ToastUtils.showShort(R.string.audio_in_call);
+//                    return;
+//                }
                 playingCoinPusherStart(deviceInfo.getRoomId());
             }
         });
@@ -161,8 +161,8 @@ public class CoinPusherRoomListDialog extends BaseDialog {
                     CoinPusherRoomListDialog.this.show();
                 }
             });
-            coinPusherConvertDialog.show();
             CoinPusherRoomListDialog.this.dismiss();
+            coinPusherConvertDialog.show();
         });
     }
 

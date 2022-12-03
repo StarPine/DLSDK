@@ -41,6 +41,32 @@
             android:src="@drawable/img_close_black_radius"
             binding:onClickCommand="@{gameViewModel.gameCloseView}"
             />
+        <FrameLayout
+            android:layout_marginTop="3dp"
+            android:layout_toEndOf="@+id/img_close"
+            android:layout_alignTop="@+id/img_close"
+            android:layout_marginStart="14dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            binding:drawable_color="@{@color/black}"
+            binding:drawable_alpha="@{50}"
+            binding:drawable_cornersRadius="@{17}"
+            android:visibility="@{gameViewModel.callingDropped ? View.GONE : View.VISIBLE}"
+            >
+            <androidx.appcompat.widget.AppCompatTextView
+                android:includeFontPadding="false"
+                android:layout_marginStart="7dp"
+                android:layout_marginEnd="7dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="3dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{gameViewModel.callDurationTime}"
+                android:visibility="@{gameViewModel.callingDropped ? View.GONE : View.VISIBLE}"
+                android:textColor="#ECECEC"
+                android:textSize="12dp"
+                />
+        </FrameLayout>
         <LinearLayout
             android:orientation="vertical"
             android:layout_marginStart="14dp"
@@ -294,6 +320,7 @@
             />
         
         <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/img_gift"
             android:layout_alignParentEnd="true"
             android:layout_alignTop="@+id/fl_play_coin"
             android:layout_marginEnd="37dp"
@@ -304,6 +331,26 @@
             binding:onClickCommand="@{gameViewModel.giftBagOnClickCommand}"
             android:visibility="@{gameViewModel.callingDropped ? View.GONE : View.VISIBLE}"
             />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_revenue_tips"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="14dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:layout_above="@+id/img_gift"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13dp"
+            android:visibility="gone"
+            binding:drawable_cornersRadius="@{19}"
+            binding:drawable_gradient_startColor="@{@color/playfun_shape_radius_start_color}"
+            binding:drawable_gradient_endColor="@{@color/playfun_shape_radius_end_color}"
+            binding:drawable_orientation="@{GradientDrawable.Orientation.LEFT_RIGHT}"
+            />
+
 
         <FrameLayout
             android:elevation="99dp"

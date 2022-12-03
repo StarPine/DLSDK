@@ -181,7 +181,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="47dp"
                 android:layout_marginEnd="17dp"
-                binding:onClickCommand="@{viewModel.closeOnclick}"
+                binding:onClickCommand="@{viewModel.rejectOnclick}"
                 android:src="@drawable/call_video_close" />
 
             <ImageView
@@ -209,9 +209,9 @@
             <ImageView
                 android:layout_width="69dp"
                 android:layout_height="69dp"
-                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginLeft="53dp"
+                android:layout_marginStart="53dp"
                 android:layout_marginBottom="53dp"
                 android:src="@drawable/call_reject"
                 android:visibility="@{viewModel.isCalledBinding ? View.VISIBLE : View.GONE}"
@@ -220,9 +220,9 @@
             <ImageView
                 android:layout_width="69dp"
                 android:layout_height="69dp"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginRight="53dp"
+                android:layout_marginEnd="53dp"
                 android:layout_marginBottom="53dp"
                 android:src="@drawable/call_accept"
                 android:visibility="@{viewModel.isCalledBinding ? View.VISIBLE : View.GONE}"
@@ -570,6 +570,11 @@
                 android:visibility="@{viewModel.coinPusherRoomShow ? View.VISIBLE : View.GONE}"
                 android:src="@drawable/img_advert_coinpusher"
                 binding:onClickCommand="@{viewModel.coinPusherRoomClick}"
+                binding:imagePath="@{viewModel.rtcRoomMessageField.rtcRoomMessageEntity.activityData.icon}"
+                binding:imageErrorPlaceholderRes="@{R.drawable.img_advert_coinpusher}"
+                binding:imagePlaceholderRes="@{R.drawable.img_advert_coinpusher}"
+                binding:resizeH="@{58}"
+                binding:resizeW="@{58}"
                 />
             <LinearLayout
                 android:id="@+id/bottom_layout"

@@ -132,6 +132,9 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
     //当前房间信息
     private CallUserRoomInfoEntity _callUserRoomInfoEntity;
 
+    private double _payeeProfits = 0;
+    private boolean _isPayee = false;
+
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LocaleManager.setLocal(newBase));
@@ -208,6 +211,8 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         barrageInfo = intent.getStringExtra("audioCallingBarrage");
         _callUserInfoEntity = (CallUserInfoEntity)intent.getSerializableExtra("CallingInviteInfoField");
         _callUserRoomInfoEntity = (CallUserRoomInfoEntity)intent.getSerializableExtra("CallUserRoomInfoEntity");
+        intent.putExtra("payeeProfits",viewModel.payeeProfits);
+        intent.putExtra("isPayee",_isPayee);
     }
 
     @Override
@@ -254,9 +259,8 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         } else if (json.isEmpty()) {
             return new ArrayList<>();
         }
-        List<AudioCallingBarrageEntity> list = GsonUtils.fromJson(json, new TypeToken<List<AudioCallingBarrageEntity>>() {
+        return GsonUtils.fromJson(json, new TypeToken<List<AudioCallingBarrageEntity>>() {
         }.getType());
-        return list;
     }
 
     /**
@@ -458,9 +462,9 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
             if(viewModel.coinPusherRoomShow.get()){
                 CallGameCoinPusherEntity _callGameCoinPusherEntity = viewModel._callGameCoinPusherEntity;
                 if(_callGameCoinPusherEntity != null){
-                    Intent intent = CoinPusherGameActivity.getStartActivityIntent(mContext,_callGameCoinPusherEntity.getClientWsRtcId()
-                            ,_callGameCoinPusherEntity.getStreamUrl(),_callGameCoinPusherEntity.getTotalGold(),_callGameCoinPusherEntity.getPayGameMoney(),30,10
-                            ,_callGameCoinPusherEntity.getRoomId(),_callGameCoinPusherEntity.getLevelId(),_callGameCoinPusherEntity.getNickname());
+                    Intent intent = CoinPusherGameActivity.getStartActivityIntent(mContext,_callGameCoinPusherEntity.getActData().getClientWsRtcId()
+                            ,_callGameCoinPusherEntity.getActData().getStreamUrl(),_callGameCoinPusherEntity.getActData().getTotalGold(),_callGameCoinPusherEntity.getActData().getPayGameMoney(),30,10
+                            ,_callGameCoinPusherEntity.getActData().getRoomId(),_callGameCoinPusherEntity.getActData().getLevelId(),_callGameCoinPusherEntity.getActData().getNickname());
                     intent.putExtra("_circusesStatus",true);
                     //创建玩游戏模型
                     GameCallEntity gameCallEntity = new GameCallEntity();
@@ -478,7 +482,12 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                     intent.putExtra("GameCallEntity",gameCallEntity);
                     intent.putExtra("CallUserInfoEntity",viewModel.otherUserInfoField.get());
                     intent.putExtra("mTimeCount",mTimeCount);
+                    intent.putExtra("payeeProfits",viewModel.payeeProfits);
+                    intent.putExtra("heartBeatInterval",viewModel.heartBeatInterval);
+                    intent.putExtra("isPayee",viewModel.isPayee);
+                    CallChatingConstant.updateCoinPusherWatchRoom(_callGameCoinPusherEntity.getActData().getRoomId(), viewModel.otherUserInfoField.get().getId(),1);
                     startActivity(intent);
+                    finish();
                     return;
                 }
             }
@@ -508,8 +517,11 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                     intent.putExtra("CallUserInfoEntity",viewModel.otherUserInfoField.get());
                     intent.putExtra("GameCallEntity",gameCallEntity);
                     intent.putExtra("mTimeCount",mTimeCount);
-                    CallChatingConstant.updateCoinPusherWatchRoom(itemEntity.getRoomInfo().getRoomId(), viewModel.otherUserInfoField.get().getId(),1);
+                    intent.putExtra("payeeProfits",viewModel.payeeProfits);
+                    intent.putExtra("heartBeatInterval",viewModel.heartBeatInterval);
+                    intent.putExtra("isPayee",viewModel.isPayee);
                     startActivity(intent);
+                    finish();
                 }
 
                 @Override
@@ -520,17 +532,23 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
             coinersDialog.show();
         });
         viewModel.uc.callingToGamePlayingEvent.observe(this, callGameCoinPusherEntity -> {
-            //进房
-            if(Objects.equals(callGameCoinPusherEntity.getState(),CallGameCoinPusherEntity.enterGame)){
-                //展示推币机入口
-                viewModel.coinPusherRoomShow.set(true);
-                viewModel._callGameCoinPusherEntity = callGameCoinPusherEntity;
-            }else if(Objects.equals(callGameCoinPusherEntity.getState(),CallGameCoinPusherEntity.leaveGame)){
-                if(!callGameCoinPusherEntity.isCircuses()){
-                    //退房
-                    viewModel.coinPusherRoomShow.set(false);
+            binding.getRoot().postDelayed(()->{
+                //进房
+                if(Objects.equals(callGameCoinPusherEntity.getActData().getState(),CallGameCoinPusherEntity.enterGame)){
+                    //展示推币机入口
+                    viewModel.coinPusherRoomShow.set(true);
+                    viewModel._callGameCoinPusherEntity = callGameCoinPusherEntity;
+                }else if(Objects.equals(callGameCoinPusherEntity.getActData().getState(),CallGameCoinPusherEntity.leaveGame)){
+                    if(!callGameCoinPusherEntity.getActData().isCircuses()){
+                        //退房
+                        viewModel.coinPusherRoomShow.set(false);
+                    }
                 }
-            }
+            },200);
+        });
+        //刷新收益
+        viewModel.uc.refreshEarnings.observe(this, unused -> {
+            setProfitTips();
         });
     }
 

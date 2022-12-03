@@ -25,13 +25,17 @@ import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
 import com.dl.playfun.data.source.http.response.BaseDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
+import com.dl.playfun.entity.CallGameCoinPusherEntity;
 import com.dl.playfun.entity.CallUserInfoEntity;
 import com.dl.playfun.entity.CallUserRoomInfoEntity;
 import com.dl.playfun.entity.CallingInfoEntity;
 import com.dl.playfun.entity.CallingStatusEntity;
 import com.dl.playfun.entity.CoinPusherBalanceDataEntity;
 import com.dl.playfun.entity.GiftBagEntity;
+import com.dl.playfun.entity.RtcRoomMessageEntity;
+import com.dl.playfun.event.CallingStatusEvent;
 import com.dl.playfun.event.CoinPusherGamePlayingEvent;
+import com.dl.playfun.event.RtcRoomMessageEvent;
 import com.dl.playfun.kl.Utils;
 import com.dl.playfun.manager.V2TIMCustomManagerUtil;
 import com.dl.playfun.utils.ApiUitl;
@@ -88,6 +92,8 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
 
     //消费者
     private Disposable coinPusherGamePlayingSubscription;
+    private Disposable mRtcRoomMessageSubscription;
+    private Disposable mCallingStatusEventSubscription;
 
     private IMAdvancedMsgListener imAdvancedMsgListener;
 
@@ -111,6 +117,8 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
     public ObservableField<CallUserRoomInfoEntity> callUserRoomInfoEntity = new ObservableField<>();
     //通话中价格提示
     public ObservableField<String> maleCallingHint = new ObservableField<>("");
+    //通话时长提示
+    public ObservableField<String> callDurationTime = new ObservableField<>();
     //当前用户是否为收款人
     public boolean isCallingPay = false;
     //余额不足临界提示分钟数
@@ -118,8 +126,13 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
     //付费放钻石总余额
     public int payUserBalanceMoney = 0;
 
+    //聊天收益
+    public double payeeProfits;
+
     //游戏房间ID
     public Integer _gameRoomId = 0;
+    //通话中状态
+    public int callingState = 0;
 
     //推币机禁音
     public ObservableBoolean muteEnabled = new ObservableBoolean(false);
@@ -374,6 +387,7 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
                         callUserRoomInfoEntity.set(callingInviteInfo);
                         //主动拨打
                         callingOnTheLine.set(true);
+                        callingState = 1;
                         Utils.StartGameCallSomeone(callingType, receiverImId, callingInviteInfo.getRoomId());
                         DLRTCAudioManager.Companion.getInstance().enableAGC(true);
                         DLRTCAudioManager.Companion.getInstance().enableAEC(true);
@@ -467,6 +481,10 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
         public SingleLiveEvent<Map<String, Object>> sendUserGiftAnim = new SingleLiveEvent<>();
         //接收礼物效果
         public SingleLiveEvent<GiftEntity> acceptUserGift = new SingleLiveEvent<>();
+        //通话中挂断电话。处理返回通话中逻辑
+        public SingleLiveEvent<Void> callChatFinish = new SingleLiveEvent<>();
+        //刷新收益
+        public SingleLiveEvent<Void> refreshEarnings = new SingleLiveEvent<>();
     }
     //显示loading
     public void loadingShow(){
@@ -491,25 +509,8 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
             V2TIMManager.getMessageManager().removeAdvancedMsgListener(imAdvancedMsgListener);
         }
     }
-    //获取房间状态
-    public void getRoomStatus(Integer roomId) {
-        model.getRoomStatus(roomId)
-                .doOnSubscribe(this)
-                .compose(RxUtils.schedulersTransformer())
-                .compose(RxUtils.exceptionTransformer())
-                .doOnSubscribe(disposable -> showHUD())
-                .subscribe(new BaseObserver<BaseDataResponse<CallingStatusEntity>>() {
-                    @Override
-                    public void onSuccess(BaseDataResponse<CallingStatusEntity> response) {
-                        CallingStatusEntity data = response.getData();
-                        Integer roomStatus = data.getRoomStatus();
-                        LogUtils.i("onSuccess: " + roomStatus);
-                        if (roomStatus != null && roomStatus != 101) {
-                            callRejectClick.execute();
-                        }
-                    }
-                });
-    }
+
+
     //发送礼物
     public void sendUserGift(Dialog dialog, GiftBagEntity.GiftEntity giftEntity, Integer to_user_id, Integer amount) {
         HashMap<String, Integer> map = new HashMap<>();
@@ -543,6 +544,26 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
                     }
                 });
     }
+
+    //发送心跳包
+    public void callingKeepAlive(Integer roomId,String roomIdStr){
+        Map<String,Object> mapData = new HashMap<>();
+        mapData.put("roomId",roomId);
+        mapData.put("roomIdStr",roomIdStr);
+        model.callingKeepAlive(ApiUitl.getBody(GsonUtils.toJson(mapData)))
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .subscribe(new BaseObserver<BaseResponse>() {
+                    @Override
+                    public void onSuccess(BaseResponse baseResponse) {
+                    }
+
+                    @Override
+                    public void onError(RequestException e) {
+                    }
+                });
+    }
     //IM消息监听
     private class IMAdvancedMsgListener extends V2TIMAdvancedMsgListener {
         @Override
@@ -558,6 +579,11 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
                             //获取moudle-pushCoinGame 推币机
                             if (CustomConvertUtils.ContainsMessageModuleKey(contentBody, CustomConstants.Message.MODULE_NAME_KEY, CustomConstants.CoinPusher.MODULE_NAME)) {
                                 V2TIMCustomManagerUtil.CoinPusherManager(contentBody);
+                            }
+                            //RTC通话中推送消息模块
+                            if(CustomConvertUtils.ContainsMessageModuleKey(contentBody, CustomConstants.Message.MODULE_NAME_KEY,CustomConstants.RtcRoomMessage.MODULE_NAME)){
+                                Map<String,Object> rtcRoomMsg = CustomConvertUtils.ConvertMassageModule(contentBody,CustomConstants.Message.MODULE_NAME_KEY,CustomConstants.RtcRoomMessage.MODULE_NAME,CustomConstants.Message.CUSTOM_CONTENT_BODY);
+                                V2TIMCustomManagerUtil.RtcRoomMessageManager(rtcRoomMsg);
                             }
                         }
                     }
@@ -611,13 +637,49 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
                         }
                     }
                 });
+        //通话活动入口
+        mRtcRoomMessageSubscription = RxBus.getDefault().toObservable(RtcRoomMessageEvent.class)
+                .subscribe(rtcRoomMessageEvent -> {
+                    RtcRoomMessageEntity rtcRoomMessageEntity = rtcRoomMessageEvent.getRtcRoomMessageEntity();
+                    if(rtcRoomMessageEntity!=null){
+                        CallGameCoinPusherEntity callGameCoinPusherEntity = rtcRoomMessageEntity.getActivityData();
+                        if(callGameCoinPusherEntity!=null){
+                            CallGameCoinPusherEntity.ActivityData activityData = callGameCoinPusherEntity.getActData();
+                            if(activityData != null && activityData.getState() != null){
+                                String state = callGameCoinPusherEntity.getActData().getState();
+                                //推币机主玩用户退出房间
+                                if(Objects.equals(state,CallGameCoinPusherEntity.leaveGame)){
+                                    gameUI.callChatFinish.call();
+                                }
+                            }
+                        }
+                    }
+
+                });
+        mCallingStatusEventSubscription = RxBus.getDefault().toObservable(CallingStatusEvent.class)
+                .subscribe(callingStatusEvent -> {
+
+                    if(callingStatusEvent!=null && callingStatusEvent.getCallingStatusEntity()!=null){
+                        CallingStatusEntity callingStatusEntity = callingStatusEvent.getCallingStatusEntity();
+                        Integer roomStatus = callingStatusEntity.getRoomStatus();
+                        if (roomStatus != null && roomStatus != 101) {
+                            callRejectClick.execute();
+                        }
+                        payeeProfits = callingStatusEntity.getPayeeProfits().doubleValue();
+                        gameUI.refreshEarnings.call();
+                    }
+                });
         //将订阅者加入管理站
         RxSubscriptions.add(coinPusherGamePlayingSubscription);
+        RxSubscriptions.add(mRtcRoomMessageSubscription);
+        RxSubscriptions.add(mCallingStatusEventSubscription);
     }
 
     @Override
     public void removeRxBus() {
         removeIMListener();
         RxSubscriptions.remove(coinPusherGamePlayingSubscription);
+        RxSubscriptions.remove(mRtcRoomMessageSubscription);
+        RxSubscriptions.remove(mCallingStatusEventSubscription);
     }
 }

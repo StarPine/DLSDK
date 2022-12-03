@@ -329,28 +329,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                     Toast.makeText(mActivity, R.string.playfun_chat_detail_blocked, Toast.LENGTH_SHORT).show();
                     return;
                 }
-                new RxPermissions(mActivity)
-                        .request(Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA)
-                        .subscribe(granted -> {
-                            if (granted) {
-                                AppContext.instance().logEvent(AppsFlyerEvent.im_video_call);
-                                viewModel.getCallingInvitedInfo(2, getUserIdIM(), mChatInfo.getId());
-                            } else {
-                                TraceDialog.getInstance(mActivity)
-                                        .setCannelOnclick(dialog -> {
-
-                                        })
-                                        .setConfirmOnlick(dialog -> new RxPermissions(mActivity)
-                                                .request(Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA)
-                                                .subscribe(granted1 -> {
-                                                    if (granted1) {
-                                                        AppContext.instance().logEvent(AppsFlyerEvent.im_video_call);
-                                                        viewModel.getCallingInvitedInfo(2, getUserIdIM(), mChatInfo.getId());
-                                                    }
-                                                }))
-                                        .AlertCallAudioPermissions().show();
-                            }
-                        });
+                launcherPermissionArray.launch(new String[]{Manifest.permission.RECORD_AUDIO,Manifest.permission.CAMERA});
             }
         });
         viewModel.uc.sendDialogViewEvent.observe(this, event -> {

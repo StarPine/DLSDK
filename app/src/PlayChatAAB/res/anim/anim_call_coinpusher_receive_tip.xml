@@ -3,10 +3,10 @@
     android:duration="1000"
     android:fillAfter="true">
     <translate
-        android:fromXDelta="0%p"
-        android:fromYDelta="0%p"
+        android:fromXDelta="0%"
+        android:fromYDelta="0%"
         android:toXDelta="5%p"
-        android:toYDelta="-143%p" />
+        android:toYDelta="-159%p" />
     <scale
         android:fromXScale="1"
         android:fromYScale="1"

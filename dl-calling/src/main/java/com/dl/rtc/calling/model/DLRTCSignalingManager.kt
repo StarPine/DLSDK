@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder
 import com.tencent.imsdk.v2.*
 import java.util.*
 
+
 /**
  *Author: 彭石林
  *Time: 2022/11/4 13:02
@@ -53,10 +54,13 @@ object DLRTCSignalingManager {
             })
     }
 
+
+
     /**
      * 发送C2C消息
      */
-    fun sendC2CMessage(v2TIMMessage : V2TIMMessage,receiverUserID: String){
+    fun sendC2CMessage(custom : String, receiverUserID: String){
+        val v2TIMMessage = V2TIMManager.getMessageManager().createCustomMessage(custom.toByteArray())
         V2TIMManager.getMessageManager().sendMessage(v2TIMMessage, receiverUserID, null, V2TIMMessage.V2TIM_PRIORITY_DEFAULT, false, null, object : V2TIMSendCallback<V2TIMMessage?> {
                 override fun onProgress(progress: Int) {}
                 override fun onError(errorCode: Int, errorMsg: String) {

@@ -225,7 +225,7 @@ public class MPDeviceUtils {
             }
             query.close();
             return str;
-        } catch (NoClassDefFoundError | NullPointerException unused) {
+        } catch (Exception unused) {
             return str;
         }
     }

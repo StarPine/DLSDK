@@ -10,20 +10,21 @@ import com.dl.rtc.calling.DLRTCCallService
 import com.dl.rtc.calling.R
 import com.dl.rtc.calling.base.DLRTCCalling
 import com.dl.rtc.calling.base.impl.DLRTCInternalListenerManager
-import com.dl.rtc.calling.model.DLRTCCallingConstants
-import com.dl.rtc.calling.model.DLRTCDataMessageType
-import com.dl.rtc.calling.model.DLRTCSignalingManager
-import com.dl.rtc.calling.model.DLRTCStartModel
+import com.dl.rtc.calling.model.*
 import com.dl.rtc.calling.model.bean.DLRTCSignallingData
 import com.dl.rtc.calling.util.MediaPlayHelper
 import com.google.gson.GsonBuilder
 import com.tencent.imsdk.v2.V2TIMSimpleMsgListener
 import com.tencent.imsdk.v2.V2TIMUserInfo
 import com.tencent.qcloud.tuicore.TUILogin
+import com.tencent.qcloud.tuicore.custom.CustomConstants
 import com.tencent.trtc.TRTCCloudDef.TRTCQuality
 import com.tencent.trtc.TRTCCloudDef.TRTCVolumeInfo
 import com.tencent.trtc.TRTCCloudListener
 import me.goldze.mvvmhabit.base.AppManager
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 /**
@@ -105,13 +106,14 @@ class DLRTCStartShowUIManager : DLRTCStartManagerDelegate, V2TIMSimpleMsgListene
             override fun callback(_success: Boolean, _errorCode: Int, _errorMsg: String?) {
                 inviteUserCall = _success
                 dlrtcStartUiClosuer.callback(_success, _errorCode, _errorMsg)
+                sendC2CMessage(inviteUser,DLRTCDataMessageType.invite, inviteType.name)
             }
         })
     }
     //接听电话
     fun inviteUserAccept(){
         lastRtcModel?.apply {
-            DLRTCStartManager.instance.inviteUserAccept(inviteId,"",object : DLRTCModuleClosuer{
+            DLRTCStartManager.instance.inviteUserAccept(DLRTCStartManager.instance.inviteId,"",object : DLRTCModuleClosuer{
                 override fun callback(_success: Boolean, _errorCode: Int, _errorMsg: String?) {
                    MPTimber.tag(TAG_LOG).e("inviteUserAccept 接听电话 ： $_success $_errorCode $_errorMsg")
                     if(rtcInviteType == DLRTCDataMessageType.DLInviteRTCType.dl_rtc_audio.name){
@@ -120,6 +122,7 @@ class DLRTCStartShowUIManager : DLRTCStartManagerDelegate, V2TIMSimpleMsgListene
                         DLRTCVideoManager.instance.enterRTCRoom(rtcInviteRoomId)
                     }
                     DLRTCStartManager.instance.mTRTCCloud?.setListener(mTRTCCloudListener)
+                    sendC2CMessage(inviteUserId,DLRTCDataMessageType.accept, rtcInviteType)
                 }
 
             })
@@ -131,6 +134,7 @@ class DLRTCStartShowUIManager : DLRTCStartManagerDelegate, V2TIMSimpleMsgListene
             DLRTCStartManager.instance.inviteUserCanceled(DLRTCStartManager.instance.inviteId,object : DLRTCModuleClosuer{
                 override fun callback(_success: Boolean, _errorCode: Int, _errorMsg: String?) {
                     MPTimber.tag(TAG_LOG).e("inviteUserCanceled 取消电话 ： $_success $_errorCode $_errorMsg")
+                    sendC2CMessage(DLRTCStartManager.instance.acceptUserId,DLRTCDataMessageType.cancel, DLRTCStartManager.instance.inviteTypeMsg)
                     exitRTCRoom()
                     DLRTCStartManager.instance.RTCRoomExitRoom()
                 }
@@ -142,6 +146,11 @@ class DLRTCStartShowUIManager : DLRTCStartManagerDelegate, V2TIMSimpleMsgListene
         DLRTCStartManager.instance.inviteUserReject(DLRTCStartManager.instance.inviteId,"",object : DLRTCModuleClosuer{
             override fun callback(_success: Boolean, _errorCode: Int, _errorMsg: String?) {
                 MPTimber.tag(TAG_LOG).e("inviteUserReject 拒绝当前邀请 ： $_success $_errorCode $_errorMsg")
+                if(receiveUserCall){
+                    sendC2CMessage(DLRTCStartManager.instance.inviteUserId,DLRTCDataMessageType.reject, DLRTCStartManager.instance.inviteTypeMsg)
+                }else{
+                    sendC2CMessage(DLRTCStartManager.instance.acceptUserId,DLRTCDataMessageType.reject, DLRTCStartManager.instance.inviteTypeMsg)
+                }
                 exitRTCRoom()
                 DLRTCStartManager.instance.RTCRoomExitRoom()
             }
@@ -358,28 +367,49 @@ class DLRTCStartShowUIManager : DLRTCStartManagerDelegate, V2TIMSimpleMsgListene
         override fun onNetworkQuality(quality: TRTCQuality, arrayList: ArrayList<TRTCQuality?>?) {
             DLRTCInternalListenerManager.instance.onNetworkQuality(quality, arrayList)
         }
+
+        override fun onFirstVideoFrame(userId: String?, streamType: Int, width: Int, height: Int) {
+            MPTimber.tag(TAG_LOG).d("onFirstVideoFrame userId : $userId , streamType : $streamType")
+            DLRTCInternalListenerManager.instance.onFirstVideoFrame(userId, streamType, width, height)
+        }
+
+        override fun onFirstAudioFrame(userId: String?) {
+            MPTimber.tag(TAG_LOG).d("onFirstAudioFrame userId : $userId ")
+            DLRTCInternalListenerManager.instance.onFirstAudioFrame(userId)
+        }
+
+        override fun onRemoteVideoStatusUpdated(userId: String?, streamType: Int, status: Int, reason: Int, extraInfo: Bundle?) {
+            MPTimber.tag(TAG_LOG).d("onRemoteVideoStatusUpdated userId : $userId , streamType : $streamType , status : $status , reason : $reason")
+            DLRTCInternalListenerManager.instance.onRemoteVideoStatusUpdated(userId, streamType, status, reason, extraInfo)
+        }
+
+        override fun onRemoteAudioStatusUpdated(userId: String?, status: Int, reason: Int, extraInfo: Bundle?) {
+            MPTimber.tag(TAG_LOG).d("onRemoteAudioStatusUpdated userId : $userId , status : $status , reason : $reason")
+            DLRTCInternalListenerManager.instance.onRemoteAudioStatusUpdated(userId, status, reason, extraInfo)
+        }
     }
 
-    fun sendC2CCustomMessage(acceptUserId : String, inviteeId : String, invitee : String, action : Int){
-        val callDataInfo = DLRTCSignallingData.DataInfo()
-        callDataInfo.cmd = "sync_info"
-        callDataInfo.userIDs  = listOf(acceptUserId);
-
-        val signallingData = createSignallingData()
-        signallingData.data = (callDataInfo)
-        signallingData.callAction = (action)
-        signallingData.callId = inviteeId
-        signallingData.user = (invitee)
+    fun sendC2CMessage(receiveUserId : String, action : String, inviteType : String){
+        val signallingData = buildDLRTCTempMessage(CustomConstants.CallingMessage.MODULE_NAME, CustomConstants.CallingMessage.TYPE_CALLING_HINT,action,inviteType)
         val gsonBuilder = GsonBuilder()
         val dataStr = gsonBuilder.create().toJson(signallingData)
-        DLRTCSignalingManager.sendC2CCustomMessage(dataStr,invitee);
+        DLRTCSignalingManager.sendC2CMessage(dataStr,receiveUserId)
     }
-    private fun createSignallingData(): DLRTCSignallingData {
-        val signallingData = DLRTCSignallingData()
-        signallingData.version = 4
-        signallingData.businessID = "av_call"
-        signallingData.platform = "Android"
-        return signallingData
+
+    private fun buildDLRTCTempMessage(msgModuleName : String, customMsgType : String,action: String, inviteType : String, isHideUI : Boolean =false) : DLRTCTempMessage {
+        val dLRTCTempMessage = DLRTCTempMessage()
+        val moduleMessage = DLRTCTempMessage.MsgModuleInfo()
+        moduleMessage.msgModuleName = msgModuleName
+        moduleMessage.contentBody = DLRTCTempMessage.MsgBodyInfo().also{
+            it.customMsgType = customMsgType
+            it.customMsgBody = Hashtable<String, Any>().apply {
+                put("action",action)
+                put("inviteType",inviteType)
+            }
+            it.isHideUI = isHideUI
+        }
+        dLRTCTempMessage.setContentBody(moduleMessage)
+        return dLRTCTempMessage
     }
 }
 interface DLRTCStartUiClosuer{

@@ -1,5 +1,6 @@
 package com.dl.rtc.calling.base.impl
 
+import android.os.Bundle
 import com.dl.rtc.calling.base.DLRTCCallingDelegate
 import com.tencent.trtc.TRTCCloudDef
 import java.lang.ref.WeakReference
@@ -133,6 +134,34 @@ class DLRTCInternalListenerManager : DLRTCCallingDelegate {
         for (reference in mWeakReferenceList!!) {
             val listener: DLRTCCallingDelegate? = reference.get()
             listener?.onTryToReconnect()
+        }
+    }
+
+    override fun onFirstAudioFrame(userId: String?) {
+        for (reference in mWeakReferenceList!!) {
+            val listener: DLRTCCallingDelegate? = reference.get()
+            listener?.onFirstAudioFrame(userId)
+        }
+    }
+
+    override fun onRemoteAudioStatusUpdated(userId: String?, status: Int, reason: Int, extraInfo: Bundle?) {
+        for (reference in mWeakReferenceList!!) {
+            val listener: DLRTCCallingDelegate? = reference.get()
+            listener?.onRemoteAudioStatusUpdated(userId, status, reason, extraInfo)
+        }
+    }
+
+    override fun onFirstVideoFrame(userId: String?, streamType: Int, width: Int, height: Int) {
+        for (reference in mWeakReferenceList!!) {
+            val listener: DLRTCCallingDelegate? = reference.get()
+            listener?.onFirstVideoFrame(userId, streamType, width, height)
+        }
+    }
+
+    override fun onRemoteVideoStatusUpdated(userId: String?, streamType: Int, status: Int, reason: Int, extraInfo: Bundle?) {
+        for (reference in mWeakReferenceList!!) {
+            val listener: DLRTCCallingDelegate? = reference.get()
+            listener?.onRemoteVideoStatusUpdated(userId, streamType, status, reason, extraInfo)
         }
     }
 }

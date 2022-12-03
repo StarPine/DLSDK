@@ -24,6 +24,7 @@ import com.dl.playfun.ui.main.MainFragment;
 import com.dl.playfun.ui.mine.webdetail.WebDetailFragment;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.viewmodel.BaseViewModel;
+import com.dl.rtc.calling.manager.DLRTCStartManager;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.util.HashMap;
@@ -92,6 +93,7 @@ public class LoginOauthViewModel extends BaseViewModel<AppRepository> {
                         // MobclickAgent.onProfileSignIn(String.valueOf(userDataEntity.getId()));
                         AppsFlyerLib.getInstance().setCustomerUserId(String.valueOf(authLoginUserEntity.getId()));
                         AppContext.instance().mFirebaseAnalytics.setUserId(String.valueOf(authLoginUserEntity.getId()));
+                        DLRTCStartManager.Companion.getInstance().setLoginSuccessUser(authLoginUserEntity.getImUserId());
                         try {
                             //添加崩溃人员id
                             FirebaseCrashlytics.getInstance().setUserId(String.valueOf(authLoginUserEntity.getId()));
