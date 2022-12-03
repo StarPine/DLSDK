@@ -7,10 +7,12 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.JavascriptInterface;
@@ -37,8 +39,11 @@ import com.dl.playfun.app.AppViewModelFactory;
 import com.dl.playfun.app.BillingClientLifecycle;
 import com.dl.playfun.databinding.FragmentInviteWebDetailBinding;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
+import com.dl.playfun.ui.webview.BrowserView;
 import com.dl.playfun.utils.SoftKeyBoardListener;
 import com.dl.playfun.utils.StringUtil;
+import com.dl.playfun.widget.action.StatusAction;
+import com.dl.playfun.widget.action.StatusLayout;
 import com.dl.playfun.widget.dialog.MMAlertDialog;
 
 import java.util.ArrayList;
@@ -53,7 +58,7 @@ import me.goldze.mvvmhabit.utils.ToastUtils;
  *
  * @author wulei
  */
-public class InviteWebDetailFragment extends BaseToolbarFragment<FragmentInviteWebDetailBinding, InviteWebDetailViewModel> {
+public class InviteWebDetailFragment extends BaseToolbarFragment<FragmentInviteWebDetailBinding, InviteWebDetailViewModel> implements StatusAction {
 
     public static final String ARG_WEB_URL = "arg_web_url";
     public static final String ARG_USER_ID = "arg_user_id";
@@ -168,6 +173,7 @@ public class InviteWebDetailFragment extends BaseToolbarFragment<FragmentInviteW
     public void initData() {
         super.initData();
         this.billingClientLifecycle = ((AppContext)mActivity.getApplication()).getBillingClientLifecycle();
+        binding.webView.setLifecycleOwner(this);
         WebSettings settings = binding.webView.getSettings();
 //        settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         settings.setJavaScriptEnabled(true);
@@ -175,8 +181,14 @@ public class InviteWebDetailFragment extends BaseToolbarFragment<FragmentInviteW
         settings.setLoadWithOverviewMode(true);
 
         //如果不设置WebViewClient，请求会跳转系统浏览器
-        binding.webView.setWebViewClient(new MyWebViewClient());
-        binding.webView.setWebChromeClient(new WebChromeClient());
+        binding.webView.setBrowserViewClient(new MyWebViewClient());
+        binding.webView.setBrowserChromeClient(new BrowserView.BrowserChromeClient(binding.webView) {
+
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                binding.pbBrowserProgress.setProgress(newProgress);
+            }
+        });
         binding.webView.addJavascriptInterface(new ShareJavaScriptInterface(mActivity), "Native");
     }
 
@@ -184,8 +196,8 @@ public class InviteWebDetailFragment extends BaseToolbarFragment<FragmentInviteW
     public void onEnterAnimationEnd(Bundle savedInstanceState) {
         super.onEnterAnimationEnd(savedInstanceState);
         if (url != null) {
+            showLoading();
             binding.webView.loadUrl(url);
-
         }
     }
 
@@ -199,10 +211,42 @@ public class InviteWebDetailFragment extends BaseToolbarFragment<FragmentInviteW
         billingClientLifecycle.querySkuDetailsLaunchBillingFlow(params,mActivity,viewModel.orderNumber);
     }
 
-    private class MyWebViewClient extends WebViewClient {
+    @Override
+    public StatusLayout getStatusLayout() {
+        return binding.hlBrowserHint;
+    }
+
+    void reload() {
+        binding.webView.reload();
+    }
+
+    private class MyWebViewClient extends BrowserView.BrowserViewClient {
+
+        /**
+         * 网页加载错误时回调，这个方法会在 onPageFinished 之前调用
+         */
         @Override
-        public void onPageFinished(WebView webView, String url) {
-            webView.loadUrl("javascript:" + url);
+        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+            // 这里为什么要用延迟呢？因为加载出错之后会先调用 onReceivedError 再调用 onPageFinished
+            post(() -> showError(v -> reload()));
+        }
+
+        /**
+         * 开始加载网页
+         */
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            binding.pbBrowserProgress.setVisibility(View.VISIBLE);
+        }
+
+        /**
+         * 完成加载网页
+         */
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            binding.pbBrowserProgress.setVisibility(View.GONE);
+            showComplete();
+            view.loadUrl("javascript:" + url);
         }
     }
 

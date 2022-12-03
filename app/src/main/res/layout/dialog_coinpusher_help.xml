@@ -38,14 +38,35 @@
                 android:textStyle="bold"
                 android:textColor="#43435E"
                 android:textSize="18sp" />
-            <WebView
-                android:layout_marginTop="10dp"
-                android:id="@+id/web_view"
-                android:layout_below="@+id/tv_title"
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fillViewport="true"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/tv_title"
+                android:orientation="vertical">
+
+                <ProgressBar
+                    android:id="@+id/pb_browser_progress"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:progressDrawable="@drawable/progress_gradient_bg"
+                    android:visibility="gone" />
+
+                <com.dl.playfun.widget.action.StatusLayout
+                    android:id="@+id/hl_browser_hint"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.dl.playfun.ui.webview.BrowserView
+                        android:id="@+id/web_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:fillViewport="true"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+                </com.dl.playfun.widget.action.StatusLayout>
+            </LinearLayout>
         </RelativeLayout>
     </FrameLayout>
 </layout>

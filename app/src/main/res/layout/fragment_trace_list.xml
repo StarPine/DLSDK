@@ -37,6 +37,7 @@
                 binding:lineManager="@{LineManagers.horizontal(1,104,0)}" />
 
             <include
+                android:id="@+id/empty"
                 layout="@layout/trace_empty_view"
                 android:visibility="gone"
                 app:stateModel="@{viewModel.stateModel}" />
