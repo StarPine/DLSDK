@@ -55,6 +55,7 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
     public SingleLiveEvent<Void> backViewEvent = new SingleLiveEvent<>();
     public SingleLiveEvent<Integer> startAudioActivity = new SingleLiveEvent<>();
 
+    //接听电话点击
     public View.OnClickListener acceptOnClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -63,6 +64,8 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
                 return;
             }
             unListen();
+            //有人进入房间回调
+            DLRTCStartShowUIManager.Companion.getInstance().inviteUserAccept();
             startAudioActivity.postValue(CallingRoomId);
         }
     };

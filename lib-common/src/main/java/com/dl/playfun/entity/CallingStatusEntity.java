@@ -1,10 +1,12 @@
 package com.dl.playfun.entity;
 
+
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * @Name： PlayChat_Google
- * @Description：
+ * @Description：通话提示消息
  * @Author： liaosf
  * @Date： 2022/4/20 11:13
  * 修改备注：
@@ -20,7 +22,8 @@ public class CallingStatusEntity {
      * payerCoinBalance : 12345
      * payeeProfits : 269.06
      */
-
+    //“profitTips”为收益提示，”balanceNotEnough”为余额不足提示
+    private String type;
     private Integer roomId;
     private Integer roomStatus;//房间状态，-1已取消，0未收到创建回调，101已创建房间，102已解散房间
     private Integer totalMinutes;//当前通话最多可通话分钟数
@@ -39,6 +42,28 @@ public class CallingStatusEntity {
         this.frozenCoins = frozenCoins;
         this.payerCoinBalance = payerCoinBalance;
         this.payeeProfits = payeeProfits;
+    }
+
+    public boolean isProfitTips(){
+        if(type == null || type.trim().isEmpty()){
+            return  false;
+        }
+        return Objects.equals(type, "profitTips");
+    }
+
+    public boolean isBalanceNotEnough(){
+        if(type == null || type.trim().isEmpty()){
+            return  false;
+        }
+        return Objects.equals(type, "balanceNotEnough");
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public Integer getRoomId() {

@@ -267,8 +267,7 @@ class DLRTCStartShowUIManager : DLRTCStartManagerDelegate, V2TIMSimpleMsgListene
                 intent.putExtra(DLRTCCallingConstants.DLRTCAcceptUserID, dLRTCStartModel.acceptUserId)
                 intent.putExtra(DLRTCCallingConstants.DLRTCInviteSelf,false)
                 intent.putExtra(DLRTCCallingConstants.RTCInviteRoomID,dLRTCStartModel.rtcInviteRoomId)
-                intent.putExtra("roomId", dLRTCStartModel.rtcInviteRoomId)
-                intent.putExtra("inviteExtJson",dLRTCStartModel.inviteExtJson)
+                intent.putExtra(DLRTCCallingConstants.inviteExtJson,dLRTCStartModel.inviteExtJson)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 mContext!!.startActivity(intent)
         }else{

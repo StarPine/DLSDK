@@ -100,6 +100,7 @@ import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuicore.Status;
+import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.custom.CustomConstants;
 import com.tencent.qcloud.tuicore.custom.entity.MediaGalleryEditEntity;
 import com.tencent.qcloud.tuicore.custom.entity.SystemTipsEntity;
@@ -1569,7 +1570,7 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
 
     //获取当前用户的IM id
     public String getUserIdIM() {
-        return ConfigManager.getInstance().getUserImID();
+        return TUILogin.getLoginUser();
     }
 
     public synchronized void removeLocalMessage(LocalMessageIMEntity localMessageIMEntity, String eventId, boolean updateView) {

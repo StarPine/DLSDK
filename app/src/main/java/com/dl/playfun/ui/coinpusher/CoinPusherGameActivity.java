@@ -48,6 +48,7 @@ import com.dl.playfun.entity.CallUserInfoEntity;
 import com.dl.playfun.entity.CoinPusherBalanceDataEntity;
 import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.entity.GoodsEntity;
+import com.dl.playfun.entity.RtcRoomMessageEntity;
 import com.dl.playfun.kl.CallChatingConstant;
 import com.dl.playfun.kl.view.AudioCallChatingActivity;
 import com.dl.playfun.kl.view.CallingVideoActivity;
@@ -170,6 +171,8 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
     //是否付费方
     public boolean _isPayee = false;
     public int _mTimeCount = 0;
+    //上个推币机活动入口
+    public RtcRoomMessageEntity _rtcRoomMessageEntity;
 
     private SVGAImageView giftEffects;
     @Override
@@ -235,7 +238,7 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
            _heartBeatInterval = intent.getIntExtra("heartBeatInterval",10);
            _isPayee = intent.getBooleanExtra("isPayee",false);
            _mTimeCount = intent.getIntExtra("mTimeCount",0);
-
+           _rtcRoomMessageEntity = (RtcRoomMessageEntity)intent.getSerializableExtra("RtcRoomMessageEntity");
        }
         initListener();
     }
@@ -783,6 +786,9 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
                 intent.putExtra("timeCount", viewModel.mTimeCount);
                 intent.putExtra("payeeProfits",viewModel.payeeProfits);
                 intent.putExtra("isPayee",_isPayee);
+                if(_rtcRoomMessageEntity!=null){
+                    intent.putExtra("RtcRoomMessageEntity",_rtcRoomMessageEntity);
+                }
                 getContext().startActivity(intent);
             }
         }

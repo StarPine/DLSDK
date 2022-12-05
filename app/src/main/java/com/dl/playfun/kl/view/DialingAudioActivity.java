@@ -192,8 +192,6 @@ public class DialingAudioActivity extends BaseActivity<ActivityCallWaiting2Bindi
             //关闭当前页面
             finish();
             overridePendingTransition(R.anim.anim_zoom_in, R.anim.anim_stay);
-            //有人进入房间回调
-            DLRTCStartShowUIManager.Companion.getInstance().inviteUserAccept();
             Intent intent = new Intent(DialingAudioActivity.this,AudioCallChatingActivity.class);
             intent.putExtra(DLRTCCallingConstants.DLRTCInviteUserID, inviteUserID);
             intent.putExtra(DLRTCCallingConstants.DLRTCAcceptUserID, acceptUserID);

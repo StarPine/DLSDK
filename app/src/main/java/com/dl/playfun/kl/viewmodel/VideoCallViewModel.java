@@ -56,6 +56,7 @@ import com.tencent.imsdk.v2.V2TIMCustomElem;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMMessageReceipt;
+import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.custom.CustomConstants;
 import com.tencent.qcloud.tuicore.custom.CustomConvertUtils;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
@@ -489,7 +490,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
     //查询房间信息
     public void callingInviteUserApply(CallUserRoomInfoEntity callingInviteInfo){
         if(callingInviteInfo!=null){
-            if(!callingInviteInfo.getPayerImId().equals(ConfigManager.getInstance().getUserImID())){
+            if(!callingInviteInfo.getPayerImId().equals(TUILogin.getLoginUser())){
                 //付费方
                 isPayee = true;
             }
@@ -623,7 +624,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
                 .subscribe(rtcRoomMessageEvent -> {
                     Log.e("接受到信令活动入口",rtcRoomMessageEvent.toString());
                     RtcRoomMessageEntity rtcRoomMessageEntity = rtcRoomMessageEvent.getRtcRoomMessageEntity();
-                    if(Objects.equals(rtcRoomMessageEntity.getActivityData().getPlayUserId(),ConfigManager.getInstance().getUserImID())){
+                    if(Objects.equals(rtcRoomMessageEntity.getActivityData().getPlayUserId(),TUILogin.getLoginUser())){
                         rtcRoomMessageField.set(rtcRoomMessageEvent);
                         coinPusherRoomShow.set(true);
                     }else{

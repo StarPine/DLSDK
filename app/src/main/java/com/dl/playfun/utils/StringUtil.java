@@ -9,6 +9,7 @@ import com.dl.playfun.entity.ConfigItemEntity;
 import com.dl.playfun.entity.OccupationConfigItemEntity;
 import com.dl.playfun.manager.ConfigManager;
 import com.google.gson.Gson;
+import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 
 import java.text.SimpleDateFormat;
@@ -256,7 +257,7 @@ public class StringUtil {
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         String format = formatter.format(date);
-        String userId = ConfigManager.getInstance().getUserImID();
+        String userId = TUILogin.getLoginUser();
         return key + format + userId;
     }
 

@@ -69,6 +69,7 @@ import com.tencent.imsdk.v2.V2TIMCustomElem;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMMessageReceipt;
+import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.custom.CustomConstants;
 import com.tencent.qcloud.tuicore.custom.CustomConvertUtils;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
@@ -108,16 +109,12 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     public String toUserId;
     //心跳包发送间隔
     public int heartBeatInterval = 10;
-    //通话数据加载完成
-    public boolean callInfoLoaded = false;
-    //男生钻石总余额
-    public int maleBalanceMoney = 0;
-    //男生总分钟数
-    public int totalMinutes = 0;
     //男生剩余聊天分钟数
     public int totalMinutesRemaining = 0;
     //聊天收益
     public double payeeProfits;
+    //当前通话状态信息
+    public CallingStatusEntity _callingStatusEntity;
     //断网总时间
     int disconnectTime = 0;
 
@@ -133,10 +130,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     public boolean isPayee = false;
     //是否已追踪0未追踪1已追踪
     public Boolean collected;
-    //余额不足临界提示分钟数
-    public int balanceNotEnoughTipsMinutes;
     //余额不足提示标记
-    public boolean flagMoneyNotWorth = false;
     public ObservableField<Boolean> isShowCountdown = new ObservableField(false);
     //防录屏提示开关
     public ObservableField<Boolean> tipSwitch = new ObservableField(true);
@@ -217,7 +211,6 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
 
     //订阅者
     private Disposable mSubscription;
-    private Disposable mCallingToGameSubscription;
     private Disposable mRtcRoomMessageSubscription;
     private Disposable mCallingStatusEventSubscription;
     private long mSelfLowQualityTime;
@@ -297,8 +290,8 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     //查询房间信息
     public void callingInviteUserApply(CallUserRoomInfoEntity callingInviteInfo){
         if(callingInviteInfo!=null){
-            if(!callingInviteInfo.getPayerImId().equals(ConfigManager.getInstance().getUserImID())){
-                //付费方
+            if(!callingInviteInfo.getPayerImId().equals(TUILogin.getLoginUser())){
+                //收益方
                 isPayee = true;
             }
             //心跳间隔大于0秒才进行赋值。否则默认10秒
@@ -378,7 +371,6 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
         //通话活动入口
         mRtcRoomMessageSubscription = RxBus.getDefault().toObservable(RtcRoomMessageEvent.class)
                 .subscribe(rtcRoomMessageEvent -> {
-                    Log.e("接受到信令活动入口",rtcRoomMessageEvent.toString());
                     RtcRoomMessageEntity rtcRoomMessageEntity = rtcRoomMessageEvent.getRtcRoomMessageEntity();
                     if(Objects.equals(rtcRoomMessageEntity.getActivityData().getPlayUserId(),currentUserInfoField.get().getImUserId())){
                         rtcRoomMessageField.set(rtcRoomMessageEvent);
@@ -405,22 +397,22 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                 .subscribe(callingStatusEvent -> {
 
                     if(callingStatusEvent!=null && callingStatusEvent.getCallingStatusEntity()!=null){
-                        CallingStatusEntity callingStatusEntity = callingStatusEvent.getCallingStatusEntity();
-                        Integer roomStatus = callingStatusEntity.getRoomStatus();
+                        _callingStatusEntity = callingStatusEvent.getCallingStatusEntity();
+                        Integer roomStatus = _callingStatusEntity.getRoomStatus();
                         if (roomStatus != null && roomStatus != 101) {
                             hangup();
                         }
-                        maleBalanceMoney = callingStatusEntity.getPayerCoinBalance();
-                        payeeProfits = callingStatusEntity.getPayeeProfits().doubleValue();
-                        totalMinutes = callingStatusEntity.getTotalMinutes() * 60;
-                        totalMinutesRemaining = totalMinutes - TimeCount;
-                        callInfoLoaded = true;
+                        payeeProfits = _callingStatusEntity.getPayeeProfits().doubleValue();
+                        int totalMinutes = _callingStatusEntity.getTotalMinutes();//当前通话最多可通话分钟数
+                        //剩余通话分钟
+                        totalMinutesRemaining = (totalMinutes * 60) - TimeCount;
+                        uc.refreshEarnings.call();
                     }
                 });
         //将订阅者加入管理站
         RxSubscriptions.add(mSubscription);
-        RxSubscriptions.add(mCallingToGameSubscription);
         RxSubscriptions.add(mRtcRoomMessageSubscription);
+        RxSubscriptions.add(mCallingStatusEventSubscription);
     }
 
     //移除RxBus
@@ -429,8 +421,8 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
         super.removeRxBus();
         //将订阅者从管理站中移除
         RxSubscriptions.remove(mSubscription);
-        RxSubscriptions.remove(mCallingToGameSubscription);
         RxSubscriptions.remove(mRtcRoomMessageSubscription);
+        RxSubscriptions.remove(mCallingStatusEventSubscription);
         destroyIMListener();
     }
 
@@ -652,23 +644,6 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                                         showGiftBarrage(giftEntity);
                                         //礼物收益提示
                                         giftIncome(giftEntity);
-                                    }else if (map_data != null && map_data.get("type") != null && map_data.get("type").equals("message_countdown")) {//对方余额不足
-                                        if (isPayee && isShowTipMoney) {
-                                            String data = (String) map_data.get("data");
-                                            Map<String, Object> dataMapCountdown = new Gson().fromJson(data, Map.class);
-                                            String isShow = (String) dataMapCountdown.get("is_show");
-                                            if (isShow != null && isShow.equals("1")) {
-                                                isShowCountdown.set(true);
-                                                girlEarningsField.set(true);
-                                                String girlEarningsTex = StringUtils.getString(R.string.playfun_insufficient_balance_of_counterparty);
-                                                SpannableString stringBuilder = new SpannableString(girlEarningsTex);
-                                                stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, girlEarningsTex.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                                girlEarningsText.set(stringBuilder);
-
-                                            }else if (isShow != null && isShow.equals("0")){
-                                                isShowCountdown.set(false);
-                                            }
-                                        }
                                     }
                                 }
                             }

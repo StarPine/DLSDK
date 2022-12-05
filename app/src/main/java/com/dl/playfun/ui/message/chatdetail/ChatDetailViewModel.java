@@ -528,7 +528,7 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                         if (callUserRoomInfoEntity != null) {
                             com.dl.playfun.kl.Utils.inviteUserRTC(toIMUserId,
                                     callingType==1 ? DLRTCDataMessageType.DLInviteRTCType.dl_rtc_audio : DLRTCDataMessageType.DLInviteRTCType.dl_rtc_video,
-                                    callUserRoomInfoEntity.getRoomId(),callUserRoomInfoEntity.getHeartBeatInterval(),true,GsonUtils.toJson(callUserRoomInfoEntity));
+                                    callUserRoomInfoEntity.getRoomId(),callUserRoomInfoEntity.getInviteTimeout(),true,GsonUtils.toJson(callUserRoomInfoEntity));
                         }
                     }
                     @Override

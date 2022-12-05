@@ -53,8 +53,10 @@ import com.dl.playfun.entity.CoinPusherDataInfoEntity;
 import com.dl.playfun.entity.CrystalDetailsConfigEntity;
 import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.entity.GoodsEntity;
+import com.dl.playfun.entity.RtcRoomMessageEntity;
 import com.dl.playfun.entity.ShowFloatWindowEntity;
 import com.dl.playfun.event.CallChatingHangupEvent;
+import com.dl.playfun.event.RtcRoomMessageEvent;
 import com.dl.playfun.kl.CallChatingConstant;
 import com.dl.playfun.kl.viewmodel.AudioCallChatingItemViewModel;
 import com.dl.playfun.kl.viewmodel.AudioCallChatingViewModel;
@@ -131,6 +133,8 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
     private CallUserInfoEntity _callUserInfoEntity;
     //当前房间信息
     private CallUserRoomInfoEntity _callUserRoomInfoEntity;
+    //上个推币机活动入口
+    public RtcRoomMessageEntity _rtcRoomMessageEntity;
 
     private double _payeeProfits = 0;
     private boolean _isPayee = false;
@@ -211,8 +215,9 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         barrageInfo = intent.getStringExtra("audioCallingBarrage");
         _callUserInfoEntity = (CallUserInfoEntity)intent.getSerializableExtra("CallingInviteInfoField");
         _callUserRoomInfoEntity = (CallUserRoomInfoEntity)intent.getSerializableExtra("CallUserRoomInfoEntity");
-        intent.putExtra("payeeProfits",viewModel.payeeProfits);
-        intent.putExtra("isPayee",_isPayee);
+        _payeeProfits = intent.getDoubleExtra("payeeProfits",0);
+        _isPayee = intent.getBooleanExtra("isPayee",false);
+        _rtcRoomMessageEntity = (RtcRoomMessageEntity)intent.getSerializableExtra("RtcRoomMessageEntity");
     }
 
     @Override
@@ -220,16 +225,23 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         super.initData();
         hideExchangeRules();
         giftEffects = binding.giftEffects;
+        //当前act重启
         if (isRestart){
             viewModel.tipSwitch.set(false);
             viewModel.TimeCount = mTimeCount;
             TimeCallMessage();
             loadBarrageInfo();
+            if(_rtcRoomMessageEntity!=null){
+                viewModel.rtcRoomMessageField.set(new RtcRoomMessageEvent(_rtcRoomMessageEntity));
+                viewModel.coinPusherRoomShow.set(true);
+            }
         }
         viewModel.init(this);
         viewModel.roomId = roomId;
         viewModel.fromUserId = inviterImId;
         viewModel.toUserId = receiverImId;
+        viewModel.isPayee = _isPayee;
+        viewModel.payeeProfits = _payeeProfits;
         //设置对方用户信息
         viewModel.otherUserInfoField.set(_callUserInfoEntity);
         if(_callUserInfoEntity!=null){
@@ -244,7 +256,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         }else{
             viewModel.callingInviteUser(inviterImId,receiverImId);
         }
-
+        setProfitTips();
         viewModel.getSayHiList();
     }
 
@@ -520,6 +532,10 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                     intent.putExtra("payeeProfits",viewModel.payeeProfits);
                     intent.putExtra("heartBeatInterval",viewModel.heartBeatInterval);
                     intent.putExtra("isPayee",viewModel.isPayee);
+                    if(viewModel.rtcRoomMessageField.get()!=null && viewModel.rtcRoomMessageField.get().getRtcRoomMessageEntity()!=null){
+                        intent.putExtra("RtcRoomMessageEntity",viewModel.rtcRoomMessageField.get().getRtcRoomMessageEntity());
+                    }
+
                     startActivity(intent);
                     finish();
                 }
@@ -926,30 +942,35 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                 //没10秒更新一次破冰文案
                 viewModel.getSayHiList();
             }
-            if (viewModel.callInfoLoaded && viewModel.isShowTipMoney){
-                //判断是否为付费方
-                if (!viewModel.isPayee) {
-                    if (viewModel.totalMinutesRemaining <= viewModel.balanceNotEnoughTipsMinutes * 60) {
-                        viewModel.totalMinutesRemaining--;
-                        if (viewModel.totalMinutesRemaining < 0) {
-                            viewModel.hangup();
-                            return;
-                        }
-                        String minute = StringUtils.getString(R.string.playfun_minute);
-                        String textHint = (viewModel.totalMinutesRemaining / 60) + minute + (viewModel.totalMinutesRemaining % 60);
-                        String txt = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt14), textHint);
-                        viewModel.maleTextMoneyField.set(txt);
-                        if (!viewModel.flagMoneyNotWorth) {
-                            moneyNoWorthSwich(true);
-                        }
-
-                    }else{
-                        if (viewModel.flagMoneyNotWorth) {
-                            moneyNoWorthSwich(false);
+            if (viewModel.isShowTipMoney){
+                if (viewModel._callingStatusEntity!=null) {
+                        //余额不足
+                    if(viewModel._callingStatusEntity.isBalanceNotEnough()){
+                        //判断是否为付费方
+                        if (!viewModel.isPayee) {
+                            viewModel.totalMinutesRemaining = viewModel.totalMinutesRemaining <= 0 ? 60 : viewModel.totalMinutesRemaining;
+                            if(viewModel.totalMinutesRemaining <= 60){
+                                viewModel.totalMinutesRemaining--;
+                                String minute = StringUtils.getString(R.string.playfun_minute);
+                                String textHint = (viewModel.totalMinutesRemaining / 60) + minute + (viewModel.totalMinutesRemaining % 60);
+                                String txt = String.format(StringUtils.getString(R.string.playfun_call_message_deatail_girl_txt14), textHint);
+                                viewModel.maleTextMoneyField.set(txt);
+                                viewModel.maleTextLayoutSHow.set(true);
+                            }else{
+                                if (viewModel.maleTextLayoutSHow.get()) {
+                                    viewModel.maleTextLayoutSHow.set(false);
+                                }
+                            }
+                        }else{
+                            if(!viewModel.girlEarningsField.get()){
+                                viewModel.girlEarningsField.set(true);
+                            }
+                            String girlEarningsTex = StringUtils.getString(R.string.playfun_insufficient_balance_of_counterparty);
+                            SpannableString stringBuilder = new SpannableString(girlEarningsTex);
+                            stringBuilder.setSpan(new ForegroundColorSpan(ColorUtils.getColor(R.color.white)), 0, girlEarningsTex.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            viewModel.girlEarningsText.set(stringBuilder);
                         }
                     }
-                }else {
-                    setProfitTips();
                 }
             }
 
@@ -962,8 +983,8 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
      * 展示右下角收益提示
      */
     private void setProfitTips() {
-        if (Boolean.FALSE.equals(viewModel.isShowCountdown.get()) && viewModel.payeeProfits > 0) {//对方余额不足没有展示
-            if (!viewModel.girlEarningsField.get()) {
+        if(viewModel.isPayee  && viewModel.payeeProfits > 0){
+            if(!viewModel.girlEarningsField.get()){
                 viewModel.girlEarningsField.set(true);
             }
             String profit = viewModel.payeeProfits + "";
@@ -975,15 +996,6 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
             stringBuilder.setSpan(blueSpan, index, index + profit.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             viewModel.girlEarningsText.set(stringBuilder);
         }
-    }
-
-    /**
-     * 余额不足推送与显示
-     * @param isShow
-     */
-    private void moneyNoWorthSwich(boolean isShow) {
-        viewModel.flagMoneyNotWorth = isShow;
-        viewModel.maleTextLayoutSHow.set(isShow);
     }
 
     @Override

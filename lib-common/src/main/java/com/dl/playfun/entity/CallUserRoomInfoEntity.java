@@ -21,6 +21,8 @@ public class CallUserRoomInfoEntity implements Serializable {
     private BigDecimal profitPerMinutes;
     //心跳间隔秒数
     private int heartBeatInterval;
+    //拨打超时时间
+    private int inviteTimeout;
     private CustomShowMsg customShowMsg;
 
     public int getRoomId() {
@@ -69,6 +71,14 @@ public class CallUserRoomInfoEntity implements Serializable {
 
     public void setHeartBeatInterval(int heartBeatInterval) {
         this.heartBeatInterval = heartBeatInterval;
+    }
+
+    public int getInviteTimeout() {
+        return inviteTimeout;
+    }
+
+    public void setInviteTimeout(int inviteTimeout) {
+        this.inviteTimeout = inviteTimeout;
     }
 
     public CustomShowMsg getCustomShowMsg() {

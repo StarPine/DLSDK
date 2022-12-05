@@ -384,14 +384,17 @@ public class CoinPusherGameViewModel extends BaseViewModel <AppRepository> {
                     @Override
                     public void onSuccess(BaseDataResponse<CallUserRoomInfoEntity> response) {
                         CallUserRoomInfoEntity callingInviteInfo = response.getData();
-                        callUserRoomInfoEntity.set(callingInviteInfo);
-                        //主动拨打
-                        callingOnTheLine.set(true);
-                        callingState = 1;
-                        Utils.StartGameCallSomeone(callingType, receiverImId, callingInviteInfo.getRoomId());
-                        DLRTCAudioManager.Companion.getInstance().enableAGC(true);
-                        DLRTCAudioManager.Companion.getInstance().enableAEC(true);
-                        DLRTCAudioManager.Companion.getInstance().enableANS(true);
+                        if(callingInviteInfo != null){
+                            callUserRoomInfoEntity.set(callingInviteInfo);
+                            //主动拨打
+                            callingOnTheLine.set(true);
+                            callingState = 1;
+                            Utils.inviteUserRTC(receiverImId, callingType==1 ? DLRTCDataMessageType.DLInviteRTCType.dl_rtc_audio : DLRTCDataMessageType.DLInviteRTCType.dl_rtc_video,
+                                    callingInviteInfo.getRoomId(), callingInviteInfo.getInviteTimeout(),false, GsonUtils.toJson(callingInviteInfo));
+                            DLRTCAudioManager.Companion.getInstance().enableAGC(true);
+                            DLRTCAudioManager.Companion.getInstance().enableAEC(true);
+                            DLRTCAudioManager.Companion.getInstance().enableANS(true);
+                        }
                         //gameUI.acceptCallingEvent.call();
                     }
                     @Override
