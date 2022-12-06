@@ -113,8 +113,8 @@ public class WebViewDialog extends BaseDialog {
                     Purchase purchase = billingPurchasesState.getPurchase();
                     if(purchase!=null){
                         try {
-                            AppContext.instance().logEvent(AppsFlyerEvent.Successful_top_up, vipPackageItemEntity.getPrice(), purchase);
-                        } catch (Exception e) {
+                            AppContext.instance().logEvent(AppsFlyerEvent.dl_purchase, vipPackageItemEntity.getPrice(), purchase);
+                        } catch (Exception ignored) {
 
                         }
                         String packageName = purchase.getPackageName();

@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -26,56 +27,53 @@ import java.util.List;
  * Time: 2021/12/7 17:09
  * Description: This is GiftBagDetailAdapter
  */
-public class GiftBagDetailAdapter extends RecyclerView.Adapter<GiftBagDetailAdapter.ItemViewHolder>{
+public class GiftBagDetailAdapter extends RecyclerView.Adapter<GiftBagDetailAdapter.GiftItemViewHolder>{
 
     private final Context mContext;
-    private List<GiftBagEntity.giftEntity> listData = null;
+    private final List<? extends GiftBagEntity.GiftEntity> listData;
 
     private OnClickDetailListener onClickDetailListener = null;
-    private boolean isDarkShow = false;
+    private final boolean isDarkShow;
 
+    private final int layoutRes;
 
-    public GiftBagDetailAdapter(RecyclerView recyclerView, List<GiftBagEntity.giftEntity> data, boolean isDarkShow) {
-        this.mContext = recyclerView.getContext();
+    private GiftItemViewHolder selected;
+
+    public GiftBagDetailAdapter(Context context, List<? extends GiftBagEntity.GiftEntity> data, int layoutRes, boolean isDarkShow) {
+        this.mContext = context;
         this.listData = data;
+        this.layoutRes = layoutRes;
         this.isDarkShow = isDarkShow;
     }
 
     @NonNull
     @Override
-    public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_gift_bag_item_detail, parent, false);
-        return new ItemViewHolder(view);
+    public GiftItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(mContext).inflate(layoutRes, parent, false);
+        return new GiftItemViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
-        ItemViewHolder itemViewHolder = holder;
+    public void onBindViewHolder(@NonNull GiftItemViewHolder holder, int position) {
         if (listData != null && listData.size() > 0) {
-            int index = position;
-            GiftBagEntity.giftEntity itemEntity = listData.get(index);
-            itemViewHolder.title.setText(itemEntity.getName());
+            GiftBagEntity.GiftEntity itemEntity = listData.get(position);
+            holder.title.setText(itemEntity.getName());
             if (isDarkShow) {
-                itemViewHolder.title.setTextColor(Color.parseColor("#F1F2F9"));
+                holder.title.setTextColor(Color.parseColor("#F1F2F9"));
             } else {
-                itemViewHolder.title.setTextColor(Color.parseColor("#333333"));
+                holder.title.setTextColor(Color.parseColor("#333333"));
             }
-            itemViewHolder.money.setText(String.valueOf(itemEntity.getMoney()));
+            holder.money.setText(String.valueOf(itemEntity.getMoney()));
             Glide.with(TUIChatService.getAppContext()).load(StringUtil.getFullImageUrl(itemEntity.getImg()))
                     .error(R.drawable.default_avatar)
                     .placeholder(R.drawable.default_avatar)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(itemViewHolder.icon_url);
-            itemViewHolder.detail_layout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (onClickDetailListener != null) {
-                        onClickDetailListener.clickDetailCheck(index, itemEntity, itemViewHolder.detail_layout);
-                    }
-                }
-            });
+                    .into(holder.icon_url);
+            holder.detail_layout.setOnClickListener(v -> itemOnSelect(position, holder));
+            if (listData.get(position).isFirst()) {
+                itemOnSelect(position, holder);
+            }
         }
-
     }
 
     @Override
@@ -86,13 +84,29 @@ public class GiftBagDetailAdapter extends RecyclerView.Adapter<GiftBagDetailAdap
         return listData.size();
     }
 
-    public class ItemViewHolder extends RecyclerView.ViewHolder {
+    private void itemOnSelect(int position, GiftItemViewHolder holder) {
+        if (onClickDetailListener != null) {
+            cleanSelect();
+            selected = holder;
+            holder.detail_layout.setBackground(ContextCompat.getDrawable(mContext, R.drawable.purple_gift_checked));
+            onClickDetailListener.clickDetailCheck(listData.get(position));
+        }
+    }
+
+    public void cleanSelect() {
+        if (selected != null) {
+            selected.detail_layout.setBackground(null);
+            selected = null;
+        }
+    }
+
+    public static class GiftItemViewHolder extends RecyclerView.ViewHolder {
         ImageView icon_url;
         TextView title;
         TextView money;
         LinearLayout detail_layout;
 
-        public ItemViewHolder(@NonNull View itemView) {
+        public GiftItemViewHolder(@NonNull View itemView) {
             super(itemView);
             detail_layout = itemView.findViewById(R.id.detail_layout);
             icon_url = itemView.findViewById(R.id.icon_url);
@@ -101,11 +115,12 @@ public class GiftBagDetailAdapter extends RecyclerView.Adapter<GiftBagDetailAdap
         }
     }
 
-    public void setOnClickListener(OnClickDetailListener onClickListener){
+    public interface OnClickDetailListener {
+        void clickDetailCheck(GiftBagEntity.GiftEntity itemEntity);
+    }
+
+        public void setOnClickListener(OnClickDetailListener onClickListener) {
         this.onClickDetailListener = onClickListener;
     }
 
-    public interface  OnClickDetailListener{
-        void clickDetailCheck(int position,GiftBagEntity.giftEntity itemEntity,LinearLayout detail_layout);
-    }
 }

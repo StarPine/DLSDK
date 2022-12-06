@@ -15,6 +15,7 @@ import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppViewModelFactory;
+import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.BillingClientLifecycle;
 import com.dl.playfun.databinding.ActivityDiamondRechargeBinding;
 import com.dl.playfun.entity.DiamondPaySuccessEntity;
@@ -129,6 +130,13 @@ public class DiamondRechargeActivity extends BaseActivity<ActivityDiamondRecharg
                 case acknowledgePurchase:  // 用户操作购买成功 --> 商家确认操作 需要手动确定收货（消耗这笔订单并且发货（给与用户购买奖励）） 否则 到达一定时间 自动退款
                     Purchase purchase = billingPurchasesState.getPurchase();
                     if(purchase!=null){
+                        try {
+                            if(viewModel.selectedGoodsEntity.get()!=null){
+                                AppContext.instance().logEvent(AppsFlyerEvent.dl_purchase, viewModel.selectedGoodsEntity.get().getPrice(), purchase);
+                            }
+                        } catch (Exception ignored) {
+
+                        }
                         String packageName = purchase.getPackageName();
                         viewModel.paySuccessNotify(packageName, purchase.getSkus(), purchase.getPurchaseToken(), 1);
                         Log.e("BillingClientLifecycle","dialog支付购买成功："+purchase.toString());

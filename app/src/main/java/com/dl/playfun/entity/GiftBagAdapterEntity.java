@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class GiftBagAdapterEntity {
     private  int idx;
-    private List<GiftBagEntity.giftEntity> giftBagEntity;
+    private List<? extends GiftBagEntity.GiftEntity> giftBagEntity;
 
     public int getIdx() {
         return idx;
@@ -19,15 +19,15 @@ public class GiftBagAdapterEntity {
         this.idx = idx;
     }
 
-    public List<GiftBagEntity.giftEntity> getGiftBagEntity() {
+    public List<? extends GiftBagEntity.GiftEntity> getGiftBagEntity() {
         return giftBagEntity;
     }
 
-    public void setGiftBagEntity(List<GiftBagEntity.giftEntity> giftBagEntity) {
+    public void setGiftBagEntity(List<? extends GiftBagEntity.GiftEntity> giftBagEntity) {
         this.giftBagEntity = giftBagEntity;
     }
 
-    public GiftBagAdapterEntity(int idx, List<GiftBagEntity.giftEntity> giftBagEntity) {
+    public GiftBagAdapterEntity(int idx, List<? extends GiftBagEntity.GiftEntity> giftBagEntity) {
         this.idx = idx;
         this.giftBagEntity = giftBagEntity;
     }

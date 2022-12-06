@@ -279,7 +279,7 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
     });
 
     //发送礼物
-    public void sendUserGift(Dialog dialog, GiftBagEntity.giftEntity giftEntity, Integer to_user_id, Integer amount) {
+    public void sendUserGift(Dialog dialog, GiftBagEntity.GiftEntity giftEntity, Integer to_user_id, Integer amount) {
         HashMap<String, Integer> map = new HashMap<>();
         map.put("giftId", giftEntity.getId());
         map.put("toUserId", to_user_id);

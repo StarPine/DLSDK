@@ -262,6 +262,7 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
                     @Override
                     public void onSuccess(BaseDataResponse<Map<String, String>> mapBaseDataResponse) {
                         dismissHUD();
+                        ConfigManager.getInstance().getAppRepository().removeOldUserData();
                         Map<String, String> dataToken = mapBaseDataResponse.getData();
                         TokenEntity tokenEntity = new TokenEntity(dataToken.get("token"), dataToken.get("userID"), dataToken.get("userSig"), Integer.parseInt(dataToken.get("is_contract")));
                         if (mapBaseDataResponse.getData() != null && mapBaseDataResponse.getData().get("is_new_user") != null && mapBaseDataResponse.getData().get("is_new_user").equals("1")) {
@@ -307,7 +308,6 @@ public class LoginViewModel extends BaseViewModel<AppRepository>  {
                         UserDataEntity authLoginUserEntity = response.getData();
                         if(ObjectUtils.isNotEmpty(authLoginUserEntity)){
                             model.saveUserData(authLoginUserEntity);
-                            ConfigManager.getInstance().getAppRepository().removeOldUserData();
                             AppsFlyerLib.getInstance().setCustomerUserId(String.valueOf(authLoginUserEntity.getId()));
                             AppContext.instance().mFirebaseAnalytics.setUserId(String.valueOf(authLoginUserEntity.getId()));
                             try {

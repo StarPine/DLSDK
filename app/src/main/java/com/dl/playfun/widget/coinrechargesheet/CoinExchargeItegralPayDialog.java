@@ -24,6 +24,7 @@ import com.blankj.utilcode.util.ObjectUtils;
 import com.dl.playfun.R;
 import com.dl.playfun.api.AppGameConfig;
 import com.dl.playfun.app.AppContext;
+import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.BillingClientLifecycle;
 import com.dl.playfun.data.source.http.exception.RequestException;
 import com.dl.playfun.data.source.http.observer.BaseObserver;
@@ -126,7 +127,11 @@ public class CoinExchargeItegralPayDialog extends BaseDialog implements View.OnC
                     Purchase purchase = billingPurchasesState.getPurchase();
                     if(purchase!=null){
                         String packageName = purchase.getPackageName();
+                        try {
+                            AppContext.instance().logEvent(AppsFlyerEvent.dl_purchase, sel_goodsEntity.getPrice(), purchase);
+                        } catch (Exception ignored) {
 
+                        }
                         paySuccessNotify(packageName,orderNumber,purchase.getSkus(),purchase.getPurchaseToken(),1);
                         Log.e("BillingClientLifecycle","dialog支付购买成功："+purchase.toString());
                     }

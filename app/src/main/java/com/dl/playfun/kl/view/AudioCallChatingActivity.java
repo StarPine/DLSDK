@@ -384,7 +384,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
             @Override
             public void onChanged(Map<String, Object> stringObjectMap) {
                 int account = (int) stringObjectMap.get("account");
-                GiftBagEntity.giftEntity giftEntity = (GiftBagEntity.giftEntity) stringObjectMap.get("giftEntity");
+                GiftBagEntity.GiftEntity giftEntity = (GiftBagEntity.GiftEntity) stringObjectMap.get("giftEntity");
                 //启动SVG动画
                 startSendSvgAnimotion(giftEntity);
                 //启动横幅动画
@@ -435,10 +435,10 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
                 if (viewModel.unitPriceList == null || viewModel.maleBalanceMoney == 0){
                     return;
                 }
-                GiftBagDialog giftBagDialog = new GiftBagDialog(mContext, true, viewModel.maleBalanceMoney, viewModel.unitPriceList.size() > 1 ? 3 : 0);
+                GiftBagDialog giftBagDialog = new GiftBagDialog(mContext, true, viewModel.unitPriceList.size() > 1 ? 3 : 0);
                 giftBagDialog.setGiftOnClickListener(new GiftBagDialog.GiftOnClickListener() {
                     @Override
-                    public void sendGiftClick(Dialog dialog, int number, GiftBagEntity.giftEntity giftEntity) {
+                    public void sendGiftClick(Dialog dialog, int number, GiftBagEntity.GiftEntity giftEntity) {
                         dialog.dismiss();
                         AppContext.instance().logEvent(AppsFlyerEvent.voicecall_send_gift);
                         viewModel.sendUserGift(dialog, giftEntity, viewModel.leftUserInfoField.get().getId(), number);
@@ -661,7 +661,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         }
     }
 
-    private void startSendBannersAnimotion(GiftBagEntity.giftEntity giftEntity, int account) {
+    private void startSendBannersAnimotion(GiftBagEntity.GiftEntity giftEntity, int account) {
         if (account > 1) {
             View streamerView = View.inflate(mContext, R.layout.call_user_streamer_item, null);
             //用户头像
@@ -734,7 +734,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         }
     }
 
-    private void startSendHeadAnimotion(GiftBagEntity.giftEntity giftEntity) {
+    private void startSendHeadAnimotion(GiftBagEntity.GiftEntity giftEntity) {
         ImageView giftImageTrans = new ImageView(mContext);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(dip2px(90), dip2px(90));
         layoutParams.gravity = Gravity.END;
@@ -771,7 +771,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
         giftImageTrans.startAnimation(animation);
     }
 
-    private void startSendSvgAnimotion(GiftBagEntity.giftEntity giftEntity) {
+    private void startSendSvgAnimotion(GiftBagEntity.GiftEntity giftEntity) {
         if (!StringUtils.isEmpty(giftEntity.getLink())) {
             SVGAParser svgaParser = SVGAParser.Companion.shareParser();
             try {

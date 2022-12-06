@@ -23,6 +23,10 @@
         <import type="androidx.recyclerview.widget.LinearLayoutManager" />
     </data>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:background="@color/status_bar_color"
         android:layout_width="match_parent"
@@ -42,15 +46,14 @@
                 app:expandedTitleMarginEnd="48dp"
                 app:expandedTitleMarginStart="48dp"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
-                android:fitsSystemWindows="false"
-                tools:visibility="gone"
-                android:visibility="@{viewModel.rcvBannerDisplay? View.VISIBLE: View.GONE}">
+                android:fitsSystemWindows="false">
                 <!--设置layout_scrollFlags保证CollapsingToolbarLayout能滚动-->
                 <!--app:layout_scrollFlags="scroll|exitUntilCollapsed"-->
 
 
                 <RelativeLayout
-                    tools:visibility="visible"
+                    tools:visibility="gone"
+                    android:visibility="@{viewModel.rcvBannerDisplay? View.VISIBLE: View.GONE}"
                     android:id="@+id/head_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -87,30 +90,30 @@
                         tools:listitem="@layout/item_main_banner"/>
 
                 </RelativeLayout>
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:background="@color/white"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
+                    <View
+                        android:id="@+id/staBarSpace"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/img_app_logo"
+                        android:layout_marginTop="7dp"
+                        android:layout_marginBottom="7dp"
+                        android:layout_width="106dp"
+                        android:layout_height="29dp"
+                        android:layout_gravity="center"
+                        android:visibility="@{viewModel.rcvBannerDisplay? View.GONE: View.VISIBLE}"
+                        android:src="@drawable/ic_playfun_logo" />
+                </LinearLayout>
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:background="@color/white"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="@{viewModel.rcvBannerDisplay? View.GONE: View.VISIBLE}">
 
-                <View
-                    android:id="@+id/staBarSpace"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp" />
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/img_app_logo"
-                    android:layout_marginTop="7dp"
-                    android:layout_marginBottom="7dp"
-                    android:layout_width="106dp"
-                    android:layout_height="29dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_playfun_logo" />
-            </LinearLayout>
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -124,8 +127,7 @@
             android:layout_height="match_parent"
             binding:drawable_color="@{@color/white}"
             binding:drawable_radius_leftTop="@{20}"
-            binding:drawable_radius_rightTop="@{20}"
-            >
+            binding:drawable_radius_rightTop="@{20}">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -264,19 +266,30 @@
                 </com.scwang.smart.refresh.layout.SmartRefreshLayout>
             </LinearLayout>
 
+
+        </RelativeLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp">
+
             <com.dl.playfun.widget.image.HomeShareImageView
-                tools:visibility="visible"
                 android:id="@+id/iv_accost"
                 android:layout_width="58dp"
                 android:layout_height="58dp"
                 android:layout_marginStart="288dp"
                 android:layout_marginTop="430dp"
-                android:elevation="50dp"
                 android:clickable="true"
+                android:elevation="50dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/nearby_accost_tip_img"
-                binding:onClickCommand="@{viewModel.toTaskClickCommand}" />
+                binding:onClickCommand="@{viewModel.toTaskClickCommand}"
+                tools:visibility="visible" />
+
         </RelativeLayout>
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    </FrameLayout>
 
 </layout>

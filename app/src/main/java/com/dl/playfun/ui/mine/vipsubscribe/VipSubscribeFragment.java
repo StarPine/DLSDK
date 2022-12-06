@@ -127,7 +127,7 @@ public class VipSubscribeFragment extends BaseToolbarFragment<FragmentVipSubscri
                     Purchase purchase = billingPurchasesState.getPurchase();
                     if (purchase != null) {
                         try {
-                            AppContext.instance().logEvent(AppsFlyerEvent.Subscribe_Successfully, viewModel.$vipPackageItemEntity.getPrice(), purchase);
+                            AppContext.instance().logEvent(AppsFlyerEvent.dl_purchase, viewModel.$vipPackageItemEntity.getPrice(), purchase);
                         } catch (Exception e) {
 
                         }
