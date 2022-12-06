@@ -26,6 +26,7 @@ import com.android.billingclient.api.SkuDetailsParams;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppContext;
+import com.dl.playfun.app.AppsFlyerEvent;
 import com.dl.playfun.app.BillingClientLifecycle;
 import com.dl.playfun.app.BillingPurchasesState;
 import com.dl.playfun.app.ElkLogEventReport;
@@ -160,6 +161,11 @@ public class CoinRechargeSheetView extends BasePopupWindow implements View.OnCli
                     }
                     Purchase purchase = billingPurchasesState.getPurchase();
                     if(purchase!=null){
+                        try {
+                            AppContext.instance().logEvent(AppsFlyerEvent.dl_purchase, currGoodsInfo.getPrice(), purchase);
+                        } catch (Exception ignored) {
+
+                        }
                         String packageName = purchase.getPackageName();
                         paySuccessNotify(packageName, purchase.getSkus(), purchase.getPurchaseToken(), 1);
                         Log.e("BillingClientLifecycle","dialog支付购买成功："+purchase.toString());

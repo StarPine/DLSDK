@@ -137,6 +137,8 @@ public interface AppsFlyerEvent {
     String Successful_top_up = "Successful_top_up";//	儲值成功	我的	電子錢包	儲值	選擇購買鑽石數量	一鍵購買
     String Failed_to_top_up = "Failed_to_top_up";//	儲值失敗	我的	電子錢包	儲值	選擇購買鑽石數量	一鍵購買
     String success_diamond_top_up = "success_diamond_top_up";//充值钻石
+    //内置购买事件
+    String dl_purchase = "dl_purchase";
 
     //追踪名单	我的
     String Following = "Following";

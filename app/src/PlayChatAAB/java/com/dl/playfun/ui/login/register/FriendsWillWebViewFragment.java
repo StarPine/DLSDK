@@ -177,7 +177,7 @@ public class FriendsWillWebViewFragment extends BaseFragment<FragmentFriendswilL
                     Purchase purchase = billingPurchasesState.getPurchase();
                     if (purchase != null) {
                         try {
-                            AppContext.instance().logEvent(novice_items_successful, viewModel.goodsEntity.getPrice(), purchase);
+                            AppContext.instance().logEvent(AppsFlyerEvent.dl_purchase, viewModel.goodsEntity.getPrice(), purchase);
                         } catch (Exception ignored) {
 
                         }
