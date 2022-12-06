@@ -30,7 +30,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.aliyun.svideo.common.utils.FastClickUtil;
+import com.dl.lib.util.FastClickUtil;
 import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
@@ -58,6 +58,10 @@ import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
 import com.dl.playfun.widget.dialog.MessageDetailDialog;
 import com.dl.playfun.widget.dialog.TraceDialog;
 import com.dl.playfun.widget.image.CircleImageView;
+import com.dl.rtc.calling.base.DLRTCCalling;
+import com.dl.rtc.calling.manager.DLRTCStartManager;
+import com.dl.rtc.calling.model.DLRTCCallingConstants;
+import com.dl.rtc.calling.ui.videolayout.VideoLayoutFactory;
 import com.faceunity.nama.FURenderer;
 import com.faceunity.nama.data.FaceUnityDataFactory;
 import com.faceunity.nama.ui.FaceUnityView;
@@ -69,11 +73,6 @@ import com.opensource.svgaplayer.SVGASoundManager;
 import com.opensource.svgaplayer.SVGAVideoEntity;
 import com.tencent.custom.GiftEntity;
 import com.tencent.imsdk.v2.V2TIMManager;
-import com.tencent.liteav.trtccalling.TUICalling;
-import com.tencent.liteav.trtccalling.model.TRTCCalling;
-import com.tencent.liteav.trtccalling.model.util.TUICallingConstants;
-import com.tencent.liteav.trtccalling.ui.base.VideoLayoutFactory;
-import com.tencent.liteav.trtccalling.ui.floatwindow.FloatCallView;
 import com.tencent.qcloud.tuicore.util.ConfigManagerUtil;
 
 import org.jetbrains.annotations.NotNull;
@@ -93,14 +92,12 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
     /**
      * 美颜相关
      */
-    protected TRTCCalling mTRTCCalling;
     private FaceUnityView mFaceUnityView;
     private FaceUnityDataFactory mFaceUnityDataFactory;
     private FURenderer mFURenderer;
     private final boolean isFuEffect = true;
 
     //视频悬浮框
-    private FloatCallView mFloatView;
     private VideoLayoutFactory mVideoFactory;
 
     private Context mContext;
@@ -115,7 +112,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
     private String callUserId;
     private String toId;
     private Integer roomId;
-    private TUICalling.Role role;
+    private DLRTCCalling.Role role;
     private String[] userIds;
 
     private int mTimeCount;
@@ -202,15 +199,15 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         SVGAParser.Companion.shareParser().init(this);
 
         Intent intent = getIntent();
-        role = (TUICalling.Role) intent.getExtras().get(TUICallingConstants.PARAM_NAME_ROLE);
+        role = (DLRTCCalling.Role) intent.getExtras().get(DLRTCCallingConstants.PARAM_NAME_ROLE);
         roomId = intent.getIntExtra("roomId", 0);
         //被动接收
-        userIds = intent.getExtras().getStringArray(TUICallingConstants.PARAM_NAME_USERIDS);
+        userIds = intent.getExtras().getStringArray(DLRTCCallingConstants.PARAM_NAME_USERIDS);
         if (userIds != null && userIds.length > 0) {
             toId = userIds[0];
         }
         //主动呼叫
-        callUserId = intent.getExtras().getString(TUICallingConstants.PARAM_NAME_SPONSORID);
+        callUserId = intent.getExtras().getString(DLRTCCallingConstants.PARAM_NAME_SPONSORID);
         String userData = intent.getExtras().getString("userProfile");
         if (userData != null) {
             callingInviteInfo = new Gson().fromJson(userData, CallingInviteInfo.class);
@@ -237,12 +234,10 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         hideExchangeRules();
         giftEffects = binding.giftEffects;
         mFaceUnityView = binding.fuView;
-        //1.先打开渲染器
-        mTRTCCalling = TRTCCalling.sharedInstance(this);
         mFURenderer = FURenderer.getInstance();
         mFaceUnityDataFactory = new FaceUnityDataFactory(0);
         mFaceUnityView.bindDataFactory(mFaceUnityDataFactory);
-        mTRTCCalling.createCustomRenderer(this, true, isFuEffect);
+        DLRTCStartManager.Companion.getInstance().createCustomRenderer(isFuEffect);
 
         mContainerView = findViewById(R.id.container);
         mJMView = findViewById(R.id.jm_view);
@@ -281,8 +276,8 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         mJMView.bringToFront();
         // 不用TRTC sponsor 一套的命名，因为他们那里其实挺混乱的， 这里就用 my 和 other
         String myUserId = V2TIMManager.getInstance().getLoginUser();
-        String otherUserId = (role == TUICalling.Role.CALL ? userIds[0] : callUserId);
-        if (role == TUICalling.Role.CALL) {//主动呼叫
+        String otherUserId = (role == DLRTCCalling.Role.CALL ? userIds[0] : callUserId);
+        if (role == DLRTCCalling.Role.CALL) {//主动呼叫
             callUserId = V2TIMManager.getInstance().getLoginUser();
             viewModel.userCall = true;
             if (callingInviteInfo != null) {
@@ -290,11 +285,11 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                 viewModel.callingInviteInfoField.set(callingInviteInfo);
                 if (callingInviteInfo.getUserProfileInfo().getSex() == 1) {
                     if (!ObjectUtils.isEmpty(callingInviteInfo.getMessages()) && callingInviteInfo.getMessages().size() > 0) {
-                        String valueData = "";
+                        StringBuilder valueData = new StringBuilder();
                         for (String value : callingInviteInfo.getMessages()) {
-                            valueData += value + "\n";
+                            valueData.append(value).append("\n");
                         }
-                        viewModel.callHintBinding.set(valueData);
+                        viewModel.callHintBinding.set(valueData.toString());
                     }
                 }
             }
@@ -383,7 +378,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
             public void onChanged(Map<String, Object> stringObjectMap) {
                 try {
                     int account = (int) stringObjectMap.get("account");
-                    GiftBagEntity.giftEntity giftEntity = (GiftBagEntity.giftEntity) stringObjectMap.get("giftEntity");
+                    GiftBagEntity.GiftEntity giftEntity = (GiftBagEntity.GiftEntity) stringObjectMap.get("giftEntity");
                     //启动SVG动画
                     startVideoSendSvgAnimotion(giftEntity);
                     //启动横幅动画
@@ -435,10 +430,10 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
                 if (viewModel.unitPriceList == null ||  viewModel.maleBalanceMoney == 0){
                     return;
                 }
-                GiftBagDialog giftBagDialog = new GiftBagDialog(mContext, true, viewModel.maleBalanceMoney, viewModel.unitPriceList.size() > 1 ? 4 : 0);
+                GiftBagDialog giftBagDialog = new GiftBagDialog(mContext, true, viewModel.unitPriceList.size() > 1 ? 4 : 0);
                 giftBagDialog.setGiftOnClickListener(new GiftBagDialog.GiftOnClickListener() {
                     @Override
-                    public void sendGiftClick(Dialog dialog, int number, GiftBagEntity.giftEntity giftEntity) {
+                    public void sendGiftClick(Dialog dialog, int number, GiftBagEntity.GiftEntity giftEntity) {
                         dialog.dismiss();
                         AppContext.instance().logEvent(AppsFlyerEvent.videocall_send_gift);
                         viewModel.sendUserGift(dialog, giftEntity, viewModel.callingVideoInviteInfoField.get().getId(), number);
@@ -496,7 +491,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         }, 1000,10000);
     }
 
-    private void startVideoSendHeadAnimotion(GiftBagEntity.giftEntity giftEntity) {
+    private void startVideoSendHeadAnimotion(GiftBagEntity.GiftEntity giftEntity) {
         ImageView giftImageTrans = new ImageView(mContext);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(dip2px(50), dip2px(50));
         layoutParams.bottomMargin = dip2px(43);
@@ -531,7 +526,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         giftImageTrans.startAnimation(animation);
     }
 
-    private void startVideoSendBannersAnimotion(int account, GiftBagEntity.giftEntity giftEntity) {
+    private void startVideoSendBannersAnimotion(int account, GiftBagEntity.GiftEntity giftEntity) {
         if (account > 1) {
             View streamerView = View.inflate(mContext, R.layout.call_user_streamer_item, null);
             //用户头像
@@ -604,7 +599,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         }
     }
 
-    private void startVideoSendSvgAnimotion(GiftBagEntity.giftEntity giftEntity) {
+    private void startVideoSendSvgAnimotion(GiftBagEntity.GiftEntity giftEntity) {
         SVGAParser svgaParser = SVGAParser.Companion.shareParser();
         try {
             svgaParser.decodeFromURL(new URL(StringUtil.getFullAudioUrl(giftEntity.getLink())), new SVGAParser.ParseCompletion() {

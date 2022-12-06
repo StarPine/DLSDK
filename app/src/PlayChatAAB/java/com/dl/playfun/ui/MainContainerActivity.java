@@ -16,7 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 
-import com.aliyun.svideo.crop.bean.AlivcCropOutputParam;
 import com.android.billingclient.api.BillingClient;
 import com.blankj.utilcode.util.KeyboardUtils;
 import com.blankj.utilcode.util.ObjectUtils;
@@ -181,16 +180,6 @@ public class MainContainerActivity extends MySupportActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode==-1){
-            if(AppConfig.isCorpAliyun){
-                AlivcCropOutputParam alivcCropOutputParam = (AlivcCropOutputParam) data.getSerializableExtra(AlivcCropOutputParam.RESULT_KEY_OUTPUT_PARAM);
-                if(alivcCropOutputParam!=null){
-                    RxBus.getDefault().post(alivcCropOutputParam);
-                }
-
-            }
-            AppConfig.isCorpAliyun = false;
-        }
     }
 
     private void registerRxBus() {

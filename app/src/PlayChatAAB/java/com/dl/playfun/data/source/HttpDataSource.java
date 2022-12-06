@@ -120,6 +120,15 @@ import retrofit2.http.Query;
 public interface HttpDataSource {
 
     /**
+     * @Desc TODO(不喜欢某个电台)
+     * @author 彭石林
+     * @parame [body]
+     * @return io.reactivex.Observable<com.dl.playfun.data.source.http.response.BaseResponse>
+     * @Date 2022/11/1
+     */
+    Observable<BaseResponse> broadcastDisLike(RequestBody body);
+
+    /**
      * @Desc TODO(查询本地未消耗订单进行消耗上报-单条)
      * @author 彭石林
      * @parame [body]

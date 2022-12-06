@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.databinding.ObservableArrayList;
 import androidx.databinding.ObservableList;
 
+import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.app.AppContext;
 import com.dl.playfun.app.AppsFlyerEvent;
@@ -17,14 +18,19 @@ import com.dl.playfun.data.source.http.response.BaseListDataResponse;
 import com.dl.playfun.data.source.http.response.BaseResponse;
 import com.dl.playfun.entity.BroadcastEntity;
 import com.dl.playfun.entity.UserDataEntity;
+import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.FileUploadUtils;
 import com.dl.playfun.viewmodel.BaseRefreshViewModel;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.ui.mine.broadcast.mytrends.TrendItemViewModel;
 import com.dl.playfun.ui.radio.issuanceprogram.IssuanceProgramFragment;
+import com.shuyu.gsyvideoplayer.GSYVideoManager;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -285,5 +291,29 @@ public class MyAllBroadcastViewModel extends BaseRefreshViewModel<AppRepository>
                         dismissHUD();
                     }
                 });
+    }
+
+    //屏蔽不喜欢的动态
+    public void broadcastDisLike(int position){
+        Map<String,Object> mapData = new HashMap<>();
+        mapData.put("id",((TrendItemViewModel) observableList.get(position)).newsEntityObservableField.get().getBroadcast().getId());
+        model.broadcastDisLike(ApiUitl.getBody(GsonUtils.toJson(mapData)))
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseResponse>() {
+                    @Override
+                    public void onSuccess(BaseResponse response) {
+                        dismissHUD();
+                        observableList.remove(position);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        dismissHUD();
+                    }
+                });
+
     }
 }

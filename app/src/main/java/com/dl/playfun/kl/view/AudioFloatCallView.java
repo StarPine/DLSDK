@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
@@ -24,18 +26,19 @@ import com.dl.playfun.entity.RestartActivityEntity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.utils.StringUtil;
 import com.dl.playfun.widget.image.CircleImageView;
+import com.dl.rtc.calling.DLRTCFloatWindowService;
+import com.dl.rtc.calling.base.DLRTCCalling;
+import com.dl.rtc.calling.ui.BaseDLRTCCallView;
 import com.google.gson.Gson;
 import com.tencent.custom.GiftEntity;
 import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMMessageReceipt;
-import com.tencent.liteav.trtccalling.TUICalling;
-import com.tencent.liteav.trtccalling.ui.base.BaseTUICallView;
-import com.tencent.liteav.trtccalling.ui.floatwindow.FloatWindowService;
 import com.tencent.qcloud.tuicore.Status;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
+import com.tencent.trtc.TRTCCloudDef;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,9 +47,8 @@ import java.util.Map;
 import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.utils.RxUtils;
 
-public class AudioFloatCallView extends BaseTUICallView {
+public class AudioFloatCallView extends BaseDLRTCCallView {
     private static final String TAG = "AudioFloatCallView";
-    private ImageView maximize;
     private CircleImageView ivAvatar;
     private TextView mTextViewTimeCount;
     private boolean isRestart = false;
@@ -54,8 +56,10 @@ public class AudioFloatCallView extends BaseTUICallView {
     private CallingInfoEntity.FromUserProfile otherUserProfile;
     private ArrayList<AudioCallingBarrageEntity> audioBarrageList;
 
+    public int mTimeCount = 0;
 
-    public AudioFloatCallView(Context context, TUICalling.Role role, TUICalling.Type type, String[] userIDs,
+
+    public AudioFloatCallView(Context context, DLRTCCalling.Role role, DLRTCCalling.Type type, String[] userIDs,
                               String sponsorID, String groupID, boolean isFromGroup,
                               CallingInfoEntity.FromUserProfile otherUserProfile, int timeCount,
                               Integer roomId, ArrayList<AudioCallingBarrageEntity> audioBarrageList) {
@@ -65,6 +69,7 @@ public class AudioFloatCallView extends BaseTUICallView {
 
     private void initData(CallingInfoEntity.FromUserProfile otherUserProfile, int timeCount, Integer roomId, ArrayList<AudioCallingBarrageEntity> audioBarrageList) {
         Glide.with(AppContext.instance())
+                .asDrawable()
                 .load(StringUtil.getFullImageUrl(otherUserProfile.getAvatar()))
                 .error(R.drawable.default_avatar) //异常时候显示的图片
                 .placeholder(R.drawable.default_avatar) //加载成功前显示的图片
@@ -86,10 +91,14 @@ public class AudioFloatCallView extends BaseTUICallView {
 
     @Override
     protected void initView() {
-        LayoutInflater.from(mContext).inflate(R.layout.audio_floatwindow_layout, this);
-        maximize = findViewById(R.id.iv_maximize);
+        LayoutInflater.from(getContext()).inflate(R.layout.audio_floatwindow_layout, this);
         ivAvatar = findViewById(R.id.iv_avatar);
         mTextViewTimeCount = findViewById(R.id.tv_time);
+    }
+
+    @Override
+    protected void timeCountListener(int times) {
+        mTimeCount = times;
     }
 
     //更新显示
@@ -99,109 +108,78 @@ public class AudioFloatCallView extends BaseTUICallView {
 
     //通话时长,注意UI更新需要在主线程中进行
     protected void showTimeCount(TextView view, int timeCount) {
-        if (mTimeRunnable != null) {
-            return;
-        }
-        mTimeCount = timeCount;
-        if (null != view) {
-            view.setText(getShowTime(++mTimeCount));
-        }
-        mTimeRunnable = new Runnable() {
-            @Override
-            public void run() {
-                mTimeCount++;
-                if (mTimeCount %10 ==0){
-                    getRoomStatus(roomId);
-                }
-                Status.mBeginTime = mTimeCount;
-                if (null != view) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (Status.mIsShowFloatWindow) {
-                                view.setText(getShowTime(mTimeCount));
-                            }
-                        }
-                    });
-                }
-                mTimeHandler.postDelayed(mTimeRunnable, 1000);
-            }
-        };
-        mTimeHandler.postDelayed(mTimeRunnable, 1000);
+        super.showTimeCount(view);
     }
 
     //监听IM消息
     private void initIMListener() {
-        V2TIMManager.getMessageManager().addAdvancedMsgListener(new V2TIMAdvancedMsgListener() {
-            @Override
-            public void onRecvNewMessage(V2TIMMessage msg) {//新消息提醒
-                try {
-                    if (msg != null && otherUserProfile != null) {
-                        TUIMessageBean info = ChatMessageBuilder.buildMessage(msg);
-                        if (info != null) {
-                            if (info.getV2TIMMessage().getSender().equals(otherUserProfile.getImId())) {
-                                String text = String.valueOf(info.getExtra());
-                                if (StringUtil.isJSON2(text) && text.contains("type")) {//做自定义通知判断
-                                    Map<String, Object> map_data = new Gson().fromJson(text, Map.class);
-                                    //礼物消息
-                                    if (map_data != null
-                                            && map_data.get("type") != null
-                                            && map_data.get("type").equals("message_gift")
-                                            && map_data.get("is_accost") == null) {
-                                        GiftEntity giftEntity = new Gson().fromJson(String.valueOf(map_data.get("data")), GiftEntity.class);
-                                        //显示礼物弹幕
-                                        showGiftBarrage(giftEntity);
-                                        //礼物收益提示
-                                        giftIncome(giftEntity);
-                                    }
+        V2TIMManager.getMessageManager().addAdvancedMsgListener(v2TIMAdvancedMsgListener);
+    }
+    V2TIMAdvancedMsgListener v2TIMAdvancedMsgListener = new V2TIMAdvancedMsgListener() {
+        @Override
+        public void onRecvNewMessage(V2TIMMessage msg) {//新消息提醒
+            try {
+                if (msg != null && otherUserProfile != null) {
+                    TUIMessageBean info = ChatMessageBuilder.buildMessage(msg);
+                    if (info != null) {
+                        if (info.getV2TIMMessage().getSender().equals(otherUserProfile.getImId())) {
+                            String text = String.valueOf(info.getExtra());
+                            if (StringUtil.isJSON2(text) && text.contains("type")) {//做自定义通知判断
+                                Map<String, Object> map_data = new Gson().fromJson(text, Map.class);
+                                //礼物消息
+                                if (map_data != null
+                                        && map_data.get("type") != null
+                                        && map_data.get("type").equals("message_gift")
+                                        && map_data.get("is_accost") == null) {
+                                    GiftEntity giftEntity = new Gson().fromJson(String.valueOf(map_data.get("data")), GiftEntity.class);
+                                    //显示礼物弹幕
+                                    showGiftBarrage(giftEntity);
+                                    //礼物收益提示
+                                    giftIncome(giftEntity);
                                 }
                             }
                         }
                     }
-                }catch (Exception e){
-
                 }
+            }catch (Exception e){
 
             }
 
-            @Override
-            public void onRecvC2CReadReceipt(List<V2TIMMessageReceipt> receiptList) {
-                super.onRecvC2CReadReceipt(receiptList);
-            }
+        }
 
-            @Override
-            public void onRecvMessageRevoked(String msgID) {
-                super.onRecvMessageRevoked(msgID);
-            }
+        @Override
+        public void onRecvC2CReadReceipt(List<V2TIMMessageReceipt> receiptList) {
+            super.onRecvC2CReadReceipt(receiptList);
+        }
 
-            @Override
-            public void onRecvMessageModified(V2TIMMessage msg) {
-                super.onRecvMessageModified(msg);
-            }
-        });
-    }
+        @Override
+        public void onRecvMessageRevoked(String msgID) {
+            super.onRecvMessageRevoked(msgID);
+        }
+
+        @Override
+        public void onRecvMessageModified(V2TIMMessage msg) {
+            super.onRecvMessageModified(msg);
+        }
+    };
 
     private void initListener() {
-        setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!isRestart) {
-                    isRestart = true;
-                    Intent intent = new Intent(mContext, AudioCallChatingActivity.class);
-                    intent.putExtra("fromUserId", mSponsorID);
-                    intent.putExtra("toUserId", mUserIDs[0]);
-                    intent.putExtra("mRole", mRole);
-                    intent.putExtra("roomId", roomId);
-                    intent.putExtra("timeCount", ++mTimeCount);
-                    intent.putExtra("isRestart", isRestart);
-                    intent.putExtra("audioCallingBarrage", GsonUtils.toJson(audioBarrageList));
-                    if (isBackground(mContext)) {
-                        mContext.startActivity(intent);
-                    } else {
-                        RxBus.getDefault().post(new RestartActivityEntity(intent));
-                    }
+        setOnClickListener(v -> {
+            if (!isRestart) {
+                isRestart = true;
+                Intent intent = new Intent(getContext(), AudioCallChatingActivity.class);
+                intent.putExtra("fromUserId", mSponsorID);
+                intent.putExtra("toUserId", mUserIDs[0]);
+                intent.putExtra("mRole", mRole);
+                intent.putExtra("roomId", roomId);
+                intent.putExtra("timeCount", ++mTimeCount);
+                intent.putExtra("isRestart", isRestart);
+                intent.putExtra("audioCallingBarrage", GsonUtils.toJson(audioBarrageList));
+                if (isBackground(getContext())) {
+                    getContext().startActivity(intent);
+                } else {
+                    RxBus.getDefault().post(new RestartActivityEntity(intent));
                 }
-
             }
         });
     }
@@ -246,11 +224,7 @@ public class AudioFloatCallView extends BaseTUICallView {
         List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
         for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
             if (appProcess.processName.equals(context.getPackageName())) {
-                if (appProcess.importance != ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return appProcess.importance != ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND;
             }
         }
         return false;
@@ -278,9 +252,14 @@ public class AudioFloatCallView extends BaseTUICallView {
         super.onCallEnd();
         //通话结束,停止悬浮窗显示
         if (Status.mIsShowFloatWindow) {
-            FloatWindowService.stopService(mContext);
+            DLRTCFloatWindowService.stopService(getContext());
             finish();
         }
+        V2TIMManager.getMessageManager().removeAdvancedMsgListener(v2TIMAdvancedMsgListener);
     }
 
+    @Override
+    public void onNetworkQuality(@Nullable TRTCCloudDef.TRTCQuality localQuality, @Nullable ArrayList<TRTCCloudDef.TRTCQuality> remoteQuality) {
+
+    }
 }

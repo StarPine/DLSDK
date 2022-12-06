@@ -29,7 +29,8 @@ import com.bumptech.glide.Glide;
 import com.dl.lib.elk.IStatisticsConfig;
 import com.dl.lib.elk.StatisticsAnalysis;
 import com.dl.lib.elk.StatisticsManager;
-import com.dl.lib.util.MPDeviceUtils;
+import com.dl.lib.util.log.DebugLoggerTree;
+import com.dl.lib.util.log.MPTimber;
 import com.dl.playfun.BuildConfig;
 import com.dl.playfun.R;
 import com.dl.playfun.data.AppRepository;
@@ -42,13 +43,17 @@ import com.dl.playfun.entity.ImUserSigEntity;
 import com.dl.playfun.entity.TokenEntity;
 import com.dl.playfun.entity.UserDataEntity;
 import com.dl.playfun.event.LoginExpiredEvent;
+import com.dl.playfun.kl.view.CallingVideoActivity;
+import com.dl.playfun.kl.view.DialingAudioActivity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.manager.LocaleManager;
 import com.dl.playfun.manager.ThirdPushTokenMgr;
 import com.dl.playfun.tim.TUIUtils;
 import com.dl.playfun.ui.MainContainerActivity;
+import com.dl.playfun.ui.coinpusher.CoinPusherGameActivity;
 import com.dl.playfun.utils.ElkLogEventUtils;
 import com.dl.playfun.utils.StringUtil;
+import com.dl.rtc.calling.manager.DLRTCInterceptorCall;
 import com.faceunity.nama.FURenderer;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -194,6 +199,8 @@ public class AppContext extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        // 初始化日志打印
+        MPTimber.plant(new DebugLoggerTree());
         instance = this;
         BaseApplication.setApplication(this);
         Utils.init(this);
@@ -228,6 +235,10 @@ public class AppContext extends Application {
                 //.eventListener(new YourCustomEventListener()) //崩溃后的错误监听
                 .apply();
         ElkLogEventReport.reportSplashModule.reportInit();
+        //注入音视频通话默认页面
+        DLRTCInterceptorCall.Companion.getInstance().setAudioCallActivity(DialingAudioActivity.class.getCanonicalName());
+        DLRTCInterceptorCall.Companion.getInstance().setVideoCallActivity(CallingVideoActivity.class.getCanonicalName());
+        DLRTCInterceptorCall.Companion.getInstance().addDelegateActivity(CoinPusherGameActivity.class);
     }
 
     public void initIM() {

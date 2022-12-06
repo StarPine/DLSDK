@@ -159,7 +159,7 @@ public class TRTCCalling {
 
     private boolean mIsUseFrontCamera;
 
-    private MediaPlayHelper mMediaPlayHelper;        // 音效
+    private final MediaPlayHelper mMediaPlayHelper;        // 音效
 
     private SensorManager mSensorManager;
     private SensorEventListener mSensorEventListener;
@@ -871,6 +871,7 @@ public class TRTCCalling {
             handleSwitchToAudio(callModel, inviter);
             return;
         }
+        startRing();
         handleDialing(callModel, inviter);
         if (mCurCallID.equals(callModel.callId)) {
             mLastCallModel = (CallModel) callModel.clone();

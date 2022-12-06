@@ -21,7 +21,7 @@ public class AppConfig {
     public static final Integer VERSION_CODE = BuildConfig.VERSION_CODE;
     public static final String VERSION_NAME = BuildConfig.VERSION_NAME;
     //上报
-    public static final String SDK_VERSION_NAME_PUSH = "1.3.0";
+    public static final String SDK_VERSION_NAME_PUSH = "1.4.0";
     //source 来源ID 1642158125=喵遊(俄语) 1648520220=杜拉克 //playchat 1648626888
     public static final String APPID = "1648626888";
     public static String DEVICE_CODE = "";
@@ -101,13 +101,6 @@ public class AppConfig {
      * 用户主动点击退出登录
      */
     public static boolean userClickOut = false;
-
-    /**
-     * @Desc TODO(阿里云剪辑是否触发)
-     * @author 彭石林
-     * @Date 2021/10/29
-     */
-    public static boolean isCorpAliyun = false;
 
     /**
      * @Desc TODO(福袋网址)

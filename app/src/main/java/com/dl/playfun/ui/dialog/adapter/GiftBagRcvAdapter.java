@@ -4,17 +4,17 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.dl.playfun.entity.GiftBagAdapterEntity;
 import com.dl.playfun.entity.GiftBagEntity;
 import com.dl.playfun.R;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Author: 彭石林
@@ -24,15 +24,26 @@ import java.util.List;
 public class GiftBagRcvAdapter extends RecyclerView.Adapter<GiftBagRcvAdapter.GiftBagRcvHolder> {
 
     private final Context mContext;
-    private List<GiftBagAdapterEntity> itemData = null;
+    private final List<List<GiftBagEntity.GiftEntity>> itemData;
 
-    private OnClickRcvDetailListener onClickDetailListener = null;
+    private GiftBagDetailAdapter.OnClickDetailListener onClickDetailListener = null;
 
-    private boolean isDarkShow = false;
+    private final boolean isDarkShow;
 
-    public GiftBagRcvAdapter(RecyclerView recyclerView, List<GiftBagAdapterEntity> dataList, boolean isDarkShow) {
-        this.mContext = recyclerView.getContext();
+    private final int layoutRes;
+
+    private Map<GiftBagRcvHolder, GiftBagDetailAdapter> adapterMap = new HashMap<>();
+
+    /**
+     * @param context 上下文
+     * @param dataList 数据列表
+     * @param layoutRes 礼物布局
+     * @param isDarkShow 是否暗黑模式
+     */
+    public GiftBagRcvAdapter(Context context, List<List<GiftBagEntity.GiftEntity>> dataList, int layoutRes, boolean isDarkShow) {
+        this.mContext = context;
         this.itemData = dataList;
+        this.layoutRes = layoutRes;
         this.isDarkShow = isDarkShow;
     }
 
@@ -45,21 +56,19 @@ public class GiftBagRcvAdapter extends RecyclerView.Adapter<GiftBagRcvAdapter.Gi
 
     @Override
     public void onBindViewHolder(@NonNull GiftBagRcvHolder holder, int position) {
-        GiftBagRcvHolder itemViewHolder = holder;
         if(itemData!=null && itemData.size()>0){
-            int index = position;
             GridLayoutManager layoutManage = new GridLayoutManager(mContext, 5);
-            itemViewHolder.rcvDetail.setLayoutManager(layoutManage);
-            GiftBagDetailAdapter giftBagDetailAdapter = new GiftBagDetailAdapter(itemViewHolder.rcvDetail, itemData.get(index).getGiftBagEntity(), isDarkShow);
-            giftBagDetailAdapter.setOnClickListener(new GiftBagDetailAdapter.OnClickDetailListener() {
-                @Override
-                public void clickDetailCheck(int position, GiftBagEntity.giftEntity itemEntity, LinearLayout detail_layout) {
-                    if(onClickDetailListener!=null){
-                        onClickDetailListener.clickRcvDetailCheck(position,itemEntity,detail_layout,index);
-                    }
+            holder.rcvDetail.setLayoutManager(layoutManage);
+            GiftBagDetailAdapter giftBagDetailAdapter = new GiftBagDetailAdapter(mContext, itemData.get(position), layoutRes, isDarkShow);
+            adapterMap.put(holder, giftBagDetailAdapter);
+            giftBagDetailAdapter.setOnClickListener((entity) -> {
+                for (GiftBagRcvHolder key: adapterMap.keySet()) {
+                    if (key == holder) continue;
+                    adapterMap.get(key).cleanSelect();
                 }
+                onClickDetailListener.clickDetailCheck(entity);
             });
-            itemViewHolder.rcvDetail.setAdapter(giftBagDetailAdapter);
+            holder.rcvDetail.setAdapter(giftBagDetailAdapter);
         }
     }
 
@@ -80,10 +89,7 @@ public class GiftBagRcvAdapter extends RecyclerView.Adapter<GiftBagRcvAdapter.Gi
         }
     }
 
-    public void setOnClickListener(OnClickRcvDetailListener onClickListener){
+    public void setOnClickListener(GiftBagDetailAdapter.OnClickDetailListener onClickListener){
         this.onClickDetailListener = onClickListener;
-    }
-    public interface  OnClickRcvDetailListener{
-        void clickRcvDetailCheck(int position,GiftBagEntity.giftEntity itemEntity,LinearLayout detail_layout,int rcvPosition);
     }
 }

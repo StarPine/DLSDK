@@ -2,14 +2,14 @@ package com.dl.playfun.kl.viewmodel;
 
 import android.util.Log;
 
-import com.tencent.liteav.trtccalling.model.TRTCCallingDelegate;
+import com.dl.rtc.calling.base.DLRTCCallingDelegate;
 import com.tencent.trtc.TRTCCloudDef;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class EmptyTRTCCallingDelegate implements TRTCCallingDelegate {
+public class EmptyTRTCCallingDelegate implements DLRTCCallingDelegate {
     private static final String TAG = "trtcJoy";
 
     @Override

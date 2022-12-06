@@ -1,5 +1,6 @@
 package com.tencent.liteav.trtccalling.model.util;
 
+import android.annotation.SuppressLint;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.database.Cursor;
@@ -113,7 +114,7 @@ public class PermissionUtil {
                     new String[]{context.getPackageName()},
                     null);
             if (cursor.moveToFirst()) {
-                int state = cursor.getInt(cursor.getColumnIndex("currentstate"));
+                @SuppressLint("Range") int state = cursor.getInt(cursor.getColumnIndex("currentstate"));
                 return 0 == state;
             }
         } catch (Exception e) {

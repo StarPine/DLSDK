@@ -266,7 +266,7 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
                     //是否允许点击PopupWindow之外的地方消失
                     .setFocusAndOutsideEnable(true)
                     .setDimValue(0)
-                    .setWidth(350)
+                    .setWidth(550)
                     .apply();
 
             LinearLayoutManager layoutManager = (LinearLayoutManager) binding.rcvRadio.getLayoutManager();
@@ -275,7 +275,7 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
                 mCirclePop.showAtAnchorView(child.findViewById(R.id.iv_more), YGravity.BELOW, XGravity.ALIGN_RIGHT, 0, 0);
             }
             TextView stop = mCirclePop.findViewById(R.id.tv_stop);
-
+            TextView tvShield = mCirclePop.findViewById(R.id.tv_shield);
             boolean isSelf = false;
             if (type.equals(RadioViewModel.RadioRecycleType_New)) {
                 if (viewModel.userId == ((TrendItemViewModel) viewModel.radioItems.get(position)).newsEntityObservableField.get().getUser().getId()) {
@@ -285,24 +285,32 @@ public class RadioFragment extends BaseRefreshFragment<FragmentRadioBinding, Rad
                 } else {
                     mCirclePop.findViewById(R.id.tv_detele).setVisibility(View.GONE);
                     stop.setText(getString(R.string.playfun_report_user_title));
+                    if(ConfigManager.getInstance().getBroadcastSquareDislikeFlag()){
+                        tvShield.setVisibility(View.VISIBLE);
+                    }else{
+                        tvShield.setVisibility(View.GONE);
+                    }
                 }
             }
 
             boolean finalIsSelf = isSelf;
-            stop.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (finalIsSelf) {
-                        viewModel.setComment(position, type);
-                    } else {
-                        AppContext.instance().logEvent(AppsFlyerEvent.Report);
-                        Bundle bundle = new Bundle();
-                        bundle.putString(ARG_REPORT_TYPE, "broadcast");
-                        bundle.putInt(ARG_REPORT_USER_ID, broadcastId);
-                        startContainerActivity(ReportUserFragment.class.getCanonicalName(), bundle);
-                    }
-                    mCirclePop.dismiss();
+            stop.setOnClickListener(v -> {
+                if (finalIsSelf) {
+                    viewModel.setComment(position, type);
+                } else {
+                    AppContext.instance().logEvent(AppsFlyerEvent.Report);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(ARG_REPORT_TYPE, "broadcast");
+                    bundle.putInt(ARG_REPORT_USER_ID, broadcastId);
+                    startContainerActivity(ReportUserFragment.class.getCanonicalName(), bundle);
                 }
+                mCirclePop.dismiss();
+            });
+
+            //屏蔽动态
+            tvShield.setOnClickListener(v -> {
+                mCirclePop.dismiss();
+                viewModel.broadcastDisLike(position);
             });
             mCirclePop.findViewById(R.id.tv_detele).setOnClickListener(new View.OnClickListener() {
                 @Override

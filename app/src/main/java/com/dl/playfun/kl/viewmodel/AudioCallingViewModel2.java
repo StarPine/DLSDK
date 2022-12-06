@@ -25,10 +25,11 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.dl.playfun.R;
 import com.dl.playfun.kl.Utils;
-import com.dl.playfun.kl.view.IViewAudioCallingWaiting;
-import com.tencent.liteav.trtccalling.TUICalling;
-import com.tencent.liteav.trtccalling.model.TRTCCalling;
-import com.tencent.liteav.trtccalling.model.TRTCCallingDelegate;
+import com.dl.rtc.calling.base.DLRTCCalling;
+import com.dl.rtc.calling.base.DLRTCCallingDelegate;
+import com.dl.rtc.calling.manager.DLRTCAudioManager;
+import com.dl.rtc.calling.manager.DLRTCStartManager;
+import com.dl.rtc.calling.model.DLRTCCallingConstants;
 import com.tencent.trtc.TRTCCloudDef;
 
 import org.jetbrains.annotations.NotNull;
@@ -49,8 +50,7 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
     public ObservableField<Boolean> isCallBinding = new ObservableField<>(false);
 
     public ObservableField<CallingInviteInfo> callingInviteInfoField = new ObservableField<>();
-    protected TRTCCalling mTRTCCalling;
-    protected TRTCCallingDelegate mTRTCCallingDelegate;
+    DLRTCCallingDelegate mTRTCCallingDelegate;
     //返回上一页
     public SingleLiveEvent<Void> backViewEvent = new SingleLiveEvent<>();
     public SingleLiveEvent<Integer> startAudioActivity = new SingleLiveEvent<>();
@@ -66,7 +66,8 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
                 finishView();
                 return;
             }
-            mTRTCCalling.accept();
+            DLRTCAudioManager.Companion.getInstance().accept();
+            DLRTCAudioManager.Companion.getInstance().enterRoom(roomId);
             unListen();
             startAudioActivity.postValue(roomId);
         }
@@ -74,19 +75,9 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
     protected int roomId;
     private String fromUserId;
     private String toUserId;
-    private TUICalling.Role mRole;
-    public View.OnClickListener closeOnclick = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            cancelCallClick();
-        }
-    };
-    public View.OnClickListener rejectOnClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            cancelCallClick();
-        }
-    };
+    private DLRTCCalling.Role mRole;
+    public View.OnClickListener closeOnclick = v -> cancelCallClick();
+    public View.OnClickListener rejectOnClick = v -> cancelCallClick();
     //订阅者
     private Disposable mSubscription;
     private long mSelfLowQualityTime;
@@ -95,7 +86,6 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
 
     public AudioCallingViewModel2(@NonNull @NotNull Application application, AppRepository model) {
         super(application, model);
-//        mTRTCCalling = TRTCCalling.sharedInstance(application);
     }
 
     //注册RxBus
@@ -118,30 +108,28 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
         RxSubscriptions.remove(mSubscription);
     }
 
-    public void init(String fromUserId, String toUserId, TUICalling.Role role, int roomId) {
+    public void init(String fromUserId, String toUserId, DLRTCCalling.Role role, int roomId) {
         this.fromUserId = fromUserId;
         this.toUserId = toUserId;
         this.mRole = role;
-        isCallBinding.set(role == TUICalling.Role.CALL);
+        isCallBinding.set(role == DLRTCCalling.Role.CALL);
         this.roomId = roomId;
-        mTRTCCalling = TRTCCalling.sharedInstance(AppContext.instance());
     }
 
-    public void init(String fromUserId, String toUserId, TUICalling.Role role) {
+    public void init(String fromUserId, String toUserId, DLRTCCalling.Role role) {
         this.fromUserId = fromUserId;
         this.toUserId = toUserId;
         this.mRole = role;
-        isCallBinding.set(role == TUICalling.Role.CALL);
-        mTRTCCalling = TRTCCalling.sharedInstance(AppContext.instance());
+        isCallBinding.set(role == DLRTCCalling.Role.CALL);
     }
 
     public void start() {
-        if (mRole == TUICalling.Role.CALL) {
+        if (mRole == DLRTCCalling.Role.CALL) {
             startCall();
         } else {
             startCalled();
         }
-        mTRTCCalling.addDelegate(mTRTCCallingDelegate);
+        DLRTCAudioManager.Companion.getInstance().addDelegate(mTRTCCallingDelegate);
     }
 
     public void cancelCallClick() {
@@ -154,7 +142,7 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
     public void unListen() {
         Utils.runOnUiThread(() -> {
             if (null != mTRTCCallingDelegate) {
-                mTRTCCalling.removeDelegate(mTRTCCallingDelegate);
+                DLRTCAudioManager.Companion.getInstance().removeDelegate(mTRTCCallingDelegate);
             }
         });
     }
@@ -162,10 +150,10 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
     // 正常拨打等待接听中的挂断， 不涉及界面
     public void endTRTCCalling() {
         Utils.runOnUiThread(() -> {
-            if (TUICalling.Role.CALL == mRole) {
-                mTRTCCalling.hangup();
+            if (DLRTCCalling.Role.CALL == mRole) {
+                DLRTCAudioManager.Companion.getInstance().hangup();
             } else {
-                mTRTCCalling.reject();
+                DLRTCAudioManager.Companion.getInstance().reject();
             }
         });
     }
@@ -179,7 +167,7 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
                 // TODO
                 unListen();
                 finishView();
-                ToastUtils.showLong(AppContext.instance().getString(com.tencent.liteav.trtccalling.R.string.trtccalling_toast_call_error_msg, code, msg));
+                ToastUtils.showLong(AppContext.instance().getString(R.string.trtccalling_toast_call_error_msg, code, msg));
             }
 
             @Override
@@ -230,9 +218,7 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
                 updateNetworkQuality(localQuality, remoteQuality);
             }
         };
-        List<String> list = new ArrayList<>(1);
-        list.add(toUserId);
-        mTRTCCalling.call(roomId, list, TRTCCalling.TYPE_AUDIO_CALL);
+        DLRTCStartManager.Companion.getInstance().call(new String[]{toUserId}, DLRTCCalling.Type.AUDIO, roomId, null);
     }
 
     // 被叫
@@ -243,7 +229,7 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
             public void onError(int code, String msg) {
                 unListen();
                 finishView();
-                ToastUtils.showLong(AppContext.instance().getString(com.tencent.liteav.trtccalling.R.string.trtccalling_toast_call_error_msg, code, msg));
+                ToastUtils.showLong(AppContext.instance().getString(R.string.trtccalling_toast_call_error_msg, code, msg));
             }
 
             @Override
@@ -304,12 +290,12 @@ public class AudioCallingViewModel2 extends BaseViewModel<AppRepository> impleme
         long currentTime = System.currentTimeMillis();
         if (isSelf) {
             if (currentTime - mSelfLowQualityTime > MIN_DURATION_SHOW_LOW_QUALITY) {
-                Toast.makeText(AppContext.instance(), com.tencent.liteav.trtccalling.R.string.trtccalling_self_network_low_quality, Toast.LENGTH_SHORT).show();
+                Toast.makeText(AppContext.instance(), R.string.trtccalling_self_network_low_quality, Toast.LENGTH_SHORT).show();
                 mSelfLowQualityTime = currentTime;
             }
         } else {
             if (currentTime - mOtherPartyLowQualityTime > MIN_DURATION_SHOW_LOW_QUALITY) {
-                Toast.makeText(AppContext.instance(), com.tencent.liteav.trtccalling.R.string.trtccalling_other_party_network_low_quality, Toast.LENGTH_SHORT).show();
+                Toast.makeText(AppContext.instance(), R.string.trtccalling_other_party_network_low_quality, Toast.LENGTH_SHORT).show();
                 mOtherPartyLowQualityTime = currentTime;
             }
         }

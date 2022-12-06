@@ -13,6 +13,7 @@ import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableList;
 
+import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.BR;
@@ -49,12 +50,15 @@ import com.dl.playfun.ui.mine.wallet.diamond.recharge.DiamondRechargeActivity;
 import com.dl.playfun.ui.radio.issuanceprogram.IssuanceProgramFragment;
 import com.dl.playfun.ui.radio.radiohome.item.RadioItemBannerVideoViewModel;
 import com.dl.playfun.ui.task.webview.FukuokaViewFragment;
+import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.viewmodel.BaseRefreshViewModel;
 import com.google.gson.Gson;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.disposables.Disposable;
 import me.goldze.mvvmhabit.base.MultiItemViewModel;
@@ -713,7 +717,7 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
                         radioItems.remove(posion);
                         try {
                             GSYVideoManager.releaseAllVideos();
-                        } catch (Exception e) {
+                        } catch (Exception ignored) {
 
                         }
                     }
@@ -723,6 +727,33 @@ public class RadioViewModel extends BaseRefreshViewModel<AppRepository> {
                         dismissHUD();
                     }
                 });
+    }
+    //屏蔽不喜欢的动态
+    public void broadcastDisLike(int position){
+        Map<String,Object> mapData = new HashMap<>();
+        mapData.put("id",((TrendItemViewModel)radioItems.get(position)).newsEntityObservableField.get().getBroadcast().getId());
+        model.broadcastDisLike(ApiUitl.getBody(GsonUtils.toJson(mapData)))
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseResponse>() {
+                    @Override
+                    public void onSuccess(BaseResponse response) {
+                        radioItems.remove(position);
+                        try {
+                            GSYVideoManager.releaseAllVideos();
+                        } catch (Exception ignored) {
+
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        dismissHUD();
+                    }
+                });
+
     }
 
     //拨打语音、视频

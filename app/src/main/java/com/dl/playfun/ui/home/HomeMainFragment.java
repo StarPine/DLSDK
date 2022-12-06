@@ -43,6 +43,7 @@ import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.viewadapter.CustomRefreshHeader;
 import com.dl.playfun.widget.coinrechargesheet.CoinRechargeSheetView;
+import com.gyf.immersionbar.NotchUtils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.List;
@@ -128,29 +129,40 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
 
         }
 
-        ViewGroup.LayoutParams staBarSpaLp = (ViewGroup.LayoutParams) binding.staBarSpace.getLayoutParams();
-        staBarSpaLp.height = BarUtils.getStatusBarHeight();
-        binding.staBarSpace.setLayoutParams(staBarSpaLp);
-
+        // 设置状态栏填充View的高度
         ViewGroup.LayoutParams lpBar = binding.statusBarView.getLayoutParams();
-        lpBar.height = BarUtils.getStatusBarHeight() + ConvertUtils.dp2px(10);
+        int barHg;
+
+        // 区别刘海屏，取刘海高度和状态栏高度中最大值
+        if (NotchUtils.hasNotchScreen(getActivity())) {
+            barHg = Math.max(BarUtils.getStatusBarHeight(), NotchUtils.getNotchHeight(getActivity()));
+        } else {
+            barHg = BarUtils.getStatusBarHeight();
+        }
+        lpBar.height = barHg;
         binding.statusBarView.setLayoutParams(lpBar);
 
         ViewGroup.LayoutParams lpSpacer = binding.spacer.getLayoutParams();
-        int barHg = BarUtils.getStatusBarHeight();
 
+        // 滑动到剩余空间小于View最大填充高度时，填充View开始展开以撑开正文不会被状态栏或刘海遮盖
         binding.appBarLayout.addOnOffsetChangedListener((appBarLayout, i) -> {
 
             i = Math.abs(i);
+            int spHg; // 最大填充高度
 
-            double percent = (appBarLayout.getTotalScrollRange() - i) / (double) barHg;
+            if (viewModel.rcvBannerDisplay.get()){
+                // rvc Banner显示时需要填充一个刘海屏高度并补足-50dp的Margin
+                spHg = barHg + ConvertUtils.dp2px(50);
+            } else {
+                // rvc Banner隐藏时只需要填充20dp
+                spHg = ConvertUtils.sp2px(20);
+            }
+
+            // 按滑动进度渐进填充，避免闪烁
+            double percent = (appBarLayout.getTotalScrollRange() - i) / (double) spHg;
             if (percent > 1.0) percent = 1.0;
-            lpSpacer.height = (int) (barHg * (1.0 - percent));
+            lpSpacer.height = (int) (spHg * (1.0 - percent)) ;
             binding.spacer.setLayoutParams(lpSpacer);
-
-            Log.d("spacer",  String.valueOf(lpSpacer.height));
-            Log.d("spacer",  String.valueOf(barHg));
-            Log.d("spacer",  String.valueOf(i));
         });
     }
 
@@ -218,15 +230,27 @@ public class HomeMainFragment extends BaseRefreshFragment<FragmentHomeMainBindin
                 toRecharge();
             }
         });
+        // 设置顶部Banner显示（rvc不显示，logo显示时）
         viewModel.rcvBannerDisplay.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
 
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
                 if (sender instanceof ObservableBoolean) {
                     if (!((ObservableBoolean) sender).get()) {
+                        // 填充并撑开Logo Banner高度
+                        ViewGroup.LayoutParams staBarSpaLp = binding.staBarSpace.getLayoutParams();
+                        if (NotchUtils.hasNotchScreen(getActivity())) {
+                            staBarSpaLp.height = Math.max(BarUtils.getStatusBarHeight(), NotchUtils.getNotchHeight(getActivity()));
+                        } else {
+                            staBarSpaLp.height = BarUtils.getStatusBarHeight();
+                        }
+                        binding.staBarSpace.setLayoutParams(staBarSpaLp);
+
+                        // 显示Logo Banner时设置正文Margin为0
                         CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) binding.content.getLayoutParams();
-                        lp.setMargins(0, 0, 0, 0);
+                        lp.setMargins(0, ConvertUtils.dp2px(0), 0, 0);
                         binding.content.setLayoutParams(lp);
+
                     }
                 }
             }

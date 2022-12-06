@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Dialog;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -25,7 +26,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.aliyun.svideo.common.utils.ScreenUtils;
 import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
@@ -58,7 +58,7 @@ import com.dl.playfun.ui.message.MessageMainFragment;
 import com.dl.playfun.ui.mine.MineFragment;
 import com.dl.playfun.ui.mine.vipsubscribe.VipSubscribeFragment;
 import com.dl.playfun.ui.radio.radiohome.RadioFragment;
-import com.dl.playfun.ui.task.TaskCenterFragment;
+import com.dl.playfun.ui.task.TaskCenterWebViewFragment;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.StringUtil;
@@ -160,6 +160,16 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
             }
         });
     }
+    public  int getDeviceStatusHeight(Context mContext) {
+        int statusID = mContext.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        //>0表示获取成功
+        if (statusID > 0) {
+            return mContext.getResources().getDimensionPixelSize(statusID);
+        }
+
+        return 0;
+
+    }
 
     @Override
     public void initViewObservable() {
@@ -250,7 +260,7 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
             });
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
             layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-            int deviceStatusHeight = ScreenUtils.getDeviceStatusHeight(mActivity);
+            int deviceStatusHeight = getDeviceStatusHeight(mActivity);
             layoutParams.setMargins(0,deviceStatusHeight+5,0,0);
             streamerView.setLayoutParams(layoutParams);
             binding.container.addView(streamerView);
@@ -680,9 +690,22 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
     }
 
     private void initView() {
+        TaskCenterWebViewFragment taskCenter = new TaskCenterWebViewFragment();
+        taskCenter.setOnClickListener(id -> setSelectedItemId(
+                        (new ImageView[]{
+                                binding.navigationHomeImg,
+                                binding.navigationRadioImg,
+                                binding.navigationRankImg,
+                                binding.navigationMessageImg,
+                                binding.navigationMineImg
+                        })[id]
+                )
+        );
+
+
         mFragments[FIRST] = new HomeMainFragment();
         mFragments[SECOND] = new RadioFragment();
-        mFragments[THIRD] = new TaskCenterFragment();
+        mFragments[THIRD] = taskCenter;
         mFragments[FOURTH] = new MessageMainFragment();
         mFragments[FIFTH] = new MineFragment();
         tvBadgeNum = binding.tvMsgCount;

@@ -250,6 +250,23 @@ public class ElkLogEventReport {
         }
     }
 
+    public static class reportTaskCenterModule {
+        public static void reportEnterTaskCenter() {
+            String doSendStatistics = commonClickString("pageview","missionCenter",_expose,"enterMissionCenter");
+            StatisticsAnalysis.doSendStatistics(doSendStatistics);
+        }
+
+        public static void reportClickSign() {
+            String doSendStatistics = commonClickString("pageview","missionCenter",_click,"sign");
+            StatisticsAnalysis.doSendStatistics(doSendStatistics);
+        }
+
+        public static void reportClickGet() {
+            String doSendStatistics = commonClickString("pageview","missionCenter",_click,"get");
+            StatisticsAnalysis.doSendStatistics(doSendStatistics);
+        }
+    }
+
     /**
      * @Desc TODO(空指针转成空字符串)
      * @author 彭石林

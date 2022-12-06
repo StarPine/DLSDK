@@ -8,6 +8,7 @@ import androidx.databinding.ObservableArrayList;
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableList;
 
+import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.playfun.app.AppContext;
@@ -27,12 +28,14 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.mine.broadcast.mytrends.CommentItemViewModel;
 import com.dl.playfun.ui.mine.broadcast.mytrends.HeadItemViewModel;
 import com.dl.playfun.ui.mine.broadcast.mytrends.ImageItemViewModel;
+import com.dl.playfun.ui.mine.broadcast.mytrends.TrendItemViewModel;
 import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.ListUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.dl.playfun.BR;
 import com.dl.playfun.R;
 import com.dl.playfun.ui.userdetail.detail.UserDetailFragment;
+import com.shuyu.gsyvideoplayer.GSYVideoManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -247,6 +250,35 @@ public class TrendDetailViewModel extends BaseViewModel<AppRepository> {
                             isDetele.set(true);
 //                            uc.clickIisDelete.call();
                         }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        dismissHUD();
+                    }
+                });
+
+    }
+
+    //屏蔽不喜欢的动态
+    public void broadcastDisLike(){
+        Map<String,Object> mapData = new HashMap<>();
+        mapData.put("id",newsEntityObservableField.get().getBroadcast().getId());
+        model.broadcastDisLike(ApiUitl.getBody(GsonUtils.toJson(mapData)))
+                .doOnSubscribe(this)
+                .compose(RxUtils.schedulersTransformer())
+                .compose(RxUtils.exceptionTransformer())
+                .doOnSubscribe(disposable -> showHUD())
+                .subscribe(new BaseObserver<BaseResponse>() {
+                    @Override
+                    public void onSuccess(BaseResponse response) {
+                        dismissHUD();
+                        RadioadetailEvent radioadetailEvent = new RadioadetailEvent();
+                        radioadetailEvent.setId(newsEntityObservableField.get().getId());
+                        radioadetailEvent.setRadioaType(RadioRecycleType_New);
+                        radioadetailEvent.setType(1);
+                        RxBus.getDefault().post(radioadetailEvent);
+                        pop();
                     }
 
                     @Override

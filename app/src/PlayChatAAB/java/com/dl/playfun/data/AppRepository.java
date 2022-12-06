@@ -54,6 +54,11 @@ public class AppRepository extends BaseModel implements HttpDataSource, LocalDat
         INSTANCE = null;
     }
 
+    @Override
+    public Observable<BaseResponse> broadcastDisLike(RequestBody body) {
+        return mHttpDataSource.broadcastDisLike(body);
+    }
+
     public Observable<BaseResponse> localeOrderReport(RequestBody requestBody){
         return mHttpDataSource.localeOrderReport(requestBody);
     }

@@ -1760,7 +1760,7 @@
     <string name="playfun_tw_money_text1">獎勵</string>
     <string name="playfun_tw_money_text2">水晶說明</string>
     <string name="playfun_tw_money_empty">這裡還是空的</string>
-    <string name="playfun_gift_bag_number_hint">數量：</string>
+    <string name="playfun_gift_bag_number_hint">數量</string>
     <string name="playfun_gift_bag_text1">首充有禮</string>
     <string name="playfun_gift_bag_more_text">1個</string>
     <string name="playfun_gift_bag_more_text1">生生世世</string>
@@ -2280,5 +2280,10 @@
     <string name="playfun_pay_buy_reports_empty">沒有找到可恢復購買的訂單</string>
     <string name="playfun_pay_buy_reports_error">系統忙碌，請重新載入</string>
     <string name="playfun_pay_buy_reports_error_2">操作太頻繁，請稍後再試</string>
+    <string name="playfun_fragment_issuance_shield">屏蔽動態</string>
+    <string name="playfun_game_audio_hint">與她語音，一起玩遊戲</string>
+    <string name="playfun_game_video_hint">與她視訊，一起玩遊戲</string>
+    <string name="playfun_meagess_crystal">水晶</string>
+    <string name="playfun_dialog_exchange_integral_total_text1_crystal">水晶不足</string>
     <!--PlayFun-APP-END-->
 </resources>

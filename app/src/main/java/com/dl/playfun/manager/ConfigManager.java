@@ -104,12 +104,17 @@ public class ConfigManager {
 
     //收益开关 打开显示收益
     public boolean getTipMoneyShowFlag() {
-        return getAppRepository().readSwitches(EaringlSwitchUtil.KEY_TIPS).intValue() == 1;
+        return getAppRepository().readSwitches(EaringlSwitchUtil.KEY_TIPS) == 1;
     }
 
     //收入开关
     public boolean getRemoveImMessageFlag() {
         return getAppRepository().readSwitches(EaringlSwitchUtil.REMOVE_IM_MESSAGE).intValue() == 1;
+    }
+
+    //广场-屏蔽动态开关
+    public boolean getBroadcastSquareDislikeFlag(){
+        return getAppRepository().readSwitches(EaringlSwitchUtil.KEY_SQUARE_DISLIKE) == 1;
     }
 
     /**

@@ -16,4 +16,6 @@ public class EaringlSwitchUtil {
     public static String KEY_WALLET_ENTRANCE = "wallet.entrance";
     //注销账号开关
     public static String KEY_DELETE_ACCOUNT = "delete.account";
+    //广场页屏蔽动态的开关
+    public static String KEY_SQUARE_DISLIKE = "squareDislike";
 }

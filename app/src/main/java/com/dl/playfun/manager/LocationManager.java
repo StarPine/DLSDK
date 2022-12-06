@@ -200,11 +200,12 @@ public class LocationManager {
             if (ActivityCompat.checkSelfPermission(AppContext.instance().getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
                     ActivityCompat.checkSelfPermission(AppContext.instance().getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 mFusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
-                    Location location = task.getResult();
-                    if (location != null) {
-                        locationListener.onLocationSuccess(location.getLatitude(), location.getLongitude());
-                        lat = location.getLatitude();
-                        lng = location.getLongitude();
+                    try {
+                        Location location = task.getResult();
+                        if (location != null) {
+                            locationListener.onLocationSuccess(location.getLatitude(), location.getLongitude());
+                            lat = location.getLatitude();
+                            lng = location.getLongitude();
 //                            getFromLocation(lat, lng, new GeocoderListener() {
 //                                @Override
 //                                public void onGeocoderSuccess(String province, String city, String country) {
@@ -216,9 +217,13 @@ public class LocationManager {
 //
 //                                }
 //                            });
-                    } else {
-                        locationListener.onLocationFailed();
+                        } else {
+                            locationListener.onLocationFailed();
+                        }
+                    }catch (Exception ignored){
+
                     }
+
                 });
             }
         } catch (Exception e) {

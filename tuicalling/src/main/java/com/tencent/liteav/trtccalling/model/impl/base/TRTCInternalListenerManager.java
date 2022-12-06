@@ -25,9 +25,9 @@ public class TRTCInternalListenerManager implements TRTCCallingDelegate {
     }
 
     public void removeDelegate(TRTCCallingDelegate listener) {
-        Iterator iterator = mWeakReferenceList.iterator();
+        Iterator<WeakReference<TRTCCallingDelegate>> iterator = mWeakReferenceList.iterator();
         while (iterator.hasNext()) {
-            WeakReference<TRTCCallingDelegate> reference = (WeakReference<TRTCCallingDelegate>) iterator.next();
+            WeakReference<TRTCCallingDelegate> reference = iterator.next();
             if (reference.get() == null) {
                 iterator.remove();
                 continue;

@@ -30,6 +30,7 @@ import com.dl.playfun.entity.OverseasUserEntity;
 import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.utils.AutoSizeUtils;
+import com.dl.playfun.utils.Utils;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -45,7 +46,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
-import com.tencent.liteav.trtccalling.ui.audiocall.audiolayout.Utils;
 
 import org.json.JSONObject;
 

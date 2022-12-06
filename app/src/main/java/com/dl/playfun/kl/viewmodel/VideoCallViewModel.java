@@ -45,6 +45,8 @@ import com.dl.playfun.utils.ApiUitl;
 import com.dl.playfun.utils.LogUtils;
 import com.dl.playfun.utils.ToastCenterUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
+import com.dl.rtc.calling.base.DLRTCCalling;
+import com.dl.rtc.calling.manager.DLRTCVideoManager;
 import com.google.gson.Gson;
 import com.tencent.custom.GiftEntity;
 import com.tencent.custom.IMGsonUtils;
@@ -52,7 +54,6 @@ import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMMessageReceipt;
-import com.tencent.liteav.trtccalling.TUICalling;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.ui.view.MyImageSpan;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
@@ -118,7 +119,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
     public boolean videoSuccess = false;
     private String mMyUserId;
     private String mOtherUserId;
-    private TUICalling.Role mRole;
+    private DLRTCCalling.Role mRole;
     //是否是拨打方
     public boolean userCall = false;
     //通话数据加载完成
@@ -179,9 +180,10 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
             }
             mainVIewShow.set(true);
             mCallVideoView.acceptCall();
+            DLRTCVideoManager.Companion.getInstance().enterRoom(roomId);
             Log.e("接听电话按钮点击", mMyUserId + "=======" + mOtherUserId);
             //getCallingInfo(roomId, ChatUtils.imUserIdToSystemUserId(mMyUserId), ChatUtils.imUserIdToSystemUserId(mOtherUserId));
-            if (mRole == TUICalling.Role.CALLED) {
+            if (mRole == DLRTCCalling.Role.CALLED) {
                 isCalledWaitingBinding.set(false);
             }
         }
@@ -337,7 +339,6 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
                     public void onSuccess(BaseDataResponse<CallingInviteInfo> callingInviteInfoBaseDataResponse) {
                         CallingInviteInfo callingInviteInfo = callingInviteInfoBaseDataResponse.getData();
                         roomId = callingInviteInfo.getRoomId();
-                        Log.e("当前用户进入房间ID", roomId + "=====================");
                         mfromUserId = fromUserId;
                         mtoUserId = userId;
                         callingInviteInfoField.set(callingInviteInfo);
@@ -392,25 +393,25 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
     }
 
     //    protected TRTCCallingDelegate mTRTCCallingDelegate;
-    public void init(String myUserId, String otherUserId, TUICalling.Role role, JMTUICallVideoView view) {
+    public void init(String myUserId, String otherUserId, DLRTCCalling.Role role, JMTUICallVideoView view) {
         this.mMyUserId = myUserId;
         this.mOtherUserId = otherUserId;
         this.mRole = role;
         this.mCallVideoView = view;
         this.isMale = ConfigManager.getInstance().isMale();
         this.isShowTipMoney = ConfigManager.getInstance().getTipMoneyShowFlag();
-        this.isCalledBinding.set(role == TUICalling.Role.CALLED);
-        this.isCalledWaitingBinding.set(role == TUICalling.Role.CALLED);
+        this.isCalledBinding.set(role == DLRTCCalling.Role.CALLED);
+        this.isCalledWaitingBinding.set(role == DLRTCCalling.Role.CALLED);
     }
 
-    public void init(String myUserId, String otherUserId, TUICalling.Role role, JMTUICallVideoView view, Integer roomId) {
+    public void init(String myUserId, String otherUserId, DLRTCCalling.Role role, JMTUICallVideoView view, Integer roomId) {
         this.mMyUserId = myUserId;
         this.mOtherUserId = otherUserId;
         this.mRole = role;
         this.mCallVideoView = view;
         this.isMale = ConfigManager.getInstance().isMale();
-        this.isCalledBinding.set(role == TUICalling.Role.CALLED);
-        this.isCalledWaitingBinding.set(role == TUICalling.Role.CALLED);
+        this.isCalledBinding.set(role == DLRTCCalling.Role.CALLED);
+        this.isCalledWaitingBinding.set(role == DLRTCCalling.Role.CALLED);
         this.roomId = roomId;
     }
 
@@ -621,7 +622,7 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
     }
 
     //发送礼物
-    public void sendUserGift(Dialog dialog, GiftBagEntity.giftEntity giftEntity, Integer to_user_id, Integer amount) {
+    public void sendUserGift(Dialog dialog, GiftBagEntity.GiftEntity giftEntity, Integer to_user_id, Integer amount) {
         HashMap<String, Integer> map = new HashMap<>();
         map.put("giftId", giftEntity.getId());
         map.put("toUserId", to_user_id);

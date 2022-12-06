@@ -30,8 +30,6 @@
             android:layout_width="@dimen/conversation_list_avatar_width"
             android:layout_height="@dimen/conversation_list_avatar_height" />
 
-
-
     </RelativeLayout>
 
     <RelativeLayout
@@ -69,6 +67,19 @@
                 android:layout_toEndOf="@id/conversation_title"
                 android:layout_toRightOf="@id/conversation_title"
                 android:src="@drawable/ic_real_man"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/service_tag"
+                android:layout_width="31dp"
+                android:layout_height="13dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginLeft="2dp"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/conversation_title"
+                android:layout_toRightOf="@id/conversation_title"
+                android:src="@drawable/ic_service_tag"
                 android:visibility="gone"
                 tools:visibility="visible" />
 

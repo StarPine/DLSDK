@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.tencent.liteav.trtccalling.ui.videocall.videolayout.TRTCVideoLayoutManager
+    <com.dl.rtc.calling.ui.videolayout.DLRTCVideoLayoutManager
         android:id="@+id/trtc_layout_manager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

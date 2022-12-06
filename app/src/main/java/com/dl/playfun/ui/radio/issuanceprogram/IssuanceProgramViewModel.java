@@ -11,7 +11,6 @@ import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableList;
 
-import com.aliyun.svideo.crop.bean.AlivcCropOutputParam;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.Utils;
@@ -67,9 +66,10 @@ import me.tatarka.bindingcollectionadapter2.ItemBinding;
  */
 public class IssuanceProgramViewModel extends BaseViewModel<AppRepository> {
     //消费者
-    private Disposable MediaStoreDisposable, AlivcCropOutputDisposable;
+    private Disposable MediaStoreDisposable;
     //用户选择媒体文件：图片/视频
     public ObservableField<String> selectMediaPath = new ObservableField<>();
+    public boolean isSelectedVideo = false;
     //心情选中
     public ObservableBoolean moolCheck = new ObservableBoolean(true);
     public ObservableField<String> selThemeItemName = new ObservableField<>("#" + StringUtils.getString(R.string.playfun_mood_item_id1));
@@ -112,7 +112,6 @@ public class IssuanceProgramViewModel extends BaseViewModel<AppRepository> {
             uc.startVideoActivity.call();
         }
     });
-    ThemeItemEntity selThemeItem;
     //发布
     public BindingCommand issuanceClickCommand = new BindingCommand(new BindingAction() {
         @Override
@@ -174,16 +173,31 @@ public class IssuanceProgramViewModel extends BaseViewModel<AppRepository> {
                 .doOnSubscribe(this)
                 .doOnSubscribe(disposable -> showHUD())
                 .subscribeOn(Schedulers.io())
-                .map(new Function<String, String>() {
-                    @Override
-                    public String apply(String s) throws Exception {
-                        if (filePath.endsWith(".mp4")) {
-                            return FileUploadUtils.ossUploadFileVideo("Issuance/", FileUploadUtils.FILE_TYPE_IMAGE, s, null);
-                        } else {
-                            return FileUploadUtils.ossUploadFile("Issuance/", FileUploadUtils.FILE_TYPE_IMAGE, s);
-                        }
+                .map((Function<String, String>) s -> {
+                    if (filePath.endsWith(".mp4")) {
+                        return FileUploadUtils.ossUploadFileVideo("Issuance/", FileUploadUtils.FILE_TYPE_IMAGE, s, new FileUploadUtils.FileUploadProgressListener() {
+                            public void fileCompressProgress(int progress) {
+                                showProgressHUD(String.format(StringUtils.getString(R.string.playfun_compressing), progress), progress);
+                            }
 
+                            @Override
+                            public void fileUploadProgress(int progress) {
+                                showProgressHUD(String.format(StringUtils.getString(R.string.playfun_uploading), progress), progress);
+                            }
+                        });
+                    } else {
+                        return FileUploadUtils.ossUploadFile("Issuance/", FileUploadUtils.FILE_TYPE_IMAGE, s, new FileUploadUtils.FileUploadProgressListener() {
+                            public void fileCompressProgress(int progress) {
+                                showProgressHUD(String.format(StringUtils.getString(R.string.playfun_compressing), progress), progress);
+                            }
+
+                            @Override
+                            public void fileUploadProgress(int progress) {
+                                showProgressHUD(String.format(StringUtils.getString(R.string.playfun_uploading), progress), progress);
+                            }
+                        });
                     }
+
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new DisposableObserver<String>() {
@@ -201,8 +215,8 @@ public class IssuanceProgramViewModel extends BaseViewModel<AppRepository> {
                                     String filename = ApiUitl.getDiskCacheDir(Utils.getApp()) + "/Overseas" + ApiUitl.getDateTimeFileName() + ".jpg";
                                     ApiUitl.saveBitmap(bitmap, filename, flag -> {
                                         //取视频第一帧图片保存成功后再次上报发送
-                                        File deleteFile = new File(filePath);
-                                        deleteFile.delete();
+//                                        File deleteFile = new File(filePath);
+//                                        deleteFile.delete();
                                         selectMediaPath.set(fileKey);
                                         uploadAvatar(filename);
                                     });
@@ -212,8 +226,8 @@ public class IssuanceProgramViewModel extends BaseViewModel<AppRepository> {
                                     retriever.release();
                                 }
                             } else {
-                                File deleteFile = new File(filePath);
-                                deleteFile.delete();
+//                                File deleteFile = new File(filePath);
+//                                deleteFile.delete();
                                 images.add(fileKey);
                                 topicalCreateMood();
                             }
@@ -280,13 +294,8 @@ public class IssuanceProgramViewModel extends BaseViewModel<AppRepository> {
     }
 
     public class UIChangeObservable {
-        public SingleLiveEvent clickHope = new SingleLiveEvent<>();
-        public SingleLiveEvent clickDay = new SingleLiveEvent<>();
         public SingleLiveEvent<Integer> clickNotVip = new SingleLiveEvent<>();
-        public SingleLiveEvent clickTheme = new SingleLiveEvent<>();
         public SingleLiveEvent clickAddress = new SingleLiveEvent<>();
-        //选中心情、约会内容
-        public SingleLiveEvent<String> checkDatingText = new SingleLiveEvent<>();
         //跳转Activity
         public SingleLiveEvent startVideoActivity = new SingleLiveEvent<>();
     }
@@ -297,16 +306,12 @@ public class IssuanceProgramViewModel extends BaseViewModel<AppRepository> {
         MediaStoreDisposable = RxBus.getDefault().toObservable(SelectMediaSourcesEvent.class).subscribe(selectMediaSourcesEvent -> {
             selectMediaPath.set(selectMediaSourcesEvent.getPath());
         });
-        AlivcCropOutputDisposable = RxBus.getDefault().toObservable(AlivcCropOutputParam.class).subscribe(alivcCropOutputParam -> {
-            selectMediaPath.set(alivcCropOutputParam.getOutputPath());
-        });
     }
 
     @Override
     public void removeRxBus() {
         super.removeRxBus();
         RxSubscriptions.remove(MediaStoreDisposable);
-        RxSubscriptions.remove(AlivcCropOutputDisposable);
     }
 
 

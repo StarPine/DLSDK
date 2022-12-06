@@ -48,7 +48,6 @@ import com.dl.playfun.ui.dialog.MyEvaluateDialog;
 import com.dl.playfun.ui.mine.setredpackagephoto.SetRedPackagePhotoFragment;
 import com.dl.playfun.ui.mine.setredpackagevideo.SetRedPackageVideoFragment;
 import com.dl.playfun.ui.mine.setting.account.bind.CommunityAccountBindFragment;
-import com.dl.playfun.ui.task.TaskCenterFragment;
 import com.dl.playfun.utils.AutoSizeUtils;
 import com.dl.playfun.utils.ImmersionBarUtils;
 import com.dl.playfun.utils.PictureSelectorUtil;

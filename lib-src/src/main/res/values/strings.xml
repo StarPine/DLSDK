@@ -6,7 +6,7 @@
     <string name="alivc_media_gop">Keyframe interval</string>
     <string name="alivc_media_frame_rate_hint">Recommended 20-30, default 30</string>
     <string name="alivc_media_gop_hint">Recommended 1-300, default 250</string>
-    <string name="alivc_media_resolution">resolution</string>
+    <string name="alivc_media_resolution" translatable="false">resolution</string>
     <string name="alivc_media_crop_mode">Crop mode</string>
     <string name="alivc_media_mode_fill">padding</string>
     <string name="alivc_media_mode_crop">crop</string>
@@ -1709,6 +1709,7 @@
     <string name="playfun_status_layout_error_network">Network error. Click to retry</string>
     <string name="playfun_dialog_exchange_integral_success">Points redeemed.</string>
     <string name="playfun_dialog_exchange_integral_total_text1">Not enough diamonds. Please top up your diamonds.</string>
+    <string name="playfun_dialog_exchange_integral_total_text1_crystal">Not enough crystals</string>
     <string name="playfun_dialog_exchange_integral_total_text2">Top-up diamonds are automatically converted to points at a ratio of 1:100.</string>
     <string name="playfun_dialog_exchange_integral_total_text3">Not enough diamonds to start a chat.</string>
     <string name="playfun_mood_item_id1">Want to fall in love</string>
@@ -1759,7 +1760,7 @@
     <string name="playfun_tw_money_text1">Crystals</string>
     <string name="playfun_tw_money_text2">Instruction</string>
     <string name="playfun_tw_money_empty">It\'s still empty here.</string>
-    <string name="playfun_gift_bag_number_hint">Quantity:</string>
+    <string name="playfun_gift_bag_number_hint">Quantity</string>
     <string name="playfun_gift_bag_text1">Gifts for the first top-up</string>
     <string name="playfun_gift_bag_more_text">1</string>
     <string name="playfun_gift_bag_more_text1">life after life</string>
@@ -1805,6 +1806,7 @@
     <string name="playfun_certification_girl_hint_text1">Exchange right</string>
     <string name="playfun_radio_fragment_posts">Post</string>
     <string name="playfun_meagess_gift">Gift</string>
+    <string name="playfun_meagess_crystal">Crystal</string>
     <string name="playfun_meagess_backpack">Bag</string>
     <string name="playfun_meagess_give_away">Send</string>
     <string name="playfun_coin_detail_detail">Details</string>
@@ -2278,5 +2280,8 @@
     <string name="playfun_pay_buy_reports_empty">No orders found to restore purchases</string>
     <string name="playfun_pay_buy_reports_error">Busy, try again later.</string>
     <string name="playfun_pay_buy_reports_error_2">Frequent operations, try again later.</string>
+    <string name="playfun_fragment_issuance_shield">Shield moment</string>
+    <string name="playfun_game_audio_hint">與她語音，一起玩遊戲</string>
+    <string name="playfun_game_video_hint">與她視訊，一起玩遊戲</string>
     <!--PlayFun-APP-END-->
 </resources>
