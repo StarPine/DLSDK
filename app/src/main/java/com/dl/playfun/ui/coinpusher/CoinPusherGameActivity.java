@@ -544,32 +544,23 @@ public class CoinPusherGameActivity extends BaseActivity<ActivityCoinpusherGameB
         //用户拨打状态折叠效果
         viewModel.gameUI.triangleEvent.observe(this,aBoolean -> {
             //折叠
+            ResizeWidthAnimation anim;
             if(aBoolean){
-                binding.rlCallingUserLayout.findViewById(R.id.fl_triangle_off).setVisibility(View.GONE);
-                Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.anim_coinpush_fold_off);
-                animation.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        binding.rlCallingUserLayout.findViewById(R.id.fl_triangle_on).setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-
-                    }
-                });
-                binding.rlCallingUserLayout.findViewById(R.id.fl_triangle_off).startAnimation(animation);
-            }else{
-                //展开
-                binding.rlCallingUserLayout.findViewById(R.id.fl_triangle_on).setVisibility(View.GONE);
+                anim = new ResizeWidthAnimation(binding.rlCallingUserLayout.findViewById(R.id.fl_triangle_off), Utils.dip2px(getContext(), 46), Utils.dip2px(getContext(), 146));
+                anim.setDuration(1000);
+                anim.setFillAfter(true);
                 binding.rlCallingUserLayout.findViewById(R.id.fl_triangle_off).setVisibility(View.VISIBLE);
-                Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.anim_coinpush_fold_on);
-                binding.rlCallingUserLayout.findViewById(R.id.fl_triangle_off).startAnimation(animation);
+                binding.rlCallingUserLayout.findViewById(R.id.fl_triangle_off).startAnimation(anim);
+                binding.rlCallingUserLayout.findViewById(R.id.img_angle).setPivotX(180);
+            }else{
+                anim = new ResizeWidthAnimation(binding.rlCallingUserLayout.findViewById(R.id.fl_triangle_off), Utils.dip2px(getContext(), 46), Utils.dip2px(getContext(), 41));
+                anim.setDuration(1000);
+                anim.setFillAfter(true);
+                //展开
+                binding.rlCallingUserLayout.findViewById(R.id.fl_triangle_off).setVisibility(View.GONE);
+                binding.rlCallingUserLayout.findViewById(R.id.fl_triangle_on).setVisibility(View.VISIBLE);
+                binding.rlCallingUserLayout.findViewById(R.id.fl_triangle_off).startAnimation(anim);
+                binding.rlCallingUserLayout.findViewById(R.id.img_angle).setPivotX(0);
             }
         });
         //点击放大缩小视讯弹窗

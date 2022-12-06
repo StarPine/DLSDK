@@ -26,9 +26,8 @@
             binding:onClickCommand="@{viewModel.triangleClick}"
             >
             <com.dl.playfun.widget.image.CircleImageView
-                android:layout_margin="2dp"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="46dp"
+                android:layout_height="46dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/default_avatar"
                 binding:imagePath="@{viewModel.otherCallInfoEntity.avatar}"
@@ -49,60 +48,55 @@
             binding:drawable_radius_leftBottom="@{22}"
             binding:drawable_radius_rightBottom="@{22}"
             >
+            <LinearLayout
+                android:id="@+id/fl_triangle_off"
+                android:visibility="gone"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginTop="23dp"
+                android:layout_width="46dp"
+                android:layout_height="wrap_content"
+                binding:drawable_alpha="@{70}"
+                binding:drawable_color="@{@color/black}"
+                binding:drawable_radius_leftBottom="@{22}"
+                binding:drawable_radius_rightBottom="@{22}"
+                >
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_marginTop="27dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:src="@drawable/img_hangup_red_2"
+                    binding:onClickCommand="@{viewModel.callRejectClick}"
+                    />
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_marginTop="10dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:src="@drawable/call_audiocall_backdrop"
+                    binding:stateActivated="@{viewModel.micMuteField}"
+                    binding:onClickCommand="@{viewModel.micMuteOnClickCommand}"
+                    />
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_marginTop="10dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:src="@drawable/call_audio_speaker_backdrop"
+                    binding:onClickCommand="@{viewModel.handsFreeOnClickCommand}"
+                    binding:stateActivated="@{viewModel.handsFreeField}"
+                    />
+            </LinearLayout>
             <androidx.appcompat.widget.AppCompatImageView
-                android:layout_gravity="bottom|center"
-                android:layout_marginBottom="5dp"
-                android:layout_width="13dp"
-                android:layout_height="8dp"
-                android:src="@drawable/img_coinpusher_triangle"
-                />
-        </FrameLayout>
-        <LinearLayout
-            android:id="@+id/fl_triangle_off"
-            android:visibility="gone"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:layout_marginTop="23dp"
-            android:layout_width="46dp"
-            android:layout_height="wrap_content"
-            binding:drawable_alpha="@{70}"
-            binding:drawable_color="@{@color/black}"
-            binding:drawable_radius_leftBottom="@{22}"
-            binding:drawable_radius_rightBottom="@{22}"
-            >
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_marginTop="27dp"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:src="@drawable/img_hangup_red_2"
-                binding:onClickCommand="@{viewModel.callRejectClick}"
-                />
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_marginTop="10dp"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:src="@drawable/call_audiocall_backdrop"
-                binding:stateActivated="@{viewModel.micMuteField}"
-                binding:onClickCommand="@{viewModel.micMuteOnClickCommand}"
-                />
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_marginTop="10dp"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:src="@drawable/call_audio_speaker_backdrop"
-                binding:onClickCommand="@{viewModel.handsFreeOnClickCommand}"
-                binding:stateActivated="@{viewModel.handsFreeField}"
-                />
-            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/img_angle"
                 android:layout_marginTop="5dp"
                 android:layout_gravity="bottom|center"
                 android:layout_marginBottom="5dp"
                 android:layout_width="13dp"
                 android:layout_height="8dp"
                 android:src="@drawable/img_coinpusher_triangle"
-                android:rotationX="180"
+                android:rotationX="0"
                 />
-        </LinearLayout>
+        </FrameLayout>
+
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/img_call_audio_or_video"
             android:layout_below="@+id/fl_avatar"

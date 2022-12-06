@@ -909,17 +909,7 @@ public class AudioCallChatingActivity extends BaseActivity<ActivityCallAudioChat
 
     //异步移除view
     private void postRemoveView(ViewGroup viewGroup, View IiageTrans) {
-        viewGroup.post(new Runnable() {
-            public void run() {
-                // it works without the runOnUiThread, but all UI updates must
-                // be done on the UI thread
-                AudioCallChatingActivity.this.runOnUiThread(new Runnable() {
-                    public void run() {
-                        viewGroup.removeView(IiageTrans);
-                    }
-                });
-            }
-        });
+        viewGroup.post(() -> viewGroup.removeView(IiageTrans));
     }
 
     /**
