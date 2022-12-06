@@ -947,10 +947,8 @@ public class UserDetailViewModel extends BaseTheirPhotoAlbumViewModel<AppReposit
                     @Override
                     public void onError(RequestException e) {
                         super.onError(e);
-                        if (e != null) {
-                            if (e.getCode() == 21001) {
-                                uc.sendDialogViewEvent.call();
-                            }
+                        if (e.getCode()!=null && e.getCode() == 21001) {
+                            uc.sendDialogViewEvent.call();
                         }
                     }
 
