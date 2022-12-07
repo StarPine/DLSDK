@@ -2281,11 +2281,10 @@
     <string name="playfun_pay_buy_reports_error">系統忙碌，請重新載入</string>
     <string name="playfun_pay_buy_reports_error_2">操作太頻繁，請稍後再試</string>
     <string name="playfun_fragment_issuance_shield">屏蔽動態</string>
-    <string name="playfun_game_audio_hint">與她語音，一起玩遊戲</string>
-    <string name="playfun_game_video_hint">與她視訊，一起玩遊戲</string>
-    <string name="playfun_meagess_crystal">水晶</string>
     <string name="playfun_dialog_exchange_integral_total_text1_crystal">水晶不足</string>
     <string name="playfun_check_name_tips">輸入暱稱已被佔用，請重新輸入</string>
     <string name="playfun_photo_setting">設定查看鑽石不能為0</string>
+    <string name="playfun_permissions_audio_txt2">為了使用語音、錄音等功能，請先同意麥克風權限</string>
+    <string name="playfun_permissions_video2">為了使用視訊、錄影、美顏等功能，請先同意攝像頭權限</string>
     <!--PlayFun-APP-END-->
 </resources>

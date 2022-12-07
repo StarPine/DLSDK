@@ -551,7 +551,6 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                             priceConfigEntityField = priceConfigEntity;
                             mySelfAudioFlag = priceConfigEntity.getCurrent().getAllowAudio() == 1;
                             mySelfVideoFlag = priceConfigEntity.getCurrent().getAllowVideo() == 1;
-                            uc.imProfit.call();
                         }
                     }
 

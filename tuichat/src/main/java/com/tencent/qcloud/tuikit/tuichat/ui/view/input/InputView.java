@@ -18,6 +18,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
@@ -163,6 +164,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     private boolean isReplyModel = false;
     private View replyLayout;
     private LinearLayout ll_input;
+    private LinearLayout ll_super;
     private TextView replyTv;
     private ImageView replyCloseBtn;
     private ReplyPreviewBean replyPreviewBean;
@@ -215,6 +217,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         mSendTextButton = findViewById(R.id.send_btn);
         mTextInput = findViewById(R.id.chat_message_input);
         ll_input = findViewById(R.id.ll_input);
+        ll_super = findViewById(R.id.ll_super);
         replyLayout = findViewById(R.id.reply_preview_bar);
         replyTv = findViewById(R.id.reply_text);
 //        replyCloseBtn = findViewById(R.id.reply_close_btn);
@@ -235,7 +238,14 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
 
     @SuppressLint("ClickableViewAccessibility")
     protected void init() {
-
+        ll_super.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (sendOnClickCallbacks != null) {
+                    sendOnClickCallbacks.onChangedVideoLayout(ll_super.getMeasuredHeight());
+                }
+            }
+        });
         //DL add
         phoneVideoBtn.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -804,9 +814,6 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                 mCurrentState = STATE_SOFT_INPUT;
                 mInputMoreView.setVisibility(View.GONE);
                 ll_input.setVisibility(VISIBLE);
-                if (sendOnClickCallbacks != null) {
-                    sendOnClickCallbacks.onChangedFaceLayout(false, 0, 0);
-                }
 //                showSoftInput();
             } else {
                 mCurrentState = STATE_FACE_INPUT;
@@ -976,16 +983,6 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                     mChatInputHandler.onInputAreaClick();
                 }
             }, 100);
-        }
-        if (mInputMoreView != null) {
-            mInputMoreView.post(new Runnable() {
-                @Override
-                public void run() {
-                    if (sendOnClickCallbacks != null) {
-                        sendOnClickCallbacks.onChangedFaceLayout(true, getMeasuredHeight(), mInputMoreView.getMeasuredHeight());
-                    }
-                }
-            });
         }
     }
 
@@ -1514,7 +1511,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         void sendBlackStatus(int status);
 
         //简体表情按钮是否展开
-        void onChangedFaceLayout(boolean flag, int height, int faceHeight);
+        void onChangedVideoLayout(int height);
     }
 
 }
