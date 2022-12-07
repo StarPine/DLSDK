@@ -89,7 +89,10 @@ public class GiftBagDetailAdapter extends RecyclerView.Adapter<GiftBagDetailAdap
             cleanSelect();
             selected = holder;
             holder.detail_layout.setBackground(ContextCompat.getDrawable(mContext, R.drawable.purple_gift_checked));
-            onClickDetailListener.clickDetailCheck(listData.get(position));
+            GiftBagEntity.GiftEntity entity = listData.get(position);
+            if (entity != null) {
+                onClickDetailListener.clickDetailCheck(entity);
+            }
         }
     }
 

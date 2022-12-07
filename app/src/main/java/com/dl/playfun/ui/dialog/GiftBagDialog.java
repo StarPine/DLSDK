@@ -233,6 +233,7 @@ public class GiftBagDialog extends BaseDialog {
             gift_check_number.setBackground(ContextCompat.getDrawable(mContext, R.drawable.shape_bg_gift_number_selector));
             crystal_check_number.setBackground(ContextCompat.getDrawable(mContext, R.drawable.shape_bg_gift_number_selector));
         }
+        refreshTabColor(tab_gift);
 
         initGiftView(giftListPage, indicatorLayout);
         initGiftView(crystalGifListPage, crystalIndicatorLayout);
@@ -403,8 +404,14 @@ public class GiftBagDialog extends BaseDialog {
                         crystalGifAdapter = initGiftData(crystalEntities, R.layout.dialog_crystal_gift_bag_item_detail, crystalIndicatorLayout);
                         crystalGifListPage.setAdapter(crystalGifAdapter);
                         crystalGifAdapter.setOnClickListener(itemEntity -> {
-                            if (checkCrystalItemEntity == null || checkGiftItemEntity.getId().intValue() != itemEntity.getId().intValue()) {
+                            if (checkCrystalItemEntity == null) {
                                 checkCrystalItemEntity = itemEntity;
+                            } else {
+                                Integer oldItemId = checkCrystalItemEntity.getId();
+                                Integer newItemId = itemEntity.getId();
+                                if (oldItemId != null && newItemId != null && newItemId.intValue() != oldItemId.intValue()) {
+                                    checkGiftItemEntity = itemEntity;
+                                }
                             }
                         });
                     }
