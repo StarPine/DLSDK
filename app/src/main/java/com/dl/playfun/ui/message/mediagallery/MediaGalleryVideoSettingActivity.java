@@ -124,18 +124,19 @@ public class MediaGalleryVideoSettingActivity extends BaseActivity<ActivitySnaps
         viewModel.isPayState.set(isPayState);
         String localPriceValue = ConfigManager.getInstance().getAppRepository().readKeyValue(localPriceConfigSettingKey);
         String localConfigId = ConfigManager.getInstance().getAppRepository().readKeyValue(localSnapshotConfigIdSettingKey);
-
-        configId = StringUtils.isEmpty(localConfigId) ? null : Integer.parseInt(localConfigId);
-        if(!StringUtils.isEmpty(localPriceValue)){
-            localCheckItemEntity = GsonUtils.fromJson(localPriceValue, MediaPayPerConfigEntity.ItemEntity.class);
+        //是付费影片
+        if(isPayState) {
+            configId = StringUtils.isEmpty(localConfigId) ? null : Integer.parseInt(localConfigId);
+            if (!StringUtils.isEmpty(localPriceValue)) {
+                localCheckItemEntity = GsonUtils.fromJson(localPriceValue, MediaPayPerConfigEntity.ItemEntity.class);
+            }
+            if (ObjectUtils.isNotEmpty(localCheckItemEntity)) {
+                checkItemEntity = localCheckItemEntity;
+            } else {
+                checkItemEntity = mediaPriceTmpConfig.getContent().get(0);
+                configId = mediaPriceTmpConfig.getConfigId();
+            }
         }
-        if(ObjectUtils.isNotEmpty(localCheckItemEntity)){
-            checkItemEntity = localCheckItemEntity;
-        }else{
-            checkItemEntity = mediaPriceTmpConfig.getContent().get(0);
-            configId = mediaPriceTmpConfig.getConfigId();
-        }
-
     }
 
     @Override
