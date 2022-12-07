@@ -2281,5 +2281,6 @@
     <string name="playfun_pay_buy_reports_error">Busy, try again later.</string>
     <string name="playfun_pay_buy_reports_error_2">Frequent operations, try again later.</string>
     <string name="playfun_fragment_issuance_shield">Shield moment</string>
+    <string name="playfun_check_name_tips">Nickname occuppied, enter again.</string>
     <!--PlayFun-APP-END-->
 </resources>
