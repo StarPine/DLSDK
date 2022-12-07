@@ -92,7 +92,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     /**
      * 消息发送按钮
      */
-    protected Button mSendTextButton;
+    protected ImageView mSendTextButton;
     protected ImageView phoneVideoBtn;
     protected ImageView giftBtn;
     protected ImageView callPhoneVideoBtn;

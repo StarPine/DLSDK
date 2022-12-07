@@ -5,6 +5,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.dl.lib.util.MPDeviceUtils;
+import com.dl.lib.util.SSLFactoryUtil;
 import com.dl.playfun.R;
 import com.dl.playfun.app.AppConfig;
 import com.dl.playfun.data.source.http.interceptor.ApiTimeOutInterceptor;
@@ -121,6 +122,8 @@ public class RetrofitClient {
                 .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
                 .writeTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
                 .readTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
+                .sslSocketFactory(SSLFactoryUtil.createSSLSocketFactory(),new SSLFactoryUtil.TrustAllManager())
+                .hostnameVerifier(new SSLFactoryUtil.TrustAllHostnameVerifier())
                 .connectionPool(new ConnectionPool(8, 15, TimeUnit.SECONDS));
         okHttpClient = builder.build();
 

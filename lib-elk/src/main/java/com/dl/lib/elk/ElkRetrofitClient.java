@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.dl.lib.elk.Interceptor.BaseElkInterceptor;
 import com.dl.lib.util.MMKVUtil;
+import com.dl.lib.util.SSLFactoryUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -66,6 +67,8 @@ public class ElkRetrofitClient {
                 .writeTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
                 .readTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
                 .connectionPool(new ConnectionPool(8, 15, TimeUnit.SECONDS));
+        builder.sslSocketFactory(SSLFactoryUtil.createSSLSocketFactory(),new SSLFactoryUtil.TrustAllManager());
+        builder.hostnameVerifier(new SSLFactoryUtil.TrustAllHostnameVerifier());
         OkHttpClient okHttpClient = builder.build();
 
         retrofit = new Retrofit.Builder()

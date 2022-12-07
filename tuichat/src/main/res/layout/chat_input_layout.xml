@@ -76,16 +76,14 @@
             android:textColor="@color/text_color_gray"
             android:visibility="gone" />
 
-        <Button
+        <ImageView
             android:id="@+id/send_btn"
-            android:layout_width="48dp"
-            android:layout_height="33dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_marginStart="14dp"
-            android:textStyle="bold"
-            android:text="@string/send"
-            android:background="@drawable/im_send_able_btn"
+            android:layout_marginBottom="4dp"
+            android:src="@drawable/custom_im_send"
             android:visibility="gone"
-            android:textColor="@color/white"
             android:layout_gravity="bottom"
             tools:visibility="visible"
             />

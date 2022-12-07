@@ -24,11 +24,11 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import androidx.annotation.StringRes;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.blankj.utilcode.util.GsonUtils;
+import com.blankj.utilcode.util.KeyboardUtils;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
@@ -57,7 +57,6 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
 import com.dl.playfun.ui.certification.certificationmale.CertificationMaleFragment;
-import com.dl.playfun.ui.coinpusher.dialog.CoinPusherDialogAdapter;
 import com.dl.playfun.ui.dialog.GiftBagDialog;
 import com.dl.playfun.ui.message.chatdetail.notepad.NotepadActivity;
 import com.dl.playfun.ui.message.mediagallery.MediaGalleryVideoSettingActivity;
@@ -1298,39 +1297,7 @@ public class ChatDetailFragment extends ChatDetailTopBarFragment<FragmentChatDet
             }
             DialogCallPlayUser(audioTag, false);
         }
-    }
 
-    //单个权限申请监听
-    ActivityResultLauncher<String> toPermissionIntent = registerForActivityResult(new ActivityResultContracts.RequestPermission(), result -> {
-        //获取单个权限成功
-        if(!result){
-            alertPermissions(R.string.playfun_permissions_audio_txt2);
-        }else{
-            AppContext.instance().logEvent(AppsFlyerEvent.im_voice_call);
-            viewModel.getCallingInvitedInfo(1, getUserIdIM(), mChatInfo.getId());
-        }
-    });
-    //多个权限申请监听
-    ActivityResultLauncher<String[]> launcherPermissionArray = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(),
-            result -> {
-                if (result.get(Manifest.permission.CAMERA) != null && result.get(Manifest.permission.RECORD_AUDIO) != null) {
-                    if (Objects.requireNonNull(result.get(Manifest.permission.CAMERA)).equals(true) && Objects.requireNonNull(result.get(Manifest.permission.RECORD_AUDIO)).equals(true)) {
-                        AppContext.instance().logEvent(AppsFlyerEvent.im_video_call);
-                        viewModel.getCallingInvitedInfo(2, getUserIdIM(), mChatInfo.getId());
-                    } else {
-                        //有权限没有获取到的动作
-                        alertPermissions(R.string.playfun_permissions_video2);
-                    }
-                }
-            });
-
-    private void alertPermissions(@StringRes int stringResId){
-        //获取语音权限失败
-        CoinPusherDialogAdapter.getDialogPermissions(mActivity, stringResId, _success -> {
-            if(_success){
-                PermissionChecker.launchAppDetailsSettings(mActivity);
-            }
-        }).show();
     }
 
     //调起拨打音视频通话
@@ -1423,6 +1390,7 @@ public class ChatDetailFragment extends ChatDetailTopBarFragment<FragmentChatDet
     }
 
     private void showLoaclRecharge(boolean isGiftSend) {
+        KeyboardUtils.hideSoftInput(mActivity);
         if (!isGiftSend) {
             AppContext.instance().logEvent(AppsFlyerEvent.im_topup);
         }
