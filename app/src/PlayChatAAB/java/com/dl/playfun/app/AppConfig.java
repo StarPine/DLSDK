@@ -12,6 +12,7 @@ public class AppConfig {
     public static boolean isRegister = false;
     public static boolean isRegisterAccost = false;
     public static boolean isMainPage = true;
+    public static boolean inChating = false;
 
     //是否开启日志打印
     public static final boolean isDebug = BuildConfig.DEBUG;
