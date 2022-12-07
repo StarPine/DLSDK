@@ -28,6 +28,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.blankj.utilcode.util.GsonUtils;
+import com.blankj.utilcode.util.KeyboardUtils;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
@@ -1389,6 +1390,7 @@ public class ChatDetailFragment extends ChatDetailTopBarFragment<FragmentChatDet
     }
 
     private void showLoaclRecharge(boolean isGiftSend) {
+        KeyboardUtils.hideSoftInput(mActivity);
         if (!isGiftSend) {
             AppContext.instance().logEvent(AppsFlyerEvent.im_topup);
         }
