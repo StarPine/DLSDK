@@ -1294,13 +1294,13 @@ public class ChatDetailFragment extends ChatDetailTopBarFragment<FragmentChatDet
                 Toast.makeText(mActivity, R.string.playfun_chat_detail_blocked, Toast.LENGTH_SHORT).show();
                 return;
             }
-            DialogCallPlayUser();
+            DialogCallPlayUser(audioTag, false);
         }
 
     }
 
     //调起拨打音视频通话
-    private void DialogCallPlayUser() {
+    private void DialogCallPlayUser(String audioTag, boolean isDouble) {
 
         if (viewModel.priceConfigEntityField != null) {
             AudioProfitTips = viewModel.priceConfigEntityField.getCurrent().getAudioProfitTips();
