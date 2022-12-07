@@ -24,6 +24,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.annotation.StringRes;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -56,6 +57,7 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
 import com.dl.playfun.ui.certification.certificationmale.CertificationMaleFragment;
+import com.dl.playfun.ui.coinpusher.dialog.CoinPusherDialogAdapter;
 import com.dl.playfun.ui.dialog.GiftBagDialog;
 import com.dl.playfun.ui.message.chatdetail.notepad.NotepadActivity;
 import com.dl.playfun.ui.message.mediagallery.MediaGalleryVideoSettingActivity;
@@ -81,6 +83,7 @@ import com.dl.playfun.widget.dialog.UserBehaviorDialog;
 import com.google.gson.Gson;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.listener.OnResultCallbackListener;
+import com.luck.picture.lib.permissions.PermissionChecker;
 import com.opensource.svgaplayer.SVGACallback;
 import com.opensource.svgaplayer.SVGAImageView;
 import com.opensource.svgaplayer.SVGAParser;
@@ -122,6 +125,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import me.goldze.mvvmhabit.utils.ToastUtils;
 import me.yokeyword.fragmentation.ISupportFragment;
@@ -131,6 +135,8 @@ import me.yokeyword.fragmentation.ISupportFragment;
  */
 public class ChatDetailFragment extends ChatDetailTopBarFragment<FragmentChatDetailBinding, ChatDetailViewModel> implements InputView.SendOnClickCallback {
     public static final String CHAT_INFO = "chatInfo";
+    private static final String AUDIO_TAG = "audio";
+    private static final String VIDEO_TAG = "video";
     //首次付费解锁引导
     static String KEY_USER_MEDIA_GALLERY_LOCK = "key_user_media_gallery_lock_";
     static String local_photo = "photo";
@@ -155,10 +161,8 @@ public class ChatDetailFragment extends ChatDetailTopBarFragment<FragmentChatDet
     private C2CChatPresenter presenter;
     private TUIMessageBean photoBean = null;
 
-    //默认记录马上视频的距离底部宽高
-    private volatile int defBottomMargin = 0;
-    private volatile int defBottomMarginHeight = 0;
     private CoinRechargeSheetView coinRechargeFragmentView;
+    private int lastHeight;
 
     @Nullable
     @Override
@@ -264,7 +268,6 @@ public class ChatDetailFragment extends ChatDetailTopBarFragment<FragmentChatDet
     }
 
     public void initCallVideoHint() {
-        defBottomMarginHeight = dp2px(mActivity, 30);
         if (mChatInfo != null && mChatInfo.getId() != null) {
             List<String> userList = new ArrayList<>();
             userList.add(mChatInfo.getId());
@@ -353,17 +356,6 @@ public class ChatDetailFragment extends ChatDetailTopBarFragment<FragmentChatDet
         viewModel.uc.signGiftAnimEvent.observe(this, animEvent -> {
             //调用播放
             startSVGAnimotion();
-        });
-        //im价格加载提醒
-        viewModel.uc.imProfit.observe(this, unused -> {
-            String videoTips = viewModel.priceConfigEntityField.getCurrent().getVideoTips();
-            if (ConfigManager.getInstance().getTipMoneyShowFlag() && videoTips != null && videoTips.length() > 0) {
-                String replaceEnd = videoTips.replaceAll("\\(|\\)", "");
-                inputLayout.setProfitTip(replaceEnd, true);
-            } else {
-                inputLayout.setProfitTip("", false);
-            }
-
         });
         viewModel.uc.sendUserGiftError.observe(this, new Observer<Void>() {
             @Override
@@ -820,7 +812,7 @@ public class ChatDetailFragment extends ChatDetailTopBarFragment<FragmentChatDet
                         viewModel.addLike(getTaUserIdIM(), messageInfo.getId());
                     } else if (customIMTextEntity.getEvent() == 4) {//唤醒语音视频聊天
                         AppContext.instance().logEvent(AppsFlyerEvent.im_tips_vv);
-                        DialogCallPlayUser();
+                        DialogCallPlayUser(null, true);
                     } else if (customIMTextEntity.getEvent() == 11) {//真人认证
                         AppContext.instance().logEvent(AppsFlyerEvent.im_tips_auth);
                         if (ConfigManager.getInstance().isMale()) {
@@ -1016,8 +1008,14 @@ public class ChatDetailFragment extends ChatDetailTopBarFragment<FragmentChatDet
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        AppConfig.inChating = true;
+    }
+    @Override
     public void onPause() {
         super.onPause();
+        AppConfig.inChating = false;
         AudioPlayer.getInstance().stopPlay();
     }
     //选择照片 snapshot 是否是付费
@@ -1239,29 +1237,15 @@ public class ChatDetailFragment extends ChatDetailTopBarFragment<FragmentChatDet
     }
 
     @Override
-    public void onChangedFaceLayout(boolean flag, int height, int faceHeight) {
+    public void onChangedVideoLayout(int height) {
         try {
             //非客服账号加载用户标签和状态
             if (!mChatInfo.getId().startsWith(AppConfig.CHAT_SERVICE_USER_ID)) {
-                if (flag) {
-                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) binding.rlLayout.getLayoutParams();
-                    if (defBottomMargin == 0) {
-                        defBottomMargin = layoutParams.bottomMargin;
-                    }
-                    int ctHeight = 0;
-                    if (height == 0 || faceHeight == 0) {
-                        ctHeight = faceHeight == 0 ? 1084 : faceHeight;
-                    }
-                    layoutParams.bottomMargin = height + ctHeight + defBottomMarginHeight;
-                    binding.rlLayout.setLayoutParams(layoutParams);
-                } else {
-                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) binding.rlLayout.getLayoutParams();
-                    if (defBottomMargin == 0) {
-                        defBottomMargin = layoutParams.bottomMargin;
-                    }
-                    layoutParams.bottomMargin = defBottomMargin;
-                    binding.rlLayout.setLayoutParams(layoutParams);
-                }
+                if (lastHeight == height)return;
+                lastHeight = height;
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) binding.rlLayout.getLayoutParams();
+                layoutParams.bottomMargin = lastHeight + 135;
+                binding.rlLayout.setLayoutParams(layoutParams);
             }
         } catch (Exception e) {
 
@@ -1290,7 +1274,16 @@ public class ChatDetailFragment extends ChatDetailTopBarFragment<FragmentChatDet
     }
 
     @Override
-    public void onClickCallPlayUser() {//点击调用拨打通话
+    public void onClickCallAudio() {//点击调用拨打通话
+        callingAble(AUDIO_TAG);
+    }
+
+    @Override
+    public void onClickCallVideo() {
+        callingAble(VIDEO_TAG);
+    }
+
+    private void callingAble(String audioTag){
         if (Status.mIsShowFloatWindow){
             me.goldze.mvvmhabit.utils.ToastUtils.showShort(R.string.audio_in_call);
             return;
@@ -1303,13 +1296,45 @@ public class ChatDetailFragment extends ChatDetailTopBarFragment<FragmentChatDet
                 Toast.makeText(mActivity, R.string.playfun_chat_detail_blocked, Toast.LENGTH_SHORT).show();
                 return;
             }
-            DialogCallPlayUser();
+            DialogCallPlayUser(audioTag, false);
         }
+    }
 
+    //单个权限申请监听
+    ActivityResultLauncher<String> toPermissionIntent = registerForActivityResult(new ActivityResultContracts.RequestPermission(), result -> {
+        //获取单个权限成功
+        if(!result){
+            alertPermissions(R.string.playfun_permissions_audio_txt2);
+        }else{
+            AppContext.instance().logEvent(AppsFlyerEvent.im_voice_call);
+            viewModel.getCallingInvitedInfo(1, getUserIdIM(), mChatInfo.getId());
+        }
+    });
+    //多个权限申请监听
+    ActivityResultLauncher<String[]> launcherPermissionArray = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(),
+            result -> {
+                if (result.get(Manifest.permission.CAMERA) != null && result.get(Manifest.permission.RECORD_AUDIO) != null) {
+                    if (Objects.requireNonNull(result.get(Manifest.permission.CAMERA)).equals(true) && Objects.requireNonNull(result.get(Manifest.permission.RECORD_AUDIO)).equals(true)) {
+                        AppContext.instance().logEvent(AppsFlyerEvent.im_video_call);
+                        viewModel.getCallingInvitedInfo(2, getUserIdIM(), mChatInfo.getId());
+                    } else {
+                        //有权限没有获取到的动作
+                        alertPermissions(R.string.playfun_permissions_video2);
+                    }
+                }
+            });
+
+    private void alertPermissions(@StringRes int stringResId){
+        //获取语音权限失败
+        CoinPusherDialogAdapter.getDialogPermissions(mActivity, stringResId, _success -> {
+            if(_success){
+                PermissionChecker.launchAppDetailsSettings(mActivity);
+            }
+        }).show();
     }
 
     //调起拨打音视频通话
-    private void DialogCallPlayUser() {
+    private void DialogCallPlayUser(String audioTag, boolean isDouble) {
 
         if (viewModel.priceConfigEntityField != null) {
             AudioProfitTips = viewModel.priceConfigEntityField.getCurrent().getAudioProfitTips();
@@ -1323,6 +1348,8 @@ public class ChatDetailFragment extends ChatDetailTopBarFragment<FragmentChatDet
 
         MessageDetailDialog.AudioAndVideoCallDialog(mActivity,
                 true,
+                audioTag,
+                isDouble,
                 AudioProfitTips,
                 VideoProfitTips,
                 new MessageDetailDialog.AudioAndVideoCallOnClickListener() {

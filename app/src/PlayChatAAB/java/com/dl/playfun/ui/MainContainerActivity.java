@@ -137,6 +137,9 @@ public class MainContainerActivity extends MySupportActivity {
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         try {
+            if (AppConfig.inChating){
+                return super.dispatchTouchEvent(ev);
+            }
             if (ev.getAction() == MotionEvent.ACTION_DOWN) {  //把操作放在用户点击的时候
                 if (KeyboardUtils.isSoftInputVisible(this)) {
                     View v = getCurrentFocus();      //得到当前页面的焦点,ps:有输入框的页面焦点一般会被输入框占据

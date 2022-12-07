@@ -547,6 +547,9 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(leftUserImg);
         leftUserImg.setOnClickListener(v -> {
+            if (leftUser.getImId().equals(ConfigManager.getInstance().getUserImID())){
+                return;
+            }
             Bundle bundle = UserDetailFragment.getStartBundle(leftUser.getId());
             viewModel.start(UserDetailFragment.class.getCanonicalName(), bundle);
         });
@@ -581,6 +584,8 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
         stringBuilder.setSpan(blueSpanYellow, tips.length(), detail.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         giftTitle.setText(stringBuilder);
         ImageView giftNumImg = streamerView.findViewById(R.id.gift_count);
+        RelativeLayout rl_banner_gift = streamerView.findViewById(R.id.rl_banner_gift);
+        rl_banner_gift.setOnClickListener(v -> {});
         int account = mqttMessageEntity.getAmount();
         setGiftNumImg(giftNumImg, account);
     }
@@ -606,25 +611,28 @@ public class MainFragment extends BaseFragment<FragmentMainBinding, MainViewMode
     }
 
     private void broadcastGiftImg(MqBroadcastGiftUserEntity giftUserEntity,ImageView userImg){
-        if(giftUserEntity.getSex()!=null && giftUserEntity.getSex()==1){
-            if(giftUserEntity.getCertification()!=null && giftUserEntity.getCertification()==1){
+        if (giftUserEntity.getSex()!=null
+                && giftUserEntity.getIsVip()!=null
+                && giftUserEntity.getCertification()!= null){
+
+            if(giftUserEntity.getIsVip() == 1){
+                if (giftUserEntity.getSex()==1){
+                    userImg.setImageResource(R.drawable.ic_vip);
+                    userImg.setVisibility(View.VISIBLE);
+                    return;
+                }else {
+                    userImg.setImageResource(R.drawable.ic_goddess);
+                    userImg.setVisibility(View.VISIBLE);
+                    return;
+                }
+            }
+            if (giftUserEntity.getCertification()== 1){
                 userImg.setImageResource(R.drawable.ic_real_man);
                 userImg.setVisibility(View.VISIBLE);
-            }
-            if(giftUserEntity.getIsVip()!=null && giftUserEntity.getIsVip()==1){
-                userImg.setImageResource(R.drawable.ic_vip);
-                userImg.setVisibility(View.VISIBLE);
-            }
-        }else{
-            if(giftUserEntity.getCertification()!=null && giftUserEntity.getCertification()==1){
-                userImg.setImageResource(R.drawable.ic_real_man);
-                userImg.setVisibility(View.VISIBLE);
-            }
-            if(giftUserEntity.getIsVip()!=null && giftUserEntity.getIsVip()==1){
-                userImg.setImageResource(R.drawable.ic_goddess);
-                userImg.setVisibility(View.VISIBLE);
+                return;
             }
         }
+        userImg.setVisibility(View.GONE);
     }
 
     @Override
