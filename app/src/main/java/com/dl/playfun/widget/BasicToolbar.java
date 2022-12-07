@@ -28,7 +28,7 @@ public class BasicToolbar extends Toolbar implements View.OnClickListener {
     private final int backImage;
     private ToolbarListener toolbarListener;
     private ImageView ivBack;
-    private TextView tvTitle;
+    protected TextView tvTitle;
     private String title;
     private int number = 0;
 
@@ -157,7 +157,7 @@ public class BasicToolbar extends Toolbar implements View.OnClickListener {
         int textl = r / 2 - textViewWidth / 2;
         int textt = b / 2 - textViewHeight / 2;
         int textr = textl + textViewWidth;
-        int textb = textr + backViewHeight;
+        int textb = textt + backViewHeight;
         textView.layout(textl, textt, textr, textb);
 
     }

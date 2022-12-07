@@ -18,6 +18,7 @@
     <color name="white">#FFFFFF</color>
     <color name="text_color_gray">#696969</color>
     <color name="black_font_color">#181818</color>
+    <color name="conversation_title_admin">#BE63FF</color>
     <color name="text_tips_color">#A5A5A5</color>
 
     <color name="text_gray1">#777777</color>

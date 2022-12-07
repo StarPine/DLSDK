@@ -11,6 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -302,8 +304,10 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
         });
         if (Objects.equals(conversation.getId(), "administrator")) {
             services_tag.setVisibility(View.VISIBLE);
+            titleText.setTextColor(ContextCompat.getColor(context, R.color.conversation_title_admin));
         } else {
             services_tag.setVisibility(View.GONE);
+            titleText.setTextColor(ContextCompat.getColor(context, R.color.black_font_color));
         }
     }
 }

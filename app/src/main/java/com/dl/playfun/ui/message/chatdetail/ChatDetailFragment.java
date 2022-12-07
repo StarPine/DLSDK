@@ -23,6 +23,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -128,7 +129,7 @@ import me.yokeyword.fragmentation.ISupportFragment;
 /**
  * @author wulei
  */
-public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBinding, ChatDetailViewModel> implements InputView.SendOnClickCallback {
+public class ChatDetailFragment extends ChatDetailTopBarFragment<FragmentChatDetailBinding, ChatDetailViewModel> implements InputView.SendOnClickCallback {
     public static final String CHAT_INFO = "chatInfo";
     //首次付费解锁引导
     static String KEY_USER_MEDIA_GALLERY_LOCK = "key_user_media_gallery_lock_";
@@ -611,6 +612,10 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         //CustomChatInputFragment.isAdmin = mChatInfo.getId() != null && mChatInfo.getId().equals(AppConfig.CHAT_SERVICE_USER_ID);
         //初始化
         setTitleBarTitle(mChatInfo.getChatName());
+        if (mChatInfo.getId().contains(AppConfig.CHAT_SERVICE_USER_ID)) {
+            setTitleBarTitleColor(ContextCompat.getColor(getContext(), R.color.conversation_title_admin));
+            setTitleBarTitleTag(R.drawable.ic_service_tag);
+        }
         binding.chatLayout.initDefault();
         presenter = new C2CChatPresenter();
         presenter.setChatInfo(mChatInfo);
