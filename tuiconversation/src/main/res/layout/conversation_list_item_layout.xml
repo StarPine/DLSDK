@@ -72,8 +72,8 @@
 
             <ImageView
                 android:id="@+id/service_tag"
-                android:layout_width="38dp"
-                android:layout_height="13dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:layout_marginStart="2dp"
                 android:layout_marginLeft="2dp"
                 android:layout_centerVertical="true"

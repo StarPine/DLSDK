@@ -39,7 +39,7 @@ public class ChatDetailTopBar extends BasicToolbar {
     public void setTitleTag(@DrawableRes int id) {
         Drawable drawable = ContextCompat.getDrawable(getContext(), id);
         if (drawable == null) return;
-        drawable.setBounds(0,  -1 * ConvertUtils.dp2px(7), ConvertUtils.dp2px(38), ConvertUtils.dp2px(6));
+        drawable.setBounds(0,  -1 * ConvertUtils.dp2px(7), ConvertUtils.dp2px(15), ConvertUtils.dp2px(8));
         tvTitle.setCompoundDrawables(null, null, drawable, null);
         tvTitle.setCompoundDrawablePadding(ConvertUtils.dp2px(2));
     }
