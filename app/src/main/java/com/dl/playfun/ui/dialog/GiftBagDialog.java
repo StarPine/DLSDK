@@ -410,7 +410,7 @@ public class GiftBagDialog extends BaseDialog {
                                 Integer oldItemId = checkCrystalItemEntity.getId();
                                 Integer newItemId = itemEntity.getId();
                                 if (oldItemId != null && newItemId != null && newItemId.intValue() != oldItemId.intValue()) {
-                                    checkGiftItemEntity = itemEntity;
+                                    checkCrystalItemEntity = itemEntity;
                                 }
                             }
                         });

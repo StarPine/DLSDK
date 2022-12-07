@@ -1167,6 +1167,10 @@ public class ChatDetailFragment extends ChatDetailTopBarFragment<FragmentChatDet
      */
     @Override
     public void sendOnClickAudioMessage(InputView.MessageHandler messageHandler, TUIMessageBean messageInfo) {
+        if (mChatInfo!=null && mChatInfo.getId()!=null && mChatInfo.getId().contains(AppConfig.CHAT_SERVICE_USER_ID)) { //客服放行
+            messageHandler.sendMessage(messageInfo);
+            return;
+        }
         if (viewModel.priceConfigEntityField == null) {
             return;
         }
