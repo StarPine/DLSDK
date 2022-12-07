@@ -277,6 +277,7 @@ public class CallingVideoActivity extends BaseActivity<ActivityCallVideoBinding,
         }
 
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
+        mCallView.setElevation(9999);
         mContainerView.addView(mCallView, params);
         mJMView.bringToFront();
         // 不用TRTC sponsor 一套的命名，因为他们那里其实挺混乱的， 这里就用 my 和 other
