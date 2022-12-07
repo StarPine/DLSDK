@@ -2284,5 +2284,6 @@
     <string name="playfun_meagess_crystal">Crystal</string>
     <string name="playfun_dialog_exchange_integral_total_text1_crystal">Not enough crystals</string>
     <string name="playfun_check_name_tips">Nickname occuppied, enter again.</string>
+    <string name="playfun_photo_setting">Not be zero</string>
     <!--PlayFun-APP-END-->
 </resources>

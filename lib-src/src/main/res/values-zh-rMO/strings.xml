@@ -2284,5 +2284,6 @@
     <string name="playfun_meagess_crystal">水晶</string>
     <string name="playfun_dialog_exchange_integral_total_text1_crystal">水晶不足</string>
     <string name="playfun_check_name_tips">輸入暱稱已被佔用，請重新輸入</string>
+    <string name="playfun_photo_setting">設定查看鑽石不能為0</string>
     <!--PlayFun-APP-END-->
 </resources>
