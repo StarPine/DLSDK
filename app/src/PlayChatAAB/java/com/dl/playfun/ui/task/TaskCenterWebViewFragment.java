@@ -60,6 +60,8 @@ public class TaskCenterWebViewFragment extends BaseFragment<TaskCenterFragmentWe
 
     private HomePageRouter router;
 
+    private boolean loadSuccess = false;
+
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return R.layout.task_center_fragment_web;
@@ -95,7 +97,7 @@ public class TaskCenterWebViewFragment extends BaseFragment<TaskCenterFragmentWe
     @Override
     public void onResume() {
         super.onResume();
-        if (webView != null) {
+        if (webView != null && loadSuccess) {
             webView.loadUrl("javascript:newData()");
         }
     }
@@ -174,6 +176,7 @@ public class TaskCenterWebViewFragment extends BaseFragment<TaskCenterFragmentWe
         @Override
         public void onPageFinished(WebView view, String url) {
             mProgressBar.setVisibility(View.GONE);
+            loadSuccess = true;
             showComplete();
         }
     }
