@@ -276,7 +276,7 @@
                     android:background="@drawable/btn_circle_purple"
                     android:text="@string/playfun_meagess_give_away"
                     android:textColor="@color/white"
-                    android:textSize="14sp" />
+                    android:textSize="13sp" />
             </RelativeLayout>
         </RelativeLayout>
 
