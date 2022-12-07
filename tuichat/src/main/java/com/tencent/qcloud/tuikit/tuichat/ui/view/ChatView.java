@@ -132,6 +132,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
     private View mForwardMergeButton;
     private View mDeleteButton;
     private boolean isGroup = false;
+    private boolean isMove = false;
 
     private ChatPresenter presenter;
 
@@ -733,6 +734,14 @@ public class ChatView extends LinearLayout  implements IChatLayout {
                 }
             }
 
+            @Override
+            public void onTouchFlag(boolean isMove) {
+                int visibility = mRecordingGroup.getVisibility();
+                if (visibility == View.GONE && isMove){
+                    mRecordingGroup.setVisibility(View.VISIBLE);
+                }
+            }
+
             private void startRecording() {
                 post(new Runnable() {
                     @Override
@@ -786,6 +795,7 @@ public class ChatView extends LinearLayout  implements IChatLayout {
                 post(new Runnable() {
                     @Override
                     public void run() {
+                        mRecordingGroup.setVisibility(View.VISIBLE);
                         mRecordingIcon.setImageResource(R.drawable.ic_volume_dialog_cancel);
                         mRecordingTips.setText(TUIChatService.getAppContext().getString(R.string.up_cancle_send));
                     }

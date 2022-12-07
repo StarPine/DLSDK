@@ -88,7 +88,6 @@ public class SampleCoverVideo extends StandardGSYVideoPlayer {
                 .setDefaultRequestOptions(
                         new RequestOptions()
                                 .frame(1000000)
-                                .centerCrop()
                                 .error(error)
                                 .placeholder(res))
                 .load(url)
