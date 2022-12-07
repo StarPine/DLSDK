@@ -41,11 +41,10 @@
             app:elevation="0dp">
 
 
-            <com.dl.playfun.widget.BasicToolbar
-                android:id="@+id/basic_toolbar"
+            <com.dl.playfun.ui.message.chatdetail.ChatDetailTopBar
+                android:id="@+id/chat_detail_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
-                app:toolbar_title="某某莫">
+                android:layout_height="55dp">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -107,7 +106,7 @@
                         binding:onClickCommand="@{viewModel.moreOnClickCommand}" />
 
                 </RelativeLayout>
-            </com.dl.playfun.widget.BasicToolbar>
+            </com.dl.playfun.ui.message.chatdetail.ChatDetailTopBar>
         </com.google.android.material.appbar.AppBarLayout>
 
         <LinearLayout

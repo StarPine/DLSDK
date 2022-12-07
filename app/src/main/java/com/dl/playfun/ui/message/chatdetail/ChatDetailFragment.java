@@ -23,7 +23,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -56,7 +56,6 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseToolbarFragment;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
 import com.dl.playfun.ui.certification.certificationmale.CertificationMaleFragment;
-import com.dl.playfun.ui.coinpusher.dialog.CoinPusherDialogAdapter;
 import com.dl.playfun.ui.dialog.GiftBagDialog;
 import com.dl.playfun.ui.message.chatdetail.notepad.NotepadActivity;
 import com.dl.playfun.ui.message.mediagallery.MediaGalleryVideoSettingActivity;
@@ -132,7 +131,7 @@ import me.yokeyword.fragmentation.ISupportFragment;
 /**
  * @author wulei
  */
-public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBinding, ChatDetailViewModel> implements InputView.SendOnClickCallback {
+public class ChatDetailFragment extends ChatDetailTopBarFragment<FragmentChatDetailBinding, ChatDetailViewModel> implements InputView.SendOnClickCallback {
     public static final String CHAT_INFO = "chatInfo";
     private static final String AUDIO_TAG = "audio";
     private static final String VIDEO_TAG = "video";
@@ -603,6 +602,10 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
         //CustomChatInputFragment.isAdmin = mChatInfo.getId() != null && mChatInfo.getId().equals(AppConfig.CHAT_SERVICE_USER_ID);
         //初始化
         setTitleBarTitle(mChatInfo.getChatName());
+        if (mChatInfo.getId().contains(AppConfig.CHAT_SERVICE_USER_ID)) {
+            setTitleBarTitleColor(ContextCompat.getColor(getContext(), R.color.conversation_title_admin));
+            setTitleBarTitleTag(R.drawable.ic_service_tag);
+        }
         binding.chatLayout.initDefault();
         presenter = new C2CChatPresenter();
         presenter.setChatInfo(mChatInfo);
@@ -1291,45 +1294,13 @@ public class ChatDetailFragment extends BaseToolbarFragment<FragmentChatDetailBi
                 Toast.makeText(mActivity, R.string.playfun_chat_detail_blocked, Toast.LENGTH_SHORT).show();
                 return;
             }
-            DialogCallPlayUser(audioTag, false);
+            DialogCallPlayUser();
         }
-    }
 
-    //单个权限申请监听
-    ActivityResultLauncher<String> toPermissionIntent = registerForActivityResult(new ActivityResultContracts.RequestPermission(), result -> {
-        //获取单个权限成功
-        if(!result){
-            alertPermissions(R.string.playfun_permissions_audio_txt2);
-        }else{
-            AppContext.instance().logEvent(AppsFlyerEvent.im_voice_call);
-            viewModel.getCallingInvitedInfo(1, getUserIdIM(), mChatInfo.getId());
-        }
-    });
-    //多个权限申请监听
-    ActivityResultLauncher<String[]> launcherPermissionArray = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(),
-            result -> {
-                if (result.get(Manifest.permission.CAMERA) != null && result.get(Manifest.permission.RECORD_AUDIO) != null) {
-                    if (Objects.requireNonNull(result.get(Manifest.permission.CAMERA)).equals(true) && Objects.requireNonNull(result.get(Manifest.permission.RECORD_AUDIO)).equals(true)) {
-                        AppContext.instance().logEvent(AppsFlyerEvent.im_video_call);
-                        viewModel.getCallingInvitedInfo(2, getUserIdIM(), mChatInfo.getId());
-                    } else {
-                        //有权限没有获取到的动作
-                        alertPermissions(R.string.playfun_permissions_video2);
-                    }
-                }
-            });
-
-    private void alertPermissions(@StringRes int stringResId){
-        //获取语音权限失败
-        CoinPusherDialogAdapter.getDialogPermissions(mActivity, stringResId, _success -> {
-            if(_success){
-                PermissionChecker.launchAppDetailsSettings(mActivity);
-            }
-        }).show();
     }
 
     //调起拨打音视频通话
-    private void DialogCallPlayUser(String audioTag, boolean isDouble) {
+    private void DialogCallPlayUser() {
 
         if (viewModel.priceConfigEntityField != null) {
             AudioProfitTips = viewModel.priceConfigEntityField.getCurrent().getAudioProfitTips();
