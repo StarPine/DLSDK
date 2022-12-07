@@ -9,6 +9,7 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.Nullable;
 import androidx.databinding.ViewDataBinding;
 
+import com.blankj.utilcode.util.KeyboardUtils;
 import com.dl.playfun.R;
 import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.viewmodel.BaseViewModel;
@@ -35,6 +36,7 @@ public abstract class ChatDetailTopBarFragment <V extends ViewDataBinding, VM ex
 
     @Override
     public void onBackClick(BasicToolbar toolbar) {
+        KeyboardUtils.hideSoftInput(mActivity);
         mActivity.onBackPressed();
     }
 
