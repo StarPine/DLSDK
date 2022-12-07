@@ -26,7 +26,7 @@
                 android:gravity="center"
                 android:text="@string/playfun_meagess_gift"
                 android:textColor="@color/purple1"
-                android:textSize="@dimen/text_size_middle2" />
+                android:textSize="15dp" />
 
             <TextView
                 android:id="@+id/tab_bag"
@@ -38,7 +38,7 @@
                 android:gravity="center"
                 android:text="@string/playfun_meagess_backpack"
                 android:textColor="@color/color_text_333333"
-                android:textSize="@dimen/text_size_middle2" />
+                android:textSize="15dp" />
 
             <TextView
                 android:id="@+id/tab_crystal"
@@ -51,7 +51,7 @@
                 android:gravity="center"
                 android:text="@string/playfun_meagess_crystal"
                 android:textColor="@color/color_text_333333"
-                android:textSize="@dimen/text_size_middle2" />
+                android:textSize="15dp" />
 
             <ImageView
                 android:id="@+id/iv_balance_diamond"
@@ -72,7 +72,7 @@
                 android:layout_toStartOf="@+id/btn_stored"
                 android:text="9999999"
                 android:textColor="#ffa72dfe"
-                android:textSize="@dimen/text_size_middle" />
+                android:textSize="13dp" />
 
             <ImageView
                 android:id="@+id/iv_balance_crystal"
@@ -94,7 +94,7 @@
                 android:layout_toStartOf="@+id/btn_stored"
                 android:text="9999999"
                 android:textColor="#ffa72dfe"
-                android:textSize="@dimen/text_size_middle"
+                android:textSize="13dp"
                 android:visibility="gone"/>
 
             <TextView
@@ -112,7 +112,7 @@
                 android:paddingRight="10dp"
                 android:text="@string/playfun_dialong_coin_rechaege_top_up"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_small_12" />
+                android:textSize="12dp" />
 
         </RelativeLayout>
 
@@ -172,7 +172,7 @@
                     android:layout_marginStart="10dp"
                     android:gravity="center"
                     android:text="@string/playfun_gift_bag_number_hint"
-                    android:textSize="13sp"
+                    android:textSize="13dp"
                     android:textColor="#BFBFBF"/>
 
                 <Button
@@ -185,7 +185,7 @@
                     android:background="@drawable/btn_circle_purple"
                     android:text="@string/playfun_meagess_give_away"
                     android:textColor="@color/white"
-                    android:textSize="13sp" />
+                    android:textSize="13dp" />
             </RelativeLayout>
         </RelativeLayout>
 
@@ -264,7 +264,7 @@
                     android:layout_marginStart="10dp"
                     android:gravity="center"
                     android:text="@string/playfun_gift_bag_number_hint"
-                    android:textSize="13sp"
+                    android:textSize="13dp"
                     android:textColor="#BFBFBF"/>
                 <Button
                     android:id="@+id/crystal_btn_submit"
@@ -276,7 +276,7 @@
                     android:background="@drawable/btn_circle_purple"
                     android:text="@string/playfun_meagess_give_away"
                     android:textColor="@color/white"
-                    android:textSize="13sp" />
+                    android:textSize="13dp" />
             </RelativeLayout>
         </RelativeLayout>
 
