@@ -90,6 +90,8 @@ public class AppConfig {
     public static final String ExchangeRecord_URL = BuildConfig.WEB_BASE_URL + "ExchangeRule";
     //H5充值网址
     public static final String  PAY_RECHARGE_URL = "/recharge/recharge.html";
+    //任务中心
+    public static final String TASK_CENTER_URL = "/taskCenter";
     /**
      * @Desc TODO(跳转页面地址)
      * @author 彭石林
