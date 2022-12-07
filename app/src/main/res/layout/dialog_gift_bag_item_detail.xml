@@ -30,7 +30,7 @@
             tools:text="比心吖"
             android:textColor="#ff333333"
             android:ellipsize="end"
-            android:textSize="11sp" />
+            android:textSize="11dp" />
 
         <LinearLayout
             android:gravity="center"

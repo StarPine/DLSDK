@@ -12,7 +12,6 @@ import android.widget.ProgressBar;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.ObjectUtils;
@@ -30,13 +29,11 @@ import com.dl.playfun.manager.ConfigManager;
 import com.dl.playfun.ui.base.BaseFragment;
 import com.dl.playfun.ui.certification.certificationfemale.CertificationFemaleFragment;
 import com.dl.playfun.ui.certification.certificationmale.CertificationMaleFragment;
-import com.dl.playfun.ui.login.register.FriendsWillWebViewFragment;
 import com.dl.playfun.ui.mine.myphotoalbum.MyPhotoAlbumFragment;
 import com.dl.playfun.ui.mine.profile.EditProfileFragment;
 import com.dl.playfun.ui.mine.setting.account.bind.CommunityAccountBindFragment;
 import com.dl.playfun.ui.radio.issuanceprogram.IssuanceProgramFragment;
 import com.dl.playfun.ui.webview.BrowserView;
-import com.dl.playfun.ui.webview.WebHomeFragment;
 import com.dl.playfun.utils.WebViewUtils;
 import com.dl.playfun.viewmodel.BaseViewModel;
 import com.dl.playfun.widget.action.StatusAction;
@@ -91,7 +88,7 @@ public class TaskCenterWebViewFragment extends BaseFragment<TaskCenterFragmentWe
         webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         //正在加载网页动画
         showLoading();
-        webView.loadUrl("http://t-m.joy-mask.com/TaskCenter");
+        webView.loadUrl(ConfigManager.getInstance().getAppRepository().readApiConfigManagerEntity().getPlayFunWebUrl() + AppConfig.TASK_CENTER_URL);
 
     }
 
