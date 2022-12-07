@@ -3,6 +3,7 @@ package com.dl.playfun.ui.dialog;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Outline;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -186,40 +187,28 @@ public class GiftBagDialog extends BaseDialog {
 
         bag_empty_img = rootView.findViewById(R.id.bag_empty_img);
 
-        tab_bag.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tab_bag.setTextColor(ColorUtils.getColor(R.color.purple1));
-                tab_gift.setTextColor(ColorUtils.getColor(R.color.color_text_333333));
-                tab_crystal.setTextColor(ColorUtils.getColor(R.color.color_text_333333));
-                gift_page_layout.setVisibility(View.GONE);
-                bag_page_layout.setVisibility(View.VISIBLE);
-                crystal_page_layout.setVisibility(View.GONE);
-                balance_diamond.setVisibility(View.VISIBLE);
-                balance_crystal.setVisibility(View.GONE);
-                balance_value.setVisibility(View.VISIBLE);
-                crystal_balance_value.setVisibility(View.GONE);
-            }
+        tab_bag.setOnClickListener(v -> {
+            refreshTabColor(tab_bag);
+            gift_page_layout.setVisibility(View.GONE);
+            bag_page_layout.setVisibility(View.VISIBLE);
+            crystal_page_layout.setVisibility(View.GONE);
+            balance_diamond.setVisibility(View.VISIBLE);
+            balance_crystal.setVisibility(View.GONE);
+            balance_value.setVisibility(View.VISIBLE);
+            crystal_balance_value.setVisibility(View.GONE);
         });
-        tab_gift.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tab_bag.setTextColor(ColorUtils.getColor(R.color.color_text_333333));
-                tab_gift.setTextColor(ColorUtils.getColor(R.color.purple1));
-                tab_crystal.setTextColor(ColorUtils.getColor(R.color.color_text_333333));
-                gift_page_layout.setVisibility(View.VISIBLE);
-                bag_page_layout.setVisibility(View.GONE);
-                crystal_page_layout.setVisibility(View.GONE);
-                balance_diamond.setVisibility(View.VISIBLE);
-                balance_crystal.setVisibility(View.GONE);
-                balance_value.setVisibility(View.VISIBLE);
-                crystal_balance_value.setVisibility(View.GONE);
-            }
+        tab_gift.setOnClickListener(v -> {
+            refreshTabColor(tab_gift);
+            gift_page_layout.setVisibility(View.VISIBLE);
+            bag_page_layout.setVisibility(View.GONE);
+            crystal_page_layout.setVisibility(View.GONE);
+            balance_diamond.setVisibility(View.VISIBLE);
+            balance_crystal.setVisibility(View.GONE);
+            balance_value.setVisibility(View.VISIBLE);
+            crystal_balance_value.setVisibility(View.GONE);
         });
         tab_crystal.setOnClickListener((v) -> {
-            tab_bag.setTextColor(ColorUtils.getColor(R.color.color_text_333333));
-            tab_gift.setTextColor(ColorUtils.getColor(R.color.color_text_333333));
-            tab_crystal.setTextColor(ColorUtils.getColor(R.color.purple1));
+            refreshTabColor(tab_crystal);
             gift_page_layout.setVisibility(View.GONE);
             bag_page_layout.setVisibility(View.GONE);
             crystal_page_layout.setVisibility(View.VISIBLE);
@@ -280,6 +269,18 @@ public class GiftBagDialog extends BaseDialog {
             }
         });
         initData();
+    }
+
+    private void refreshTabColor(TextView select) {
+        TextView[] tabs = new TextView[] { tab_gift, tab_bag, tab_crystal };
+        for (TextView tab: tabs) {
+            if (tab == select) {
+                tab.setTextColor(ColorUtils.getColor(R.color.purple1));
+            } else {
+                if (isDark) tab.setTextColor(ColorUtils.getColor(android.R.color.white));
+                else tab.setTextColor(ColorUtils.getColor(R.color.color_text_333333));
+            }
+        }
     }
 
     private void initGiftView(RecyclerView view, LinearLayout indicatorLayout) {
