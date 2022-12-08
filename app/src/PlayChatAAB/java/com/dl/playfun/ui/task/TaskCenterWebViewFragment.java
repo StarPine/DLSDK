@@ -90,7 +90,7 @@ public class TaskCenterWebViewFragment extends BaseFragment<TaskCenterFragmentWe
         webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         //正在加载网页动画
         showLoading();
-        webView.loadUrl(ConfigManager.getInstance().getAppRepository().readApiConfigManagerEntity().getPlayFunWebUrl() + AppConfig.TASK_CENTER_URL);
+        webView.loadUrl(ConfigManager.getInstance().getAppRepository().readApiConfigManagerEntity().getPlayChatWebUrl() + AppConfig.TASK_CENTER_URL);
 
     }
 
