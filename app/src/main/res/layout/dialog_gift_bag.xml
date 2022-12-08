@@ -147,16 +147,16 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/gift_list_page"
                 android:layout_centerInParent="true"
-                android:layout_marginTop="-10dp"
+                android:layout_marginTop="-5dp"
                 android:gravity="center"
-                android:minHeight="13dp"
+                android:minHeight="20dp"
                 android:orientation="horizontal" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:layout_below="@+id/gift_list_page"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="25dp">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/gift_number_list"
@@ -240,9 +240,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/crystal_list_page"
                 android:layout_centerInParent="true"
-                android:layout_marginTop="-10dp"
+                android:layout_marginTop="-5dp"
                 android:gravity="center"
-                android:minHeight="10dp"
+                android:minHeight="20dp"
                 android:orientation="horizontal" />
 
             <RelativeLayout
