@@ -157,7 +157,7 @@ public class BasicToolbar extends Toolbar implements View.OnClickListener {
         int textl = r / 2 - textViewWidth / 2;
         int textt = b / 2 - textViewHeight / 2;
         int textr = textl + textViewWidth;
-        int textb = textt + backViewHeight;
+        int textb = textt + textViewHeight;
         textView.layout(textl, textt, textr, textb);
 
     }

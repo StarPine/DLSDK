@@ -22,20 +22,19 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="7dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="14dp"
-        android:layout_marginStart="14dp"
         android:layout_gravity="center"
-        android:orientation="horizontal"
-        >
+        android:layout_marginHorizontal="14dp"
+        android:orientation="horizontal">
 
         <LinearLayout
             android:id="@+id/ll_input"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_marginVertical="8dp"
             android:minHeight="33dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
             android:background="@drawable/msg_editor_border"
             android:gravity="center_vertical"
             android:orientation="horizontal">
@@ -43,27 +42,19 @@
 
             <com.tencent.qcloud.tuikit.tuichat.ui.view.input.TIMMentionEditText
                 android:id="@+id/chat_message_input"
+                android:includeFontPadding="false"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:maxHeight="120dp"
-                android:background="@color/white"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
+                android:maxHeight="86dp"
+                android:background="@color/transparent"
                 android:layout_marginStart="14dp"
                 android:layout_marginEnd="14dp"
                 android:textCursorDrawable="@drawable/my_cursor"
+                android:textSize="13dp"
                 tools:text="das哈共和国号公安吼吼吼活动哈哈的厚爱爱爸爸播放爱爱爸爸播放爱爱爸爸播放爱爱爸爸播放爱爱爸爸播放爱爱爸爸播放爱爱爸爸播放爱爱爸爸播放爱爱爸爸播放爱爱爸爸播放爱爱爸爸播放爱爱爸爸播放爱爱爸爸播放爱爱爸爸播放爱爱爸爸播放阿斯顿发打撒撒刚案发大发"
                 />
 
-            <ImageView
-                android:id="@+id/face_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginEnd="14dp"
-                android:layout_marginBottom="4dp"
-                android:src="@drawable/custom_im_face" />
         </LinearLayout>
 
         <Button
@@ -71,22 +62,35 @@
             android:layout_width="match_parent"
             style="?android:attr/borderlessButtonStyle"
             android:layout_height="33dp"
+            android:layout_marginVertical="8dp"
             android:background="@drawable/voice_btn_selector"
             android:text="@string/hold_say"
             android:textColor="@color/text_color_gray"
             android:visibility="gone" />
 
         <ImageView
+            android:id="@+id/face_btn"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="12dp"
+            android:layout_gravity="bottom"
+            android:scaleType="fitXY"
+            android:src="@drawable/custom_im_face" />
+
+        <ImageView
             android:id="@+id/send_btn"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginStart="14dp"
-            android:layout_marginBottom="4dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="9dp"
+            android:layout_marginEnd="2dp"
+            android:layout_marginBottom="12dp"
+            android:layout_gravity="bottom"
+            android:scaleType="fitXY"
             android:src="@drawable/custom_im_send"
             android:visibility="gone"
-            android:layout_gravity="bottom"
-            tools:visibility="visible"
-            />
+            tools:visibility="visible" />
 
     </LinearLayout>
 
