@@ -672,9 +672,10 @@ public class VideoCallViewModel extends BaseViewModel<AppRepository> {
                             ToastCenterUtils.showToast(R.string.playfun_dialog_exchange_integral_total_text1);
                             AppContext.instance().logEvent(AppsFlyerEvent.videocall_gift_Insu_topup);
                             uc.sendUserGiftError.postValue(true);
-                        }
-                        if (e.getCode() != null && e.getCode().intValue() == 21005) {
+                        } else if (e.getCode() != null && e.getCode().intValue() == 21005) {
                             ToastCenterUtils.showToast(R.string.playfun_dialog_exchange_integral_total_text1_crystal);
+                        } else {
+                            super.onError(e);
                         }
                     }
                 });

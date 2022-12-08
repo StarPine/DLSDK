@@ -449,9 +449,10 @@ public class ChatDetailViewModel extends BaseViewModel<AppRepository> {
                             ToastCenterUtils.showToast(R.string.playfun_dialog_exchange_integral_total_text1);
                             AppContext.instance().logEvent(AppsFlyerEvent.im_gifts_Insufficient_topup);
                             uc.sendUserGiftError.call();
-                        }
-                        if (e.getCode() != null && e.getCode().intValue() == 21005) {
+                        } else if (e.getCode() != null && e.getCode().intValue() == 21005) {
                             ToastCenterUtils.showToast(R.string.playfun_dialog_exchange_integral_total_text1_crystal);
+                        } else {
+                            super.onError(e);
                         }
                     }
 
