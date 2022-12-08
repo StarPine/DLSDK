@@ -379,16 +379,14 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                         CallGameCoinPusherEntity callGameCoinPusherEntity = rtcRoomMessageEntity.getActivityData();
                         if(callGameCoinPusherEntity!=null){
                             CallGameCoinPusherEntity.ActivityData activityData = callGameCoinPusherEntity.getActData();
-                            if(activityData != null && activityData.getState() != null){
-                                if(Objects.equals(activityData.getState(),CallGameCoinPusherEntity.enterGame)){
-                                    rtcRoomMessageField.set(rtcRoomMessageEvent);
-                                    coinPusherRoomShow.set(true);
-                                    _callGameCoinPusherEntity = callGameCoinPusherEntity;
-                                }else{
-                                    rtcRoomMessageField.set(rtcRoomMessageEvent);
-                                    coinPusherRoomShow.set(false);
-                                    _callGameCoinPusherEntity = null;
-                                }
+                            if(activityData != null ){
+                                rtcRoomMessageField.set(rtcRoomMessageEvent);
+                                coinPusherRoomShow.set(true);
+                                _callGameCoinPusherEntity = callGameCoinPusherEntity;
+                            }else{
+                                rtcRoomMessageField.set(rtcRoomMessageEvent);
+                                coinPusherRoomShow.set(false);
+                                _callGameCoinPusherEntity = null;
                             }
                         }
                     }
