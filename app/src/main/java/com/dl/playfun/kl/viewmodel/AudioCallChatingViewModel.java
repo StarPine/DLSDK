@@ -331,7 +331,6 @@ public class AudioCallChatingViewModel extends BaseViewModel<AppRepository> {
                         }
                         if (e.getCode() != null && e.getCode().intValue() == 21005) {
                             ToastCenterUtils.showToast(R.string.playfun_dialog_exchange_integral_total_text1_crystal);
-                            AppContext.instance().logEvent(AppsFlyerEvent.im_gifts_Insufficient_topup);
                         }
                     }
                 });
