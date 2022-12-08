@@ -26,7 +26,8 @@
                 android:gravity="center"
                 android:text="@string/playfun_meagess_gift"
                 android:textColor="@color/purple1"
-                android:textSize="15dp" />
+                android:textSize="15dp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tab_bag"
@@ -38,6 +39,7 @@
                 android:gravity="center"
                 android:text="@string/playfun_meagess_backpack"
                 android:textColor="@color/color_text_333333"
+                android:textStyle="bold"
                 android:textSize="15dp" />
 
             <TextView
@@ -51,6 +53,7 @@
                 android:gravity="center"
                 android:text="@string/playfun_meagess_crystal"
                 android:textColor="@color/color_text_333333"
+                android:textStyle="bold"
                 android:textSize="15dp" />
 
             <ImageView
@@ -144,16 +147,16 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/gift_list_page"
                 android:layout_centerInParent="true"
-                android:layout_marginTop="-5dp"
+                android:layout_marginTop="-10dp"
                 android:gravity="center"
-                android:minHeight="20dp"
+                android:minHeight="13dp"
                 android:orientation="horizontal" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:layout_below="@+id/gift_list_page"
-                android:layout_marginTop="25dp">
+                android:layout_marginTop="20dp">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/gift_number_list"
@@ -237,9 +240,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/crystal_list_page"
                 android:layout_centerInParent="true"
-                android:layout_marginTop="-5dp"
+                android:layout_marginTop="-10dp"
                 android:gravity="center"
-                android:minHeight="20dp"
+                android:minHeight="10dp"
                 android:orientation="horizontal" />
 
             <RelativeLayout
