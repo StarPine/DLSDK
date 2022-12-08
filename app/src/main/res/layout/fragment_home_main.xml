@@ -255,8 +255,7 @@
                             app:layoutManager="LinearLayoutManager"
                             binding:adapter="@{viewModel.adapter}"
                             binding:itemBinding="@{viewModel.itemBinding}"
-                            binding:items="@{viewModel.observableList}"
-                            binding:lineManager="@{LineManagers.horizontal(1,104,0)}" />
+                            binding:items="@{viewModel.observableList}" />
 
                         <include
                             layout="@layout/empty_view"
