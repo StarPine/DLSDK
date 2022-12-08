@@ -24,7 +24,7 @@
         <LinearLayout
             android:id="@+id/navigation_view"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="89dp"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="0dp"
             android:background="@drawable/main_bottom_navigation_img"
@@ -41,8 +41,8 @@
 
                 <ImageView
                     android:id="@+id/navigation_home_img"
-                    android:layout_width="21dp"
-                    android:layout_height="21dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_centerInParent="true"
                     android:layout_marginBottom="4dp"
                     android:scaleType="centerCrop"
@@ -50,8 +50,8 @@
 
                 <com.airbnb.lottie.LottieAnimationView
                     android:id="@+id/navigation_home_img_lottie"
-                    android:layout_width="21dp"
-                    android:layout_height="21dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_alignStart="@+id/navigation_home_img"
                     android:layout_alignTop="@+id/navigation_home_img"
                     android:elevation="11dp"
@@ -72,8 +72,8 @@
 
                 <ImageView
                     android:id="@+id/navigation_radio_img"
-                    android:layout_width="21dp"
-                    android:layout_height="21dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_centerInParent="true"
                     android:layout_marginBottom="4dp"
                     android:scaleType="centerCrop"
@@ -81,8 +81,8 @@
 
                 <com.airbnb.lottie.LottieAnimationView
                     android:id="@+id/navigation_radio_img_lottie"
-                    android:layout_width="21dp"
-                    android:layout_height="21dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_alignStart="@+id/navigation_radio_img"
                     android:layout_alignTop="@+id/navigation_radio_img"
                     android:elevation="11dp"
@@ -104,11 +104,11 @@
                     android:layout_height="58dp"
                     android:layout_alignParentTop="true"
                     android:layout_centerInParent="true"
-                    android:layout_marginTop="4dp">
+                    android:layout_marginTop="20dp">
 
                     <ImageView
                         android:id="@+id/navigation_rank_img"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
                         android:src="@drawable/toolbar_icon_task_checked" />
@@ -165,8 +165,8 @@
 
                 <ImageView
                     android:id="@+id/navigation_message_img"
-                    android:layout_width="21dp"
-                    android:layout_height="21dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_centerInParent="true"
                     android:layout_gravity="center_horizontal|top"
                     android:layout_marginBottom="4dp"
@@ -175,8 +175,8 @@
 
                 <com.airbnb.lottie.LottieAnimationView
                     android:id="@+id/navigation_message_img_lottie"
-                    android:layout_width="21dp"
-                    android:layout_height="21dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_alignStart="@+id/navigation_message_img"
                     android:layout_alignTop="@+id/navigation_message_img"
                     android:elevation="11dp"
@@ -197,8 +197,8 @@
 
                 <ImageView
                     android:id="@+id/navigation_mine_img"
-                    android:layout_width="21dp"
-                    android:layout_height="21dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_centerInParent="true"
                     android:layout_marginBottom="4dp"
                     android:scaleType="centerCrop"
@@ -206,8 +206,8 @@
 
                 <com.airbnb.lottie.LottieAnimationView
                     android:id="@+id/navigation_mine_img_lottie"
-                    android:layout_width="21dp"
-                    android:layout_height="21dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_alignStart="@+id/navigation_mine_img"
                     android:layout_alignTop="@+id/navigation_mine_img"
                     android:elevation="11dp"
